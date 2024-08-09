@@ -25,27 +25,12 @@ namespace newasm
         {
             if(arg == static_cast<std::string>("data"))
             {
-                try
-                {
-                    newasm::system::labels |= newasm::constv::__data;
-                }
-                catch(const std::exception& e)
-                {
-                    std::cerr << e.what() << '\n' << "RANDOM ERROR 1" << std::endl;
-                }
-                
+                newasm::system::label = newasm::constv::__data;
                 return 1;
             }
             if(arg == static_cast<std::string>("start"))
             {
-                try
-                {
-                    newasm::system::labels |= newasm::constv::__start;
-                }
-                catch(const std::exception& e)
-                {
-                    std::cerr << e.what() << '\n' << "RANDOM ERROR 2" << std::endl;
-                }
+                newasm::system::label = newasm::constv::__start;
                 return 1;
             }
         }
@@ -53,10 +38,10 @@ namespace newasm
     }
     int process_d(std::string name, std::string value)
     {
-        if(!(newasm::system::labels & newasm::constv::__data) && (newasm::system::labels & newasm::constv::__start))
+        if(newasm::system::label != newasm::constv::__data)
         {
-            newasm::header::functions::err("Program cannot start.");
             newasm::mem::regs::pri = 1;
+            newasm::system::terminated = true;
             newasm::header::functions::info("Program finished with exit code : " + std::to_string(newasm::mem::regs::pri));
             return 1;
         }
@@ -70,17 +55,10 @@ namespace newasm
     int process_iso(std::string ins, std::string suf, std::string opr)
     {
         newasm::header::functions::parseopr(opr, newasm::mem::data);
-        if(!(newasm::system::labels & newasm::constv::__data))
+        if(newasm::system::label != newasm::constv::__start)
         {
-            newasm::header::functions::err("Program cannot start.");
             newasm::mem::regs::pri = 1;
-            newasm::header::functions::info("Program finished with exit code : " + std::to_string(newasm::mem::regs::pri));
-            return 1;
-        }
-        if(!(newasm::system::labels & newasm::constv::__start))
-        {
-            newasm::header::functions::err("Program cannot start.");
-            newasm::mem::regs::pri = 1;
+            newasm::system::terminated = true;
             newasm::header::functions::info("Program finished with exit code : " + std::to_string(newasm::mem::regs::pri));
             return 1;
         }
@@ -105,17 +83,33 @@ namespace newasm
         // MOV
         if(ins == static_cast<std::string>("mov"))
         {
+            if(suf == static_cast<std::string>("fdx"))
+            {
+                if(newasm::header::functions::isalphanum(opr))
+                {
+                    newasm::mem::regs::fdx = std::stoi(opr);
+                    return 1;
+                }
+            }
             if(suf == static_cast<std::string>("otx"))
             {
                 newasm::mem::regs::otx = opr;
                 return 1;
             }
         }
+        // syscall
         if(ins == static_cast<std::string>("syscall"))
         {
-            if(suf == static_cast<std::string>("o"))
+            if(suf == static_cast<std::string>("0"))
             {
-                return 1;
+                if(opr == static_cast<std::string>("0"))
+                {
+                    if(newasm::mem::regs::fdx == 1)
+                    {
+                        std::cout << newasm::mem::regs::otx << std::endl;
+                    }
+                    return 1;
+                }
             }
         }
         return 1;

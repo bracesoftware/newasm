@@ -27,7 +27,7 @@ namespace newasm
     namespace system
     {
         bool terminated = false;
-        int labels = 0;
+        int label = 0;
     }
     namespace mem
     {
@@ -35,6 +35,7 @@ namespace newasm
         {
             int pri = 0;
             int alt = 0;
+            int fdx = 0;
             std::string otx;
         }
         std::unordered_map<std::string, std::string> data;
