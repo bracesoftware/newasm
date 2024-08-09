@@ -82,26 +82,45 @@ New-Assembly eXecutor 0.0.1 (c) 2024 Brace Software Co., by DEntisT
 [newasm] PROGRAM THREAD @ System info: Program finished with exit code : 23
 ```
 
-### `mov` instruction
+### `mov` and `stor` instruction
 Set value of a specific register.
 
-#### Syntax
+#### Syntax for `mov`
 - `instruction` - `mov`
 - `suffix` - register name
 - `operand` - new register value
 
-#### Example
+#### Syntax for `stor`
+- `instruction` - `stor`
+- `suffix` - register name
+- `operand` - variable name
 
+#### Example `#1`
+In this example, we basically do `fdx=1`:
 ```asm
 _ : start
     mov . fdx , 1
     retn . 0 , 23
 ```
 
-#### Register list
+#### Example `#2`
+In this example, we basically do `fdx=1`, `myvar=fdx`, `exit 1`:
+```asm
+_ : data
+    myvar ; 0
+_ : start
+    mov . fdx , 1
+    stor . fdx , myvar
+    retn . 0 , myvar
+```
+
+#### Available register list
+- There are input and output registers. Input registers are used to get the input from the user, and output registers are used to store data which will be used as an argument in a `syscall` or an operand in an instruction.
+
 | Register name    | Description |
 | -------- | ------- |
 | `fdx`  | Holds an index of a function `syscall` will call.    |
+| `onm` | Used as an integer output argument in some `syscall`s.     |
 | `otx` | Used as a text output argument in some `syscall`s.     |
 
 ### `syscall` instruction
@@ -126,6 +145,7 @@ _ : start
 | Register name    | Arguments | Description |
 | ---------------- | --------- | ----------- |
 | `1` | `otx` | Prints text. |
+| `2` | `onm` | Prints a number. |
 
 ### `nop` instruction
 Do nothing.

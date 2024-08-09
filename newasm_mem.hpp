@@ -33,14 +33,34 @@ namespace newasm
     }
     namespace mem
     {
+        //fake registers lol
         namespace regs
         {
+            //Unused registers
             int pri = 0;
             int alt = 0;
+            //Used registers
             int fdx = 0;
-            std::string otx;
+
+            //Output registers
+            int onm = 0;
+            std::string otx = "";
         }
         std::unordered_map<std::string, std::string> data;
         std::unordered_map<std::string, std::vector<std::string>> funcs;
+        namespace functions
+        {
+            bool datavalid(std::string dataname,std::unordered_map<std::string, std::string> &dat)
+            {
+                for(auto it = dat.begin(); it != dat.end(); it++)
+                {
+                    if(it->first == dataname)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
     }
 }

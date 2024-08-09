@@ -56,7 +56,6 @@ namespace newasm
     }
     int process_iso(std::string ins, std::string suf, std::string opr)
     {
-        newasm::header::functions::parseopr(opr, newasm::mem::data);
         if(newasm::system::label != newasm::constv::__start)
         {
             newasm::mem::regs::pri = 1;
@@ -64,6 +63,7 @@ namespace newasm
             newasm::header::functions::info("Program finished with exit code : " + std::to_string(newasm::mem::regs::pri));
             return 1;
         }
+
         //end
         if(ins == static_cast<std::string>("end"))
         {
@@ -82,6 +82,35 @@ namespace newasm
             newasm::mem::funcs[newasm::system::cproc].push_back(newline);
             return 1;
         }
+        // STOR
+        if(ins == static_cast<std::string>("stor"))
+        {
+            if(!newasm::header::functions::isalphanum(opr))
+            {
+                return 1;
+            }
+            if(!newasm::mem::functions::datavalid(opr,newasm::mem::data))
+            {
+                return 1;
+            }
+
+            if(suf == static_cast<std::string>("fdx"))
+            {
+                newasm::mem::data[opr] = std::to_string(newasm::mem::regs::fdx);
+                return 1;
+            }
+            if(suf == static_cast<std::string>("onm"))
+            {
+                newasm::mem::data[opr] = std::to_string(newasm::mem::regs::onm);
+                return 1;
+            }
+            if(suf == static_cast<std::string>("otx"))
+            {
+                newasm::mem::data[opr] = (newasm::mem::regs::otx);
+                return 1;
+            }
+        }
+        newasm::header::functions::parseopr(opr, newasm::mem::data);
         // RETURN
         if(ins == static_cast<std::string>("retn"))
         {
@@ -105,11 +134,23 @@ namespace newasm
         {
             if(suf == static_cast<std::string>("fdx"))
             {
-                if(newasm::header::functions::isalphanum(opr))
+                if(!newasm::header::functions::isnumeric(opr))
                 {
-                    newasm::mem::regs::fdx = std::stoi(opr);
+                    newasm::mem::regs::fdx = 0;
                     return 1;
                 }
+                newasm::mem::regs::fdx = std::stoi(opr);
+                return 1;
+            }
+            if(suf == static_cast<std::string>("onm"))
+            {
+                if(!newasm::header::functions::isnumeric(opr))
+                {
+                    newasm::mem::regs::onm = 0;
+                    return 1;
+                }
+                newasm::mem::regs::onm = std::stoi(opr);
+                return 1;
             }
             if(suf == static_cast<std::string>("otx"))
             {
@@ -127,6 +168,10 @@ namespace newasm
                     if(newasm::mem::regs::fdx == 1)
                     {
                         std::cout << newasm::mem::regs::otx << std::endl;
+                    }
+                    if(newasm::mem::regs::fdx == 2)
+                    {
+                        std::cout << newasm::mem::regs::onm << std::endl;
                     }
                     return 1;
                 }
