@@ -27,6 +27,13 @@ namespace newasm
         const int sysreq_fail = 4;
         const int stk_underflow = 5;
         const int data_overflow = 6;
+        const int dtyp_mismatch = 7;
+    }
+    namespace datatypes
+    {
+        const int number = 1;
+        const int decimal = 2;
+        const int text = 3;
     }
     namespace constv
     {
@@ -48,18 +55,14 @@ namespace newasm
         //fake registers lol
         namespace regs
         {
-            //Unused registers
-            int pri = 0;
-            int alt = 0;
-            //Used registers
+            //NORMAL REGISTERS
+            int exc = 0;
             int fdx = 0;
-            int psx = 0;
-
-            //Output registers
-            int onm = 0;
-            std::string otx = "";
+            std::string tlr = "null";
+            std::string psx = "null";
         }
         std::unordered_map<std::string, std::string> data;
+        std::unordered_map<std::string, int> datatypes;
         std::unordered_map<std::string, std::vector<std::string>> funcs;
         std::vector<std::string> stack;
         namespace functions

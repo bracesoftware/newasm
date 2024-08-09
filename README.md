@@ -3,15 +3,14 @@ Below is the simple `Hello World` program written in New-Assembly.
 
 ```asm
 _ : data
-    myvar ; 23
-    str ; Hello world
+    txt $ string ; Hello world
 _ : start
-    mov . otx , str
+    mov . tlr , string
     mov . fdx , 1
     
     syscall . 0 , 0
 
-    retn . 0 , myvar
+    retn . 0 , 0
 ```
 
 # Documentation
@@ -20,6 +19,7 @@ Documentation about `newasm` which includes following topics:
 - Labels
 - Variables
 - Instructions
+- Exit codes
 
 ## Compiling
 This project is written purely in C++ using its standard libraries, so compiling it should be easy. To download C++ compiler, please follow instructions on the link below:
@@ -37,7 +37,7 @@ _ : label_name
 In this label, you can declare variables to avoid repeated code. General syntax is:
 
 ```asm
-variable_name ; variable_value
+data type $ variable_name ; variable_value
 ```
 
 You can use `variable_name` as an operand in instructions documented below.
@@ -76,9 +76,6 @@ _ : start
 Output:
 
 ```
-New-Assembly eXecutor 0.0.1 (c) 2024 Brace Software Co., by DEntisT
-
-
 [newasm] PROGRAM THREAD @ System info: Program finished with exit code : 23
 ```
 
@@ -107,7 +104,7 @@ _ : start
 In this example, we basically do `fdx=1`, `myvar=fdx`, `exit 1`:
 ```asm
 _ : data
-    myvar ; 0
+    num $ myvar ; 0
 _ : start
     mov . fdx , 1
     stor . fdx , myvar
@@ -120,9 +117,7 @@ _ : start
 | Register name    | Description |
 | -------- | ------- |
 | `fdx`  | Holds an index of a function `syscall` will call.    |
-| `onm` | Used as an integer output argument in some `syscall`s.     |
-| `otx` | Used as a text output argument in some `syscall`s.     |
-| `psx` | Holds a value of last procedure scope exit. |
+| `tlr` | Used as an integer output argument in some `syscall`s.     |
 
 ### `syscall` instruction
 Set value of a specific register.
@@ -137,7 +132,7 @@ Set value of a specific register.
 ```asm
 _ : start
     mov . fdx , 1
-    mov . otx , Hello World
+    mov . tlr , Hello World
     syscall . 0 , 0
     retn . 0 , 23
 ```
@@ -145,8 +140,7 @@ _ : start
 #### `syscall` list
 | Register name    | Arguments | Description |
 | ---------------- | --------- | ----------- |
-| `1` | `otx` | Prints text. |
-| `2` | `onm` | Prints a number. |
+| `1` | `tlr` | Prints text. |
 
 ### `nop` instruction
 Do nothing.
@@ -211,12 +205,15 @@ Return a value inside a function.
 #### Example
 
 ```asm
+_ : data
+    num $ variable ; 0
 _ : start
     proc . 0 , testprocedure
         halt . proc , 364
     end . 0 , 0
+    call . 0 , testprocedure
     stor . psx , variable
-    mov . onm , variable
+    mov . tlr , variable
     mov . fdx , 1
     syscall . 0 , 0
     retn . 0 , 1
@@ -239,7 +236,7 @@ _ : start
 
 ```asm
 _ : data
-    myvar2 ; 0
+    num $ myvar2 ; 0
 _ : start
     push . 0 , 273
 
@@ -250,8 +247,8 @@ _ : start
 
     pop . 0 , myvar2
 
-    mov . onm , myvar2
-    mov . fdx , 2
+    mov . tlr , myvar2
+    mov . fdx , 1
     syscall . 0 , 0
 
     retn . 0 , 0
@@ -273,30 +270,12 @@ call . 0 , procedure_name
 - Here is an example:
 
 ```asm
-_ : data
-    myvar ; 23
-    str ; Hello world
-    str2 ; Hi again
-    str3 ; procedure works
-
 _ : start
-    mov . otx , str
-    mov . fdx , 1
-    
-    syscall . 0 , 0
-
-    proc . 0 , testproc
-        mov . otx , str3
-        mov . fdx , 1
-        syscall . 0 , 0
+    proc . 0 , test
+        halt . proc , 1
     end . 0 , 0
-
-    mov . otx , str2
-    syscall . 0 , 0
-
-    call . 0 , testproc
-
-    retn . 0 , myvar
+    call . 0 , test
+    retn . 0 , 0
 ```
 
 Basically, these are just functions, but in assembly.
@@ -312,3 +291,4 @@ When a fatal error happens, program will shut down, returning a specific exit co
 | `4` | `sysreq` failed, pretty self-explanatory. |
 | `5` | Stack underflow - tried to pop a value while the stack was empty. |
 | `6` | Data overflow - tried to pop a value into unallocated address. |
+| `7` | Data type mismatch. |

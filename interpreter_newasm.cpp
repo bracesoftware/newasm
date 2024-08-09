@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
         }
         else
         {
-            newasm::header::functions::err("Wrong usage :" + newasm::header::col::gray + " newasm -input <filename in nax_scripts> -other_options");
+            newasm::header::functions::err("Wrong application usage!\n\t\t\t\t\t" + newasm::header::col::gray + " newasm -input <filename in nax_scripts> -other_options");
             newasm::header::functions::wrn("Input file is set to `index.nax`.");
         }
     }

@@ -53,7 +53,7 @@ namespace newasm
         {
             const int major = 0;
             const int minor = 0;
-            const int patch = 2;
+            const int patch = 3;
         }
         namespace functions
         {
@@ -179,6 +179,19 @@ namespace newasm
                         opr = it->second;
                         break;
                     }
+                }
+            }
+            bool isfloat(const std::string& str)
+            {
+                try
+                {
+                    size_t pos;
+                    std::stof(str, &pos);
+                    return pos == str.length();
+                } 
+                catch(std::exception&)
+                {
+                    return false;
                 }
             }
         }
