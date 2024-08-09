@@ -20,6 +20,12 @@ the Initial Developer. All Rights Reserved.
 
 namespace newasm
 {
+    void terminate(int exit_code)
+    {
+        newasm::mem::regs::pri = exit_code;
+        newasm::system::terminated = true;
+        newasm::header::functions::info(newasm::constv::pxstr + std::to_string(newasm::mem::regs::pri));
+    }
     void callproc(std::string name);
     int process_l(std::string stat, std::string arg)
     {
@@ -42,9 +48,7 @@ namespace newasm
     {
         if(newasm::system::label != newasm::constv::__data)
         {
-            newasm::mem::regs::pri = 1;
-            newasm::system::terminated = true;
-            newasm::header::functions::info("Program finished with exit code : " + std::to_string(newasm::mem::regs::pri));
+            newasm::terminate(newasm::exit_codes::invalid_label);
             return 1;
         }
         if(newasm::header::functions::isalphanum(name))
@@ -58,9 +62,7 @@ namespace newasm
     {
         if(newasm::system::label != newasm::constv::__start)
         {
-            newasm::mem::regs::pri = 1;
-            newasm::system::terminated = true;
-            newasm::header::functions::info("Program finished with exit code : " + std::to_string(newasm::mem::regs::pri));
+            newasm::terminate(newasm::exit_codes::invalid_label);
             return 1;
         }
 
@@ -109,6 +111,33 @@ namespace newasm
                 newasm::mem::data[opr] = (newasm::mem::regs::otx);
                 return 1;
             }
+            if(suf == static_cast<std::string>("psx"))
+            {
+                newasm::mem::data[opr] = std::to_string(newasm::mem::regs::psx);
+                return 1;
+            }
+        }
+        //sysreq
+        if(ins == static_cast<std::string>("sysreq"))
+        {
+            if(suf == static_cast<std::string>("proc"))
+            {
+                if(!newasm::mem::functions::datavalid(opr,newasm::mem::funcs))
+                {
+                    //std::cout << opr << " not found <proc>" << std::endl;
+                    newasm::terminate(newasm::exit_codes::sysreq_fail);
+                    return 1;
+                }
+            }
+            if(suf == static_cast<std::string>("data"))
+            {
+                if(!newasm::mem::functions::datavalid(opr,newasm::mem::data))
+                {
+                    //std::cout << opr << " not found <data>" << std::endl;
+                    newasm::terminate(newasm::exit_codes::sysreq_fail);
+                    return 1;
+                }
+            }
         }
         newasm::header::functions::parseopr(opr, newasm::mem::data);
         // RETURN
@@ -122,10 +151,9 @@ namespace newasm
                 }
                 else
                 {
-                    newasm::mem::regs::pri = 0;
+                    newasm::mem::regs::pri = newasm::exit_codes::invalid_retn;
                 }
-                newasm::header::functions::info("Program finished with exit code : " + std::to_string(newasm::mem::regs::pri));
-                newasm::system::terminated = true;
+                newasm::terminate(newasm::mem::regs::pri);
                 return 1;
             }
         }
@@ -155,6 +183,16 @@ namespace newasm
             if(suf == static_cast<std::string>("otx"))
             {
                 newasm::mem::regs::otx = opr;
+                return 1;
+            }
+            if(suf == static_cast<std::string>("psx"))
+            {
+                if(!newasm::header::functions::isnumeric(opr))
+                {
+                    newasm::mem::regs::psx = 0;
+                    return 1;
+                }
+                newasm::mem::regs::psx = std::stoi(opr);
                 return 1;
             }
         }
@@ -226,6 +264,20 @@ namespace newasm
                 }
             }
         }
+        //halt
+        if(ins == static_cast<std::string>("halt"))
+        {
+            if(suf == static_cast<std::string>("proc"))
+            {
+                if(newasm::header::functions::isnumeric(opr))
+                {
+                    newasm::system::stoproc = 1;
+                    newasm::mem::regs::psx = std::stoi(opr);
+                    return 1;
+                }
+            }
+        }
+
         return 1;
     }
     
@@ -287,15 +339,18 @@ namespace newasm
         {
             for(std::string &line : it->second)
             {
+                if(newasm::system::stoproc == 1)
+                {
+                    newasm::system::stoproc = 0;
+                    break;
+                }
                 newasm::procline(line);
                 //std::cout << "Executing : " << line << std::endl;
             }
         }
         else
         {
-            newasm::mem::regs::pri = 2;
-            newasm::system::terminated = true;
-            newasm::header::functions::info("Program finished with exit code : " + std::to_string(newasm::mem::regs::pri));
+            newasm::terminate(newasm::exit_codes::invaid_proc);
         }
     }
     void execute(std::string file)

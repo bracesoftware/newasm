@@ -19,8 +19,17 @@ the Initial Developer. All Rights Reserved.
 
 namespace newasm
 {
+    namespace exit_codes
+    {
+        const int invalid_label = 1;
+        const int invaid_proc = 2;
+        const int invalid_retn = 3;
+        const int sysreq_fail = 4;
+    }
     namespace constv
     {
+        const std::string pxstr = "Program finished with exit code : ";
+
         const int __data = 0b1;
         const int __start = 0b10;
     }
@@ -29,6 +38,7 @@ namespace newasm
         bool terminated = false;
         int label = 0;
         int stop = 0;
+        int stoproc = 0;
         std::string cproc;
     }
     namespace mem
@@ -41,6 +51,7 @@ namespace newasm
             int alt = 0;
             //Used registers
             int fdx = 0;
+            int psx = 0;
 
             //Output registers
             int onm = 0;
@@ -50,7 +61,7 @@ namespace newasm
         std::unordered_map<std::string, std::vector<std::string>> funcs;
         namespace functions
         {
-            bool datavalid(std::string dataname,std::unordered_map<std::string, std::string> &dat)
+            template<typename T> bool datavalid(std::string dataname, T &dat)
             {
                 for(auto it = dat.begin(); it != dat.end(); it++)
                 {

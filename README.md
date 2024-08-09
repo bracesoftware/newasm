@@ -122,6 +122,7 @@ _ : start
 | `fdx`  | Holds an index of a function `syscall` will call.    |
 | `onm` | Used as an integer output argument in some `syscall`s.     |
 | `otx` | Used as a text output argument in some `syscall`s.     |
+| `psx` | Holds a value of last procedure scope exit. |
 
 ### `syscall` instruction
 Set value of a specific register.
@@ -177,6 +178,48 @@ Do nothing.
 _ : start
     rem . 0 , my comment
     retn . 0 , 23
+```
+
+### `sysreq` instruction
+Ensure that a symbol is available for further use.
+
+#### Syntax
+- `instruction` - `sysreq`
+- `suffix` - `proc`, `data`
+- `operand` - procedure return value
+
+#### Example
+
+```asm
+_ : data
+_ : start
+    rem . 0 , Notice how we haven't declared anything in _:data
+    sysreq . data , variable
+    rem . 0 , Program will be terminated with exit code 4
+    rem . 0 , Same happens when we try to access a procedure:
+    sysreq . proc , some_random_proc
+```
+
+### `halt` instruction
+Return a value inside a function.
+
+#### Syntax
+- `instruction` - `halt`
+- `suffix` - `proc`
+- `operand` - procedure return value
+
+#### Example
+
+```asm
+_ : start
+    proc . 0 , testprocedure
+        halt . proc , 364
+    end . 0 , 0
+    stor . psx , variable
+    mov . onm , variable
+    mov . fdx , 1
+    syscall . 0 , 0
+    retn . 0 , 1
 ```
 
 ## Procedures
