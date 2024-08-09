@@ -25,6 +25,8 @@ namespace newasm
         const int invaid_proc = 2;
         const int invalid_retn = 3;
         const int sysreq_fail = 4;
+        const int stk_underflow = 5;
+        const int data_overflow = 6;
     }
     namespace constv
     {
@@ -59,6 +61,7 @@ namespace newasm
         }
         std::unordered_map<std::string, std::string> data;
         std::unordered_map<std::string, std::vector<std::string>> funcs;
+        std::vector<std::string> stack;
         namespace functions
         {
             template<typename T> bool datavalid(std::string dataname, T &dat)

@@ -222,6 +222,40 @@ _ : start
     retn . 0 , 1
 ```
 
+### `push` and `pop` instruction
+- Push and pop values to and from the stack, respectively.
+
+#### Syntax for `push`
+- `instruction` - `push`
+- `suffix` - no suffix
+- `operand` - constant value or a value of a variable
+
+#### Syntax for `pop`
+- `instruction` - `pop`
+- `suffix` - no suffix
+- `operand` - variable to pop the value to
+
+#### Example
+
+```asm
+_ : data
+    myvar2 ; 0
+_ : start
+    push . 0 , 273
+
+
+    rem . 0 , change myvar2 to something dumb:
+    stor . fdx , myvar2
+
+
+    pop . 0 , myvar2
+
+    mov . onm , myvar2
+    mov . fdx , 2
+    syscall . 0 , 0
+
+    retn . 0 , 0
+```
 ## Procedures
 Procedures allow you to use the same piece of code without having to actually repeat it. General syntax is:
 
@@ -266,3 +300,15 @@ _ : start
 ```
 
 Basically, these are just functions, but in assembly.
+
+## Exit codes
+When a fatal error happens, program will shut down, returning a specific exit code, below is a list of exit codes.
+
+| Exit code | Description |
+| ---------------- | ----------- |
+| `1` | Invalid label. For example, you tried to create a variable inside `_:start`. |
+| `2` | Attempted to call a procedure which does not exist. |
+| `3` | Invalid non-numeric value was passed to `retn`. |
+| `4` | `sysreq` failed, pretty self-explanatory. |
+| `5` | Stack underflow - tried to pop a value while the stack was empty. |
+| `6` | Data overflow - tried to pop a value into unallocated address. |

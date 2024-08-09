@@ -139,6 +139,26 @@ namespace newasm
                 }
             }
         }
+        //pop
+        if(ins == static_cast<std::string>("pop"))
+        {
+            if(suf == static_cast<std::string>("0"))
+            {
+                if(newasm::mem::stack.empty())
+                {
+                    newasm::terminate(newasm::exit_codes::stk_underflow);
+                    return 1;
+                }
+                if(!newasm::mem::functions::datavalid(opr,newasm::mem::data))
+                {
+                    newasm::terminate(newasm::exit_codes::data_overflow);
+                    return 1;
+                }
+                newasm::mem::data[opr] = newasm::mem::stack.back();
+                newasm::mem::stack.pop_back();
+                return 1;
+            }
+        }
         newasm::header::functions::parseopr(opr, newasm::mem::data);
         // RETURN
         if(ins == static_cast<std::string>("retn"))
@@ -277,7 +297,15 @@ namespace newasm
                 }
             }
         }
-
+        //push
+        if(ins == static_cast<std::string>("push"))
+        {
+            if(suf == static_cast<std::string>("0"))
+            {
+                newasm::mem::stack.push_back(opr);
+                return 1;
+            }
+        }
         return 1;
     }
     
