@@ -8,7 +8,7 @@ _ : start
     mov . tlr , string
     mov . fdx , 1
     
-    syscall . 0 , 0
+    syscall . 0 , %ios
 
     retn . 0 , 0
 ```
@@ -17,6 +17,7 @@ _ : start
 Documentation about `newasm` which includes following topics:
 - Compiling binaries
 - Labels
+- Built-in constants
 - Variables
 - Instructions
 - Exit codes
@@ -49,6 +50,13 @@ There are 3 data types:
 
 ### `start` label
 In this label, you can perform instructions, and cannot create variables, or else program will end with exit code 1.
+
+## Built-in constants
+This language brings some built-in constants, or rather operands, with itself - list:
+
+- `%ios` - used as an operand in `syscall`, represents a module of `syscall` functions
+
+**WARNING**: Syntax such as `% ios` is invalid.
 
 ## Instructions
 Below is a list of available instructions. General syntax is:
@@ -138,7 +146,7 @@ Set value of a specific register.
 _ : start
     mov . fdx , 1
     mov . tlr , "Hello World"
-    syscall . 0 , 0
+    syscall . 0 , %ios
     retn . 0 , 23
 ```
 
@@ -221,7 +229,7 @@ _ : start
     stor . psx , variable
     mov . tlr , variable
     mov . fdx , 1
-    syscall . 0 , 0
+    syscall . 0 , %ios
     retn . 0 , 1
 ```
 
@@ -255,7 +263,7 @@ _ : start
 
     mov . tlr , myvar2
     mov . fdx , 1
-    syscall . 0 , 0
+    syscall . 0 , %ios
 
     retn . 0 , 0
 ```
