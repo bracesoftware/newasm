@@ -145,7 +145,8 @@ _ : start
 #### `syscall` list
 | Register name    | Arguments | Description |
 | ---------------- | --------- | ----------- |
-| `1` | `tlr` | Prints text. |
+| `1` | `tlr` | Prints exclusively text. |
+| `2` | `tlr` | Prints integers and floating point numbers. |
 
 ### `nop` instruction
 Do nothing.
