@@ -102,24 +102,20 @@ namespace newasm
                 return 1;
             }
         }
-        // ZERO
-        if(ins == static_cast<std::string>("zero"))
+        // MOV
+        if(ins == static_cast<std::string>("mov"))
         {
-            if(suf == static_cast<std::string>("alt"))
+            if(suf == static_cast<std::string>("otx"))
             {
-                if(opr == static_cast<std::string>("0"))
-                {
-                    newasm::mem::regs::alt = 0;
-                    return 1;
-                }
+                newasm::mem::regs::otx = opr;
+                return 1;
             }
-            if(suf == static_cast<std::string>("pri"))
+        }
+        if(ins == static_cast<std::string>("syscall"))
+        {
+            if(suf == static_cast<std::string>("o"))
             {
-                if(opr == static_cast<std::string>("0"))
-                {
-                    newasm::mem::regs::pri = 0;
-                    return 1;
-                }
+                return 1;
             }
         }
         return 1;

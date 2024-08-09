@@ -33,9 +33,9 @@ the Initial Developer. All Rights Reserved.
 #include <cctype>
 
 #define __newasm_included
-#include "newasm_header.h"
-#include "newasm_mem.h"
-#include "newasm_parser.h"
+#include "newasm_header.hpp"
+#include "newasm_mem.hpp"
+#include "newasm_parser.hpp"
 
 int main(int argc, char *argv[])
 {

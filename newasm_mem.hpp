@@ -35,7 +35,7 @@ namespace newasm
         {
             int pri = 0;
             int alt = 0;
-            int exc = 0;
+            std::string otx;
         }
         std::unordered_map<std::string, std::string> data;
     }
