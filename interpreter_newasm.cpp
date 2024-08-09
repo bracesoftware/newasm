@@ -39,12 +39,33 @@ the Initial Developer. All Rights Reserved.
 
 int main(int argc, char *argv[])
 {
-    if(newasm::header::functions::check_args("-ver",argc,argv))
+    int argid = 0;
+    if(newasm::header::functions::check_args("-ver",argc,argv,argid))
     {
         newasm::header::functions::vers_info();
         return 0;
     }
-    newasm::header::functions::vers_info();
+    std::cout << std::endl; newasm::header::functions::vers_info();
+    if(newasm::header::functions::check_args("-input",argc,argv,argid))
+    {
+        if(argid < argc-1)
+        {
+            newasm::header::settings::script_file = static_cast<std::string>(argv[argid+1]);
+        }
+        else
+        {
+            newasm::header::functions::err("Wrong usage :" + newasm::header::col::gray + " newasm -input <filename in nax_scripts> -other_options");
+            newasm::header::functions::wrn("Input file is set to `index.nax`.");
+        }
+    }
+    //other funny options
+    if(newasm::header::functions::check_args("-help",argc,argv,argid))
+    {
+        newasm::header::functions::help_info();
+    }
+
+    std::cout << std::endl;
+
     newasm::execute("index.nax");
     return 0;
 }

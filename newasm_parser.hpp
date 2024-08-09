@@ -157,6 +157,30 @@ namespace newasm
                 }
             }
         }
+        //rem
+        if(ins == static_cast<std::string>("rem"))
+        {
+            if(suf == static_cast<std::string>("0"))
+            {
+                /*if(opr.empty())
+                {
+                    newasm::header::functions::wrn("Encountered an empty comment.");
+                }*/
+                //do nothing,this is a comment
+                return 1;
+            }
+        }
+        //nop
+        if(ins == static_cast<std::string>("nop"))
+        {
+            if(suf == static_cast<std::string>("0"))
+            {
+                if(opr == static_cast<std::string>("0"))
+                {
+                    return 1;//newasm::header::functions::wrn("Encountered an empty comment.");
+                }
+            }
+        }
         return 1;
     }
     

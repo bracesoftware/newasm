@@ -127,6 +127,38 @@ _ : start
 | ---------------- | --------- | ----------- |
 | `1` | `otx` | Prints text. |
 
+### `nop` instruction
+Do nothing.
+
+#### Syntax
+- `instruction` - `nop`
+- `suffix` - no suffix
+- `operand` - no operand
+
+#### Example
+
+```asm
+_ : start
+    nop . 0 , 0
+    retn . 0 , 23
+```
+
+### `rem` instruction
+Do nothing.
+
+#### Syntax
+- `instruction` - `rem`
+- `suffix` - no suffix
+- `operand` - your comment
+
+#### Example
+
+```asm
+_ : start
+    rem . 0 , my comment
+    retn . 0 , 23
+```
+
 ## Procedures
 Procedures allow you to use the same piece of code without having to actually repeat it. General syntax is:
 

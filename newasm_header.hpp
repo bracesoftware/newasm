@@ -29,46 +29,65 @@ namespace newasm
             char nullchar = '0';
             float nullfloat = 0.0;
 
-            std::string scripts_folder = "nax_scripts/";
+            const std::string scripts_folder = "nax_scripts/";
+            const std::string output_folder = "nax_output/";
+        }
+        namespace col
+        {
+            const std::string red = "\033[31m";
+            const std::string green = "\033[32m";
+            const std::string yellow = "\033[33m";
+            const std::string blue = "\033[34m";
+            const std::string magenta = "\033[35m";
+            const std::string cyan = "\033[36m";
+            const std::string gray = "\033[90m";
+
+            const std::string reset = "\033[0m";
         }
         namespace settings
         {
             int debug = 1;
+            std::string script_file = "index.nax";
         }
         namespace version
         {
             const int major = 0;
             const int minor = 0;
-            const int patch = 1;
+            const int patch = 2;
         }
         namespace functions
         {
+            void nullprint(std::string text)
+            {
+                std::cout << text << std::endl;
+            }
             void err(std::string text)
             {
-                std::cout << "[newasm] PROGRAM THREAD @ System error: " << text << std::endl;
+                std::cout << newasm::header::col::red << "[newasm] PROGRAM THREAD @ System error: " << newasm::header::col::reset << text << std::endl;
             }
             void wrn(std::string text)
             {
-                std::cout << "[newasm] PROGRAM THREAD @ System warning: " << text << std::endl;
+                std::cout << newasm::header::col::yellow << "[newasm] PROGRAM THREAD @ System warning: " << newasm::header::col::reset << text << std::endl;
             }
             void info(std::string text)
             {
                 if(newasm::header::settings::debug == 1)
                 {
-                    std::cout << "[newasm] PROGRAM THREAD @ System info: " << text << std::endl;
+                    std::cout << newasm::header::col::cyan << "[newasm] PROGRAM THREAD @ System info: " << newasm::header::col::gray << text << newasm::header::col::reset << std::endl;
                 }
             }
             /*void init()
             {
                 newasm::header::functions::info("Init finished.");
             }*/
-            bool check_args(std::string forarg, int argc, char *argv[])
+            bool check_args(std::string forarg, int argc, char *argv[], int &argid)
             {
                 if(argc > 1) for(int i = 1; i < argc; i++)
                 {
                     if(forarg == static_cast<std::string>(argv[i]))
                     {
-                        newasm::header::functions::info("Argument found.");
+                        argid = i;
+                        //newasm::header::functions::info("Argument found.");
                         return true;
                     }
                 }
@@ -76,10 +95,31 @@ namespace newasm
             }
             void vers_info()
             {
-                std::cout << "New-Assembly eXecutor" << newasm::header::constants::nullstr;
+                std::cout << newasm::header::col::green;
+                std::cout << "\tNew-Assembly eXecutor\t\t" << newasm::header::constants::nullstr;
+                std::cout << newasm::header::col::reset;
                 std::cout << newasm::header::version::major<<"."<<newasm::header::version::minor<<"."<<newasm::header::version::patch;
                 std::cout << newasm::header::constants::nullstr;
-                std::cout << "(c) 2024 Brace Software Co., by DEntisT" << std::endl << std::endl;
+                std::cout << newasm::header::col::green;
+                std::cout << "\n\t(c) 2024 Brace Software Co.," << newasm::header::col::reset << " by DEntisT" << std::endl << std::endl;
+                //std::cout << newasm::header::col::reset;
+            }
+            void help_info()
+            {
+                newasm::header::functions::nullprint("[newasm] Application arguments:\n");
+                newasm::header::functions::nullprint(
+                    newasm::header::col::reset + "\t-help" + 
+                    newasm::header::col::gray + "\t\t\tDisplays this panel."
+                );
+                newasm::header::functions::nullprint(
+                    newasm::header::col::reset + "\t-ver" + 
+                    newasm::header::col::gray + "\t\t\tDisplays version information."
+                );
+                newasm::header::functions::nullprint(
+                    newasm::header::col::reset + "\t-input <file>" + 
+                    newasm::header::col::gray + "\t\tSets the input file."
+                );
+                std::cout << newasm::header::col::reset;
             }
             std::vector<std::string> split(const std::string &str, char delimiter)
             {
