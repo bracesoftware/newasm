@@ -16,9 +16,15 @@ _ : start
 
 # Documentation
 Documentation about `newasm` which includes following topics:
+- Compiling binaries
 - Labels
 - Variables
 - Instructions
+
+## Compiling
+This project is written purely in C++ using its standard libraries, so compiling it should be easy. To download C++ compiler, please follow instructions on the link below:
+
+[Click me...](https://code.visualstudio.com/docs/languages/cpp)
 
 ## Labels
 Labels are built-in "tags" used to classify code. Each label has different syntax in terms of instructions. General syntax is:
