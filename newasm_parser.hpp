@@ -17,8 +17,10 @@ the Initial Developer. All Rights Reserved.
 
 */
 
+
 namespace newasm
 {
+    void callproc(std::string name);
     int process_l(std::string stat, std::string arg)
     {
         if(stat == static_cast<std::string>("_"))
@@ -60,6 +62,24 @@ namespace newasm
             newasm::mem::regs::pri = 1;
             newasm::system::terminated = true;
             newasm::header::functions::info("Program finished with exit code : " + std::to_string(newasm::mem::regs::pri));
+            return 1;
+        }
+        //end
+        if(ins == static_cast<std::string>("end"))
+        {
+            if(suf == static_cast<std::string>("0"))
+            {
+                if(opr == static_cast<std::string>("0"))
+                {
+                    newasm::system::stop = 0;
+                    return 1;
+                }
+            }
+        }
+        if(newasm::system::stop == 1)
+        {
+            std::string newline = ins + static_cast<std::string>(".") + suf + static_cast<std::string>(",") + opr;
+            newasm::mem::funcs[newasm::system::cproc].push_back(newline);
             return 1;
         }
         // RETURN
@@ -112,69 +132,119 @@ namespace newasm
                 }
             }
         }
+        //proc
+        if(ins == static_cast<std::string>("proc"))
+        {
+            if(suf == static_cast<std::string>("0"))
+            {
+                if(newasm::header::functions::isalphanum(opr))
+                {
+                    newasm::system::stop = 1;
+                    newasm::system::cproc = opr;
+                    return 1;
+                }
+            }
+        }
+        //call
+        if(ins == static_cast<std::string>("call"))
+        {
+            if(suf == static_cast<std::string>("0"))
+            {
+                if(newasm::header::functions::isalphanum(opr))
+                {
+                    newasm::callproc(opr);
+                    return 1;
+                }
+            }
+        }
         return 1;
+    }
+    
+    void procline(std::string &line)
+    {
+        std::string ins, suf, opr, stat, arg;
+        std::vector<std::string> tmp, tmp1, tmp2;
+        tmp.clear();
+        tmp1.clear();
+        tmp2.clear();
+
+        ins.clear();
+        suf.clear();
+        opr.clear();
+        
+        stat.clear();
+        arg.clear();
+
+        if(newasm::header::functions::strfind(line,':'))
+        {
+            tmp2 = newasm::header::functions::split(line, ':');
+            stat = tmp2[0];
+            arg = tmp2[1];
+            stat = newasm::header::functions::trim(stat);
+            arg = newasm::header::functions::trim(arg);
+        }
+        if(newasm::header::functions::strfind(line,';'))
+        {
+            tmp2 = newasm::header::functions::split(line, ';');
+            stat = tmp2[0];
+            arg = tmp2[1];
+            stat = newasm::header::functions::trim(stat);
+            arg = newasm::header::functions::trim(arg);
+        }
+        if(newasm::header::functions::strfind(line,'.')) if(newasm::header::functions::strfind(line,','))
+        {
+            tmp = newasm::header::functions::split(line, '.');
+            tmp1 = newasm::header::functions::split(tmp[1], ',');
+            ins = tmp[0];
+            suf = tmp1[0];
+            opr = tmp1[1];
+            ins = newasm::header::functions::trim(ins);
+            suf = newasm::header::functions::trim(suf);
+            opr = newasm::header::functions::trim(opr);
+        }
+        
+        if(newasm::header::functions::strfind(line,':'))
+            newasm::process_l(stat,arg);
+        if(newasm::header::functions::strfind(line,';'))
+            newasm::process_d(stat,arg);
+        if(newasm::header::functions::strfind(line,'.'))
+            if(newasm::header::functions::strfind(line,','))
+                newasm::process_iso(ins,suf,opr);
+    }
+    void callproc(std::string name)
+    {
+        auto it = newasm::mem::funcs.find(name);
+        if(it != newasm::mem::funcs.end())
+        {
+            for(std::string &line : it->second)
+            {
+                newasm::procline(line);
+                //std::cout << "Executing : " << line << std::endl;
+            }
+        }
+        else
+        {
+            newasm::mem::regs::pri = 2;
+            newasm::system::terminated = true;
+            newasm::header::functions::info("Program finished with exit code : " + std::to_string(newasm::mem::regs::pri));
+        }
     }
     void execute(std::string file)
     {
         std::ifstream internal_fileobject(newasm::header::constants::scripts_folder + file);
         if(internal_fileobject.is_open())
         {
-            std::string line, ins, suf, opr, stat, arg;
-            std::vector<std::string> tmp;
-            std::vector<std::string> tmp1;
-            std::vector<std::string> tmp2;
+            std::string line;
+            int lineidx = 1;
 
             while(std::getline(internal_fileobject, line))
             {
-                tmp.clear();
-                tmp1.clear();
-                tmp2.clear();
-
-                ins.clear();
-                suf.clear();
-                opr.clear();
-
-                stat.clear();
-                arg.clear();
-
-                if(newasm::header::functions::strfind(line,':'))
-                {
-                    tmp2 = newasm::header::functions::split(line, ':');
-                    stat = tmp2[0];
-                    arg = tmp2[1];
-                    stat = newasm::header::functions::trim(stat);
-                    arg = newasm::header::functions::trim(arg);
-                }
-                if(newasm::header::functions::strfind(line,';'))
-                {
-                    tmp2 = newasm::header::functions::split(line, ';');
-                    stat = tmp2[0];
-                    arg = tmp2[1];
-                    stat = newasm::header::functions::trim(stat);
-                    arg = newasm::header::functions::trim(arg);
-                }
-                if(newasm::header::functions::strfind(line,'.')) if(newasm::header::functions::strfind(line,','))
-                {
-                    tmp = newasm::header::functions::split(line, '.');
-                    tmp1 = newasm::header::functions::split(tmp[1], ',');
-                    ins = tmp[0];
-                    suf = tmp1[0];
-                    opr = tmp1[1];
-                    ins = newasm::header::functions::trim(ins);
-                    suf = newasm::header::functions::trim(suf);
-                    opr = newasm::header::functions::trim(opr);
-                }
-
                 if(newasm::system::terminated)
                 {
                     break;
                 }
-                if(newasm::header::functions::strfind(line,':'))
-                    newasm::process_l(stat,arg);
-                if(newasm::header::functions::strfind(line,';'))
-                    newasm::process_d(stat,arg);
-                if(newasm::header::functions::strfind(line,'.')) if(newasm::header::functions::strfind(line,','))
-                    newasm::process_iso(ins,suf,opr);
+                newasm::procline(line);
+                lineidx++;
             }
             internal_fileobject.close();
         }

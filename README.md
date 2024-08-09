@@ -120,3 +120,48 @@ _ : start
 | Register name    | Arguments | Description |
 | ---------------- | --------- | ----------- |
 | `1` | `otx` | Prints text. |
+
+## Procedures
+Procedures allow you to use the same piece of code without having to actually repeat it. General syntax is:
+
+```asm
+proc . 0 , procedure_name
+end . 0 , 0
+```
+
+To call the procedure, use:
+
+```asm
+call . 0 , procedure_name
+```
+
+- Here is an example:
+
+```asm
+_ : data
+    myvar ; 23
+    str ; Hello world
+    str2 ; Hi again
+    str3 ; procedure works
+
+_ : start
+    mov . otx , str
+    mov . fdx , 1
+    
+    syscall . 0 , 0
+
+    proc . 0 , testproc
+        mov . otx , str3
+        mov . fdx , 1
+        syscall . 0 , 0
+    end . 0 , 0
+
+    mov . otx , str2
+    syscall . 0 , 0
+
+    call . 0 , testproc
+
+    retn . 0 , myvar
+```
+
+Basically, these are just functions, but in assembly.

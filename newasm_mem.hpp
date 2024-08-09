@@ -28,6 +28,8 @@ namespace newasm
     {
         bool terminated = false;
         int label = 0;
+        int stop = 0;
+        std::string cproc;
     }
     namespace mem
     {
@@ -39,5 +41,6 @@ namespace newasm
             std::string otx;
         }
         std::unordered_map<std::string, std::string> data;
+        std::unordered_map<std::string, std::vector<std::string>> funcs;
     }
 }
