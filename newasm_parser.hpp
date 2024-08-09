@@ -78,6 +78,12 @@ namespace newasm
             }
             if(dtyp == static_cast<std::string>("txt"))
             {
+                if(!newasm::header::functions::istext(value))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    return 1;
+                }
+                newasm::header::functions::remq(value);
                 newasm::mem::datatypes[name] = newasm::datatypes::text;
                 newasm::mem::data[name] = value;
                 return 1;
@@ -254,13 +260,18 @@ namespace newasm
                     newasm::mem::stack.pop_back();
                     return 1;
                 }
-                if(newasm::mem::datatypes[opr] != newasm::datatypes::text)
+                if(newasm::header::functions::istext(newasm::mem::stack.back()))
                 {
-                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    if(newasm::mem::datatypes[opr] != newasm::datatypes::text)
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    newasm::mem::data[opr] = /*newasm::header::functions::remq*/(newasm::mem::stack.back());
+                    newasm::mem::stack.pop_back();
                     return 1;
                 }
-                newasm::mem::data[opr] = newasm::mem::stack.back();
-                newasm::mem::stack.pop_back();
+                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                 return 1;
             }
         }
@@ -311,13 +322,31 @@ namespace newasm
         {
             if(suf == static_cast<std::string>("0"))
             {
-                if(opr == static_cast<std::string>("0"))
+                if(opr == static_cast<std::string>("\%ios"))
                 {
                     if(newasm::mem::regs::fdx == 1)
                     {
+                        if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
+                        {
+                            //std::cout << "Terminated<syscall@txt> : " << newasm::mem::regs::tlr << std::endl;
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                            return 1;
+                        }
+                        newasm::mem::regs::tlr = newasm::header::functions::remq(newasm::mem::regs::tlr);
                         std::cout << newasm::mem::regs::tlr << std::endl;
+                        return 1;
                     }
-                    return 1;
+                    if(newasm::mem::regs::fdx == 2)
+                    {
+                        if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr) && !newasm::header::functions::isfloat(newasm::mem::regs::tlr))
+                        {
+                            //std::cout << "Terminated<syscall@num,decm> : " << newasm::mem::regs::tlr << std::endl;
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                            return 1;
+                        }
+                        std::cout << newasm::mem::regs::tlr << std::endl;
+                        return 1;
+                    }
                 }
             }
         }

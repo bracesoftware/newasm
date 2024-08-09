@@ -167,7 +167,13 @@ namespace newasm
             }
             bool isalphanum(const std::string& str)
             {
-                return !str.empty() && std::all_of(str.begin(), str.end(), ::isalnum);
+                return !str.empty() && std::all_of
+                (
+                    str.begin(), str.end(), [](unsigned char c) 
+                    {
+                        return std::isalnum(c) || c == '_';
+                    }
+                );
             }
             void parseopr(std::string &opr,std::unordered_map<std::string, std::string> &data)
             {
@@ -193,6 +199,26 @@ namespace newasm
                 {
                     return false;
                 }
+            }
+            bool istext(const std::string& str)
+            {
+                int quocount = 0;
+                for(int i = 0; i < str.size(); i++)
+                {
+                    if(str.at(i) == '\"')
+                    {
+                        quocount ++;
+                    }
+                }
+                return !str.empty() && str.front() == '"' && str.back() == '"' && quocount == 2;
+            }
+            std::string remq(const std::string& str)
+            {
+                if(str.length() >= 2 && str.front() == '"' && str.back() == '"')
+                {
+                    return str.substr(1, str.length() - 2);
+                }
+                return str;
             }
         }
     }

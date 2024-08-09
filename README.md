@@ -3,7 +3,7 @@ Below is the simple `Hello World` program written in New-Assembly.
 
 ```asm
 _ : data
-    txt $ string ; Hello world
+    txt $ string ; "Hello world"
 _ : start
     mov . tlr , string
     mov . fdx , 1
@@ -37,10 +37,15 @@ _ : label_name
 In this label, you can declare variables to avoid repeated code. General syntax is:
 
 ```asm
-data type $ variable_name ; variable_value
+data_type $ variable_name ; variable_value
 ```
 
 You can use `variable_name` as an operand in instructions documented below.
+
+There are 3 data types:
+- `num` for integers;
+- `decm` for floats;
+- `txt` for strings.
 
 ### `start` label
 In this label, you can perform instructions, and cannot create variables, or else program will end with exit code 1.
@@ -132,7 +137,7 @@ Set value of a specific register.
 ```asm
 _ : start
     mov . fdx , 1
-    mov . tlr , Hello World
+    mov . tlr , "Hello World"
     syscall . 0 , 0
     retn . 0 , 23
 ```
@@ -170,7 +175,7 @@ Do nothing.
 
 ```asm
 _ : start
-    rem . 0 , my comment
+    rem . 0 , "my comment"
     retn . 0 , 23
 ```
 
@@ -241,7 +246,7 @@ _ : start
     push . 0 , 273
 
 
-    rem . 0 , change myvar2 to something dumb:
+    rem . 0 , "change myvar2 to something dumb:"
     stor . fdx , myvar2
 
 
