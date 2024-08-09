@@ -192,10 +192,10 @@ Ensure that a symbol is available for further use.
 ```asm
 _ : data
 _ : start
-    rem . 0 , Notice how we haven't declared anything in _:data
+    rem . 0 , "Notice how we haven't declared anything in _:data"
     sysreq . data , variable
-    rem . 0 , Program will be terminated with exit code 4
-    rem . 0 , Same happens when we try to access a procedure:
+    rem . 0 , "Program will be terminated with exit code 4"
+    rem . 0 , "Same happens when we try to access a procedure:"
     sysreq . proc , some_random_proc
 ```
 

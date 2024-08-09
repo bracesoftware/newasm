@@ -380,12 +380,11 @@ namespace newasm
         {
             if(suf == static_cast<std::string>("0"))
             {
-                /*if(opr.empty())
+                if(newasm::header::functions::istext(opr))
                 {
-                    newasm::header::functions::wrn("Encountered an empty comment.");
-                }*/
-                //do nothing,this is a comment
-                return 1;
+                    //do nothing,it's a comment
+                    return 1;
+                }
             }
         }
         //nop
