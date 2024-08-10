@@ -459,6 +459,7 @@ When a fatal error happens, program will shut down, returning a specific exit co
 | `10` | Invalid instruction; pretty self-explanatory, also happens if you use `.` or `,` (instruction parsing delimiters) in your `rem` comments. |
 | `11` | Memory overflow. |
 | `12` | Memory underflow. |
+| `13` | Procedure redefinition. |
 
 ## Comments
 Comments are also available:
