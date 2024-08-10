@@ -20,6 +20,15 @@ Documentation about `newasm` which includes following topics:
 - [Built-in constants](#built-in-constants)
 - [Variables](#data-label)
 - [Instructions](#instructions)
+    - [`retn` and `ret`](#retn-and-ret-instructions)
+    - [`mov` and `stor`](#mov-and-stor-instructions)
+    - [`syscall`](#syscall-instruction)
+    - [`nop`](#nop-instruction)
+    - [`rem`](#rem-instruction)
+    - [`sysreq`](#sysreq-instruction)
+    - [`halt`](#halt-instruction)
+    - [`push` and `pop`](#push-and-pop-instruction)
+- [Procedures](#procedures)
 - [Exit codes](#exit-codes)
 
 ## Compiling
@@ -112,7 +121,7 @@ Output:
 [newasm] PROGRAM THREAD @ System info: Program finished with exit code : 8
 ```
 
-### `mov` and `stor` instruction
+### `mov` and `stor` instructions
 Set value of a specific register.
 
 #### Syntax for `mov`
