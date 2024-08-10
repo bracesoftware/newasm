@@ -206,7 +206,7 @@ _ : start
 ```
 
 ### `rem` instruction
-Do nothing.
+Do nothing. NOT RECOMMENDED TO USE!
 
 #### Syntax
 - `instruction` - `rem`
@@ -234,10 +234,10 @@ Ensure that a symbol is available for further use.
 ```asm
 _ : data
 _ : start
-    rem . 0 , "Notice how we haven't declared anything in _:data"
+    ; Notice how we haven't declared anything in _:data
     sysreq . data , variable
-    rem . 0 , "Program will be terminated with exit code 4"
-    rem . 0 , "Same happens when we try to access a procedure:"
+    ; Program will be terminated with exit code 4
+    ; Same happens when we try to access a procedure:
     sysreq . proc , some_random_proc
 ```
 
@@ -288,7 +288,7 @@ _ : start
     push . 0 , 273
 
 
-    rem . 0 , "change myvar2 to something dumb:"
+    ; change myvar2 to something dumb:
     stor . fdx , myvar2
 
 
