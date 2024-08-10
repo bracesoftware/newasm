@@ -29,6 +29,7 @@ Documentation about `newasm` which includes following topics:
     - [`sysreq`](#sysreq-instruction)
     - [`halt`](#halt-instruction)
     - [`push` and `pop`](#push-and-pop-instruction)
+    - [`zero`]
     - [`jmp` and labels](#labels)
 - [Procedures](#procedures)
 - [Exit codes](#exit-codes)
@@ -322,6 +323,43 @@ _ : start
 ```asm
 _ : start
     pop . 0 , %nl
+```
+
+### `zero` instruction
+Resets the register to an invalid value that cannot be used.
+
+#### Syntax
+- `instruction` - `zero`
+- `suffix` - register name
+- `operand` - no operand
+
+#### Example
+
+```asm
+_ : start
+    zero . stl , 0
+    ; something ?
+```
+
+### `heap` instruction
+Move down and up the heap.
+
+#### Syntax
+- `instruction` - `heap`
+- `suffix` - no suffix
+- `operand` - number of addresses to move up to
+
+#### Example
+
+```asm
+_ : data
+    num $ mynum = 0
+_ : start
+    heap . 0 , 3
+    stor . hea , mynum
+    mov . tlr , mynum
+    mov . fdx , 2
+    syscall . 0 , 0
 ```
 
 ### Labels
