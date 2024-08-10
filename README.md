@@ -16,6 +16,7 @@ _ : start
 # Documentation
 Documentation about `newasm` which includes following topics:
 - [Compiling binaries](#compiling)
+- [Arguments](#arguments)
 - [Sections](#sections)
 - [Built-in references](#built-in-references)
 - [Variables](#data-section)
@@ -37,6 +38,15 @@ Documentation about `newasm` which includes following topics:
 This project is written purely in C++ using its standard libraries, so compiling it should be easy. To download C++ compiler, please follow instructions on the link below:
 
 [Click me...](https://code.visualstudio.com/docs/languages/cpp)
+
+## Arguments
+- There are some arguments you can use when executing the interpreter.
+
+| Argument | Parameters | Description |
+| ---------------- | --------- | ----------- |
+| `-ver` | - | Displays version information only, and doesn't start the interpreter at all. |
+| `-help` | - | Displays help information. |
+| `-input` | `<filename>` | Sets the input file; if `-input` was not provided, interpreter sets it to `input.nax`. Note that the input file must be located inside the `nax_scripts` folder, file extension doesn't matter, it can be the standard `.asm` as well. |
 
 ## Sections
 Sections are built-in "tags" used to classify code. Each section uses different syntax in terms of instructions. General syntax is:
@@ -187,7 +197,8 @@ _ : start
 | ----- | ---------------- | --------- | ----------- |
 | `%ios` | `1` | `tlr` | Prints exclusively text. |
 | `%ios` | `2` | `tlr` | Prints integers and floating point numbers. |
-| `%ios` | `3` | - | Requests user input and stores the value in `tlr`. |
+| `%ios` | `3` | - | Requests textual user input and stores the value in `tlr`. |
+| `%ios` | `4` | - | Requests numeric (including floats) user input and stores the value in `tlr`. |
 
 ### `nop` instruction
 Do nothing.
