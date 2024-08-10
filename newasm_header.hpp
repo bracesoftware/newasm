@@ -29,6 +29,8 @@ namespace newasm
             char nullchar = '0';
             float nullfloat = 0.0;
 
+            const int max_tokens = 2;
+
             const std::string scripts_folder = "nax_scripts/";
             const std::string output_folder = "nax_output/";
         }
@@ -53,7 +55,7 @@ namespace newasm
         {
             const int major = 0;
             const int minor = 0;
-            const int patch = 3;
+            const int patch = 4;
         }
         namespace functions
         {
@@ -127,9 +129,24 @@ namespace newasm
                 std::string token;
                 std::stringstream ss(str);
 
-                while (std::getline(ss, token, delimiter))
+                while(std::getline(ss, token, delimiter))
                 {
                     tokens.push_back(token);
+                }
+
+                return tokens;
+            }
+            std::vector<std::string> split_fixed(const std::string &str, char delimiter, int size)
+            {
+                std::vector<std::string> tokens;
+                std::string token;
+                std::stringstream ss(str);
+                int index = 0;
+
+                while(std::getline(ss, token, delimiter) && index < size)
+                {
+                    tokens.push_back(token);
+                    index++;
                 }
 
                 return tokens;
@@ -219,6 +236,15 @@ namespace newasm
                     return str.substr(1, str.length() - 2);
                 }
                 return str;
+            }
+            std::string remc(const std::string &line)
+            {
+                std::size_t pos = line.find(';');
+                if(pos != std::string::npos)
+                {
+                    return line.substr(0, pos);
+                }
+                return line;
             }
         }
     }

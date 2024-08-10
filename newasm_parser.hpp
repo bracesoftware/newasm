@@ -225,6 +225,7 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::sysreq_fail);
                     return 1;
                 }
+                return 1;
             }
             if(suf == static_cast<std::string>("data"))
             {
@@ -234,6 +235,7 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::sysreq_fail);
                     return 1;
                 }
+                return 1;
             }
         }
         //pop
@@ -496,11 +498,14 @@ namespace newasm
                 return 1;
             }
         }
+        std::cout << ins << "." << suf << "," << opr;
+        newasm::terminate(newasm::exit_codes::invalid_ins);
         return 1;
     }
     
     void procline(std::string &line)
     {
+        line = newasm::header::functions::remc(line);
         std::string ins, suf, opr, stat, arg, dtyp;
         std::vector<std::string> tmp, tmp1, tmp2, tmp3;
         tmp.clear();
@@ -524,10 +529,10 @@ namespace newasm
             stat = newasm::header::functions::trim(stat);
             arg = newasm::header::functions::trim(arg);
         }
-        if(newasm::header::functions::strfind(line,'$')) if(newasm::header::functions::strfind(line,';'))
+        if(newasm::header::functions::strfind(line,'$')) if(newasm::header::functions::strfind(line,'='))
         {
             tmp2 = newasm::header::functions::split(line, '$');
-            tmp3 = newasm::header::functions::split(tmp2[1], ';');
+            tmp3 = newasm::header::functions::split(tmp2[1], '=');
             dtyp = tmp2[0];
             stat = tmp3[0];
             arg = tmp3[1];
@@ -537,8 +542,8 @@ namespace newasm
         }
         if(newasm::header::functions::strfind(line,'.')) if(newasm::header::functions::strfind(line,','))
         {
-            tmp = newasm::header::functions::split(line, '.');
-            tmp1 = newasm::header::functions::split(tmp[1], ',');
+            tmp = newasm::header::functions::split_fixed(line, '.', newasm::header::constants::max_tokens);
+            tmp1 = newasm::header::functions::split_fixed(tmp[1], ',', newasm::header::constants::max_tokens);
             ins = tmp[0];
             suf = tmp1[0];
             opr = tmp1[1];
@@ -550,7 +555,7 @@ namespace newasm
         if(newasm::header::functions::strfind(line,':'))
             newasm::process_s(stat,arg);
         if(newasm::header::functions::strfind(line,'$'))
-            if(newasm::header::functions::strfind(line,';'))
+            if(newasm::header::functions::strfind(line,'='))
                 newasm::process_d(dtyp,stat,arg);
         if(newasm::header::functions::strfind(line,'.'))
             if(newasm::header::functions::strfind(line,','))

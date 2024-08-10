@@ -3,7 +3,7 @@ Below is the simple `Hello World` program written in New-Assembly.
 
 ```asm
 _ : data
-    txt $ string ; "Hello world"
+    txt $ string = "Hello world"
 _ : start
     mov . tlr , string
     mov . fdx , 1
@@ -31,6 +31,7 @@ Documentation about `newasm` which includes following topics:
     - [`jmp` and labels](#labels)
 - [Procedures](#procedures)
 - [Exit codes](#exit-codes)
+- [Comments](#comments)
 
 ## Compiling
 This project is written purely in C++ using its standard libraries, so compiling it should be easy. To download C++ compiler, please follow instructions on the link below:
@@ -48,7 +49,7 @@ _ : section_name
 In this section, you can declare variables to avoid repeated code. General syntax is:
 
 ```asm
-data_type $ variable_name ; variable_value
+data_type $ variable_name = variable_value
 ```
 
 You can use `variable_name` as an operand in instructions documented below.
@@ -148,7 +149,7 @@ _ : start
 In this example, we basically do `fdx=1`, `myvar=fdx`, `exit 1`:
 ```asm
 _ : data
-    num $ myvar ; 0
+    num $ myvar = 0
 _ : start
     mov . fdx , 1
     stor . fdx , myvar
@@ -252,7 +253,7 @@ Return a value inside a function.
 
 ```asm
 _ : data
-    num $ variable ; 0
+    num $ variable = 0
 _ : start
     proc . 0 , testprocedure
         halt . proc , 364
@@ -282,7 +283,7 @@ _ : start
 
 ```asm
 _ : data
-    num $ myvar2 ; 0
+    num $ myvar2 = 0
 _ : start
     push . 0 , 273
 
@@ -397,3 +398,14 @@ When a fatal error happens, program will shut down, returning a specific exit co
 | `5` | Stack underflow - tried to pop a value while the stack was empty. |
 | `6` | Data overflow - tried to pop a value into unallocated address. |
 | `7` | Data type mismatch. |
+
+## Comments
+Comments are also available:
+
+```asm
+_ : start
+    ; comment
+    mov . fdx , 1
+    mov . tlr , "hello" ; comment
+    syscall . 0 , %ios ; comment again
+```

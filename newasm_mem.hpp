@@ -36,6 +36,7 @@ namespace newasm
         const int dtyp_mismatch = 7;
         const int label_redef = 8;
         const int bus_err = 9;
+        const int invalid_ins = 10;
     }
     namespace datatypes
     {
