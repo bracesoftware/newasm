@@ -29,7 +29,8 @@ Documentation about `newasm` which includes following topics:
     - [`sysreq`](#sysreq-instruction)
     - [`halt`](#halt-instruction)
     - [`push` and `pop`](#push-and-pop-instruction)
-    - [`zero`]
+    - [`zero`](#zero-instruction)
+    - [`heap`](#heap-instruction)
     - [`jmp` and labels](#labels)
 - [Procedures](#procedures)
 - [Exit codes](#exit-codes)
