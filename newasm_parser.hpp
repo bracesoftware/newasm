@@ -293,6 +293,35 @@ namespace newasm
                 return 1;
             }
         }
+        if(ins == static_cast<std::string>("ret"))
+        {
+            if(opr == static_cast<std::string>("0"))
+            {
+                if(suf == static_cast<std::string>("fdx"))
+                {
+                    newasm::terminate(newasm::mem::regs::fdx);
+                    return 1;
+                }
+                if(suf == static_cast<std::string>("tlr"))
+                {
+                    if(newasm::header::functions::isnumeric(newasm::mem::regs::tlr))
+                    {
+                        newasm::terminate(std::stoi(newasm::mem::regs::tlr));
+                        return 1;
+                    }
+                }
+                if(suf == static_cast<std::string>("psx"))
+                {
+                    if(newasm::header::functions::isnumeric(newasm::mem::regs::psx))
+                    {
+                        newasm::terminate(std::stoi(newasm::mem::regs::psx));
+                        return 1;
+                    }
+                }
+                newasm::terminate(newasm::exit_codes::invalid_retn);
+                return 1;
+            }
+        }
         // MOV
         if(ins == static_cast<std::string>("mov"))
         {

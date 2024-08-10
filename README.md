@@ -71,15 +71,20 @@ This is also valid:
 instruction.suffix,operand
 ```
 
-### `retn` instruction
+### `retn` and `ret` instructions
 Ends your program with specific exit code.
 
-#### Syntax
+#### Syntax for `retn`
 - `instruction` - `retn`
 - `suffix` - no suffix, use `retn . 0 , ...`
 - `operand` - exit code
 
-#### Example
+#### Syntax for `ret`
+- `instruction` - `ret`
+- `suffix` - register name
+- `operand` - no operand (`0`)
+
+#### Example for `retn`
 
 ```asm
 _ : start
@@ -90,6 +95,21 @@ Output:
 
 ```
 [newasm] PROGRAM THREAD @ System info: Program finished with exit code : 23
+```
+
+
+#### Example for `ret`
+
+```asm
+_ : start
+    mov . tlr , 8
+    ret . tlr , 0
+```
+
+Output:
+
+```
+[newasm] PROGRAM THREAD @ System info: Program finished with exit code : 8
 ```
 
 ### `mov` and `stor` instruction
