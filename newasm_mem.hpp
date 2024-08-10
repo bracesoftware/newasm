@@ -29,15 +29,18 @@ namespace newasm
     {
         const int noterm_point = 0;
         const int invalid_section = 1;
-        const int invaid_proc = 2;
+        const int invalid_proc = 2;
         const int invalid_retn = 3;
         const int sysreq_fail = 4;
-        const int stk_underflow = 5;
+        const int stkhea_col = 5;
         const int data_overflow = 6;
         const int dtyp_mismatch = 7;
         const int label_redef = 8;
         const int bus_err = 9;
         const int invalid_ins = 10;
+        const int mem_overflow = 11;
+        const int mem_underflow = 12;
+        const int proc_redef = 13;
     }
     namespace datatypes
     {
@@ -62,22 +65,36 @@ namespace newasm
     }
     namespace mem
     {
-        //fake registers lol
+        namespace inf
+        {
+            const int mem_size = 100;
+        }
+        std::string program_memory[newasm::mem::inf::mem_size];
+
         namespace regs
         {
+            //mem registers
+            int stk = newasm::mem::inf::mem_size - 1;
+            int hea = 0;
             //NORMAL REGISTERS
             int exc = 0;
             int fdx = 0;
-            std::string tlr = "null";
-            std::string psx = "null";
+            std::string tlr = newasm::header::constants::inv_reg_val;
+            std::string stl = newasm::header::constants::inv_reg_val;
+            std::string psx = newasm::header::constants::inv_reg_val;
         }
+
         std::unordered_map<std::string, std::string> data;
         std::unordered_map<std::string, int> datatypes;
         std::unordered_map<std::string, std::vector<std::string>> funcs;
         std::unordered_map<std::string, int> labels;
-        std::vector<std::string> stack;
+
         namespace functions
         {
+            bool check_stkhea_col()
+            {
+                return (!(newasm::mem::regs::hea < newasm::mem::regs::stk));
+            }
             template<typename T> bool datavalid(std::string dataname, T &dat)
             {
                 for(auto it = dat.begin(); it != dat.end(); it++)
@@ -88,6 +105,25 @@ namespace newasm
                     }
                 }
                 return false;
+            }
+            void out_bopr(std::string reg)
+            {
+                if(reg == "\%ios")
+                {
+                    std::cout << "";
+                }
+                if(reg == "\%nl")
+                {
+                    std::cout << "";
+                }
+                if(reg == "\%endl")
+                {
+                    std::cout << newasm::header::constants::endl;
+                }
+                if(reg == newasm::header::constants::inv_reg_val)
+                {
+                    std::cout << "";
+                }
             }
         }
     }

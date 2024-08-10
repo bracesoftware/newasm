@@ -35,7 +35,7 @@ the Initial Developer. All Rights Reserved.
 #define __newasm_included
 #include "newasm_header.hpp"
 #include "newasm_mem.hpp"
-#include "newasm_parser.hpp"
+#include "newasm_exec.hpp"
 
 int main(int argc, char *argv[])
 {

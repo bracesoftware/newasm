@@ -171,8 +171,12 @@ _ : start
 
 | Register name    | Description |
 | -------- | ------- |
-| `fdx`  | Holds an index of a function `syscall` will call.    |
-| `tlr` | Used as an integer output argument in some `syscall`s.     |
+| `fdx`  | Holds an index of a function `syscall` will call. |
+| `tlr` | Typeless register (can hold any value, even code literals). Used as an output argument in some `syscall`s. |
+| `stl` | Typeless register; however used to hold built-in operands for `syscall`s. |
+| `stk` | Stack pointer. |
+| `hea` | Heap pointer. |
+| `psx` | Procedure scope exit value. |
 
 ### `syscall` instruction
 Set value of a specific register.
@@ -195,10 +199,11 @@ _ : start
 #### `syscall` list
 | Module | ID    | Arguments | Description |
 | ----- | ---------------- | --------- | ----------- |
-| `%ios` | `1` | `tlr` | Prints exclusively text. |
-| `%ios` | `2` | `tlr` | Prints integers and floating point numbers. |
+| `%ios` | `1` | `tlr`, `stl` | Prints exclusively text. Uses `stl` as a help argument. |
+| `%ios` | `2` | `tlr`, `stl` | Prints integers and floating point numbers. Uses `stl` as a help argument. |
 | `%ios` | `3` | - | Requests textual user input and stores the value in `tlr`. |
 | `%ios` | `4` | - | Requests numeric (including floats) user input and stores the value in `tlr`. |
+| `%ios` | `5` | `tlr` | Prints the textual value of a built-in operand. |
 
 ### `nop` instruction
 Do nothing.
@@ -407,12 +412,14 @@ When a fatal error happens, program will shut down, returning a specific exit co
 | `2` | Attempted to call a procedure which does not exist. |
 | `3` | Invalid non-numeric value was passed to `retn`. |
 | `4` | `sysreq` failed, pretty self-explanatory. |
-| `5` | Stack underflow - tried to pop a value while the stack was empty. |
+| `5` | Stack/heap collision; pretty self-explanatory. |
 | `6` | Data overflow - tried to pop a value into unallocated address. |
 | `7` | Data type mismatch. |
 | `8` | Tried to redefine a label. |
 | `9` | Bus error; tried to access an invalid label with `jmp`. |
 | `10` | Invalid instruction; pretty self-explanatory, also happens if you use `.` or `,` (instruction parsing delimiters) in your `rem` comments. |
+| `11` | Memory overflow. |
+| `12` | Memory underflow. |
 
 ## Comments
 Comments are also available:

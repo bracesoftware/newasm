@@ -21,6 +21,12 @@ namespace newasm
 {
     namespace header
     {
+        namespace data
+        {
+            std::string lastln = "";
+            int lastlndx = 0;
+            bool exception = true;
+        }
         namespace constants
         {
             int nullint = 0;
@@ -33,6 +39,10 @@ namespace newasm
 
             const std::string scripts_folder = "nax_scripts/";
             const std::string output_folder = "nax_output/";
+
+            const std::string endl = "\n";
+
+            const std::string inv_reg_val = "[newasm] __ptr -> Segmentation fault.";
         }
         namespace col
         {
@@ -45,6 +55,11 @@ namespace newasm
             const std::string gray = "\033[90m";
 
             const std::string reset = "\033[0m";
+        }
+        namespace style
+        {
+            const std::string underline = "\033[4m";
+            const std::string bold = "\033[1m";
         }
         namespace settings
         {
@@ -97,8 +112,8 @@ namespace newasm
             }
             void vers_info()
             {
-                std::cout << newasm::header::col::green;
-                std::cout << "\tNew-Assembly eXecutor\t\t" << newasm::header::constants::nullstr;
+                std::cout << newasm::header::col::green << newasm::header::style::bold << newasm::header::style::underline;
+                std::cout << "\tNew-Assembly eXecutor\t\t";
                 std::cout << newasm::header::col::reset;
                 std::cout << newasm::header::version::major<<"."<<newasm::header::version::minor<<"."<<newasm::header::version::patch;
                 std::cout << newasm::header::constants::nullstr;
@@ -174,9 +189,19 @@ namespace newasm
 
                 return std::string(start, it + 1);
             }
-            bool isnumeric(const std::string &str)
+            bool isnumeric(const std::string str)
             {
-                return !str.empty() && std::all_of(str.begin(), str.end(), ::isdigit);
+                std::string copy;
+                for(char i : str)
+                {
+                    if(!std::isspace(i))
+                    {
+                        copy = copy + i;
+                    }
+                }
+                if (copy.empty()) return false;
+                if (copy[0] != '-' && !std::isdigit(copy[0])) return false;
+                return std::all_of(copy.begin() + 1, copy.end(), ::isdigit);
             }
             bool strfind(const std::string& str, char c)
             {
