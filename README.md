@@ -360,7 +360,7 @@ _ : start
     stor . hea , mynum
     mov . tlr , mynum
     mov . fdx , 2
-    syscall . 0 , 0
+    syscall . 0 , %ios
 ```
 
 ### Labels
