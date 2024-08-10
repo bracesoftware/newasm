@@ -171,10 +171,11 @@ _ : start
 ```
 
 #### `syscall` list
-| Register name    | Arguments | Description |
-| ---------------- | --------- | ----------- |
-| `1` | `tlr` | Prints exclusively text. |
-| `2` | `tlr` | Prints integers and floating point numbers. |
+| Module | ID    | Arguments | Description |
+| ----- | ---------------- | --------- | ----------- |
+| `%ios` | `1` | `tlr` | Prints exclusively text. |
+| `%ios` | `2` | `tlr` | Prints integers and floating point numbers. |
+| `%ios` | `3` | - | Requests user input and stores the value in `tlr`. |
 
 ### `nop` instruction
 Do nothing.

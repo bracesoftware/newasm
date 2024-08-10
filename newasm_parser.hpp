@@ -376,6 +376,13 @@ namespace newasm
                         std::cout << newasm::mem::regs::tlr << std::endl;
                         return 1;
                     }
+                    if(newasm::mem::regs::fdx == 3)
+                    {
+                        //std::cin >> newasm::mem::regs::tlr;
+        	            std::getline(std::cin, newasm::mem::regs::tlr);
+                        newasm::mem::regs::tlr = static_cast<std::string>("\"") + newasm::mem::regs::tlr + static_cast<std::string>("\"");
+                        return 1;
+                    }
                 }
             }
         }
