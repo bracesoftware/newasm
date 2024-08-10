@@ -15,12 +15,12 @@ _ : start
 
 # Documentation
 Documentation about `newasm` which includes following topics:
-- Compiling binaries
-- Labels
-- Built-in constants
-- Variables
-- Instructions
-- Exit codes
+- [Compiling binaries](#compiling)
+- [Labels](#labels)
+- [Built-in constants](#built-in-constants)
+- [Variables](#data-label)
+- [Instructions](#instructions)
+- [Exit codes](#exit-codes)
 
 ## Compiling
 This project is written purely in C++ using its standard libraries, so compiling it should be easy. To download C++ compiler, please follow instructions on the link below:
