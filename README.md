@@ -16,9 +16,9 @@ _ : start
 # Documentation
 Documentation about `newasm` which includes following topics:
 - [Compiling binaries](#compiling)
-- [Labels](#labels)
-- [Built-in constants](#built-in-constants)
-- [Variables](#data-label)
+- [Sections](#sections)
+- [Built-in references](#built-in-references)
+- [Variables](#data-section)
 - [Instructions](#instructions)
     - [`retn` and `ret`](#retn-and-ret-instructions)
     - [`mov` and `stor`](#mov-and-stor-instructions)
@@ -28,6 +28,7 @@ Documentation about `newasm` which includes following topics:
     - [`sysreq`](#sysreq-instruction)
     - [`halt`](#halt-instruction)
     - [`push` and `pop`](#push-and-pop-instruction)
+    - [`jmp` and labels]
 - [Procedures](#procedures)
 - [Exit codes](#exit-codes)
 
@@ -36,15 +37,15 @@ This project is written purely in C++ using its standard libraries, so compiling
 
 [Click me...](https://code.visualstudio.com/docs/languages/cpp)
 
-## Labels
-Labels are built-in "tags" used to classify code. Each label has different syntax in terms of instructions. General syntax is:
+## Sections
+Sections are built-in "tags" used to classify code. Each section uses different syntax in terms of instructions. General syntax is:
 
 ```asm
-_ : label_name
+_ : section_name
 ```
 
-### `data` label
-In this label, you can declare variables to avoid repeated code. General syntax is:
+### `data` section
+In this section, you can declare variables to avoid repeated code. General syntax is:
 
 ```asm
 data_type $ variable_name ; variable_value
@@ -57,13 +58,14 @@ There are 3 data types:
 - `decm` for floats;
 - `txt` for strings.
 
-### `start` label
-In this label, you can perform instructions, and cannot create variables, or else program will end with exit code 1.
+### `start` section
+In this section, you can perform instructions, and cannot create variables, or else program will end with exit code 1.
 
-## Built-in constants
-This language brings some built-in constants, or rather operands, with itself - list:
+## Built-in references
+This language brings some built-in references, or rather operands, with itself - list:
 
-- `%ios` - used as an operand in `syscall`, represents a module of `syscall` functions
+- `%ios` - used as an operand in `syscall`, represents a module of `syscall` functions;
+- `%nl` - used as a null operand in some instructions.
 
 **WARNING**: Syntax such as `% ios` is invalid.
 
@@ -297,6 +299,65 @@ _ : start
 
     retn . 0 , 0
 ```
+
+- **TIP**: If you just want to pop the value off the stack, and not store it anywhere, just do:
+
+```asm
+_ : start
+    pop . 0 , %nl
+```
+
+### Labels
+- You can create labels inside `_:start` and then jump to them using the `jmp` instruction. General syntax is:
+
+```asm
+_ ! label_name
+```
+
+#### Example `#1`
+
+```asm
+_ : start
+    _ ! labelname
+        mov . fdx , 4
+        syscall . 0 , %ios
+    jmp . 0 , labelname
+```
+
+#### Example `#2`
+A little too complex example.
+```asm
+_ : start
+    jmp . 0 , label2
+    _ ! label
+        mov . tlr , "label called"
+        mov . fdx , 1
+        syscall . 0 , %ios
+        mov . fdx , 72
+        jmp . 0 , label3
+        ret . fdx , 0
+    _ ! label2
+        mov . tlr , "label2 called"
+        mov . fdx , 1
+        syscall . 0 , %ios
+        jmp . 0 , label
+    _ ! label3
+        mov . tlr , "label3 called"
+        mov . fdx , 1
+        syscall . 0 , %ios
+
+    retn . 0 , 3873
+```
+
+Output:
+
+```
+label2 called
+label called
+label3 called
+[newasm] PROGRAM THREAD @ System info: Program finished with exit code : 3873
+```
+
 ## Procedures
 Procedures allow you to use the same piece of code without having to actually repeat it. General syntax is:
 
@@ -329,7 +390,7 @@ When a fatal error happens, program will shut down, returning a specific exit co
 
 | Exit code | Description |
 | ---------------- | ----------- |
-| `1` | Invalid label. For example, you tried to create a variable inside `_:start`. |
+| `1` | Invalid section. For example, you tried to create a variable inside `_:start`. |
 | `2` | Attempted to call a procedure which does not exist. |
 | `3` | Invalid non-numeric value was passed to `retn`. |
 | `4` | `sysreq` failed, pretty self-explanatory. |

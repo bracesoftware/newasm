@@ -19,15 +19,23 @@ the Initial Developer. All Rights Reserved.
 
 namespace newasm
 {
+    namespace code_stream
+    {
+        int jumpto = 1;
+        int jump = 0;
+        const int invalid_lnidx = -1;
+    }
     namespace exit_codes
     {
-        const int invalid_label = 1;
+        const int invalid_section = 1;
         const int invaid_proc = 2;
         const int invalid_retn = 3;
         const int sysreq_fail = 4;
         const int stk_underflow = 5;
         const int data_overflow = 6;
         const int dtyp_mismatch = 7;
+        const int label_redef = 8;
+        const int bus_err = 9;
     }
     namespace datatypes
     {
@@ -45,7 +53,7 @@ namespace newasm
     namespace system
     {
         bool terminated = false;
-        int label = 0;
+        int section = 0;
         int stop = 0;
         int stoproc = 0;
         std::string cproc;
@@ -64,6 +72,7 @@ namespace newasm
         std::unordered_map<std::string, std::string> data;
         std::unordered_map<std::string, int> datatypes;
         std::unordered_map<std::string, std::vector<std::string>> funcs;
+        std::unordered_map<std::string, int> labels;
         std::vector<std::string> stack;
         namespace functions
         {

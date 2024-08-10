@@ -27,28 +27,42 @@ namespace newasm
         newasm::header::functions::info(newasm::constv::pxstr + std::to_string(newasm::mem::regs::exc));
     }
     void callproc(std::string name);
-    int process_l(std::string stat, std::string arg)
+    int process_s(std::string stat, std::string arg)
     {
         if(stat == static_cast<std::string>("_"))
         {
             if(arg == static_cast<std::string>("data"))
             {
-                newasm::system::label = newasm::constv::__data;
+                newasm::system::section = newasm::constv::__data;
                 return 1;
             }
             if(arg == static_cast<std::string>("start"))
             {
-                newasm::system::label = newasm::constv::__start;
+                newasm::system::section = newasm::constv::__start;
                 return 1;
             }
         }
         return 1;
     }
+    int process_l(std::string stat, std::string arg, int lineidx)
+    {
+        if(stat == static_cast<std::string>("_"))
+        {
+            if(newasm::mem::functions::datavalid(arg,newasm::mem::labels))
+            {
+                newasm::terminate(newasm::exit_codes::label_redef);
+                return 1;
+            }
+            newasm::mem::labels[arg] = lineidx;
+            return 1;
+        }
+        return 1;
+    }
     int process_d(std::string dtyp, std::string name, std::string value)
     {
-        if(newasm::system::label != newasm::constv::__data)
+        if(newasm::system::section != newasm::constv::__data)
         {
-            newasm::terminate(newasm::exit_codes::invalid_label);
+            newasm::terminate(newasm::exit_codes::invalid_section);
             return 1;
         }
         //std::cout << dtyp << ":" << name << ":" << value << std::endl;
@@ -93,9 +107,9 @@ namespace newasm
     }
     int process_iso(std::string ins, std::string suf, std::string opr)
     {
-        if(newasm::system::label != newasm::constv::__start)
+        if(newasm::system::section != newasm::constv::__start)
         {
-            newasm::terminate(newasm::exit_codes::invalid_label);
+            newasm::terminate(newasm::exit_codes::invalid_section);
             return 1;
         }
 
@@ -230,6 +244,11 @@ namespace newasm
                 if(newasm::mem::stack.empty())
                 {
                     newasm::terminate(newasm::exit_codes::stk_underflow);
+                    return 1;
+                }
+                if(opr == static_cast<std::string>("\%nl"))
+                {
+                    newasm::mem::stack.pop_back();
                     return 1;
                 }
                 if(!newasm::mem::functions::datavalid(opr,newasm::mem::data))
@@ -378,10 +397,19 @@ namespace newasm
                     }
                     if(newasm::mem::regs::fdx == 3)
                     {
-                        //std::cin >> newasm::mem::regs::tlr;
         	            std::getline(std::cin, newasm::mem::regs::tlr);
                         newasm::mem::regs::tlr = static_cast<std::string>("\"") + newasm::mem::regs::tlr + static_cast<std::string>("\"");
                         return 1;
+                    }
+                    if(newasm::mem::regs::fdx == 4)
+                    {
+                        std::cin >> newasm::mem::regs::tlr;
+                        if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr) && !newasm::header::functions::isfloat(newasm::mem::regs::tlr))
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                            return 1;
+                        }
+        	            return 1;
                     }
                 }
             }
@@ -453,6 +481,21 @@ namespace newasm
                 return 1;
             }
         }
+        //jmp
+        if(ins == static_cast<std::string>("jmp"))
+        {
+            if(suf == static_cast<std::string>("0"))
+            {
+                if(!newasm::mem::functions::datavalid(opr, newasm::mem::labels))
+                {
+                    newasm::terminate(newasm::exit_codes::bus_err);
+                    return 1;
+                }
+                newasm::code_stream::jump = 1;
+                newasm::code_stream::jumpto = 1 + newasm::mem::labels[opr];
+                return 1;
+            }
+        }
         return 1;
     }
     
@@ -505,13 +548,43 @@ namespace newasm
         }
         
         if(newasm::header::functions::strfind(line,':'))
-            newasm::process_l(stat,arg);
+            newasm::process_s(stat,arg);
         if(newasm::header::functions::strfind(line,'$'))
             if(newasm::header::functions::strfind(line,';'))
                 newasm::process_d(dtyp,stat,arg);
         if(newasm::header::functions::strfind(line,'.'))
             if(newasm::header::functions::strfind(line,','))
                 newasm::process_iso(ins,suf,opr);
+    }
+    void analyzeline(std::string &line, int lineidx)
+    {
+        std::string ins, suf, opr, stat, arg, dtyp;
+        std::vector<std::string> tmp, tmp1, tmp2, tmp3;
+        tmp.clear();
+        tmp1.clear();
+        tmp2.clear();
+        tmp3.clear();
+
+        ins.clear();
+        suf.clear();
+        opr.clear();
+        
+        stat.clear();
+        arg.clear();
+        dtyp.clear();
+
+        if(lineidx != newasm::code_stream::invalid_lnidx) if(newasm::header::functions::strfind(line,'!'))
+        {
+            tmp2 = newasm::header::functions::split(line, '!');
+            stat = tmp2[0];
+            arg = tmp2[1];
+            stat = newasm::header::functions::trim(stat);
+            arg = newasm::header::functions::trim(arg);
+        }
+        
+        if(lineidx != newasm::code_stream::invalid_lnidx) 
+            if(newasm::header::functions::strfind(line,'!'))
+                newasm::process_l(stat,arg,lineidx);
     }
     void callproc(std::string name)
     {
@@ -534,7 +607,7 @@ namespace newasm
             newasm::terminate(newasm::exit_codes::invaid_proc);
         }
     }
-    void execute(std::string file)
+    void analyze(std::string file)
     {
         std::ifstream internal_fileobject(newasm::header::constants::scripts_folder + file);
         if(internal_fileobject.is_open())
@@ -544,8 +617,41 @@ namespace newasm
 
             while(std::getline(internal_fileobject, line))
             {
+                newasm::analyzeline(line, lineidx);
+                lineidx++;
+            }
+            internal_fileobject.close();
+        }
+        else
+        {
+            newasm::header::functions::err(
+                static_cast<std::string>("Unable to open the file : ") + static_cast<std::string>("'") + 
+                newasm::header::constants::scripts_folder + file + static_cast<std::string>("'"));
+        }
+    }
+    void execute(std::string file, int startline)
+    {
+        std::ifstream internal_fileobject(newasm::header::constants::scripts_folder + file);
+        if(internal_fileobject.is_open())
+        {
+            std::string line;
+            int lineidx = 1;
+
+            while(std::getline(internal_fileobject, line))
+            {
+                if(startline != newasm::code_stream::invalid_lnidx) if(!(lineidx >= startline))
+                {
+                    lineidx++;
+                    continue;
+                }
                 if(newasm::system::terminated)
                 {
+                    break;
+                }
+                if(newasm::code_stream::jump == 1)
+                {
+                    newasm::code_stream::jump = 0;
+                    newasm::execute(file, newasm::code_stream::jumpto);
                     break;
                 }
                 newasm::procline(line);

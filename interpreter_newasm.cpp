@@ -66,6 +66,7 @@ int main(int argc, char *argv[])
 
     std::cout << std::endl;
 
-    newasm::execute("index.nax");
+    newasm::analyze("index.nax");
+    newasm::execute("index.nax", newasm::code_stream::invalid_lnidx);
     return 0;
 }
