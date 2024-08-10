@@ -27,6 +27,7 @@ namespace newasm
     }
     namespace exit_codes
     {
+        const int noterm_point = 0;
         const int invalid_section = 1;
         const int invaid_proc = 2;
         const int invalid_retn = 3;

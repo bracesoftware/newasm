@@ -391,6 +391,7 @@ When a fatal error happens, program will shut down, returning a specific exit co
 
 | Exit code | Description |
 | ---------------- | ----------- |
+| `0` | No termination point (standard exit code if you have no `ret` or `retn` in your script). |
 | `1` | Invalid section. For example, you tried to create a variable inside `_:start`. |
 | `2` | Attempted to call a procedure which does not exist. |
 | `3` | Invalid non-numeric value was passed to `retn`. |
@@ -398,6 +399,9 @@ When a fatal error happens, program will shut down, returning a specific exit co
 | `5` | Stack underflow - tried to pop a value while the stack was empty. |
 | `6` | Data overflow - tried to pop a value into unallocated address. |
 | `7` | Data type mismatch. |
+| `8` | Tried to redefine a label. |
+| `9` | Bus error; tried to access an invalid label with `jmp`. |
+| `10` | Invalid instruction; pretty self-explanatory, also happens if you use `.` or `,` (instruction parsing delimiters) in your `rem` comments. |
 
 ## Comments
 Comments are also available:

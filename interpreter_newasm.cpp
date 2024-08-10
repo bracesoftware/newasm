@@ -56,6 +56,7 @@ int main(int argc, char *argv[])
         {
             newasm::header::functions::err("Wrong application usage!\n\t\t\t\t\t" + newasm::header::col::gray + " newasm -input <filename in nax_scripts> -other_options");
             newasm::header::functions::wrn("Input file is set to `index.nax`.");
+            newasm::header::settings::script_file = "index.nax";
         }
     }
     //other funny options
@@ -66,7 +67,16 @@ int main(int argc, char *argv[])
 
     std::cout << std::endl;
 
-    newasm::analyze("index.nax");
-    newasm::execute("index.nax", newasm::code_stream::invalid_lnidx);
+    // File to analyze.
+    newasm::header::functions::trim(newasm::header::settings::script_file);
+    newasm::execute
+    (
+        newasm::header::settings::script_file,
+        newasm::code_stream::invalid_lnidx,
+        newasm::analyze
+        (
+            newasm::header::settings::script_file
+        )
+    );
     return 0;
 }

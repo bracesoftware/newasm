@@ -612,7 +612,7 @@ namespace newasm
             newasm::terminate(newasm::exit_codes::invaid_proc);
         }
     }
-    void analyze(std::string file)
+    int analyze(std::string file)
     {
         std::ifstream internal_fileobject(newasm::header::constants::scripts_folder + file);
         if(internal_fileobject.is_open())
@@ -626,6 +626,7 @@ namespace newasm
                 lineidx++;
             }
             internal_fileobject.close();
+            return 1;
         }
         else
         {
@@ -633,9 +634,14 @@ namespace newasm
                 static_cast<std::string>("Unable to open the file : ") + static_cast<std::string>("'") + 
                 newasm::header::constants::scripts_folder + file + static_cast<std::string>("'"));
         }
+        return 0;
     }
-    void execute(std::string file, int startline)
+    int execute(std::string file, int startline, int proc)
     {
+        if(proc == 0)
+        {
+            return proc;
+        }
         std::ifstream internal_fileobject(newasm::header::constants::scripts_folder + file);
         if(internal_fileobject.is_open())
         {
@@ -656,13 +662,18 @@ namespace newasm
                 if(newasm::code_stream::jump == 1)
                 {
                     newasm::code_stream::jump = 0;
-                    newasm::execute(file, newasm::code_stream::jumpto);
+                    newasm::execute(file, newasm::code_stream::jumpto, 1);
                     break;
                 }
                 newasm::procline(line);
                 lineidx++;
             }
             internal_fileobject.close();
+            if(!newasm::system::terminated)
+            {
+                newasm::terminate(newasm::exit_codes::noterm_point);
+            }
+            return 1;
         }
         else
         {
@@ -670,5 +681,6 @@ namespace newasm
                 static_cast<std::string>("Unable to open the file : ") + static_cast<std::string>("'") + 
                 newasm::header::constants::scripts_folder + file + static_cast<std::string>("'"));
         }
+        return 0;
     }
 }
