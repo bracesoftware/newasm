@@ -8,6 +8,8 @@
 
 <img height="30" align="left" src="readme_resources/cpp_logo.png">
 <img height="30" align="left" src="readme_resources/brace_product.png">
+<div>
+</div>
 
 # Documentation
 Below is the simple `Hello World` program written in New-Assembly.
