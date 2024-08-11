@@ -3,9 +3,10 @@
 <h1 align = "center">Welcome to the <i><b>New-ASM</b></i> Wiki</h1>
 <h3 align = "center">Interpreted Low-Level Language that Mimics Assembly</h3>
 
+<div>
 <img height="30" align="center" src="readme_resources/cpp_logo.png">
 <img height="30" align="center" src="readme_resources/brace_product.png">
-
+</div>
 
 # Documentation
 Below is the simple `Hello World` program written in New-Assembly.
