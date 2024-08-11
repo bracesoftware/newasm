@@ -56,11 +56,18 @@ namespace newasm
         const int memory_leak = 16;
         const int invalid_config = 17;
     }
+    namespace cmp_results
+    {
+        const int equal = 1;
+        const int less = 2;
+        const int greater = 3;
+    }
     namespace datatypes
     {
         const int number = 1;
         const int decimal = 2;
         const int text = 3;
+        const int reference = 4;
     }
     namespace constv
     {
@@ -96,6 +103,8 @@ namespace newasm
             std::string tlr = newasm::header::constants::inv_reg_val;
             std::string stl = newasm::header::constants::inv_reg_val;
             std::string psx = newasm::header::constants::inv_reg_val;
+            std::string prp = newasm::header::constants::inv_reg_val;
+            int cpr = 0;
         }
 
         std::unordered_map<std::string, std::string> data;

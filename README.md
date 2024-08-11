@@ -97,7 +97,8 @@ You can use `variable_name` as an operand in instructions documented below.
 There are 3 data types:
 - `num` for integers;
 - `decm` for floats;
-- `txt` for strings.
+- `txt` for strings;
+- `ref` for references to data symbols (basically a kind of a pointer).
 
 ### `start` section
 In this section, you can perform instructions, and cannot create variables, or else program will end with exit code 1.
@@ -106,6 +107,7 @@ In this section, you can perform instructions, and cannot create variables, or e
 This language brings some built-in references, or rather operands, with itself - list:
 
 - `%ios` - used as an operand in `syscall`, represents a module of `syscall` functions;
+- `%endl` - line ending, used in `stl`;
 - `%nl` - used as a null operand in some instructions.
 
 **WARNING**: Syntax such as `% ios` is invalid.
@@ -199,14 +201,15 @@ _ : start
 #### Available register list
 - There are input and output registers. Input registers are used to get the input from the user, and output registers are used to store data which will be used as an argument in a `syscall` or an operand in an instruction.
 
-| Register name    | Description |
-| -------- | ------- |
-| `fdx`  | Holds an index of a function `syscall` will call. |
-| `tlr` | Typeless register (can hold any value, even code literals). Used as an output argument in some `syscall`s. |
-| `stl` | Typeless register; however used to hold built-in operands for `syscall`s. |
-| `stk` | Stack pointer. |
-| `hea` | Heap pointer. |
-| `psx` | Procedure scope exit value. |
+| Register name | Full name | Description |
+| ------------- | --------- | ----------- |
+| `fdx` | function index | Holds an index of a function `syscall` will call. |
+| `tlr` | typeless register | Typeless register (can hold any value, even code literals). Used as an output argument in some `syscall`s. |
+| `stl` | secondary typeless register | Typeless register; however used to hold built-in operands for `syscall`s. |
+| `stk` | stack pointer | Points at the top of the stack. |
+| `hea` | heap pointer | Points at an address in the heap. |
+| `psx` | procedure scope exit value | Holds value returned inside a procedure using `halt`. |
+| `prp` | procedure pointer | Points at the procedure that was called using `call`. |
 
 ### `syscall` instruction
 Set value of a specific register.
@@ -234,6 +237,7 @@ _ : start
 | `%ios` | `3` | - | Requests textual user input and stores the value in `tlr`. |
 | `%ios` | `4` | - | Requests numeric (including floats) user input and stores the value in `tlr`. |
 | `%ios` | `5` | `tlr` | Prints the textual value of a built-in operand. |
+| `%ios` | `6` | `tlr`, `stl` | Prints the name of a symbol a reference is pointing to. |
 
 ### `nop` instruction
 Do nothing.

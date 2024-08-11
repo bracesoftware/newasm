@@ -59,6 +59,7 @@ namespace newasm
             const std::string endl = "\n";
 
             const std::string inv_reg_val = "[newasm] __ptr -> Segmentation fault.";
+            const int inv_ireg_val = -999999;
         }
         namespace col
         {
@@ -271,6 +272,30 @@ namespace newasm
                 }
                 return !str.empty() && str.front() == '"' && str.back() == '"' && quocount == 2;
             }
+            bool isref(const std::string& str)
+            {
+                int amp_count = 0;
+                for(int i = 0; i < str.size(); i++)
+                {
+                    if(str.at(i) == '&')
+                    {
+                        amp_count ++;
+                    }
+                }
+                if(amp_count != 1)
+                {
+                    return false;
+                }
+                if(str.at(0) != '&')
+                {
+                    return false;
+                }
+                if(str.at(0) == '&' && !std::isalnum(str.at(1)) && str.at(1) != '_')
+                {
+                    return false;
+                }
+                return true;
+            }
             std::string remq(const std::string& str)
             {
                 if(str.length() >= 2 && str.front() == '"' && str.back() == '"')
@@ -287,6 +312,36 @@ namespace newasm
                     return line.substr(0, pos);
                 }
                 return line;
+            }
+            std::string remamp(const std::string line)
+            {
+                std::size_t pos = line.find('&');
+                if(pos != std::string::npos)
+                {
+                    return line.substr(pos+1);
+                }
+                return line;
+            }
+            int strdist(std::string a, std::string b)
+            {
+                if(a == b)
+                {
+                    return 0;
+                }
+                int size_a = a.size();
+                int size_b = b.size();
+                int result = 0;
+
+                for(int i = 0; i < size_a > size_b ? size_b : size_a; i++)
+                {
+                    if(a.at(i) != b.at(i))
+                    {
+                        result++;
+                    }
+                }
+
+                result = result + size_a > size_b ? size_a - size_b : size_b - size_a;
+                return result;
             }
         }
     }

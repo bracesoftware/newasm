@@ -34,7 +34,7 @@ the Initial Developer. All Rights Reserved.
 #include <cctype>
 
 #define __newasm_included
-#include "newasm_syscall.hpp"
+//#include "newasm_syscall.hpp"
 #include "newasm_header.hpp"
 #include "newasm_mem.hpp"
 
