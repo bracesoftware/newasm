@@ -127,7 +127,7 @@ Output:
 ```asm
 _ : start
     mov . tlr , 8
-    ret . tlr , 0
+    ret . tlr
 ```
 
 Output:
@@ -219,7 +219,7 @@ Do nothing.
 
 ```asm
 _ : start
-    nop . 0 , 0
+    nop
     retn . 0 , 23
 ```
 
@@ -275,7 +275,7 @@ _ : data
 _ : start
     proc . 0 , testprocedure
         halt . proc , 364
-    end . 0 , 0
+    end
     call . 0 , testprocedure
     stor . psx , variable
     mov . tlr , variable
@@ -338,7 +338,7 @@ Resets the register to an invalid value that cannot be used.
 
 ```asm
 _ : start
-    zero . stl , 0
+    zero . stl
     ; something ?
 ```
 
@@ -391,7 +391,7 @@ _ : start
         syscall . 0 , %ios
         mov . fdx , 72
         jmp . 0 , label3
-        ret . fdx , 0
+        ret . fdx
     _ ! label2
         mov . tlr , "label2 called"
         mov . fdx , 1
@@ -419,7 +419,8 @@ Procedures allow you to use the same piece of code without having to actually re
 
 ```asm
 proc . 0 , procedure_name
-end . 0 , 0
+    ; code
+end
 ```
 
 To call the procedure, use:
@@ -434,7 +435,7 @@ call . 0 , procedure_name
 _ : start
     proc . 0 , test
         halt . proc , 1
-    end . 0 , 0
+    end
     call . 0 , test
     retn . 0 , 0
 ```
@@ -447,7 +448,7 @@ When a fatal error happens, program will shut down, returning a specific exit co
 | Exit code | Description |
 | ---------------- | ----------- |
 | `0` | No termination point (standard exit code if you have no `ret` or `retn` in your script). |
-| `1` | Invalid section. For example, you tried to create a variable inside `_:start`. |
+| `1` | Invalid section (for example, tried to enter a section named `_:lol`). |
 | `2` | Attempted to call a procedure which does not exist. |
 | `3` | Invalid non-numeric value was passed to `retn`. |
 | `4` | `sysreq` failed, pretty self-explanatory. |
@@ -460,6 +461,8 @@ When a fatal error happens, program will shut down, returning a specific exit co
 | `11` | Memory overflow. |
 | `12` | Memory underflow. |
 | `13` | Procedure redefinition. |
+| `14` | Invalid memory access. |
+| `15` | Invalid syntax. |
 
 ## Comments
 Comments are also available:

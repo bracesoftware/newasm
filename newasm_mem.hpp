@@ -24,6 +24,11 @@ namespace newasm
         int jumpto = 1;
         int jump = 0;
         const int invalid_lnidx = -1;
+        namespace sections
+        {
+            const int data = 1;
+            const int start = 2;
+        }
     }
     namespace exit_codes
     {
@@ -41,6 +46,8 @@ namespace newasm
         const int mem_overflow = 11;
         const int mem_underflow = 12;
         const int proc_redef = 13;
+        const int invalid_memacc = 14;
+        const int invalid_syntax = 15;
     }
     namespace datatypes
     {
@@ -51,9 +58,6 @@ namespace newasm
     namespace constv
     {
         const std::string pxstr = "Program finished with exit code : ";
-
-        const int __data = 0b1;
-        const int __start = 0b10;
     }
     namespace system
     {
@@ -73,9 +77,11 @@ namespace newasm
 
         namespace regs
         {
+            // non accessible registers
+            int hea = 0;
             //mem registers
             int stk = newasm::mem::inf::mem_size - 1;
-            int hea = 0;
+            int heaptr = 0;
             //NORMAL REGISTERS
             int exc = 0;
             int fdx = 0;

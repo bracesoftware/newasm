@@ -151,17 +151,19 @@ namespace newasm
 
                 return tokens;
             }
-            std::vector<std::string> split_fixed(const std::string &str, char delimiter, int size)
+            std::vector<std::string> split_fixed(const std::string &str, char delimiter)
             {
+                size_t pos = str.find(delimiter);
                 std::vector<std::string> tokens;
-                std::string token;
-                std::stringstream ss(str);
-                int index = 0;
 
-                while(std::getline(ss, token, delimiter) && index < size)
+                if(pos != std::string::npos)
                 {
-                    tokens.push_back(token);
-                    index++;
+                    tokens.push_back(str.substr(0, pos));
+                    tokens.push_back(str.substr(pos + 1));
+                }
+                else
+                {
+                    tokens.push_back(str);
                 }
 
                 return tokens;
