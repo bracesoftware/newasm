@@ -18,6 +18,7 @@ Documentation about `newasm` which includes following topics:
 - [Compiling binaries](#compiling)
 - [Arguments](#arguments)
 - [Sections](#sections)
+    - [`config` section](#config-section)
     - [`data` section](#data-section)
     - [`start` section](#start-section)
 - [Built-in references](#built-in-references)
