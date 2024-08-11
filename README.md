@@ -1,4 +1,15 @@
-# New-Assembly
+<p align="left">
+  <img height="200" align="left" src="readme_resources/newasm_logo.png">
+</p>
+<h1 align = "left">Welcome to the <i><b>New-ASM</b></i> Wiki</h1>
+<h3 align = "left">
+  Interpreted Low-Level Language that Mimics Assembly
+</h3>
+
+<img height="30" align="left" src="readme_resources/cpp_logo.png">
+<img height="30" align="left" src="readme_resources/brace_product.png">
+
+# Documentation
 Below is the simple `Hello World` program written in New-Assembly.
 
 ```asm
@@ -13,7 +24,7 @@ _ : start
     retn . 0 , 0
 ```
 
-# Documentation
+# Table of contents
 Documentation about `newasm` which includes following topics:
 - [Compiling binaries](#compiling)
 - [Arguments](#arguments)
