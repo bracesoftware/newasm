@@ -48,6 +48,7 @@ namespace newasm
         const int proc_redef = 13;
         const int invalid_memacc = 14;
         const int invalid_syntax = 15;
+        const int memory_leak = 16;
     }
     namespace datatypes
     {

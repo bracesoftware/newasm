@@ -367,7 +367,11 @@ _ : start
 - You can create labels inside `_:start` and then jump to them using the `jmp` instruction. General syntax is:
 
 ```asm
-_ ! label_name
+_ : start
+    _ ! label_name
+
+    ; somewhere
+    jmp . 0 , label_name
 ```
 
 #### Example `#1`
@@ -463,6 +467,7 @@ When a fatal error happens, program will shut down, returning a specific exit co
 | `13` | Procedure redefinition. |
 | `14` | Invalid memory access. |
 | `15` | Invalid syntax. |
+| `16` | Memory leak: neither `retn`, `ret` or `heap` were used at the end of the program while the `hea` register wasn't at 0. |
 
 ## Comments
 Comments are also available:

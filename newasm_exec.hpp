@@ -140,6 +140,81 @@ namespace newasm
             //std::cout << newasm::system::cproc << " : " << newline << std::endl;
             return 1;
         }
+        //LOAD.ref
+        if(ins == static_cast<std::string>("load"))
+        {
+            if(suf == static_cast<std::string>("ref"))
+            {
+                if(!newasm::header::functions::isalphanum(opr))
+                {
+                    return 1;
+                }
+                if(!newasm::mem::functions::datavalid(opr,newasm::mem::data))
+                {
+                    return 1;
+                }
+
+                if(newasm::header::functions::isnumeric
+                (
+                    newasm::mem::program_memory
+                    [
+                        newasm::mem::regs::heaptr
+                    ]
+                ))
+                {
+                    if(newasm::mem::datatypes[opr] != newasm::datatypes::number)
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    newasm::mem::data[opr] = newasm::mem::program_memory
+                    [
+                        newasm::mem::regs::heaptr
+                    ];
+                    return 1;
+                }
+                if(newasm::header::functions::isfloat
+                (
+                    newasm::mem::program_memory
+                    [
+                        newasm::mem::regs::heaptr
+                    ]
+                ))
+                {
+                    if(newasm::mem::datatypes[opr] != newasm::datatypes::decimal)
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    newasm::mem::data[opr] = newasm::mem::program_memory
+                    [
+                        newasm::mem::regs::heaptr
+                    ];
+                    return 1;
+                }
+                if(newasm::header::functions::istext
+                (
+                    newasm::mem::program_memory
+                    [
+                        newasm::mem::regs::heaptr
+                    ]
+                ))
+                {
+                    if(newasm::mem::datatypes[opr] != newasm::datatypes::text)
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    newasm::mem::data[opr] = newasm::mem::program_memory
+                    [
+                        newasm::mem::regs::heaptr
+                    ];
+                    return 1;
+                }
+                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                return 1;
+            }
+        }
         // STOR
         if(ins == static_cast<std::string>("stor"))
         {
@@ -602,6 +677,21 @@ namespace newasm
                 }
             }
         }
+        //load.adr
+        if(ins == static_cast<std::string>("load"))
+        {
+            if(suf == static_cast<std::string>("adr"))
+            {
+                if(!newasm::header::functions::isnumeric(opr) && !newasm::header::functions::isfloat(opr) && !newasm::header::functions::istext(opr))
+                {
+                    std::cout << "opr is " << opr << std::endl;
+                    newasm::terminate(newasm::exit_codes::invalid_syntax);
+                    return 1;
+                }
+                newasm::mem::program_memory[newasm::mem::regs::heaptr] = opr;
+                return 1;
+            }
+        }
         
         //std::cout << ins << "." << suf << "," << opr;
         newasm::terminate(newasm::exit_codes::invalid_ins);//,wholeline);
@@ -962,7 +1052,12 @@ namespace newasm
             internal_fileobject.close();
             if(!newasm::system::terminated)
             {
-                newasm::terminate(newasm::exit_codes::noterm_point);//,static_cast<std::string>("null"));
+                if(newasm::mem::regs::hea != 0)
+                {
+                    newasm::terminate(newasm::exit_codes::memory_leak); // Learn to clean after yourself.
+                    return 1;
+                }
+                newasm::terminate(newasm::exit_codes::noterm_point); // You got to end your programs.
             }
             return 1;
         }
