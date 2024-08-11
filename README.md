@@ -686,6 +686,7 @@ When a fatal error happens, program will shut down, returning a specific exit co
 | `14` | Invalid memory access; tried to access an address using `mov.hea,...` that isn't allocated for the heap. |
 | `15` | Invalid syntax. |
 | `16` | Memory leak: neither `retn`, `ret` or `heap` were used at the end of the program while the `hea` register wasn't at 0. |
+| `17` | Invalid configuration. |
 
 ## Comments
 Comments are also available:
