@@ -31,6 +31,7 @@ Documentation about `newasm` which includes following topics:
     - [`push` and `pop`](#push-and-pop-instruction)
     - [`zero`](#zero-instruction)
     - [`heap`](#heap-instruction)
+    - [`load`](#load-instruction)
     - [`jmp` and labels](#labels)
 - [Procedures](#procedures)
 - [Exit codes](#exit-codes)
