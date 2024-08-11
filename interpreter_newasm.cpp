@@ -67,10 +67,6 @@ int main(int argc, char *argv[])
     {
         newasm::header::functions::help_info();
     }
-    if(newasm::header::functions::check_args("-endl",argc,argv,argid))
-    {
-        std::cout << std::endl;
-    }
 
     std::cout << std::endl;
 
