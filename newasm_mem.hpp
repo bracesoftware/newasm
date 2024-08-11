@@ -12,10 +12,14 @@ WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 for the specific language governing rights and limitations under the
 License.
 
-Portions created by the Initial Developer are Copyright (c) 2022
+Portions created by the Initial Developer are Copyright (c) The COPYRIGHT YEAR
 the Initial Developer. All Rights Reserved.
 
 */
+
+#ifndef __newasm_included
+    #error [New-ASM] Cannot compile.
+#endif
 
 namespace newasm
 {
@@ -60,7 +64,7 @@ namespace newasm
     }
     namespace constv
     {
-        const std::string pxstr = "Program finished with exit code : ";
+        const std::string pxstr = "Program finished with exit code: ";
     }
     namespace system
     {

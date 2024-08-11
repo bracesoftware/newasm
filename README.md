@@ -18,8 +18,9 @@ Documentation about `newasm` which includes following topics:
 - [Compiling binaries](#compiling)
 - [Arguments](#arguments)
 - [Sections](#sections)
+    - [`data` section](#data-section)
+    - [`start` section](#start-section)
 - [Built-in references](#built-in-references)
-- [Variables](#data-section)
 - [Instructions](#instructions)
     - [`retn` and `ret`](#retn-and-ret-instructions)
     - [`mov` and `stor`](#mov-and-stor-instructions)
@@ -57,6 +58,31 @@ Sections are built-in "tags" used to classify code. Each section uses different 
 ```asm
 _ : section_name
 ```
+
+### `config` section
+In this section, you can setup some settings for your program. It is thus recommended to keep this section on top of the code. General syntax is:
+
+```asm
+_ : config
+    configuration @ value_in_specific_datatype
+_ : data
+    ; some stuff
+_ : start
+    mov . fdx , 100
+    retn . fdx
+```
+
+A simple example would be:
+
+```asm
+_ : config
+    memsize @ 256 ; can be any integer from 1 to 512
+```
+
+#### List of available settings
+| Setting name | Data type | Description |
+| ------------ | --------- | ----------- |
+| `memsize` | `num` | Reallocates the number of addresses for the heap and the stack of the program. |
 
 ### `data` section
 In this section, you can declare variables to avoid repeated code. General syntax is:

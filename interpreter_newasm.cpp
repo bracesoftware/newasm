@@ -2,6 +2,7 @@
 
 The ORIGINAL CODE is the `New-Assembly eXecutor` Source Code.
 The INITIAL DEVELOPER is Brace Software Co., DEntisT.
+The COPYRIGHT YEAR is 2024.
 
 Version: MPL 1.1
 
@@ -15,26 +16,28 @@ WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 for the specific language governing rights and limitations under the
 License.
 
-Portions created by the Initial Developer are Copyright (c) 2022
+Portions created by the Initial Developer are Copyright (c) The COPYRIGHT YEAR
 the Initial Developer. All Rights Reserved.
 
 */
 
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 #include <string>
 #include <fstream>
 #include <cstdio>
 #include <sstream>
 #include <filesystem>
-#include <unordered_map>
 
 #include <algorithm>
 #include <cctype>
 
 #define __newasm_included
+#include "newasm_syscall.hpp"
 #include "newasm_header.hpp"
 #include "newasm_mem.hpp"
+
 #include "newasm_exec.hpp"
 
 int main(int argc, char *argv[])

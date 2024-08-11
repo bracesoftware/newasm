@@ -12,11 +12,15 @@ WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 for the specific language governing rights and limitations under the
 License.
 
-Portions created by the Initial Developer are Copyright (c) 2022
+Portions created by the Initial Developer are Copyright (c) The COPYRIGHT YEAR
 the Initial Developer. All Rights Reserved.
 
 */
 
+
+#ifndef __newasm_included
+    #error [New-ASM] Cannot compile.
+#endif
 
 namespace newasm
 {

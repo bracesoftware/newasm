@@ -12,15 +12,31 @@ WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 for the specific language governing rights and limitations under the
 License.
 
-Portions created by the Initial Developer are Copyright (c) 2022
+Portions created by the Initial Developer are Copyright (c) The COPYRIGHT YEAR
 the Initial Developer. All Rights Reserved.
 
 */
+
+#ifndef __newasm_included
+    #error [New-ASM] Cannot compile.
+#endif
 
 namespace newasm
 {
     namespace header
     {
+        namespace system_info
+        {
+            const std::string name = "[New-ASM]";
+            const std::string copyright_claim = "(c) 2024 Brace Software Co.";
+            const std::string fullname = "New-ASM eXecutor";
+        }
+        namespace version
+        {
+            const int major = 0;
+            const int minor = 0;
+            const int patch = 5;
+        }
         namespace data
         {
             std::string lastln = "";
@@ -66,31 +82,29 @@ namespace newasm
             int debug = 1;
             std::string script_file = "index.nax";
         }
-        namespace version
-        {
-            const int major = 0;
-            const int minor = 0;
-            const int patch = 5;
-        }
         namespace functions
         {
             void nullprint(std::string text)
             {
                 std::cout << text << std::endl;
             }
+            void nullprint_wnm(std::string text)
+            {
+                std::cout << newasm::header::system_info::name << " " << text << std::endl;
+            }
             void err(std::string text)
             {
-                std::cout << newasm::header::col::red << "[newasm] PROGRAM THREAD @ System error: " << newasm::header::col::reset << text << std::endl;
+                std::cout << newasm::header::col::red << newasm::header::system_info::name << " PROGRAM THREAD @ System error: " << newasm::header::col::reset << text << std::endl;
             }
             void wrn(std::string text)
             {
-                std::cout << newasm::header::col::yellow << "[newasm] PROGRAM THREAD @ System warning: " << newasm::header::col::reset << text << std::endl;
+                std::cout << newasm::header::col::yellow << newasm::header::system_info::name << "  PROGRAM THREAD @ System warning: " << newasm::header::col::reset << text << std::endl;
             }
             void info(std::string text)
             {
                 if(newasm::header::settings::debug == 1)
                 {
-                    std::cout << newasm::header::col::cyan << "[newasm] PROGRAM THREAD @ System info: " << newasm::header::col::gray << text << newasm::header::col::reset << std::endl;
+                    std::cout << newasm::header::col::cyan << newasm::header::system_info::name << "  PROGRAM THREAD @ System info: " << newasm::header::col::gray << text << newasm::header::col::reset << std::endl;
                 }
             }
             /*void init()
@@ -113,17 +127,18 @@ namespace newasm
             void vers_info()
             {
                 std::cout << newasm::header::col::green << newasm::header::style::bold << newasm::header::style::underline;
-                std::cout << "\tNew-Assembly eXecutor\t\t";
+                std::cout << "\t" << newasm::header::system_info::fullname << "\t\t";
                 std::cout << newasm::header::col::reset;
                 std::cout << newasm::header::version::major<<"."<<newasm::header::version::minor<<"."<<newasm::header::version::patch;
                 std::cout << newasm::header::constants::nullstr;
                 std::cout << newasm::header::col::green;
-                std::cout << "\n\t(c) 2024 Brace Software Co.," << newasm::header::col::reset << " by DEntisT" << std::endl << std::endl;
+                std::cout << "\n\t" << newasm::header::system_info::copyright_claim <<
+                newasm::header::col::reset << ", by DEntisT" << std::endl << std::endl;
                 //std::cout << newasm::header::col::reset;
             }
             void help_info()
             {
-                newasm::header::functions::nullprint("[newasm] Application arguments:\n");
+                newasm::header::functions::nullprint_wnm("Application arguments:\n");
                 newasm::header::functions::nullprint(
                     newasm::header::col::reset + "\t-help" + 
                     newasm::header::col::gray + "\t\t\tDisplays this panel."
