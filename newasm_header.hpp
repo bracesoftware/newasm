@@ -70,7 +70,7 @@ namespace newasm
         {
             const int major = 0;
             const int minor = 0;
-            const int patch = 4;
+            const int patch = 5;
         }
         namespace functions
         {

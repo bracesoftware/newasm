@@ -52,6 +52,12 @@ namespace newasm
         valid = false;
         if(stat == static_cast<std::string>("_"))
         {
+            if(arg == static_cast<std::string>("config"))
+            {
+                newasm::system::section = newasm::code_stream::sections::config;
+                valid = true;
+                return 1;
+            }
             if(arg == static_cast<std::string>("data"))
             {
                 newasm::system::section = newasm::code_stream::sections::data;
@@ -684,7 +690,7 @@ namespace newasm
             {
                 if(!newasm::header::functions::isnumeric(opr) && !newasm::header::functions::isfloat(opr) && !newasm::header::functions::istext(opr))
                 {
-                    std::cout << "opr is " << opr << std::endl;
+                    //std::cout << "opr is " << opr << std::endl;
                     newasm::terminate(newasm::exit_codes::invalid_syntax);
                     return 1;
                 }
@@ -820,6 +826,25 @@ namespace newasm
         newasm::terminate(newasm::exit_codes::invalid_ins);//,wholeline);
         return 1;
     }
+    int process_c(std::string wholeline, std::string stat, std::string arg)
+    {
+        if(stat == static_cast<std::string>("memsize"))
+        {
+            if(!newasm::header::functions::isnumeric(arg))
+            {
+                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                return 1;
+            }
+            if(!newasm::mem::functions::setup_memsize(std::stoi(arg)))
+            {
+                newasm::terminate(newasm::exit_codes::invalid_config);
+                return 1;
+            }
+            return 1;
+        }
+        newasm::terminate(newasm::exit_codes::invalid_config);
+        return 1;
+    }
     int procline(std::string &line)
     {
         line = newasm::header::functions::trim(line);
@@ -860,6 +885,20 @@ namespace newasm
             {
                 return 1;
             }
+        }
+        if(newasm::system::section == newasm::code_stream::sections::config)
+        {
+            if(line.find('@') == std::string::npos)
+            {
+                newasm::terminate(newasm::exit_codes::invalid_syntax);
+                return 1;
+            }
+            tmp = newasm::header::functions::split_fixed(line, '@');
+            stat = tmp[0];
+            arg = tmp[1];
+            stat = newasm::header::functions::trim(stat);
+            arg = newasm::header::functions::trim(arg);
+            return newasm::process_c(line,stat,arg);
         }
         if(newasm::system::section == newasm::code_stream::sections::data)
         {

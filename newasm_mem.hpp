@@ -26,8 +26,9 @@ namespace newasm
         const int invalid_lnidx = -1;
         namespace sections
         {
-            const int data = 1;
-            const int start = 2;
+            const int config = 1;
+            const int data = 2;
+            const int start = 3;
         }
     }
     namespace exit_codes
@@ -49,6 +50,7 @@ namespace newasm
         const int invalid_memacc = 14;
         const int invalid_syntax = 15;
         const int memory_leak = 16;
+        const int invalid_config = 17;
     }
     namespace datatypes
     {
@@ -72,16 +74,17 @@ namespace newasm
     {
         namespace inf
         {
-            const int mem_size = 100;
+            const int max_mem_size = 512;
+            int mem_size = 64;
         }
-        std::string program_memory[newasm::mem::inf::mem_size];
+        std::string program_memory[newasm::mem::inf::max_mem_size];
 
         namespace regs
         {
             // non accessible registers
             int hea = 0;
             //mem registers
-            int stk = newasm::mem::inf::mem_size - 1;
+            int stk = newasm::mem::inf::max_mem_size - 1;
             int heaptr = 0;
             //NORMAL REGISTERS
             int exc = 0;
@@ -98,6 +101,22 @@ namespace newasm
 
         namespace functions
         {
+            bool setup_memsize(int size)
+            {
+                if(size > newasm::mem::inf::max_mem_size)
+                {
+                    return false;
+                }
+                newasm::mem::inf::mem_size = size;
+                newasm::mem::regs::hea = 0;
+                newasm::mem::regs::heaptr = 0;
+                newasm::mem::regs::stk = size-1;
+                for(int i = 0; i < size; i++)
+                {
+                    newasm::mem::program_memory[i] = newasm::header::constants::nullstr;
+                }
+                return true;
+            }
             bool check_stkhea_col()
             {
                 return (!(newasm::mem::regs::hea < newasm::mem::regs::stk));
