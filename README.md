@@ -211,6 +211,7 @@ _ : start
 | `hea` | heap pointer | Points at an address in the heap. |
 | `psx` | procedure scope exit value | Holds value returned inside a procedure using `halt`. |
 | `prp` | procedure pointer | Points at the procedure that was called using `call`. |
+| `cpr` | comparsion result register | Holds a value of the comparsion (`cmp`) result; `1` for `equal`, `2` for less and `3` for greater (although there are 6 logical variants of `jmp`, only these 3 cases are required and detected by `cmp`). |
 
 ### `syscall` instruction
 Set value of a specific register.

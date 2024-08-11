@@ -445,6 +445,16 @@ namespace newasm
                 newasm::mem::data[opr] = newasm::mem::regs::prp;
                 return 1;
             }
+            if(suf == static_cast<std::string>("cpr"))
+            {
+                if(newasm::mem::datatypes[opr] != newasm::datatypes::number)
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                    return 1;
+                }
+                newasm::mem::data[opr] = std::to_string(newasm::mem::regs::cpr);
+                return 1;
+            }
         }
         //sysreq
         if(ins == static_cast<std::string>("sysreq"))
@@ -618,6 +628,16 @@ namespace newasm
                     return 1;
                 }
                 newasm::mem::regs::prp = (opr);
+                return 1;
+            }
+            if(suf == static_cast<std::string>("cpr"))
+            {
+                if(!newasm::header::functions::isnumeric(opr))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                    return 1;
+                }
+                newasm::mem::regs::cpr = std::stoi(opr);
                 return 1;
             }
         }
@@ -840,6 +860,10 @@ namespace newasm
             if(suf == static_cast<std::string>("hea"))
             {
                 intreg = newasm::mem::regs::heaptr;
+            }
+            if(suf == static_cast<std::string>("cpr"))
+            {
+                intreg = newasm::mem::regs::cpr;
             }
 
             if(suf == static_cast<std::string>("tlr"))
