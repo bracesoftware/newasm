@@ -363,6 +363,94 @@ _ : start
     syscall . 0 , %ios
 ```
 
+### `load` instruction
+- Load data and store data from the heap and into the heap, respectively.
+
+#### Syntax
+- `instruction` - `load`
+- `suffix` - `adr`, `ref`
+- `operand` - literal value or a reference
+
+#### Example
+```asm
+_ : data
+    decm $ testdecimal = 0.0
+_ : start
+    ; If the suffix of the LOAD instruction is `adr`,
+    ; then we will update the value in the address heap pointer
+    ; is pointing to - HOWEVER, if the suffix is `ref`, then we will 
+    ; store the value in the address heap pointer is pointing to
+    ; into some variable in `_:data`. 
+    load . adr , 736.38 ; hea = something
+    load . ref , testdecimal ; myvar = hea
+
+    mov . tlr , testdecimal
+    mov . stl , %endl
+    mov . fdx , 2
+    syscall . 0 , %ios
+
+    retn . 0 , 0
+```
+
+Output:
+
+```
+736.38
+```
+
+#### Example `#3`
+- If we expand our code, and manually assign addresses before cleaning up the heap, we can do this:
+
+```asm
+_ : data
+    decm $ testdecimal = 0.0
+    decm $ testdecm2 = 0.0
+_ : start
+    load . adr , 736.38 ; hea = something
+    load . ref , testdecimal ; myvar = hea
+
+    mov . tlr , testdecimal
+    mov . stl , %endl
+    mov . fdx , 2
+    syscall . 0 , %ios
+
+    ; Allocate more space:
+    heap . 0 , 1
+    load . adr , 9821.38 ; hea = 63
+    load . ref , testdecm2 ; myvar = hea
+    mov . tlr , testdecm2
+    mov . stl , %endl
+    mov . fdx , 2
+    syscall . 0 , %ios
+    
+    mov . hea , 0 ; manually access the first address
+    load . ref , testdecm2 ; myvar = hea
+    mov . tlr , testdecm2
+    mov . stl , %endl
+    mov . fdx , 2
+    syscall . 0 , %ios
+
+    mov . hea , 1 ; manually access the second address
+    load . ref , testdecm2 ; myvar = hea
+    mov . tlr , testdecm2
+    mov . stl , %endl
+    mov . fdx , 2
+    syscall . 0 , %ios
+
+    heap . 0 , -1 ; let all the memory go to avoid getting the memory leak
+```
+
+Output:
+
+```
+736.38
+9821.38
+736.38
+9821.38
+```
+
+- **NOTE**: Procedures and variables you create in New-Assembly are not located in the stack and the heap of your program, so you have both the stack and the heap for yourself, which means that addresses in the heap start from 0 and go up by 1. You may ask, why is that - well New-Assembly mimics the assembly language and doesn't need to go by the rules set by the standards.
+
 ### Labels
 - You can create labels inside `_:start` and then jump to them using the `jmp` instruction. General syntax is:
 
@@ -465,7 +553,7 @@ When a fatal error happens, program will shut down, returning a specific exit co
 | `11` | Memory overflow. |
 | `12` | Memory underflow. |
 | `13` | Procedure redefinition. |
-| `14` | Invalid memory access. |
+| `14` | Invalid memory access; tried to access an address using `mov.hea,...` that isn't allocated for the heap. |
 | `15` | Invalid syntax. |
 | `16` | Memory leak: neither `retn`, `ret` or `heap` were used at the end of the program while the `hea` register wasn't at 0. |
 
