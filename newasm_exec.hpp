@@ -886,7 +886,7 @@ namespace newasm
                 ///////////////////NUMERIC
                 if(newasm::header::functions::isnumeric(opr))
                 {
-                    if(newasm::header::functions::isnumeric(strreg))
+                    if(newasm::header::functions::isnumeric(strreg) || newasm::header::functions::isfloat(strreg))
                     {
                         //proceed to comparsion
                         if(std::stoi(strreg) == std::stoi(opr))
@@ -909,7 +909,7 @@ namespace newasm
                 ///////////////////FLOAT
                 if(newasm::header::functions::isfloat(opr))
                 {
-                    if(newasm::header::functions::isfloat(strreg))
+                    if(newasm::header::functions::isfloat(strreg) || newasm::header::functions::isnumeric(strreg))
                     {
                         //proceed to comparsion
                         if(std::stof(strreg) == std::stof(opr))

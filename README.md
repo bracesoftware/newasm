@@ -35,6 +35,7 @@ Documentation about `newasm` which includes following topics:
     - [`heap`](#heap-instruction)
     - [`load`](#load-instruction)
     - [`jmp` and labels](#labels)
+    - [`cmp` and `jmp` variants](#cmp-instruction-and-jmp-variants)
 - [Procedures](#procedures)
 - [Exit codes](#exit-codes)
 - [Comments](#comments)
@@ -536,6 +537,90 @@ label2 called
 label called
 label3 called
 [newasm] PROGRAM THREAD @ System info: Program finished with exit code : 3873
+```
+
+### `cmp` instruction and `jmp` variants
+Compare values of registers with values stored in the operands.
+
+```asm
+cmp . fdx , 3 ; check if fdx is 3
+```
+
+According to the result `cmp` stores in its own "hidden" register, you can use the following variants of the `jmp` instruction in order to perform jumps to labels according to the value of the `cpr` (comparsion result register):
+
+| Instruction | Processed if... |
+| ----------- | --------------- |
+| `je` | comparsion returned `equal`. |
+| `jne` | comparsion returned `not equal`. |
+| `jl` | comparsion returned `less`. |
+| `jg` | comparsion returned `greater`. |
+| `jle` | comparsion returned `less or equal`. |
+| `jge` | comparsion returned `greater or equal`. |
+
+#### Example
+
+```asm
+_ : start
+    mov . tlr , 5.8
+    cmp . tlr , 1
+    je . 0 , equal
+    ;jne . 0, notequal
+    jl . 0 , less
+    jg . 0 , greater
+    ;jle . 0 , lesseq
+    ;jge . 0 , greatereq
+
+    ; We just want to check if they are either equal, less or greater.
+
+    _ ! equal
+        mov . tlr , "EQUAL"
+        mov . fdx , 1
+        mov . stl , %endl
+        syscall . 0 , %ios
+        jmp . 0 , endtheprogram
+
+    _ ! notequal
+        mov . tlr , "NOT EQUAL"
+        mov . fdx , 1
+        mov . stl , %endl
+        syscall . 0 , %ios
+        jmp . 0 , endtheprogram
+
+    _ ! less
+        mov . tlr , "LESS"
+        mov . fdx , 1
+        mov . stl , %endl
+        syscall . 0 , %ios
+        jmp . 0 , endtheprogram
+
+    _ ! greater
+        mov . tlr , "GREATER"
+        mov . fdx , 1
+        mov . stl , %endl
+        syscall . 0 , %ios
+        jmp . 0 , endtheprogram
+
+    _ ! lesseq
+        mov . tlr , "LESS OR EQUAL"
+        mov . fdx , 1
+        mov . stl , %endl
+        syscall . 0 , %ios
+        jmp . 0 , endtheprogram
+
+    _ ! greatereq
+        mov . tlr , "GREATER OR EQUAL"
+        mov . fdx , 1
+        mov . stl , %endl
+        syscall . 0 , %ios
+        jmp . 0 , endtheprogram
+
+    _ ! endtheprogram
+    retn . 0 , 0
+```
+
+Output:
+```
+GREATER
 ```
 
 ## Procedures
