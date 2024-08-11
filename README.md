@@ -6,8 +6,8 @@
 <h3 align = "center">Interpreted Low-Level Language that Mimics Assembly</h3>
 
 <div align="center" style="border-radius: 5px;">
-    <img height="30" align="center" src="readme_resources/cpp_logo.png">
     <img height="30" align="center" src="readme_resources/brace_product.png">
+    <img height="30" align="center" src="readme_resources/cpp_logo.png">
 </div>
 
 # Documentation
