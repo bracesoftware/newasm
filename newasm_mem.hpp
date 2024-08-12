@@ -105,6 +105,8 @@ namespace newasm
             std::string psx = newasm::header::constants::inv_reg_val;
             std::string prp = newasm::header::constants::inv_reg_val;
             int cpr = 0;
+            float cr0 = 0;
+            float cr1 = 0; 
         }
 
         std::unordered_map<std::string, std::string> data;
@@ -163,6 +165,17 @@ namespace newasm
                 {
                     std::cout << "";
                 }
+            }
+            bool islbln(int line)
+            {
+                for(std::unordered_map<std::string, int>::iterator i = labels.begin(); i != labels.end(); i++)
+                {
+                    if(i->second == line)
+                    {
+                        return true;
+                    }
+                }
+                return false;
             }
         }
     }

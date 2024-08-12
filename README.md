@@ -37,6 +37,7 @@ Documentation about `newasm` which includes following topics:
 - [Instructions](#instructions)
     - [`retn` and `ret`](#retn-and-ret-instructions)
     - [`mov` and `stor`](#mov-and-stor-instructions)
+        - [Register list](#available-register-list)
     - [`syscall`](#syscall-instruction)
     - [`nop`](#nop-instruction)
     - [`rem`](#rem-instruction)

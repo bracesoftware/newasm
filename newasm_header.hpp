@@ -60,6 +60,7 @@ namespace newasm
 
             const std::string inv_reg_val = "[newasm] __ptr -> Segmentation fault.";
             const int inv_ireg_val = -999999;
+            const float inv_freg_val = static_cast<float>(-999999);
         }
         namespace col
         {
@@ -95,17 +96,17 @@ namespace newasm
             }
             void err(std::string text)
             {
-                std::cout << newasm::header::col::red << newasm::header::system_info::name << " PROGRAM THREAD @ System error: " << newasm::header::col::reset << text << std::endl;
+                std::cout << newasm::header::col::red << newasm::header::system_info::name << " PROGRAM THREAD @ System error | " << newasm::header::col::reset << text << std::endl;
             }
             void wrn(std::string text)
             {
-                std::cout << newasm::header::col::yellow << newasm::header::system_info::name << "  PROGRAM THREAD @ System warning: " << newasm::header::col::reset << text << std::endl;
+                std::cout << newasm::header::col::yellow << newasm::header::system_info::name << "  PROGRAM THREAD @ System warning | " << newasm::header::col::reset << text << std::endl;
             }
             void info(std::string text)
             {
                 if(newasm::header::settings::debug == 1)
                 {
-                    std::cout << newasm::header::col::cyan << newasm::header::system_info::name << "  PROGRAM THREAD @ System info: " << newasm::header::col::gray << text << newasm::header::col::reset << std::endl;
+                    std::cout << newasm::header::col::cyan << newasm::header::system_info::name << "  PROGRAM THREAD @ System info | " << newasm::header::col::gray << text << newasm::header::col::reset << std::endl;
                 }
             }
             /*void init()

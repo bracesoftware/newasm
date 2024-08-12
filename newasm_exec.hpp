@@ -455,6 +455,36 @@ namespace newasm
                 newasm::mem::data[opr] = std::to_string(newasm::mem::regs::cpr);
                 return 1;
             }
+            if(suf == static_cast<std::string>("cr0"))
+            {
+                if(newasm::mem::datatypes[opr] == newasm::datatypes::number)
+                {
+                    newasm::mem::data[opr] = std::to_string(static_cast<int>(newasm::mem::regs::cr0));
+                    return 1;
+                }
+                if(newasm::mem::datatypes[opr] == newasm::datatypes::decimal)
+                {
+                    newasm::mem::data[opr] = std::to_string(newasm::mem::regs::cr0);
+                    return 1;
+                }
+                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                return 1;
+            }
+            if(suf == static_cast<std::string>("cr1"))
+            {
+                if(newasm::mem::datatypes[opr] == newasm::datatypes::number)
+                {
+                    newasm::mem::data[opr] = std::to_string(static_cast<int>(newasm::mem::regs::cr1));
+                    return 1;
+                }
+                if(newasm::mem::datatypes[opr] == newasm::datatypes::decimal)
+                {
+                    newasm::mem::data[opr] = std::to_string(newasm::mem::regs::cr1);
+                    return 1;
+                }
+                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                return 1;
+            }
         }
         //sysreq
         if(ins == static_cast<std::string>("sysreq"))
@@ -638,6 +668,26 @@ namespace newasm
                     return 1;
                 }
                 newasm::mem::regs::cpr = std::stoi(opr);
+                return 1;
+            }
+            if(suf == static_cast<std::string>("cr0"))
+            {
+                if(!newasm::header::functions::isnumeric(opr) && !newasm::header::functions::isfloat(opr))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                    return 1;
+                }
+                newasm::mem::regs::cr0 = std::stof(opr);
+                return 1;
+            }
+            if(suf == static_cast<std::string>("cr1"))
+            {
+                if(!newasm::header::functions::isnumeric(opr) && !newasm::header::functions::isfloat(opr))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                    return 1;
+                }
+                newasm::mem::regs::cr1 = std::stof(opr);
                 return 1;
             }
         }
@@ -847,6 +897,7 @@ namespace newasm
         {
             //if(suf == static_cast<std::string>("fdx"))
             int intreg = newasm::header::constants::inv_ireg_val;
+            int floatreg = newasm::header::constants::inv_freg_val;
             std::string strreg = newasm::header::constants::inv_reg_val;
 
             if(suf == static_cast<std::string>("fdx"))
@@ -864,6 +915,15 @@ namespace newasm
             if(suf == static_cast<std::string>("cpr"))
             {
                 intreg = newasm::mem::regs::cpr;
+            }
+
+            if(suf == static_cast<std::string>("cr0"))
+            {
+                floatreg = newasm::mem::regs::cr0;
+            }
+            if(suf == static_cast<std::string>("cr1"))
+            {
+                floatreg = newasm::mem::regs::cr1;
             }
 
             if(suf == static_cast<std::string>("tlr"))
@@ -900,6 +960,28 @@ namespace newasm
                     newasm::mem::regs::cpr = newasm::cmp_results::less;
                 }
                 if((intreg) > std::stoi(opr))
+                {
+                    newasm::mem::regs::cpr = newasm::cmp_results::greater;
+                }
+                return 1;
+            }
+            if(floatreg != newasm::header::constants::inv_ireg_val)
+            {
+                if(!newasm::header::functions::isfloat(opr) && !newasm::header::functions::isnumeric(opr))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    return 1;
+                }
+                //proceed to comparsion
+                if((floatreg) == std::stof(opr))
+                {
+                    newasm::mem::regs::cpr = newasm::cmp_results::equal;
+                }
+                if((floatreg) < std::stof(opr))
+                {
+                    newasm::mem::regs::cpr = newasm::cmp_results::less;
+                }
+                if((floatreg) > std::stof(opr))
                 {
                     newasm::mem::regs::cpr = newasm::cmp_results::greater;
                 }
@@ -1268,6 +1350,10 @@ namespace newasm
     }
     int procline(std::string &line)
     {
+        if(newasm::mem::functions::islbln(newasm::header::data::lastlndx))
+        {
+            return 1;
+        }
         line = newasm::header::functions::trim(line);
         if(line[0] == ';')
         {
