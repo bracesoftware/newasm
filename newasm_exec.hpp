@@ -1326,6 +1326,31 @@ namespace newasm
             // do nothing
             return 1;
         }
+        if(ins == static_cast<std::string>("add"))
+        {
+            newasm::mem::regs::cr0 = newasm::mem::regs::cr0 + newasm::mem::regs::cr1;
+            return 1;
+        }
+        if(ins == static_cast<std::string>("sub"))
+        {
+            newasm::mem::regs::cr0 = newasm::mem::regs::cr0 - newasm::mem::regs::cr1;
+            return 1;
+        }
+        if(ins == static_cast<std::string>("div"))
+        {
+            newasm::mem::regs::cr0 = newasm::mem::regs::cr0 / newasm::mem::regs::cr1;
+            return 1;
+        }
+        if(ins == static_cast<std::string>("mul"))
+        {
+            newasm::mem::regs::cr0 = newasm::mem::regs::cr0 * newasm::mem::regs::cr1;
+            return 1;
+        }
+        if(ins == static_cast<std::string>("exp"))
+        {
+            newasm::mem::regs::cr0 = std::pow(newasm::mem::regs::cr0,newasm::mem::regs::cr1);
+            return 1;
+        }
         newasm::terminate(newasm::exit_codes::invalid_ins);//,wholeline);
         return 1;
     }

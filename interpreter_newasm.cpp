@@ -29,6 +29,7 @@ the Initial Developer. All Rights Reserved.
 #include <cstdio>
 #include <sstream>
 #include <filesystem>
+#include <cmath>
 
 #include <algorithm>
 #include <cctype>

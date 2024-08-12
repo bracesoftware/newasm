@@ -225,6 +225,8 @@ _ : start
 | `psx` | procedure scope exit value | Holds value returned inside a procedure using `halt`. |
 | `prp` | procedure pointer | Points at the procedure that was called using `call`. |
 | `cpr` | comparsion result register | Holds a value of the comparsion (`cmp`) result; `1` for `equal`, `2` for less and `3` for greater (although there are 6 logical variants of `jmp`, only these 3 cases are required and detected by `cmp`). |
+| `cr0` | primary calculation register | Register in which all the calculation results are stored.  |
+| `cr1` | alternate calculation register | Register which is used as a second operand in calculations. |
 
 ### `syscall` instruction
 Set value of a specific register.
@@ -635,6 +637,28 @@ _ : start
 Output:
 ```
 GREATER
+```
+
+### Calculation instructions
+There are 4 mathematical instructions you can use:
+- `add` - addition,
+- `sub` - subtraction,
+- `mul` - multiplication,
+- `div` - division,
+- `exp` - exponentiation.
+
+#### Syntax
+All of these operations use `cr0` and `cr1` registers. The result is stored in `cr0`; so:
+
+```asm
+_ : start
+    mov . cr0 , 3.0 ; can be either a float or a whole number
+    mov . cr1 , 9 ; same
+    add ; cr0 = cr0 + cr1
+    sub ; cr0 = cr0 - cr1
+    mul ; cr0 = cr0 * cr1
+    div ; cr0 = cr0 / cr1
+    exp ; cr0 = power(cr0,cr1)
 ```
 
 ## Procedures
