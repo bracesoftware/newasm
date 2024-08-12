@@ -485,6 +485,28 @@ namespace newasm
                 newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                 return 1;
             }
+            if(suf == static_cast<std::string>("br0"))
+            {
+                if(newasm::mem::datatypes[opr] != newasm::datatypes::number)
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                    return 1;
+                }
+                newasm::mem::data[opr] = std::to_string(newasm::mem::regs::br0);
+                return 1;
+            }
+            if(suf == static_cast<std::string>("br1"))
+            {
+                if(newasm::mem::datatypes[opr] != newasm::datatypes::number)
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                    return 1;
+                }
+                newasm::mem::data[opr] = std::to_string(newasm::mem::regs::br1);
+                return 1;
+            }
+            newasm::terminate(newasm::exit_codes::bus_err);
+            return 1;
         }
         //sysreq
         if(ins == static_cast<std::string>("sysreq"))
@@ -690,6 +712,28 @@ namespace newasm
                 newasm::mem::regs::cr1 = std::stof(opr);
                 return 1;
             }
+            if(suf == static_cast<std::string>("br0"))
+            {
+                if(!newasm::header::functions::isnumeric(opr))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                    return 1;
+                }
+                newasm::mem::regs::br0 = std::stoi(opr);
+                return 1;
+            }
+            if(suf == static_cast<std::string>("br1"))
+            {
+                if(!newasm::header::functions::isnumeric(opr))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                    return 1;
+                }
+                newasm::mem::regs::br1 = std::stoi(opr);
+                return 1;
+            }
+            newasm::terminate(newasm::exit_codes::bus_err);
+            return 1;
         }
         // syscall
         if(ins == static_cast<std::string>("syscall"))
@@ -915,6 +959,14 @@ namespace newasm
             if(suf == static_cast<std::string>("cpr"))
             {
                 intreg = newasm::mem::regs::cpr;
+            }
+            if(suf == static_cast<std::string>("br0"))
+            {
+                intreg = newasm::mem::regs::br0;
+            }
+            if(suf == static_cast<std::string>("br1"))
+            {
+                intreg = newasm::mem::regs::br1;
             }
 
             if(suf == static_cast<std::string>("cr0"))
@@ -1349,6 +1401,37 @@ namespace newasm
         if(ins == static_cast<std::string>("exp"))
         {
             newasm::mem::regs::cr0 = std::pow(newasm::mem::regs::cr0,newasm::mem::regs::cr1);
+            return 1;
+        }
+
+        if(ins == static_cast<std::string>("and"))
+        {
+            newasm::mem::regs::br0 = newasm::mem::regs::br0 & newasm::mem::regs::br1;
+            return 1;
+        }
+        if(ins == static_cast<std::string>("or"))
+        {
+            newasm::mem::regs::br0 = newasm::mem::regs::br0 | newasm::mem::regs::br1;
+            return 1;
+        }
+        if(ins == static_cast<std::string>("not"))
+        {
+            newasm::mem::regs::br0 = ~newasm::mem::regs::br1;
+            return 1;
+        }
+        if(ins == static_cast<std::string>("xor"))
+        {
+            newasm::mem::regs::br0 = newasm::mem::regs::br0 ^ newasm::mem::regs::br1;
+            return 1;
+        }
+        if(ins == static_cast<std::string>("shl"))
+        {
+            newasm::mem::regs::br0 = newasm::mem::regs::br0 << newasm::mem::regs::br1;
+            return 1;
+        }
+        if(ins == static_cast<std::string>("shr"))
+        {
+            newasm::mem::regs::br0 = newasm::mem::regs::br0 >> newasm::mem::regs::br1;
             return 1;
         }
         newasm::terminate(newasm::exit_codes::invalid_ins);//,wholeline);

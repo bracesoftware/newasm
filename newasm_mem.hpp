@@ -106,7 +106,9 @@ namespace newasm
             std::string prp = newasm::header::constants::inv_reg_val;
             int cpr = 0;
             float cr0 = 0;
-            float cr1 = 0; 
+            float cr1 = 0;
+            int br0 = 0;
+            int br1 = 0;
         }
 
         std::unordered_map<std::string, std::string> data;

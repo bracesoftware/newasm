@@ -344,6 +344,36 @@ namespace newasm
                 result = result + size_a > size_b ? size_a - size_b : size_b - size_a;
                 return result;
             }
+            bool ishex(const std::string str)
+            {
+                if (str.size() < 3) return false;
+                if (str.at(0) != '0' || str.at(1) != 'x') return false;
+                
+                for (int i = 2; i < str.size(); i++)
+                {
+                    char c = str.at(i);
+                    if(!(('0' <= c && c <= '9') || ('a' <= c && c <= 'f') || ('A' <= c && c <= 'F')))
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            bool isbin(const std::string str)
+            {
+                if (str.size() < 3) return false;
+                if (str.at(0) != '0' || str.at(1) != 'b') return false;
+                
+                for (int i = 2; i < str.size(); i++)
+                {
+                    char c = str.at(i);
+                    if(c != '0' && c != '1')
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
         }
     }
 }

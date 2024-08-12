@@ -49,6 +49,8 @@ Documentation about `newasm` which includes following topics:
     - [`load`](#load-instruction)
     - [`jmp` and labels](#labels)
     - [`cmp` and `jmp` variants](#cmp-instruction-and-jmp-variants)
+    - [Math calculations](#calculation-instructions)
+    - [Bit operations](#bit-operations)
 - [Procedures](#procedures)
 - [Exit codes](#exit-codes)
 - [Comments](#comments)
@@ -225,8 +227,10 @@ _ : start
 | `psx` | procedure scope exit value | Holds value returned inside a procedure using `halt`. |
 | `prp` | procedure pointer | Points at the procedure that was called using `call`. |
 | `cpr` | comparsion result register | Holds a value of the comparsion (`cmp`) result; `1` for `equal`, `2` for less and `3` for greater (although there are 6 logical variants of `jmp`, only these 3 cases are required and detected by `cmp`). |
-| `cr0` | primary calculation register | Register in which all the calculation results are stored.  |
-| `cr1` | alternate calculation register | Register which is used as a second operand in calculations. |
+| `cr0` | primary calculation register | Register in which all the calculation results are stored. Read [this](#calculation-instructions) for more information... |
+| `cr1` | alternate calculation register | Register which is used as a second operand in calculations. Read [this](#calculation-instructions) for more information... |
+| `br0` | primary bit operation register | Register in which all the bitwise calculation results are stored. Read [this](#bit-operations) for more information...  |
+| `br1` | alternate bit operation register | Register which is used as a second operand in bitwise calculations. Read [this](#bit-operations) for more information... |
 
 ### `syscall` instruction
 Set value of a specific register.
@@ -654,11 +658,37 @@ All of these operations use `cr0` and `cr1` registers. The result is stored in `
 _ : start
     mov . cr0 , 3.0 ; can be either a float or a whole number
     mov . cr1 , 9 ; same
+
     add ; cr0 = cr0 + cr1
     sub ; cr0 = cr0 - cr1
     mul ; cr0 = cr0 * cr1
     div ; cr0 = cr0 / cr1
     exp ; cr0 = power(cr0,cr1)
+```
+
+### Bit operations
+There are 7 mathematical instructions you can use:
+- `and` - and,
+- `or` - or,
+- `not` - not,
+- `xor` - exclusive or,
+- `shl` - shift left,
+- `shr` - shift right.
+
+#### Syntax
+All of these operations use `br0` and `br1` registers. The result is stored in `br0`; so:
+
+```asm
+_ : start
+    mov . br0 , 1 ; must be a number
+    mov . br1 , 1 ; same
+
+    and ; br0 = br0 & br1
+    or ; br0 = br0 | br1
+    not ; br0 = ~br1
+    xor ; br0 = br0 ^ br1
+    shl ; br0 = br0 << br1
+    shr ; br0 = br0 >> br1
 ```
 
 ## Procedures
