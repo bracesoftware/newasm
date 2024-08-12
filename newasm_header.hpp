@@ -42,6 +42,9 @@ namespace newasm
             std::string lastln = "";
             int lastlndx = 0;
             bool exception = true;
+            bool repl = false;
+            bool repl_end = false;
+            bool proc_now = false;
         }
         namespace constants
         {
@@ -90,9 +93,10 @@ namespace newasm
             {
                 std::cout << text << std::endl;
             }
-            void nullprint_wnm(std::string text)
+            int nullprint_wnm(std::string text)
             {
                 std::cout << newasm::header::system_info::name << " " << text << std::endl;
+                return 0;
             }
             void err(std::string text)
             {

@@ -55,6 +55,26 @@ namespace newasm
         const int invalid_syntax = 15;
         const int memory_leak = 16;
         const int invalid_config = 17;
+        const std::unordered_map<int, std::string> identifier = {
+            {noterm_point, "NoTerminationPoint"},
+            {invalid_section, "InvalidSection"},
+            {invalid_proc, "InvalidProcedure"},
+            {invalid_retn, "InvalidExitAttempt"},
+            {sysreq_fail, "SystemRequirementsNotMet"},
+            {stkhea_col, "StackHeapCollision"},
+            {data_overflow, "DataOverflow"},
+            {dtyp_mismatch, "DataTypeMismatch"},
+            {label_redef, "LabelRedefinition"},
+            {bus_err, "BusError"},
+            {invalid_ins, "InvalidASMInstruction"},
+            {mem_overflow, "ProgramMemoryOverflow"},
+            {mem_underflow, "ProgramMemoryUnderflow"},
+            {proc_redef, "ProcedureRedefinition"},
+            {invalid_memacc, "InvalidMemoryAccess"},
+            {invalid_syntax, "InvalidSyntax"},
+            {memory_leak, "HeapMemoryLeak"},
+            {invalid_config, "InvalidSysConfiguration"}
+        };
     }
     namespace cmp_results
     {
@@ -109,6 +129,7 @@ namespace newasm
             float cr1 = 0;
             int br0 = 0;
             int br1 = 0;
+            //int mcd = newasm::datatypes::decimal;
         }
 
         std::unordered_map<std::string, std::string> data;

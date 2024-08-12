@@ -24,31 +24,95 @@ the Initial Developer. All Rights Reserved.
 
 namespace newasm
 {
-    void terminate(int exit_code)//, std::string line)
+    void unsins(std::string ins)
     {
+        newasm::header::functions::wrn(
+            static_cast<std::string>("Instruction `") +
+            newasm::header::style::underline+ins+newasm::header::col::reset
+            +static_cast<std::string>("` is not supported in the REPL mode.")
+        );
+    }
+    void unsins_repl(std::string ins)
+    {
+        newasm::header::functions::wrn(
+            static_cast<std::string>("Instruction `") +
+            newasm::header::style::underline+ins+newasm::header::col::reset
+            +static_cast<std::string>("` is not supported outside the REPL mode.")
+        );
+    }
+    int terminate(int exit_code)//, std::string line)
+    {
+        //std::cout << "TERMINATEEE" << std::endl;
+        if(newasm::header::data::repl)
+        {
+            newasm::header::data::exception = true;
+            if(newasm::header::data::exception)
+            {
+                std::cout <<
+                "\t\t\t" <<
+                newasm::header::col::magenta <<
+                "Exception \"" <<
+                newasm::header::col::gray<<
+                newasm::header::style::underline<<
+                newasm::exit_codes::identifier.at(exit_code)<<
+                newasm::header::col::reset<<
+                newasm::header::col::magenta << "\" occured >> "<<
+                newasm::header::col::gray<<
+                newasm::header::data::lastln << std::endl;
+
+                std::cout << newasm::header::col::reset << std::endl;
+            }
+            return 1;
+        }
         //newasm::header::data::lastln = line;
         newasm::mem::regs::exc = exit_code;
         newasm::system::terminated = true;
         std::cout << std::endl;
         newasm::header::functions::info(newasm::constv::pxstr + std::to_string(newasm::mem::regs::exc));
-        if(newasm::header::data::exception) 
+        
+        if(newasm::header::data::exception)
+        {
             std::cout <<
-            "\t\t\t\t\t" <<
+            "\t\t\t" <<
             newasm::header::col::magenta <<
-            "Exception in " <<
-            newasm::header::col::gray <<
-            newasm::header::style::bold <<
-            newasm::header::style::underline <<
-            newasm::header::settings::script_file <<
-            ":" <<
-            newasm::header::data::lastlndx <<
+            "Exception \"" <<
+            newasm::header::col::gray<<
+            newasm::header::style::underline<<
+            newasm::exit_codes::identifier.at(exit_code)<<
+            newasm::header::col::reset <<
+            newasm::header::col::magenta <<
+            "\" in ";
+
+            if(newasm::header::data::proc_now == false)
+            {
+                std::cout <<
+                newasm::header::col::gray <<
+                newasm::header::style::bold <<
+                newasm::header::style::underline <<
+                newasm::header::settings::script_file <<
+                ":" <<
+                newasm::header::data::lastlndx;
+            }
+            if(newasm::header::data::proc_now == true)
+            {
+                std::cout << "the procedure " <<
+                newasm::header::col::gray <<
+                newasm::header::style::bold <<
+                newasm::header::style::underline <<
+                newasm::mem::regs::prp;
+            }
+
+            std::cout <<
             newasm::header::col::reset <<
             newasm::header::col::magenta <<
             " >> " <<
             newasm::header::col::gray <<
             newasm::header::data::lastln << 
             std::endl;
-        if(newasm::header::data::exception) std::cout << newasm::header::col::reset;
+
+            std::cout << newasm::header::col::reset;
+        }
+        return 1;
     }
     void callproc(std::string name);
     int process_s(bool &valid, std::string wholeline, std::string stat, std::string arg)
@@ -594,6 +658,11 @@ namespace newasm
         // RETURN
         if(ins == static_cast<std::string>("retn"))
         {
+            if(newasm::header::data::repl)
+            {
+                newasm::unsins(ins);
+                return 1;
+            }
             if(suf == static_cast<std::string>("0"))
             {
                 if(newasm::header::functions::isnumeric(opr))
@@ -719,6 +788,7 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                     return 1;
                 }
+                //std::cout << "Moved " << opr << " into br0" << std::endl;
                 newasm::mem::regs::br0 = std::stoi(opr);
                 return 1;
             }
@@ -732,6 +802,23 @@ namespace newasm
                 newasm::mem::regs::br1 = std::stoi(opr);
                 return 1;
             }
+            /*if(suf == static_cast<std::string>("mcd"))
+            {
+                if(opr != static_cast<std::string>("\%own") && opr != static_cast<std::string>("\%orn"))
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_syntax);
+                    return 1;
+                }
+                if(opr == static_cast<std::string>("\%own"))
+                {
+                    newasm::mem::regs::mcd = newasm::datatypes::number;
+                }
+                if(opr == static_cast<std::string>("\%orn"))
+                {
+                    newasm::mem::regs::mcd = newasm::datatypes::decimal;
+                }
+                return 1;
+            }*/
             newasm::terminate(newasm::exit_codes::bus_err);
             return 1;
         }
@@ -806,6 +893,11 @@ namespace newasm
         //proc
         if(ins == static_cast<std::string>("proc"))
         {
+            if(newasm::header::data::repl)
+            {
+                newasm::unsins(ins);
+                return 1;
+            }
             if(suf == static_cast<std::string>("0"))
             {
                 if(newasm::header::functions::isalphanum(opr))
@@ -879,6 +971,11 @@ namespace newasm
         //jmp
         if(ins == static_cast<std::string>("jmp"))
         {
+            if(newasm::header::data::repl)
+            {
+                newasm::unsins(ins);
+                return 1;
+            }
             if(suf == static_cast<std::string>("0"))
             {
                 if(!newasm::mem::functions::datavalid(opr, newasm::mem::labels))
@@ -939,6 +1036,11 @@ namespace newasm
         //cmp
         if(ins == static_cast<std::string>("cmp"))
         {
+            if(newasm::header::data::repl)
+            {
+                newasm::unsins(ins);
+                return 1;
+            }
             //if(suf == static_cast<std::string>("fdx"))
             int intreg = newasm::header::constants::inv_ireg_val;
             int floatreg = newasm::header::constants::inv_freg_val;
@@ -1142,6 +1244,11 @@ namespace newasm
         //je
         if(ins == static_cast<std::string>("je"))
         {
+            if(newasm::header::data::repl)
+            {
+                newasm::unsins(ins);
+                return 1;
+            }
             if(suf == static_cast<std::string>("0"))
             {
                 if(!newasm::mem::functions::datavalid(opr, newasm::mem::labels))
@@ -1161,6 +1268,11 @@ namespace newasm
         //jne
         if(ins == static_cast<std::string>("jne"))
         {
+            if(newasm::header::data::repl)
+            {
+                newasm::unsins(ins);
+                return 1;
+            }
             if(suf == static_cast<std::string>("0"))
             {
                 if(!newasm::mem::functions::datavalid(opr, newasm::mem::labels))
@@ -1180,6 +1292,11 @@ namespace newasm
         //jl
         if(ins == static_cast<std::string>("jl"))
         {
+            if(newasm::header::data::repl)
+            {
+                newasm::unsins(ins);
+                return 1;
+            }
             if(suf == static_cast<std::string>("0"))
             {
                 if(!newasm::mem::functions::datavalid(opr, newasm::mem::labels))
@@ -1199,6 +1316,11 @@ namespace newasm
         //jg
         if(ins == static_cast<std::string>("jg"))
         {
+            if(newasm::header::data::repl)
+            {
+                newasm::unsins(ins);
+                return 1;
+            }
             if(suf == static_cast<std::string>("0"))
             {
                 if(!newasm::mem::functions::datavalid(opr, newasm::mem::labels))
@@ -1218,6 +1340,11 @@ namespace newasm
         //jle
         if(ins == static_cast<std::string>("jle"))
         {
+            if(newasm::header::data::repl)
+            {
+                newasm::unsins(ins);
+                return 1;
+            }
             if(suf == static_cast<std::string>("0"))
             {
                 if(!newasm::mem::functions::datavalid(opr, newasm::mem::labels))
@@ -1237,6 +1364,11 @@ namespace newasm
         //jge
         if(ins == static_cast<std::string>("jge"))
         {
+            if(newasm::header::data::repl)
+            {
+                newasm::unsins(ins);
+                return 1;
+            }
             if(suf == static_cast<std::string>("0"))
             {
                 if(!newasm::mem::functions::datavalid(opr, newasm::mem::labels))
@@ -1270,6 +1402,11 @@ namespace newasm
         //ret
         if(ins == static_cast<std::string>("ret"))
         {
+            if(newasm::header::data::repl)
+            {
+                newasm::unsins(ins);
+                return 1;
+            }
             if(suf == static_cast<std::string>("fdx"))
             {
                 newasm::header::data::exception = false;
@@ -1313,6 +1450,45 @@ namespace newasm
             {
                 newasm::header::data::exception = false;
                 newasm::terminate(newasm::mem::regs::heaptr);//,wholeline);
+                return 1;
+            }
+            if(suf == static_cast<std::string>("prp"))
+            {
+                if(newasm::header::functions::isnumeric(newasm::mem::regs::prp))
+                {
+                    newasm::header::data::exception = false;
+                    newasm::terminate(std::stoi(newasm::mem::regs::psx));//,wholeline);
+                    return 1;
+                }
+            }
+            if(suf == static_cast<std::string>("cpr"))
+            {
+                newasm::header::data::exception = false;
+                newasm::terminate(newasm::mem::regs::cpr);//,wholeline);
+                return 1;
+            }
+            if(suf == static_cast<std::string>("cr0"))
+            {
+                newasm::header::data::exception = false;
+                newasm::terminate(static_cast<int>(newasm::mem::regs::cr0));//,wholeline);
+                return 1;
+            }
+            if(suf == static_cast<std::string>("cr1"))
+            {
+                newasm::header::data::exception = false;
+                newasm::terminate(static_cast<int>(newasm::mem::regs::cr1));//,wholeline);
+                return 1;
+            }
+            if(suf == static_cast<std::string>("br0"))
+            {
+                newasm::header::data::exception = false;
+                newasm::terminate(newasm::mem::regs::br0);//,wholeline);
+                return 1;
+            }
+            if(suf == static_cast<std::string>("br1"))
+            {
+                newasm::header::data::exception = false;
+                newasm::terminate(newasm::mem::regs::br1);//,wholeline);
                 return 1;
             }
             newasm::terminate(newasm::exit_codes::invalid_retn);//,wholeline);
@@ -1359,9 +1535,25 @@ namespace newasm
     }
     int process_i(std::string line, std::string ins)
     {
+        if(ins == static_cast<std::string>("exit"))
+        {
+            if(!newasm::header::data::repl)
+            {
+                newasm::unsins_repl(ins);
+                return 1;
+            }
+            newasm::header::data::repl_end = true;
+            newasm::header::functions::info("REPL mode exit.");
+            return 1;
+        }
         //end
         if(ins == static_cast<std::string>("end"))
         {
+            if(newasm::header::data::repl)
+            {
+                newasm::unsins(ins);
+                return 1;
+            }
             newasm::system::stop = 0;
             //std::cout << "Finished proc: " << newasm::system::cproc << std::endl;
             return 1;
@@ -1629,6 +1821,7 @@ namespace newasm
     void callproc(std::string name)
     {
         newasm::system::stoproc = 0;
+        newasm::header::data::proc_now = true;
         newasm::mem::regs::prp = static_cast<std::string>("&") + name;
         auto it = newasm::mem::funcs.find(name);
         if(it != newasm::mem::funcs.end())
@@ -1638,11 +1831,14 @@ namespace newasm
                 if(newasm::system::stoproc == 1)
                 {
                     newasm::system::stoproc = 0;
+                    newasm::header::data::proc_now = false;
                     break;
                 }
+                newasm::header::data::lastln = line;
                 newasm::procline(line);
-                //std::cout << "Executing : " << line << std::endl;
+                //std::cout << "Executed : " << line << std::endl;
             }
+            newasm::header::data::proc_now = false;
         }
     }
     int analyze(std::string file)

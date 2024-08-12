@@ -41,6 +41,30 @@ the Initial Developer. All Rights Reserved.
 
 #include "newasm_exec.hpp"
 
+namespace newasm
+{
+    int repl()
+    {
+        std::string line;
+        
+        std::cout << newasm::header::system_info::name + " >>> " + newasm::header::col::gray;
+        std::getline(std::cin,line);
+        
+        newasm::header::data::lastln = line;
+        std::cout << newasm::header::col::reset;
+        
+        newasm::procline(line);
+        
+        if(newasm::header::data::repl_end)
+        {
+            return 0;
+        }
+
+        newasm::header::data::lastlndx++;
+        return newasm::repl();
+    }
+}
+
 int main(int argc, char *argv[])
 {
     int argid = 0;
@@ -82,5 +106,18 @@ int main(int argc, char *argv[])
             newasm::header::settings::script_file
         )
     );
+
+    if(newasm::header::functions::check_args("-repl",argc,argv,argid))
+    {
+        std::cout << std::endl;
+        newasm::header::functions::nullprint_wnm(
+            static_cast<std::string>("Read-Eval-Print Loop mode loaded; to leave, use the `")+
+            newasm::header::style::underline+static_cast<std::string>("exit")+newasm::header::col::reset+
+            static_cast<std::string>("` instruction."));
+        newasm::header::data::lastlndx = 0;
+        newasm::header::data::repl = true;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        newasm::repl();
+    }
     return 0;
 }
