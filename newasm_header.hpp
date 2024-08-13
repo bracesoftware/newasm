@@ -51,6 +51,7 @@ namespace newasm
             int nullint = 0;
             bool nullbool = false;
             std::string nullstr = " ";
+            std::string nullstring = "null";
             char nullchar = '0';
             float nullfloat = 0.0;
 
@@ -212,7 +213,7 @@ namespace newasm
 
                 return std::string(start, it + 1);
             }
-            bool isnumeric(const std::string str)
+            bool isnumeric(const std::string &str)
             {
                 std::string copy;
                 for(char i : str)
@@ -226,7 +227,7 @@ namespace newasm
                 if (copy[0] != '-' && !std::isdigit(copy[0])) return false;
                 return std::all_of(copy.begin() + 1, copy.end(), ::isdigit);
             }
-            bool strfind(const std::string& str, char c)
+            bool strfind(const std::string& str, const char c)
             {
                 return str.find(c) != std::string::npos;
             }
@@ -318,7 +319,7 @@ namespace newasm
                 }
                 return line;
             }
-            std::string remamp(const std::string line)
+            std::string remamp(const std::string &line)
             {
                 std::size_t pos = line.find('&');
                 if(pos != std::string::npos)
@@ -327,7 +328,7 @@ namespace newasm
                 }
                 return line;
             }
-            int strdist(std::string a, std::string b)
+            int strdist(const std::string &a, const std::string &b)
             {
                 if(a == b)
                 {
@@ -348,7 +349,7 @@ namespace newasm
                 result = result + size_a > size_b ? size_a - size_b : size_b - size_a;
                 return result;
             }
-            bool ishex(const std::string str)
+            bool ishex(const std::string &str)
             {
                 if (str.size() < 3) return false;
                 if (str.at(0) != '0' || str.at(1) != 'x') return false;
@@ -363,7 +364,7 @@ namespace newasm
                 }
                 return true;
             }
-            bool isbin(const std::string str)
+            bool isbin(const std::string &str)
             {
                 if (str.size() < 3) return false;
                 if (str.at(0) != '0' || str.at(1) != 'b') return false;

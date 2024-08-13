@@ -55,6 +55,9 @@ namespace newasm
         const int invalid_syntax = 15;
         const int memory_leak = 16;
         const int invalid_config = 17;
+        const int inline_proc = 18;
+        const int unknown_fdx = 19;
+
         const std::unordered_map<int, std::string> identifier = {
             {noterm_point, "NoTerminationPoint"},
             {invalid_section, "InvalidSection"},
@@ -73,7 +76,9 @@ namespace newasm
             {invalid_memacc, "InvalidMemoryAccess"},
             {invalid_syntax, "InvalidSyntax"},
             {memory_leak, "HeapMemoryLeak"},
-            {invalid_config, "InvalidSysConfiguration"}
+            {invalid_config, "InvalidSysConfiguration"},
+            {inline_proc, "InlineProcedure"},
+            {unknown_fdx, "UnknownSystemCall"}
         };
     }
     namespace cmp_results
@@ -173,6 +178,10 @@ namespace newasm
             void out_bopr(std::string reg)
             {
                 if(reg == "\%ios")
+                {
+                    std::cout << "";
+                }
+                if(reg == "\%fs")
                 {
                     std::cout << "";
                 }

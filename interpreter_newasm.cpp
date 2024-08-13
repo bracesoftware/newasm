@@ -35,14 +35,32 @@ the Initial Developer. All Rights Reserved.
 #include <cctype>
 
 #define __newasm_included
-//#include "newasm_syscall.hpp"
 #include "newasm_header.hpp"
 #include "newasm_mem.hpp"
+#include "newasm_syscalls.hpp"
+
+#include "newasm_dyn.hpp"
 
 #include "newasm_exec.hpp"
 
+class ProcInsert
+{
+    public:
+    int processline(std::string &ln)
+    {
+        return newasm::procline(ln);
+    }
+};
+
+int operator<<(ProcInsert &obj, std::string &ln)
+{
+    obj.processline(ln);
+    return 1;
+}
+
 namespace newasm
 {
+    ProcInsert process;
     int repl()
     {
         std::string line;
@@ -53,7 +71,7 @@ namespace newasm
         newasm::header::data::lastln = line;
         std::cout << newasm::header::col::reset;
         
-        newasm::procline(line);
+        newasm::process << line;
         
         if(newasm::header::data::repl_end)
         {
@@ -67,6 +85,12 @@ namespace newasm
 
 int main(int argc, char *argv[])
 {
+    if(argc == 1)
+    {
+        newasm::header::functions::vers_info();
+        std::cout << "\t\t\tUse `" << newasm::header::style::underline << "-help" << newasm::header::col::reset << "` for more information." << std::endl;
+        return 1;
+    }
     int argid = 0;
     if(newasm::header::functions::check_args("-ver",argc,argv,argid))
     {
@@ -119,5 +143,7 @@ int main(int argc, char *argv[])
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         newasm::repl();
     }
+
+    newasm::handles::delete_handles();
     return 0;
 }

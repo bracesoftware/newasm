@@ -827,6 +827,7 @@ namespace newasm
         {
             if(suf == static_cast<std::string>("0"))
             {
+                ///// input-output stream
                 if(opr == static_cast<std::string>("\%ios"))
                 {
                     if(newasm::mem::regs::fdx == 1)
@@ -887,8 +888,42 @@ namespace newasm
                         newasm::mem::functions::out_bopr(newasm::mem::regs::stl);
                         return 1;
                     }
+                    newasm::terminate(newasm::exit_codes::unknown_fdx);
+                    return 1;
                 }
+                //////file stream
+                if(opr == static_cast<std::string>("\%fs"))
+                {
+                    if(newasm::mem::regs::fdx == 1)
+                    {
+                        if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                            return 1;
+                        }
+                        newasm::handles::dir_handle->set_name(newasm::header::functions::remq(newasm::mem::regs::tlr));
+                        newasm::handles::dir_handle->create();
+                        return 1;
+                    }
+                    if(newasm::mem::regs::fdx == 2)
+                    {
+                        if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                            return 1;
+                        }
+                        newasm::handles::dir_handle->set_name(newasm::header::functions::remq(newasm::mem::regs::tlr));
+                        newasm::handles::dir_handle->remove();
+                        return 1;
+                    }
+                    newasm::terminate(newasm::exit_codes::unknown_fdx);
+                    return 1;
+                }
+                newasm::terminate(newasm::exit_codes::unknown_fdx);
+                return 1;
             }
+            newasm::terminate(newasm::exit_codes::invalid_syntax);
+            return 1;
         }
         //proc
         if(ins == static_cast<std::string>("proc"))
@@ -917,6 +952,11 @@ namespace newasm
         //call
         if(ins == static_cast<std::string>("call"))
         {
+            if(newasm::header::data::proc_now)
+            {
+                newasm::terminate(newasm::exit_codes::inline_proc);
+                return 1;
+            }
             if(suf == static_cast<std::string>("0"))
             {
                 if(newasm::header::functions::isalphanum(opr))

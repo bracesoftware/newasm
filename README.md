@@ -668,7 +668,7 @@ _ : start
 ```
 
 ### Bit operations
-There are 7 mathematical instructions you can use:
+There are 7 bitwise operations you can use:
 - `and` - and,
 - `or` - or,
 - `not` - not,
@@ -743,6 +743,7 @@ When a fatal error happens, program will shut down, returning a specific exit co
 | `15` | Invalid syntax. |
 | `16` | Memory leak: neither `retn`, `ret` or `heap` were used at the end of the program while the `hea` register wasn't at 0. |
 | `17` | Invalid configuration. |
+| `18` | You tried to call a procedure within a procedure. |
 
 ## Comments
 Comments are also available:
