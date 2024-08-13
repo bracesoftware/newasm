@@ -98,6 +98,14 @@ namespace newasm
         }
         namespace functions
         {
+            void getos(std::string &dest)
+            {
+                #ifdef _WIN32
+                    dest = "windows";
+                #elif defined(__linux__)
+                    dest = "linux";
+                #endif
+            }
             void getarch(std::string &dest)
             {
                 #if defined(__x86_64__) || defined(__amd64__)
@@ -156,15 +164,17 @@ namespace newasm
             void vers_info()
             {
                 std::string arch;
+                std::string os;
                 newasm::header::functions::getarch(arch);
+                newasm::header::functions::getos(os);
                 std::cout << newasm::header::col::green << newasm::header::style::bold << newasm::header::style::underline;
                 std::cout << "\t" << newasm::header::system_info::fullname << "\t\t";
                 std::cout << newasm::header::col::reset;
-                std::cout << newasm::header::version::major<<"."<<newasm::header::version::minor<<"."<<newasm::header::version::patch<<"-"<<arch;
+                std::cout << newasm::header::version::major<<"."<<newasm::header::version::minor<<"."<<newasm::header::version::patch<<"-"<<os<<"_"<<arch;
                 std::cout << newasm::header::constants::nullstr;
                 std::cout << newasm::header::col::green;
                 std::cout << "\n\t" << newasm::header::system_info::copyright_claim <<
-                newasm::header::col::reset << ", by DEntisT" << std::endl << std::endl;
+                newasm::header::col::reset << std::endl << std::endl;
                 //std::cout << newasm::header::col::reset;
             }
             void help_info()
