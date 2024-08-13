@@ -42,7 +42,7 @@ namespace newasm
         {
             const int major = 0;
             const int minor = 0;
-            const int patch = 7;
+            const int patch = 8;
         }
         namespace data
         {
@@ -94,6 +94,7 @@ namespace newasm
         {
             int debug = 1;
             std::string script_file = "index.nax";
+            bool extra = false;
         }
         namespace functions
         {

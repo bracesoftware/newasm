@@ -33,6 +33,8 @@ the Initial Developer. All Rights Reserved.
 
 #include <algorithm>
 #include <cctype>
+#include <chrono>
+#include <thread>
 
 #define __newasm_included
 #include "newasm_header.hpp"
@@ -43,23 +45,22 @@ the Initial Developer. All Rights Reserved.
 
 #include "newasm_exec.hpp"
 
-class ProcInsert
-{
-    public:
-    int processline(std::string &ln)
-    {
-        return newasm::procline(ln);
-    }
-};
-
-int operator<<(ProcInsert &obj, std::string &ln)
-{
-    obj.processline(ln);
-    return 1;
-}
-
 namespace newasm
 {
+    class procline_insert
+    {
+        public:
+        int processline(std::string &ln)
+        {
+            return newasm::procline(ln);
+        }
+    };
+
+    int operator<<(newasm::procline_insert &obj, std::string &ln)
+    {
+        obj.processline(ln);
+        return 1;
+    }
     namespace setup
     {
         namespace args
@@ -68,16 +69,19 @@ namespace newasm
             const int input = 2;
             const int help = 3;
             const int repl = 4;
+            const int extra = 5;
 
             std::unordered_map<int, std::string> arg_map = {
                 {ver, "-ver"},
                 {input, "-input"},
                 {help, "-help"},
-                {repl, "-repl"}
+                {repl, "-repl"},
+                {extra, "-extra"}
             };
         }
     }
-    ProcInsert process;
+    newasm::procline_insert process;
+
     int repl()
     {
         std::string line;
@@ -98,7 +102,37 @@ namespace newasm
         newasm::header::data::lastlndx++;
         return newasm::repl();
     }
+    namespace utils
+    {
+        void displaybar(const std::string &text, float progress)
+        {
+            int bar_width = 40;
+            std::cout << newasm::header::col::reset << newasm::header::col::green << text << newasm::header::col::gray << "[";
+            int pos = static_cast<int>(bar_width * progress);
+            for (int i = 0; i < bar_width; ++i)
+            {
+                if (i < pos) std::cout << "=";
+                else if (i == pos) std::cout << "*";
+                else std::cout << " ";
+            }
+            std::cout << "] " << newasm::header::col::reset << int(progress * 100.0) << " %\r"; // Ispis procenta
+            std::cout.flush(); // Osvježavanje linije u konzoli
+        }
+
+        int loadingbar(const std::string &text)
+        {
+            for (int i = 0; i <= 100; i+=5)
+            {
+                newasm::utils::displaybar(text, i / 100.0f);
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            }
+            std::cout << std::endl;
+            return 0;
+        }
+    }
 }
+
+// MAIN
 
 int main(int argc, char *argv[])
 {
@@ -139,6 +173,10 @@ int main(int argc, char *argv[])
     {
         newasm::header::functions::help_info();
     }
+    if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::extra),argc,argv,argid))
+    {
+        newasm::header::settings::extra = true;
+    }
 
     std::cout << std::endl;
     newasm::header::execution_flow::entry_exec = newasm::header::settings::script_file;
@@ -160,6 +198,11 @@ int main(int argc, char *argv[])
         if(newasm::header::data::exception)
         {
             return 0;
+        }
+        if(newasm::header::settings::extra)
+        {
+            newasm::utils::loadingbar("\t* Preparing REPL:        ");
+            //newasm::utils::loadingbar("\t* Sexy:                  ");
         }
         std::cout << std::endl;
         newasm::header::functions::nullprint_wnm(
