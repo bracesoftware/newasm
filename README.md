@@ -57,7 +57,7 @@ Documentation about `newasm` which includes following topics:
 - [Comments](#comments)
 - [Interesting examples](#interesting-examples)
     - [Writing to a file, and then reading it](#writing-to-a-file-and-printing-its-content)
-    - [Creating a child process]
+    - [Creating a child process](#creating-a-child-process)
 
 ## Compiling
 This project is written purely in C++ using its standard libraries, so compiling it should be easy. To download C++ compiler, please follow instructions on the link below:
