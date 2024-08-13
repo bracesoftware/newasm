@@ -39,6 +39,7 @@ Documentation about `newasm` which includes following topics:
     - [`mov` and `stor`](#mov-and-stor-instructions)
         - [Register list](#available-register-list)
     - [`syscall`](#syscall-instruction)
+        - [System call list](#syscall-list)
     - [`nop`](#nop-instruction)
     - [`rem`](#rem-instruction)
     - [`sysreq`](#sysreq-instruction)
@@ -54,6 +55,8 @@ Documentation about `newasm` which includes following topics:
 - [Procedures](#procedures)
 - [Exit codes](#exit-codes)
 - [Comments](#comments)
+- [Interesting examples](#interesting-examples)
+    - [Writing to a file, and then reading it](#writing-to-a-file-and-printing-its-content)
 
 ## Compiling
 This project is written purely in C++ using its standard libraries, so compiling it should be easy. To download C++ compiler, please follow instructions on the link below:
@@ -260,6 +263,14 @@ _ : start
 | `%ios` | `4` | - | Requests numeric (including floats) user input and stores the value in `tlr`. |
 | `%ios` | `5` | `tlr` | Prints the textual value of a built-in operand. |
 | `%ios` | `6` | `tlr`, `stl` | Prints the name of a symbol a reference is pointing to. |
+| `%fs` | `1` | `tlr` | Create a directory; with `tlr` being a string containing the directory name. |
+| `%fs` | `2` | `tlr` | Remove a directory; with `tlr` being a string containing the directory name. |
+| `%fs` | `3` | `tlr` | Create a file; with `tlr` being a string containing the file name. |
+| `%fs` | `4` | `tlr` | Remove a file; with `tlr` being a string containing the file name. |
+| `%fs` | `5` | `tlr`, `stl` | Overwrite file content; with `tlr` being a string containing the file name, and `stl` being a string containing the new content. |
+| `%fs` | `6` | `tlr`, `stl` | Append content to file; with `tlr` being a string containing the file name, and `stl` being a string containing the content to append. |
+| `%fs` | `7` | `tlr` | Remove all file content; with `tlr` being a string containing the file name. |
+| `%fs` | `8` | `tlr`, `stl` | Read a file line; with `tlr` being a string containing the file name, and `stl` being the line number. Read content is subsequently stored in `tlr`. |
 
 ### `nop` instruction
 Do nothing.
@@ -754,4 +765,30 @@ _ : start
     mov . fdx , 1
     mov . tlr , "hello" ; comment
     syscall . 0 , %ios ; comment again
+```
+
+## Interesting examples
+### Writing to a file, and printing its content
+
+```asm
+_ : start
+    mov . fdx, 3
+    mov . tlr, "filename"
+    syscall . 0, %fs
+    mov . stl, "TEXTeee"
+    mov . fdx, 6
+    syscall . 0, %fs
+    mov . stl, 1
+    mov . fdx, 8
+    syscall . 0, %fs
+    mov . stl, %endl
+    mov . fdx, 1
+    syscall . 0, %ios
+    retn . 0 , 0
+```
+
+Output:
+
+```
+TEXTeee
 ```

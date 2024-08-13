@@ -23,8 +23,8 @@ namespace newasm
     {
         newasm::syscalls::filestream::dir *dir_handle = new newasm::syscalls::filestream::dir;
         newasm::syscalls::filestream::file<
-            newasm::syscalls::filestream::filetype::ini
-        > *file_handle = new newasm::syscalls::filestream::file<newasm::syscalls::filestream::filetype::ini>();
+            newasm::syscalls::filestream::filetype::txt
+        > *file_handle = new newasm::syscalls::filestream::file<newasm::syscalls::filestream::filetype::txt>();
         void delete_handles()
         {
             delete dir_handle;
