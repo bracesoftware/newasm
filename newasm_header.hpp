@@ -25,6 +25,13 @@ namespace newasm
 {
     namespace header
     {
+        namespace execution_flow
+        {
+            int entry_start_line = 1;
+            std::string file = "";
+            bool exec_redirected = false;
+            std::string entry_exec = "";
+        }
         namespace system_info
         {
             const std::string name = "[New-ASM]";

@@ -57,6 +57,7 @@ Documentation about `newasm` which includes following topics:
 - [Comments](#comments)
 - [Interesting examples](#interesting-examples)
     - [Writing to a file, and then reading it](#writing-to-a-file-and-printing-its-content)
+    - [Creating a child process]
 
 ## Compiling
 This project is written purely in C++ using its standard libraries, so compiling it should be easy. To download C++ compiler, please follow instructions on the link below:
@@ -126,7 +127,9 @@ In this section, you can perform instructions, and cannot create variables, or e
 ## Built-in references
 This language brings some built-in references, or rather operands, with itself - list:
 
-- `%ios` - used as an operand in `syscall`, represents a module of `syscall` functions;
+- `%ios` - used as an operand in `syscall`, represents a module of system calls responsible for input and output streaming;
+- `%fs` - used as an operand in `syscall`, represents a module of system calls responsible for input and output streaming;
+- `%exf` - used as an operand in `syscall`, represents a module of system calls responsible for execution flow (starting child processes);
 - `%endl` - line ending, used in `stl`;
 - `%nl` - used as a null operand in some instructions.
 
@@ -271,6 +274,7 @@ _ : start
 | `%fs` | `6` | `tlr`, `stl` | Append content to file; with `tlr` being a string containing the file name, and `stl` being a string containing the content to append. |
 | `%fs` | `7` | `tlr` | Remove all file content; with `tlr` being a string containing the file name. |
 | `%fs` | `8` | `tlr`, `stl` | Read a file line; with `tlr` being a string containing the file name, and `stl` being the line number. Read content is subsequently stored in `tlr`. |
+| `%exf` | `1` | `tlr` | Start a new child process; with `tlr` being a string containing the file name. |
 
 ### `nop` instruction
 Do nothing.
@@ -768,6 +772,7 @@ _ : start
 ```
 
 ## Interesting examples
+Below is a list of interesting examples of using the language.
 ### Writing to a file, and printing its content
 
 ```asm
@@ -792,3 +797,44 @@ Output:
 ```
 TEXTeee
 ```
+
+### Creating a child process
+`index.nax`:
+```asm
+_ : start
+    mov .tlr, "child.nax" ; another nax file containing stuff such as config modifications, variables and procedures
+    mov .fdx, 1
+    syscall . 0 , %exf ; create a process and execute it
+
+    mov . tlr , "Hi after the process" ; this line will be processed AFTER child.nax finishes executing
+    mov . stl , %endl
+    mov . fdx , 1
+    syscall . 0 , %ios
+
+    retn . 0 , 0
+```
+
+`child.nax`:
+```asm
+_ : data
+    num $ mynum = 0
+_ : start
+    heap . 0 , 36
+    stor . hea , mynum
+    mov . tlr , mynum
+    mov . fdx , 2
+    syscall . 0 , %ios ; prints heap size (36)
+    heap . 0 , -36 ; free up memory we occupied for the sake of the example
+```
+
+Output:
+
+```
+36
+Hi after the process
+```
+
+#### Notes regarding child processes
+1. You cannot create labels and jump to them in child processes.
+2. If you use `ret` or `retn` inside a child process, it will terminate the whole program with that exit code and not just the child process.
+3. Procedures and variables created inside the child process can be used in the parent process (in our case `index.nax`) after the child process finishes executing.

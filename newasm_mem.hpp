@@ -57,6 +57,8 @@ namespace newasm
         const int invalid_config = 17;
         const int inline_proc = 18;
         const int unknown_fdx = 19;
+        const int nested_redirect = 20;
+        const int nested_csm = 21;
 
         const std::unordered_map<int, std::string> identifier = {
             {noterm_point, "NoTerminationPoint"},
@@ -78,7 +80,9 @@ namespace newasm
             {memory_leak, "HeapMemoryLeak"},
             {invalid_config, "InvalidSysConfiguration"},
             {inline_proc, "InlineProcedure"},
-            {unknown_fdx, "UnknownSystemCall"}
+            {unknown_fdx, "UnknownSystemCall"},
+            {nested_redirect, "NestedExecFlowRedirection"},
+            {nested_csm, "NestedCodeStreamModif"}
         };
     }
     namespace cmp_results
@@ -177,6 +181,10 @@ namespace newasm
             }
             void out_bopr(std::string reg)
             {
+                if(reg == "\%exf")
+                {
+                    std::cout << "";
+                }
                 if(reg == "\%ios")
                 {
                     std::cout << "";

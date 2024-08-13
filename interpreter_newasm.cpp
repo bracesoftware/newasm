@@ -118,6 +118,7 @@ int main(int argc, char *argv[])
     }
 
     std::cout << std::endl;
+    newasm::header::execution_flow::entry_exec = newasm::header::settings::script_file;
 
     // File to analyze.
     newasm::header::functions::trim(newasm::header::settings::script_file);
@@ -133,6 +134,10 @@ int main(int argc, char *argv[])
 
     if(newasm::header::functions::check_args("-repl",argc,argv,argid))
     {
+        if(newasm::header::data::exception)
+        {
+            return 0;
+        }
         std::cout << std::endl;
         newasm::header::functions::nullprint_wnm(
             static_cast<std::string>("Read-Eval-Print Loop mode loaded; to leave, use the `")+

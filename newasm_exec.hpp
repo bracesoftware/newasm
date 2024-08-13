@@ -24,6 +24,7 @@ the Initial Developer. All Rights Reserved.
 
 namespace newasm
 {
+    int execute(std::string file, int startline, int proceed);
     void unsins(std::string ins)
     {
         newasm::header::functions::wrn(
@@ -40,6 +41,7 @@ namespace newasm
             +static_cast<std::string>("` is not supported outside the REPL mode.")
         );
     }
+    //int redirect_exec(std::string filename);
     int terminate(int exit_code)//, std::string line)
     {
         //std::cout << "TERMINATEEE" << std::endl;
@@ -83,7 +85,7 @@ namespace newasm
             newasm::header::col::magenta <<
             "\" in ";
 
-            if(newasm::header::data::proc_now == false)
+            if(newasm::header::execution_flow::exec_redirected == false) if(newasm::header::data::proc_now == false)
             {
                 std::cout <<
                 newasm::header::col::gray <<
@@ -100,6 +102,16 @@ namespace newasm
                 newasm::header::style::bold <<
                 newasm::header::style::underline <<
                 newasm::mem::regs::prp;
+            }
+            if(newasm::header::execution_flow::exec_redirected) if(newasm::header::data::proc_now == false)
+            {
+                std::cout << "child process "<<
+                newasm::header::col::gray <<
+                newasm::header::style::bold <<
+                newasm::header::style::underline <<
+                newasm::header::execution_flow::file <<
+                ":" <<
+                newasm::header::data::lastlndx;
             }
 
             std::cout <<
@@ -827,6 +839,30 @@ namespace newasm
         {
             if(suf == static_cast<std::string>("0"))
             {
+                //////process management (execution flow)
+                if(opr == static_cast<std::string>("\%exf"))
+                {
+                    if(newasm::header::execution_flow::exec_redirected)
+                    {
+                        newasm::terminate(newasm::exit_codes::nested_redirect);
+                        return 1;
+                    }
+                    if(newasm::mem::regs::fdx == 1)
+                    {
+                        if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                            return 1;
+                        }
+                        
+                        newasm::header::execution_flow::entry_start_line = newasm::header::data::lastlndx+1;
+                        newasm::header::execution_flow::file = newasm::header::functions::remq(newasm::mem::regs::tlr);
+                        newasm::header::execution_flow::exec_redirected = true;
+                        return 1;
+                    }
+                    newasm::terminate(newasm::exit_codes::unknown_fdx);
+                    return 1;
+                }
                 ///// input-output stream
                 if(opr == static_cast<std::string>("\%ios"))
                 {
@@ -1112,6 +1148,11 @@ namespace newasm
         //jmp
         if(ins == static_cast<std::string>("jmp"))
         {
+            if(newasm::header::execution_flow::exec_redirected)
+            {
+                newasm::terminate(newasm::exit_codes::nested_csm);
+                return 1;
+            }
             if(newasm::header::data::repl)
             {
                 newasm::unsins(ins);
@@ -1385,6 +1426,11 @@ namespace newasm
         //je
         if(ins == static_cast<std::string>("je"))
         {
+            if(newasm::header::execution_flow::exec_redirected)
+            {
+                newasm::terminate(newasm::exit_codes::nested_csm);
+                return 1;
+            }
             if(newasm::header::data::repl)
             {
                 newasm::unsins(ins);
@@ -1409,6 +1455,11 @@ namespace newasm
         //jne
         if(ins == static_cast<std::string>("jne"))
         {
+            if(newasm::header::execution_flow::exec_redirected)
+            {
+                newasm::terminate(newasm::exit_codes::nested_csm);
+                return 1;
+            }
             if(newasm::header::data::repl)
             {
                 newasm::unsins(ins);
@@ -1433,6 +1484,11 @@ namespace newasm
         //jl
         if(ins == static_cast<std::string>("jl"))
         {
+            if(newasm::header::execution_flow::exec_redirected)
+            {
+                newasm::terminate(newasm::exit_codes::nested_csm);
+                return 1;
+            }
             if(newasm::header::data::repl)
             {
                 newasm::unsins(ins);
@@ -1457,6 +1513,11 @@ namespace newasm
         //jg
         if(ins == static_cast<std::string>("jg"))
         {
+            if(newasm::header::execution_flow::exec_redirected)
+            {
+                newasm::terminate(newasm::exit_codes::nested_csm);
+                return 1;
+            }
             if(newasm::header::data::repl)
             {
                 newasm::unsins(ins);
@@ -1481,6 +1542,11 @@ namespace newasm
         //jle
         if(ins == static_cast<std::string>("jle"))
         {
+            if(newasm::header::execution_flow::exec_redirected)
+            {
+                newasm::terminate(newasm::exit_codes::nested_csm);
+                return 1;
+            }
             if(newasm::header::data::repl)
             {
                 newasm::unsins(ins);
@@ -1505,6 +1571,11 @@ namespace newasm
         //jge
         if(ins == static_cast<std::string>("jge"))
         {
+            if(newasm::header::execution_flow::exec_redirected)
+            {
+                newasm::terminate(newasm::exit_codes::nested_csm);
+                return 1;
+            }
             if(newasm::header::data::repl)
             {
                 newasm::unsins(ins);
@@ -1791,7 +1862,7 @@ namespace newasm
     }
     int procline(std::string &line)
     {
-        if(newasm::mem::functions::islbln(newasm::header::data::lastlndx))
+        if(!newasm::header::execution_flow::exec_redirected) if(newasm::mem::functions::islbln(newasm::header::data::lastlndx))
         {
             return 1;
         }
@@ -2006,11 +2077,41 @@ namespace newasm
         }
         return 0;
     }
-    int execute(std::string file, int startline, int proc)
+    int executechild()
     {
-        if(proc == 0)
+        std::ifstream internal_fileobject(newasm::header::constants::scripts_folder + newasm::header::execution_flow::file);
+        if(internal_fileobject.is_open())
         {
-            return proc;
+            std::string line;
+            int lineidx = 1;
+
+            while(std::getline(internal_fileobject, line))
+            {
+                if(newasm::system::terminated)
+                {
+                    newasm::header::execution_flow::exec_redirected = false;
+                    newasm::execute(newasm::header::settings::script_file, newasm::header::execution_flow::entry_start_line, 1);
+                    break;
+                }
+
+                newasm::header::data::lastln = line;
+                newasm::header::data::lastlndx = lineidx;
+                newasm::procline(line);
+                lineidx++;
+            }
+            internal_fileobject.close();
+            newasm::header::execution_flow::exec_redirected = false;
+            newasm::execute(newasm::header::settings::script_file, newasm::header::execution_flow::entry_start_line, 1);
+            return 1;
+        }
+        //else
+        return 0;
+    }
+    int execute(std::string file, int startline, int proceed)
+    {
+        if(proceed == 0)
+        {
+            return proceed;
         }
         std::ifstream internal_fileobject(newasm::header::constants::scripts_folder + file);
         if(internal_fileobject.is_open())
@@ -2033,6 +2134,11 @@ namespace newasm
                 {
                     newasm::code_stream::jump = 0;
                     newasm::execute(file, newasm::code_stream::jumpto, 1);
+                    break;
+                }
+                if(newasm::header::execution_flow::exec_redirected)
+                {
+                    newasm::executechild();
                     break;
                 }
 
