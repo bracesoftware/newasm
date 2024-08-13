@@ -60,6 +60,23 @@ int operator<<(ProcInsert &obj, std::string &ln)
 
 namespace newasm
 {
+    namespace setup
+    {
+        namespace args
+        {
+            const int ver = 1;
+            const int input = 2;
+            const int help = 3;
+            const int repl = 4;
+
+            std::unordered_map<int, std::string> arg_map = {
+                {ver, "-ver"},
+                {input, "-input"},
+                {help, "-help"},
+                {repl, "-repl"}
+            };
+        }
+    }
     ProcInsert process;
     int repl()
     {
@@ -88,17 +105,23 @@ int main(int argc, char *argv[])
     if(argc == 1)
     {
         newasm::header::functions::vers_info();
-        std::cout << "\t\t\tUse `" << newasm::header::style::underline << "-help" << newasm::header::col::reset << "` for more information." << std::endl;
+        std::cout << "\t\t\tUse `" << newasm::header::style::underline <<
+        newasm::setup::args::arg_map.at(newasm::setup::args::help)
+        << newasm::header::col::reset << "` for more information." << std::endl;
         return 1;
     }
     int argid = 0;
-    if(newasm::header::functions::check_args("-ver",argc,argv,argid))
+    if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::ver),argc,argv,argid))
     {
         newasm::header::functions::vers_info();
         return 0;
     }
     std::cout << std::endl; newasm::header::functions::vers_info();
-    if(newasm::header::functions::check_args("-input",argc,argv,argid))
+    if(!newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::input),argc,argv,argid) &&
+    newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::repl),argc,argv,argid))
+        goto repl_label;
+    
+    if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::input),argc,argv,argid))
     {
         if(argid < argc-1)
         {
@@ -112,7 +135,7 @@ int main(int argc, char *argv[])
         }
     }
     //other funny options
-    if(newasm::header::functions::check_args("-help",argc,argv,argid))
+    if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::help),argc,argv,argid))
     {
         newasm::header::functions::help_info();
     }
@@ -131,8 +154,8 @@ int main(int argc, char *argv[])
             newasm::header::settings::script_file
         )
     );
-
-    if(newasm::header::functions::check_args("-repl",argc,argv,argid))
+    repl_label:
+    if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::repl),argc,argv,argid))
     {
         if(newasm::header::data::exception)
         {
