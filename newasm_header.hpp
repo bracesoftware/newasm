@@ -42,7 +42,7 @@ namespace newasm
         {
             const int major = 0;
             const int minor = 0;
-            const int patch = 6;
+            const int patch = 7;
         }
         namespace data
         {
@@ -97,6 +97,20 @@ namespace newasm
         }
         namespace functions
         {
+            void getarch(std::string &dest)
+            {
+                #if defined(__x86_64__) || defined(__amd64__)
+                    dest = "x86-64bit";//std::cout << "64-bit x86 architecture" << std::endl;
+                #elif defined(__i386__)
+                    dest = "x86-32bit";//std::cout << "32-bit x86 architecture" << std::endl;
+                #elif defined(__aarch64__)
+                    dest = "ARM-64bit";//std::cout << "64-bit ARM architecture" << std::endl;
+                #elif defined(__arm__)
+                    dest = "ARM-32bit";//std::cout << "32-bit ARM architecture" << std::endl;
+                #else
+                    dest = "u-Arch";//std::cout << "Unknown architecture" << std::endl;
+                #endif
+            }
             void nullprint(std::string text)
             {
                 std::cout << text << std::endl;
@@ -140,10 +154,12 @@ namespace newasm
             }
             void vers_info()
             {
+                std::string arch;
+                newasm::header::functions::getarch(arch);
                 std::cout << newasm::header::col::green << newasm::header::style::bold << newasm::header::style::underline;
                 std::cout << "\t" << newasm::header::system_info::fullname << "\t\t";
                 std::cout << newasm::header::col::reset;
-                std::cout << newasm::header::version::major<<"."<<newasm::header::version::minor<<"."<<newasm::header::version::patch;
+                std::cout << newasm::header::version::major<<"."<<newasm::header::version::minor<<"."<<newasm::header::version::patch<<"-"<<arch;
                 std::cout << newasm::header::constants::nullstr;
                 std::cout << newasm::header::col::green;
                 std::cout << "\n\t" << newasm::header::system_info::copyright_claim <<

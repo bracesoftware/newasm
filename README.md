@@ -759,6 +759,9 @@ When a fatal error happens, program will shut down, returning a specific exit co
 | `16` | Memory leak: neither `retn`, `ret` or `heap` were used at the end of the program while the `hea` register wasn't at 0. |
 | `17` | Invalid configuration. |
 | `18` | You tried to call a procedure within a procedure. |
+| `19 `| Unknown system call index (invalid value moved into `fdx`). |
+| `20 `| Tried to create a child process in a child process. |
+| `21 `| Tried to jump to a label in a child process. |
 
 ## Comments
 Comments are also available:
