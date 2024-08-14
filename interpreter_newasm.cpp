@@ -85,22 +85,25 @@ namespace newasm
     int repl()
     {
         std::string line;
-        
-        std::cout << newasm::header::system_info::name + " >>> " + newasm::header::col::gray;
-        std::getline(std::cin,line);
-        
-        newasm::header::data::lastln = line;
-        std::cout << newasm::header::col::reset;
-        
-        newasm::process << line;
-        
-        if(newasm::header::data::repl_end)
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        while(true)
         {
-            return 0;
-        }
+            std::cout << newasm::header::system_info::name + " >>> " + newasm::header::col::gray;
+            std::getline(std::cin,line);
+            
+            newasm::header::data::lastln = line;
+            std::cout << newasm::header::col::reset;
+            
+            if(newasm::header::data::repl_end)
+            {
+                break;
+            }
 
-        newasm::header::data::lastlndx++;
-        return newasm::repl();
+            newasm::process << line;
+
+            newasm::header::data::lastlndx++;
+        }
+        return 0;
     }
     namespace utils
     {
@@ -211,7 +214,7 @@ int main(int argc, char *argv[])
             static_cast<std::string>("` instruction."));
         newasm::header::data::lastlndx = 0;
         newasm::header::data::repl = true;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        
         newasm::repl();
     }
 

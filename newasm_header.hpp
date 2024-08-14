@@ -98,6 +98,13 @@ namespace newasm
         }
         namespace functions
         {
+            void getversion(std::string &dest)
+            {
+                dest.clear();
+                dest =  std::to_string(newasm::header::version::major) + static_cast<std::string>(".") +
+                        std::to_string(newasm::header::version::minor) + static_cast<std::string>(".") +
+                        std::to_string(newasm::header::version::patch);
+            }
             void getos(std::string &dest)
             {
                 #ifdef _WIN32
@@ -165,17 +172,21 @@ namespace newasm
             {
                 std::string arch;
                 std::string os;
+                std::string version;
+
                 newasm::header::functions::getarch(arch);
                 newasm::header::functions::getos(os);
+                newasm::header::functions::getversion(version);
+
                 std::cout << newasm::header::col::green << newasm::header::style::bold << newasm::header::style::underline;
                 std::cout << "\t" << newasm::header::system_info::fullname << "\t\t";
                 std::cout << newasm::header::col::reset;
-                std::cout << newasm::header::version::major<<"."<<newasm::header::version::minor<<"."<<newasm::header::version::patch<<"-"<<os<<"_"<<arch;
+                std::cout << version << "-" << os << "_" << arch;
                 std::cout << newasm::header::constants::nullstr;
                 std::cout << newasm::header::col::green;
                 std::cout << "\n\t" << newasm::header::system_info::copyright_claim <<
                 newasm::header::col::reset << std::endl << std::endl;
-                //std::cout << newasm::header::col::reset;
+                
             }
             void help_info()
             {
