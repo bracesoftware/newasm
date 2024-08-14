@@ -84,17 +84,11 @@ namespace newasm
 
     int repl()
     {
-        int firstuse = 1;
         std::string line;
+        std::cout << "\n";
         //std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         while(true)
         {
-            if(firstuse == 1)
-            {
-                std::cout << "\n";
-                firstuse = 0;
-                continue;
-            }
             line.clear();
             std::cout << newasm::header::style::underline + newasm::header::col::gray;
             std::getline(std::cin,line);
@@ -174,13 +168,13 @@ int main(int argc, char *argv[])
     {
         if(argid < argc-1)
         {
-            newasm::header::settings::script_file = static_cast<std::string>(argv[argid+1]);
+            newasm::header::settings::script_file = newasm::header::functions::trim(static_cast<std::string>(argv[argid+1]));
         }
         else
         {
             newasm::header::functions::err("Wrong application usage!\n\t\t\t\t\t" + newasm::header::col::gray + " newasm -input <filename in nax_scripts> -other_options");
             newasm::header::functions::wrn("Input file is set to `index.nax`.");
-            newasm::header::settings::script_file = "index.nax";
+            newasm::header::settings::script_file = newasm::header::constants::default_input;
         }
     }
     //other funny options

@@ -71,7 +71,7 @@ This project is written purely in C++ using its standard libraries, so compiling
 | ---------------- | --------- | ----------- |
 | `-ver` | - | Displays version information only, and doesn't start the interpreter at all. |
 | `-help` | - | Displays help information. |
-| `-input` | `<filename>` | Sets the input file; if `-input` was not provided, interpreter sets it to `input.nax`. Note that the input file must be located inside the `nax_scripts` folder, file extension doesn't matter, it can be the standard `.asm` as well. |
+| `-input` | `<filename>` | Sets the input file; if `-input` was not provided, interpreter sets it to `input.asm`. |
 | `-repl` | - | Enter the read-evaluate-print mode. |
 
 ## Sections

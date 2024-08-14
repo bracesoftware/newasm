@@ -1741,6 +1741,39 @@ namespace newasm
                 newasm::mem::regs::psx = newasm::header::constants::inv_reg_val;
                 return 1;
             }
+            if(suf == static_cast<std::string>("prp"))
+            {
+                newasm::mem::regs::prp = newasm::header::constants::inv_reg_val;
+                return 1;
+            }
+            if(suf == static_cast<std::string>("cpr"))
+            {
+                newasm::mem::regs::cpr = 0;
+                return 1;
+            }
+            if(suf == static_cast<std::string>("cr0"))
+            {
+                newasm::mem::regs::cr0 = 0.0;
+                return 1;
+            }
+            if(suf == static_cast<std::string>("cr1"))
+            {
+                newasm::mem::regs::cr1 = 0.0;
+                return 1;
+            }
+            if(suf == static_cast<std::string>("br0"))
+            {
+                newasm::mem::regs::br0 = 0;
+                return 1;
+            }
+            if(suf == static_cast<std::string>("br1"))
+            {
+                newasm::mem::regs::br1 = 0;
+                return 1;
+            }
+            newasm::terminate(newasm::exit_codes::bus_err); // non existing register; 
+            //however this error is highly misleading since registers arent in RAM
+            return 1;
         }
         newasm::terminate(newasm::exit_codes::invalid_ins);//,wholeline);
         return 1;
@@ -2073,13 +2106,13 @@ namespace newasm
         {
             newasm::header::functions::err(
                 static_cast<std::string>("Unable to open the file : ") + static_cast<std::string>("'") + 
-                newasm::header::constants::scripts_folder + file + static_cast<std::string>("'"));
+                /*newasm::header::constants::scripts_folder + */file + static_cast<std::string>("'"));
         }
         return 0;
     }
     int executechild()
     {
-        std::ifstream internal_fileobject(newasm::header::constants::scripts_folder + newasm::header::execution_flow::file);
+        std::ifstream internal_fileobject(/*newasm::header::constants::scripts_folder + */newasm::header::execution_flow::file);
         if(internal_fileobject.is_open())
         {
             std::string line;
@@ -2163,7 +2196,7 @@ namespace newasm
         {
             newasm::header::functions::err(
                 static_cast<std::string>("Unable to open the file : ") + static_cast<std::string>("'") + 
-                newasm::header::constants::scripts_folder + file + static_cast<std::string>("'"));
+                /*newasm::header::constants::scripts_folder +*/ file + static_cast<std::string>("'"));
         }
         return 0;
     }

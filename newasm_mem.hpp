@@ -122,12 +122,12 @@ namespace newasm
         namespace regs
         {
             // non accessible registers
-            int hea = 0;
+            int exc = 0; // cant be used lol
+            int hea = 0; // heap size
             //mem registers
             int stk = newasm::mem::inf::max_mem_size - 1;
-            int heaptr = 0;
+            int heaptr = 0; // pointer to heap adr
             //NORMAL REGISTERS
-            int exc = 0;
             int fdx = 0;
             std::string tlr = newasm::header::constants::inv_reg_val;
             std::string stl = newasm::header::constants::inv_reg_val;
