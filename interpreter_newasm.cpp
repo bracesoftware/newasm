@@ -96,7 +96,7 @@ namespace newasm
                 continue;
             }
             line.clear();
-            std::cout << newasm::header::system_info::name + " >>> " + newasm::header::col::gray;
+            std::cout << newasm::header::style::underline + newasm::header::col::gray;
             std::getline(std::cin,line);
             
             newasm::header::data::lastln = line;

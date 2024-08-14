@@ -2055,7 +2055,7 @@ namespace newasm
     }
     int analyze(std::string file)
     {
-        std::ifstream internal_fileobject(newasm::header::constants::scripts_folder + file);
+        std::ifstream internal_fileobject(/*newasm::header::constants::scripts_folder + */file);
         if(internal_fileobject.is_open())
         {
             std::string line;
@@ -2113,7 +2113,7 @@ namespace newasm
         {
             return proceed;
         }
-        std::ifstream internal_fileobject(newasm::header::constants::scripts_folder + file);
+        std::ifstream internal_fileobject(/*newasm::header::constants::scripts_folder + */file);
         if(internal_fileobject.is_open())
         {
             std::string line;
