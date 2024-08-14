@@ -36,7 +36,7 @@ namespace newasm
         {
             const std::string name = "[New-ASM]";
             const std::string copyright_claim = "(c) 2024 Brace Software Co.";
-            const std::string fullname = "New-ASM eXecutor";
+            const std::string fullname = "New-ASM Runtime Environment";
         }
         namespace version
         {
@@ -178,14 +178,13 @@ namespace newasm
                 newasm::header::functions::getos(os);
                 newasm::header::functions::getversion(version);
 
-                std::cout << newasm::header::col::green << newasm::header::style::bold << newasm::header::style::underline;
-                std::cout << "\t" << newasm::header::system_info::fullname << "\t\t";
-                std::cout << newasm::header::col::reset;
-                std::cout << version << "-" << os << "_" << arch;
-                std::cout << newasm::header::constants::nullstr;
-                std::cout << newasm::header::col::green;
-                std::cout << "\n\t" << newasm::header::system_info::copyright_claim <<
-                newasm::header::col::reset << std::endl << std::endl;
+                std::cout << newasm::header::col::yellow << newasm::header::style::bold << newasm::header::style::underline;
+                std::cout << "\n" << newasm::header::system_info::fullname;
+                std::cout << newasm::header::col::reset << newasm::header::col::gray;
+                std::cout << "\n  Build: " << version << "-" << os << "_" << arch;
+                
+                std::cout << "\n  " << newasm::header::system_info::copyright_claim <<
+                newasm::header::col::reset << std::endl;
                 
             }
             void help_info()
@@ -204,6 +203,7 @@ namespace newasm
                     newasm::header::col::gray + "\t\tSets the input file."
                 );
                 std::cout << newasm::header::col::reset;
+                std::cout << "\n";
             }
             std::vector<std::string> split(const std::string &str, char delimiter)
             {

@@ -84,24 +84,31 @@ namespace newasm
 
     int repl()
     {
+        int firstuse = 1;
         std::string line;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        //std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         while(true)
         {
+            if(firstuse == 1)
+            {
+                std::cout << "\n";
+                firstuse = 0;
+                continue;
+            }
+            line.clear();
             std::cout << newasm::header::system_info::name + " >>> " + newasm::header::col::gray;
             std::getline(std::cin,line);
             
             newasm::header::data::lastln = line;
             std::cout << newasm::header::col::reset;
             
+            newasm::header::data::lastlndx++;
+            newasm::process << line;
+
             if(newasm::header::data::repl_end)
             {
                 break;
             }
-
-            newasm::process << line;
-
-            newasm::header::data::lastlndx++;
         }
         return 0;
     }
@@ -118,8 +125,8 @@ namespace newasm
                 else if (i == pos) std::cout << "*";
                 else std::cout << " ";
             }
-            std::cout << "] " << newasm::header::col::reset << int(progress * 100.0) << " %\r"; // Ispis procenta
-            std::cout.flush(); // Osvježavanje linije u konzoli
+            std::cout << "] " << newasm::header::col::reset << int(progress * 100.0) << " %\r";
+            std::cout.flush();
         }
 
         int loadingbar(const std::string &text)
@@ -142,9 +149,11 @@ int main(int argc, char *argv[])
     if(argc == 1)
     {
         newasm::header::functions::vers_info();
-        std::cout << "\t\t\tUse `" << newasm::header::style::underline <<
+        std::cout << "Use `" << newasm::header::style::underline <<
         newasm::setup::args::arg_map.at(newasm::setup::args::help)
         << newasm::header::col::reset << "` for more information." << std::endl;
+        std::cout << "\n";
+        std::cout << "\n";
         return 1;
     }
     int argid = 0;
@@ -156,7 +165,10 @@ int main(int argc, char *argv[])
     std::cout << std::endl; newasm::header::functions::vers_info();
     if(!newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::input),argc,argv,argid) &&
     newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::repl),argc,argv,argid))
+    {
+        newasm::header::data::exception = false;
         goto repl_label;
+    }
     
     if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::input),argc,argv,argid))
     {
