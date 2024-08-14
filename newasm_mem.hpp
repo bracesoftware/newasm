@@ -59,6 +59,7 @@ namespace newasm
         const int unknown_fdx = 19;
         const int nested_redirect = 20;
         const int nested_csm = 21;
+        const int uninptr_usage = 22;
 
         const std::unordered_map<int, std::string> identifier = {
             {noterm_point, "NoTerminationPoint"},
@@ -82,7 +83,8 @@ namespace newasm
             {inline_proc, "InlineProcedure"},
             {unknown_fdx, "UnknownSystemCall"},
             {nested_redirect, "NestedExecFlowRedirection"},
-            {nested_csm, "NestedCodeStreamModif"}
+            {nested_csm, "NestedCodeStreamModif"},
+            {uninptr_usage, "UnassignedRefUsage"}
         };
     }
     namespace cmp_results
@@ -143,8 +145,12 @@ namespace newasm
 
         std::unordered_map<std::string, std::string> data;
         std::unordered_map<std::string, int> datatypes;
-        std::unordered_map<std::string, std::vector<std::string>> funcs;
+
+        std::map<std::string, std::vector<std::string>> funcs;
+
         std::unordered_map<std::string, int> labels;
+
+        std::vector<std::string> uninitialized_pointer;
 
         namespace functions
         {

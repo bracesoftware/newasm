@@ -52,6 +52,8 @@ Documentation about `newasm` which includes following topics:
     - [`cmp` and `jmp` variants](#cmp-instruction-and-jmp-variants)
     - [Math calculations](#calculation-instructions)
     - [Bit operations](#bit-operations)
+    - [`inc` and `dec` instructions](#inc-and-dec-instructions)
+    - [Unassigned references](#unassigned-pointers-or-references)
 - [Procedures](#procedures)
 - [Exit codes](#exit-codes)
 - [Comments](#comments)
@@ -131,6 +133,7 @@ This language brings some built-in references, or rather operands, with itself -
 - `%fs` - used as an operand in `syscall`, represents a module of system calls responsible for input and output streaming;
 - `%exf` - used as an operand in `syscall`, represents a module of system calls responsible for execution flow (starting child processes);
 - `%endl` - line ending, used in `stl`;
+- `&%null` - used to leave references/pointers unassigned/uninitialized.
 - `%nl` - used as a null operand in some instructions.
 
 **WARNING**: Syntax such as `% ios` is invalid.
@@ -707,6 +710,68 @@ _ : start
     shr ; br0 = br0 >> br1
 ```
 
+### `inc` and `dec` instructions
+These instructions are used to increment or decrement register values. Since registers can be of various types, these 2 instructions perform differently.
+
+#### Syntax
+```asm
+inc.register_name
+dec.register_name
+```
+
+#### Example `#1`
+If you operate on a whole number or rational number register, then it may not be so interesting, it just increments it by 1.
+
+```asm
+inc.br0 ; br0++
+dec.cr1 ; cr1--
+```
+
+If you are operating on a typeless register, these operations will check if the register is holding a whole number, and then apply changes to it. Namely, if you try to increment `tlr` while `tlr` is holding a string, you will get a data type mismatch exception.
+
+However, what if you try to decrement a symbol reference, well - this gets interesting. For instance, if you tried to decrement the `prp` register (which is a reference to a last used procedure), you can't just decrement it by 1 since it is internally pointing to a pair in the procedure map, so the interpreter does the work for you and updates it to the pair before the pair `prp` is pointing at.
+
+Demonstration:
+```asm
+_ : data
+    ref $ temporary = &%null
+_ : start
+    proc . 0 , procedure_1
+        halt . proc , 0
+    end
+    proc . 0 , procedure_2
+        halt . proc , 0
+    end
+    proc . 0 , procedure_3
+        halt . proc , 0
+    end
+
+    mov . prp , &procedure_1
+    inc . prp
+
+    stor . prp , temporary
+    mov . tlr , temporary
+    mov . stl , %endl
+    mov . fdx , 6
+    syscall . 0 , %ios
+
+    mov . prp , &procedure_3
+    dec . prp
+
+    stor . prp , temporary
+    mov . tlr , temporary
+    mov . stl , %endl
+    mov . fdx , 6
+    syscall . 0 , %ios
+```
+
+Output:
+
+```asm
+procedure_2
+procedure_2
+```
+
 ## Procedures
 Procedures allow you to use the same piece of code without having to actually repeat it. General syntax is:
 
@@ -762,6 +827,7 @@ When a fatal error happens, program will shut down, returning a specific exit co
 | `19 `| Unknown system call index (invalid value moved into `fdx`). |
 | `20 `| Tried to create a child process in a child process. |
 | `21 `| Tried to jump to a label in a child process. |
+| `22` | Attempted to use an unassigned pointer/reference variable. |
 
 ## Comments
 Comments are also available:
@@ -841,3 +907,11 @@ Hi after the process
 1. You cannot create labels and jump to them in child processes.
 2. If you use `ret` or `retn` inside a child process, it will terminate the whole program with that exit code and not just the child process.
 3. Procedures and variables created inside the child process can be used in the parent process (in our case `index.nax`) after the child process finishes executing.
+
+## Unassigned pointers or references
+```asm
+_:data
+    ref $ unassigned_pointer = &%null
+```
+
+This reference is left unassigned and an attempt to use it will result in an exception.
