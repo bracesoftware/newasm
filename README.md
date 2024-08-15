@@ -53,13 +53,13 @@ Documentation about `newasm` which includes following topics:
     - [Math calculations](#calculation-instructions)
     - [Bit operations](#bit-operations)
     - [`inc` and `dec` instructions](#inc-and-dec-instructions)
-    - [Unassigned references](#unassigned-pointers-or-references)
 - [Procedures](#procedures)
 - [Exit codes](#exit-codes)
 - [Comments](#comments)
 - [Interesting examples](#interesting-examples)
     - [Writing to a file, and then reading it](#writing-to-a-file-and-printing-its-content)
     - [Creating a child process](#creating-a-child-process)
+- [Unassigned references](#unassigned-pointers-or-references)
 
 ## Compiling
 This project is written purely in C++ using its standard libraries, so compiling it should be easy. To download C++ compiler, please follow instructions on the link below:
