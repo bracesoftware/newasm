@@ -42,7 +42,7 @@ namespace newasm
         {
             const int major = 0;
             const int minor = 1;
-            const int patch = 0;
+            const int patch = 1;
         }
         namespace data
         {
@@ -98,6 +98,7 @@ namespace newasm
             int debug = 1;
             std::string script_file = "index.nax";
             bool extra = false;
+            bool create_new_projfile = false;
         }
         namespace functions
         {
@@ -433,5 +434,65 @@ namespace newasm
                 return true;
             }
         }
+    }
+
+    namespace project_data
+    {
+        std::string name = "";
+        std::string version = "";
+
+        namespace impl
+        {
+            int parse_proj_settings(const std::string &key, const std::string &value)
+            {
+                if(key == static_cast<std::string>("name"))
+                {
+                    newasm::project_data::name = value;
+                }
+                if(key == static_cast<std::string>("version"))
+                {
+                    newasm::project_data::version = value;
+                }
+                return 1;
+            }
+            int setup_proj()
+            {
+                std::ifstream internal_fileobject(newasm::header::settings::script_file + static_cast<std::string>(".newasm_proj"));
+                if(internal_fileobject.is_open())
+                {
+                    std::string line,key,value;
+                    std::vector<std::string> tokens;
+
+                    while(std::getline(internal_fileobject, line))
+                    {
+                        tokens = newasm::header::functions::split_fixed(line, '=');
+                        key = tokens[0];
+                        key = newasm::header::functions::trim(key);
+                        value = tokens[1];
+                        value = newasm::header::functions::trim(value);
+                        newasm::project_data::impl::parse_proj_settings(key, value);
+                    }
+                    internal_fileobject.close();
+                    return 1;
+                }
+                else
+                {
+                    newasm::header::functions::wrn("Cannot find the project file.");
+                    newasm::project_data::name = "Unnamed project";
+                    newasm::project_data::version = "0.0.1";
+                    if(newasm::header::settings::create_new_projfile)
+                    {
+                        std::ofstream internal_fileobject(newasm::header::settings::script_file + static_cast<std::string>(".newasm_proj"), std::ios::app);
+
+                        if(internal_fileobject.is_open())
+                        {
+                            internal_fileobject << "name = Unnamed project" << "\n" << "version = 0.0.1" << "\n";
+                            internal_fileobject.close();
+                        }
+                    }
+                }
+                return 1;
+            }
+        } 
     }
 }

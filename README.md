@@ -61,6 +61,7 @@ Documentation about `newasm` which includes following topics:
     - [Creating a child process](#creating-a-child-process)
 - [Unassigned references](#unassigned-pointers-or-references)
 - [Structures](#structures)
+- [Project files]()
 
 ## Compiling
 This project is written purely in C++ using its standard libraries, so compiling it should be easy. To download C++ compiler, please follow instructions on the link below:
@@ -76,6 +77,7 @@ This project is written purely in C++ using its standard libraries, so compiling
 | `-help` | - | Displays help information. |
 | `-input` | `<filename>` | Sets the input file; if `-input` was not provided, interpreter sets it to `input.asm`. |
 | `-repl` | - | Enter the read-evaluate-print mode. |
+| `-newproj` | - | Create a new project file if one doesn't already exist. |
 
 ## Sections
 Sections are built-in "tags" used to classify code. Each section uses different syntax in terms of instructions. General syntax is:
@@ -1020,3 +1022,24 @@ struct $ name = { ; brace must be HERE
     num $ number = 384
 }
 ```
+
+## Project files
+**Project files** (`.newasm_proj` file) are files that define information about your New-ASM project. General name format for them is:
+
+```
+<entry file name>.newasm_proj
+```
+For example, if my `-input` file is `input.asm`, project file for that would be `input.asm.newasm_proj`. This is basically an INI file.
+
+### Keys and values available
+| Key name | Description |
+| -------- | ----------- |
+| `name` | Name for your project. |
+| `version` | Version of your project. |
+
+Example `index.asm.newasm_proj` file:
+```ini
+name = Unnamed project
+version = 0.0.1
+```
+

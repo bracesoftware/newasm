@@ -71,13 +71,15 @@ namespace newasm
             const int help = 3;
             const int repl = 4;
             const int extra = 5;
+            const int cnpf = 6;
 
             std::unordered_map<int, std::string> arg_map = {
                 {ver, "-ver"},
                 {input, "-input"},
                 {help, "-help"},
                 {repl, "-repl"},
-                {extra, "-extra"}
+                {extra, "-extra"},
+                {cnpf, "-newproj"}
             };
         }
     }
@@ -187,9 +189,19 @@ int main(int argc, char *argv[])
     {
         newasm::header::settings::extra = true;
     }
+    if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::cnpf),argc,argv,argid))
+    {
+        newasm::header::settings::create_new_projfile = true;
+    }
 
     std::cout << std::endl;
     newasm::header::execution_flow::entry_exec = newasm::header::settings::script_file;
+
+    newasm::project_data::impl::setup_proj();
+    newasm::header::functions::info(
+        static_cast<std::string>("Preparing to execute: ") + newasm::header::col::yellow +
+        newasm::project_data::name + static_cast<std::string>(" ") + newasm::project_data::version
+        + newasm::header::col::reset);
 
     // File to analyze.
     newasm::header::functions::trim(newasm::header::settings::script_file);
