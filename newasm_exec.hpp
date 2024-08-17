@@ -318,6 +318,178 @@ namespace newasm
         }
         return 1;
     }
+    int stor_structmem(const std::string &suf, const std::string &into)
+    {
+        std::vector<std::string> tokens;
+        std::string member_name;
+        std::string struct_name;
+
+        tokens = newasm::header::functions::split_fixed(into, '@');
+        member_name = tokens[0];
+        struct_name = tokens[1];
+        member_name = newasm::header::functions::trim(member_name);
+        struct_name = newasm::header::functions::trim(struct_name);
+
+        if(!newasm::mem::functions::datavalid(struct_name, newasm::mem::structs))
+        {
+            newasm::terminate(newasm::exit_codes::undefined_struct);
+            return 1;
+        }
+        bool member_found = false;
+        std::vector<newasm::mem::struct_member>::iterator struct_member_id;
+        for(struct_member_id = newasm::mem::structs[struct_name].begin(); struct_member_id !=newasm::mem::structs[struct_name].end(); struct_member_id++)
+        {
+            if(struct_member_id->name == member_name)
+            {
+                member_found = true;
+                break;
+            }
+        }
+        if(!member_found)
+        {
+            newasm::terminate(newasm::exit_codes::undefined_structmem);
+            return 1;
+        }
+
+        //std::cout << struct_member_id->datatype << " " << struct_member_id->name << " " << struct_member_id->value << std::endl;
+
+        int intreg = newasm::header::constants::inv_ireg_val;
+        int floatreg = newasm::header::constants::inv_freg_val;
+        std::string strreg = newasm::header::constants::inv_reg_val;
+
+        if(suf == static_cast<std::string>("fdx"))
+        {
+            intreg = newasm::mem::regs::fdx;
+        }
+        if(suf == static_cast<std::string>("stk"))
+        {
+            intreg = newasm::mem::regs::stk;
+        }
+        if(suf == static_cast<std::string>("hea"))
+        {
+            intreg = newasm::mem::regs::heaptr;
+        }
+        if(suf == static_cast<std::string>("cpr"))
+        {
+            intreg = newasm::mem::regs::cpr;
+        }
+        if(suf == static_cast<std::string>("br0"))
+        {
+            intreg = newasm::mem::regs::br0;
+        }
+        if(suf == static_cast<std::string>("br1"))
+        {
+            intreg = newasm::mem::regs::br1;
+        }
+
+        if(suf == static_cast<std::string>("cr0"))
+        {
+            floatreg = newasm::mem::regs::cr0;
+        }
+        if(suf == static_cast<std::string>("cr1"))
+        {
+            floatreg = newasm::mem::regs::cr1;
+        }
+
+        if(suf == static_cast<std::string>("tlr"))
+        {
+            strreg = newasm::mem::regs::tlr;
+        }
+        if(suf == static_cast<std::string>("stl"))
+        {
+            strreg = newasm::mem::regs::stl;
+        }
+        if(suf == static_cast<std::string>("psx"))
+        {
+            strreg = newasm::mem::regs::psx;
+        }
+        if(suf == static_cast<std::string>("prp"))
+        {
+            strreg = newasm::mem::regs::prp;
+        }
+
+        const bool debugit = false;
+
+        if(intreg != newasm::header::constants::inv_ireg_val)
+        {
+            if(struct_member_id->datatype != newasm::datatypes::number)
+            {
+                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                return 1;
+            }
+            struct_member_id->value = std::to_string(intreg);
+            if(debugit) std::cout << struct_member_id->datatype << " " << struct_member_id->name << " " << struct_member_id->value << std::endl;
+            return 1;
+        }
+        if(floatreg != newasm::header::constants::inv_freg_val)
+        {
+            if(struct_member_id->datatype != newasm::datatypes::decimal)
+            {
+                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                return 1;
+            }
+            struct_member_id->value = std::to_string(floatreg);
+            if(debugit) std::cout << struct_member_id->datatype << " " << struct_member_id->name << " " << struct_member_id->value << std::endl;
+            return 1;
+        }
+        if(strreg != newasm::header::constants::inv_reg_val)
+        {
+            if(newasm::header::functions::isnumeric(strreg))
+            {
+                if(struct_member_id->datatype != newasm::datatypes::number)
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    return 1;
+                }
+
+                struct_member_id->value = strreg;
+                if(debugit) std::cout << struct_member_id->datatype << " " << struct_member_id->name << " " << struct_member_id->value << std::endl;
+                return 1;
+            }
+            if(newasm::header::functions::isfloat(strreg))
+            {
+                if(struct_member_id->datatype != newasm::datatypes::decimal)
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    return 1;
+                }
+
+                struct_member_id->value = strreg;
+                if(debugit) std::cout << struct_member_id->datatype << " " << struct_member_id->name << " " << struct_member_id->value << std::endl;
+                return 1;
+            }
+            if(newasm::header::functions::istext(strreg))
+            {
+                if(struct_member_id->datatype != newasm::datatypes::text)
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    return 1;
+                }
+
+                //strreg = newasm::header::functions::remq(strreg);
+                struct_member_id->value = strreg;
+                if(debugit) std::cout << struct_member_id->datatype << " " << struct_member_id->name << " " << struct_member_id->value << std::endl;
+                return 1;
+            }
+            if(newasm::header::functions::isref(strreg))
+            {
+                if(struct_member_id->datatype != newasm::datatypes::reference)
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    return 1;
+                }
+
+                //strreg = newasm::header::functions::remamp(strreg);
+                struct_member_id->value = strreg;
+                if(debugit) std::cout << struct_member_id->datatype << " " << struct_member_id->name << " " << struct_member_id->value << std::endl;
+                return 1;
+            }
+            newasm::terminate(newasm::exit_codes::nested_redirect);
+            return 1;
+        }
+
+        return 1;
+    }
     int process_iso(std::string wholeline, std::string ins, std::string suf, std::string opr)
     {
         if(opr == newasm::header::constants::inv_reg_val)
@@ -432,6 +604,11 @@ namespace newasm
         // STOR
         if(ins == static_cast<std::string>("stor"))
         {
+            if(newasm::header::functions::isrefat(opr) && !newasm::header::functions::istext(opr))
+            {
+                newasm::stor_structmem(suf, opr);
+                return 1;
+            }
             if(!newasm::header::functions::isalphanum(opr))
             {
                 return 1;

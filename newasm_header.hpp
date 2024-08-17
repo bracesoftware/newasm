@@ -351,6 +351,10 @@ namespace newasm
                 }
                 return true;
             }
+            bool isrefat(const std::string &data)
+            {
+                return (data.find("@") != std::string::npos);
+            }
             std::string remq(const std::string& str)
             {
                 if(str.length() >= 2 && str.front() == '"' && str.back() == '"')

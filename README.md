@@ -60,6 +60,7 @@ Documentation about `newasm` which includes following topics:
     - [Writing to a file, and then reading it](#writing-to-a-file-and-printing-its-content)
     - [Creating a child process](#creating-a-child-process)
 - [Unassigned references](#unassigned-pointers-or-references)
+- [Structures](#structures)
 
 ## Compiling
 This project is written purely in C++ using its standard libraries, so compiling it should be easy. To download C++ compiler, please follow instructions on the link below:
@@ -830,6 +831,11 @@ When a fatal error happens, program will shut down, returning a specific exit co
 | `20 `| Tried to create a child process in a child process. |
 | `21 `| Tried to jump to a label in a child process. |
 | `22` | Attempted to use an unassigned pointer/reference variable. |
+| `23` | Tried to redefine a variable. |
+| `24` | Tried to redefine a structure. |
+| `25` | Unexpected closing brace. |
+| `26` | Tried to access a structure that hasn't been declared. |
+| `27` | Tried to access an undefined structure member. |
 
 ## Comments
 Comments are also available:
@@ -917,3 +923,100 @@ _:data
 ```
 
 This reference is left unassigned and an attempt to use it will result in an exception.
+
+## Structures
+In this quite frankly low-level language, there are also structs! General syntax is:
+```asm
+_:data
+    struct $ structure_name = {
+        ; members
+        data_type $ member_name = member_value
+    }
+
+```
+
+### Example
+```asm
+_ : data
+    struct $ mystruct = {
+        num $ lol = 98
+        decm $ decimal = 2.3
+        txt $ text = "hi from struct"
+    }
+    struct $ mystruct2 = {
+        num $ lol = 45
+        decm $ decimal = 833.4
+        txt $ text = "hi from struct again"
+        ref $ reference = &prptest
+    }
+_ : start
+    mov . tlr , text @ mystruct
+    mov . stl , %endl
+    mov . fdx , 1
+    syscall . 0 , %ios
+
+    mov . tlr , decimal @ mystruct
+    mov . fdx , 2
+    syscall . 0 , %ios
+
+    mov . tlr , lol @ mystruct
+    mov . fdx , 2
+    syscall . 0 , %ios
+
+    mov . tlr , text @ mystruct2
+    mov . stl , %endl
+    mov . fdx , 1
+    syscall . 0 , %ios
+
+    mov . tlr , decimal @ mystruct2
+    mov . fdx , 2
+    syscall . 0 , %ios
+
+    mov . tlr , lol @ mystruct2
+    mov . fdx , 2
+    syscall . 0 , %ios
+
+    mov . tlr , reference @ mystruct2
+    mov . fdx , 6
+    syscall . 0 , %ios
+
+    mov . stl , 45657
+
+    stor . stl , lol @ mystruct2
+    mov . tlr , lol @ mystruct2
+    mov . fdx , 2
+    mov . stl , %endl
+    syscall . 0 , %ios
+
+    mov . psx , "HIII243"
+
+    stor . psx , text @ mystruct
+    mov . tlr , text @ mystruct
+    mov . fdx , 1
+    mov . stl , %endl
+    syscall . 0 , %ios
+```
+
+Output:
+
+```
+hi from struct
+2.3
+98
+hi from struct again
+833.4
+45
+prptest
+45657
+HIII243
+```
+
+### Notes
+1. Currently, if you want to store a value into a struct member, only the `stor` instruction will work - note that instructions such as `load` and `pop` will not work regarding this.
+2. This syntax is a must:
+```asm
+struct $ name = { ; brace must be HERE
+; and not here
+    num $ number = 384
+}
+```
