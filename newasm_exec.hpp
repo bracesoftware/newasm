@@ -2078,6 +2078,7 @@ namespace newasm
             // do nothing
             return 1;
         }
+        //MATH OPERATIONS
         if(ins == static_cast<std::string>("add"))
         {
             newasm::mem::regs::cr0 = newasm::mem::regs::cr0 + newasm::mem::regs::cr1;
@@ -2103,7 +2104,12 @@ namespace newasm
             newasm::mem::regs::cr0 = std::pow(newasm::mem::regs::cr0,newasm::mem::regs::cr1);
             return 1;
         }
-
+        if(ins == static_cast<std::string>("log"))
+        {
+            newasm::mem::regs::cr0 = std::log10(newasm::mem::regs::cr0) / std::log10(newasm::mem::regs::cr1);
+            return 1;
+        }
+        //BITWISE OPERATIONS
         if(ins == static_cast<std::string>("and"))
         {
             newasm::mem::regs::br0 = newasm::mem::regs::br0 & newasm::mem::regs::br1;

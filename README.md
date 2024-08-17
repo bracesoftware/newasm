@@ -663,12 +663,13 @@ GREATER
 ```
 
 ### Calculation instructions
-There are 4 mathematical instructions you can use:
+There are 5 mathematical instructions you can use:
 - `add` - addition,
 - `sub` - subtraction,
 - `mul` - multiplication,
 - `div` - division,
-- `exp` - exponentiation.
+- `exp` - exponentiation,
+- `log` - logarithm.
 
 #### Syntax
 All of these operations use `cr0` and `cr1` registers. The result is stored in `cr0`; so:
@@ -683,6 +684,7 @@ _ : start
     mul ; cr0 = cr0 * cr1
     div ; cr0 = cr0 / cr1
     exp ; cr0 = power(cr0,cr1)
+    log ; cr0 = log_c1(cr0)
 ```
 
 ### Bit operations

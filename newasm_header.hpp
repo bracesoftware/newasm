@@ -41,8 +41,8 @@ namespace newasm
         namespace version
         {
             const int major = 0;
-            const int minor = 0;
-            const int patch = 9;
+            const int minor = 1;
+            const int patch = 0;
         }
         namespace data
         {
