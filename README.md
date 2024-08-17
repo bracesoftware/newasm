@@ -61,7 +61,7 @@ Documentation about `newasm` which includes following topics:
     - [Creating a child process](#creating-a-child-process)
 - [Unassigned references](#unassigned-pointers-or-references)
 - [Structures](#structures)
-- [Project files]()
+- [Project files](#project-files)
 
 ## Compiling
 This project is written purely in C++ using its standard libraries, so compiling it should be easy. To download C++ compiler, please follow instructions on the link below:
