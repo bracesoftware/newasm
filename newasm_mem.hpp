@@ -60,6 +60,11 @@ namespace newasm
         const int nested_redirect = 20;
         const int nested_csm = 21;
         const int uninptr_usage = 22;
+        const int var_redef = 23;
+        const int struct_redef = 24;
+        const int unexpected_cbrace = 25;
+        const int undefined_struct = 26;
+        const int undefined_structmem = 27;
 
         const std::unordered_map<int, std::string> identifier = {
             {noterm_point, "NoTerminationPoint"},
@@ -84,7 +89,12 @@ namespace newasm
             {unknown_fdx, "UnknownSystemCall"},
             {nested_redirect, "NestedExecFlowRedirection"},
             {nested_csm, "NestedCodeStreamModif"},
-            {uninptr_usage, "UnassignedRefUsage"}
+            {uninptr_usage, "UnassignedRefUsage"},
+            {var_redef, "VariableRedefinition"},
+            {struct_redef, "StructRedefinition"},
+            {unexpected_cbrace, "UnexpectedClosingBrace"},
+            {undefined_struct, "UndefinedStruct"},
+            {undefined_structmem, "UndefinedStructMember"}
         };
     }
     namespace cmp_results
@@ -143,6 +153,13 @@ namespace newasm
             //int mcd = newasm::datatypes::decimal;
         }
 
+        struct struct_member
+        {
+            int datatype;
+            std::string name;
+            std::string value;
+        };
+
         std::unordered_map<std::string, std::string> data;
         std::unordered_map<std::string, int> datatypes;
 
@@ -150,7 +167,8 @@ namespace newasm
 
         std::unordered_map<std::string, int> labels;
 
-        std::vector<std::string> uninitialized_pointer;
+        std::unordered_map<std::string, std::vector<newasm::mem::struct_member>> structs;
+        //std::vector<std::string> uninitialized_pointer;
 
         namespace functions
         {

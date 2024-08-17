@@ -88,7 +88,7 @@ In this section, you can setup some settings for your program. It is thus recomm
 
 ```asm
 _ : config
-    configuration @ value_in_specific_datatype
+    configuration ~ value_in_specific_datatype
 _ : data
     ; some stuff
 _ : start
@@ -100,7 +100,7 @@ A simple example would be:
 
 ```asm
 _ : config
-    memsize @ 256 ; can be any integer from 1 to 512
+    memsize ~ 256 ; can be any integer from 1 to 512
 ```
 
 #### List of available settings

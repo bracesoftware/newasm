@@ -52,6 +52,8 @@ namespace newasm
             bool repl = false;
             bool repl_end = false;
             bool proc_now = false;
+            bool struct_now = false;
+            std::string struct_decl = "";
         }
         namespace constants
         {
