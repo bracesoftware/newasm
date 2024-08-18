@@ -42,7 +42,9 @@ the Initial Developer. All Rights Reserved.
 #include "newasm_header.cpp"
 #include "newasm_setup.cpp"
 
+#include "system_calls/io_stream.cpp"
 #include "system_calls/file_stream.cpp"
+#include "system_calls/exec_flow.cpp"
 
 #include "newasm_exec.cpp"
 

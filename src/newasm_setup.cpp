@@ -203,33 +203,6 @@ namespace newasm
                 }
                 return false;
             }
-            void out_bopr(std::string reg)
-            {
-                if(reg == "\%exf")
-                {
-                    std::cout << "";
-                }
-                if(reg == "\%ios")
-                {
-                    std::cout << "";
-                }
-                if(reg == "\%fs")
-                {
-                    std::cout << "";
-                }
-                if(reg == "\%nl")
-                {
-                    std::cout << "";
-                }
-                if(reg == "\%endl")
-                {
-                    std::cout << newasm::header::constants::endl;
-                }
-                if(reg == newasm::header::constants::inv_reg_val)
-                {
-                    std::cout << "";
-                }
-            }
             bool islbln(int line)
             {
                 for(std::unordered_map<std::string, int>::iterator i = labels.begin(); i != labels.end(); i++)

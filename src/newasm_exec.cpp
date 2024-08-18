@@ -1184,7 +1184,8 @@ namespace newasm
                         }
                         newasm::mem::regs::tlr = newasm::header::functions::remq(newasm::mem::regs::tlr);
                         std::cout << newasm::mem::regs::tlr;// << std::endl;
-                        newasm::mem::functions::out_bopr(newasm::mem::regs::stl);
+                        //newasm::mem::functions::out_bopr(newasm::mem::regs::stl);
+                        newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
                         return 1;
                     }
                     //print numbers and floats
@@ -1196,7 +1197,8 @@ namespace newasm
                             return 1;
                         }
                         std::cout << newasm::mem::regs::tlr;// << std::endl;
-                        newasm::mem::functions::out_bopr(newasm::mem::regs::stl);
+                        //newasm::mem::functions::out_bopr(newasm::mem::regs::stl);
+                        newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
                         return 1;
                     }
                     //input text
@@ -1220,7 +1222,8 @@ namespace newasm
                     //print values of builtin operands
                     if(newasm::mem::regs::fdx == 5)
                     {
-                        newasm::mem::functions::out_bopr(newasm::mem::regs::tlr);
+                        //newasm::mem::functions::out_bopr(newasm::mem::regs::tlr);
+                        newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
                         return 1;
                     }
                     //print references
@@ -1233,7 +1236,8 @@ namespace newasm
                             return 1;
                         }
                         std::cout << newasm::header::functions::remamp(newasm::mem::regs::tlr);
-                        newasm::mem::functions::out_bopr(newasm::mem::regs::stl);
+                        //newasm::mem::functions::out_bopr(newasm::mem::regs::stl);
+                        newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
                         return 1;
                     }
                     newasm::terminate(newasm::exit_codes::unknown_fdx);

@@ -17,6 +17,12 @@ the Initial Developer. All Rights Reserved.
 
 */
 
+
+#ifndef __newasm_included
+    #error [New-ASM] Cannot compile.
+#endif
+
+
 #define __newasm__fs_filetype_txt 0
 #define __newasm__fs_filetype_ini 1
 
