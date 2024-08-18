@@ -28,7 +28,7 @@ namespace newasm
     {
         namespace iostream
         {
-            void out_bopr(std::string reg)
+            void out_bopr(const std::string &reg)
             {
                 if(reg == "\%exf")
                 {
@@ -52,7 +52,7 @@ namespace newasm
                 }
                 if(reg == "\%endl")
                 {
-                    std::cout << newasm::header::constants::endl;
+                    std::cout << "\n";
                 }
                 if(reg == newasm::header::constants::inv_reg_val)
                 {

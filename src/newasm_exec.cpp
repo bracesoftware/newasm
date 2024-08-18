@@ -602,7 +602,7 @@ namespace newasm
             }
         }
         // STOR
-        if(ins == static_cast<std::string>("stor"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::stor))
         {
             if(newasm::header::functions::isrefat(opr) && !newasm::header::functions::istext(opr))
             {
@@ -861,7 +861,7 @@ namespace newasm
             return 1;
         }
         //sysreq
-        if(ins == static_cast<std::string>("sysreq"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::sysreq))
         {
             if(suf == static_cast<std::string>("proc"))
             {
@@ -885,7 +885,7 @@ namespace newasm
             }
         }
         //pop
-        if(ins == static_cast<std::string>("pop"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::pop))
         {
             if(suf == static_cast<std::string>("0"))
             {
@@ -974,7 +974,7 @@ namespace newasm
             return 1;
         }
         // RETURN
-        if(ins == static_cast<std::string>("retn"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::retn))
         {
             if(newasm::header::data::repl)
             {
@@ -998,7 +998,7 @@ namespace newasm
             }
         }
         // MOV
-        if(ins == static_cast<std::string>("mov"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::mov))
         {
             if(suf == static_cast<std::string>("fdx"))
             {
@@ -1141,7 +1141,7 @@ namespace newasm
             return 1;
         }
         // syscall
-        if(ins == static_cast<std::string>("syscall"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::syscall))
         {
             if(suf == static_cast<std::string>("0"))
             {
@@ -1223,7 +1223,7 @@ namespace newasm
                     if(newasm::mem::regs::fdx == 5)
                     {
                         //newasm::mem::functions::out_bopr(newasm::mem::regs::tlr);
-                        newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
+                        newasm::syscalls::iostream::out_bopr(newasm::mem::regs::tlr);
                         return 1;
                     }
                     //print references
@@ -1373,7 +1373,7 @@ namespace newasm
             return 1;
         }
         //proc
-        if(ins == static_cast<std::string>("proc"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::proc))
         {
             if(newasm::header::data::repl)
             {
@@ -1397,7 +1397,7 @@ namespace newasm
             }
         }
         //call
-        if(ins == static_cast<std::string>("call"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::call))
         {
             if(newasm::header::data::proc_now)
             {
@@ -1419,7 +1419,7 @@ namespace newasm
             }
         }
         //rem
-        if(ins == static_cast<std::string>("rem"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::rem))
         {
             if(suf == static_cast<std::string>("0"))
             {
@@ -1431,7 +1431,7 @@ namespace newasm
             }
         }
         //halt
-        if(ins == static_cast<std::string>("halt"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::halt))
         {
             if(suf == static_cast<std::string>("proc"))
             {
@@ -1441,7 +1441,7 @@ namespace newasm
             }
         }
         //push
-        if(ins == static_cast<std::string>("push"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::push))
         {
             if(suf == static_cast<std::string>("0"))
             {
@@ -1456,7 +1456,7 @@ namespace newasm
             }
         }
         //jmp
-        if(ins == static_cast<std::string>("jmp"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::jmp))
         {
             if(newasm::header::execution_flow::exec_redirected)
             {
@@ -1481,7 +1481,7 @@ namespace newasm
             }
         }
         //heap
-        if(ins == static_cast<std::string>("heap"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::heap))
         {
             if(suf == static_cast<std::string>("0"))
             {
@@ -1509,7 +1509,7 @@ namespace newasm
             }
         }
         //load.adr
-        if(ins == static_cast<std::string>("load"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::load))
         {
             if(suf == static_cast<std::string>("adr"))
             {
@@ -1526,7 +1526,7 @@ namespace newasm
         }
 
         //cmp
-        if(ins == static_cast<std::string>("cmp"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::cmp))
         {
             if(newasm::header::data::repl)
             {
@@ -1734,7 +1734,7 @@ namespace newasm
             return 1;
         }
         //je
-        if(ins == static_cast<std::string>("je"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::je))
         {
             if(newasm::header::execution_flow::exec_redirected)
             {
@@ -1763,7 +1763,7 @@ namespace newasm
             }
         }
         //jne
-        if(ins == static_cast<std::string>("jne"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::jne))
         {
             if(newasm::header::execution_flow::exec_redirected)
             {
@@ -1792,7 +1792,7 @@ namespace newasm
             }
         }
         //jl
-        if(ins == static_cast<std::string>("jl"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::jl))
         {
             if(newasm::header::execution_flow::exec_redirected)
             {
@@ -1821,7 +1821,7 @@ namespace newasm
             }
         }
         //jg
-        if(ins == static_cast<std::string>("jg"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::jg))
         {
             if(newasm::header::execution_flow::exec_redirected)
             {
@@ -1850,7 +1850,7 @@ namespace newasm
             }
         }
         //jle
-        if(ins == static_cast<std::string>("jle"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::jle))
         {
             if(newasm::header::execution_flow::exec_redirected)
             {
@@ -1879,7 +1879,7 @@ namespace newasm
             }
         }
         //jge
-        if(ins == static_cast<std::string>("jge"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::jge))
         {
             if(newasm::header::execution_flow::exec_redirected)
             {
@@ -1922,7 +1922,7 @@ namespace newasm
             return 1;
         }
         //ret
-        if(ins == static_cast<std::string>("ret"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::ret))
         {
             if(newasm::header::data::repl)
             {
@@ -2018,7 +2018,7 @@ namespace newasm
         }
         
         //zero
-        if(ins == static_cast<std::string>("zero"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::zero))
         {
             if(suf == static_cast<std::string>("fdx"))
             {
@@ -2086,7 +2086,7 @@ namespace newasm
             return 1;
         }
         //inc
-        if(ins == static_cast<std::string>("inc"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::inc))
         {
             if(suf == static_cast<std::string>("fdx"))
             {
@@ -2198,7 +2198,7 @@ namespace newasm
             return 1;
         }
         //dec
-        if(ins == static_cast<std::string>("dec"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::dec))
         {
             if(suf == static_cast<std::string>("fdx"))
             {
@@ -2310,7 +2310,7 @@ namespace newasm
     }
     int process_i(std::string line, std::string ins)
     {
-        if(ins == static_cast<std::string>("exit"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::exit))
         {
             if(!newasm::header::data::repl)
             {
@@ -2322,7 +2322,7 @@ namespace newasm
             return 1;
         }
         //end
-        if(ins == static_cast<std::string>("end"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::end))
         {
             if(newasm::header::data::repl)
             {
@@ -2340,69 +2340,69 @@ namespace newasm
             //std::cout << newasm::system::cproc << " : " << newline << std::endl;
             return 1;
         }
-        if(ins == static_cast<std::string>("nop"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::nop))
         {
             // do nothing
             return 1;
         }
         //MATH OPERATIONS
-        if(ins == static_cast<std::string>("add"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::add))
         {
             newasm::mem::regs::cr0 = newasm::mem::regs::cr0 + newasm::mem::regs::cr1;
             return 1;
         }
-        if(ins == static_cast<std::string>("sub"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::sub))
         {
             newasm::mem::regs::cr0 = newasm::mem::regs::cr0 - newasm::mem::regs::cr1;
             return 1;
         }
-        if(ins == static_cast<std::string>("div"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::div))
         {
             newasm::mem::regs::cr0 = newasm::mem::regs::cr0 / newasm::mem::regs::cr1;
             return 1;
         }
-        if(ins == static_cast<std::string>("mul"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::mul))
         {
             newasm::mem::regs::cr0 = newasm::mem::regs::cr0 * newasm::mem::regs::cr1;
             return 1;
         }
-        if(ins == static_cast<std::string>("exp"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::exp))
         {
             newasm::mem::regs::cr0 = std::pow(newasm::mem::regs::cr0,newasm::mem::regs::cr1);
             return 1;
         }
-        if(ins == static_cast<std::string>("log"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::log))
         {
             newasm::mem::regs::cr0 = std::log10(newasm::mem::regs::cr0) / std::log10(newasm::mem::regs::cr1);
             return 1;
         }
         //BITWISE OPERATIONS
-        if(ins == static_cast<std::string>("and"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::and__))
         {
             newasm::mem::regs::br0 = newasm::mem::regs::br0 & newasm::mem::regs::br1;
             return 1;
         }
-        if(ins == static_cast<std::string>("or"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::or__))
         {
             newasm::mem::regs::br0 = newasm::mem::regs::br0 | newasm::mem::regs::br1;
             return 1;
         }
-        if(ins == static_cast<std::string>("not"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::not__))
         {
             newasm::mem::regs::br0 = ~newasm::mem::regs::br1;
             return 1;
         }
-        if(ins == static_cast<std::string>("xor"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::xor__))
         {
             newasm::mem::regs::br0 = newasm::mem::regs::br0 ^ newasm::mem::regs::br1;
             return 1;
         }
-        if(ins == static_cast<std::string>("shl"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::shl))
         {
             newasm::mem::regs::br0 = newasm::mem::regs::br0 << newasm::mem::regs::br1;
             return 1;
         }
-        if(ins == static_cast<std::string>("shr"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::shr))
         {
             newasm::mem::regs::br0 = newasm::mem::regs::br0 >> newasm::mem::regs::br1;
             return 1;
