@@ -506,7 +506,7 @@ namespace newasm
             return 1;
         }
         //LOAD.ref
-        if(ins == static_cast<std::string>("load"))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::load))
         {
             if(suf == static_cast<std::string>("ref"))
             {

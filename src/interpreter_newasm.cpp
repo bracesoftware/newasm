@@ -46,6 +46,8 @@ the Initial Developer. All Rights Reserved.
 #include "system_calls/file_stream.cpp"
 #include "system_calls/exec_flow.cpp"
 
+#include "core/lang_inf.cpp"
+
 #include "newasm_exec.cpp"
 
 namespace newasm
