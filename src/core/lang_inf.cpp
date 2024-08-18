@@ -115,6 +115,21 @@ namespace newasm
                 {shl, "shl"},
                 {shr, "shr"}
             };
+
+            namespace utils
+            {
+                bool iskeyword(const std::string &str)
+                {
+                    for(auto i = newasm::core::lang_inf::instruction_set.begin(); i != newasm::core::lang_inf::instruction_set.end(); i++)
+                    {
+                        if(i->second == str)
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            }
         }
     }
 }
