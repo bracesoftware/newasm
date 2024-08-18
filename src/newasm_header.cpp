@@ -36,6 +36,7 @@ namespace newasm
             const int major = 0;
             const int minor = 1;
             const int patch = 1;
+            const int release = 2;
         }
         namespace data
         {
@@ -100,7 +101,8 @@ namespace newasm
                 dest.clear();
                 dest =  std::to_string(newasm::header::version::major) + static_cast<std::string>(".") +
                         std::to_string(newasm::header::version::minor) + static_cast<std::string>(".") +
-                        std::to_string(newasm::header::version::patch);
+                        std::to_string(newasm::header::version::patch) + static_cast<std::string>("-R") +
+                        std::to_string(newasm::header::version::release);
             }
             void getos(std::string &dest)
             {
