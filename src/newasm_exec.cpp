@@ -2651,7 +2651,7 @@ namespace newasm
         else
         {
             newasm::header::functions::err(
-                static_cast<std::string>("Unable to open the file : ") + static_cast<std::string>("'") + 
+                static_cast<std::string>("Unable to open the file: ") + static_cast<std::string>("'") + 
                 /*newasm::header::constants::scripts_folder + */file + static_cast<std::string>("'"));
         }
         return 0;
