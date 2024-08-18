@@ -318,3 +318,20 @@ namespace newasm
         }//filestream
     }//syscalls
 }//newasm
+
+namespace newasm
+{
+    namespace handles
+    {
+        newasm::syscalls::filestream::dir *dir_handle = new newasm::syscalls::filestream::dir;
+        newasm::syscalls::filestream::file<
+            newasm::syscalls::filestream::filetype::txt
+        > *file_handle = new newasm::syscalls::filestream::file<newasm::syscalls::filestream::filetype::txt>();
+        
+        void delete_handles()
+        {
+            delete dir_handle;
+            delete file_handle;
+        }
+    }
+}

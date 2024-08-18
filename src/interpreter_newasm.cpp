@@ -38,13 +38,13 @@ the Initial Developer. All Rights Reserved.
 #include <thread>
 
 #define __newasm_included
-#include "newasm_header.hpp"
-#include "newasm_mem.hpp"
-#include "newasm_syscalls.hpp"
 
-#include "newasm_dyn.hpp"
+#include "newasm_header.cpp"
+#include "newasm_setup.cpp"
 
-#include "newasm_exec.hpp"
+#include "system_calls/file_stream.cpp"
+
+#include "newasm_exec.cpp"
 
 namespace newasm
 {
