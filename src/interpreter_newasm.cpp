@@ -1,6 +1,6 @@
 /*
 
-The ORIGINAL CODE is the `New-Assembly eXecutor` Source Code.
+The ORIGINAL CODE is the `New-ASM Runtime Environment` Source Code.
 The INITIAL DEVELOPER is Brace Software Co., DEntisT.
 The COPYRIGHT YEAR is 2024.
 
