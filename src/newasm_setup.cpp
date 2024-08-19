@@ -65,6 +65,8 @@ namespace newasm
         const int unexpected_cbrace = 25;
         const int undefined_struct = 26;
         const int undefined_structmem = 27;
+        const int nested_struct = 28;
+        const int expected_cbrace = 29;
 
         const std::unordered_map<int, std::string> identifier = {
             {noterm_point, "NoTerminationPoint"},
@@ -94,7 +96,9 @@ namespace newasm
             {struct_redef, "StructRedefinition"},
             {unexpected_cbrace, "UnexpectedClosingBrace"},
             {undefined_struct, "UndefinedStruct"},
-            {undefined_structmem, "UndefinedStructMember"}
+            {undefined_structmem, "UndefinedStructMember"},
+            {nested_struct, "NestedStruct"},
+            {expected_cbrace, "ExpectedClosingBrace"}
         };
     }
     namespace cmp_results

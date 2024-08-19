@@ -225,6 +225,11 @@ namespace newasm
         {
             if(dtyp == static_cast<std::string>("struct"))
             {
+                if(newasm::header::data::struct_now)
+                {
+                    newasm::terminate(newasm::exit_codes::nested_struct);
+                    return 1;
+                }
                 if(value != static_cast<std::string>("{"))
                 {
                     newasm::terminate(newasm::exit_codes::invalid_syntax);
@@ -2519,6 +2524,11 @@ namespace newasm
             stat = newasm::header::functions::trim(stat);
             arg = newasm::header::functions::trim(arg);
             return newasm::process_d(line,dtyp,stat,arg);
+        }
+        if(newasm::header::data::struct_now)
+        {
+            newasm::terminate(newasm::exit_codes::expected_cbrace);
+            return 1;
         }
         if(newasm::system::section == newasm::code_stream::sections::start)
         {

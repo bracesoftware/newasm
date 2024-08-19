@@ -838,6 +838,8 @@ When a fatal error happens, program will shut down, returning a specific exit co
 | `25` | Unexpected closing brace. |
 | `26` | Tried to access a structure that hasn't been declared. |
 | `27` | Tried to access an undefined structure member. |
+| `28` | Tried to create a struct inside a struct. |
+| `29` | Expected closing brace. |
 
 ## Comments
 Comments are also available:
