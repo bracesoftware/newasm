@@ -666,7 +666,7 @@ GREATER
 ```
 
 ### Calculation instructions
-There are 5 mathematical instructions you can use:
+There are 6 mathematical instructions you can use:
 - `add` - addition,
 - `sub` - subtraction,
 - `mul` - multiplication,
@@ -691,7 +691,7 @@ _ : start
 ```
 
 ### Bit operations
-There are 7 bitwise operations you can use:
+There are 6 bitwise operations you can use:
 - `and` - and,
 - `or` - or,
 - `not` - not,
