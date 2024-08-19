@@ -1,6 +1,6 @@
 /*
 
-The ORIGINAL CODE is the `New-ASM Runtime Environment` Source Code.
+The ORIGINAL CODE is the `NewASM Runtime Environment` Source Code.
 The INITIAL DEVELOPER is Brace Software Co., DEntisT.
 The COPYRIGHT YEAR is 2024.
 
@@ -50,98 +50,9 @@ the Initial Developer. All Rights Reserved.
 
 #include "newasm_exec.cpp"
 
-namespace newasm
-{
-    class procline_insert
-    {
-        public:
-        int processline(std::string &ln)
-        {
-            return newasm::procline(ln);
-        }
-    };
-
-    int operator<<(newasm::procline_insert &obj, std::string &ln)
-    {
-        obj.processline(ln);
-        return 1;
-    }
-    namespace setup
-    {
-        namespace args
-        {
-            const int ver = 1;
-            const int input = 2;
-            const int help = 3;
-            const int repl = 4;
-            const int extra = 5;
-            const int cnpf = 6;
-
-            std::unordered_map<int, std::string> arg_map = {
-                {ver, "-ver"},
-                {input, "-input"},
-                {help, "-help"},
-                {repl, "-repl"},
-                {extra, "-extra"},
-                {cnpf, "-newproj"}
-            };
-        }
-    }
-    newasm::procline_insert process;
-
-    int repl()
-    {
-        std::string line;
-        std::cout << "\n";
-        //std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        while(true)
-        {
-            line.clear();
-            std::cout << newasm::header::style::underline + newasm::header::col::gray;
-            std::getline(std::cin,line);
-            
-            newasm::header::data::lastln = line;
-            std::cout << newasm::header::col::reset;
-            
-            newasm::header::data::lastlndx++;
-            newasm::process << line;
-
-            if(newasm::header::data::repl_end)
-            {
-                break;
-            }
-        }
-        return 0;
-    }
-    namespace utils
-    {
-        void displaybar(const std::string &text, float progress)
-        {
-            int bar_width = 40;
-            std::cout << newasm::header::col::reset << newasm::header::col::green << text << newasm::header::col::gray << "[";
-            int pos = static_cast<int>(bar_width * progress);
-            for (int i = 0; i < bar_width; ++i)
-            {
-                if (i < pos) std::cout << "=";
-                else if (i == pos) std::cout << "*";
-                else std::cout << " ";
-            }
-            std::cout << "] " << newasm::header::col::reset << int(progress * 100.0) << " %\r";
-            std::cout.flush();
-        }
-
-        int loadingbar(const std::string &text)
-        {
-            for (int i = 0; i <= 100; i+=5)
-            {
-                newasm::utils::displaybar(text, i / 100.0f);
-                std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            }
-            std::cout << std::endl;
-            return 0;
-        }
-    }
-}
+#include "extra/procline_insert.cpp"
+#include "extra/repl_mode.cpp"
+#include "extra/utils.cpp"
 
 // MAIN
 
@@ -218,6 +129,7 @@ int main(int argc, char *argv[])
             newasm::header::settings::script_file
         )
     );
+    
     repl_label:
     if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::repl),argc,argv,argid))
     {

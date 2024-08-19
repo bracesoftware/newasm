@@ -21,15 +21,19 @@ the Initial Developer. All Rights Reserved.
     #error [New-ASM] Cannot compile.
 #endif
 
+#ifndef __cplusplus
+    #error WHAT
+#endif
+
 namespace newasm
 {
     namespace header
     {
         namespace system_info
         {
-            const std::string name = "[New-ASM]";
+            const std::string name = "[NewASM]";
             const std::string copyright_claim = "(c) 2024 Brace Software Co.";
-            const std::string fullname = "New-ASM Runtime Environment";
+            const std::string fullname = "NewASM Runtime Environment";
         }
         namespace version
         {
@@ -182,6 +186,7 @@ namespace newasm
                 std::cout << "\n" << newasm::header::system_info::fullname;
                 std::cout << newasm::header::col::reset << newasm::header::col::gray;
                 std::cout << "\n  Build: " << version << "-" << os << "_" << arch;
+                std::cout << "\n  Compiled with: C++" << __cplusplus;
                 
                 std::cout << "\n  " << newasm::header::system_info::copyright_claim <<
                 newasm::header::col::reset << std::endl;
@@ -232,7 +237,7 @@ namespace newasm
                 {
                     tokens.push_back(str);
                 }
-
+                
                 return tokens;
             }
             std::string trim(const std::string &str)
