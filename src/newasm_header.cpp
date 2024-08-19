@@ -46,7 +46,7 @@ namespace newasm
             const int major = 0;
             const int minor = 1;
             const int patch = 1;
-            const int release = 2;
+            const int release = 3;
             const int release_type = newasm::header::version::release_types::test;
         }
         namespace data
@@ -377,6 +377,18 @@ namespace newasm
                 }
                 return true;
             }
+            bool ischar(const std::string &str)
+            {
+                int singlequo_count = 0;
+                for(int i = 0; i < str.size(); i++)
+                {
+                    if(str.at(i) == '\'')
+                    {
+                        singlequo_count ++;
+                    }
+                }
+                return !str.empty() && str.front() == '\'' && str.back() == '\'' && singlequo_count == 2 && str.size() == 3;
+            }
             bool isrefat(const std::string &data)
             {
                 return (data.find("@") != std::string::npos);
@@ -384,6 +396,14 @@ namespace newasm
             std::string remq(const std::string& str)
             {
                 if(str.length() >= 2 && str.front() == '"' && str.back() == '"')
+                {
+                    return str.substr(1, str.length() - 2);
+                }
+                return str;
+            }
+            std::string remsq(const std::string& str)
+            {
+                if(str.length() >= 2 && str.front() == '\'' && str.back() == '\'')
                 {
                     return str.substr(1, str.length() - 2);
                 }

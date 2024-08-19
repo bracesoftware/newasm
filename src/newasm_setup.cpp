@@ -113,6 +113,7 @@ namespace newasm
         const int decimal = 2;
         const int text = 3;
         const int reference = 4;
+        const int character = 5;
     }
     namespace constv
     {
