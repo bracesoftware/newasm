@@ -37,10 +37,17 @@ namespace newasm
         }
         namespace version
         {
+            namespace release_types
+            {
+                const int unstable = 1;
+                const int stable = 2;
+                const int test = 3;
+            }
             const int major = 0;
             const int minor = 1;
             const int patch = 1;
             const int release = 2;
+            const int release_type = newasm::header::version::release_types::test;
         }
         namespace data
         {
@@ -100,13 +107,31 @@ namespace newasm
         }
         namespace functions
         {
+            void getreleasetype(std::string &dest)
+            {
+                if(newasm::header::version::release_type == newasm::header::version::release_types::unstable)
+                {
+                    dest = "unstable";
+                }
+                if(newasm::header::version::release_type == newasm::header::version::release_types::stable)
+                {
+                    dest = "stable";
+                }
+                if(newasm::header::version::release_type == newasm::header::version::release_types::test)
+                {
+                    dest = "test";
+                }
+            }
             void getversion(std::string &dest)
             {
+                std::string release__type;
+                newasm::header::functions::getreleasetype(release__type);
                 dest.clear();
                 dest =  std::to_string(newasm::header::version::major) + static_cast<std::string>(".") +
                         std::to_string(newasm::header::version::minor) + static_cast<std::string>(".") +
                         std::to_string(newasm::header::version::patch) + static_cast<std::string>("-R") +
-                        std::to_string(newasm::header::version::release);
+                        std::to_string(newasm::header::version::release) + static_cast<std::string>("-") + 
+                        release__type;
             }
             void getos(std::string &dest)
             {
