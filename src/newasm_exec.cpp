@@ -168,6 +168,11 @@ namespace newasm
     void callproc(std::string name);
     int process_s(bool &valid, std::string wholeline, std::string stat, std::string arg)
     {
+        if(newasm::system::stop == 1)
+        {
+            newasm::terminate(newasm::exit_codes::invalid_syntax);
+            return 1;
+        }
         valid = false;
         if(stat == static_cast<std::string>("_"))
         {
