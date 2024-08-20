@@ -47,6 +47,7 @@ the Initial Developer. All Rights Reserved.
 #include "system_calls/exec_flow.cpp"
 
 #include "core/lang_inf.cpp"
+#include "core/containers.cpp"
 
 #include "newasm_exec.cpp"
 
