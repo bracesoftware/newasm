@@ -619,6 +619,25 @@ namespace newasm
                     //if(i != newasm::mem::uninitialized_pointer.end()) newasm::mem::uninitialized_pointer.erase(i);
                     return 1;
                 }
+                if(newasm::header::functions::ischar
+                (
+                    newasm::mem::program_memory
+                    [
+                        newasm::mem::regs::heaptr
+                    ]
+                ))
+                {
+                    if(newasm::mem::datatypes[opr] != newasm::datatypes::character)
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    newasm::mem::data[opr] = newasm::mem::program_memory
+                    [
+                        newasm::mem::regs::heaptr
+                    ];
+                    return 1;
+                }
                 newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                 return 1;
             }
@@ -1591,7 +1610,8 @@ namespace newasm
             if(suf == static_cast<std::string>("adr"))
             {
                 if(!newasm::header::functions::isnumeric(opr) && !newasm::header::functions::isfloat(opr) &&
-                !newasm::header::functions::istext(opr) && !newasm::header::functions::isref(opr))
+                !newasm::header::functions::istext(opr) && !newasm::header::functions::isref(opr) &&
+                !newasm::header::functions::ischar(opr))
                 {
                     //std::cout << "opr is " << opr << std::endl;
                     newasm::terminate(newasm::exit_codes::invalid_syntax);
