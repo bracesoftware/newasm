@@ -522,6 +522,7 @@ namespace newasm
 
         if(newasm::system::stop == 1)
         {
+            newasm::system::proclines ++;
             std::string newline = ins + static_cast<std::string>(".") + suf + static_cast<std::string>(",") + opr;
             newasm::mem::funcs[newasm::system::cproc].push_back(newline);
             //std::cout << newasm::system::cproc << " : " << newline << std::endl;
@@ -1487,6 +1488,7 @@ namespace newasm
                     }
                     newasm::system::stop = 1;
                     newasm::system::cproc = opr;
+                    newasm::system::proclines = 0;
                     //std::cout << "Creating proc: " << opr << std::endl;
                     return 1;
                 }
@@ -2036,6 +2038,7 @@ namespace newasm
     {
         if(newasm::system::stop == 1)
         {
+            newasm::system::proclines ++;
             std::string newline = ins + static_cast<std::string>(".") + suf;
             newasm::mem::funcs[newasm::system::cproc].push_back(newline);
             //std::cout << newasm::system::cproc << " : " << newline << std::endl;
@@ -2449,12 +2452,18 @@ namespace newasm
                 newasm::unsins(ins);
                 return 1;
             }
+            if(newasm::system::proclines == 0)
+            {
+                newasm::terminate(newasm::exit_codes::empty_proc);
+                return 1;
+            }
             newasm::system::stop = 0;
             //std::cout << "Finished proc: " << newasm::system::cproc << std::endl;
             return 1;
         }
         if(newasm::system::stop == 1)
         {
+            newasm::system::proclines ++;
             std::string newline = ins;
             newasm::mem::funcs[newasm::system::cproc].push_back(newline);
             //std::cout << newasm::system::cproc << " : " << newline << std::endl;

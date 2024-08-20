@@ -843,6 +843,7 @@ When a fatal error happens, program will shut down, returning a specific exit co
 | `27` | Tried to access an undefined structure member. |
 | `28` | Tried to create a struct inside a struct. |
 | `29` | Expected closing brace. |
+| `30` | Tried to create an empty procedure. |
 
 ## Comments
 Comments are also available:
