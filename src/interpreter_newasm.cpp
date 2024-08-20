@@ -68,13 +68,17 @@ int main(int argc, char *argv[])
         std::cout << "\n";
         return 1;
     }
+
     int argid = 0;
+
     if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::ver),argc,argv,argid))
     {
         newasm::header::functions::vers_info();
         return 0;
     }
+
     std::cout << std::endl; newasm::header::functions::vers_info();
+
     if(!newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::input),argc,argv,argid) &&
     newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::repl),argc,argv,argid))
     {
@@ -95,6 +99,7 @@ int main(int argc, char *argv[])
             newasm::header::settings::script_file = newasm::header::constants::default_input;
         }
     }
+    
     //other funny options
     if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::help),argc,argv,argid))
     {

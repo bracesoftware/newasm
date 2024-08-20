@@ -124,7 +124,8 @@ There are 3 data types:
 - `num` for integers;
 - `decm` for floats;
 - `txt` for strings;
-- `ref` for references to data symbols (basically a kind of a pointer).
+- `ref` for references to data symbols (basically a kind of a pointer);
+- `char` for characters.
 
 ### `start` section
 In this section, you can perform instructions, and cannot create variables, or else program will end with exit code 1.
@@ -272,6 +273,8 @@ _ : start
 | `%ios` | `4` | - | Requests numeric (including floats) user input and stores the value in `tlr`. |
 | `%ios` | `5` | `tlr` | Prints the textual value of a built-in operand. |
 | `%ios` | `6` | `tlr`, `stl` | Prints the name of a symbol a reference is pointing to. |
+| `%ios` | `7` | `tlr`, `stl` | Prints a single character. |
+| `%ios` | `8` | - | Requests a single character input from the user and stores the value in `tlr`. |
 | `%fs` | `1` | `tlr` | Create a directory; with `tlr` being a string containing the directory name. |
 | `%fs` | `2` | `tlr` | Remove a directory; with `tlr` being a string containing the directory name. |
 | `%fs` | `3` | `tlr` | Create a file; with `tlr` being a string containing the file name. |

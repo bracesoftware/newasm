@@ -1291,6 +1291,7 @@ namespace newasm
                         newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
                         return 1;
                     }
+                    //print characters
                     if(newasm::mem::regs::fdx == 7)
                     {
                         //std::cout << "tlr is: \"" << newasm::mem::regs::tlr << "\"\n";
@@ -1304,6 +1305,17 @@ namespace newasm
                         //newasm::mem::functions::out_bopr(newasm::mem::regs::stl);
                         newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
                         return 1;
+                    }
+                    if(newasm::mem::regs::fdx == 8)
+                    {
+                        std::cin >> newasm::mem::regs::tlr;
+                        newasm::mem::regs::tlr = static_cast<std::string>("'") + newasm::mem::regs::tlr + static_cast<std::string>("'");
+                        if(!newasm::header::functions::ischar(newasm::mem::regs::tlr))
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                            return 1;
+                        }
+        	            return 1;
                     }
                     newasm::terminate(newasm::exit_codes::unknown_fdx);
                     return 1;
