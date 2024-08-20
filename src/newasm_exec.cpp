@@ -1804,6 +1804,29 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                     return 1;
                 }
+                ///////////////////char
+                if(newasm::header::functions::ischar(opr))
+                {
+                    if(newasm::header::functions::ischar(strreg))
+                    {
+                        //proceed to comparsion
+                        if(strreg[1] == opr[1])
+                        {
+                            newasm::mem::regs::cpr = newasm::cmp_results::equal;
+                        }
+                        if(strreg[1] < opr[1])
+                        {
+                            newasm::mem::regs::cpr = newasm::cmp_results::less;
+                        }
+                        if(strreg[1] > opr[1])
+                        {
+                            newasm::mem::regs::cpr = newasm::cmp_results::greater;
+                        }
+                        return 1;
+                    }
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    return 1;
+                }
                 newasm::terminate(newasm::exit_codes::invalid_syntax);
                 return 1;
             }
