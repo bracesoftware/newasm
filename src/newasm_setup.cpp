@@ -68,6 +68,7 @@ namespace newasm
         const int nested_struct = 28;
         const int expected_cbrace = 29;
         const int empty_proc = 30;
+        const int datastruct_redef = 31;
 
         const std::unordered_map<int, std::string> identifier = {
             {noterm_point, "NoTerminationPoint"},
@@ -100,7 +101,8 @@ namespace newasm
             {undefined_structmem, "UndefinedStructMember"},
             {nested_struct, "NestedStruct"},
             {expected_cbrace, "ExpectedClosingBrace"},
-            {empty_proc, "EmptyProcedureBlock"}
+            {empty_proc, "EmptyProcedureBlock"},
+            {datastruct_redef, "DataStructureRedefinition"}
         };
     }
     namespace cmp_results

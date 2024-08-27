@@ -339,6 +339,23 @@ namespace newasm
                 newasm::mem::data[name] = value;
                 return 1;
             }
+
+            if(dtyp == static_cast<std::string>("bit_arr"))
+            {
+                if(!newasm::header::functions::isnumeric(value))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                    return 1;
+                }
+                if(newasm::mem::functions::datavalid(name, newasm::containers::bit_arrays))
+                {
+                    newasm::terminate(newasm::exit_codes::datastruct_redef);
+                    return 1;
+                }
+          
+                newasm::containers::bit_arrays[name] = new newasm::containers::bit_array<512>();
+                return 1;
+            }
             
             newasm::terminate(newasm::exit_codes::invalid_syntax);
             return 1;

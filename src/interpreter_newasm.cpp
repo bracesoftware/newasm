@@ -55,6 +55,8 @@ the Initial Developer. All Rights Reserved.
 #include "extra/repl_mode.cpp"
 #include "extra/utils.cpp"
 
+#include "newasm_tests.cpp"
+
 // MAIN
 
 int main(int argc, char *argv[])
@@ -114,6 +116,10 @@ int main(int argc, char *argv[])
     {
         newasm::header::settings::create_new_projfile = true;
     }
+    if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::tests),argc,argv,argid))
+    {
+        newasm::tests::main();
+    }
 
     std::cout << std::endl;
     newasm::header::execution_flow::entry_exec = newasm::header::settings::script_file;
@@ -160,5 +166,6 @@ int main(int argc, char *argv[])
     }
 
     newasm::handles::delete_handles();
+    newasm::containers::functions::free_dyn_mem();
     return 0;
 }
