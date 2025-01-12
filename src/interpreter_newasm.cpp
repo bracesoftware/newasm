@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
     
     if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::input),argc,argv,argid))
     {
-        if(argid < argc-1)
+        if(argid < argc - 1)
         {
             newasm::header::settings::script_file = newasm::header::functions::trim(static_cast<std::string>(argv[argid+1]));
         }
