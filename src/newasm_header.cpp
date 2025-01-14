@@ -490,17 +490,16 @@ namespace newasm
                 {
                     return 1;
                 }
-                std::ofstream file_obj(newasm::header::constants::log_file, std::ios::app);
-                if(file_obj.is_open())
+                std::ofstream log_file_object(newasm::header::constants::log_file);
+                if(log_file_object.is_open())
                 {
-                    file_obj << newasm::header::system_info::name << " LOG | " << text << "\n";
+                    log_file_object << newasm::header::system_info::name << " LOG | " << text << "\n";
+                    log_file_object.close();
                     return 1;
                 }
-                else
-                {
-                    newasm::header::functions::err(static_cast<std::string>("Unable to open the log file."));
-                    return 1;
-                }
+                newasm::header::functions::err("Unable to open the log file.");
+                newasm::header::functions::info("IDIOT");
+                return 1;
             }
         }
     }
@@ -509,6 +508,7 @@ namespace newasm
     {
         std::string name = "";
         std::string version = "";
+        std::vector<std::string> dynamic_libs;
 
         namespace impl
         {
@@ -521,6 +521,10 @@ namespace newasm
                 if(key == static_cast<std::string>("version"))
                 {
                     newasm::project_data::version = value;
+                }
+                if(key == static_cast<std::string>("dlibs"))
+                {
+
                 }
                 return 1;
             }
