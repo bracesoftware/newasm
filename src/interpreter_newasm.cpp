@@ -61,7 +61,6 @@ the Initial Developer. All Rights Reserved.
 
 int main(int argc, char *argv[])
 {
-    newasm::header::functions::log("System loading...");
     if(argc == 1)
     {
         newasm::header::functions::vers_info();
@@ -124,8 +123,9 @@ int main(int argc, char *argv[])
     if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::log),argc,argv,argid))
     {
         newasm::header::settings::logging = true;
-        newasm::header::functions::log("yo");
+        //newasm::header::functions::log("yo");
     }
+    newasm::header::functions::log("System loading...");
 
     std::cout << std::endl;
     newasm::header::execution_flow::entry_exec = newasm::header::settings::script_file;

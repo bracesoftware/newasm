@@ -484,20 +484,22 @@ namespace newasm
                 }
                 return true;
             }
-            void log(std::string text)
+            int log(std::string text)
             {
                 if(newasm::header::settings::logging == false)
                 {
-                    return;
+                    return 1;
                 }
                 std::ofstream file_obj(newasm::header::constants::log_file, std::ios::app);
                 if(file_obj.is_open())
                 {
                     file_obj << newasm::header::system_info::name << " LOG | " << text << "\n";
+                    return 1;
                 }
                 else
                 {
                     newasm::header::functions::err(static_cast<std::string>("Unable to open the log file."));
+                    return 1;
                 }
             }
         }
