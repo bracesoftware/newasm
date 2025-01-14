@@ -74,6 +74,7 @@ namespace newasm
             //const std::string scripts_folder = "nax_scripts/";
             //const std::string output_folder = "nax_output/";
             const std::string default_input = "index.asm";
+            const std::string log_file = "newasm_log.txt";
 
             const std::string endl = "\n";
 
@@ -232,6 +233,10 @@ namespace newasm
                 newasm::header::functions::nullprint(
                     newasm::header::col::reset + "\t-input <file>" + 
                     newasm::header::col::gray + "\t\tSets the input file."
+                );
+                newasm::header::functions::nullprint(
+                    newasm::header::col::reset + "\t-logs" + 
+                    newasm::header::col::gray + "\t\t\tToggles the logging system."
                 );
                 std::cout << newasm::header::col::reset;
                 std::cout << "\n";
@@ -479,13 +484,21 @@ namespace newasm
                 }
                 return true;
             }
-            void log(std::string str)
+            void log(std::string text)
             {
                 if(newasm::header::settings::logging == false)
                 {
                     return;
                 }
-                //empty rn
+                std::ofstream file_obj(newasm::header::constants::log_file, std::ios::app);
+                if(file_obj.is_open())
+                {
+                    file_obj << newasm::header::system_info::name << " LOG | " << text << "\n";
+                }
+                else
+                {
+                    newasm::header::functions::err(static_cast<std::string>("Unable to open the log file."));
+                }
             }
         }
     }

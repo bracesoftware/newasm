@@ -61,6 +61,7 @@ the Initial Developer. All Rights Reserved.
 
 int main(int argc, char *argv[])
 {
+    newasm::header::functions::log("System loading...");
     if(argc == 1)
     {
         newasm::header::functions::vers_info();
@@ -172,5 +173,6 @@ int main(int argc, char *argv[])
 
     newasm::handles::delete_handles();
     newasm::containers::functions::free_dyn_mem();
+    newasm::header::functions::log("System unloading...");
     return 0;
 }
