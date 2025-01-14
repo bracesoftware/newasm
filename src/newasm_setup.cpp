@@ -69,6 +69,7 @@ namespace newasm
         const int expected_cbrace = 29;
         const int empty_proc = 30;
         const int datastruct_redef = 31;
+        const int unexpected_end = 32;
 
         const std::unordered_map<int, std::string> identifier = {
             {noterm_point, "NoTerminationPoint"},
@@ -102,7 +103,8 @@ namespace newasm
             {nested_struct, "NestedStruct"},
             {expected_cbrace, "ExpectedClosingBrace"},
             {empty_proc, "EmptyProcedureBlock"},
-            {datastruct_redef, "DataStructureRedefinition"}
+            {datastruct_redef, "DataStructureRedefinition"},
+            {unexpected_end, "UnexpectedProcedureEnd"}
         };
     }
     namespace cmp_results

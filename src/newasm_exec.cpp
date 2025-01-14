@@ -2474,6 +2474,11 @@ namespace newasm
                 newasm::unsins(ins);
                 return 1;
             }
+            if(newasm::system::stop == 0)
+            {
+                newasm::terminate(newasm::exit_codes::unexpected_end);
+                return 1;
+            }
             if(newasm::system::proclines == 0)
             {
                 newasm::terminate(newasm::exit_codes::empty_proc);
