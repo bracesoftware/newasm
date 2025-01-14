@@ -46,6 +46,7 @@ namespace newasm
             const int extra = 5;
             const int cnpf = 6;
             const int tests = 7;
+            const int log = 8;
 
             std::unordered_map<int, std::string> arg_map = {
                 {ver, "-ver"},
@@ -54,7 +55,8 @@ namespace newasm
                 {repl, "-repl"},
                 {extra, "-extra"},
                 {cnpf, "-newproj"},
-                {tests, "-tests"}
+                {tests, "-tests"},
+                {log, "-log"}
             };
         }
     }

@@ -120,6 +120,11 @@ int main(int argc, char *argv[])
     {
         newasm::tests::main();
     }
+    if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::log),argc,argv,argid))
+    {
+        newasm::header::settings::logging = true;
+        newasm::header::functions::log("yo");
+    }
 
     std::cout << std::endl;
     newasm::header::execution_flow::entry_exec = newasm::header::settings::script_file;

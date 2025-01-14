@@ -104,6 +104,7 @@ namespace newasm
             std::string script_file = "index.nax";
             bool extra = false;
             bool create_new_projfile = false;
+            bool logging = false;
         }
         namespace functions
         {
@@ -477,6 +478,14 @@ namespace newasm
                     }
                 }
                 return true;
+            }
+            void log(std::string str)
+            {
+                if(newasm::header::settings::logging == false)
+                {
+                    return;
+                }
+                //empty rn
             }
         }
     }
