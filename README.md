@@ -62,6 +62,8 @@ Documentation about `newasm` which includes following topics:
 - [Unassigned references](#unassigned-pointers-or-references)
 - [Structures](#structures)
 - [Project files](#project-files)
+- [Dynamic libraries](#dynamic-libraries)
+    - [Runtime errors](#runtime-errors)
 
 ## Compiling
 This project is written purely in C++ using its standard libraries, so compiling it should be easy. To download C++ compiler, please follow instructions on the link below:
