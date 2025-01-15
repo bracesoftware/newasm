@@ -846,6 +846,9 @@ When a fatal error happens, program will shut down, returning a specific exit co
 | `28` | Tried to create a struct inside a struct. |
 | `29` | Expected closing brace. |
 | `30` | Tried to create an empty procedure. |
+| `31` | Tried to redefine a data structure. |
+| `32` | Unexpected usage of the `end` instruction. |
+| `33` | Tried to use an improperly loaded dynamic library instruction. |
 
 ## Comments
 Comments are also available:
@@ -1044,10 +1047,35 @@ For example, if my `-input` file is `input.asm`, project file for that would be 
 | -------- | ----------- |
 | `name` | Name for your project. |
 | `version` | Version of your project. |
+| `dlibs` | Dynamic libraries your project is using. |
 
 Example `index.asm.newasm_proj` file:
 ```ini
 name = Unnamed project
 version = 0.0.1
+dlibs = testlib, sayhi
 ```
 
+## Dynamic libraries
+**Dynamic libraries** (`.newasm_dl` file) are files that provide user-made instructions. For example, let's say this is a NewASM dynamic library you wrote:
+
+`sayhi.newasm_dl`:
+```asm
+mov . tlr , "hi from my dynamic library"
+mov . fdx , 1
+syscall . 0 , %ios
+```
+
+In your entry file - `index.asm`, you can do this:
+```asm
+_ : start
+    mov . tlr , "some stuff"
+    inc . prp ; bunch of operations
+    ; more stuff...
+
+    sayhi ; your very own custom instruction
+```
+
+This is literally a fancy way of making procedures, making them reusable across files, however there are limits:
+1. You cannot create labels.
+2. You thus cannot use jump instructions such as `jmp`, `je`, `jne` and more.

@@ -2683,6 +2683,22 @@ namespace newasm
         }
         if(newasm::system::section == newasm::code_stream::sections::start)
         {
+            if(newasm::mem::functions::datavalid(line, newasm::mem::instructions))
+            {
+                for(int i = 0; i < newasm::dynlib::mem::invalid_dynlibs.size(); i++)
+                {
+                    if(line == newasm::dynlib::mem::invalid_dynlibs.at(i))
+                    {
+                        newasm::terminate(newasm::exit_codes::improper_dynlib);
+                        return 1;
+                    }
+                }
+                for(int i = 0; i < newasm::mem::instructions[line].size(); i++)
+                {
+                    newasm::procline(newasm::mem::instructions[line].at(i));
+                }
+                return 1;
+            }
             if(newasm::header::functions::strfind(line,'.')) if(newasm::header::functions::strfind(line,','))
             {
                 if(line.find('.') > line.find(','))

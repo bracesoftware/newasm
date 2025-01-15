@@ -39,6 +39,14 @@ the Initial Developer. All Rights Reserved.
 
 #define __newasm_included
 
+namespace newasm
+{
+    std::unordered_map<std::string,std::vector<std::string>>* dyn_ins_set;
+}
+
+#include "core/lang_inf.cpp"
+
+#include "newasm_dynlib.cpp"
 #include "newasm_header.cpp"
 #include "newasm_setup.cpp"
 
@@ -46,7 +54,6 @@ the Initial Developer. All Rights Reserved.
 #include "system_calls/file_stream.cpp"
 #include "system_calls/exec_flow.cpp"
 
-#include "core/lang_inf.cpp"
 #include "core/containers.cpp"
 
 #include "newasm_exec.cpp"
@@ -61,6 +68,7 @@ the Initial Developer. All Rights Reserved.
 
 int main(int argc, char *argv[])
 {
+    newasm::dyn_ins_set = &newasm::mem::instructions;
     if(argc == 1)
     {
         newasm::header::functions::vers_info();
@@ -174,5 +182,6 @@ int main(int argc, char *argv[])
     newasm::handles::delete_handles();
     newasm::containers::functions::free_dyn_mem();
     newasm::header::functions::log("System unloading...");
+    delete newasm::dyn_ins_set;
     return 0;
 }

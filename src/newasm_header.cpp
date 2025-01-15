@@ -82,23 +82,6 @@ namespace newasm
             const int inv_ireg_val = -999999;
             const float inv_freg_val = static_cast<float>(-999999);
         }
-        namespace col
-        {
-            const std::string red = "\033[31m";
-            const std::string green = "\033[32m";
-            const std::string yellow = "\033[33m";
-            const std::string blue = "\033[34m";
-            const std::string magenta = "\033[35m";
-            const std::string cyan = "\033[36m";
-            const std::string gray = "\033[90m";
-
-            const std::string reset = "\033[0m";
-        }
-        namespace style
-        {
-            const std::string underline = "\033[4m";
-            const std::string bold = "\033[1m";
-        }
         namespace settings
         {
             int debug = 1;
@@ -524,7 +507,99 @@ namespace newasm
                 }
                 if(key == static_cast<std::string>("dlibs"))
                 {
+                    dynamic_libs.clear();
+                    newasm::header::functions::info("Loading the dynamic libraries...");
+                    //std::cout << "Debugging MEGA CRASH " << "1\n";
+                    dynamic_libs = newasm::header::functions::split(value,',');
+                    for(int i = 0; i < dynamic_libs.size(); i++)
+                    {
+                        dynamic_libs[i] = newasm::header::functions::trim(dynamic_libs[i]);
+                        //std::cout << "dynamic_libs [" << i << "] : '" << dynamic_libs[i] << "'\n";
+                        if(std::filesystem::exists(dynamic_libs[i] + static_cast<std::string>(".newasm_dl")))
+                        {
+                            std::ifstream file(dynamic_libs[i] + static_cast<std::string>(".newasm_dl"));
+                            std::vector<std::string> parser,parser2;
+                            std::string ins,suf,op;
+                            //std::cout << "Debugging MEGA CRASH " << "2\n";
+                            //std::vector<std::string> lines;
+                            std::cout << newasm::header::col::reset << "\t\t\tSuccessfully loaded dynamic library: " + 
+                                static_cast<std::string>(newasm::header::col::gray) + 
+                                dynamic_libs[i] << "\n";
 
+                            std::string line;
+                            newasm::dynlib::settings::analyzed_dynlib = dynamic_libs[i];
+                            newasm::dynlib::settings::lastlinedx = 0;
+                            bool dynlib_errno = true;
+                            //std::cout << "Debugging MEGA CRASH " << "3\n";
+                            while (std::getline(file, line))
+                            {
+                                line = newasm::header::functions::trim(line);
+                                (*newasm::dyn_ins_set)[dynamic_libs[i]].push_back(line);
+                                newasm::dynlib::settings::lastline = line;
+                                newasm::dynlib::settings::lastlinedx += 1;
+                                //std::cout << "Debugging MEGA CRASH " << "4\n";
+
+                                if(newasm::header::functions::strfind(line,'!'))
+                                {
+                                    parser = newasm::header::functions::split_fixed(line,'!');
+                                    parser[0] = newasm::header::functions::trim(parser[0]);
+                                    parser[1] = newasm::header::functions::trim(parser[1]);
+                                }
+                                //std::cout << "Debugging MEGA CRASH " << "5\n";
+                                
+                                if(!parser.empty()) if(!parser[0].empty() && parser[0] == "_")
+                                {
+                                    dynlib_errno = false;
+                                    newasm::dynlib::functions::abort(newasm::dynlib::err_codes::labels_unsupported);
+                                    //std::cout << "Debugging MEGA CRASH " << "5.1\n";
+                                }
+                                //std::cout << "Debugging MEGA CRASH " << "5.2\n";
+                                parser.clear();
+                                if(newasm::header::functions::strfind(line,'.') && newasm::header::functions::strfind(line,','))
+                                {
+                                    parser = newasm::header::functions::split_fixed(line,',');
+                                    op = newasm::header::functions::trim(parser[1]);
+                                    parser2 = newasm::header::functions::split_fixed(parser[0],'.');
+                                    ins = newasm::header::functions::trim(parser2[0]);
+                                    suf = newasm::header::functions::trim(parser2[1]);
+                                }
+                                //std::cout << "Debugging MEGA CRASH " << "6\n";
+                                bool tried_retry_label = false;
+                                parser_retry_label:
+                                if(!parser.empty()) if(!ins.empty() && (
+                                    ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::jmp) ||
+                                    ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::je) ||
+                                    ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::jne) ||
+                                    ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::jl) ||
+                                    ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::jle) ||
+                                    ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::jg) ||
+                                    ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::jge)
+                                ))
+                                {
+                                    dynlib_errno = false;
+                                    newasm::dynlib::functions::abort(newasm::dynlib::err_codes::unsupported_instruction);
+                                    //std::cout << "Debugging MEGA CRASH " << "6.1\n";
+                                }
+                                if(dynlib_errno && !tried_retry_label)
+                                {
+                                    tried_retry_label = true;
+                                    ins = line;
+                                    parser.push_back("random");
+                                    goto parser_retry_label;
+                                }
+                            }
+
+                            file.close();
+                                //std::cout << "Debugging MEGA CRASH " << "7\n";
+                        }
+                        if(!std::filesystem::exists(dynamic_libs[i] + static_cast<std::string>(".newasm_dl")))
+                        {
+                            std::cout << newasm::header::col::red << "\t\t\tFailed to load dynamic library: " + 
+                                static_cast<std::string>(newasm::header::col::gray) + 
+                                dynamic_libs[i] << "\n";
+                                //std::cout << "Debugging MEGA CRASH " << "8\n";
+                        }
+                    }
                 }
                 return 1;
             }

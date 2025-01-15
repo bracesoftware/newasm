@@ -70,6 +70,7 @@ namespace newasm
         const int empty_proc = 30;
         const int datastruct_redef = 31;
         const int unexpected_end = 32;
+        const int improper_dynlib = 33;
 
         const std::unordered_map<int, std::string> identifier = {
             {noterm_point, "NoTerminationPoint"},
@@ -104,7 +105,8 @@ namespace newasm
             {expected_cbrace, "ExpectedClosingBrace"},
             {empty_proc, "EmptyProcedureBlock"},
             {datastruct_redef, "DataStructureRedefinition"},
-            {unexpected_end, "UnexpectedProcedureEnd"}
+            {unexpected_end, "UnexpectedProcedureEnd"},
+            {improper_dynlib, "ImproperDynLibraryImplementation"}
         };
     }
     namespace cmp_results
@@ -176,6 +178,7 @@ namespace newasm
         std::unordered_map<std::string, int> datatypes;
 
         std::map<std::string, std::vector<std::string>> funcs;
+        std::unordered_map<std::string, std::vector<std::string>> instructions;
 
         std::unordered_map<std::string, int> labels;
 
