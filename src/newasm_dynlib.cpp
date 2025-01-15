@@ -73,7 +73,7 @@ namespace newasm
                 std::cout << newasm::header::col::reset
                 << newasm::header::col::red << "\t\t\t\t"
                 << "Aborted dynamic library implementation.\n"<< "\t\t\t\t"
-                << "Runtime error \"" << newasm::header::col::gray << newasm::header::style::underline
+                << "Runtime error " << error_code << " \"" << newasm::header::col::gray << newasm::header::style::underline
                 << newasm::dynlib::err_codes::identifier.at(error_code) << newasm::header::col::reset
                 << newasm::header::col::red << "\" in " << newasm::header::col::gray << newasm::header::style::underline
                 << newasm::dynlib::settings::analyzed_dynlib << ":" << newasm::dynlib::settings::lastlinedx << newasm::header::col::reset

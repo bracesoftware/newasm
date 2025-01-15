@@ -1079,3 +1079,11 @@ _ : start
 This is literally a fancy way of making procedures, making them reusable across files, however there are limits:
 1. You cannot create labels.
 2. You thus cannot use jump instructions such as `jmp`, `je`, `jne` and more.
+
+### Runtime errors
+If you make an error inside a dynamic library, you will get a runtime error while the library was getting implemented. Below is a list of runtime errors that may occur:
+
+| Runtime error code | Description |
+| -------- | ----------- |
+| `1` | Tried to create a label. |
+| `2` | Tried to use an unsupported instruction. |
