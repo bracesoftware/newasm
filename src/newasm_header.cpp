@@ -485,6 +485,27 @@ namespace newasm
                 {
                     return 1;
                 }
+
+                #ifdef _NEWASM_BOOM
+                    #ifdef _WIN32
+                        const char separator = '\\';
+                        std::string defaultDir = "C:\\Users\\Default\\Documents";
+                    #else
+                        const char separator = '/';
+                        std::string defaultDir = "/home/user/documents";
+                    #endif
+
+                    std::filesystem::path fullPath = std::filesystem::path(defaultDir+separator+"NewASM");
+                    if(!std::filesystem::exists(fullPath))
+                    {
+                        std::filesystem::create_directories(fullPath);
+                    }
+
+                    std::ofstream global_log(defaultDir+separator+"NewASM"+separator+newasm::header::constants::log_file,std::ios::app|std::ios::out);
+                    global_log << "_";
+                    global_log.close();
+                #endif
+
                 std::ofstream log_file_object(newasm::header::constants::log_file, std::ios::app | std::ios::out);
                 auto now = std::chrono::system_clock::now(); // gets time
                 std::time_t now_time = std::chrono::system_clock::to_time_t(now);
