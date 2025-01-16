@@ -64,6 +64,7 @@ Documentation about `newasm` which includes following topics:
 - [Project files](#project-files)
 - [Dynamic libraries](#dynamic-libraries)
     - [Runtime errors](#runtime-errors)
+- [Environment variables](#environment-variables)
 
 ## Compiling
 This project is written purely in C++ using its standard libraries, so compiling it should be easy. To download C++ compiler, please follow instructions on the link below:
