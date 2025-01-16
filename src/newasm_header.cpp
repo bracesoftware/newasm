@@ -218,6 +218,18 @@ namespace newasm
                     newasm::header::col::gray + "\t\tSets the input file."
                 );
                 newasm::header::functions::nullprint(
+                    newasm::header::col::reset + "\t-repl" + 
+                    newasm::header::col::gray + "\t\t\tEnter the read-evaluate-print mode."
+                );
+                newasm::header::functions::nullprint(
+                    newasm::header::col::reset + "\t-newproj" + 
+                    newasm::header::col::gray + "\t\t\tCreate a new project file if it doesn't already exist."
+                );
+                newasm::header::functions::nullprint(
+                    newasm::header::col::reset + "\t-tests" + 
+                    newasm::header::col::gray + "\t\t\tLoads the test function."
+                );
+                newasm::header::functions::nullprint(
                     newasm::header::col::reset + "\t-log" + 
                     newasm::header::col::gray + "\t\t\tToggles the logging system."
                 );
