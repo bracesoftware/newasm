@@ -81,7 +81,7 @@ This project is written purely in C++ using its standard libraries, so compiling
 | `-repl` | - | Enter the read-evaluate-print mode. |
 | `-newproj` | - | Create a new project file if one doesn't already exist. |
 | `-tests` | - | Start the test function. |
-| `-logs` | - | Toggle the logging system. |
+| `-log` | - | Toggle the logging system. |
 
 ## Sections
 Sections are built-in "tags" used to classify code. Each section uses different syntax in terms of instructions. General syntax is:

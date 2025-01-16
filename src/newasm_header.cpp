@@ -473,15 +473,18 @@ namespace newasm
                 {
                     return 1;
                 }
-                std::ofstream log_file_object(newasm::header::constants::log_file);
+                std::ofstream log_file_object(newasm::header::constants::log_file, std::ios::app | std::ios::out);
+                auto now = std::chrono::system_clock::now(); // gets time
+                std::time_t now_time = std::chrono::system_clock::to_time_t(now);
                 if(log_file_object.is_open())
                 {
-                    log_file_object << newasm::header::system_info::name << " LOG | " << text << "\n";
+                    log_file_object << std::put_time(std::localtime(&now_time), "[%d/%m/%Y - %H:%M:%S] ")
+                    << newasm::header::system_info::name << " Log | " << text << "\n";
                     log_file_object.close();
                     return 1;
                 }
                 newasm::header::functions::err("Unable to open the log file.");
-                newasm::header::functions::info("IDIOT");
+                //newasm::header::functions::info("IDIOT");
                 return 1;
             }
         }

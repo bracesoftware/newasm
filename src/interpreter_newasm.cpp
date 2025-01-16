@@ -37,6 +37,8 @@ the Initial Developer. All Rights Reserved.
 #include <chrono>
 #include <thread>
 
+#include <iomanip>
+
 #define __newasm_included
 
 namespace newasm
@@ -155,6 +157,10 @@ int main(int argc, char *argv[])
             newasm::header::settings::script_file
         )
     );
+    if(newasm::header::data::exception)
+    {
+        newasm::header::functions::log("Process terminated...");
+    }
     
     repl_label:
     if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::repl),argc,argv,argid))
