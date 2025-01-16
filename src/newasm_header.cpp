@@ -45,7 +45,7 @@ namespace newasm
             }
             const int major = 0;
             const int minor = 1;
-            const int patch = 2;
+            const int patch = 3;
             const int release = 1;
             const int release_type = newasm::header::version::release_types::test;
         }
