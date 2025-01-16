@@ -74,7 +74,7 @@ namespace newasm
             //const std::string scripts_folder = "nax_scripts/";
             //const std::string output_folder = "nax_output/";
             const std::string default_input = "index.asm";
-            const std::string log_file = "newasm_log.txt";
+            const std::string log_file = newasm::core::constants::data_folder + newasm::core::constants::separator + "log.txt";
 
             const std::string endl = "\n";
 

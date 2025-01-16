@@ -1089,3 +1089,28 @@ If you make an error inside a dynamic library, you will get a runtime error whil
 | -------- | ----------- |
 | `1` | Tried to create a label. |
 | `2` | Tried to use an unsupported instruction. |
+
+## Environment variables
+Environment variables are typeless variables that are defined within the `.newasm/env_vars.ini` file. Let's take a look:
+
+`.newasm/env_vars.ini`:
+```ini
+testenv = "hello from env var"
+```
+
+`index.asm`:
+```asm
+_ : start
+    mov . tlr , * / testenv
+    mov . fdx , 1
+    syscall . 0 , %ios
+```
+
+* **NOTE**: You must use `*/` before the environment variable name so the program knows you are using an environment variable and not a standard variable, which means this wouldn't work:
+
+```asm
+_ : start
+    mov . tlr , testenv
+    mov . fdx , 1
+    syscall . 0 , %ios
+```

@@ -26,6 +26,15 @@ namespace newasm
 {
     namespace core
     {
+        namespace constants
+        {
+            const std::string data_folder = ".newasm";
+            #ifdef _WIN32
+                const std::string separator = "\\";
+            #else
+                const std::string separator = "/";
+            #endif
+        }
         namespace lang_inf
         {
             const int load = 1;

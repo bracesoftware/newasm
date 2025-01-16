@@ -550,6 +550,7 @@ namespace newasm
             //std::cout << newasm::system::cproc << " : " << newline << std::endl;
             return 1;
         }
+        
         //LOAD.ref
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::load))
         {
@@ -2714,6 +2715,16 @@ namespace newasm
                 ins = newasm::header::functions::trim(ins);
                 suf = newasm::header::functions::trim(suf);
                 opr = newasm::header::functions::trim(opr);
+               
+                std::vector<std::string> tokens;
+                for(std::vector<std::pair<std::string,std::string>>::iterator i = newasm::env_vars->begin(); i < newasm::env_vars->end(); i++)
+                {
+                    tokens = newasm::header::functions::split_fixed(opr,'/');
+                    if(newasm::header::functions::trim(tokens[0]) == "*") if(newasm::header::functions::trim(tokens[1]) == i->first)
+                    {
+                        opr = i->second;
+                    }
+                }
                 return newasm::process_iso(line,ins,suf,opr);
             }
             if(newasm::header::functions::strfind(line,'.')) if(!newasm::header::functions::strfind(line,','))

@@ -44,6 +44,7 @@ the Initial Developer. All Rights Reserved.
 namespace newasm
 {
     std::unordered_map<std::string,std::vector<std::string>>* dyn_ins_set;
+    std::vector<std::pair<std::string,std::string>>* env_vars;
 }
 
 #include "core/lang_inf.cpp"
@@ -57,6 +58,7 @@ namespace newasm
 #include "system_calls/exec_flow.cpp"
 
 #include "core/containers.cpp"
+#include "core/env_vars.cpp"
 
 #include "newasm_exec.cpp"
 
@@ -66,11 +68,20 @@ namespace newasm
 
 #include "newasm_tests.cpp"
 
+namespace fs = std::filesystem;
+
 // MAIN
 
 int main(int argc, char *argv[])
 {
+    fs::path data_folder = fs::path(newasm::core::constants::data_folder);
+    if(!fs::exists(data_folder))
+    {
+        fs::create_directories(data_folder);
+    }
     newasm::dyn_ins_set = &newasm::mem::instructions;
+    //std::cout << "IDIOTISM" << std::endl;
+    newasm::env_vars = &newasm::core::env_vars::priv_env_var;
     if(argc == 1)
     {
         newasm::header::functions::vers_info();
@@ -140,6 +151,7 @@ int main(int argc, char *argv[])
     std::cout << std::endl;
     newasm::header::execution_flow::entry_exec = newasm::header::settings::script_file;
 
+    newasm::core::env_vars::functions::setup_env();
     newasm::project_data::impl::setup_proj();
     newasm::header::functions::info(
         static_cast<std::string>("Preparing to execute: ") + newasm::header::col::yellow +
@@ -189,5 +201,6 @@ int main(int argc, char *argv[])
     newasm::containers::functions::free_dyn_mem();
     newasm::header::functions::log("System unloading...");
     delete newasm::dyn_ins_set;
+    delete newasm::env_vars;
     return 0;
 }
