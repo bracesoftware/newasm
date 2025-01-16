@@ -218,7 +218,7 @@ namespace newasm
                     newasm::header::col::gray + "\t\tSets the input file."
                 );
                 newasm::header::functions::nullprint(
-                    newasm::header::col::reset + "\t-logs" + 
+                    newasm::header::col::reset + "\t-log" + 
                     newasm::header::col::gray + "\t\t\tToggles the logging system."
                 );
                 std::cout << newasm::header::col::reset;
