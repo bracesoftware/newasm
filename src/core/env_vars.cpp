@@ -44,6 +44,10 @@ namespace newasm
 
                         while(std::getline(internal_fileobject, line))
                         {
+                            if(line.empty())
+                            {
+                                continue;
+                            }
                             if(!newasm::header::functions::strfind(line,'='))
                             {
                                 continue;
