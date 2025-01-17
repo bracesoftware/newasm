@@ -65,9 +65,10 @@ namespace newasm
                                     continue;
                                 }
                             }
-                            newasm::header::functions::info("Successfully analyzed the environment variables.");
+                            
                             newasm::core::env_vars::priv_env_var.push_back({key,value});
                         }
+                        newasm::header::functions::info("Successfully analyzed the environment variables.");
                         internal_fileobject.close();
                         return 1;
                     }
