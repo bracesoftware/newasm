@@ -451,6 +451,10 @@ namespace newasm
         {
             strreg = newasm::mem::regs::prp;
         }
+        if(suf == static_cast<std::string>("cpt"))
+        {
+            strreg = newasm::mem::regs::cpt;
+        }
 
         const bool debugit = false;
 
@@ -891,6 +895,18 @@ namespace newasm
                 //if(i != newasm::mem::uninitialized_pointer.end()) newasm::mem::uninitialized_pointer.erase(i);
                 return 1;
             }
+            if(suf == static_cast<std::string>("cpt"))
+            {
+                if(newasm::mem::datatypes[opr] != newasm::datatypes::reference)
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                    return 1;
+                }
+                newasm::mem::data[opr] = newasm::mem::regs::cpt;
+                //auto i = std::find(newasm::mem::uninitialized_pointer.begin(), newasm::mem::uninitialized_pointer.end(), opr);
+                //if(i != newasm::mem::uninitialized_pointer.end()) newasm::mem::uninitialized_pointer.erase(i);
+                return 1;
+            }
             if(suf == static_cast<std::string>("cpr"))
             {
                 if(newasm::mem::datatypes[opr] != newasm::datatypes::number)
@@ -1163,6 +1179,21 @@ namespace newasm
                 newasm::mem::regs::prp = (opr);
                 return 1;
             }
+            if(suf == static_cast<std::string>("cpt")) //procedure pointer
+            {
+                if(!newasm::header::functions::isref(opr))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                    return 1;
+                }
+                if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(opr), newasm::containers::bit_arrays))
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_memacc);
+                    return 1;
+                }
+                newasm::mem::regs::cpt = (opr);
+                return 1;
+            }
             if(suf == static_cast<std::string>("cpr"))
             {
                 if(!newasm::header::functions::isnumeric(opr))
@@ -1258,6 +1289,30 @@ namespace newasm
                         newasm::header::execution_flow::entry_start_line = newasm::header::data::lastlndx+1;
                         newasm::header::execution_flow::file = newasm::header::functions::remq(newasm::mem::regs::tlr);
                         newasm::header::execution_flow::exec_redirected = true;
+                        return 1;
+                    }
+                    newasm::terminate(newasm::exit_codes::unknown_fdx);
+                    return 1;
+                }
+                //////////// container manipulation
+                if(opr == static_cast<std::string>("\%cmanip"))
+                {
+                    //clear
+                    if(newasm::mem::regs::fdx == 1)
+                    {
+                        newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->clear();
+                        return 1;
+                    }
+                    //flip
+                    if(newasm::mem::regs::fdx == 2)
+                    {
+                        newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->flip();
+                        return 1;
+                    }
+                    //reverse
+                    if(newasm::mem::regs::fdx == 3)
+                    {
+                        newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->reverse();
                         return 1;
                     }
                     newasm::terminate(newasm::exit_codes::unknown_fdx);
@@ -1710,6 +1765,10 @@ namespace newasm
             {
                 strreg = newasm::mem::regs::prp;
             }
+            if(suf == static_cast<std::string>("cpt"))
+            {
+                strreg = newasm::mem::regs::cpt;
+            }
 
             if(intreg != newasm::header::constants::inv_ireg_val)
             {
@@ -2125,7 +2184,16 @@ namespace newasm
                 if(newasm::header::functions::isnumeric(newasm::mem::regs::prp))
                 {
                     newasm::header::data::exception = false;
-                    newasm::terminate(std::stoi(newasm::mem::regs::psx));//,wholeline);
+                    newasm::terminate(std::stoi(newasm::mem::regs::prp));//,wholeline);
+                    return 1;
+                }
+            }
+            if(suf == static_cast<std::string>("cpt"))
+            {
+                if(newasm::header::functions::isnumeric(newasm::mem::regs::cpt))
+                {
+                    newasm::header::data::exception = false;
+                    newasm::terminate(std::stoi(newasm::mem::regs::cpt));//,wholeline);
                     return 1;
                 }
             }
@@ -2200,6 +2268,11 @@ namespace newasm
             if(suf == static_cast<std::string>("prp"))
             {
                 newasm::mem::regs::prp = newasm::header::constants::inv_reg_val;
+                return 1;
+            }
+            if(suf == static_cast<std::string>("cpt"))
+            {
+                newasm::mem::regs::cpt = newasm::header::constants::inv_reg_val;
                 return 1;
             }
             if(suf == static_cast<std::string>("cpr"))
@@ -2339,6 +2412,11 @@ namespace newasm
                 }
                 return 1;
             }
+            if(suf == static_cast<std::string>("cpt"))
+            {
+                //make later
+                return 1;
+            }
             newasm::terminate(newasm::exit_codes::invalid_syntax); // non existing register; 
             //however this error is highly misleading since registers arent in RAM
             return 1;
@@ -2443,6 +2521,11 @@ namespace newasm
                         break;
                     }
                 }
+                return 1;
+            }
+            if(suf == static_cast<std::string>("cpt"))
+            {
+                //make later
                 return 1;
             }
             newasm::terminate(newasm::exit_codes::invalid_syntax); // non existing register; 

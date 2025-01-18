@@ -164,6 +164,7 @@ namespace newasm
             float cr1 = 0;
             int br0 = 0;
             int br1 = 0;
+            std::string cpt = newasm::header::constants::inv_reg_val;
             //int mcd = newasm::datatypes::decimal;
         }
 
