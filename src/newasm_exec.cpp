@@ -1297,6 +1297,11 @@ namespace newasm
                 //////////// container manipulation
                 if(opr == static_cast<std::string>("\%cmanip"))
                 {
+                    if(newasm::mem::regs::cpt == newasm::header::constants::inv_reg_val)
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
                     //clear
                     if(newasm::mem::regs::fdx == 1)
                     {
@@ -1313,6 +1318,22 @@ namespace newasm
                     if(newasm::mem::regs::fdx == 3)
                     {
                         newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->reverse();
+                        return 1;
+                    }
+                    //set at
+                    if(newasm::mem::regs::fdx == 3)
+                    {
+                        if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr))
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                            return 1;
+                        }
+                        if(!newasm::header::functions::isnumeric(newasm::mem::regs::stl))
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                            return 1;
+                        }
+                        newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->set_at(std::stoi(newasm::mem::regs::tlr),std::stoi(newasm::mem::regs::stl));
                         return 1;
                     }
                     newasm::terminate(newasm::exit_codes::unknown_fdx);
