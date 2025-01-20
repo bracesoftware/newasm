@@ -291,6 +291,11 @@ _ : start
 | `%fs` | `7` | `tlr` | Remove all file content; with `tlr` being a string containing the file name. |
 | `%fs` | `8` | `tlr`, `stl` | Read a file line; with `tlr` being a string containing the file name, and `stl` being the line number. Read content is subsequently stored in `tlr`. |
 | `%exf` | `1` | `tlr` | Start a new child process; with `tlr` being a string containing the file name. |
+| `%cmanip` | `1` | `cpt` | Clear the bit array, with `cpt` being a pointer holding the address of your bit array. |
+| `%cmanip` | `2` | `cpt` | Flip the bit array, with `cpt` being a pointer holding the address of your bit array. |
+| `%cmanip` | `3` | `cpt` | Reverse the bit array, with `cpt` being a pointer holding the address of your bit array. |
+| `%cmanip` | `4` | `cpt`, `tlr`, `stl` | Set a value at a specific index, with `cpt` being a pointer holding the address of your bit array, `tlr` an index and `stl` either 0 or 1 as a value. |
+| `%cmanip` | `5` | `cpt`, `tlr` | Get value stored at the bit array, with `cpt` being a pointer holding the address of your bit array and `tlr` being the index. After the `syscall`, the function will store the value in `tlr`. |
 
 ### `nop` instruction
 Do nothing.
