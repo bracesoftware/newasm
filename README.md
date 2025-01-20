@@ -143,6 +143,7 @@ This language brings some built-in references, or rather operands, with itself -
 - `%ios` - used as an operand in `syscall`, represents a module of system calls responsible for input and output streaming;
 - `%fs` - used as an operand in `syscall`, represents a module of system calls responsible for input and output streaming;
 - `%exf` - used as an operand in `syscall`, represents a module of system calls responsible for execution flow (starting child processes);
+- `%cmanip` - used as an operand in `syscall`, represents a module of system calls responsible for container and data structure manipulation;
 - `%endl` - line ending, used in `stl`;
 - `&%null` - used to leave references/pointers unassigned/uninitialized.
 - `%nl` - used as a null operand in some instructions.
@@ -252,6 +253,7 @@ _ : start
 | `cr1` | alternate calculation register | Register which is used as a second operand in calculations. Read [this](#calculation-instructions) for more information... |
 | `br0` | primary bit operation register | Register in which all the bitwise calculation results are stored. Read [this](#bit-operations) for more information...  |
 | `br1` | alternate bit operation register | Register which is used as a second operand in bitwise calculations. Read [this](#bit-operations) for more information... |
+| `cpt` | container pointer | Register holding an address specifically of a container or a data structure. Read [this](#containers-and-data-structures) for more information... |
 
 ### `syscall` instruction
 Set value of a specific register.
