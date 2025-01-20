@@ -65,6 +65,8 @@ Documentation about `newasm` which includes following topics:
 - [Dynamic libraries](#dynamic-libraries)
     - [Runtime errors](#runtime-errors)
 - [Environment variables](#environment-variables)
+- [Containers and data structures](#containers-and-data-structures)
+    - [Bit arrays](#bit-arrays)
 
 ## Compiling
 This project is written purely in C++ using its standard libraries, so compiling it should be easy. To download C++ compiler, please follow instructions on the link below:
@@ -1115,3 +1117,40 @@ _ : start
     mov . fdx , 1
     syscall . 0 , %ios
 ```
+
+## Containers and data structures
+- There are following data structures and containers available:
+1. Bit arrays
+
+### Bit arrays
+- Arrays of bits. Internally, they are just integers, but you are provided `syscall`s to manipulate them as if they were really just arrays of bits, an example:
+
+`index.asm`:
+```asm
+_ : data
+    bit_arr $ testbitarr = 0
+_ : start
+    mov . cpt , &testbitarr
+    mov . tlr , 2
+    mov . stl , 1
+    mov . fdx , 4
+    syscall . 0 , %cmanip
+    mov . tlr , 1
+    mov . fdx , 5
+    syscall . 0 , %cmanip
+    mov . fdx , 2
+    mov . stl , %endl
+    syscall . 0 , %ios
+    mov . tlr , 2
+    mov . fdx , 5
+    syscall . 0 , %cmanip
+    mov . fdx , 2
+    syscall . 0 , %ios
+```
+Output:
+```
+0
+1
+```
+
+NOTE: To really understand what's going on, check out the list of available system calls.

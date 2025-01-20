@@ -1321,7 +1321,7 @@ namespace newasm
                         return 1;
                     }
                     //set at
-                    if(newasm::mem::regs::fdx == 3)
+                    if(newasm::mem::regs::fdx == 4)
                     {
                         if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr))
                         {
@@ -1334,6 +1334,13 @@ namespace newasm
                             return 1;
                         }
                         newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->set_at(std::stoi(newasm::mem::regs::tlr),std::stoi(newasm::mem::regs::stl));
+                        return 1;
+                    }
+                    // get at
+                    if(newasm::mem::regs::fdx == 5)
+                    {
+                        int result = newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->get_at(std::stoi(newasm::mem::regs::tlr));
+                        newasm::mem::regs::tlr = std::to_string(result);
                         return 1;
                     }
                     newasm::terminate(newasm::exit_codes::unknown_fdx);
