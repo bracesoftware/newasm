@@ -34,6 +34,10 @@ namespace newasm
                 {
                     std::cout << "";
                 }
+                if(reg == "\%cmanip")
+                {
+                    std::cout << "";
+                }
                 if(reg == "\%ios")
                 {
                     std::cout << "";
