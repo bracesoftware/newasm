@@ -36,7 +36,11 @@ namespace newasm
             }
 
             delete binaryTree;
-            newasm::header::functions::info("Tests finished.");
+
+            int testint = 23874;
+            printf("number is %i",testint);
+
+            std::cout << std::endl; newasm::header::functions::info("Tests finished.");
             return;
         }
     }

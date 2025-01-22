@@ -30,19 +30,19 @@ namespace newasm
         {
             void out_bopr(const std::string &reg)
             {
-                if(reg == "\%exf")
+                if(reg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::exf))
                 {
                     std::cout << "";
                 }
-                if(reg == "\%cmanip")
+                if(reg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::cmanip))
                 {
                     std::cout << "";
                 }
-                if(reg == "\%ios")
+                if(reg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::ios))
                 {
                     std::cout << "";
                 }
-                if(reg == "\%fs")
+                if(reg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::fs))
                 {
                     std::cout << "";
                 }

@@ -31,13 +31,13 @@ the Initial Developer. All Rights Reserved.
 #include <sstream>
 #include <filesystem>
 #include <cmath>
-
 #include <algorithm>
 #include <cctype>
 #include <chrono>
 #include <thread>
 
 #include <iomanip>
+#include <stdio.h>
 
 #define __newasm_included
 
@@ -201,6 +201,7 @@ int main(int argc, char *argv[])
     newasm::handles::delete_handles();
     newasm::containers::functions::free_dyn_mem();
     newasm::header::functions::log("System unloading...");
+
     delete newasm::dyn_ins_set;
     delete newasm::env_vars;
     return 0;
