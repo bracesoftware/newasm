@@ -125,6 +125,22 @@ namespace newasm
                 {shr, "shr"}
             };
 
+            namespace refs
+            {
+                const int ios = 1;
+                const int exf = 2;
+                const int cmanip = 3;
+                const int fs = 4;
+                //const int  = 5;
+
+                const std::unordered_map<int, std::string> identifiers__ = {
+                    {ios, "\%ios"},
+                    {exf, "\%exf"},
+                    {cmanip, "\%cmanip"},
+                    {fs, "\%fs"}
+                };
+            }
+
             namespace utils
             {
                 bool iskeyword(const std::string &str)

@@ -32,6 +32,7 @@ namespace newasm
     {
         class binary_tree__
         {
+            public:
             virtual int get_at(int index)
             {
                 return -1;
@@ -45,6 +46,10 @@ namespace newasm
                 return;
             }
             virtual void set_at_right_child_of(int index, int value)
+            {
+                return;
+            }
+            virtual void set_at__(int index, int value)
             {
                 return;
             }
@@ -95,6 +100,11 @@ namespace newasm
                         return;
                     }
                     contents[index * 2 + 1] = value;
+                    return;
+                }
+                void set_at__(int index, int value) override
+                {
+                    this->contents[index] = value;
                     return;
                 }
         };
@@ -225,12 +235,19 @@ namespace newasm
         };
 
         std::unordered_map<std::string, newasm::containers::bit_array__*> bit_arrays;
+        std::unordered_map<std::string, newasm::containers::binary_tree__*> binary_trees;
 
         namespace functions
         {
             void free_dyn_mem()
             {
-                for(std::unordered_map<std::string, newasm::containers::bit_array__*>::iterator i = newasm::containers::bit_arrays.begin(); i != newasm::containers::bit_arrays.end(); i++)
+                for(std::unordered_map<std::string, newasm::containers::bit_array__*>::iterator i = newasm::containers::bit_arrays.begin();
+                i != newasm::containers::bit_arrays.end(); i++)
+                {
+                    delete i->second;
+                }
+                for(std::unordered_map<std::string, newasm::containers::binary_tree__*>::iterator i = newasm::containers::binary_trees.begin();
+                i != newasm::containers::binary_trees.end(); i++)
                 {
                     delete i->second;
                 }

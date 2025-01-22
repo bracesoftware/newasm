@@ -356,6 +356,24 @@ namespace newasm
                 newasm::containers::bit_arrays[name] = new newasm::containers::bit_array<512>();
                 return 1;
             }
+
+            if(dtyp == static_cast<std::string>("bin_tree"))
+            {
+                if(!newasm::header::functions::isnumeric(value))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                    return 1;
+                }
+                if(newasm::mem::functions::datavalid(name, newasm::containers::binary_trees))
+                {
+                    newasm::terminate(newasm::exit_codes::datastruct_redef);
+                    return 1;
+                }
+
+                newasm::containers::binary_trees[name] = new newasm::containers::binary_tree<512>();
+                newasm::containers::binary_trees.at(name)->set_at__(0,0);
+                return 1;
+            }
             
             newasm::terminate(newasm::exit_codes::invalid_syntax);
             return 1;
@@ -1179,14 +1197,17 @@ namespace newasm
                 newasm::mem::regs::prp = (opr);
                 return 1;
             }
-            if(suf == static_cast<std::string>("cpt")) //procedure pointer
+            if(suf == static_cast<std::string>("cpt")) //container pointer
             {
                 if(!newasm::header::functions::isref(opr))
                 {
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                     return 1;
                 }
-                if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(opr), newasm::containers::bit_arrays))
+                if(!newasm::mem::functions::datavalid(
+                    newasm::header::functions::remamp(opr), newasm::containers::bit_arrays) &&
+                !newasm::mem::functions::datavalid(
+                    newasm::header::functions::remamp(opr), newasm::containers::binary_trees))
                 {
                     newasm::terminate(newasm::exit_codes::invalid_memacc);
                     return 1;
@@ -1271,7 +1292,7 @@ namespace newasm
             if(suf == static_cast<std::string>("0"))
             {
                 //////process management (execution flow)
-                if(opr == static_cast<std::string>("\%exf"))
+                if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::exf))
                 {
                     if(newasm::header::execution_flow::exec_redirected)
                     {
@@ -1295,7 +1316,7 @@ namespace newasm
                     return 1;
                 }
                 //////////// container manipulation
-                if(opr == static_cast<std::string>("\%cmanip"))
+                if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::cmanip))
                 {
                     if(newasm::mem::regs::cpt == newasm::header::constants::inv_reg_val)
                     {
@@ -1305,24 +1326,44 @@ namespace newasm
                     //clear
                     if(newasm::mem::regs::fdx == 1)
                     {
+                        if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::bit_arrays))
+                        {
+                            newasm::terminate(newasm::exit_codes::invalid_memacc);
+                            return 1;
+                        }
                         newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->clear();
                         return 1;
                     }
                     //flip
                     if(newasm::mem::regs::fdx == 2)
                     {
+                        if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::bit_arrays))
+                        {
+                            newasm::terminate(newasm::exit_codes::invalid_memacc);
+                            return 1;
+                        }
                         newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->flip();
                         return 1;
                     }
                     //reverse
                     if(newasm::mem::regs::fdx == 3)
                     {
+                        if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::bit_arrays))
+                        {
+                            newasm::terminate(newasm::exit_codes::invalid_memacc);
+                            return 1;
+                        }
                         newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->reverse();
                         return 1;
                     }
                     //set at
                     if(newasm::mem::regs::fdx == 4)
                     {
+                        if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::bit_arrays))
+                        {
+                            newasm::terminate(newasm::exit_codes::invalid_memacc);
+                            return 1;
+                        }
                         if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr))
                         {
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);
@@ -1339,7 +1380,58 @@ namespace newasm
                     // get at
                     if(newasm::mem::regs::fdx == 5)
                     {
+                        if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::bit_arrays))
+                        {
+                            newasm::terminate(newasm::exit_codes::invalid_memacc);
+                            return 1;
+                        }
                         int result = newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->get_at(std::stoi(newasm::mem::regs::tlr));
+                        newasm::mem::regs::tlr = std::to_string(result);
+                        return 1;
+                    }
+                    //binary trees
+                    //set at parent of
+                    if(newasm::mem::regs::fdx == 6)
+                    {
+                        if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::binary_trees))
+                        {
+                            newasm::terminate(newasm::exit_codes::invalid_memacc);
+                            return 1;
+                        }
+                        newasm::containers::binary_trees.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->set_at_parent_of(std::stoi(newasm::mem::regs::tlr),std::stoi(newasm::mem::regs::stl));
+                        return 1;
+                    }
+                    //right child
+                    if(newasm::mem::regs::fdx == 7)
+                    {
+                        if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::binary_trees))
+                        {
+                            newasm::terminate(newasm::exit_codes::invalid_memacc);
+                            return 1;
+                        }
+                        newasm::containers::binary_trees.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->set_at_right_child_of(std::stoi(newasm::mem::regs::tlr),std::stoi(newasm::mem::regs::stl));
+                        return 1;
+                    }
+                    //left child
+                    if(newasm::mem::regs::fdx == 8)
+                    {
+                        if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::binary_trees))
+                        {
+                            newasm::terminate(newasm::exit_codes::invalid_memacc);
+                            return 1;
+                        }
+                        newasm::containers::binary_trees.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->set_at_left_child_of(std::stoi(newasm::mem::regs::tlr),std::stoi(newasm::mem::regs::stl));
+                        return 1;
+                    }
+                    //get
+                    if(newasm::mem::regs::fdx == 9)
+                    {
+                        if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::binary_trees))
+                        {
+                            newasm::terminate(newasm::exit_codes::invalid_memacc);
+                            return 1;
+                        }
+                        int result = newasm::containers::binary_trees.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->get_at(std::stoi(newasm::mem::regs::tlr));
                         newasm::mem::regs::tlr = std::to_string(result);
                         return 1;
                     }
@@ -1347,7 +1439,7 @@ namespace newasm
                     return 1;
                 }
                 ///// input-output stream
-                if(opr == static_cast<std::string>("\%ios"))
+                if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::ios))
                 {
                     //print text
                     if(newasm::mem::regs::fdx == 1)
@@ -1447,7 +1539,7 @@ namespace newasm
                     return 1;
                 }
                 //////file stream
-                if(opr == static_cast<std::string>("\%fs"))
+                if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::fs))
                 {
                     //create folder
                     if(newasm::mem::regs::fdx == 1)

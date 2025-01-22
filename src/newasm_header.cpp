@@ -202,9 +202,48 @@ namespace newasm
                 newasm::header::col::reset << std::endl;
                 
             }
+            const int first_column = 20;
+            const int second_column = 20;
+            const int third_column = 20;
+            const std::string tabs = "\t";
+            const std::vector<std::pair<std::string, std::pair<std::string,std::string>>> help_table_data = {
+                {"-help",      {"/",           "Displays the help panel."}},
+                {"-ver",       {"/",           "Displays the version information."}},
+                {"-input",     {"<file>",      "Sets the input file."}},
+                {"-repl",      {"/",           "Enter the read-evaluate-print mode."}},
+                {"-newproj",   {"/",           "Create a new project file if one doesn't already exist."}},
+                {"-tests",     {"/",           "Loads the test function."}},
+                {"-log",       {"/",           "Enables the logging system."}}
+            };
             void help_info()
             {
-                newasm::header::functions::nullprint_wnm("Application arguments:\n");
+                std::cout << "\n" << newasm::header::col::reset;
+                std::cout
+                        << std::setw(first_column) << std::left<<newasm::header::style::underline + newasm::header::style::bold+tabs+"Argument"
+                        << std::setw(second_column) << std::left<<"Parameters" 
+                        << std::setw(third_column) << std::left<<"Description"
+                << "\n" << newasm::header::col::reset;
+
+                std::string argument, params, description;
+
+                for(auto i = help_table_data.begin(); i != help_table_data.end(); i++)
+                {
+                    argument = i->first;
+                    params = i->second.first;
+                    description = i->second.second;
+                    std::cout 
+                            << std::setw(first_column) << std::left<<tabs+newasm::header::col::reset + argument
+                            << std::setw(second_column) << std::left<<params
+                            << std::setw(third_column) << std::left<<newasm::header::col::gray + description
+                    << "\n";
+                }
+
+                std::cout << "\n";
+                return;
+            }
+            
+                
+                /*newasm::header::functions::nullprint_wnm("Application arguments:\n");
                 newasm::header::functions::nullprint(
                     newasm::header::col::reset + "\t-help" + 
                     newasm::header::col::gray + "\t\t\tDisplays this panel."
@@ -233,9 +272,8 @@ namespace newasm
                     newasm::header::col::reset + "\t-log" + 
                     newasm::header::col::gray + "\t\t\tToggles the logging system."
                 );
-                std::cout << newasm::header::col::reset;
-                std::cout << "\n";
-            }
+                std::cout << newasm::header::col::reset;*/
+            
             std::vector<std::string> split(const std::string &str, char delimiter)
             {
                 std::vector<std::string> tokens;
