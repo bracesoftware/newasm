@@ -53,6 +53,7 @@ Documentation about `newasm` which includes following topics:
     - [Math calculations](#calculation-instructions)
     - [Bit operations](#bit-operations)
     - [`inc` and `dec` instructions](#inc-and-dec-instructions)
+    - [`db` instruction](#db-instruction)
 - [Procedures](#procedures)
 - [Exit codes](#exit-codes)
 - [Comments](#comments)
