@@ -119,8 +119,8 @@ int main(int argc, char *argv[])
         }
         else
         {
-            newasm::header::functions::err("Wrong application usage!\n\t\t\t\t\t" + newasm::header::col::gray + " newasm -input <filename in nax_scripts> -other_options");
-            newasm::header::functions::wrn("Input file is set to `index.nax`.");
+            newasm::header::functions::err("Wrong application usage!\n\t\t\t\t\t" + newasm::header::col::gray + " newasm -input <filename> -other_options");
+            newasm::header::functions::wrn("Input file is set to `"+newasm::header::constants::default_input+"`.");
             newasm::header::settings::script_file = newasm::header::constants::default_input;
         }
     }
@@ -202,7 +202,8 @@ int main(int argc, char *argv[])
     newasm::containers::functions::free_dyn_mem();
     newasm::header::functions::log("System unloading...");
 
-    delete newasm::dyn_ins_set;
-    delete newasm::env_vars;
+    if(newasm::dyn_ins_set != nullptr) delete newasm::dyn_ins_set;
+    if(newasm::env_vars != nullptr) delete newasm::env_vars;
+    
     return 0;
 }

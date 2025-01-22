@@ -2246,6 +2246,84 @@ namespace newasm
             //std::cout << newasm::system::cproc << " : " << newline << std::endl;
             return 1;
         }
+        //db - debug
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::db))
+        {
+            auto debugRegister = [](std::string str1, std::string str2)
+            {
+                newasm::header::functions::dbg(str1 + static_cast<std::string>(" = `") + 
+                    str2 + 
+                    static_cast<std::string>("`")
+                );
+            };
+            if(suf == static_cast<std::string>("fdx"))
+            {
+                debugRegister(suf, std::to_string(newasm::mem::regs::fdx));
+                return 1;
+            }
+            if(suf == static_cast<std::string>("tlr"))
+            {
+                debugRegister(suf, (newasm::mem::regs::tlr));
+                return 1;
+            }
+            if(suf == static_cast<std::string>("stl"))
+            {
+                debugRegister(suf, (newasm::mem::regs::stl));
+                return 1;
+            }
+            if(suf == static_cast<std::string>("psx"))
+            {
+                debugRegister(suf, (newasm::mem::regs::psx));
+                return 1;
+            }
+            if(suf == static_cast<std::string>("stk"))
+            {
+                debugRegister(suf, std::to_string(newasm::mem::regs::stk));
+                return 1;
+            }
+            if(suf == static_cast<std::string>("hea"))
+            {
+                debugRegister(suf, std::to_string(newasm::mem::regs::heaptr));
+                return 1;
+            }
+            if(suf == static_cast<std::string>("prp"))
+            {
+                debugRegister(suf, (newasm::mem::regs::prp));
+                return 1;
+            }
+            if(suf == static_cast<std::string>("cpt"))
+            {
+                debugRegister(suf, (newasm::mem::regs::cpt));
+                return 1;
+            }
+            if(suf == static_cast<std::string>("cpr"))
+            {
+                debugRegister(suf, std::to_string(newasm::mem::regs::cpr));
+                return 1;
+            }
+            if(suf == static_cast<std::string>("cr0"))
+            {
+                debugRegister(suf, std::to_string(newasm::mem::regs::cr0));
+                return 1;
+            }
+            if(suf == static_cast<std::string>("cr1"))
+            {
+                debugRegister(suf, std::to_string(newasm::mem::regs::cr1));
+                return 1;
+            }
+            if(suf == static_cast<std::string>("br0"))
+            {
+                debugRegister(suf, std::to_string(newasm::mem::regs::br0));
+                return 1;
+            }
+            if(suf == static_cast<std::string>("br1"))
+            {
+                debugRegister(suf, std::to_string(newasm::mem::regs::br1));
+                return 1;
+            }
+            newasm::terminate(newasm::exit_codes::invalid_syntax);
+            return 1;
+        }
         //ret
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::ret))
         {

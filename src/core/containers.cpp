@@ -244,12 +244,12 @@ namespace newasm
                 for(std::unordered_map<std::string, newasm::containers::bit_array__*>::iterator i = newasm::containers::bit_arrays.begin();
                 i != newasm::containers::bit_arrays.end(); i++)
                 {
-                    delete i->second;
+                    if(i->second != nullptr) delete i->second;
                 }
                 for(std::unordered_map<std::string, newasm::containers::binary_tree__*>::iterator i = newasm::containers::binary_trees.begin();
                 i != newasm::containers::binary_trees.end(); i++)
                 {
-                    delete i->second;
+                    if(i->second != nullptr) delete i->second;
                 }
                 return;
             }

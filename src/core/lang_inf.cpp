@@ -79,6 +79,7 @@ namespace newasm
             const int not__ = 38;
             const int shl = 39;
             const int shr = 40;
+            const int db = 41;
 
             const std::unordered_map<int, std::string> instruction_set = {
                 {load,"load"},
@@ -122,7 +123,9 @@ namespace newasm
                 {xor__, "xor"},
                 {not__, "not"},
                 {shl, "shl"},
-                {shr, "shr"}
+                {shr, "shr"},
+
+                {db, "db"}
             };
 
             namespace refs

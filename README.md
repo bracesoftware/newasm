@@ -67,6 +67,7 @@ Documentation about `newasm` which includes following topics:
 - [Environment variables](#environment-variables)
 - [Containers and data structures](#containers-and-data-structures)
     - [Bit arrays](#bit-arrays)
+    - [Binary trees](#binary-trees)
 
 ## Compiling
 This project is written purely in C++ using its standard libraries, so compiling it should be easy. To download C++ compiler, please follow instructions on the link below:
@@ -298,6 +299,10 @@ _ : start
 | `%cmanip` | `3` | `cpt` | Reverse the bit array, with `cpt` being a pointer holding the address of your bit array. |
 | `%cmanip` | `4` | `cpt`, `tlr`, `stl` | Set a value at a specific index, with `cpt` being a pointer holding the address of your bit array, `tlr` an index and `stl` either 0 or 1 as a value. |
 | `%cmanip` | `5` | `cpt`, `tlr` | Get value stored at the bit array, with `cpt` being a pointer holding the address of your bit array and `tlr` being the index. After the `syscall`, the function will store the value in `tlr`. |
+| `%cmanip` | `6` | `cpt`, `tlr`, `stl` | Set-at-parent-of function, with `cpt` being a pointer holding the address of your binary tree, `tlr` being the index and `stl` the value. |
+| `%cmanip` | `7` | `cpt`, `tlr`, `stl` | Set-at-right child-of function, with `cpt` being a pointer holding the address of your binary tree, `tlr` being the index and `stl` the value. |
+| `%cmanip` | `8` | `cpt`, `tlr`, `stl` | Set-at-left child-of function, with `cpt` being a pointer holding the address of your binary tree, `tlr` being the index and `stl` the value. |
+| `%cmanip` | `9` | `cpt`, `tlr`, `stl` | Get-at function, with `cpt` being a pointer holding the address of your binary tree and `tlr` being the index. After the `syscall`, the function will store the value in `tlr`.|
 
 ### `nop` instruction
 Do nothing.
@@ -794,6 +799,20 @@ procedure_2
 procedure_2
 ```
 
+### `db` instruction
+- A little instruction used to debug register values. Example:
+
+```asm
+_ : start
+    ; ... some code
+    db . tlr
+```
+
+Output:
+```
+[NewASM]   PROGRAM THREAD @ Debug | tlr = `"string"`
+```
+
 ## Procedures
 Procedures allow you to use the same piece of code without having to actually repeat it. General syntax is:
 
@@ -1128,6 +1147,7 @@ _ : start
 ## Containers and data structures
 - There are following data structures and containers available:
 1. Bit arrays
+2. Binary trees
 
 ### Bit arrays
 - Arrays of bits. Internally, they are just integers, but you are provided `syscall`s to manipulate them as if they were really just arrays of bits, an example:
@@ -1160,4 +1180,62 @@ Output:
 1
 ```
 
-NOTE: To really understand what's going on, check out the list of available system calls.
+* NOTE: To really understand what's going on, check out the list of available system calls.
+
+### Binary trees
+- Binary trees are specific arrays containing the parent nodes which have their right and their left child. Example:
+
+`index.asm`:
+```asm
+
+_:data
+    bin_tree $ testbintree = 0
+_:start
+    mov . cpt , &testbintree
+
+    mov . tlr , 0
+    mov . stl , 33
+    mov . fdx , 7
+    syscall . 0 , %cmanip
+    
+    mov . tlr , 0
+    mov . fdx , 9
+    syscall . 0 , %cmanip
+
+    mov . stl , %endl
+    mov . fdx , 2
+    syscall . 0 , %ios
+    
+    mov . tlr , 1
+    mov . fdx , 9
+    syscall . 0 , %cmanip
+
+    mov . stl , %endl
+    mov . fdx , 2
+    syscall . 0 , %ios
+    
+    mov . tlr , 2
+    mov . fdx , 9
+    syscall . 0 , %cmanip
+
+    mov . stl , %endl
+    mov . fdx , 2
+    syscall . 0 , %ios
+    
+    mov . tlr , 3
+    mov . fdx , 9
+    syscall . 0 , %cmanip
+
+    mov . stl , %endl
+    mov . fdx , 2
+    syscall . 0 , %ios
+
+```
+
+Output:
+```
+-1
+33
+0
+0
+```

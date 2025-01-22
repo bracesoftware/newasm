@@ -164,6 +164,10 @@ namespace newasm
                     std::cout << newasm::header::col::cyan << newasm::header::system_info::name << "  PROGRAM THREAD @ System info | " << newasm::header::col::gray << text << newasm::header::col::reset << std::endl;
                 }
             }
+            void dbg(std::string text)
+            {
+                std::cout << newasm::header::col::magenta << newasm::header::system_info::name << "   PROGRAM THREAD @ Debug | " << newasm::header::col::reset << text << std::endl;
+            }
             /*void init()
             {
                 newasm::header::functions::info("Init finished.");
