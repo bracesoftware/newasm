@@ -31,6 +31,21 @@ namespace newasm
             {
                 return;
             }
+            namespace impl
+            {
+                std::string quotes = static_cast<std::string>("\"");
+                int concat()
+                {
+                    newasm::mem::regs::tlr = quotes+newasm::header::functions::remq(newasm::mem::regs::tlr) + 
+                    newasm::header::functions::remq(newasm::mem::regs::stl)+quotes;
+                    return 1;
+                }
+                int trim()
+                {
+                    newasm::mem::regs::tlr = quotes + newasm::header::functions::trim(newasm::header::functions::remq(newasm::mem::regs::tlr)) + quotes;
+                    return 1;
+                }
+            }
         }
     }
 }

@@ -226,8 +226,27 @@ namespace newasm
             newasm::terminate(newasm::exit_codes::struct_redef);
             return 1;
         }
+        if(newasm::mem::functions::datavalid(name, newasm::threads::memory))
+        {
+            newasm::terminate(newasm::exit_codes::struct_redef);
+            return 1;
+        }
         if(newasm::header::functions::isalphanum(name))
         {
+            if(dtyp == static_cast<std::string>("thread"))
+            {
+                if(value != static_cast<std::string>("{"))
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_syntax);
+                    return 1;
+                }
+                newasm::threads::thread_now = true;
+                newasm::threads::thread_decl = name;
+                newasm::threads::memory.at(name) = new newasm::threads::object__();
+                newasm::threads::valid_threads.push_back(name);
+
+                return 1;
+            }
             if(dtyp == static_cast<std::string>("struct"))
             {
                 if(newasm::header::data::struct_now)
@@ -1310,6 +1329,22 @@ namespace newasm
                         newasm::header::execution_flow::entry_start_line = newasm::header::data::lastlndx+1;
                         newasm::header::execution_flow::file = newasm::header::functions::remq(newasm::mem::regs::tlr);
                         newasm::header::execution_flow::exec_redirected = true;
+                        return 1;
+                    }
+                    newasm::terminate(newasm::exit_codes::unknown_fdx);
+                    return 1;
+                }
+                //text manipulation
+                if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::txtop))
+                {
+                    if(newasm::mem::regs::fdx == 1)
+                    {
+                        newasm::syscalls::txtop::impl::concat();
+                        return 1;
+                    }
+                    if(newasm::mem::regs::fdx == 2)
+                    {
+                        newasm::syscalls::txtop::impl::trim();
                         return 1;
                     }
                     newasm::terminate(newasm::exit_codes::unknown_fdx);
@@ -2889,7 +2924,18 @@ namespace newasm
                 newasm::header::data::struct_now = false;
                 return 1;
             }
+            if(newasm::threads::thread_now)
+            {
+                newasm::threads::thread_now = false;
+                return 1;
+            }
             newasm::terminate(newasm::exit_codes::unexpected_cbrace);
+            return 1;
+        }
+        if(newasm::threads::thread_now)
+        {
+            newasm::threads::memory.at(newasm::threads::thread_decl)->contents.push_back(line);
+            newasm::threads::memory.at(newasm::threads::thread_decl)->size++;
             return 1;
         }
         line = newasm::header::functions::remc(line);
@@ -3194,6 +3240,28 @@ namespace newasm
                 newasm::header::data::lastlndx = lineidx;
                 newasm::procline(line);
                 lineidx++;
+
+                //threads
+                if(newasm::threads::thread_count != 0)
+                {
+                    for(auto i = newasm::threads::valid_threads.begin(); i < newasm::threads::valid_threads.end(); i++)
+                    {
+                        if(newasm::threads::functions::finished(*i))
+                        {
+                            if(std::find(newasm::threads::finished_threads.begin(),newasm::threads::finished_threads.end(),*i) == newasm::threads::finished_threads.end())
+                            {
+                                newasm::threads::finished_threads.push_back(*i);
+                                newasm::threads::thread_count--;
+                            }
+                        }
+                        if(!newasm::threads::functions::finished(*i))
+                        {
+                            std::string linetoprocess = newasm::threads::functions::getlastline(*i); 
+                            newasm::procline(linetoprocess);
+                        }
+                    }
+                }
+                //////////
             }
             internal_fileobject.close();
             if(!newasm::system::terminated)

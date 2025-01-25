@@ -53,6 +53,8 @@ namespace newasm
 #include "newasm_header.cpp"
 #include "newasm_setup.cpp"
 
+#include "threads/impl.cpp"
+
 #include "system_calls/io_stream.cpp"
 #include "system_calls/file_stream.cpp"
 #include "system_calls/exec_flow.cpp"
@@ -206,5 +208,6 @@ int main(int argc, char *argv[])
     if(newasm::dyn_ins_set != nullptr) delete newasm::dyn_ins_set;
     if(newasm::env_vars != nullptr) delete newasm::env_vars;
     
+    newasm::threads::functions::free_mem();
     return 0;
 }
