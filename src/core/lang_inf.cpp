@@ -134,13 +134,14 @@ namespace newasm
                 const int exf = 2;
                 const int cmanip = 3;
                 const int fs = 4;
-                //const int  = 5;
+                const int txtop = 5;
 
                 const std::unordered_map<int, std::string> identifiers__ = {
                     {ios, "\%ios"},
                     {exf, "\%exf"},
                     {cmanip, "\%cmanip"},
-                    {fs, "\%fs"}
+                    {fs, "\%fs"},
+                    {txtop, "\%txtop"}
                 };
             }
 

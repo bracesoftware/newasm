@@ -57,6 +57,7 @@ namespace newasm
 #include "system_calls/file_stream.cpp"
 #include "system_calls/exec_flow.cpp"
 #include "system_calls/c_manip.cpp"
+#include "system_calls/text_operations.cpp"
 
 #include "core/containers.cpp"
 #include "core/env_vars.cpp"

@@ -46,6 +46,10 @@ namespace newasm
                 {
                     std::cout << "";
                 }
+                if(reg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::txtop))
+                {
+                    std::cout << "";
+                }
                 if(reg == "\%nl")
                 {
                     std::cout << "";
