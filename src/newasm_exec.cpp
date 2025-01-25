@@ -242,9 +242,9 @@ namespace newasm
                 }
                 newasm::threads::thread_now = true;
                 newasm::threads::thread_decl = name;
-                newasm::threads::memory.at(name) = new newasm::threads::object__();
+                newasm::threads::memory[name] = new newasm::threads::object__();
                 newasm::threads::valid_threads.push_back(name);
-
+                newasm::threads::thread_count++;
                 return 1;
             }
             if(dtyp == static_cast<std::string>("struct"))
@@ -491,6 +491,15 @@ namespace newasm
         if(suf == static_cast<std::string>("cpt"))
         {
             strreg = newasm::mem::regs::cpt;
+        }
+
+        if(suf == static_cast<std::string>("tr0"))
+        {
+            strreg = newasm::mem::regs::tr0;
+        }
+        if(suf == static_cast<std::string>("tr1"))
+        {
+            strreg = newasm::mem::regs::tr1;
         }
 
         const bool debugit = false;
@@ -790,6 +799,118 @@ namespace newasm
                 }
                 return 1;
             }
+            if(suf == static_cast<std::string>("tr0"))
+            {
+                if(newasm::header::functions::isnumeric(newasm::mem::regs::tr0))
+                {
+                    if(newasm::mem::datatypes[opr] != newasm::datatypes::number)
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    newasm::mem::data[opr] = newasm::mem::regs::tr0;
+                    return 1;
+                }
+                if(newasm::header::functions::isfloat(newasm::mem::regs::tr0))
+                {
+                    if(newasm::mem::datatypes[opr] != newasm::datatypes::decimal)
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    newasm::mem::data[opr] = newasm::mem::regs::tr0;
+                    return 1;
+                }
+                if(newasm::header::functions::istext(newasm::mem::regs::tr0))
+                {
+                    if(newasm::mem::datatypes[opr] != newasm::datatypes::text)
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    newasm::mem::data[opr] = newasm::mem::regs::tr0;
+                    return 1;
+                }
+                if(newasm::header::functions::isref(newasm::mem::regs::tr0))
+                {
+                    if(newasm::mem::datatypes[opr] != newasm::datatypes::reference)
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    newasm::mem::data[opr] = newasm::mem::regs::tr0;
+                    //auto i = std::find(newasm::mem::uninitialized_pointer.begin(), newasm::mem::uninitialized_pointer.end(), opr);
+                    //if(i != newasm::mem::uninitialized_pointer.end()) newasm::mem::uninitialized_pointer.erase(i);
+                    return 1;
+                }
+                if(newasm::header::functions::ischar(newasm::mem::regs::tr0))
+                {
+                    if(newasm::mem::datatypes[opr] != newasm::datatypes::character)
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    newasm::mem::data[opr] = newasm::mem::regs::tr0;
+                    return 1;
+                }
+                return 1;
+            }
+            if(suf == static_cast<std::string>("tr1"))
+            {
+                if(newasm::header::functions::isnumeric(newasm::mem::regs::tr1))
+                {
+                    if(newasm::mem::datatypes[opr] != newasm::datatypes::number)
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    newasm::mem::data[opr] = newasm::mem::regs::tr1;
+                    return 1;
+                }
+                if(newasm::header::functions::isfloat(newasm::mem::regs::tr1))
+                {
+                    if(newasm::mem::datatypes[opr] != newasm::datatypes::decimal)
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    newasm::mem::data[opr] = newasm::mem::regs::tr1;
+                    return 1;
+                }
+                if(newasm::header::functions::istext(newasm::mem::regs::tr1))
+                {
+                    if(newasm::mem::datatypes[opr] != newasm::datatypes::text)
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    newasm::mem::data[opr] = newasm::mem::regs::tr1;
+                    return 1;
+                }
+                if(newasm::header::functions::isref(newasm::mem::regs::tr1))
+                {
+                    if(newasm::mem::datatypes[opr] != newasm::datatypes::reference)
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    newasm::mem::data[opr] = newasm::mem::regs::tr1;
+                    //auto i = std::find(newasm::mem::uninitialized_pointer.begin(), newasm::mem::uninitialized_pointer.end(), opr);
+                    //if(i != newasm::mem::uninitialized_pointer.end()) newasm::mem::uninitialized_pointer.erase(i);
+                    return 1;
+                }
+                if(newasm::header::functions::ischar(newasm::mem::regs::tr1))
+                {
+                    if(newasm::mem::datatypes[opr] != newasm::datatypes::character)
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    newasm::mem::data[opr] = newasm::mem::regs::tr1;
+                    return 1;
+                }
+                return 1;
+            }
             if(suf == static_cast<std::string>("stl"))
             {
                 if(newasm::header::functions::isnumeric(newasm::mem::regs::stl))
@@ -944,6 +1065,7 @@ namespace newasm
                 //if(i != newasm::mem::uninitialized_pointer.end()) newasm::mem::uninitialized_pointer.erase(i);
                 return 1;
             }
+            
             if(suf == static_cast<std::string>("cpr"))
             {
                 if(newasm::mem::datatypes[opr] != newasm::datatypes::number)
@@ -1162,6 +1284,20 @@ namespace newasm
                 //using std::cout, std::endl;
                 //cout << "\n\t >> tlr set to: " << opr << endl;
                 newasm::mem::regs::tlr = (opr);
+                return 1;
+            }
+            if(suf == static_cast<std::string>("tr0"))
+            {
+                //using std::cout, std::endl;
+                //cout << "\n\t >> tlr set to: " << opr << endl;
+                newasm::mem::regs::tr0 = (opr);
+                return 1;
+            }
+            if(suf == static_cast<std::string>("tr1"))
+            {
+                //using std::cout, std::endl;
+                //cout << "\n\t >> tlr set to: " << opr << endl;
+                newasm::mem::regs::tr1 = (opr);
                 return 1;
             }
             if(suf == static_cast<std::string>("stl"))
@@ -1908,6 +2044,14 @@ namespace newasm
             {
                 strreg = newasm::mem::regs::tlr;
             }
+            if(suf == static_cast<std::string>("tr0"))
+            {
+                strreg = newasm::mem::regs::tr0;
+            }
+            if(suf == static_cast<std::string>("tr1"))
+            {
+                strreg = newasm::mem::regs::tr1;
+            }
             if(suf == static_cast<std::string>("stl"))
             {
                 strreg = newasm::mem::regs::stl;
@@ -2301,6 +2445,16 @@ namespace newasm
                 debugRegister(suf, (newasm::mem::regs::tlr));
                 return 1;
             }
+            if(suf == static_cast<std::string>("tr0"))
+            {
+                debugRegister(suf, (newasm::mem::regs::tr0));
+                return 1;
+            }
+            if(suf == static_cast<std::string>("tr1"))
+            {
+                debugRegister(suf, (newasm::mem::regs::tr1));
+                return 1;
+            }
             if(suf == static_cast<std::string>("stl"))
             {
                 debugRegister(suf, (newasm::mem::regs::stl));
@@ -2379,6 +2533,24 @@ namespace newasm
                 {
                     newasm::header::data::exception = false;
                     newasm::terminate(std::stoi(newasm::mem::regs::tlr));//,wholeline);
+                    return 1;
+                }
+            }
+            if(suf == static_cast<std::string>("tr0"))
+            {
+                if(newasm::header::functions::isnumeric(newasm::mem::regs::tr0))
+                {
+                    newasm::header::data::exception = false;
+                    newasm::terminate(std::stoi(newasm::mem::regs::tr0));//,wholeline);
+                    return 1;
+                }
+            }
+            if(suf == static_cast<std::string>("tr1"))
+            {
+                if(newasm::header::functions::isnumeric(newasm::mem::regs::tr1))
+                {
+                    newasm::header::data::exception = false;
+                    newasm::terminate(std::stoi(newasm::mem::regs::tr1));//,wholeline);
                     return 1;
                 }
             }
@@ -2475,6 +2647,16 @@ namespace newasm
             if(suf == static_cast<std::string>("tlr"))
             {
                 newasm::mem::regs::tlr = newasm::header::constants::inv_reg_val;
+                return 1;
+            }
+            if(suf == static_cast<std::string>("tr0"))
+            {
+                newasm::mem::regs::tr0 = newasm::header::constants::inv_reg_val;
+                return 1;
+            }
+            if(suf == static_cast<std::string>("tr1"))
+            {
+                newasm::mem::regs::tr1 = newasm::header::constants::inv_reg_val;
                 return 1;
             }
             if(suf == static_cast<std::string>("stl"))
@@ -2615,6 +2797,29 @@ namespace newasm
                 newasm::mem::regs::psx = std::to_string(tmp);
                 return 1;
             }
+
+            if(suf == static_cast<std::string>("tr0"))
+            {
+                if(!newasm::header::functions::isnumeric(newasm::mem::regs::tr0))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    return 1;
+                }
+                int tmp = std::stoi(newasm::mem::regs::tr0)+1;
+                newasm::mem::regs::tr0 = std::to_string(tmp);
+                return 1;
+            }
+            if(suf == static_cast<std::string>("tr1"))
+            {
+                if(!newasm::header::functions::isnumeric(newasm::mem::regs::tr1))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    return 1;
+                }
+                int tmp = std::stoi(newasm::mem::regs::tr1)+1;
+                newasm::mem::regs::tr1 = std::to_string(tmp);
+                return 1;
+            }
             //and then, we have this beautiful procedure pointer...
             //we'll just pickup the next procedure from the map memory
             if(suf == static_cast<std::string>("prp"))
@@ -2650,6 +2855,7 @@ namespace newasm
                 //make later
                 return 1;
             }
+            
             newasm::terminate(newasm::exit_codes::invalid_syntax); // non existing register; 
             //however this error is highly misleading since registers arent in RAM
             return 1;
@@ -2730,6 +2936,29 @@ namespace newasm
                 }
                 int tmp = std::stoi(newasm::mem::regs::psx)-1;
                 newasm::mem::regs::psx = std::to_string(tmp);
+                return 1;
+            }
+
+            if(suf == static_cast<std::string>("tr1"))
+            {
+                if(!newasm::header::functions::isnumeric(newasm::mem::regs::tr1))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    return 1;
+                }
+                int tmp = std::stoi(newasm::mem::regs::tr1)-1;
+                newasm::mem::regs::tr1 = std::to_string(tmp);
+                return 1;
+            }
+            if(suf == static_cast<std::string>("tr0"))
+            {
+                if(!newasm::header::functions::isnumeric(newasm::mem::regs::tr0))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    return 1;
+                }
+                int tmp = std::stoi(newasm::mem::regs::tr0)-1;
+                newasm::mem::regs::tr0 = std::to_string(tmp);
                 return 1;
             }
             //and then, we have this beautiful procedure pointer...
@@ -3201,7 +3430,7 @@ namespace newasm
         //else
         return 0;
     }
-    int execute(std::string file, int startline, int proceed)
+    void handle_threads(); int execute(std::string file, int startline, int proceed)
     {
         if(proceed == 0)
         {
@@ -3242,24 +3471,9 @@ namespace newasm
                 lineidx++;
 
                 //threads
-                if(newasm::threads::thread_count != 0)
+                if(newasm::system::section == newasm::code_stream::sections::start)
                 {
-                    for(auto i = newasm::threads::valid_threads.begin(); i < newasm::threads::valid_threads.end(); i++)
-                    {
-                        if(newasm::threads::functions::finished(*i))
-                        {
-                            if(std::find(newasm::threads::finished_threads.begin(),newasm::threads::finished_threads.end(),*i) == newasm::threads::finished_threads.end())
-                            {
-                                newasm::threads::finished_threads.push_back(*i);
-                                newasm::threads::thread_count--;
-                            }
-                        }
-                        if(!newasm::threads::functions::finished(*i))
-                        {
-                            std::string linetoprocess = newasm::threads::functions::getlastline(*i); 
-                            newasm::procline(linetoprocess);
-                        }
-                    }
+                    newasm::handle_threads();
                 }
                 //////////
             }
@@ -3282,5 +3496,32 @@ namespace newasm
                 /*newasm::header::constants::scripts_folder +*/ file + static_cast<std::string>("'"));
         }
         return 0;
+    }
+    void handle_threads()
+    {
+        if(newasm::threads::thread_count != 0)
+        {
+            for(auto i = newasm::threads::valid_threads.begin(); i < newasm::threads::valid_threads.end(); i++)
+            {
+                if(newasm::threads::functions::finished(*i))
+                {
+                    if(std::find(newasm::threads::finished_threads.begin(),newasm::threads::finished_threads.end(),*i) == newasm::threads::finished_threads.end())
+                    {
+                        newasm::threads::finished_threads.push_back(*i);
+                        newasm::threads::thread_count--;
+                        newasm::header::functions::log("Thread `"+*i+"` finished.");
+                        continue;
+                    }
+                    continue;
+                }
+                if(!newasm::threads::functions::finished(*i))
+                {
+                    std::string linetoprocess = newasm::threads::functions::getlastline(*i); 
+                    newasm::procline(linetoprocess);
+                    newasm::header::functions::log("Thread `"+*i+"` -> " + linetoprocess);
+                    return;
+                }
+            }
+        }
     }
 }

@@ -42,7 +42,7 @@ namespace newasm
         {
             bool finished(std::string thread_name)
             {
-                if(newasm::threads::memory.at(thread_name)->lastlndx == newasm::threads::memory.at(thread_name)->size-1)
+                if(newasm::threads::memory.at(thread_name)->lastlndx == newasm::threads::memory.at(thread_name)->size)
                 {
                     return true;
                 }
@@ -53,7 +53,7 @@ namespace newasm
                 int line = 0;
                 for(auto i = newasm::threads::memory.at(thread_name)->contents.begin(); i < newasm::threads::memory.at(thread_name)->contents.end(); i++)
                 {
-                    if(line == newasm::threads::memory.at(thread_name)->lastlndx+1)
+                    if(line == newasm::threads::memory.at(thread_name)->lastlndx)
                     {
                         newasm::threads::memory.at(thread_name)->lastlndx++;
                         return *i;
@@ -69,6 +69,10 @@ namespace newasm
                     delete i->second;
                 }
             }
+            /*void proceed()
+            {
+                
+            }*/
         }
     }
 }
