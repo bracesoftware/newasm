@@ -145,6 +145,15 @@ namespace newasm
                 };
             }
 
+            namespace events
+            {
+                const int exit = 1;
+
+                const std::unordered_map<int, std::string> identifiers__ = {
+                    {exit, "~exit"}
+                };
+            }
+
             namespace utils
             {
                 bool iskeyword(const std::string &str)

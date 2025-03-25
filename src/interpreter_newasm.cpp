@@ -38,6 +38,7 @@ the Initial Developer. All Rights Reserved.
 
 #include <iomanip>
 #include <stdio.h>
+#include <deque>
 
 #define __newasm_included
 
@@ -47,6 +48,7 @@ namespace newasm
     std::vector<std::pair<std::string,std::string>>* env_vars;
 }
 
+#include "core/handlers.cpp"
 #include "core/lang_inf.cpp"
 
 #include "newasm_dynlib.cpp"

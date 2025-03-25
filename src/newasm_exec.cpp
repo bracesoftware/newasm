@@ -194,6 +194,12 @@ namespace newasm
                 valid = true;
                 return 1;
             }
+            if(arg == static_cast<std::string>("hndl"))
+            {
+                newasm::system::section = newasm::code_stream::sections::hndl;
+                valid = true;
+                return 1;
+            }
             newasm::terminate(newasm::exit_codes::invalid_section);
             return 1;
         }
@@ -244,7 +250,7 @@ namespace newasm
                 newasm::threads::thread_decl = name;
                 newasm::threads::memory[name] = new newasm::threads::object__();
                 newasm::threads::valid_threads.push_back(name);
-                newasm::threads::thread_count++;
+                //newasm::threads::thread_count++;
                 return 1;
             }
             if(dtyp == static_cast<std::string>("struct"))
@@ -3128,7 +3134,42 @@ namespace newasm
             }
             return 1;
         }
+        if(stat == static_cast<std::string>("lazy_evhndlr"))
+        {
+            if(!newasm::header::functions::isnumeric(arg))
+            {
+                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                return 1;
+            }
+            if(std::stoi(arg) == 0)
+            {
+                newasm::header::settings::lazy_evhndlr = false;
+                return 1;
+            }
+            if(std::stoi(arg) == 1)
+            {
+                newasm::header::settings::lazy_evhndlr = true;
+                return 1;
+            }
+            newasm::terminate(newasm::exit_codes::invalid_syntax);
+            return 1;
+        }
         newasm::terminate(newasm::exit_codes::invalid_config);
+        return 1;
+    }
+    int process_hndl(std::string tohandle, std::string procedure)
+    {
+        if(tohandle == newasm::core::lang_inf::events::identifiers__.at(newasm::core::lang_inf::events::exit))
+        {
+            if(newasm::header::settings::lazy_evhndlr == false) if(!newasm::mem::functions::datavalid(procedure, newasm::mem::funcs))
+            {
+                newasm::terminate(newasm::exit_codes::invalid_evhndlr);
+                return 1;
+            }
+            newasm::handlers::exit_handler = procedure;
+            return 1;
+        }
+        newasm::terminate(newasm::exit_codes::unknown_event);
         return 1;
     }
     int procline(std::string &line)
@@ -3164,11 +3205,11 @@ namespace newasm
         if(newasm::threads::thread_now)
         {
             newasm::threads::memory.at(newasm::threads::thread_decl)->contents.push_back(line);
-            newasm::threads::memory.at(newasm::threads::thread_decl)->size++;
+            //newasm::threads::memory.at(newasm::threads::thread_decl)->size++;
             return 1;
         }
         line = newasm::header::functions::remc(line);
-        std::string ins, suf, opr, stat, arg, dtyp;
+        std::string ins, suf, opr, stat, arg, dtyp, ev, pr;
         std::vector<std::string> tmp, tmp1, tmp2, tmp3;
         tmp.clear();
         tmp1.clear();
@@ -3196,6 +3237,18 @@ namespace newasm
             {
                 return 1;
             }
+        }
+
+        if(newasm::system::section == newasm::code_stream::sections::hndl)
+        {
+            tmp = newasm::header::functions::split_fixed(line, ',');
+            ev = tmp[0];
+            pr = tmp[1];
+            
+            ev = newasm::header::functions::trim(ev);
+            pr = newasm::header::functions::trim(pr);
+
+            return newasm::process_hndl(ev,pr);
         }
         if(newasm::system::section == newasm::code_stream::sections::config)
         {
@@ -3478,6 +3531,10 @@ namespace newasm
                 //////////
             }
             internal_fileobject.close();
+            if(newasm::mem::functions::datavalid(newasm::handlers::exit_handler, newasm::mem::funcs))
+            {
+                newasm::callproc(newasm::handlers::exit_handler);
+            }
             if(!newasm::system::terminated)
             {
                 if(newasm::mem::regs::hea != 0)
@@ -3499,6 +3556,7 @@ namespace newasm
     }
     void handle_threads()
     {
+        #ifdef NEWASM_MEGA_ERROR
         if(newasm::threads::thread_count != 0)
         {
             for(auto i = newasm::threads::valid_threads.begin(); i < newasm::threads::valid_threads.end(); i++)
@@ -3522,6 +3580,17 @@ namespace newasm
                     return;
                 }
             }
+        }
+        #endif
+        for(auto i = newasm::threads::valid_threads.begin(); i != newasm::threads::valid_threads.end(); i++)
+        {
+            if(newasm::threads::memory.at(*i)->contents.empty())
+            {
+                continue;   
+            }
+            newasm::procline(*newasm::threads::memory.at(*i)->contents.begin());
+            newasm::threads::memory.at(*i)->contents.pop_front();
+            //continue;
         }
     }
 }

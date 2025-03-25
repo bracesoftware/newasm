@@ -30,16 +30,18 @@ namespace newasm
         class object__
         {
             public:
-            std::vector<std::string> contents;
-            int lastlndx = 0;
-            int size = 0;
+            std::deque<std::string> contents;
+            //std::vector<std::string> contents_old;
+            //int lastlndx = 0;
+            //int size = 0;
         };
         std::unordered_map<std::string, newasm::threads::object__*> memory;
         std::vector<std::string> valid_threads;
-        std::vector<std::string> finished_threads;
+        //std::vector<std::string> finished_threads;
         int thread_count = 0;
         namespace functions
         {
+            #ifdef NEWASM_MEGA_ERROR
             bool finished(std::string thread_name)
             {
                 if(newasm::threads::memory.at(thread_name)->lastlndx == newasm::threads::memory.at(thread_name)->size)
@@ -62,6 +64,7 @@ namespace newasm
                 }
                 return static_cast<std::string>("__rip_thread__");
             }
+            #endif
             void free_mem()
             {
                 for(auto i = newasm::threads::memory.begin(); i != newasm::threads::memory.end(); i++)

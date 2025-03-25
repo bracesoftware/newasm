@@ -89,6 +89,7 @@ namespace newasm
             bool extra = false;
             bool create_new_projfile = false;
             bool logging = false;
+            bool lazy_evhndlr = false;
         }
         namespace functions
         {

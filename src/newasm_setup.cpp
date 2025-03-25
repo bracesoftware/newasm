@@ -33,6 +33,7 @@ namespace newasm
             const int config = 1;
             const int data = 2;
             const int start = 3;
+            const int hndl = 4;
         }
     }
     namespace exit_codes
@@ -71,6 +72,8 @@ namespace newasm
         const int datastruct_redef = 31;
         const int unexpected_end = 32;
         const int improper_dynlib = 33;
+        const int unknown_event = 34;
+        const int invalid_evhndlr = 35;
 
         const std::unordered_map<int, std::string> identifier = {
             {noterm_point, "NoTerminationPoint"},
@@ -106,7 +109,9 @@ namespace newasm
             {empty_proc, "EmptyProcedureBlock"},
             {datastruct_redef, "DataStructureRedefinition"},
             {unexpected_end, "UnexpectedProcedureEnd"},
-            {improper_dynlib, "ImproperDynLibraryImplementation"}
+            {improper_dynlib, "ImproperDynLibraryImplementation"},
+            {unknown_event, "UnknownEventToHandle"},
+            {invalid_evhndlr, "InvalidEventHandler"}
         };
     }
     namespace cmp_results
