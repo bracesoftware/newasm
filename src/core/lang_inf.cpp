@@ -29,6 +29,7 @@ namespace newasm
         namespace constants
         {
             const std::string data_folder = ".newasm";
+            const std::string temp_vers = "__temp_vers.txt";
             #ifdef _WIN32
                 const std::string separator = "\\";
             #else

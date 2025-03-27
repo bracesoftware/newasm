@@ -85,7 +85,7 @@ namespace newasm
         namespace settings
         {
             int debug = 1;
-            std::string script_file = "index.nax";
+            std::string script_file = newasm::header::constants::default_input;
             bool extra = false;
             bool create_new_projfile = false;
             bool logging = false;

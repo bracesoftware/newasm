@@ -50,6 +50,7 @@ namespace newasm
 
 #include "core/handlers.cpp"
 #include "core/lang_inf.cpp"
+#include "core/net.cpp"
 
 #include "newasm_dynlib.cpp"
 #include "newasm_header.cpp"
@@ -75,6 +76,30 @@ namespace newasm
 #include "newasm_tests.cpp"
 
 namespace fs = std::filesystem;
+
+namespace newasm
+{
+    namespace vers
+    {
+        int main()
+        {
+            // download test
+            std::string url = "https://bracesoftware.github.io/web/newasm_server/vers.txt";
+            std::string output_path = newasm::core::constants::data_folder + newasm::core::constants::separator + newasm::core::constants::temp_vers;
+
+            newasm::utils::loadingbar("\t* Downloading updates:        ");
+            if(newasm::net::download(url, output_path))
+            {
+                newasm::header::functions::info("Download successful.");
+            }
+            else
+            {
+                newasm::header::functions::info("Download failed.");
+            }
+            return 1;
+        }
+    }
+}
 
 // MAIN
 
@@ -129,6 +154,8 @@ int main(int argc, char *argv[])
             newasm::header::settings::script_file = newasm::header::constants::default_input;
         }
     }
+    
+    newasm::vers::main();
     
     //other funny options
     if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::help),argc,argv,argid))
@@ -211,5 +238,6 @@ int main(int argc, char *argv[])
     if(newasm::env_vars != nullptr) delete newasm::env_vars;
     
     newasm::threads::functions::free_mem();
+
     return 0;
 }
