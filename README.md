@@ -29,6 +29,7 @@ _ : start
 Documentation about `newasm` which includes following topics:
 - [Compiling binaries](#compiling)
 - [Arguments](#arguments)
+- [Launch modes](#launch-modes)
 - [Sections](#sections)
     - [`config` section](#config-section)
     - [`data` section](#data-section)
@@ -87,6 +88,21 @@ This project is written purely in C++ using its standard libraries, so compiling
 | `-newproj` | - | Create a new project file if one doesn't already exist. |
 | `-tests` | - | Start the test function. |
 | `-log` | - | Toggle the logging system. |
+| `-nover` | - | Turn off version checking. |
+| `-mode` | - | Change the launch mode. |
+
+## Launch modes
+When running the `newasm` executeable, you can optionally use the `-mode` argument to open the application in different modes:
+* mode 0: this is the default interpreter mode, it just does the primary idea of what it is supposed to do - run the assembly code;
+* mode 1: this is the CTL, or control console, mode - application will run as the command prompt with its own commands, you can install packages and maintain your project.
+
+### CTL mode
+CTL mode brings new different commands with it. Below is a list of available commands:
+| Command | Arguments | Description |
+| ---------------- | --------- | ----------- |
+| `help` | - | Displays this panel within the console. |
+| `exit` | - | Closes the application. |
+| `install` | `<lib>` | Install a library. |
 
 ## Sections
 Sections are built-in "tags" used to classify code. Each section uses different syntax in terms of instructions. General syntax is:
