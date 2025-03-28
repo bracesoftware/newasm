@@ -31,7 +31,10 @@ Documentation about `newasm` which includes following topics:
 - [Arguments](#arguments)
 - [Launch modes](#launch-modes)
 - [Sections](#sections)
+    - [`hndl` section](#hndl-section)
+        - [Available events](#available-events)
     - [`config` section](#config-section)
+        - [Available configuration options](#list-of-available-settings)
     - [`data` section](#data-section)
     - [`start` section](#start-section)
 - [Built-in references](#built-in-references)
@@ -70,6 +73,7 @@ Documentation about `newasm` which includes following topics:
 - [Containers and data structures](#containers-and-data-structures)
     - [Bit arrays](#bit-arrays)
     - [Binary trees](#binary-trees)
+- [Threads](#threads)
 
 ## Compiling
 This project is written purely in C++ using its standard libraries, so compiling it should be easy. To download C++ compiler, please follow instructions on the link below:
@@ -111,6 +115,24 @@ Sections are built-in "tags" used to classify code. Each section uses different 
 _ : section_name
 ```
 
+### `hndl` section
+In this section, you can setup event handlers.
+```asm
+_ : hndl
+    ~exit , MY_EXIT_PROC
+_ : start
+    proc . 0 , MY_EXIT_PROC
+        ; code
+        halt . proc , 0
+    end
+    ; code
+```
+
+#### Available events
+| Event name | Passed information | Description |
+| ------------ | --------- | ----------- |
+| `~exit~` | / | Called when the program ends. |
+
 ### `config` section
 In this section, you can setup some settings for your program. It is thus recommended to keep this section on top of the code. General syntax is:
 
@@ -135,6 +157,7 @@ _ : config
 | Setting name | Data type | Description |
 | ------------ | --------- | ----------- |
 | `memsize` | `num` | Reallocates the number of addresses for the heap and the stack of the program. |
+| `lazy_evhndlr` | `num` | Toggles the "lazy event handler" option on (1) or off (0). If it is turned on, event handlers will not check if procedures they're assigned actually exist. |
 
 ### `data` section
 In this section, you can declare variables to avoid repeated code. General syntax is:
@@ -1255,4 +1278,78 @@ Output:
 33
 0
 0
+```
+
+## Threads
+Threads are blocks of code declared within the `data` section. Once you switch to the `start` section, they will start executing simultaneously with the source code.
+Threads are declared like this:
+```asm
+_ : data
+    thread $ test_thread = {
+        ; code
+    }
+_ : start
+    ; more code
+
+; "code" and "more code" will be executed almost at same time.
+```
+
+Since this is a low-level language, there is not much of use of these threads yet.
+
+Example:
+
+`index.asm`:
+```asm
+_!startofprog
+ ; Example
+_ : config
+    memsize ~ 87 ; reallocate
+_ : data
+    num $ mynumber = 736
+    decm $ mydecimal = 243.3
+    txt $ mytext = "Hello World"
+    txt $ return_vals = "null"
+    ref $ testreference = &return_vals ; we must provide a valid value
+
+    txt $ threadarg = "hello from thread"
+
+    thread $ testthread = {
+        __say.0,"thread debug 1"
+        __say.0,"thread debug 3"
+        __say.0,"thread debug 5"
+        __say.0,"thread debug 6"
+        __say.0,"thread debug 7"
+        __say.0,"thread debug 8"
+        __say.0,"thread debug 9"
+        __say.0,"thread debug 10"
+    }
+    thread $ testthread2 = {
+        __say.0,"thread debug 2"
+        __say.0,"thread debug 4" 
+    }
+
+_ : start
+    ;db . tr0
+    ;db . tr1
+    zero . stl
+    mov . tlr , mytext ;test
+    ;mov . stl , %endl
+    mov . fdx , 1
+    syscall . 0 , %ios
+
+    ;other code
+```
+
+Output will be:
+```
+thread debug 1
+thread debug 2
+thread debug 3
+thread debug 4
+thread debug 5
+thread debug 6
+thread debug 7
+thread debug 8
+thread debug 9
+Hello World             thread debug 10
 ```
