@@ -39,6 +39,7 @@ namespace newasm
     {
         namespace args
         {
+            const int mode = 0;
             const int ver = 1;
             const int input = 2;
             const int help = 3;
@@ -49,6 +50,7 @@ namespace newasm
             const int log = 8;
 
             std::unordered_map<int, std::string> arg_map = {
+                {mode, "-mode"},
                 {ver, "-ver"},
                 {input, "-input"},
                 {help, "-help"},

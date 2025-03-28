@@ -21,6 +21,7 @@ the Initial Developer. All Rights Reserved.
 
 */
 
+#define EMPTYLINE std::cout<<"\n"
 #include <iostream>
 #include <vector>
 #include <unordered_map>
@@ -46,6 +47,13 @@ namespace newasm
 {
     std::unordered_map<std::string,std::vector<std::string>>* dyn_ins_set;
     std::vector<std::pair<std::string,std::string>>* env_vars;
+
+    namespace global
+    {
+        const int MODE_CTL = 0;
+        const int MODE_INT = 1;
+        int mode = newasm::global::MODE_INT;
+    }
 }
 
 #include "core/handlers.cpp"
@@ -74,6 +82,7 @@ namespace newasm
 #include "extra/utils.cpp"
 
 #include "newasm_tests.cpp"
+#include "newasm_ctl.cpp"
 
 namespace fs = std::filesystem;
 
@@ -87,7 +96,8 @@ namespace newasm
             std::string url = "https://bracesoftware.github.io/web/newasm_server/vers.txt";
             std::string output_path = newasm::core::constants::data_folder + newasm::core::constants::separator + newasm::core::constants::temp_vers;
 
-            newasm::utils::loadingbar("\t* Downloading updates:        ");
+            newasm::header::functions::info("Downloading updates...");
+            newasm::utils::loadingbar("\t* Progress:        ");
             if(newasm::net::download(url, output_path))
             {
                 newasm::header::functions::info("Download successful.");
@@ -133,6 +143,32 @@ int main(int argc, char *argv[])
     }
 
     std::cout << std::endl; newasm::header::functions::vers_info();
+    //mode stuff
+    if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::mode),argc,argv,argid))
+    {
+        if(argid < argc - 1)
+        {
+            newasm::global::mode = std::stoi(newasm::header::functions::trim(static_cast<std::string>(argv[argid+1])));
+            /*else
+            {
+                newasm::header::functions::wrn("Invalid mode, resetting to default.");
+                newasm::global::mode = newasm::global::MODE_INT;
+            }*/
+        }
+        else
+        {
+            newasm::header::functions::err("Wrong application usage!\n\t\t\t\t\t" + newasm::header::col::gray + " newasm -mode <mode ID> -other_options");
+        }
+    }
+    //control mode
+    if(newasm::global::mode == newasm::global::MODE_CTL)
+    {
+        EMPTYLINE;EMPTYLINE;
+        newasm::header::functions::info("Loading the CTL mode...");
+        EMPTYLINE;
+        newasm::ctl::main();
+        return 1;
+    }
 
     if(!newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::input),argc,argv,argid) &&
     newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::repl),argc,argv,argid))

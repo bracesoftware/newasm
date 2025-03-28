@@ -279,6 +279,7 @@ namespace newasm
                 );
                 std::cout << newasm::header::col::reset;*/
             
+            std::string trim(const std::string &str);
             std::vector<std::string> split(const std::string &str, char delimiter)
             {
                 std::vector<std::string> tokens;
@@ -287,6 +288,7 @@ namespace newasm
 
                 while(std::getline(ss, token, delimiter))
                 {
+                    if(newasm::header::functions::trim(token).empty()) continue;
                     tokens.push_back(token);
                 }
 
