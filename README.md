@@ -131,7 +131,7 @@ _ : start
 #### Available events
 | Event name | Passed information | Description |
 | ------------ | --------- | ----------- |
-| `~exit~` | / | Called when the program ends. |
+| `~exit` | / | Called when the program ends. |
 
 ### `config` section
 In this section, you can setup some settings for your program. It is thus recommended to keep this section on top of the code. General syntax is:
