@@ -93,7 +93,7 @@ This project is written purely in C++ using its standard libraries, so compiling
 | `-tests` | - | Start the test function. |
 | `-log` | - | Toggle the logging system. |
 | `-nover` | - | Turn off version checking. |
-| `-mode` | - | Change the launch mode. |
+| `-mode` | `<id>` | Change the launch mode. |
 
 ## Launch modes
 When running the `newasm` executeable, you can optionally use the `-mode` argument to open the application in different modes:
