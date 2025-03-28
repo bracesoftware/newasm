@@ -606,7 +606,21 @@ namespace newasm
             //std::cout << newasm::system::cproc << " : " << newline << std::endl;
             return 1;
         }
-        
+        //__say
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::__say))
+        {
+            if(suf == static_cast<std::string>("0"))
+            {
+                if(!newasm::header::functions::istext(opr))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    return 1;
+                }
+                std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + newasm::header::functions::remq(opr));
+                std::cout << newasm::header::col::reset;
+                return 1;
+            }
+        }
         //LOAD.ref
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::load))
         {

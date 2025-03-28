@@ -26,11 +26,48 @@ namespace newasm
 {
     namespace ctl
     {
+        const int first_column = 20;
+        const int second_column = 20;
+        const int third_column = 20;
+        const std::string tabs = "\t";
+        const std::vector<std::pair<std::string, std::pair<std::string,std::string>>> help_table_data = {
+            {"help",      {"/",           "Displays the help panel."}},
+            {"exit",      {"/",           "Exits the application."}},
+            {"install",   {"<lib>", "Installs a dynamic library."}}
+        };
+        void help_info()
+        {
+            std::cout << "\n" << newasm::header::col::reset;
+            std::cout
+                    << std::setw(first_column) << std::left<<newasm::header::style::underline + newasm::header::style::bold+tabs+"Command"
+                    << std::setw(second_column) << std::left<<"Arguments" 
+                    << std::setw(third_column) << std::left<<"Description"
+            << "\n" << newasm::header::col::reset;
+
+            std::string argument, params, description;
+
+            for(auto i = help_table_data.begin(); i != help_table_data.end(); i++)
+            {
+                argument = i->first;
+                params = i->second.first;
+                description = i->second.second;
+                std::cout 
+                        << std::setw(first_column) << std::left<<tabs+newasm::header::col::reset + argument
+                        << std::setw(second_column) << std::left<<params
+                        << std::setw(third_column) << std::left<<newasm::header::col::gray + description
+                << "\n";
+            }
+
+            std::cout << "\n";
+            return;
+        }
+
         namespace data
         {
             std::string cmd;
             bool finish = false;
         }
+        
         namespace impl
         {
             int process_c(std::string cmd)
@@ -53,11 +90,19 @@ namespace newasm
                     }
                     if(tokens[0] == static_cast<std::string>("help"))
                     {
-                        //newasm::ctl::data::finish = true;
+                        newasm::ctl::help_info();
                         return 1;
                     }
                 }
-                newasm::header::functions::err("Invalid command.");
+                if(tokens.size() == 2)
+                {
+                    if(tokens[0] == static_cast<std::string>("install"))
+                    {
+                        newasm::header::functions::info(static_cast<std::string>("Installed the \"") + tokens[1] + static_cast<std::string>("\" dynamic library."));
+                        return 1;
+                    }
+                }
+                newasm::header::functions::err("Invalid command or command usage.");
                 return 1;
             }
         }

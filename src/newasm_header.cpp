@@ -218,7 +218,9 @@ namespace newasm
                 {"-repl",      {"/",           "Enter the read-evaluate-print mode."}},
                 {"-newproj",   {"/",           "Create a new project file if one doesn't already exist."}},
                 {"-tests",     {"/",           "Loads the test function."}},
-                {"-log",       {"/",           "Enables the logging system."}}
+                {"-log",       {"/",           "Enables the logging system."}},
+                {"-mode",      {"<mode ID>",   "Changes the app launch mode."}},
+                {"-nover",     {"/",           "Disables the version check feature."}}
             };
             void help_info()
             {

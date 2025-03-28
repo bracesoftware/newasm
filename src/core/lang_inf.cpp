@@ -81,6 +81,7 @@ namespace newasm
             const int shl = 39;
             const int shr = 40;
             const int db = 41;
+            const int __say = 42;
 
             const std::unordered_map<int, std::string> instruction_set = {
                 {load,"load"},
@@ -126,7 +127,9 @@ namespace newasm
                 {shl, "shl"},
                 {shr, "shr"},
 
-                {db, "db"}
+                {db, "db"},
+
+                {__say, "__say"}
             };
 
             namespace refs

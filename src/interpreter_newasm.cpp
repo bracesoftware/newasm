@@ -45,6 +45,9 @@ the Initial Developer. All Rights Reserved.
 
 namespace newasm
 {
+    const int BUILD_NUMBER = 0;
+    bool vercheck = true;
+    const std::string tab = "\t\t\t";
     std::unordered_map<std::string,std::vector<std::string>>* dyn_ins_set;
     std::vector<std::pair<std::string,std::string>>* env_vars;
 
@@ -96,16 +99,33 @@ namespace newasm
             std::string url = "https://bracesoftware.github.io/web/newasm_server/vers.txt";
             std::string output_path = newasm::core::constants::data_folder + newasm::core::constants::separator + newasm::core::constants::temp_vers;
 
-            newasm::header::functions::info("Downloading updates...");
+            newasm::header::functions::info("Checking for updates...");
             newasm::utils::loadingbar("\t* Progress:        ");
-            if(newasm::net::download(url, output_path))
+            bool checkres = newasm::net::download(url, output_path);
+            if(checkres)
             {
-                newasm::header::functions::info("Download successful.");
+                std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + static_cast<std::string>("Accessed the update server..."));
+                std::cout << newasm::header::col::reset;std::ifstream file(output_path);
+                if(!file)
+                {
+                    std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + static_cast<std::string>("Error while checking the version."));
+                    std::cout << newasm::header::col::reset;
+                    return 1;
+                }
+                std::string vernumber;
+                std::getline(file, vernumber);
+                if(newasm::BUILD_NUMBER < std::stoi(newasm::header::functions::trim((vernumber))))
+                {
+                    std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + static_cast<std::string>("Latest build ") + newasm::header::functions::trim((vernumber)) + " is available!");
+                    std::cout << newasm::header::col::reset;
+                    return 1;
+                }
+                std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + static_cast<std::string>("Running the latest version of the runtime environment!"));
+                std::cout << newasm::header::col::reset;
+                return 1;
             }
-            else
-            {
-                newasm::header::functions::info("Download failed.");
-            }
+            std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + static_cast<std::string>("Cannot access the update server!"));
+            std::cout << newasm::header::col::reset;
             return 1;
         }
     }
@@ -191,8 +211,6 @@ int main(int argc, char *argv[])
         }
     }
     
-    newasm::vers::main();
-    
     //other funny options
     if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::help),argc,argv,argid))
     {
@@ -210,12 +228,21 @@ int main(int argc, char *argv[])
     {
         newasm::tests::main();
     }
+    if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::nover),argc,argv,argid))
+    {
+        newasm::vercheck = false;
+    }
     if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::log),argc,argv,argid))
     {
         newasm::header::settings::logging = true;
         //newasm::header::functions::log("yo");
     }
     newasm::header::functions::log("System loading...");
+
+    if(newasm::vercheck)
+    {
+        newasm::vers::main();
+    }
 
     std::cout << std::endl;
     newasm::header::execution_flow::entry_exec = newasm::header::settings::script_file;
