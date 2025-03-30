@@ -64,7 +64,7 @@ namespace newasm
 
 #include "core/handlers.cpp"
 #include "core/lang_inf.cpp"
-#include "core/net.cpp"
+#include "3rd.net.cpp"
 
 #include "newasm_dynlib.cpp"
 #include "newasm_header.cpp"
