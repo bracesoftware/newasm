@@ -30,6 +30,8 @@ Documentation about `newasm` which includes following topics:
 - [Compiling binaries](#compiling)
 - [Arguments](#arguments)
 - [Launch modes](#launch-modes)
+    - [CTL mode](#ctl-mode)
+        - [`install` command](#install-command)
 - [Sections](#sections)
     - [`hndl` section](#hndl-section)
         - [Available events](#available-events)
