@@ -108,6 +108,68 @@ CTL mode brings new different commands with it. Below is a list of available com
 | `exit` | - | Closes the application. |
 | `install` | `<lib>` | Install a library. |
 
+#### `install` command
+The install-command allows you to download and install New-ASM dynamic libraries and packages. There are 2 types of downloadable files - dynamic libraries (`.newasm_dl` files) and library setups (`.newasm_set` files). Setups allow library developers to provide more information about the library itself.
+
+- An example library on the download server:
+`internettest.newasm_dl` on `server.com/`:
+```asm
+mov . fdx , 1
+mov . tlr , "Hi"
+mov . stl , %endl
+syscall . 0 , %ios
+zero . stl
+zero . tlr
+```
+
+Example of command usage:
+```cmd
+install internettest
+```
+Notice how we just provided the library name, and not the extension. This will display the following information:
+
+```
+>>> install internettest
+[NewASM]  PROGRAM THREAD @ System info | Attempting to install the "internettest" package.
+        * Progress:        [========================================] 100 %
+                        Accessed the download server...
+                        Successfully downloaded the library!
+```
+
+Now, if we want to download a package (or a setup), we use the same command, but the process will be different:
+`net-conf.newasm_set` on `server.com/`:
+```asm
+~setup : msg
+	Welcome to netconf!
+~setup : dlname
+	netconf
+~setup : impl
+	mov . tlr , "INTERNET WORKS!"
+	mov . fdx , 1
+	mov . stl , %endl
+	syscall . 0 , %ios
+	zero . stl
+```
+As you can see, we can use setup labels to mark code. Installing this with:
+```cmd
+install net-conf
+```
+we will receive the following output:
+```
+>>> install net-conf
+[NewASM]  PROGRAM THREAD @ System info | Attempting to install the "net-conf" package.
+        * Progress:        [========================================] 100 %
+                        Accessed the download server...
+                        Successfully downloaded the setup.
+                        Preparing to run the setup...
+                        * Imported the dynamic library name...
+                        * Imported the dynamic library install message...
+                        * Imported the dynamic library implementation...
+                        Successfully finished the setup.
+                        Info: Welcome to netconf!
+```
+
+
 ## Sections
 Sections are built-in "tags" used to classify code. Each section uses different syntax in terms of instructions. General syntax is:
 

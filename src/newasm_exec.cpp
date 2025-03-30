@@ -1863,7 +1863,7 @@ namespace newasm
         {
             if(newasm::header::data::repl)
             {
-                newasm::unsins(ins);
+                newasm::unsins(ins); // incompatible instruction for repl
                 return 1;
             }
             if(suf == static_cast<std::string>("0"))
@@ -3443,6 +3443,19 @@ namespace newasm
             newasm::header::data::proc_now = false;
         }
     }
+    void copyproc(std::string name)
+    {
+        newasm::global::event_codeblock.clear();
+        auto it = newasm::mem::funcs.find(name);
+        if(it != newasm::mem::funcs.end())
+        {
+            for(std::string &line : it->second)
+            {
+                newasm::global::event_codeblock.push_back(line);
+            }
+        }
+        return;
+    }
     int analyze(std::string file)
     {
         std::ifstream internal_fileobject(/*newasm::header::constants::scripts_folder + */file);
@@ -3544,11 +3557,20 @@ namespace newasm
                 }
                 //////////
             }
-            internal_fileobject.close();
+            
             if(newasm::mem::functions::datavalid(newasm::handlers::exit_handler, newasm::mem::funcs))
             {
-                newasm::callproc(newasm::handlers::exit_handler);
+                newasm::global::event_now = true;
+                newasm::copyproc(newasm::handlers::exit_handler);
+                for(auto i = newasm::global::event_codeblock.begin(); i != newasm::global::event_codeblock.end(); i++)
+                {
+                    newasm::procline(*i);
+                }
+                newasm::global::event_now = false;
             }
+
+            internal_fileobject.close();
+            
             if(!newasm::system::terminated)
             {
                 if(newasm::mem::regs::hea != 0)

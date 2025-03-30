@@ -24,7 +24,7 @@ namespace newasm
         void displaybar(const std::string &text, float progress)
         {
             int bar_width = 40;
-            std::cout << newasm::header::col::reset << newasm::header::col::green << text << newasm::header::col::gray << "[";
+            std::cout << newasm::header::col::reset /*<< newasm::header::col::green*/ << text << newasm::header::col::gray << "[";
             int pos = static_cast<int>(bar_width * progress);
             for (int i = 0; i < bar_width; ++i)
             {

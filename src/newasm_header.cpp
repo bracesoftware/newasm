@@ -598,9 +598,9 @@ namespace newasm
                     {
                         dynamic_libs[i] = newasm::header::functions::trim(dynamic_libs[i]);
                         //std::cout << "dynamic_libs [" << i << "] : '" << dynamic_libs[i] << "'\n";
-                        if(std::filesystem::exists(dynamic_libs[i] + static_cast<std::string>(".newasm_dl")))
+                        if(std::filesystem::exists(dynamic_libs[i] + newasm::core::constants::dynlib_ex))
                         {
-                            std::ifstream file(dynamic_libs[i] + static_cast<std::string>(".newasm_dl"));
+                            std::ifstream file(dynamic_libs[i] + newasm::core::constants::dynlib_ex);
                             std::vector<std::string> parser,parser2;
                             std::string ins,suf,op;
                             //std::cout << "Debugging MEGA CRASH " << "2\n";
@@ -675,7 +675,7 @@ namespace newasm
                             file.close();
                                 //std::cout << "Debugging MEGA CRASH " << "7\n";
                         }
-                        if(!std::filesystem::exists(dynamic_libs[i] + static_cast<std::string>(".newasm_dl")))
+                        if(!std::filesystem::exists(dynamic_libs[i] + newasm::core::constants::dynlib_ex))
                         {
                             std::cout << newasm::header::col::red << "\t\t\tFailed to load dynamic library: " + 
                                 static_cast<std::string>(newasm::header::col::gray) + 

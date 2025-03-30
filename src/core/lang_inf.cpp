@@ -30,6 +30,8 @@ namespace newasm
         {
             const std::string data_folder = ".newasm";
             const std::string temp_vers = "__temp_vers.txt";
+            const std::string dynlib_ex = ".newasm_dl";
+            const std::string setup_ex = ".newasm_set";
             #ifdef _WIN32
                 const std::string separator = "\\";
             #else
@@ -146,6 +148,19 @@ namespace newasm
                     {cmanip, "\%cmanip"},
                     {fs, "\%fs"},
                     {txtop, "\%txtop"}
+                };
+            }
+
+            namespace cmds
+            {
+                const int exit__ = 1;
+                const int help__ = 2;
+                const int install__ = 3;
+
+                const std::unordered_map<int, std::string> identifiers__ = {
+                    {exit__, "exit"},
+                    {help__, "help"},
+                    {install__, "install"}
                 };
             }
 

@@ -56,6 +56,9 @@ namespace newasm
         const int MODE_CTL = 0;
         const int MODE_INT = 1;
         int mode = newasm::global::MODE_INT;
+
+        std::deque<std::string> event_codeblock;
+        bool event_now = false;
     }
 }
 
