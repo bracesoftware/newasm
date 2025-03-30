@@ -69,7 +69,11 @@ namespace newasm
             {
                 for(auto i = newasm::threads::memory.begin(); i != newasm::threads::memory.end(); i++)
                 {
-                    delete i->second;
+                    if(i->second != nullptr)
+                    {
+                        delete i->second;
+                        i->second = nullptr;
+                    }
                 }
             }
             /*void proceed()

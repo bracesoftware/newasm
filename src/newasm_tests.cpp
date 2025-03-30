@@ -36,6 +36,7 @@ namespace newasm
             }
 
             delete binaryTree;
+            binaryTree = nullptr;
 
             int testint = 23874;
             printf("number is %i",testint);

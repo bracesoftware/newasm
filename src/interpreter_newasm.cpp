@@ -245,6 +245,10 @@ int main(int argc, char *argv[])
     if(newasm::vercheck)
     {
         newasm::vers::main();
+        if(std::filesystem::exists(newasm::core::constants::data_folder + newasm::core::constants::separator + newasm::core::constants::temp_vers))
+        {
+            std::filesystem::remove(newasm::core::constants::data_folder + newasm::core::constants::separator + newasm::core::constants::temp_vers);
+        }
     }
 
     std::cout << std::endl;
@@ -300,8 +304,16 @@ int main(int argc, char *argv[])
     newasm::containers::functions::free_dyn_mem();
     newasm::header::functions::log("System unloading...");
 
-    if(newasm::dyn_ins_set != nullptr) delete newasm::dyn_ins_set;
-    if(newasm::env_vars != nullptr) delete newasm::env_vars;
+    if(newasm::dyn_ins_set != nullptr)
+    {
+        delete newasm::dyn_ins_set;
+        newasm::dyn_ins_set = nullptr;
+    }
+    if(newasm::env_vars != nullptr)
+    {
+        delete newasm::env_vars;
+        newasm::env_vars = nullptr;
+    }
     
     newasm::threads::functions::free_mem();
 

@@ -49,7 +49,7 @@ namespace newasm
             return res == S_OK;
 
         #else
-            std::string host, path;
+            /*std::string host, path;
             if (url.find("http://") == 0)
                 host = url.substr(7);
             else if (url.find("https://") == 0)
@@ -107,22 +107,10 @@ namespace newasm
 
             close(sockfd);
             file.close();
-            return true;
+            return true;*/
+            std::cout << std::endl << "\t\tLinux doesn't yet support the newasm::net::download function." << std::endl;
+            return false;
         #endif
         }
     }
 }
-#ifdef CRAZY
-int main() {
-    std::string url = "http://example.com/file.txt";  // Zamijeni s pravim URL-om
-    std::string output_path = "file.txt";
-
-    if (DownloadFile(url, output_path)) {
-        std::cout << "Preuzimanje uspješno!\n";
-    } else {
-        std::cout << "Greška pri preuzimanju.\n";
-    }
-
-    return 0;
-}
-#endif
