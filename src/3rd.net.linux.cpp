@@ -38,6 +38,7 @@ namespace newasm
             bool ret = res == 0;
             if(!ret)
             {
+                command.str("");
                 command.clear();
                 command << "rm " << output_path;
                 if(std::filesystem::exists(output_path))
