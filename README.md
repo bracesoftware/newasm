@@ -250,6 +250,7 @@ This language brings some built-in references, or rather operands, with itself -
 - `%exf` - used as an operand in `syscall`, represents a module of system calls responsible for execution flow (starting child processes);
 - `%cmanip` - used as an operand in `syscall`, represents a module of system calls responsible for container and data structure manipulation;
 - `%net` - used as an operand in `syscall`, represents a module of system calls responsible for network features;
+- `%mem` - used as an operand in `syscall`, represents a module of system calls responsible for memory/data management;
 - `%endl` - line ending, used in `stl`;
 - `&%null` - used to leave references/pointers unassigned/uninitialized.
 - `%nl` - used as a null operand in some instructions.
@@ -409,6 +410,7 @@ _ : start
 | `%cmanip` | `8` | `cpt`, `tlr`, `stl` | Set-at-left child-of function, with `cpt` being a pointer holding the address of your binary tree, `tlr` being the index and `stl` the value. |
 | `%cmanip` | `9` | `cpt`, `tlr`, `stl` | Get-at function, with `cpt` being a pointer holding the address of your binary tree and `tlr` being the index. After the `syscall`, the function will store the value in `tlr`.|
 | `%net` | `1` | `tlr`, `stl` | Download a file, with `tlr` being a link to the file and `stl` being the output destination. |
+| `%mem` | `1` | `tlr` | Marks a variable as a constant, with `tlr` being a pointer to the specific variable. Trying to modify a variable using `stor` afterwards will cause errors. |
 
 ### `nop` instruction
 Do nothing.
