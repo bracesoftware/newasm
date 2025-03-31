@@ -21,6 +21,8 @@ the Initial Developer. All Rights Reserved.
 
 */
 
+#include "common/os.cpp"
+
 #define EMPTYLINE std::cout<<"\n"
 #include <iostream>
 #include <vector>
@@ -64,7 +66,11 @@ namespace newasm
 
 #include "core/handlers.cpp"
 #include "core/lang_inf.cpp"
-#include "3rd.net.cpp"
+#if __newasm_os == newasm__common__os__win32
+    #include "3rd.net.win32.cpp"
+#elif __newasm_os == newasm__common__os__linux
+    #include "3rd.net.linux.cpp"
+#endif
 
 #include "newasm_dynlib.cpp"
 #include "newasm_header.cpp"
