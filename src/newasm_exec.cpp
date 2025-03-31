@@ -1490,6 +1490,39 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::unknown_fdx);
                     return 1;
                 }
+                //net
+                if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::net))
+                {
+                    if(newasm::mem::regs::fdx == 1) //download files
+                    {
+                        if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                            return 1;
+                        }
+                        if(!newasm::header::functions::istext(newasm::mem::regs::stl))
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                            return 1;
+                        }
+
+                        int result = newasm::net::download(
+                            newasm::header::functions::trim(
+                                newasm::header::functions::remq(
+                                    newasm::mem::regs::tlr
+                                )
+                            ),
+                            newasm::header::functions::trim(
+                                newasm::header::functions::remq(
+                                    newasm::mem::regs::stl
+                                )
+                            )
+                        );
+                        return 1;
+                    }
+                    newasm::terminate(newasm::exit_codes::unknown_fdx);
+                    return 1;
+                }
                 //text manipulation
                 if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::txtop))
                 {

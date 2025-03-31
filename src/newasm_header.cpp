@@ -39,15 +39,16 @@ namespace newasm
         {
             namespace release_types
             {
-                const int unstable = 1;
-                const int stable = 2;
-                const int test = 3;
+                const int unstable = 1; //has many major bugs
+                const int stable = 2; //has no known bugs
+                const int test = 3; //not tested enough
+                const int beta = 4; //has some bugs
             }
             const int major = 0;
             const int minor = 1;
-            const int patch = 3;
+            const int patch = 4;
             const int release = 1;
-            const int release_type = newasm::header::version::release_types::test;
+            const int release_type = newasm::header::version::release_types::beta;
         }
         namespace data
         {
@@ -106,6 +107,10 @@ namespace newasm
                 if(newasm::header::version::release_type == newasm::header::version::release_types::test)
                 {
                     dest = "test";
+                }
+                if(newasm::header::version::release_type == newasm::header::version::release_types::beta)
+                {
+                    dest = "beta";
                 }
             }
             void getversion(std::string &dest)
