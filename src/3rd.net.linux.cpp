@@ -35,7 +35,17 @@ namespace newasm
             std::ostringstream command;
             command << "wget -q -O " << output_path << " " << url;
             int res = std::system(command.str().c_str());
-            return res == 0;
+            bool ret = res == 0;
+            if(!ret)
+            {
+                command.clear();
+                command << "rm " << output_path;
+                if(std::filesystem::exists(output_path))
+                {
+                    std::system(command.str().c_str());
+                }
+            }
+            return ret;
         }
     }
 }

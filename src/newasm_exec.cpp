@@ -1518,6 +1518,18 @@ namespace newasm
                                 )
                             )
                         );
+
+                        newasm::header::functions::log(
+                            static_cast<std::string>("Network info\nnewasm::net::download - tlr : '") + newasm::header::functions::trim(
+                                newasm::header::functions::remq(
+                                    newasm::mem::regs::tlr
+                                )
+                            ) + "'" + static_cast<std::string>("\nnewasm::net::download - stl : '") + newasm::header::functions::trim(
+                                newasm::header::functions::remq(
+                                    newasm::mem::regs::stl
+                                )
+                            ) + "'" + static_cast<std::string>("\nnewasm::net::download - result : '") + std::to_string(result) + "'"
+                        );
                         return 1;
                     }
                     newasm::terminate(newasm::exit_codes::unknown_fdx);
