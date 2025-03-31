@@ -746,11 +746,21 @@ namespace newasm
             }
             if(!newasm::header::functions::isalphanum(opr))
             {
+                newasm::terminate(newasm::exit_codes::invalid_syntax);
                 return 1;
             }
             if(!newasm::mem::functions::datavalid(opr,newasm::mem::data))
             {
+                newasm::terminate(newasm::exit_codes::invalid_memacc);
                 return 1;
+            }
+            for(auto i = newasm::syscalls::mem::constvals.begin(); i != newasm::syscalls::mem::constvals.end(); i++)
+            {
+                if(*i == newasm::header::functions::trim(opr))
+                {
+                    newasm::terminate(newasm::exit_codes::constant_modif);
+                    return 1;
+                }
             }
 
             if(suf == static_cast<std::string>("fdx"))
@@ -1530,6 +1540,27 @@ namespace newasm
                                 )
                             ) + "'" + static_cast<std::string>("\nnewasm::net::download - result : '") + std::to_string(result) + "'"
                         );
+                        return 1;
+                    }
+                    newasm::terminate(newasm::exit_codes::unknown_fdx);
+                    return 1;
+                }
+                //memory/data manipulation
+                if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::mem))
+                {
+                    if(newasm::mem::regs::fdx == 1)
+                    {
+                        if(!newasm::header::functions::isref(newasm::mem::regs::tlr))
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                            return 1;
+                        }
+                        if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::tlr),newasm::mem::data))
+                        {
+                            newasm::terminate(newasm::exit_codes::invalid_memacc);
+                            return 1;
+                        }
+                        newasm::syscalls::mem::constvals.push_back(newasm::header::functions::remamp(newasm::mem::regs::tlr));
                         return 1;
                     }
                     newasm::terminate(newasm::exit_codes::unknown_fdx);
@@ -3572,6 +3603,7 @@ namespace newasm
                 if(startline != newasm::code_stream::invalid_lnidx) if(!(lineidx >= startline))
                 {
                     lineidx++;
+                    newasm::header::data::lastlndx = lineidx;
                     continue;
                 }
                 if(newasm::system::terminated)

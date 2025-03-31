@@ -142,6 +142,7 @@ namespace newasm
                 const int fs = 4;
                 const int txtop = 5;
                 const int net = 6;
+                const int mem = 7;
 
                 const std::unordered_map<int, std::string> identifiers__ = {
                     {ios, "\%ios"},
@@ -149,7 +150,8 @@ namespace newasm
                     {cmanip, "\%cmanip"},
                     {fs, "\%fs"},
                     {txtop, "\%txtop"},
-                    {net, "\%net"}
+                    {net, "\%net"},
+                    {mem, "\%mem"}
                 };
             }
 
