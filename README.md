@@ -982,6 +982,10 @@ When a fatal error happens, program will shut down, returning a specific exit co
 | `31` | Tried to redefine a data structure. |
 | `32` | Unexpected usage of the `end` instruction. |
 | `33` | Tried to use an improperly loaded dynamic library instruction. |
+| `34` | Unknown event specified in the handler section. |
+| `35` | Assigned an invalid procedure as an event handler. |
+| `36` | Tried to modify a constant. |
+| `37` | Operating system-related error. |
 
 ## Comments
 Comments are also available:

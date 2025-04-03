@@ -75,6 +75,7 @@ namespace newasm
         const int unknown_event = 34;
         const int invalid_evhndlr = 35;
         const int constant_modif = 36;
+        const int os_error = 37;
 
         const std::unordered_map<int, std::string> identifier = {
             {noterm_point, "NoTerminationPoint"},
@@ -113,7 +114,8 @@ namespace newasm
             {improper_dynlib, "ImproperDynLibraryImplementation"},
             {unknown_event, "UnknownEventToHandle"},
             {invalid_evhndlr, "InvalidEventHandler"},
-            {constant_modif, "ConstValModification"}
+            {constant_modif, "ConstValModification"},
+            {os_error, "OSErr"}
         };
     }
     namespace cmp_results
