@@ -22,7 +22,7 @@ _ : start
     
     syscall 0 , %ios
 
-    retn 0 , 0
+    retn 0
 ```
 
 # Table of contents
@@ -269,7 +269,7 @@ Ends your program with specific exit code.
 
 #### Syntax for `retn`
 - `instruction` - `retn`
-- `suffix` - no suffix, use `retn . 0 , ...`
+- `suffix` - no suffix, use `retn exit_code`
 - `operand` - exit code
 
 #### Syntax for `ret`
@@ -281,7 +281,7 @@ Ends your program with specific exit code.
 
 ```asm
 _ : start
-    retn 0 , 23
+    retn 23
 ```
 
 Output:
@@ -323,7 +323,7 @@ In this example, we basically do `fdx=1`:
 ```asm
 _ : start
     mov fdx , 1
-    retn 0 , 23
+    retn 23
 ```
 
 #### Example `#2`
@@ -334,7 +334,7 @@ _ : data
 _ : start
     mov fdx , 1
     stor fdx , myvar
-    retn 0 , myvar
+    retn myvar
 ```
 
 #### Available register list
@@ -371,7 +371,7 @@ _ : start
     mov fdx , 1
     mov tlr , "Hello World"
     syscall 0 , %ios
-    retn 0 , 23
+    retn 23
 ```
 
 #### `syscall` list
@@ -419,7 +419,7 @@ Do nothing.
 ```asm
 _ : start
     nop
-    retn 0 , 23
+    retn 23
 ```
 
 ### `rem` instruction
@@ -435,7 +435,7 @@ Do nothing. NOT RECOMMENDED TO USE!
 ```asm
 _ : start
     rem 0 , "my comment"
-    retn 0 , 23
+    retn 23
 ```
 
 ### `sysreq` instruction
@@ -480,7 +480,7 @@ _ : start
     mov tlr , variable
     mov fdx , 1
     syscall 0 , %ios
-    retn 0 , 1
+    retn 1
 ```
 
 ### `push` and `pop` instruction
@@ -515,7 +515,7 @@ _ : start
     mov fdx , 1
     syscall 0 , %ios
 
-    retn 0 , 0
+    retn 0
 ```
 
 - **TIP**: If you just want to pop the value off the stack, and not store it anywhere, just do:
@@ -588,7 +588,7 @@ _ : start
     mov fdx , 2
     syscall . 0 , %ios
 
-    retn 0 , 0
+    retn 0
 ```
 
 Output:
@@ -693,7 +693,7 @@ _ : start
         mov fdx , 1
         syscall 0 , %ios
 
-    retn 0 , 3873
+    retn 3873
 ```
 
 Output:
@@ -781,7 +781,7 @@ _ : start
         jmp 0 , endtheprogram
 
     _ ! endtheprogram
-    retn 0 , 0
+    retn 0
 ```
 
 Output:
@@ -938,7 +938,7 @@ _ : start
         halt proc , 1
     end
     call 0 , test
-    retn 0 , 0
+    retn 0
 ```
 
 Basically, these are just functions, but in assembly.
@@ -1016,7 +1016,7 @@ _ : start
     mov stl, %endl
     mov fdx, 1
     syscall 0, %ios
-    retn 0 , 0
+    retn 0
 ```
 
 Output:
@@ -1038,7 +1038,7 @@ _ : start
     mov fdx , 1
     syscall 0 , %ios
 
-    retn 0 , 0
+    retn 0
 ```
 
 `child.nax`:
