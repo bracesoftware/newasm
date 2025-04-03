@@ -17,12 +17,12 @@ Below is the simple `Hello World` program written in New-Assembly.
 _ : data
     txt $ string = "Hello world"
 _ : start
-    mov . tlr , string
-    mov . fdx , 1
+    mov tlr , string
+    mov fdx , 1
     
-    syscall . 0 , %ios
+    syscall 0 , %ios
 
-    retn . 0 , 0
+    retn 0 , 0
 ```
 
 # Table of contents
@@ -116,12 +116,12 @@ The install-command allows you to download and install New-ASM dynamic libraries
 - An example library on the download server:
 `internettest.newasm_dl` on `server.com/`:
 ```asm
-mov . fdx , 1
-mov . tlr , "Hi"
-mov . stl , %endl
-syscall . 0 , %ios
-zero . stl
-zero . tlr
+mov fdx , 1
+mov tlr , "Hi"
+mov stl , %endl
+syscall 0 , %ios
+zero stl
+zero tlr
 ```
 
 Example of command usage:
@@ -146,11 +146,11 @@ Now, if we want to download a package (or a setup), we use the same command, but
 ~setup : dlname
 	netconf
 ~setup : impl
-	mov . tlr , "INTERNET WORKS!"
-	mov . fdx , 1
-	mov . stl , %endl
-	syscall . 0 , %ios
-	zero . stl
+	mov tlr , "INTERNET WORKS!"
+	mov fdx , 1
+	mov stl , %endl
+	syscall 0 , %ios
+	zero stl
 ```
 As you can see, we can use setup labels to mark code. Installing this with:
 ```cmd
@@ -185,9 +185,9 @@ In this section, you can setup event handlers.
 _ : hndl
     ~exit , MY_EXIT_PROC
 _ : start
-    proc . 0 , MY_EXIT_PROC
+    proc 0 , MY_EXIT_PROC
         ; code
-        halt . proc , 0
+        halt proc , 0
     end
     ; code
 ```
@@ -206,8 +206,8 @@ _ : config
 _ : data
     ; some stuff
 _ : start
-    mov . fdx , 100
-    retn . fdx
+    mov fdx , 100
+    ret fdx
 ```
 
 A simple example would be:
@@ -261,13 +261,7 @@ This language brings some built-in references, or rather operands, with itself -
 Below is a list of available instructions. General syntax is:
 
 ```asm
-instruction . suffix , operand
-```
-
-This is also valid:
-
-```asm
-instruction.suffix,operand
+instruction suffix , operand
 ```
 
 ### `retn` and `ret` instructions
@@ -287,7 +281,7 @@ Ends your program with specific exit code.
 
 ```asm
 _ : start
-    retn . 0 , 23
+    retn 0 , 23
 ```
 
 Output:
@@ -301,8 +295,8 @@ Output:
 
 ```asm
 _ : start
-    mov . tlr , 8
-    ret . tlr
+    mov tlr , 8
+    ret tlr
 ```
 
 Output:
@@ -328,8 +322,8 @@ Set value of a specific register.
 In this example, we basically do `fdx=1`:
 ```asm
 _ : start
-    mov . fdx , 1
-    retn . 0 , 23
+    mov fdx , 1
+    retn 0 , 23
 ```
 
 #### Example `#2`
@@ -338,9 +332,9 @@ In this example, we basically do `fdx=1`, `myvar=fdx`, `exit 1`:
 _ : data
     num $ myvar = 0
 _ : start
-    mov . fdx , 1
-    stor . fdx , myvar
-    retn . 0 , myvar
+    mov fdx , 1
+    stor fdx , myvar
+    retn 0 , myvar
 ```
 
 #### Available register list
@@ -374,10 +368,10 @@ Set value of a specific register.
 
 ```asm
 _ : start
-    mov . fdx , 1
-    mov . tlr , "Hello World"
-    syscall . 0 , %ios
-    retn . 0 , 23
+    mov fdx , 1
+    mov tlr , "Hello World"
+    syscall 0 , %ios
+    retn 0 , 23
 ```
 
 #### `syscall` list
@@ -425,7 +419,7 @@ Do nothing.
 ```asm
 _ : start
     nop
-    retn . 0 , 23
+    retn 0 , 23
 ```
 
 ### `rem` instruction
@@ -440,8 +434,8 @@ Do nothing. NOT RECOMMENDED TO USE!
 
 ```asm
 _ : start
-    rem . 0 , "my comment"
-    retn . 0 , 23
+    rem 0 , "my comment"
+    retn 0 , 23
 ```
 
 ### `sysreq` instruction
@@ -458,10 +452,10 @@ Ensure that a symbol is available for further use.
 _ : data
 _ : start
     ; Notice how we haven't declared anything in _:data
-    sysreq . data , variable
+    sysreq data , variable
     ; Program will be terminated with exit code 4
     ; Same happens when we try to access a procedure:
-    sysreq . proc , some_random_proc
+    sysreq proc , some_random_proc
 ```
 
 ### `halt` instruction
@@ -478,15 +472,15 @@ Return a value inside a function.
 _ : data
     num $ variable = 0
 _ : start
-    proc . 0 , testprocedure
-        halt . proc , 364
+    proc 0 , testprocedure
+        halt proc , 364
     end
-    call . 0 , testprocedure
-    stor . psx , variable
-    mov . tlr , variable
-    mov . fdx , 1
-    syscall . 0 , %ios
-    retn . 0 , 1
+    call 0 , testprocedure
+    stor psx , variable
+    mov tlr , variable
+    mov fdx , 1
+    syscall 0 , %ios
+    retn 0 , 1
 ```
 
 ### `push` and `pop` instruction
@@ -508,27 +502,27 @@ _ : start
 _ : data
     num $ myvar2 = 0
 _ : start
-    push . 0 , 273
+    push 0 , 273
 
 
     ; change myvar2 to something dumb:
-    stor . fdx , myvar2
+    stor fdx , myvar2
 
 
-    pop . 0 , myvar2
+    pop 0 , myvar2
 
-    mov . tlr , myvar2
-    mov . fdx , 1
-    syscall . 0 , %ios
+    mov tlr , myvar2
+    mov fdx , 1
+    syscall 0 , %ios
 
-    retn . 0 , 0
+    retn 0 , 0
 ```
 
 - **TIP**: If you just want to pop the value off the stack, and not store it anywhere, just do:
 
 ```asm
 _ : start
-    pop . 0 , %nl
+    pop 0 , %nl
 ```
 
 ### `zero` instruction
@@ -543,7 +537,7 @@ Resets the register to an invalid value that cannot be used.
 
 ```asm
 _ : start
-    zero . stl
+    zero stl
     ; something ?
 ```
 
@@ -561,11 +555,11 @@ Move down and up the heap.
 _ : data
     num $ mynum = 0
 _ : start
-    heap . 0 , 3
-    stor . hea , mynum
-    mov . tlr , mynum
-    mov . fdx , 2
-    syscall . 0 , %ios
+    heap 0 , 3
+    stor hea , mynum
+    mov tlr , mynum
+    mov fdx , 2
+    syscall 0 , %ios
 ```
 
 ### `load` instruction
@@ -586,15 +580,15 @@ _ : start
     ; is pointing to - HOWEVER, if the suffix is `ref`, then we will 
     ; store the value in the address heap pointer is pointing to
     ; into some variable in `_:data`. 
-    load . adr , 736.38 ; hea = something
-    load . ref , testdecimal ; myvar = hea
+    load adr , 736.38 ; hea = something
+    load ref , testdecimal ; myvar = hea
 
-    mov . tlr , testdecimal
-    mov . stl , %endl
-    mov . fdx , 2
+    mov tlr , testdecimal
+    mov stl , %endl
+    mov fdx , 2
     syscall . 0 , %ios
 
-    retn . 0 , 0
+    retn 0 , 0
 ```
 
 Output:
@@ -611,38 +605,38 @@ _ : data
     decm $ testdecimal = 0.0
     decm $ testdecm2 = 0.0
 _ : start
-    load . adr , 736.38 ; hea = something
-    load . ref , testdecimal ; myvar = hea
+    load adr , 736.38 ; hea = something
+    load ref , testdecimal ; myvar = hea
 
-    mov . tlr , testdecimal
-    mov . stl , %endl
-    mov . fdx , 2
-    syscall . 0 , %ios
+    mov tlr , testdecimal
+    mov stl , %endl
+    mov fdx , 2
+    syscall 0 , %ios
 
     ; Allocate more space:
-    heap . 0 , 1
-    load . adr , 9821.38 ; hea = 63
-    load . ref , testdecm2 ; myvar = hea
-    mov . tlr , testdecm2
-    mov . stl , %endl
-    mov . fdx , 2
-    syscall . 0 , %ios
+    heap 0 , 1
+    load adr , 9821.38 ; hea = smth
+    load ref , testdecm2 ; myvar = hea
+    mov tlr , testdecm2
+    mov stl , %endl
+    mov fdx , 2
+    syscall 0 , %ios
     
-    mov . hea , 0 ; manually access the first address
-    load . ref , testdecm2 ; myvar = hea
-    mov . tlr , testdecm2
-    mov . stl , %endl
-    mov . fdx , 2
-    syscall . 0 , %ios
+    mov hea , 0 ; manually access the first address
+    load ref , testdecm2 ; myvar = hea
+    mov tlr , testdecm2
+    mov stl , %endl
+    mov fdx , 2
+    syscall 0 , %ios
 
-    mov . hea , 1 ; manually access the second address
-    load . ref , testdecm2 ; myvar = hea
-    mov . tlr , testdecm2
-    mov . stl , %endl
-    mov . fdx , 2
-    syscall . 0 , %ios
+    mov hea , 1 ; manually access the second address
+    load ref , testdecm2 ; myvar = hea
+    mov tlr , testdecm2
+    mov stl , %endl
+    mov fdx , 2
+    syscall 0 , %ios
 
-    heap . 0 , -1 ; let all the memory go to avoid getting the memory leak
+    heap 0 , -1 ; let all the memory go to avoid getting the memory leak
 ```
 
 Output:
@@ -664,7 +658,7 @@ _ : start
     _ ! label_name
 
     ; somewhere
-    jmp . 0 , label_name
+    jmp 0 , label_name
 ```
 
 #### Example `#1`
@@ -674,32 +668,32 @@ _ : start
     _ ! labelname
         mov . fdx , 4
         syscall . 0 , %ios
-    jmp . 0 , labelname
+    jmp 0 , labelname
 ```
 
 #### Example `#2`
 A little too complex example.
 ```asm
 _ : start
-    jmp . 0 , label2
+    jmp 0 , label2
     _ ! label
-        mov . tlr , "label called"
-        mov . fdx , 1
+        mov tlr , "label called"
+        mov fdx , 1
         syscall . 0 , %ios
-        mov . fdx , 72
-        jmp . 0 , label3
-        ret . fdx
+        mov fdx , 72
+        jmp 0 , label3
+        ret fdx
     _ ! label2
-        mov . tlr , "label2 called"
-        mov . fdx , 1
-        syscall . 0 , %ios
-        jmp . 0 , label
+        mov tlr , "label2 called"
+        mov fdx , 1
+        syscall 0 , %ios
+        jmp 0 , label
     _ ! label3
-        mov . tlr , "label3 called"
-        mov . fdx , 1
-        syscall . 0 , %ios
+        mov tlr , "label3 called"
+        mov fdx , 1
+        syscall 0 , %ios
 
-    retn . 0 , 3873
+    retn 0 , 3873
 ```
 
 Output:
@@ -733,61 +727,61 @@ According to the result `cmp` stores in its own "hidden" register, you can use t
 
 ```asm
 _ : start
-    mov . tlr , 5.8
-    cmp . tlr , 1
-    je . 0 , equal
-    ;jne . 0, notequal
-    jl . 0 , less
-    jg . 0 , greater
-    ;jle . 0 , lesseq
-    ;jge . 0 , greatereq
+    mov tlr , 5.8
+    cmp tlr , 1
+    je 0 , equal
+    ;jne 0, notequal
+    jl 0 , less
+    jg 0 , greater
+    ;jle 0 , lesseq
+    ;jge 0 , greatereq
 
     ; We just want to check if they are either equal, less or greater.
 
     _ ! equal
-        mov . tlr , "EQUAL"
-        mov . fdx , 1
-        mov . stl , %endl
-        syscall . 0 , %ios
-        jmp . 0 , endtheprogram
+        mov tlr , "EQUAL"
+        mov fdx , 1
+        mov stl , %endl
+        syscall 0 , %ios
+        jmp 0 , endtheprogram
 
     _ ! notequal
-        mov . tlr , "NOT EQUAL"
-        mov . fdx , 1
-        mov . stl , %endl
-        syscall . 0 , %ios
-        jmp . 0 , endtheprogram
+        mov tlr , "NOT EQUAL"
+        mov fdx , 1
+        mov stl , %endl
+        syscall 0 , %ios
+        jmp 0 , endtheprogram
 
     _ ! less
-        mov . tlr , "LESS"
-        mov . fdx , 1
-        mov . stl , %endl
-        syscall . 0 , %ios
-        jmp . 0 , endtheprogram
+        mov tlr , "LESS"
+        mov fdx , 1
+        mov stl , %endl
+        syscall 0 , %ios
+        jmp 0 , endtheprogram
 
     _ ! greater
-        mov . tlr , "GREATER"
-        mov . fdx , 1
-        mov . stl , %endl
-        syscall . 0 , %ios
-        jmp . 0 , endtheprogram
+        mov tlr , "GREATER"
+        mov fdx , 1
+        mov stl , %endl
+        syscall 0 , %ios
+        jmp 0 , endtheprogram
 
     _ ! lesseq
-        mov . tlr , "LESS OR EQUAL"
-        mov . fdx , 1
-        mov . stl , %endl
-        syscall . 0 , %ios
-        jmp . 0 , endtheprogram
+        mov tlr , "LESS OR EQUAL"
+        mov fdx , 1
+        mov stl , %endl
+        syscall 0 , %ios
+        jmp 0 , endtheprogram
 
     _ ! greatereq
-        mov . tlr , "GREATER OR EQUAL"
-        mov . fdx , 1
-        mov . stl , %endl
-        syscall . 0 , %ios
-        jmp . 0 , endtheprogram
+        mov tlr , "GREATER OR EQUAL"
+        mov fdx , 1
+        mov stl , %endl
+        syscall 0 , %ios
+        jmp 0 , endtheprogram
 
     _ ! endtheprogram
-    retn . 0 , 0
+    retn 0 , 0
 ```
 
 Output:
@@ -809,8 +803,8 @@ All of these operations use `cr0` and `cr1` registers. The result is stored in `
 
 ```asm
 _ : start
-    mov . cr0 , 3.0 ; can be either a float or a whole number
-    mov . cr1 , 9 ; same
+    mov cr0 , 3.0 ; can be either a float or a whole number
+    mov cr1 , 9 ; same
 
     add ; cr0 = cr0 + cr1
     sub ; cr0 = cr0 - cr1
@@ -834,8 +828,8 @@ All of these operations use `br0` and `br1` registers. The result is stored in `
 
 ```asm
 _ : start
-    mov . br0 , 1 ; must be a number
-    mov . br1 , 1 ; same
+    mov br0 , 1 ; must be a number
+    mov br1 , 1 ; same
 
     and ; br0 = br0 & br1
     or ; br0 = br0 | br1
@@ -850,16 +844,16 @@ These instructions are used to increment or decrement register values. Since reg
 
 #### Syntax
 ```asm
-inc.register_name
-dec.register_name
+inc register_name
+dec register_name
 ```
 
 #### Example `#1`
 If you operate on a whole number or rational number register, then it may not be so interesting, it just increments it by 1.
 
 ```asm
-inc.br0 ; br0++
-dec.cr1 ; cr1--
+inc br0 ; br0++
+dec cr1 ; cr1--
 ```
 
 If you are operating on a typeless register, these operations will check if the register is holding a whole number, and then apply changes to it. Namely, if you try to increment `tlr` while `tlr` is holding a string, you will get a data type mismatch exception.
@@ -871,33 +865,33 @@ Demonstration:
 _ : data
     ref $ temporary = &%null
 _ : start
-    proc . 0 , procedure_1
-        halt . proc , 0
+    proc 0 , procedure_1
+        halt proc , 0
     end
-    proc . 0 , procedure_2
-        halt . proc , 0
+    proc 0 , procedure_2
+        halt proc , 0
     end
-    proc . 0 , procedure_3
-        halt . proc , 0
+    proc 0 , procedure_3
+        halt proc , 0
     end
 
-    mov . prp , &procedure_1
-    inc . prp
+    mov prp , &procedure_1
+    inc prp
 
-    stor . prp , temporary
-    mov . tlr , temporary
-    mov . stl , %endl
-    mov . fdx , 6
-    syscall . 0 , %ios
+    stor prp , temporary
+    mov tlr , temporary
+    mov stl , %endl
+    mov fdx , 6
+    syscall 0 , %ios
 
-    mov . prp , &procedure_3
-    dec . prp
+    mov prp , &procedure_3
+    dec prp
 
-    stor . prp , temporary
-    mov . tlr , temporary
-    mov . stl , %endl
-    mov . fdx , 6
-    syscall . 0 , %ios
+    stor prp , temporary
+    mov tlr , temporary
+    mov stl , %endl
+    mov fdx , 6
+    syscall 0 , %ios
 ```
 
 Output:
@@ -913,7 +907,7 @@ procedure_2
 ```asm
 _ : start
     ; ... some code
-    db . tlr
+    db tlr
 ```
 
 Output:
@@ -925,7 +919,7 @@ Output:
 Procedures allow you to use the same piece of code without having to actually repeat it. General syntax is:
 
 ```asm
-proc . 0 , procedure_name
+proc 0 , procedure_name
     ; code
 end
 ```
@@ -933,18 +927,18 @@ end
 To call the procedure, use:
 
 ```asm
-call . 0 , procedure_name
+call 0 , procedure_name
 ```
 
 - Here is an example:
 
 ```asm
 _ : start
-    proc . 0 , test
-        halt . proc , 1
+    proc 0 , test
+        halt proc , 1
     end
-    call . 0 , test
-    retn . 0 , 0
+    call 0 , test
+    retn 0 , 0
 ```
 
 Basically, these are just functions, but in assembly.
@@ -995,9 +989,9 @@ Comments are also available:
 ```asm
 _ : start
     ; comment
-    mov . fdx , 1
-    mov . tlr , "hello" ; comment
-    syscall . 0 , %ios ; comment again
+    mov fdx , 1
+    mov tlr , "hello" ; comment
+    syscall 0 , %ios ; comment again
 ```
 
 ## Interesting examples
@@ -1006,19 +1000,19 @@ Below is a list of interesting examples of using the language.
 
 ```asm
 _ : start
-    mov . fdx, 3
-    mov . tlr, "filename"
+    mov fdx, 3
+    mov tlr, "filename"
     syscall . 0, %fs
-    mov . stl, "TEXTeee"
-    mov . fdx, 6
+    mov stl, "TEXTeee"
+    mov fdx, 6
+    syscall 0, %fs
+    mov stl, 1
+    mov fdx, 8
     syscall . 0, %fs
-    mov . stl, 1
-    mov . fdx, 8
-    syscall . 0, %fs
-    mov . stl, %endl
-    mov . fdx, 1
-    syscall . 0, %ios
-    retn . 0 , 0
+    mov stl, %endl
+    mov fdx, 1
+    syscall 0, %ios
+    retn 0 , 0
 ```
 
 Output:
@@ -1031,16 +1025,16 @@ TEXTeee
 `index.nax`:
 ```asm
 _ : start
-    mov .tlr, "child.nax" ; another nax file containing stuff such as config modifications, variables and procedures
-    mov .fdx, 1
-    syscall . 0 , %exf ; create a process and execute it
+    mov tlr, "child.nax" ; another nax file containing stuff such as config modifications, variables and procedures
+    mov fdx, 1
+    syscall 0 , %exf ; create a process and execute it
 
-    mov . tlr , "Hi after the process" ; this line will be processed AFTER child.nax finishes executing
-    mov . stl , %endl
-    mov . fdx , 1
-    syscall . 0 , %ios
+    mov tlr , "Hi after the process" ; this line will be processed AFTER child.nax finishes executing
+    mov stl , %endl
+    mov fdx , 1
+    syscall 0 , %ios
 
-    retn . 0 , 0
+    retn 0 , 0
 ```
 
 `child.nax`:
@@ -1048,12 +1042,12 @@ _ : start
 _ : data
     num $ mynum = 0
 _ : start
-    heap . 0 , 36
-    stor . hea , mynum
-    mov . tlr , mynum
-    mov . fdx , 2
-    syscall . 0 , %ios ; prints heap size (36)
-    heap . 0 , -36 ; free up memory we occupied for the sake of the example
+    heap 0 , 36
+    stor hea , mynum
+    mov tlr , mynum
+    mov fdx , 2
+    syscall 0 , %ios ; prints heap size (36)
+    heap 0 , -36 ; free up memory we occupied for the sake of the example
 ```
 
 Output:
@@ -1102,51 +1096,51 @@ _ : data
         ref $ reference = &prptest
     }
 _ : start
-    mov . tlr , text @ mystruct
-    mov . stl , %endl
-    mov . fdx , 1
-    syscall . 0 , %ios
+    mov tlr , text @ mystruct
+    mov stl , %endl
+    mov fdx , 1
+    syscall 0 , %ios
 
-    mov . tlr , decimal @ mystruct
-    mov . fdx , 2
-    syscall . 0 , %ios
+    mov tlr , decimal @ mystruct
+    mov fdx , 2
+    syscall 0 , %ios
 
-    mov . tlr , lol @ mystruct
-    mov . fdx , 2
-    syscall . 0 , %ios
+    mov tlr , lol @ mystruct
+    mov fdx , 2
+    syscall 0 , %ios
 
-    mov . tlr , text @ mystruct2
-    mov . stl , %endl
-    mov . fdx , 1
-    syscall . 0 , %ios
+    mov tlr , text @ mystruct2
+    mov stl , %endl
+    mov fdx , 1
+    syscall 0 , %ios
 
-    mov . tlr , decimal @ mystruct2
-    mov . fdx , 2
-    syscall . 0 , %ios
+    mov tlr , decimal @ mystruct2
+    mov fdx , 2
+    syscall 0 , %ios
 
-    mov . tlr , lol @ mystruct2
-    mov . fdx , 2
-    syscall . 0 , %ios
+    mov tlr , lol @ mystruct2
+    mov fdx , 2
+    syscall 0 , %ios
 
-    mov . tlr , reference @ mystruct2
-    mov . fdx , 6
-    syscall . 0 , %ios
+    mov tlr , reference @ mystruct2
+    mov fdx , 6
+    syscall 0 , %ios
 
-    mov . stl , 45657
+    mov stl , 45657
 
-    stor . stl , lol @ mystruct2
-    mov . tlr , lol @ mystruct2
-    mov . fdx , 2
-    mov . stl , %endl
-    syscall . 0 , %ios
+    stor stl , lol @ mystruct2
+    mov tlr , lol @ mystruct2
+    mov fdx , 2
+    mov stl , %endl
+    syscall 0 , %ios
 
-    mov . psx , "HIII243"
+    mov psx , "HIII243"
 
-    stor . psx , text @ mystruct
-    mov . tlr , text @ mystruct
-    mov . fdx , 1
-    mov . stl , %endl
-    syscall . 0 , %ios
+    stor psx , text @ mystruct
+    mov tlr , text @ mystruct
+    mov fdx , 1
+    mov stl , %endl
+    syscall 0 , %ios
 ```
 
 Output:
@@ -1200,16 +1194,16 @@ dlibs = testlib, sayhi
 
 `sayhi.newasm_dl`:
 ```asm
-mov . tlr , "hi from my dynamic library"
-mov . fdx , 1
-syscall . 0 , %ios
+mov tlr , "hi from my dynamic library"
+mov fdx , 1
+syscall 0 , %ios
 ```
 
 In your entry file - `index.asm`, you can do this:
 ```asm
 _ : start
-    mov . tlr , "some stuff"
-    inc . prp ; bunch of operations
+    mov tlr , "some stuff"
+    inc prp ; bunch of operations
     ; more stuff...
 
     sayhi ; your very own custom instruction
@@ -1238,18 +1232,18 @@ testenv = "hello from env var"
 `index.asm`:
 ```asm
 _ : start
-    mov . tlr , * / testenv
-    mov . fdx , 1
-    syscall . 0 , %ios
+    mov tlr , * / testenv
+    mov fdx , 1
+    syscall 0 , %ios
 ```
 
 * **NOTE**: You must use `*/` before the environment variable name so the program knows you are using an environment variable and not a standard variable, which means this wouldn't work:
 
 ```asm
 _ : start
-    mov . tlr , testenv
-    mov . fdx , 1
-    syscall . 0 , %ios
+    mov tlr , testenv
+    mov fdx , 1
+    syscall 0 , %ios
 ```
 
 ## Containers and data structures
@@ -1265,22 +1259,22 @@ _ : start
 _ : data
     bit_arr $ testbitarr = 0
 _ : start
-    mov . cpt , &testbitarr
-    mov . tlr , 2
-    mov . stl , 1
-    mov . fdx , 4
-    syscall . 0 , %cmanip
-    mov . tlr , 1
-    mov . fdx , 5
-    syscall . 0 , %cmanip
-    mov . fdx , 2
-    mov . stl , %endl
-    syscall . 0 , %ios
-    mov . tlr , 2
-    mov . fdx , 5
-    syscall . 0 , %cmanip
-    mov . fdx , 2
-    syscall . 0 , %ios
+    mov cpt , &testbitarr
+    mov tlr , 2
+    mov stl , 1
+    mov fdx , 4
+    syscall 0 , %cmanip
+    mov tlr , 1
+    mov fdx , 5
+    syscall 0 , %cmanip
+    mov fdx , 2
+    mov stl , %endl
+    syscall 0 , %ios
+    mov tlr , 2
+    mov fdx , 5
+    syscall 0 , %cmanip
+    mov fdx , 2
+    syscall 0 , %ios
 ```
 Output:
 ```
@@ -1299,44 +1293,44 @@ Output:
 _:data
     bin_tree $ testbintree = 0
 _:start
-    mov . cpt , &testbintree
+    mov cpt , &testbintree
 
-    mov . tlr , 0
-    mov . stl , 33
-    mov . fdx , 7
+    mov tlr , 0
+    mov stl , 33
+    mov fdx , 7
     syscall . 0 , %cmanip
     
-    mov . tlr , 0
-    mov . fdx , 9
-    syscall . 0 , %cmanip
+    mov tlr , 0
+    mov fdx , 9
+    syscall 0 , %cmanip
 
-    mov . stl , %endl
-    mov . fdx , 2
-    syscall . 0 , %ios
+    mov stl , %endl
+    mov fdx , 2
+    syscall 0 , %ios
     
-    mov . tlr , 1
-    mov . fdx , 9
-    syscall . 0 , %cmanip
+    mov tlr , 1
+    mov fdx , 9
+    syscall 0 , %cmanip
 
-    mov . stl , %endl
-    mov . fdx , 2
-    syscall . 0 , %ios
+    mov stl , %endl
+    mov fdx , 2
+    syscall 0 , %ios
     
-    mov . tlr , 2
-    mov . fdx , 9
-    syscall . 0 , %cmanip
+    mov tlr , 2
+    mov fdx , 9
+    syscall 0 , %cmanip
 
-    mov . stl , %endl
-    mov . fdx , 2
-    syscall . 0 , %ios
+    mov stl , %endl
+    mov fdx , 2
+    syscall 0 , %ios
     
-    mov . tlr , 3
-    mov . fdx , 9
-    syscall . 0 , %cmanip
+    mov tlr , 3
+    mov fdx , 9
+    syscall 0 , %cmanip
 
-    mov . stl , %endl
-    mov . fdx , 2
-    syscall . 0 , %ios
+    mov stl , %endl
+    mov fdx , 2
+    syscall 0 , %ios
 
 ```
 
@@ -1368,42 +1362,31 @@ Example:
 
 `index.asm`:
 ```asm
-_!startofprog
- ; Example
 _ : config
-    memsize ~ 87 ; reallocate
+    memsize ~ 87
 _ : data
-    num $ mynumber = 736
-    decm $ mydecimal = 243.3
     txt $ mytext = "Hello World"
-    txt $ return_vals = "null"
-    ref $ testreference = &return_vals ; we must provide a valid value
-
-    txt $ threadarg = "hello from thread"
 
     thread $ testthread = {
-        __say.0,"thread debug 1"
-        __say.0,"thread debug 3"
-        __say.0,"thread debug 5"
-        __say.0,"thread debug 6"
-        __say.0,"thread debug 7"
-        __say.0,"thread debug 8"
-        __say.0,"thread debug 9"
-        __say.0,"thread debug 10"
+        __say 0,"thread debug 1"
+        __say 0,"thread debug 3"
+        __say 0,"thread debug 5"
+        __say 0,"thread debug 6"
+        __say 0,"thread debug 7"
+        __say 0,"thread debug 8"
+        __say 0,"thread debug 9"
+        __say 0,"thread debug 10"
     }
     thread $ testthread2 = {
-        __say.0,"thread debug 2"
-        __say.0,"thread debug 4" 
+        __say 0,"thread debug 2"
+        __say 0,"thread debug 4" 
     }
 
 _ : start
-    ;db . tr0
-    ;db . tr1
-    zero . stl
-    mov . tlr , mytext ;test
-    ;mov . stl , %endl
-    mov . fdx , 1
-    syscall . 0 , %ios
+    zero stl
+    mov tlr , mytext
+    mov fdx , 1
+    syscall 0 , %ios
 
     ;other code
 ```
