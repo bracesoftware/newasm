@@ -44,9 +44,9 @@ namespace newasm
                 const int test = 3; //not tested enough
                 const int beta = 4; //has some bugs
             }
-            const int major = 0;
-            const int minor = 1;
-            const int patch = 4;
+            const int major = 1;
+            const int minor = 0;
+            const int patch = 0;
             const int release = 1;
             const int release_type = newasm::header::version::release_types::beta;
         }
@@ -287,6 +287,46 @@ namespace newasm
                 std::cout << newasm::header::col::reset;*/
             
             std::string trim(const std::string &str);
+            bool isbetween(const std::string str, char delim, char what)
+            {
+                int pos1 = -1,pos2 = -1,delpos = -1;
+                for(int i = 0; i < str.size(); i++)
+                {
+                    if(str.at(i) == delim)
+                    {
+                        if(delpos == -1)
+                        {
+                            delpos = i;
+                            //std::cout << "found delpos " << delpos << std::endl;
+                            continue;
+                        }
+                    }
+                    if(str.at(i) == what)
+                    {
+                        if(pos1 == -1)
+                        {
+                            pos1 = i;
+                            //std::cout << "found pos1 " << pos1 << std::endl;
+                            continue;
+                        }
+                        if(pos2 == -1)
+                        {
+                            pos2 = i;
+                            //std::cout << "found pos2 " << pos2 << std::endl;
+                            continue;
+                        }
+                    }
+                }
+                if((delpos != -1) && (pos1 != -1) && (pos2 != -1))
+                {
+                    //std::cout << "pos1 " << pos1<< "delpos " << delpos << "pos2" << pos2 << std::endl;
+                    if(pos1 < delpos && delpos < pos2)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
             std::vector<std::string> split(const std::string &str, char delimiter)
             {
                 std::vector<std::string> tokens;
@@ -530,6 +570,22 @@ namespace newasm
                     }
                 }
                 return true;
+            }
+            bool hasnull(std::string str, char &delim, int &pos)
+            {
+                for(int i = 0; i < str.size(); i++)
+                {
+                    if(
+                        (str.at(i) == '\t') ||
+                        (str.at(i) == 32)
+                    )
+                    {
+                        pos = i;
+                        delim = str.at(i);
+                        return true;
+                    }
+                }
+                return false;
             }
             int log(std::string text)
             {

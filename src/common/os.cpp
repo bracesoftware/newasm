@@ -1,9 +1,5 @@
 /*
 
-The ORIGINAL CODE is the `NewASM Runtime Environment` Source Code.
-The INITIAL DEVELOPER is Brace Software Co., DEntisT.
-The COPYRIGHT YEAR is 2024.
-
 Version: MPL 1.1
 
 The contents of this file are subject to the Mozilla Public License Version 

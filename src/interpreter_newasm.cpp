@@ -74,6 +74,7 @@ namespace newasm
 
 #include "newasm_dynlib.cpp"
 #include "newasm_header.cpp"
+#include "common/tokenize.cpp"
 #include "newasm_setup.cpp"
 
 #include "threads/impl.cpp"
@@ -143,9 +144,30 @@ namespace newasm
 }
 
 // MAIN
+//#define NEWASM_STRICT_TEST
 
 int main(int argc, char *argv[])
 {
+    #ifdef NEWASM_STRICT_TEST
+    std::string line = "  mov   \"oh, no\"";
+    std::string line2 = "   ret    tlr,             \"eh, sexy\"";
+    std::string line3 = "   syscall    ";
+    std::string line4 = "   zero    stl";
+    std::cout << newasm::common::tokenize(line).size() << char(32) <<
+    newasm::common::tokenize(line2).size() << char(32) <<
+    newasm::common::tokenize(line3).size() << char(32) <<
+    newasm::common::tokenize(line4).size() << char(32) << std::endl; 
+
+    std::cout << newasm::common::tokenize(line).at(0) << '|' << newasm::common::tokenize(line).at(1) << '|'<< std::endl;
+    std::cout << newasm::common::tokenize(line2).at(0) << '|' << newasm::common::tokenize(line2).at(1) << '|' << newasm::common::tokenize(line2).at(2) << '|'<< std::endl;
+    std::cout << newasm::common::tokenize(line3).at(0) << '|'<<std::endl;
+    std::cout << newasm::common::tokenize(line4).at(0) << '|' << newasm::common::tokenize(line4).at(1) << '|'<< std::endl;
+
+    //line = newasm::header::functions::trim(line);
+    
+
+    return 1;
+    #endif
     fs::path data_folder = fs::path(newasm::core::constants::data_folder);
     if(!fs::exists(data_folder))
     {

@@ -66,6 +66,7 @@ namespace newasm
             }
             return 1;
         }
+      
         //newasm::header::data::lastln = line;
         newasm::mem::regs::exc = exit_code;
         newasm::system::terminated = true;
@@ -592,6 +593,16 @@ namespace newasm
     }
     int process_iso(std::string wholeline, std::string ins, std::string suf, std::string opr)
     {
+        std::vector<std::string> tokens;
+        for(std::vector<std::pair<std::string,std::string>>::iterator i = newasm::env_vars->begin(); i < newasm::env_vars->end(); i++)
+        {
+            tokens = newasm::header::functions::split_fixed(opr,'/');
+            if(newasm::header::functions::trim(tokens[0]) == "*") if(newasm::header::functions::trim(tokens[1]) == i->first)
+            {
+                opr = i->second;
+            }
+        }
+
         if(opr == newasm::header::constants::inv_reg_val)
         {
             newasm::terminate(newasm::exit_codes::mem_overflow);//,wholeline);
@@ -601,7 +612,7 @@ namespace newasm
         if(newasm::system::stop == 1)
         {
             newasm::system::proclines ++;
-            std::string newline = ins + static_cast<std::string>(".") + suf + static_cast<std::string>(",") + opr;
+            std::string newline = ins + static_cast<std::string>(" ") + suf + static_cast<std::string>(",") + opr;
             newasm::mem::funcs[newasm::system::cproc].push_back(newline);
             //std::cout << newasm::system::cproc << " : " << newline << std::endl;
             return 1;
@@ -2516,7 +2527,7 @@ namespace newasm
         if(newasm::system::stop == 1)
         {
             newasm::system::proclines ++;
-            std::string newline = ins + static_cast<std::string>(".") + suf;
+            std::string newline = ins + static_cast<std::string>(" ") + suf;
             newasm::mem::funcs[newasm::system::cproc].push_back(newline);
             //std::cout << newasm::system::cproc << " : " << newline << std::endl;
             return 1;
@@ -3399,7 +3410,22 @@ namespace newasm
                 }
                 return 1;
             }
-            if(newasm::header::functions::strfind(line,'.')) if(newasm::header::functions::strfind(line,','))
+            //tokenizer starts here
+            std::vector<std::string> linetokens = newasm::common::tokenize(line);
+
+            if(linetokens.size() == 1)
+            {
+                return newasm::process_i(line, linetokens.at(0));
+            }
+            if(linetokens.size() == 2)
+            {
+                return newasm::process_is(line, linetokens.at(0),linetokens.at(1));
+            }
+            if(linetokens.size() == 3)
+            {
+                return newasm::process_iso(line, linetokens.at(0),linetokens.at(1),linetokens.at(2));
+            }
+            /*if(newasm::header::functions::strfind(line,'.')) if(newasm::header::functions::strfind(line,','))
             {
                 if(line.find('.') > line.find(','))
                 {
@@ -3415,15 +3441,7 @@ namespace newasm
                 suf = newasm::header::functions::trim(suf);
                 opr = newasm::header::functions::trim(opr);
                
-                std::vector<std::string> tokens;
-                for(std::vector<std::pair<std::string,std::string>>::iterator i = newasm::env_vars->begin(); i < newasm::env_vars->end(); i++)
-                {
-                    tokens = newasm::header::functions::split_fixed(opr,'/');
-                    if(newasm::header::functions::trim(tokens[0]) == "*") if(newasm::header::functions::trim(tokens[1]) == i->first)
-                    {
-                        opr = i->second;
-                    }
-                }
+                
                 return newasm::process_iso(line,ins,suf,opr);
             }
             if(newasm::header::functions::strfind(line,'.')) if(!newasm::header::functions::strfind(line,','))
@@ -3440,7 +3458,7 @@ namespace newasm
                 ins = line;
                 ins = newasm::header::functions::trim(ins);
                 return newasm::process_i(line,ins);
-            }
+            }*/
         }
         
         /*if(!newasm::header::functions::strfind(line,'.'))
@@ -3603,7 +3621,7 @@ namespace newasm
                 if(startline != newasm::code_stream::invalid_lnidx) if(!(lineidx >= startline))
                 {
                     lineidx++;
-                    newasm::header::data::lastlndx = lineidx;
+                    //newasm::header::data::lastlndx = lineidx;
                     continue;
                 }
                 if(newasm::system::terminated)
