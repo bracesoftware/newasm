@@ -3406,6 +3406,10 @@ namespace newasm
                 }
                 for(int i = 0; i < newasm::mem::instructions[line].size(); i++)
                 {
+                    if(newasm::system::terminated)
+                    {
+                        return 1;
+                    }
                     newasm::procline(newasm::mem::instructions[line].at(i));
                 }
                 return 1;

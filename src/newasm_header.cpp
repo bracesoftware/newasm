@@ -636,6 +636,7 @@ namespace newasm
         std::string name = "";
         std::string version = "";
         std::vector<std::string> dynamic_libs;
+        std::vector<std::string> tokens;
 
         namespace impl
         {
@@ -678,6 +679,7 @@ namespace newasm
                             while (std::getline(file, line))
                             {
                                 line = newasm::header::functions::trim(line);
+                                tokens = newasm::common::tokenize(line);
                                 (*newasm::dyn_ins_set)[dynamic_libs[i]].push_back(line);
                                 newasm::dynlib::settings::lastline = line;
                                 newasm::dynlib::settings::lastlinedx += 1;
@@ -699,13 +701,29 @@ namespace newasm
                                 }
                                 //std::cout << "Debugging MEGA CRASH " << "5.2\n";
                                 parser.clear();
-                                if(newasm::header::functions::strfind(line,'.') && newasm::header::functions::strfind(line,','))
+                                /*if(newasm::header::functions::strfind(line,'.') && newasm::header::functions::strfind(line,','))
                                 {
                                     parser = newasm::header::functions::split_fixed(line,',');
                                     op = newasm::header::functions::trim(parser[1]);
                                     parser2 = newasm::header::functions::split_fixed(parser[0],'.');
                                     ins = newasm::header::functions::trim(parser2[0]);
                                     suf = newasm::header::functions::trim(parser2[1]);
+                                }*/
+                                tokens.clear();
+                                if(tokens.size() == 1)
+                                {
+                                    ins = tokens[0];
+                                }
+                                if(tokens.size() == 2)
+                                {
+                                    ins = tokens.at(0);
+                                    suf = tokens.at(1);
+                                }
+                                if(tokens.size() == 3)
+                                {
+                                    ins = tokens.at(0);
+                                    suf = tokens.at(1);
+                                    op = tokens.at(2);
                                 }
                                 //std::cout << "Debugging MEGA CRASH " << "6\n";
                                 bool tried_retry_label = false;

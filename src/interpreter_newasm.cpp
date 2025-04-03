@@ -21,7 +21,7 @@ the Initial Developer. All Rights Reserved.
 
 */
 
-#include "common/os.cpp"
+#include "common/os.h"
 
 #define EMPTYLINE std::cout<<"\n"
 #include <iostream>
@@ -44,6 +44,9 @@ the Initial Developer. All Rights Reserved.
 #include <deque>
 
 #define __newasm_included
+
+#include "assets/text.h"
+#include "assets/def.h"
 
 namespace newasm
 {
@@ -74,7 +77,7 @@ namespace newasm
 
 #include "newasm_dynlib.cpp"
 #include "newasm_header.cpp"
-#include "common/tokenize.cpp"
+#include "common/tokenize.h"
 #include "newasm_setup.cpp"
 
 #include "threads/impl.cpp"

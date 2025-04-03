@@ -27,7 +27,7 @@ namespace newasm
     {
         std::vector<std::string> tokenize(const std::string line)
         {
-            //newasm::header::functions::dbg(static_cast<std::string>("Tokenizing - \"") + line + static_cast<std::string>("\""));
+            //newasm::header::functions::dbg(static_cast<std::string>("\t\t\t\nTokenizing - \"") + line + static_cast<std::string>("\""));
             char delim = '0';
             int loc = -1;
             std::vector<std::string> tokens;
@@ -65,7 +65,7 @@ namespace newasm
             }
             for(int i = 0; i < tokens.size(); i++)
             {
-                //std::cout << i << " : '" << tokens.at(i) << "'\n"; 
+                //std::cout << "\t\t\t" << i << " : '" << tokens.at(i) << "'\n"; 
             }
             return tokens;
         }
