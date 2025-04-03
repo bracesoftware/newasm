@@ -1283,30 +1283,7 @@ namespace newasm
             newasm::terminate(newasm::exit_codes::uninptr_usage);
             return 1;
         }
-        // RETURN
-        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::retn))
-        {
-            if(newasm::header::data::repl)
-            {
-                newasm::unsins(ins);
-                return 1;
-            }
-            if(suf == static_cast<std::string>("0"))
-            {
-                if(newasm::header::functions::isnumeric(opr))
-                {
-                    newasm::mem::regs::exc = std::stoi(opr);
-                    newasm::header::data::exception = false;
-                    newasm::terminate(newasm::mem::regs::exc);//,wholeline);
-                }
-                else
-                {
-                    newasm::mem::regs::exc = newasm::exit_codes::invalid_retn;
-                    newasm::terminate(newasm::mem::regs::exc);//,wholeline);
-                }
-                return 1;
-            }
-        }
+        
         // MOV
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::mov))
         {
@@ -2618,6 +2595,42 @@ namespace newasm
                 return 1;
             }
             newasm::terminate(newasm::exit_codes::invalid_syntax);
+            return 1;
+        }
+        // RETURN
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::retn))
+        {
+            if(newasm::header::data::repl)
+            {
+                newasm::unsins(ins);
+                return 1;
+            }
+            std::vector<std::string> tokens;
+            for(std::vector<std::pair<std::string,std::string>>::iterator i = newasm::env_vars->begin(); i < newasm::env_vars->end(); i++)
+            {
+                tokens = newasm::header::functions::split_fixed(suf,'/');
+                if(newasm::header::functions::trim(tokens[0]) == "*") if(newasm::header::functions::trim(tokens[1]) == i->first)
+                {
+                    suf = i->second;
+                }
+            }
+
+            if(suf == newasm::header::constants::inv_reg_val)
+            {
+                newasm::terminate(newasm::exit_codes::mem_overflow);//,wholeline);
+                return 1;
+            }
+            newasm::header::functions::parseopr(suf, newasm::mem::data);
+            newasm::parseopr_struct(suf);
+            if(newasm::header::functions::isnumeric(suf))
+            {
+                newasm::mem::regs::exc = std::stoi(suf);
+                newasm::header::data::exception = false;
+                newasm::terminate(newasm::mem::regs::exc);//,wholeline);
+                return 1;
+            }
+            newasm::mem::regs::exc = newasm::exit_codes::invalid_retn;
+            newasm::terminate(newasm::mem::regs::exc);//,wholeline);
             return 1;
         }
         //ret

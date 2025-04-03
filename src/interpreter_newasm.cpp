@@ -70,9 +70,9 @@ namespace newasm
 #include "core/handlers.cpp"
 #include "core/lang_inf.cpp"
 #if __newasm_os == newasm__common__os__win32
-    #include "3rd.net.win32.cpp"
+    #include "3rd.net.win32.h"
 #elif __newasm_os == newasm__common__os__linux
-    #include "3rd.net.linux.cpp"
+    #include "3rd.net.linux.h"
 #endif
 
 #include "newasm_dynlib.cpp"
