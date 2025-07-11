@@ -75,6 +75,8 @@ namespace newasm
     #include "3rd.net.linux.h"
 #endif
 
+#include "common/opcodes.h"
+
 #include "newasm_dynlib.cpp"
 #include "newasm_header.cpp"
 #include "common/tokenize.h"

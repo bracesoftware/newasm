@@ -1922,53 +1922,8 @@ namespace newasm
             newasm::terminate(newasm::exit_codes::invalid_syntax);
             return 1;
         }
-        //proc
-        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::proc))
-        {
-            if(newasm::header::data::repl)
-            {
-                newasm::unsins(ins); // incompatible instruction for repl
-                return 1;
-            }
-            if(suf == static_cast<std::string>("0"))
-            {
-                if(newasm::header::functions::isalphanum(opr))
-                {
-                    if(newasm::mem::functions::datavalid(opr,newasm::mem::funcs))
-                    {
-                        newasm::terminate(newasm::exit_codes::proc_redef);
-                        return 1;
-                    }
-                    newasm::system::stop = 1;
-                    newasm::system::cproc = opr;
-                    newasm::system::proclines = 0;
-                    //std::cout << "Creating proc: " << opr << std::endl;
-                    return 1;
-                }
-            }
-        }
-        //call
-        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::call))
-        {
-            if(newasm::header::data::proc_now)
-            {
-                newasm::terminate(newasm::exit_codes::inline_proc);
-                return 1;
-            }
-            if(suf == static_cast<std::string>("0"))
-            {
-                if(newasm::header::functions::isalphanum(opr))
-                {
-                    if(!newasm::mem::functions::datavalid(opr,newasm::mem::funcs))
-                    {
-                        newasm::terminate(newasm::exit_codes::invalid_proc);
-                        return 1;
-                    }
-                    newasm::callproc(opr);
-                    return 1;
-                }
-            }
-        }
+        
+        
         //rem
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::rem))
         {
@@ -2031,34 +1986,7 @@ namespace newasm
                 return 1;
             }
         }
-        //heap
-        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::heap))
-        {
-            if(suf == static_cast<std::string>("0"))
-            {
-                if(newasm::header::functions::isnumeric(opr))
-                {
-                    newasm::mem::regs::hea = newasm::mem::regs::hea + std::stoi(opr);
-                    newasm::mem::regs::heaptr = newasm::mem::regs::hea;
-                    if(newasm::mem::regs::hea > newasm::mem::inf::mem_size - 1)
-                    {
-                        newasm::terminate(newasm::exit_codes::mem_overflow);//,wholeline);
-                        return 1;
-                    }
-                    if(newasm::mem::regs::hea < 0)
-                    {
-                        newasm::terminate(newasm::exit_codes::mem_underflow);//,wholeline);
-                        return 1;
-                    }
-                    if(newasm::mem::functions::check_stkhea_col())
-                    {
-                        newasm::terminate(newasm::exit_codes::stkhea_col);//,wholeline);
-                        return 1;
-                    }
-                    return 1;
-                }
-            }
-        }
+        
         //load.adr
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::load))
         {
@@ -2508,6 +2436,72 @@ namespace newasm
             newasm::mem::funcs[newasm::system::cproc].push_back(newline);
             //std::cout << newasm::system::cproc << " : " << newline << std::endl;
             return 1;
+        }
+        //call
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::call))
+        {
+            if(newasm::header::data::proc_now)
+            {
+                newasm::terminate(newasm::exit_codes::inline_proc);
+                return 1;
+            }
+            if(newasm::header::functions::isalphanum(suf))
+            {
+                if(!newasm::mem::functions::datavalid(suf,newasm::mem::funcs))
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_proc);
+                    return 1;
+                }
+                newasm::callproc(suf);
+                return 1;
+            }
+        }
+        //proc
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::proc))
+        {
+            if(newasm::header::data::repl)
+            {
+                newasm::unsins(ins); // incompatible instruction for repl
+                return 1;
+            }
+            if(newasm::header::functions::isalphanum(suf))
+            {
+                if(newasm::mem::functions::datavalid(suf,newasm::mem::funcs))
+                {
+                    newasm::terminate(newasm::exit_codes::proc_redef);
+                    return 1;
+                }
+                newasm::system::stop = 1;
+                newasm::system::cproc = suf;
+                newasm::system::proclines = 0;
+                //std::cout << "Creating proc: " << opr << std::endl;
+                return 1;
+            }
+        }
+        //heap
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::heap))
+        {
+            if(newasm::header::functions::isnumeric(suf))
+            {
+                newasm::mem::regs::hea = newasm::mem::regs::hea + std::stoi(suf);
+                newasm::mem::regs::heaptr = newasm::mem::regs::hea;
+                if(newasm::mem::regs::hea > newasm::mem::inf::mem_size - 1)
+                {
+                    newasm::terminate(newasm::exit_codes::mem_overflow);//,wholeline);
+                    return 1;
+                }
+                if(newasm::mem::regs::hea < 0)
+                {
+                    newasm::terminate(newasm::exit_codes::mem_underflow);//,wholeline);
+                    return 1;
+                }
+                if(newasm::mem::functions::check_stkhea_col())
+                {
+                    newasm::terminate(newasm::exit_codes::stkhea_col);//,wholeline);
+                    return 1;
+                }
+                return 1;
+            }
         }
         //db - debug
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::db))
@@ -3338,7 +3332,18 @@ namespace newasm
         arg.clear();
         dtyp.clear();
 
-        if(newasm::header::functions::strfind(line,':'))
+        if(line.at(0) == '.')
+        {
+            bool valid = false;
+            std::string sec = newasm::header::functions::trim(line.substr(1,line.size()));
+            newasm::process_s(valid,line,"_",sec);
+            if(valid)
+            {
+                return 1;
+            }
+        }
+
+        /*if(newasm::header::functions::strfind(line,':'))
         {
             bool valid = false;
             tmp2 = newasm::header::functions::split_fixed(line, ':');
@@ -3351,7 +3356,7 @@ namespace newasm
             {
                 return 1;
             }
-        }
+        }*/
 
         if(newasm::system::section == newasm::code_stream::sections::hndl)
         {
@@ -3430,17 +3435,35 @@ namespace newasm
             //tokenizer starts here
             std::vector<std::string> linetokens = newasm::common::tokenize(line);
 
+            std::string instruction;
+            instruction = linetokens.at(0);
+            if(newasm::header::functions::ishex(instruction))
+            {
+                for(std::unordered_map<int, std::string>::iterator i = newasm::opcodes::mem.begin(); i != newasm::opcodes::mem.end(); i++)
+                {
+                    if(i->first == newasm::header::functions::hextoi(instruction))
+                    {
+                        using namespace std;
+                        cout << instruction << endl;
+                        cout << i->first << endl;
+                        cout << i->second << endl;
+                        instruction = i->second;
+                        //cout << instruction << endl;
+                    }
+                }
+            }               
+
             if(linetokens.size() == 1)
             {
-                return newasm::process_i(line, linetokens.at(0));
+                return newasm::process_i(line, instruction);
             }
             if(linetokens.size() == 2)
             {
-                return newasm::process_is(line, linetokens.at(0),linetokens.at(1));
+                return newasm::process_is(line, instruction,linetokens.at(1));
             }
             if(linetokens.size() == 3)
             {
-                return newasm::process_iso(line, linetokens.at(0),linetokens.at(1),linetokens.at(2));
+                return newasm::process_iso(line, instruction,linetokens.at(1),linetokens.at(2));
             }
             /*if(newasm::header::functions::strfind(line,'.')) if(newasm::header::functions::strfind(line,','))
             {

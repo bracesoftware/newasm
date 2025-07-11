@@ -541,6 +541,41 @@ namespace newasm
                 result = result + size_a > size_b ? size_a - size_b : size_b - size_a;
                 return result;
             }
+            int hex_char_to_int(char c)
+            {
+                if (c >= '0' && c <= '9')
+                    return c - '0';
+                else if (c >= 'a' && c <= 'f')
+                    return 10 + (c - 'a');
+                else if (c >= 'A' && c <= 'F')
+                    return 10 + (c - 'A');
+                else
+                    return 0;
+            }
+
+            int hextoi(const std::string& hex_str)
+            {
+                size_t start = 0;
+                int result = 0;
+
+                // Ako počinje s "0x" ili "0X", preskoči prefiks
+                if(hex_str.size() >= 2 && hex_str[0] == '0' && (hex_str[1] == 'x' || hex_str[1] == 'X'))
+                {
+                    start = 2;
+                }
+
+                for(size_t i = start; i < hex_str.length(); ++i)
+                {
+                    char c = hex_str[i];
+                    if(!std::isxdigit(c))
+                    {
+                        return -1;
+                    }
+                    result = result * 16 + hex_char_to_int(c);
+                }
+
+                return result;
+            }
             bool ishex(const std::string &str)
             {
                 if (str.size() < 3) return false;
