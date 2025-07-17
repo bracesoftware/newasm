@@ -76,6 +76,7 @@ Documentation about `newasm` which includes following topics:
     - [Bit arrays](#bit-arrays)
     - [Binary trees](#binary-trees)
 - [Threads](#threads)
+- [Opcodes](#instruction-set-and-opcodes)
 
 ## Compiling
 This project is written purely in C++ using its standard libraries, so compiling it should be easy. To download C++ compiler, please follow instructions on the link below:
@@ -1407,4 +1408,13 @@ thread debug 7
 thread debug 8
 thread debug 9
 Hello World             thread debug 10
+```
+
+## Instruction set and opcodes
+NewASM has a bunch of instructions, and in order to mimic real assemblers, there is a specific opcode linked to every instruction, for example `mov` is `0x6`:
+
+```asm
+.start
+    0x6 tlr, 1 ; same as `mov tlr, 1`
+    ; more code
 ```
