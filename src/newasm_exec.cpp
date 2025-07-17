@@ -3374,6 +3374,11 @@ namespace newasm
         }
         if(newasm::header::functions::ishex(tohandle))
         {
+            if(newasm::stack::events.find(tohandle) != newasm::stack::events.end())
+            {
+                newasm::terminate(newasm::exit_codes::hndl_reassign);
+                return 1;
+            }
             newasm::stack::events[tohandle] = procedure;
             return 1;
         }
@@ -3817,16 +3822,7 @@ namespace newasm
                 //////////
             }
             
-            if(newasm::mem::functions::datavalid(newasm::handlers::exit_handler, newasm::mem::funcs))
-            {
-                newasm::global::event_now = true;
-                newasm::copyproc(newasm::handlers::exit_handler);
-                for(auto i = newasm::global::event_codeblock.begin(); i != newasm::global::event_codeblock.end(); i++)
-                {
-                    newasm::procline(*i);
-                }
-                newasm::global::event_now = false;
-            }
+            
 
             internal_fileobject.close();
             

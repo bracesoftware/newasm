@@ -44,7 +44,7 @@ namespace newasm
                 const int test = 3; //not tested enough
                 const int beta = 4; //has some bugs
             }
-            const int major = 1;
+            const int major = 2;
             const int minor = 0;
             const int patch = 0;
             const int release = 1;
@@ -123,8 +123,9 @@ namespace newasm
                 dest.clear();
                 dest =  std::to_string(newasm::header::version::major) + static_cast<std::string>(".") +
                         std::to_string(newasm::header::version::minor) + static_cast<std::string>(".") +
-                        std::to_string(newasm::header::version::patch) + static_cast<std::string>("-R") +
-                        std::to_string(newasm::header::version::release) + static_cast<std::string>("-") + 
+                        std::to_string(newasm::header::version::patch) + static_cast<std::string>(".r") +
+                        std::to_string(newasm::header::version::release) + static_cast<std::string>("-b") +
+                        std::to_string(newasm::BUILD_NUMBER) + static_cast<std::string>("-") + 
                         release__type;
             }
             void getos(std::string &dest)

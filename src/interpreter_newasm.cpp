@@ -50,7 +50,7 @@ the Initial Developer. All Rights Reserved.
 
 namespace newasm
 {
-    const int BUILD_NUMBER = 2;
+    const int BUILD_NUMBER = 3;
     bool vercheck = true;
     const std::string tab = "\t\t\t";
     std::unordered_map<std::string,std::vector<std::string>>* dyn_ins_set;
@@ -308,6 +308,16 @@ int main(int argc, char *argv[])
             newasm::header::settings::script_file
         )
     );
+    if(newasm::mem::functions::datavalid(newasm::handlers::exit_handler, newasm::mem::funcs))
+    {
+        newasm::global::event_now = true;
+        newasm::copyproc(newasm::handlers::exit_handler);
+        for(auto i = newasm::global::event_codeblock.begin(); i != newasm::global::event_codeblock.end(); i++)
+        {
+            newasm::procline(*i);
+        }
+        newasm::global::event_now = false;
+    }
     if(newasm::header::data::exception)
     {
         newasm::header::functions::log("Process terminated...");
