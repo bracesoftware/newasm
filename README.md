@@ -655,7 +655,7 @@ Output:
 
 ```asm
 . start
-    _ ! label_name
+    : label_name
 
     ; somewhere
     jmp 0 , label_name
@@ -665,7 +665,7 @@ Output:
 
 ```asm
 . start
-    _ ! labelname
+    : labelname
         mov . fdx , 4
         syscall . 0 , %ios
     jmp 0 , labelname
@@ -676,19 +676,19 @@ A little too complex example.
 ```asm
 . start
     jmp 0 , label2
-    _ ! label
+    : label
         mov tlr , "label called"
         mov fdx , 1
         syscall . 0 , %ios
         mov fdx , 72
         jmp 0 , label3
         ret fdx
-    _ ! label2
+    : label2
         mov tlr , "label2 called"
         mov fdx , 1
         syscall 0 , %ios
         jmp 0 , label
-    _ ! label3
+    : label3
         mov tlr , "label3 called"
         mov fdx , 1
         syscall 0 , %ios
@@ -738,49 +738,49 @@ According to the result `cmp` stores in its own "hidden" register, you can use t
 
     ; We just want to check if they are either equal, less or greater.
 
-    _ ! equal
+    : equal
         mov tlr , "EQUAL"
         mov fdx , 1
         mov stl , %endl
         syscall 0 , %ios
         jmp 0 , endtheprogram
 
-    _ ! notequal
+    : notequal
         mov tlr , "NOT EQUAL"
         mov fdx , 1
         mov stl , %endl
         syscall 0 , %ios
         jmp 0 , endtheprogram
 
-    _ ! less
+    : less
         mov tlr , "LESS"
         mov fdx , 1
         mov stl , %endl
         syscall 0 , %ios
         jmp 0 , endtheprogram
 
-    _ ! greater
+    : greater
         mov tlr , "GREATER"
         mov fdx , 1
         mov stl , %endl
         syscall 0 , %ios
         jmp 0 , endtheprogram
 
-    _ ! lesseq
+    : lesseq
         mov tlr , "LESS OR EQUAL"
         mov fdx , 1
         mov stl , %endl
         syscall 0 , %ios
         jmp 0 , endtheprogram
 
-    _ ! greatereq
+    : greatereq
         mov tlr , "GREATER OR EQUAL"
         mov fdx , 1
         mov stl , %endl
         syscall 0 , %ios
         jmp 0 , endtheprogram
 
-    _ ! endtheprogram
+    : endtheprogram
     retn 0
 ```
 
