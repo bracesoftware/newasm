@@ -917,6 +917,15 @@ Output:
 [NewASM]   PROGRAM THREAD @ Debug | tlr : `"string"`
 ```
 
+### `wait` instruction
+Basically pauses the program execution.
+```asm
+.start
+    wait 2000 ; waits for 2000ms, or 2s
+    retn 0 ; ends the program
+```
+
+
 ### `malloc` and `free`
 Easily manage heap memory. Example:
 
