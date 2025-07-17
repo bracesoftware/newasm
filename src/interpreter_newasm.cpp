@@ -67,6 +67,7 @@ namespace newasm
     }
 }
 
+#include "core/malloc.h"
 #include "core/handlers.cpp"
 #include "core/lang_inf.cpp"
 #if __newasm_os == newasm__common__os__win32

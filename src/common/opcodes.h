@@ -64,6 +64,10 @@ namespace newasm
             {39, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::shl)},
             {40, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::shr)},
             {41, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::db)},
+            {42, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::malloc__)},
+            {43, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::free__)},
+            {44, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::stack)},
+            {45, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::wait)},
             {100, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::__say)}
         };
     }

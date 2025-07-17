@@ -916,6 +916,36 @@ Output:
 [NewASM]   PROGRAM THREAD @ Debug | tlr : `"string"`
 ```
 
+### `malloc` and `free`
+Easily manage heap memory. Example:
+
+```asm
+.start
+    heap 40
+    db hea
+    malloc 2 ; for test purposes
+    mov hea, 2
+    db hea
+    free
+    db hea
+    __say 0,"2nd malloc"
+    malloc 2 ; allocate 2 more spaces in the heap
+    mov hea, [1] ; using brackets we can access the address id of the malloc-allocated heap
+    db hea
+    free ; automatically get rid of that allocated memory
+    db hea
+    heap -40 ; free up the rest we occupied for some testing
+```
+Output:
+```
+[NewASM]   PROGRAM THREAD @ Debug | hea = `40`
+[NewASM]   PROGRAM THREAD @ Debug | hea = `2`
+[NewASM]   PROGRAM THREAD @ Debug | hea = `40`
+                        2nd malloc
+[NewASM]   PROGRAM THREAD @ Debug | hea = `42`
+[NewASM]   PROGRAM THREAD @ Debug | hea = `40`
+```
+
 ## Procedures
 Procedures allow you to use the same piece of code without having to actually repeat it. General syntax is:
 

@@ -83,6 +83,10 @@ namespace newasm
             const int shl = 39;
             const int shr = 40;
             const int db = 41;
+            const int malloc__ = 42;
+            const int free__ = 43;
+            const int stack = 44;
+            const int wait = 45;
             
             const int __say = 100;
 
@@ -131,6 +135,10 @@ namespace newasm
                 {shr, "shr"},
 
                 {db, "db"},
+                {malloc__, "malloc"},
+                {free__, "free"},
+                {stack, "stack"},
+                {wait, "wait"},
 
                 {__say, "__say"}
             };

@@ -1340,6 +1340,24 @@ namespace newasm
             }
             if(suf == static_cast<std::string>("hea"))
             {
+                //malloc
+                if(newasm::header::functions::isallocref(opr).first)
+                {
+                    if(newasm::allocation_data == nullptr) //NoAlloc
+                    {
+                        newasm::terminate(newasm::exit_codes::malloc_err);
+                        return 1;
+                    }
+                    if(newasm::header::functions::isallocref(opr).second >= newasm::allocation_data->size) //AllocSizeExceeded
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    newasm::mem::regs::heaptr = 1+newasm::allocation_data->heapsize_new - newasm::allocation_data->size + newasm::header::functions::isallocref(opr).second;
+                    return 1;
+                }
+
+                //standard heap adr alloc
                 if(!newasm::header::functions::isnumeric(opr))
                 {
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
@@ -1958,6 +1976,14 @@ namespace newasm
                 }
                 newasm::mem::program_memory[newasm::mem::regs::stk] = opr;
                 newasm::mem::regs::stk = newasm::mem::regs::stk - 1;
+                if(newasm::header::functions::ishex(opr))
+                {
+                    newasm::header::data::callstkidx = newasm::mem::regs::stk;
+                    if(newasm::stack::events.find(opr) != newasm::stack::events.end())
+                    {
+                        newasm::callproc(newasm::stack::events.at(opr));
+                    }
+                }
                 return 1;
             }
         }
@@ -2435,6 +2461,42 @@ namespace newasm
             std::string newline = ins + static_cast<std::string>(" ") + suf;
             newasm::mem::funcs[newasm::system::cproc].push_back(newline);
             //std::cout << newasm::system::cproc << " : " << newline << std::endl;
+            return 1;
+        }
+        //wait
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::wait))
+        {
+            if(!newasm::header::functions::isnumeric(suf))
+            {
+                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                return 1;
+            }
+            if(newasm::header::functions::wait(std::stoi(suf)) == -1)
+            {
+                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+            }
+
+            return 1;
+        }
+        //malloc
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::malloc__))
+        {
+            if(newasm::allocation_data != nullptr) // malloc je vec upotrebljen //NoAlloc
+            {
+                newasm::terminate(newasm::exit_codes::malloc_err);
+                return 1;
+            }
+            if(!newasm::header::functions::isnumeric(suf))
+            {
+                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                return 1;
+            }
+            newasm::allocation_data = new newasm::mem::malloc_info();
+            newasm::allocation_data->size = std::stoi(suf);
+            newasm::mem::regs::hea += std::stoi(suf);
+            newasm::allocation_data->heapsize_new = newasm::mem::regs::hea;
+            // medjutim nece heap pointer biti promienjen, to cemo ostaviti za mov i free
+
             return 1;
         }
         //call
@@ -3115,6 +3177,39 @@ namespace newasm
     }
     int process_i(std::string line, std::string ins)
     {
+        //stack
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::stack))
+        {
+            if(newasm::header::data::callstkidx == 0)
+            {
+                newasm::terminate(newasm::exit_codes::invalid_memacc);
+                return 1;
+            }
+            newasm::mem::regs::stk = newasm::mem::regs::stk + 1 + newasm::header::data::argc;
+            newasm::header::data::argc = 0;
+            newasm::header::data::callstkidx = 0;
+            return 1;
+        }
+        //free
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::free__))
+        {
+            if(newasm::allocation_data == nullptr) // malloc nije upotrebljen // NoAlloc
+            {
+                newasm::terminate(newasm::exit_codes::malloc_err);
+                return 1;
+            }
+            newasm::mem::regs::hea -= newasm::allocation_data->size;
+            if(newasm::mem::regs::hea != newasm::allocation_data->heapsize_new - newasm::allocation_data->size) //neko je manualno dirao heap prije free
+            {
+                newasm::terminate(newasm::exit_codes::manual_heap);
+                return 1;
+            }
+            newasm::mem::regs::heaptr = newasm::mem::regs::hea;
+            delete newasm::allocation_data;
+            newasm::allocation_data = nullptr;
+            return 1;
+        }
+        //exit
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::exit))
         {
             if(!newasm::header::data::repl)
@@ -3267,14 +3362,19 @@ namespace newasm
     }
     int process_hndl(std::string tohandle, std::string procedure)
     {
+        if(newasm::header::settings::lazy_evhndlr == false) if(!newasm::mem::functions::datavalid(procedure, newasm::mem::funcs))
+        {
+            newasm::terminate(newasm::exit_codes::invalid_evhndlr);
+            return 1;
+        }
         if(tohandle == newasm::core::lang_inf::events::identifiers__.at(newasm::core::lang_inf::events::exit))
         {
-            if(newasm::header::settings::lazy_evhndlr == false) if(!newasm::mem::functions::datavalid(procedure, newasm::mem::funcs))
-            {
-                newasm::terminate(newasm::exit_codes::invalid_evhndlr);
-                return 1;
-            }
             newasm::handlers::exit_handler = procedure;
+            return 1;
+        }
+        if(newasm::header::functions::ishex(tohandle))
+        {
+            newasm::stack::events[tohandle] = procedure;
             return 1;
         }
         newasm::terminate(newasm::exit_codes::unknown_event);
@@ -3479,7 +3579,17 @@ namespace newasm
             }
             if(linetokens.size() == 3)
             {
-                return newasm::process_iso(line, instruction,linetokens.at(1),linetokens.at(2));
+                std::string operand;
+                operand = linetokens.at(2);
+                if(newasm::header::data::proc_now)
+                {
+                    if(newasm::header::functions::isargref(linetokens.at(2)).first)
+                    {
+                        newasm::header::data::argc++;
+                        operand = newasm::mem::program_memory[newasm::header::data::callstkidx + 1 + newasm::header::functions::isargref(linetokens.at(2)).second];
+                    }
+                }
+                return newasm::process_iso(line, instruction,linetokens.at(1),operand);
             }
             /*if(newasm::header::functions::strfind(line,'.')) if(newasm::header::functions::strfind(line,','))
             {

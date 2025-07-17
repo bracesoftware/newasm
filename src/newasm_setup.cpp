@@ -76,6 +76,9 @@ namespace newasm
         const int invalid_evhndlr = 35;
         const int constant_modif = 36;
         const int os_error = 37;
+        const int malloc_err = 38;
+        const int manual_heap = 39;
+        const int invalid_call = 40;
 
         const std::unordered_map<int, std::string> identifier = {
             {noterm_point, "NoTerminationPoint"},
@@ -115,7 +118,10 @@ namespace newasm
             {unknown_event, "UnknownEventToHandle"},
             {invalid_evhndlr, "InvalidEventHandler"},
             {constant_modif, "ConstValModification"},
-            {os_error, "OSErr"}
+            {os_error, "OSErr"},
+            {malloc_err, "MallocErr"},
+            {manual_heap, "ManualHeapModif"},
+            {invalid_call, "InvalidProcCall"}
         };
     }
     namespace cmp_results

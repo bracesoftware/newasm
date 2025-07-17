@@ -60,6 +60,9 @@ namespace newasm
             bool proc_now = false;
             bool struct_now = false;
             std::string struct_decl = "";
+
+            int argc = 0;
+            int callstkidx = 0;
         }
         namespace constants
         {
@@ -327,6 +330,47 @@ namespace newasm
                 }
                 return false;
             }
+            std::vector<std::string> tokenize2(const std::string& input)
+            {
+                std::vector<std::string> tokens;
+
+                size_t i = 0;
+                while(i < input.size() && !std::isspace(static_cast<unsigned char>(input[i])))
+                {
+                    i++;
+                }
+
+                if(i == input.size())
+                {
+                    // Nema razmaka (nema whitespace)
+                    tokens.push_back(input);
+                }
+                else
+                {
+                    // Razdvoji u dva dijela
+                    std::string first = input.substr(0, i);
+
+                    // preskoči sve whitespace karaktere nakon prvog
+                    size_t j = i;
+                    while(j < input.size() && std::isspace(static_cast<unsigned char>(input[j])))
+                    {
+                        j++;
+                    }
+
+                    std::string second = input.substr(j);
+                    tokens.push_back(first);
+                    tokens.push_back(second);
+                }
+
+                return tokens;
+            }
+            int wait(int milliseconds)
+            {
+                if (milliseconds < 0) return -1; // negativno vrijeme nema smisla
+                std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
+                return 0; // sve ok
+            }
+
             std::vector<std::string> split(const std::string &str, char delimiter)
             {
                 std::vector<std::string> tokens;
@@ -663,6 +707,37 @@ namespace newasm
                 //newasm::header::functions::info("IDIOT");
                 return 1;
             }
+            std::pair<bool, int> isallocref(std::string text)
+            {
+                std::string newstr = newasm::header::functions::trim(text);
+
+                if(newstr.size() >= 3 && newstr.front() == '[' && newstr.back() == ']')
+                {
+                    std::string number_part = newstr.substr(1, newstr.size() - 2);
+                    if(newasm::header::functions::isnumeric(number_part))
+                    {
+                        return {true, std::stoi(number_part)};
+                    }
+                }
+
+                return {false, 0};
+            }
+            std::pair<bool, int> isargref(std::string text)
+            {
+                std::string newstr = newasm::header::functions::trim(text);
+
+                if(newstr.size() >= 3 && newstr.front() == '<' && newstr.back() == '>')
+                {
+                    std::string number_part = newstr.substr(1, newstr.size() - 2);
+                    if(newasm::header::functions::isnumeric(number_part))
+                    {
+                        return {true, std::stoi(number_part)};
+                    }
+                }
+
+                return {false, 0};
+            }
+
         }
     }
 
