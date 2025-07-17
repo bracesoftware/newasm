@@ -1060,6 +1060,7 @@ When a fatal error happens, program will shut down, returning a specific exit co
 | `38` | Memory allocation error. |
 | `39` | Tried to modify the memory manually before using `free`. |
 | `40` | Invalid stack call. |
+| `41` | Handle reassignment. |
 
 ## Comments
 Comments are also available:
