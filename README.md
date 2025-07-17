@@ -60,7 +60,9 @@ Documentation about `newasm` which includes following topics:
     - [Bit operations](#bit-operations)
     - [`inc` and `dec` instructions](#inc-and-dec-instructions)
     - [`db` instruction](#db-instruction)
+    - [`wait` instruction](#wait-instruction)
     - [`malloc` and `free` instructions](#malloc-and-free)
+    - [`stack` instruction](#stack-instruction)
 - [Procedures](#procedures)
 - [Exit codes](#exit-codes)
 - [Comments](#comments)
@@ -954,6 +956,32 @@ Output:
                         2nd malloc
 [NewASM]   PROGRAM THREAD @ Debug | hea = `42`
 [NewASM]   PROGRAM THREAD @ Debug | hea = `40`
+```
+
+### `stack` instruction
+Clear up the call stack.
+```asm
+.hndl
+    0x827, procedurename ;assign a hex code to a procedure
+.start
+    proc procedurename
+        mov tlr, <0> ;get the first argument
+        mov stl, <1> ;get the second argument
+        mov fdx, <2>
+        syscall 0, %ios
+        halt proc, 0
+    end
+    db stk
+    push 0, 1 ; push the third arg
+    push 0, %endl ; push the second arg
+    push 0, "call stack works" ; push the first arg
+    push 0, 0x827 ; call the procedure
+    stack ;clear up the stack after the procedure call
+    retn 0
+```
+Output:
+```
+call stack works
 ```
 
 ## Procedures

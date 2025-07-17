@@ -3585,9 +3585,11 @@ namespace newasm
                 {
                     if(newasm::header::functions::isargref(linetokens.at(2)).first)
                     {
-                        std::cout << "token is arg | token :: `" << linetokens.at(2) << '`' << std::endl;
+                        //std::cout << "token is arg | token :: `" << linetokens.at(2) << "` | argc :: " << newasm::header::data::argc << std::endl;
                         newasm::header::data::argc++;
-                        operand = newasm::mem::program_memory[newasm::header::data::callstkidx + 1 + newasm::header::functions::isargref(linetokens.at(2)).second];
+                        operand = newasm::mem::program_memory[newasm::header::data::callstkidx + 2 + newasm::header::functions::isargref(linetokens.at(2)).second];
+                        //std::cout << "newasm::header::data::callstkidx is " << newasm::header::data::callstkidx << std::endl;
+                        //std::cout << "operand is " << operand << std::endl;
                     }
                 }
                 return newasm::process_iso(line, instruction,linetokens.at(1),operand);
