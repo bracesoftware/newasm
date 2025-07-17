@@ -680,7 +680,7 @@ A little too complex example.
     : label
         mov tlr , "label called"
         mov fdx , 1
-        syscall . 0 , %ios
+        syscall 0 , %ios
         mov fdx , 72
         jmp 0 , label3
         ret fdx
@@ -710,7 +710,7 @@ label3 called
 Compare values of registers with values stored in the operands.
 
 ```asm
-cmp . fdx , 3 ; check if fdx is 3
+cmp fdx , 3 ; check if fdx is 3
 ```
 
 According to the result `cmp` stores in its own "hidden" register, you can use the following variants of the `jmp` instruction in order to perform jumps to labels according to the value of the `cpr` (comparsion result register):
