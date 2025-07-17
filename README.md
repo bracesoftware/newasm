@@ -1038,13 +1038,13 @@ Below is a list of interesting examples of using the language.
 . start
     mov fdx, 3
     mov tlr, "filename"
-    syscall . 0, %fs
+    syscall 0, %fs
     mov stl, "TEXTeee"
     mov fdx, 6
     syscall 0, %fs
     mov stl, 1
     mov fdx, 8
-    syscall . 0, %fs
+    syscall 0, %fs
     mov stl, %endl
     mov fdx, 1
     syscall 0, %ios
@@ -1078,12 +1078,12 @@ TEXTeee
 . data
     num  mynum : 0
 . start
-    heap 0 , 36
+    heap 36
     stor hea , mynum
     mov tlr , mynum
     mov fdx , 2
     syscall 0 , %ios ; prints heap size (36)
-    heap 0 , -36 ; free up memory we occupied for the sake of the example
+    heap -36 ; free up memory we occupied for the sake of the example
 ```
 
 Output:
