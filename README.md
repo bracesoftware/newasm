@@ -1018,6 +1018,9 @@ When a fatal error happens, program will shut down, returning a specific exit co
 | `35` | Assigned an invalid procedure as an event handler. |
 | `36` | Tried to modify a constant. |
 | `37` | Operating system-related error. |
+| `38` | Memory allocation error. |
+| `39` | Tried to modify the memory manually before using `free`. |
+| `40` | Invalid stack call. |
 
 ## Comments
 Comments are also available:
