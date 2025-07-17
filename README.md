@@ -1265,7 +1265,7 @@ Environment variables are typeless variables that are defined within the `.newas
 
 `.newasm/env_vars.ini`:
 ```ini
-testenv : "hello from env var"
+testenv = "hello from env var"
 ```
 
 `index.asm`:
