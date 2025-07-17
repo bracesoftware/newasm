@@ -990,7 +990,7 @@ call stack works
 Procedures allow you to use the same piece of code without having to actually repeat it. General syntax is:
 
 ```asm
-proc 0 , procedure_name
+proc procedure_name
     ; code
 end
 ```
@@ -998,17 +998,17 @@ end
 To call the procedure, use:
 
 ```asm
-call 0 , procedure_name
+call procedure_name
 ```
 
 - Here is an example:
 
 ```asm
 . start
-    proc 0 , test
+    proc test
         halt proc , 1
     end
-    call 0 , test
+    call test
     retn 0
 ```
 
