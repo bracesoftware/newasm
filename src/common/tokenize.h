@@ -69,5 +69,40 @@ namespace newasm
             }
             return tokens;
         }
+        std::vector<std::string> tokenize2(const std::string& input)
+        {
+            std::vector<std::string> tokens;
+
+            size_t i = 0;
+            while(i < input.size() && !std::isspace(static_cast<unsigned char>(input[i])))
+            {
+                i++;
+            }
+
+            if(i == input.size())
+            {
+                // Nema razmaka (nema whitespace)
+                tokens.push_back(input);
+            }
+            else
+            {
+                // Razdvoji u dva dijela
+                std::string first = input.substr(0, i);
+
+                // preskoči sve whitespace karaktere nakon prvog
+                size_t j = i;
+                while(j < input.size() && std::isspace(static_cast<unsigned char>(input[j])))
+                {
+                    j++;
+                }
+
+                std::string second = input.substr(j);
+                tokens.push_back(first);
+                tokens.push_back(second);
+            }
+
+            return tokens;
+        }
+
     }
 }

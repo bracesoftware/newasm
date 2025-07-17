@@ -3310,8 +3310,11 @@ namespace newasm
             newasm::terminate(newasm::exit_codes::unexpected_cbrace);
             return 1;
         }
+        //using namespace std;
+        //cout << newasm::threads::thread_now << endl;
         if(newasm::threads::thread_now)
         {
+            //std::cout << "FUCCCKKKKKKKKKK2\n";
             newasm::threads::memory.at(newasm::threads::thread_decl)->contents.push_back(line);
             //newasm::threads::memory.at(newasm::threads::thread_decl)->size++;
             return 1;
@@ -3360,6 +3363,11 @@ namespace newasm
 
         if(newasm::system::section == newasm::code_stream::sections::hndl)
         {
+            if(line.size() < 1 || line.find(',') == std::string::npos)
+            {
+                newasm::terminate(newasm::exit_codes::invalid_syntax);
+                return 1;
+            }
             tmp = newasm::header::functions::split_fixed(line, ',');
             ev = tmp[0];
             pr = tmp[1];
@@ -3385,25 +3393,33 @@ namespace newasm
         }
         if(newasm::system::section == newasm::code_stream::sections::data)
         {
-            if(line.find('$') == std::string::npos || line.find('=') == std::string::npos)
+            try
             {
-                newasm::terminate(newasm::exit_codes::invalid_syntax);
-                return 1;
+                if(line.size() < 1 || line.find(':') == std::string::npos)
+                {
+                    //std::cout << "FUCKKKKKKKKKK\n";
+                    newasm::terminate(newasm::exit_codes::invalid_syntax);
+                    return 1;
+                }
+                std::vector<std::string> tokens = newasm::common::tokenize2(line);
+                std::vector<std::string> tokens2 = newasm::header::functions::split_fixed(tokens[1],':');
+
+                if(tokens.size() < 2) return newasm::terminate(newasm::exit_codes::os_error);
+                if(tokens2.size() < 2) return newasm::terminate(newasm::exit_codes::os_error);
+
+                tokens[0] = newasm::header::functions::trim(tokens[0]);
+                tokens2[0] = newasm::header::functions::trim(tokens2[0]);
+                tokens2[1] = newasm::header::functions::trim(tokens2[1]);
+
+                //std::cout << tokens[0] << tokens2[0] << tokens2[1] << std::endl; 
+
+                newasm::process_d(line,tokens[0],tokens2[0],tokens2[1]);
             }
-            if(line.find('$') > line.find('='))
+            catch(std::exception& err)
             {
-                newasm::terminate(newasm::exit_codes::invalid_syntax);
-                return 1;
+                std::cout << "DATA SEC :: " << err.what() << std::endl;
             }
-            tmp2 = newasm::header::functions::split_fixed(line, '$');
-            tmp3 = newasm::header::functions::split_fixed(tmp2[1], '=');
-            dtyp = tmp2[0];
-            stat = tmp3[0];
-            arg = tmp3[1];
-            dtyp = newasm::header::functions::trim(dtyp);
-            stat = newasm::header::functions::trim(stat);
-            arg = newasm::header::functions::trim(arg);
-            return newasm::process_d(line,dtyp,stat,arg);
+            return 1;
         }
         if(newasm::header::data::struct_now)
         {
@@ -3443,10 +3459,10 @@ namespace newasm
                 {
                     if(i->first == newasm::header::functions::hextoi(instruction))
                     {
-                        using namespace std;
+                        /*using namespace std;
                         cout << instruction << endl;
                         cout << i->first << endl;
-                        cout << i->second << endl;
+                        cout << i->second << endl;*/
                         instruction = i->second;
                         //cout << instruction << endl;
                     }
@@ -3526,33 +3542,28 @@ namespace newasm
     }
     void analyzeline(std::string &line, int lineidx)
     {
-        std::string ins, suf, opr, stat, arg, dtyp;
-        std::vector<std::string> tmp, tmp1, tmp2, tmp3;
-        tmp.clear();
-        tmp1.clear();
-        tmp2.clear();
-        tmp3.clear();
-
-        ins.clear();
-        suf.clear();
-        opr.clear();
+        //using namespace std;
+        //cout << "DEBUG:\t" << line << endl;
         
-        stat.clear();
-        arg.clear();
-        dtyp.clear();
-
-        if(lineidx != newasm::code_stream::invalid_lnidx) if(newasm::header::functions::strfind(line,'!'))
+        try
         {
-            tmp2 = newasm::header::functions::split(line, '!');
-            stat = tmp2[0];
-            arg = tmp2[1];
-            stat = newasm::header::functions::trim(stat);
-            arg = newasm::header::functions::trim(arg);
+            std::string arg;
+
+            if(line.size() <= 1 || line.find(':') == std::string::npos) return;
+
+            line = newasm::header::functions::trim(line);
+
+            if(lineidx != newasm::code_stream::invalid_lnidx) if(line.at(0) == ':')
+            {
+                arg = line.substr(1);
+                arg = newasm::header::functions::trim(arg);
+                newasm::process_l(line,"_",arg,lineidx);
+            }
         }
-        
-        if(lineidx != newasm::code_stream::invalid_lnidx) 
-            if(newasm::header::functions::strfind(line,'!'))
-                newasm::process_l(line,stat,arg,lineidx);
+        catch(std::exception& err)
+        {
+            std::cout << "LABEL SEC :: " << err.what() << std::endl;
+        }
     }
     void callproc(std::string name)
     {

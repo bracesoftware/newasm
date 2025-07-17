@@ -1,22 +1,22 @@
-<div align="center">
-    <img height="200" src="readme_resources/newasm_logo.png">
+<div align:"center">
+    <img height:"200" src:"readme_resources/newasm_logo.png">
 </div>
 
-<h1 align = "center">Welcome to the <i><b>New-ASM</b></i> Wiki</h1>
-<h3 align = "center">Interpreted Low-Level Language that Mimics Assembly</h3>
+<h1 align : "center">Welcome to the <i><b>New-ASM</b></i> Wiki</h1>
+<h3 align : "center">Interpreted Low-Level Language that Mimics Assembly</h3>
 
-<div align="center" style="border-radius: 5px;">
-    <img height="30" align="center" src="readme_resources/brace_product.png">
-    <img height="30" align="center" src="readme_resources/cpp_logo.png">
+<div align:"center" style:"border-radius: 5px;">
+    <img height:"30" align:"center" src:"readme_resources/brace_product.png">
+    <img height:"30" align:"center" src:"readme_resources/cpp_logo.png">
 </div>
 
 # Documentation
 Below is the simple `Hello World` program written in New-Assembly.
 
 ```asm
-_ : data
-    txt $ string = "Hello world"
-_ : start
+.data
+    txt string : "Hello world"
+.start
     mov tlr , string
     mov fdx , 1
     
@@ -133,7 +133,7 @@ Notice how we just provided the library name, and not the extension. This will d
 ```
 >>> install internettest
 [NewASM]  PROGRAM THREAD @ System info | Attempting to install the "internettest" package.
-        * Progress:        [========================================] 100 %
+        * Progress:        [::::::::::::::::::::::::::::::::::::::::] 100 %
                         Accessed the download server...
                         Successfully downloaded the library!
 ```
@@ -160,7 +160,7 @@ we will receive the following output:
 ```
 >>> install net-conf
 [NewASM]  PROGRAM THREAD @ System info | Attempting to install the "net-conf" package.
-        * Progress:        [========================================] 100 %
+        * Progress:        [::::::::::::::::::::::::::::::::::::::::] 100 %
                         Accessed the download server...
                         Successfully downloaded the setup.
                         Preparing to run the setup...
@@ -176,16 +176,16 @@ we will receive the following output:
 Sections are built-in "tags" used to classify code. Each section uses different syntax in terms of instructions. General syntax is:
 
 ```asm
-_ : section_name
+. section_name
 ```
 
 ### `hndl` section
 In this section, you can setup event handlers.
 ```asm
-_ : hndl
+. hndl
     ~exit , MY_EXIT_PROC
-_ : start
-    proc 0 , MY_EXIT_PROC
+. start
+    proc MY_EXIT_PROC
         ; code
         halt proc , 0
     end
@@ -201,11 +201,11 @@ _ : start
 In this section, you can setup some settings for your program. It is thus recommended to keep this section on top of the code. General syntax is:
 
 ```asm
-_ : config
+. config
     configuration ~ value_in_specific_datatype
-_ : data
+. data
     ; some stuff
-_ : start
+. start
     mov fdx , 100
     ret fdx
 ```
@@ -213,7 +213,7 @@ _ : start
 A simple example would be:
 
 ```asm
-_ : config
+. config
     memsize ~ 256 ; can be any integer from 1 to 512
 ```
 
@@ -227,7 +227,7 @@ _ : config
 In this section, you can declare variables to avoid repeated code. General syntax is:
 
 ```asm
-data_type $ variable_name = variable_value
+data_type  variable_name : variable_value
 ```
 
 You can use `variable_name` as an operand in instructions documented below.
@@ -280,7 +280,7 @@ Ends your program with specific exit code.
 #### Example for `retn`
 
 ```asm
-_ : start
+. start
     retn 23
 ```
 
@@ -294,7 +294,7 @@ Output:
 #### Example for `ret`
 
 ```asm
-_ : start
+. start
     mov tlr , 8
     ret tlr
 ```
@@ -321,17 +321,17 @@ Set value of a specific register.
 #### Example `#1`
 In this example, we basically do `fdx=1`:
 ```asm
-_ : start
+. start
     mov fdx , 1
     retn 23
 ```
 
 #### Example `#2`
-In this example, we basically do `fdx=1`, `myvar=fdx`, `exit 1`:
+In this example, we basically do `fdx=1`, `myvar=fdx`, `return 1`:
 ```asm
-_ : data
-    num $ myvar = 0
-_ : start
+. data
+    num  myvar : 0
+. start
     mov fdx , 1
     stor fdx , myvar
     retn myvar
@@ -367,7 +367,7 @@ Set value of a specific register.
 #### Example
 
 ```asm
-_ : start
+. start
     mov fdx , 1
     mov tlr , "Hello World"
     syscall 0 , %ios
@@ -417,7 +417,7 @@ Do nothing.
 #### Example
 
 ```asm
-_ : start
+. start
     nop
     retn 23
 ```
@@ -433,7 +433,7 @@ Do nothing. NOT RECOMMENDED TO USE!
 #### Example
 
 ```asm
-_ : start
+. start
     rem 0 , "my comment"
     retn 23
 ```
@@ -449,9 +449,9 @@ Ensure that a symbol is available for further use.
 #### Example
 
 ```asm
-_ : data
-_ : start
-    ; Notice how we haven't declared anything in _:data
+. data
+. start
+    ; Notice how we haven't declared anything in .data
     sysreq data , variable
     ; Program will be terminated with exit code 4
     ; Same happens when we try to access a procedure:
@@ -469,9 +469,9 @@ Return a value inside a function.
 #### Example
 
 ```asm
-_ : data
-    num $ variable = 0
-_ : start
+. data
+    num  variable : 0
+. start
     proc 0 , testprocedure
         halt proc , 364
     end
@@ -499,9 +499,9 @@ _ : start
 #### Example
 
 ```asm
-_ : data
-    num $ myvar2 = 0
-_ : start
+. data
+    num  myvar2 : 0
+. start
     push 0 , 273
 
 
@@ -521,7 +521,7 @@ _ : start
 - **TIP**: If you just want to pop the value off the stack, and not store it anywhere, just do:
 
 ```asm
-_ : start
+. start
     pop 0 , %nl
 ```
 
@@ -536,7 +536,7 @@ Resets the register to an invalid value that cannot be used.
 #### Example
 
 ```asm
-_ : start
+. start
     zero stl
     ; something ?
 ```
@@ -552,9 +552,9 @@ Move down and up the heap.
 #### Example
 
 ```asm
-_ : data
-    num $ mynum = 0
-_ : start
+. data
+    num  mynum : 0
+. start
     heap 0 , 3
     stor hea , mynum
     mov tlr , mynum
@@ -572,16 +572,16 @@ _ : start
 
 #### Example
 ```asm
-_ : data
-    decm $ testdecimal = 0.0
-_ : start
+. data
+    decm  testdecimal : 0.0
+. start
     ; If the suffix of the LOAD instruction is `adr`,
     ; then we will update the value in the address heap pointer
     ; is pointing to - HOWEVER, if the suffix is `ref`, then we will 
     ; store the value in the address heap pointer is pointing to
-    ; into some variable in `_:data`. 
-    load adr , 736.38 ; hea = something
-    load ref , testdecimal ; myvar = hea
+    ; into some variable in `.data`. 
+    load adr , 736.38 ; hea : something
+    load ref , testdecimal ; myvar : hea
 
     mov tlr , testdecimal
     mov stl , %endl
@@ -601,12 +601,12 @@ Output:
 - If we expand our code, and manually assign addresses before cleaning up the heap, we can do this:
 
 ```asm
-_ : data
-    decm $ testdecimal = 0.0
-    decm $ testdecm2 = 0.0
-_ : start
-    load adr , 736.38 ; hea = something
-    load ref , testdecimal ; myvar = hea
+. data
+    decm  testdecimal : 0.0
+    decm  testdecm2 : 0.0
+. start
+    load adr , 736.38 ; hea : something
+    load ref , testdecimal ; myvar : hea
 
     mov tlr , testdecimal
     mov stl , %endl
@@ -615,22 +615,22 @@ _ : start
 
     ; Allocate more space:
     heap 0 , 1
-    load adr , 9821.38 ; hea = smth
-    load ref , testdecm2 ; myvar = hea
+    load adr , 9821.38 ; hea : smth
+    load ref , testdecm2 ; myvar : hea
     mov tlr , testdecm2
     mov stl , %endl
     mov fdx , 2
     syscall 0 , %ios
     
     mov hea , 0 ; manually access the first address
-    load ref , testdecm2 ; myvar = hea
+    load ref , testdecm2 ; myvar : hea
     mov tlr , testdecm2
     mov stl , %endl
     mov fdx , 2
     syscall 0 , %ios
 
     mov hea , 1 ; manually access the second address
-    load ref , testdecm2 ; myvar = hea
+    load ref , testdecm2 ; myvar : hea
     mov tlr , testdecm2
     mov stl , %endl
     mov fdx , 2
@@ -651,10 +651,10 @@ Output:
 - **NOTE**: Procedures and variables you create in New-Assembly are not located in the stack and the heap of your program, so you have both the stack and the heap for yourself, which means that addresses in the heap start from 0 and go up by 1. You may ask, why is that - well New-Assembly mimics the assembly language and doesn't need to go by the rules set by the standards.
 
 ### Labels
-- You can create labels inside `_:start` and then jump to them using the `jmp` instruction. General syntax is:
+- You can create labels inside `.start` and then jump to them using the `jmp` instruction. General syntax is:
 
 ```asm
-_ : start
+. start
     _ ! label_name
 
     ; somewhere
@@ -664,7 +664,7 @@ _ : start
 #### Example `#1`
 
 ```asm
-_ : start
+. start
     _ ! labelname
         mov . fdx , 4
         syscall . 0 , %ios
@@ -674,7 +674,7 @@ _ : start
 #### Example `#2`
 A little too complex example.
 ```asm
-_ : start
+. start
     jmp 0 , label2
     _ ! label
         mov tlr , "label called"
@@ -726,7 +726,7 @@ According to the result `cmp` stores in its own "hidden" register, you can use t
 #### Example
 
 ```asm
-_ : start
+. start
     mov tlr , 5.8
     cmp tlr , 1
     je 0 , equal
@@ -802,16 +802,16 @@ There are 6 mathematical instructions you can use:
 All of these operations use `cr0` and `cr1` registers. The result is stored in `cr0`; so:
 
 ```asm
-_ : start
+. start
     mov cr0 , 3.0 ; can be either a float or a whole number
     mov cr1 , 9 ; same
 
-    add ; cr0 = cr0 + cr1
-    sub ; cr0 = cr0 - cr1
-    mul ; cr0 = cr0 * cr1
-    div ; cr0 = cr0 / cr1
-    exp ; cr0 = power(cr0,cr1)
-    log ; cr0 = log_c1(cr0)
+    add ; cr0 : cr0 + cr1
+    sub ; cr0 : cr0 - cr1
+    mul ; cr0 : cr0 * cr1
+    div ; cr0 : cr0 / cr1
+    exp ; cr0 : power(cr0,cr1)
+    log ; cr0 : log_c1(cr0)
 ```
 
 ### Bit operations
@@ -827,16 +827,16 @@ There are 6 bitwise operations you can use:
 All of these operations use `br0` and `br1` registers. The result is stored in `br0`; so:
 
 ```asm
-_ : start
+. start
     mov br0 , 1 ; must be a number
     mov br1 , 1 ; same
 
-    and ; br0 = br0 & br1
-    or ; br0 = br0 | br1
-    not ; br0 = ~br1
-    xor ; br0 = br0 ^ br1
-    shl ; br0 = br0 << br1
-    shr ; br0 = br0 >> br1
+    and ; br0 : br0 & br1
+    or ; br0 : br0 | br1
+    not ; br0 : ~br1
+    xor ; br0 : br0 ^ br1
+    shl ; br0 : br0 << br1
+    shr ; br0 : br0 >> br1
 ```
 
 ### `inc` and `dec` instructions
@@ -862,9 +862,9 @@ However, what if you try to decrement a symbol reference, well - this gets inter
 
 Demonstration:
 ```asm
-_ : data
-    ref $ temporary = &%null
-_ : start
+. data
+    ref  temporary : &%null
+. start
     proc 0 , procedure_1
         halt proc , 0
     end
@@ -905,14 +905,14 @@ procedure_2
 - A little instruction used to debug register values. Example:
 
 ```asm
-_ : start
+. start
     ; ... some code
     db tlr
 ```
 
 Output:
 ```
-[NewASM]   PROGRAM THREAD @ Debug | tlr = `"string"`
+[NewASM]   PROGRAM THREAD @ Debug | tlr : `"string"`
 ```
 
 ## Procedures
@@ -933,7 +933,7 @@ call 0 , procedure_name
 - Here is an example:
 
 ```asm
-_ : start
+. start
     proc 0 , test
         halt proc , 1
     end
@@ -949,7 +949,7 @@ When a fatal error happens, program will shut down, returning a specific exit co
 | Exit code | Description |
 | ---------------- | ----------- |
 | `0` | No termination point (standard exit code if you have no `ret` or `retn` in your script). |
-| `1` | Invalid section (for example, tried to enter a section named `_:lol`). |
+| `1` | Invalid section (for example, tried to enter a section named `.lol`). |
 | `2` | Attempted to call a procedure which does not exist. |
 | `3` | Invalid non-numeric value was passed to `retn`. |
 | `4` | `sysreq` failed, pretty self-explanatory. |
@@ -991,7 +991,7 @@ When a fatal error happens, program will shut down, returning a specific exit co
 Comments are also available:
 
 ```asm
-_ : start
+. start
     ; comment
     mov fdx , 1
     mov tlr , "hello" ; comment
@@ -1003,7 +1003,7 @@ Below is a list of interesting examples of using the language.
 ### Writing to a file, and printing its content
 
 ```asm
-_ : start
+. start
     mov fdx, 3
     mov tlr, "filename"
     syscall . 0, %fs
@@ -1028,7 +1028,7 @@ TEXTeee
 ### Creating a child process
 `index.nax`:
 ```asm
-_ : start
+. start
     mov tlr, "child.nax" ; another nax file containing stuff such as config modifications, variables and procedures
     mov fdx, 1
     syscall 0 , %exf ; create a process and execute it
@@ -1043,9 +1043,9 @@ _ : start
 
 `child.nax`:
 ```asm
-_ : data
-    num $ mynum = 0
-_ : start
+. data
+    num  mynum : 0
+. start
     heap 0 , 36
     stor hea , mynum
     mov tlr , mynum
@@ -1068,8 +1068,8 @@ Hi after the process
 
 ## Unassigned pointers or references
 ```asm
-_:data
-    ref $ unassigned_pointer = &%null
+.data
+    ref  unassigned_pointer : &%null
 ```
 
 This reference is left unassigned and an attempt to use it will result in an exception.
@@ -1077,29 +1077,29 @@ This reference is left unassigned and an attempt to use it will result in an exc
 ## Structures
 In this quite frankly low-level language, there are also structs! General syntax is:
 ```asm
-_:data
-    struct $ structure_name = {
+.data
+    struct  structure_name : {
         ; members
-        data_type $ member_name = member_value
+        data_type  member_name : member_value
     }
 
 ```
 
 ### Example
 ```asm
-_ : data
-    struct $ mystruct = {
-        num $ lol = 98
-        decm $ decimal = 2.3
-        txt $ text = "hi from struct"
+. data
+    struct  mystruct : {
+        num  lol : 98
+        decm  decimal : 2.3
+        txt  text : "hi from struct"
     }
-    struct $ mystruct2 = {
-        num $ lol = 45
-        decm $ decimal = 833.4
-        txt $ text = "hi from struct again"
-        ref $ reference = &prptest
+    struct  mystruct2 : {
+        num  lol : 45
+        decm  decimal : 833.4
+        txt  text : "hi from struct again"
+        ref  reference : &prptest
     }
-_ : start
+. start
     mov tlr , text @ mystruct
     mov stl , %endl
     mov fdx , 1
@@ -1165,9 +1165,9 @@ HIII243
 1. Currently, if you want to store a value into a struct member, only the `stor` instruction will work - note that instructions such as `load` and `pop` will not work regarding this.
 2. This syntax is a must:
 ```asm
-struct $ name = { ; brace must be HERE
+struct  name : { ; brace must be HERE
 ; and not here
-    num $ number = 384
+    num  number : 384
 }
 ```
 
@@ -1188,9 +1188,9 @@ For example, if my `-input` file is `input.asm`, project file for that would be 
 
 Example `index.asm.newasm_proj` file:
 ```ini
-name = Unnamed project
-version = 0.0.1
-dlibs = testlib, sayhi
+name : Unnamed project
+version : 0.0.1
+dlibs : testlib, sayhi
 ```
 
 ## Dynamic libraries
@@ -1205,7 +1205,7 @@ syscall 0 , %ios
 
 In your entry file - `index.asm`, you can do this:
 ```asm
-_ : start
+. start
     mov tlr , "some stuff"
     inc prp ; bunch of operations
     ; more stuff...
@@ -1230,12 +1230,12 @@ Environment variables are typeless variables that are defined within the `.newas
 
 `.newasm/env_vars.ini`:
 ```ini
-testenv = "hello from env var"
+testenv : "hello from env var"
 ```
 
 `index.asm`:
 ```asm
-_ : start
+. start
     mov tlr , * / testenv
     mov fdx , 1
     syscall 0 , %ios
@@ -1244,7 +1244,7 @@ _ : start
 * **NOTE**: You must use `*/` before the environment variable name so the program knows you are using an environment variable and not a standard variable, which means this wouldn't work:
 
 ```asm
-_ : start
+. start
     mov tlr , testenv
     mov fdx , 1
     syscall 0 , %ios
@@ -1260,9 +1260,9 @@ _ : start
 
 `index.asm`:
 ```asm
-_ : data
-    bit_arr $ testbitarr = 0
-_ : start
+. data
+    bit_arr  testbitarr : 0
+. start
     mov cpt , &testbitarr
     mov tlr , 2
     mov stl , 1
@@ -1294,9 +1294,9 @@ Output:
 `index.asm`:
 ```asm
 
-_:data
-    bin_tree $ testbintree = 0
-_:start
+.data
+    bin_tree  testbintree : 0
+.start
     mov cpt , &testbintree
 
     mov tlr , 0
@@ -1350,11 +1350,11 @@ Output:
 Threads are blocks of code declared within the `data` section. Once you switch to the `start` section, they will start executing simultaneously with the source code.
 Threads are declared like this:
 ```asm
-_ : data
-    thread $ test_thread = {
+. data
+    thread  test_thread : {
         ; code
     }
-_ : start
+. start
     ; more code
 
 ; "code" and "more code" will be executed almost at same time.
@@ -1366,12 +1366,12 @@ Example:
 
 `index.asm`:
 ```asm
-_ : config
+. config
     memsize ~ 87
-_ : data
-    txt $ mytext = "Hello World"
+. data
+    txt  mytext : "Hello World"
 
-    thread $ testthread = {
+    thread  testthread : {
         __say 0,"thread debug 1"
         __say 0,"thread debug 3"
         __say 0,"thread debug 5"
@@ -1381,12 +1381,12 @@ _ : data
         __say 0,"thread debug 9"
         __say 0,"thread debug 10"
     }
-    thread $ testthread2 = {
+    thread  testthread2 : {
         __say 0,"thread debug 2"
         __say 0,"thread debug 4" 
     }
 
-_ : start
+. start
     zero stl
     mov tlr , mytext
     mov fdx , 1
