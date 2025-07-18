@@ -34,6 +34,7 @@ namespace newasm
             const int data = 2;
             const int start = 3;
             const int hndl = 4;
+            const int text = 5;
         }
     }
     namespace exit_codes
@@ -81,6 +82,9 @@ namespace newasm
         const int invalid_call = 40;
         const int hndl_reassign = 41;
         const int sysenter_fail = 42;
+        const int macro_redef = 43;
+        const int unexpected_hash = 44;
+        const int undefined_macro = 45;
 
         const std::unordered_map<int, std::string> identifier = {
             {noterm_point, "NoTerminationPoint"},
@@ -125,7 +129,10 @@ namespace newasm
             {manual_heap, "ManualHeapModif"},
             {invalid_call, "InvalidProcCall"},
             {hndl_reassign, "HexReassignment"},
-            {sysenter_fail, "SysenterFail"}
+            {sysenter_fail, "SysenterFail"},
+            {macro_redef, "MacroRedefinition"},
+            {unexpected_hash, "UnexpectedHash"},
+            {undefined_macro, "UndefinedMacro"}
         };
     }
     namespace cmp_results

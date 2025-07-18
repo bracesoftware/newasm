@@ -42,5 +42,21 @@ namespace newasm
         std::unordered_map<std::string, std::string> events = {
             {"test","test2"}
         };
+        class macro_data
+        {
+            public:
+            std::vector<std::string> contents;
+        };
+        std::unordered_map<std::string, newasm::stack::macro_data*> macros;
+
+        void free_macro_mem()
+        {
+            for(std::unordered_map<std::string, newasm::stack::macro_data*>::iterator i = newasm::stack::macros.begin();
+            i != newasm::stack::macros.end(); i++)
+            {
+                if(i->second != nullptr) delete i->second;
+            }
+            return;
+        }
     }
 }

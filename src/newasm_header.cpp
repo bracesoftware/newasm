@@ -45,7 +45,7 @@ namespace newasm
                 const int beta = 4; //has some bugs
             }
             const int major = 2;
-            const int minor = 0;
+            const int minor = 1;
             const int patch = 0;
             const int release = 1;
             const int release_type = newasm::header::version::release_types::beta;
@@ -67,6 +67,9 @@ namespace newasm
             int module = 0;
 
             std::string temp = "temp";
+
+            bool macro_now = false;
+            std::string macro_decl = "";
         }
         namespace constants
         {

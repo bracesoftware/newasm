@@ -348,6 +348,7 @@ int main(int argc, char *argv[])
 
     newasm::handles::delete_handles();
     newasm::containers::functions::free_dyn_mem();
+    newasm::stack::free_macro_mem();
     newasm::header::functions::log("System unloading...");
 
     if(newasm::dyn_ins_set != nullptr)

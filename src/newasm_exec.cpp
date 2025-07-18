@@ -201,6 +201,12 @@ namespace newasm
                 valid = true;
                 return 1;
             }
+            if(arg == static_cast<std::string>("text"))
+            {
+                newasm::system::section = newasm::code_stream::sections::text;
+                valid = true;
+                return 1;
+            }
             newasm::terminate(newasm::exit_codes::invalid_section);
             return 1;
         }
@@ -3439,6 +3445,28 @@ namespace newasm
         newasm::terminate(newasm::exit_codes::unknown_event);
         return 1;
     }
+    int process_text(std::string macroname, std::string symbol)
+    {
+        if(symbol != static_cast<std::string>("#"))
+        {
+            newasm::terminate(newasm::exit_codes::invalid_syntax);
+            return 1;
+        }
+        if(newasm::header::functions::isalphanum(macroname))
+        {
+            if(newasm::stack::macros.find(macroname) != newasm::stack::macros.end())
+            {
+                newasm::terminate(newasm::exit_codes::macro_redef);
+                return 1;
+            }
+            newasm::stack::macros[macroname] = new newasm::stack::macro_data();
+            newasm::header::data::macro_now = true;
+            newasm::header::data::macro_decl = macroname;
+            return 1;
+        }
+        newasm::terminate(newasm::exit_codes::invalid_syntax);
+        return 1;
+    }
     int procline(std::string &line)
     {
         if(!newasm::header::execution_flow::exec_redirected) if(newasm::mem::functions::islbln(newasm::header::data::lastlndx))
@@ -3469,12 +3497,29 @@ namespace newasm
             newasm::terminate(newasm::exit_codes::unexpected_cbrace);
             return 1;
         }
+        if(line == static_cast<std::string>("#"))
+        {
+            if(newasm::header::data::macro_now)
+            {
+                newasm::header::data::macro_now = false;
+                return 1;
+            }
+            newasm::terminate(newasm::exit_codes::unexpected_cbrace);
+            return 1;
+        }
         //using namespace std;
         //cout << newasm::threads::thread_now << endl;
         if(newasm::threads::thread_now)
         {
             //std::cout << "FUCCCKKKKKKKKKK2\n";
             newasm::threads::memory.at(newasm::threads::thread_decl)->contents.push_back(line);
+            //newasm::threads::memory.at(newasm::threads::thread_decl)->size++;
+            return 1;
+        }
+        if(newasm::header::data::macro_now)
+        {
+            //std::cout << "FUCCCKKKKKKKKKK2\n";
+            newasm::stack::macros.at(newasm::header::data::macro_decl)->contents.push_back(line);
             //newasm::threads::memory.at(newasm::threads::thread_decl)->size++;
             return 1;
         }
@@ -3535,6 +3580,20 @@ namespace newasm
             pr = newasm::header::functions::trim(pr);
 
             return newasm::process_hndl(ev,pr);
+        }
+        if(newasm::system::section == newasm::code_stream::sections::text)
+        {
+            if(line.find(':') == std::string::npos)
+            {
+                newasm::terminate(newasm::exit_codes::invalid_syntax);
+                return 1;
+            }
+            tmp = newasm::header::functions::split_fixed(line, ':');
+            stat = tmp[0];
+            arg = tmp[1];
+            stat = newasm::header::functions::trim(stat);
+            arg = newasm::header::functions::trim(arg);
+            return newasm::process_text(stat,arg);
         }
         if(newasm::system::section == newasm::code_stream::sections::config)
         {
@@ -3605,6 +3664,20 @@ namespace newasm
                     }
                     newasm::procline(newasm::mem::instructions[line].at(i));
                 }
+                return 1;
+            }
+            if(line.at(0) == '$')
+            {
+                std::string macroname = newasm::header::functions::trim(line.substr(1));
+                auto it = newasm::stack::macros; if(it.find(macroname) != it.end())
+                {
+                    for(int i = 0; i < it.at(macroname)->contents.size(); i++)
+                    {
+                        newasm::procline(it.at(macroname)->contents.at(i));
+                    }
+                    return 1;
+                }
+                newasm::terminate(newasm::exit_codes::undefined_macro);
                 return 1;
             }
             //tokenizer starts here
