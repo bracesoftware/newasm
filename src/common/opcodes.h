@@ -68,6 +68,8 @@ namespace newasm
             {43, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::free__)},
             {44, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::stack)},
             {45, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::wait)},
+            {46, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::sysenter)},
+
             {100, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::__say)}
         };
     }

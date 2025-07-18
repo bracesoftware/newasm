@@ -63,6 +63,8 @@ namespace newasm
 
             int argc = 0;
             int callstkidx = 0;
+
+            int module = 0;
         }
         namespace constants
         {

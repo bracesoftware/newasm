@@ -87,6 +87,7 @@ namespace newasm
             const int free__ = 43;
             const int stack = 44;
             const int wait = 45;
+            const int sysenter = 46;
             
             const int __say = 100;
 
@@ -139,6 +140,7 @@ namespace newasm
                 {free__, "free"},
                 {stack, "stack"},
                 {wait, "wait"},
+                {sysenter, "sysenter"},
 
                 {__say, "__say"}
             };

@@ -80,6 +80,7 @@ namespace newasm
         const int manual_heap = 39;
         const int invalid_call = 40;
         const int hndl_reassign = 41;
+        const int sysenter_fail = 42;
 
         const std::unordered_map<int, std::string> identifier = {
             {noterm_point, "NoTerminationPoint"},
@@ -123,7 +124,8 @@ namespace newasm
             {malloc_err, "MallocErr"},
             {manual_heap, "ManualHeapModif"},
             {invalid_call, "InvalidProcCall"},
-            {hndl_reassign, "HexReassignment"}
+            {hndl_reassign, "HexReassignment"},
+            {sysenter_fail, "SysenterFail"}
         };
     }
     namespace cmp_results

@@ -1477,469 +1477,7 @@ namespace newasm
             newasm::terminate(newasm::exit_codes::bus_err);
             return 1;
         }
-        // syscall
-        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::syscall))
-        {
-            if(suf == static_cast<std::string>("0"))
-            {
-                //////process management (execution flow)
-                if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::exf))
-                {
-                    if(newasm::header::execution_flow::exec_redirected)
-                    {
-                        newasm::terminate(newasm::exit_codes::nested_redirect);
-                        return 1;
-                    }
-                    if(newasm::mem::regs::fdx == 1)
-                    {
-                        if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
-                        {
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                            return 1;
-                        }
-                        
-                        newasm::header::execution_flow::entry_start_line = newasm::header::data::lastlndx+1;
-                        newasm::header::execution_flow::file = newasm::header::functions::remq(newasm::mem::regs::tlr);
-                        newasm::header::execution_flow::exec_redirected = true;
-                        return 1;
-                    }
-                    newasm::terminate(newasm::exit_codes::unknown_fdx);
-                    return 1;
-                }
-                //net
-                if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::net))
-                {
-                    if(newasm::mem::regs::fdx == 1) //download files
-                    {
-                        if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
-                        {
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                            return 1;
-                        }
-                        if(!newasm::header::functions::istext(newasm::mem::regs::stl))
-                        {
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                            return 1;
-                        }
-
-                        int result = newasm::net::download(
-                            newasm::header::functions::trim(
-                                newasm::header::functions::remq(
-                                    newasm::mem::regs::tlr
-                                )
-                            ),
-                            newasm::header::functions::trim(
-                                newasm::header::functions::remq(
-                                    newasm::mem::regs::stl
-                                )
-                            )
-                        );
-
-                        newasm::header::functions::log(
-                            static_cast<std::string>("Network info\nnewasm::net::download - tlr : '") + newasm::header::functions::trim(
-                                newasm::header::functions::remq(
-                                    newasm::mem::regs::tlr
-                                )
-                            ) + "'" + static_cast<std::string>("\nnewasm::net::download - stl : '") + newasm::header::functions::trim(
-                                newasm::header::functions::remq(
-                                    newasm::mem::regs::stl
-                                )
-                            ) + "'" + static_cast<std::string>("\nnewasm::net::download - result : '") + std::to_string(result) + "'"
-                        );
-                        return 1;
-                    }
-                    newasm::terminate(newasm::exit_codes::unknown_fdx);
-                    return 1;
-                }
-                //memory/data manipulation
-                if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::mem))
-                {
-                    if(newasm::mem::regs::fdx == 1)
-                    {
-                        if(!newasm::header::functions::isref(newasm::mem::regs::tlr))
-                        {
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                            return 1;
-                        }
-                        if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::tlr),newasm::mem::data))
-                        {
-                            newasm::terminate(newasm::exit_codes::invalid_memacc);
-                            return 1;
-                        }
-                        newasm::syscalls::mem::constvals.push_back(newasm::header::functions::remamp(newasm::mem::regs::tlr));
-                        return 1;
-                    }
-                    newasm::terminate(newasm::exit_codes::unknown_fdx);
-                    return 1;
-                }
-                //text manipulation
-                if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::txtop))
-                {
-                    if(newasm::mem::regs::fdx == 1)
-                    {
-                        newasm::syscalls::txtop::impl::concat();
-                        return 1;
-                    }
-                    if(newasm::mem::regs::fdx == 2)
-                    {
-                        newasm::syscalls::txtop::impl::trim();
-                        return 1;
-                    }
-                    newasm::terminate(newasm::exit_codes::unknown_fdx);
-                    return 1;
-                }
-                //////////// container manipulation
-                if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::cmanip))
-                {
-                    if(newasm::mem::regs::cpt == newasm::header::constants::inv_reg_val)
-                    {
-                        newasm::terminate(newasm::exit_codes::invalid_memacc);
-                        return 1;
-                    }
-                    //clear
-                    if(newasm::mem::regs::fdx == 1)
-                    {
-                        if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::bit_arrays))
-                        {
-                            newasm::terminate(newasm::exit_codes::invalid_memacc);
-                            return 1;
-                        }
-                        newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->clear();
-                        return 1;
-                    }
-                    //flip
-                    if(newasm::mem::regs::fdx == 2)
-                    {
-                        if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::bit_arrays))
-                        {
-                            newasm::terminate(newasm::exit_codes::invalid_memacc);
-                            return 1;
-                        }
-                        newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->flip();
-                        return 1;
-                    }
-                    //reverse
-                    if(newasm::mem::regs::fdx == 3)
-                    {
-                        if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::bit_arrays))
-                        {
-                            newasm::terminate(newasm::exit_codes::invalid_memacc);
-                            return 1;
-                        }
-                        newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->reverse();
-                        return 1;
-                    }
-                    //set at
-                    if(newasm::mem::regs::fdx == 4)
-                    {
-                        if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::bit_arrays))
-                        {
-                            newasm::terminate(newasm::exit_codes::invalid_memacc);
-                            return 1;
-                        }
-                        if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr))
-                        {
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                            return 1;
-                        }
-                        if(!newasm::header::functions::isnumeric(newasm::mem::regs::stl))
-                        {
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                            return 1;
-                        }
-                        newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->set_at(std::stoi(newasm::mem::regs::tlr),std::stoi(newasm::mem::regs::stl));
-                        return 1;
-                    }
-                    // get at
-                    if(newasm::mem::regs::fdx == 5)
-                    {
-                        if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::bit_arrays))
-                        {
-                            newasm::terminate(newasm::exit_codes::invalid_memacc);
-                            return 1;
-                        }
-                        int result = newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->get_at(std::stoi(newasm::mem::regs::tlr));
-                        newasm::mem::regs::tlr = std::to_string(result);
-                        return 1;
-                    }
-                    //binary trees
-                    //set at parent of
-                    if(newasm::mem::regs::fdx == 6)
-                    {
-                        if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::binary_trees))
-                        {
-                            newasm::terminate(newasm::exit_codes::invalid_memacc);
-                            return 1;
-                        }
-                        newasm::containers::binary_trees.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->set_at_parent_of(std::stoi(newasm::mem::regs::tlr),std::stoi(newasm::mem::regs::stl));
-                        return 1;
-                    }
-                    //right child
-                    if(newasm::mem::regs::fdx == 7)
-                    {
-                        if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::binary_trees))
-                        {
-                            newasm::terminate(newasm::exit_codes::invalid_memacc);
-                            return 1;
-                        }
-                        newasm::containers::binary_trees.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->set_at_right_child_of(std::stoi(newasm::mem::regs::tlr),std::stoi(newasm::mem::regs::stl));
-                        return 1;
-                    }
-                    //left child
-                    if(newasm::mem::regs::fdx == 8)
-                    {
-                        if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::binary_trees))
-                        {
-                            newasm::terminate(newasm::exit_codes::invalid_memacc);
-                            return 1;
-                        }
-                        newasm::containers::binary_trees.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->set_at_left_child_of(std::stoi(newasm::mem::regs::tlr),std::stoi(newasm::mem::regs::stl));
-                        return 1;
-                    }
-                    //get
-                    if(newasm::mem::regs::fdx == 9)
-                    {
-                        if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::binary_trees))
-                        {
-                            newasm::terminate(newasm::exit_codes::invalid_memacc);
-                            return 1;
-                        }
-                        int result = newasm::containers::binary_trees.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->get_at(std::stoi(newasm::mem::regs::tlr));
-                        newasm::mem::regs::tlr = std::to_string(result);
-                        return 1;
-                    }
-                    newasm::terminate(newasm::exit_codes::unknown_fdx);
-                    return 1;
-                }
-                ///// input-output stream
-                if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::ios))
-                {
-                    //print text
-                    if(newasm::mem::regs::fdx == 1)
-                    {
-                        if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
-                        {
-                            using std::endl, std::cout;
-                            //cout << "tlr is: " << newasm::mem::regs::tlr << endl;
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                            return 1;
-                        }
-                        newasm::mem::regs::tlr = newasm::header::functions::remq(newasm::mem::regs::tlr);
-                        std::cout << newasm::mem::regs::tlr;// << std::endl;
-                        //newasm::mem::functions::out_bopr(newasm::mem::regs::stl);
-                        newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
-                        return 1;
-                    }
-                    //print numbers and floats
-                    if(newasm::mem::regs::fdx == 2)
-                    {
-                        if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr) && !newasm::header::functions::isfloat(newasm::mem::regs::tlr))
-                        {
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                            return 1;
-                        }
-                        std::cout << newasm::mem::regs::tlr;// << std::endl;
-                        //newasm::mem::functions::out_bopr(newasm::mem::regs::stl);
-                        newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
-                        return 1;
-                    }
-                    //input text
-                    if(newasm::mem::regs::fdx == 3)
-                    {
-        	            std::getline(std::cin, newasm::mem::regs::tlr);
-                        newasm::mem::regs::tlr = static_cast<std::string>("\"") + newasm::mem::regs::tlr + static_cast<std::string>("\"");
-                        return 1;
-                    }
-                    //input numbers and floats
-                    if(newasm::mem::regs::fdx == 4)
-                    {
-                        std::cin >> newasm::mem::regs::tlr;
-                        if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr) && !newasm::header::functions::isfloat(newasm::mem::regs::tlr))
-                        {
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                            return 1;
-                        }
-        	            return 1;
-                    }
-                    //print values of builtin operands
-                    if(newasm::mem::regs::fdx == 5)
-                    {
-                        //newasm::mem::functions::out_bopr(newasm::mem::regs::tlr);
-                        newasm::syscalls::iostream::out_bopr(newasm::mem::regs::tlr);
-                        return 1;
-                    }
-                    //print references
-                    if(newasm::mem::regs::fdx == 6)
-                    {
-                        if(!newasm::header::functions::isref(newasm::mem::regs::tlr))
-                        {
-                            //std::cout << "tlr is " << newasm::mem::regs::tlr << std::endl;
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                            return 1;
-                        }
-                        std::cout << newasm::header::functions::remamp(newasm::mem::regs::tlr);
-                        //newasm::mem::functions::out_bopr(newasm::mem::regs::stl);
-                        newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
-                        return 1;
-                    }
-                    //print characters
-                    if(newasm::mem::regs::fdx == 7)
-                    {
-                        //std::cout << "tlr is: \"" << newasm::mem::regs::tlr << "\"\n";
-                        if(!newasm::header::functions::ischar(newasm::mem::regs::tlr))
-                        {
-                            //std::cout << "tlr is " << newasm::mem::regs::tlr << std::endl;
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                            return 1;
-                        }
-                        std::cout << newasm::header::functions::remsq(newasm::mem::regs::tlr);
-                        //newasm::mem::functions::out_bopr(newasm::mem::regs::stl);
-                        newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
-                        return 1;
-                    }
-                    if(newasm::mem::regs::fdx == 8)
-                    {
-                        std::cin >> newasm::mem::regs::tlr;
-                        newasm::mem::regs::tlr = static_cast<std::string>("'") + newasm::mem::regs::tlr + static_cast<std::string>("'");
-                        if(!newasm::header::functions::ischar(newasm::mem::regs::tlr))
-                        {
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                            return 1;
-                        }
-        	            return 1;
-                    }
-                    newasm::terminate(newasm::exit_codes::unknown_fdx);
-                    return 1;
-                }
-                //////file stream
-                if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::fs))
-                {
-                    //create folder
-                    if(newasm::mem::regs::fdx == 1)
-                    {
-                        if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
-                        {
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                            return 1;
-                        }
-                        newasm::handles::dir_handle->set_name(newasm::header::functions::remq(newasm::mem::regs::tlr));
-                        newasm::handles::dir_handle->create();
-                        return 1;
-                    }
-                    //remove folder
-                    if(newasm::mem::regs::fdx == 2)
-                    {
-                        if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
-                        {
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                            return 1;
-                        }
-                        newasm::handles::dir_handle->set_name(newasm::header::functions::remq(newasm::mem::regs::tlr));
-                        newasm::handles::dir_handle->remove();
-                        return 1;
-                    }
-                    //create file
-                    if(newasm::mem::regs::fdx == 3)
-                    {
-                        if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
-                        {
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                            return 1;
-                        }
-                        newasm::handles::file_handle->set_name(newasm::header::functions::remq(newasm::mem::regs::tlr));
-                        newasm::handles::file_handle->overwrite_text("");
-                        return 1;
-                    }
-                    //remove file
-                    if(newasm::mem::regs::fdx == 4)
-                    {
-                        if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
-                        {
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                            return 1;
-                        }
-                        newasm::handles::file_handle->set_name(newasm::header::functions::remq(newasm::mem::regs::tlr));
-                        newasm::handles::file_handle->remove();
-                        return 1;
-                    }
-                    //overwrite text
-                    if(newasm::mem::regs::fdx == 5)
-                    {
-                        if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
-                        {
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                            return 1;
-                        }
-                        if(!newasm::header::functions::istext(newasm::mem::regs::stl))
-                        {
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                            return 1;
-                        }
-                        newasm::handles::file_handle->set_name(newasm::header::functions::remq(newasm::mem::regs::tlr));
-                        newasm::handles::file_handle->overwrite_text(newasm::header::functions::remq(newasm::mem::regs::stl));
-                        return 1;
-                    }
-                    //append text
-                    if(newasm::mem::regs::fdx == 6)
-                    {
-                        if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
-                        {
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                            return 1;
-                        }
-                        if(!newasm::header::functions::istext(newasm::mem::regs::stl))
-                        {
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                            return 1;
-                        }
-                        newasm::handles::file_handle->set_name(newasm::header::functions::remq(newasm::mem::regs::tlr));
-                        newasm::handles::file_handle->append_text(newasm::header::functions::remq(newasm::mem::regs::stl));
-                        return 1;
-                    }
-                    //remove content
-                    if(newasm::mem::regs::fdx == 7)
-                    {
-                        if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
-                        {
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                            return 1;
-                        }
-                        /*if(!newasm::header::functions::istext(newasm::mem::regs::stl))
-                        {
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                            return 1;
-                        }*/
-                        newasm::handles::file_handle->set_name(newasm::header::functions::remq(newasm::mem::regs::tlr));
-                        newasm::handles::file_handle->remove_content();
-                        return 1;
-                    }
-                    //read line
-                    if(newasm::mem::regs::fdx == 8)
-                    {
-                        if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
-                        {
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                            return 1;
-                        }
-                        if(!newasm::header::functions::isnumeric(newasm::mem::regs::stl))
-                        {
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                            return 1;
-                        }
-                        newasm::handles::file_handle->set_name(newasm::header::functions::remq(newasm::mem::regs::tlr));
-                        newasm::handles::file_handle->read_line(std::stoi(newasm::mem::regs::stl),newasm::mem::regs::tlr);
-                        newasm::mem::regs::tlr = static_cast<std::string>("\"")+newasm::mem::regs::tlr+static_cast<std::string>("\"");
-                        return 1;
-                    }
-                    newasm::terminate(newasm::exit_codes::unknown_fdx);
-                    return 1;
-                }
-                newasm::terminate(newasm::exit_codes::unknown_fdx);
-                return 1;
-            }
-            newasm::terminate(newasm::exit_codes::invalid_syntax);
-            return 1;
-        }
+        
         
         
         //rem
@@ -2463,6 +2001,48 @@ namespace newasm
             //std::cout << newasm::system::cproc << " : " << newline << std::endl;
             return 1;
         }
+        //sysenter
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::sysenter))
+        {
+            if(suf == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::ios))
+            {
+                newasm::header::data::module = newasm::core::lang_inf::refs::ios;
+                return 1;
+            }
+            if(suf == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::fs))
+            {
+                newasm::header::data::module = newasm::core::lang_inf::refs::fs;
+                return 1;
+            }
+            if(suf == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::exf))
+            {
+                newasm::header::data::module = newasm::core::lang_inf::refs::exf;
+                return 1;
+            }
+            if(suf == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::cmanip))
+            {
+                newasm::header::data::module = newasm::core::lang_inf::refs::cmanip;
+                return 1;
+            }
+            if(suf == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::txtop))
+            {
+                newasm::header::data::module = newasm::core::lang_inf::refs::txtop;
+                return 1;
+            }
+            if(suf == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::net))
+            {
+                newasm::header::data::module = newasm::core::lang_inf::refs::net;
+                return 1;
+            }
+            if(suf == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::mem))
+            {
+                newasm::header::data::module = newasm::core::lang_inf::refs::mem;
+                return 1;
+            }
+            newasm::terminate(newasm::exit_codes::sysenter_fail);
+            return 1;
+        }
+        //
         //wait
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::wait))
         {
@@ -3177,38 +2757,7 @@ namespace newasm
     }
     int process_i(std::string line, std::string ins)
     {
-        //stack
-        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::stack))
-        {
-            if(newasm::header::data::callstkidx == 0)
-            {
-                newasm::terminate(newasm::exit_codes::invalid_memacc);
-                return 1;
-            }
-            newasm::mem::regs::stk = newasm::mem::regs::stk + 1 + newasm::header::data::argc;
-            newasm::header::data::argc = 0;
-            newasm::header::data::callstkidx = 0;
-            return 1;
-        }
-        //free
-        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::free__))
-        {
-            if(newasm::allocation_data == nullptr) // malloc nije upotrebljen // NoAlloc
-            {
-                newasm::terminate(newasm::exit_codes::malloc_err);
-                return 1;
-            }
-            newasm::mem::regs::hea -= newasm::allocation_data->size;
-            if(newasm::mem::regs::hea != newasm::allocation_data->heapsize_new - newasm::allocation_data->size) //neko je manualno dirao heap prije free
-            {
-                newasm::terminate(newasm::exit_codes::manual_heap);
-                return 1;
-            }
-            newasm::mem::regs::heaptr = newasm::mem::regs::hea;
-            delete newasm::allocation_data;
-            newasm::allocation_data = nullptr;
-            return 1;
-        }
+        
         //exit
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::exit))
         {
@@ -3254,6 +2803,503 @@ namespace newasm
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::nop))
         {
             // do nothing
+            return 1;
+        }
+        // syscall
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::syscall))
+        {
+            //////process management (execution flow)
+            //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::exf))
+            if(newasm::header::data::module == newasm::core::lang_inf::refs::exf)
+            {
+                if(newasm::header::execution_flow::exec_redirected)
+                {
+                    newasm::terminate(newasm::exit_codes::nested_redirect);
+                    return 1;
+                }
+                if(newasm::mem::regs::fdx == 1)
+                {
+                    if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    
+                    newasm::header::execution_flow::entry_start_line = newasm::header::data::lastlndx+1;
+                    newasm::header::execution_flow::file = newasm::header::functions::remq(newasm::mem::regs::tlr);
+                    newasm::header::execution_flow::exec_redirected = true;
+                    return 1;
+                }
+                newasm::terminate(newasm::exit_codes::unknown_fdx);
+                return 1;
+            }
+            //net
+            //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::net))
+            if(newasm::header::data::module == newasm::core::lang_inf::refs::net)
+            {
+                if(newasm::mem::regs::fdx == 1) //download files
+                {
+                    if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    if(!newasm::header::functions::istext(newasm::mem::regs::stl))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+
+                    int result = newasm::net::download(
+                        newasm::header::functions::trim(
+                            newasm::header::functions::remq(
+                                newasm::mem::regs::tlr
+                            )
+                        ),
+                        newasm::header::functions::trim(
+                            newasm::header::functions::remq(
+                                newasm::mem::regs::stl
+                            )
+                        )
+                    );
+
+                    newasm::header::functions::log(
+                        static_cast<std::string>("Network info\nnewasm::net::download - tlr : '") + newasm::header::functions::trim(
+                            newasm::header::functions::remq(
+                                newasm::mem::regs::tlr
+                            )
+                        ) + "'" + static_cast<std::string>("\nnewasm::net::download - stl : '") + newasm::header::functions::trim(
+                            newasm::header::functions::remq(
+                                newasm::mem::regs::stl
+                            )
+                        ) + "'" + static_cast<std::string>("\nnewasm::net::download - result : '") + std::to_string(result) + "'"
+                    );
+                    return 1;
+                }
+                newasm::terminate(newasm::exit_codes::unknown_fdx);
+                return 1;
+            }
+            //memory/data manipulation
+            //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::mem))
+            if(newasm::header::data::module == newasm::core::lang_inf::refs::mem)
+            {
+                if(newasm::mem::regs::fdx == 1)
+                {
+                    if(!newasm::header::functions::isref(newasm::mem::regs::tlr))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::tlr),newasm::mem::data))
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    newasm::syscalls::mem::constvals.push_back(newasm::header::functions::remamp(newasm::mem::regs::tlr));
+                    return 1;
+                }
+                newasm::terminate(newasm::exit_codes::unknown_fdx);
+                return 1;
+            }
+            //text manipulation
+            //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::txtop))
+            if(newasm::header::data::module == newasm::core::lang_inf::refs::txtop)
+            {
+                if(newasm::mem::regs::fdx == 1)
+                {
+                    newasm::syscalls::txtop::impl::concat();
+                    return 1;
+                }
+                if(newasm::mem::regs::fdx == 2)
+                {
+                    newasm::syscalls::txtop::impl::trim();
+                    return 1;
+                }
+                newasm::terminate(newasm::exit_codes::unknown_fdx);
+                return 1;
+            }
+            //////////// container manipulation
+            //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::cmanip))
+            if(newasm::header::data::module == newasm::core::lang_inf::refs::cmanip)
+            {
+                if(newasm::mem::regs::cpt == newasm::header::constants::inv_reg_val)
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_memacc);
+                    return 1;
+                }
+                //clear
+                if(newasm::mem::regs::fdx == 1)
+                {
+                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::bit_arrays))
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->clear();
+                    return 1;
+                }
+                //flip
+                if(newasm::mem::regs::fdx == 2)
+                {
+                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::bit_arrays))
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->flip();
+                    return 1;
+                }
+                //reverse
+                if(newasm::mem::regs::fdx == 3)
+                {
+                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::bit_arrays))
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->reverse();
+                    return 1;
+                }
+                //set at
+                if(newasm::mem::regs::fdx == 4)
+                {
+                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::bit_arrays))
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::stl))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->set_at(std::stoi(newasm::mem::regs::tlr),std::stoi(newasm::mem::regs::stl));
+                    return 1;
+                }
+                // get at
+                if(newasm::mem::regs::fdx == 5)
+                {
+                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::bit_arrays))
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    int result = newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->get_at(std::stoi(newasm::mem::regs::tlr));
+                    newasm::mem::regs::tlr = std::to_string(result);
+                    return 1;
+                }
+                //binary trees
+                //set at parent of
+                if(newasm::mem::regs::fdx == 6)
+                {
+                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::binary_trees))
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    newasm::containers::binary_trees.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->set_at_parent_of(std::stoi(newasm::mem::regs::tlr),std::stoi(newasm::mem::regs::stl));
+                    return 1;
+                }
+                //right child
+                if(newasm::mem::regs::fdx == 7)
+                {
+                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::binary_trees))
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    newasm::containers::binary_trees.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->set_at_right_child_of(std::stoi(newasm::mem::regs::tlr),std::stoi(newasm::mem::regs::stl));
+                    return 1;
+                }
+                //left child
+                if(newasm::mem::regs::fdx == 8)
+                {
+                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::binary_trees))
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    newasm::containers::binary_trees.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->set_at_left_child_of(std::stoi(newasm::mem::regs::tlr),std::stoi(newasm::mem::regs::stl));
+                    return 1;
+                }
+                //get
+                if(newasm::mem::regs::fdx == 9)
+                {
+                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::binary_trees))
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    int result = newasm::containers::binary_trees.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->get_at(std::stoi(newasm::mem::regs::tlr));
+                    newasm::mem::regs::tlr = std::to_string(result);
+                    return 1;
+                }
+                newasm::terminate(newasm::exit_codes::unknown_fdx);
+                return 1;
+            }
+            ///// input-output stream
+            //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::ios))
+            if(newasm::header::data::module == newasm::core::lang_inf::refs::ios)
+            {
+                //print text
+                if(newasm::mem::regs::fdx == 1)
+                {
+                    if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
+                    {
+                        using std::endl, std::cout;
+                        //cout << " ERROR CATCH - tlr is: " << newasm::mem::regs::tlr << endl;
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    newasm::mem::regs::tlr = newasm::header::functions::remq(newasm::mem::regs::tlr);
+                    std::cout << newasm::mem::regs::tlr;// << std::endl;
+                    //newasm::mem::functions::out_bopr(newasm::mem::regs::stl);
+                    newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
+                    return 1;
+                }
+                //print numbers and floats
+                if(newasm::mem::regs::fdx == 2)
+                {
+                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr) && !newasm::header::functions::isfloat(newasm::mem::regs::tlr))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    std::cout << newasm::mem::regs::tlr;// << std::endl;
+                    //newasm::mem::functions::out_bopr(newasm::mem::regs::stl);
+                    newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
+                    return 1;
+                }
+                //input text
+                if(newasm::mem::regs::fdx == 3)
+                {
+                    std::getline(std::cin, newasm::mem::regs::tlr);
+                    newasm::mem::regs::tlr = static_cast<std::string>("\"") + newasm::mem::regs::tlr + static_cast<std::string>("\"");
+                    return 1;
+                }
+                //input numbers and floats
+                if(newasm::mem::regs::fdx == 4)
+                {
+                    std::cin >> newasm::mem::regs::tlr;
+                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr) && !newasm::header::functions::isfloat(newasm::mem::regs::tlr))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    return 1;
+                }
+                //print values of builtin operands
+                if(newasm::mem::regs::fdx == 5)
+                {
+                    //newasm::mem::functions::out_bopr(newasm::mem::regs::tlr);
+                    newasm::syscalls::iostream::out_bopr(newasm::mem::regs::tlr);
+                    return 1;
+                }
+                //print references
+                if(newasm::mem::regs::fdx == 6)
+                {
+                    if(!newasm::header::functions::isref(newasm::mem::regs::tlr))
+                    {
+                        //std::cout << "tlr is " << newasm::mem::regs::tlr << std::endl;
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    std::cout << newasm::header::functions::remamp(newasm::mem::regs::tlr);
+                    //newasm::mem::functions::out_bopr(newasm::mem::regs::stl);
+                    newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
+                    return 1;
+                }
+                //print characters
+                if(newasm::mem::regs::fdx == 7)
+                {
+                    //std::cout << "tlr is: \"" << newasm::mem::regs::tlr << "\"\n";
+                    if(!newasm::header::functions::ischar(newasm::mem::regs::tlr))
+                    {
+                        //std::cout << "tlr is " << newasm::mem::regs::tlr << std::endl;
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    std::cout << newasm::header::functions::remsq(newasm::mem::regs::tlr);
+                    //newasm::mem::functions::out_bopr(newasm::mem::regs::stl);
+                    newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
+                    return 1;
+                }
+                if(newasm::mem::regs::fdx == 8)
+                {
+                    std::cin >> newasm::mem::regs::tlr;
+                    newasm::mem::regs::tlr = static_cast<std::string>("'") + newasm::mem::regs::tlr + static_cast<std::string>("'");
+                    if(!newasm::header::functions::ischar(newasm::mem::regs::tlr))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    return 1;
+                }
+                newasm::terminate(newasm::exit_codes::unknown_fdx);
+                return 1;
+            }
+            //////file stream
+            //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::fs))
+            if(newasm::header::data::module == newasm::core::lang_inf::refs::fs)
+            {
+                //create folder
+                if(newasm::mem::regs::fdx == 1)
+                {
+                    if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    newasm::handles::dir_handle->set_name(newasm::header::functions::remq(newasm::mem::regs::tlr));
+                    newasm::handles::dir_handle->create();
+                    return 1;
+                }
+                //remove folder
+                if(newasm::mem::regs::fdx == 2)
+                {
+                    if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    newasm::handles::dir_handle->set_name(newasm::header::functions::remq(newasm::mem::regs::tlr));
+                    newasm::handles::dir_handle->remove();
+                    return 1;
+                }
+                //create file
+                if(newasm::mem::regs::fdx == 3)
+                {
+                    if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    newasm::handles::file_handle->set_name(newasm::header::functions::remq(newasm::mem::regs::tlr));
+                    newasm::handles::file_handle->overwrite_text("");
+                    return 1;
+                }
+                //remove file
+                if(newasm::mem::regs::fdx == 4)
+                {
+                    if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    newasm::handles::file_handle->set_name(newasm::header::functions::remq(newasm::mem::regs::tlr));
+                    newasm::handles::file_handle->remove();
+                    return 1;
+                }
+                //overwrite text
+                if(newasm::mem::regs::fdx == 5)
+                {
+                    if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    if(!newasm::header::functions::istext(newasm::mem::regs::stl))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    newasm::handles::file_handle->set_name(newasm::header::functions::remq(newasm::mem::regs::tlr));
+                    newasm::handles::file_handle->overwrite_text(newasm::header::functions::remq(newasm::mem::regs::stl));
+                    return 1;
+                }
+                //append text
+                if(newasm::mem::regs::fdx == 6)
+                {
+                    if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    if(!newasm::header::functions::istext(newasm::mem::regs::stl))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    newasm::handles::file_handle->set_name(newasm::header::functions::remq(newasm::mem::regs::tlr));
+                    newasm::handles::file_handle->append_text(newasm::header::functions::remq(newasm::mem::regs::stl));
+                    return 1;
+                }
+                //remove content
+                if(newasm::mem::regs::fdx == 7)
+                {
+                    if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    /*if(!newasm::header::functions::istext(newasm::mem::regs::stl))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }*/
+                    newasm::handles::file_handle->set_name(newasm::header::functions::remq(newasm::mem::regs::tlr));
+                    newasm::handles::file_handle->remove_content();
+                    return 1;
+                }
+                //read line
+                if(newasm::mem::regs::fdx == 8)
+                {
+                    if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::stl))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    newasm::handles::file_handle->set_name(newasm::header::functions::remq(newasm::mem::regs::tlr));
+                    newasm::handles::file_handle->read_line(std::stoi(newasm::mem::regs::stl),newasm::mem::regs::tlr);
+                    newasm::mem::regs::tlr = static_cast<std::string>("\"")+newasm::mem::regs::tlr+static_cast<std::string>("\"");
+                    return 1;
+                }
+                newasm::terminate(newasm::exit_codes::unknown_fdx);
+                return 1;
+            }
+            newasm::terminate(newasm::exit_codes::sysenter_fail);
+            return 1;
+        }
+        //stack
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::stack))
+        {
+            if(newasm::header::data::callstkidx == 0)
+            {
+                newasm::terminate(newasm::exit_codes::invalid_memacc);
+                return 1;
+            }
+            newasm::mem::regs::stk = newasm::mem::regs::stk + 1 + newasm::header::data::argc;
+            newasm::header::data::argc = 0;
+            newasm::header::data::callstkidx = 0;
+            return 1;
+        }
+        //free
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::free__))
+        {
+            if(newasm::allocation_data == nullptr) // malloc nije upotrebljen // NoAlloc
+            {
+                newasm::terminate(newasm::exit_codes::malloc_err);
+                return 1;
+            }
+            newasm::mem::regs::hea -= newasm::allocation_data->size;
+            if(newasm::mem::regs::hea != newasm::allocation_data->heapsize_new - newasm::allocation_data->size) //neko je manualno dirao heap prije free
+            {
+                newasm::terminate(newasm::exit_codes::manual_heap);
+                return 1;
+            }
+            newasm::mem::regs::heaptr = newasm::mem::regs::hea;
+            delete newasm::allocation_data;
+            newasm::allocation_data = nullptr;
             return 1;
         }
         //MATH OPERATIONS

@@ -19,8 +19,10 @@ Below is the simple `Hello World` program written in New-Assembly.
 .start
     mov tlr , string
     mov fdx , 1
+
+    sysenter %ios
     
-    syscall 0 , %ios
+    syscall
 
     retn 0
 ```
@@ -44,7 +46,7 @@ Documentation about `newasm` which includes following topics:
     - [`retn` and `ret`](#retn-and-ret-instructions)
     - [`mov` and `stor`](#mov-and-stor-instructions)
         - [Register list](#available-register-list)
-    - [`syscall`](#syscall-instruction)
+    - [`syscall` and `sysenter`](#syscall-instruction)
         - [System call list](#syscall-list)
     - [`nop`](#nop-instruction)
     - [`rem`](#rem-instruction)
@@ -123,7 +125,8 @@ The install-command allows you to download and install New-ASM dynamic libraries
 mov fdx , 1
 mov tlr , "Hi"
 mov stl , %endl
-syscall 0 , %ios
+sysenter %ios
+syscall
 zero stl
 zero tlr
 ```
@@ -153,7 +156,8 @@ Now, if we want to download a package (or a setup), we use the same command, but
 	mov tlr , "INTERNET WORKS!"
 	mov fdx , 1
 	mov stl , %endl
-	syscall 0 , %ios
+    sysenter %ios
+	syscall 
 	zero stl
 ```
 As you can see, we can use setup labels to mark code. Installing this with:
@@ -360,21 +364,15 @@ In this example, we basically do `fdx=1`, `myvar=fdx`, `return 1`:
 | `br1` | alternate bit operation register | Register which is used as a second operand in bitwise calculations. Read [this](#bit-operations) for more information... |
 | `cpt` | container pointer | Register holding an address specifically of a container or a data structure. Read [this](#containers-and-data-structures) for more information... |
 
-### `syscall` instruction
-Set value of a specific register.
-
-#### Syntax
-- `instruction` - `syscall`
-- `suffix` - no suffix
-- `operand` - no operand
-
-#### Example
+### `syscall` and `sysenter` instructions
+Perform a specific system call within a system module.
 
 ```asm
-. start
+.start
     mov fdx , 1
     mov tlr , "Hello World"
-    syscall 0 , %ios
+    sysenter %ios ; enter the IO stream
+    syscall ; do the call
     retn 23
 ```
 
@@ -485,7 +483,8 @@ Return a value inside a function.
     stor psx , variable
     mov tlr , variable
     mov fdx , 1
-    syscall 0 , %ios
+    sysenter %ios
+    syscall
     retn 1
 ```
 
@@ -519,7 +518,8 @@ Return a value inside a function.
 
     mov tlr , myvar2
     mov fdx , 1
-    syscall 0 , %ios
+    sysenter %ios
+    syscall
 
     retn 0
 ```
@@ -565,7 +565,8 @@ Move down and up the heap.
     stor hea , mynum
     mov tlr , mynum
     mov fdx , 2
-    syscall 0 , %ios
+    sysenter %ios
+syscall
 ```
 
 ### `load` instruction
@@ -617,7 +618,8 @@ Output:
     mov tlr , testdecimal
     mov stl , %endl
     mov fdx , 2
-    syscall 0 , %ios
+    sysenter %ios
+syscall
 
     ; Allocate more space:
     heap 0 , 1
@@ -626,21 +628,24 @@ Output:
     mov tlr , testdecm2
     mov stl , %endl
     mov fdx , 2
-    syscall 0 , %ios
+    sysenter %ios
+syscall
     
     mov hea , 0 ; manually access the first address
     load ref , testdecm2 ; myvar : hea
     mov tlr , testdecm2
     mov stl , %endl
     mov fdx , 2
-    syscall 0 , %ios
+    sysenter %ios
+syscall
 
     mov hea , 1 ; manually access the second address
     load ref , testdecm2 ; myvar : hea
     mov tlr , testdecm2
     mov stl , %endl
     mov fdx , 2
-    syscall 0 , %ios
+    sysenter %ios
+syscall
 
     heap 0 , -1 ; let all the memory go to avoid getting the memory leak
 ```
@@ -685,19 +690,22 @@ A little too complex example.
     : label
         mov tlr , "label called"
         mov fdx , 1
-        syscall 0 , %ios
+        sysenter %ios
+syscall
         mov fdx , 72
         jmp 0 , label3
         ret fdx
     : label2
         mov tlr , "label2 called"
         mov fdx , 1
-        syscall 0 , %ios
+        sysenter %ios
+syscall
         jmp 0 , label
     : label3
         mov tlr , "label3 called"
         mov fdx , 1
-        syscall 0 , %ios
+        sysenter %ios
+syscall
 
     retn 3873
 ```
@@ -748,42 +756,48 @@ According to the result `cmp` stores in its own "hidden" register, you can use t
         mov tlr , "EQUAL"
         mov fdx , 1
         mov stl , %endl
-        syscall 0 , %ios
+        sysenter %ios
+syscall
         jmp 0 , endtheprogram
 
     : notequal
         mov tlr , "NOT EQUAL"
         mov fdx , 1
         mov stl , %endl
-        syscall 0 , %ios
+        sysenter %ios
+syscall
         jmp 0 , endtheprogram
 
     : less
         mov tlr , "LESS"
         mov fdx , 1
         mov stl , %endl
-        syscall 0 , %ios
+        sysenter %ios
+syscall
         jmp 0 , endtheprogram
 
     : greater
         mov tlr , "GREATER"
         mov fdx , 1
         mov stl , %endl
-        syscall 0 , %ios
+        sysenter %ios
+syscall
         jmp 0 , endtheprogram
 
     : lesseq
         mov tlr , "LESS OR EQUAL"
         mov fdx , 1
         mov stl , %endl
-        syscall 0 , %ios
+        sysenter %ios
+syscall
         jmp 0 , endtheprogram
 
     : greatereq
         mov tlr , "GREATER OR EQUAL"
         mov fdx , 1
         mov stl , %endl
-        syscall 0 , %ios
+        sysenter %ios
+syscall
         jmp 0 , endtheprogram
 
     : endtheprogram
@@ -888,7 +902,8 @@ Demonstration:
     mov tlr , temporary
     mov stl , %endl
     mov fdx , 6
-    syscall 0 , %ios
+    sysenter %ios
+syscall
 
     mov prp , &procedure_3
     dec prp
@@ -897,7 +912,8 @@ Demonstration:
     mov tlr , temporary
     mov stl , %endl
     mov fdx , 6
-    syscall 0 , %ios
+    sysenter %ios
+syscall
 ```
 
 Output:
@@ -970,7 +986,8 @@ Clear up the call stack.
         mov tlr, <0> ;get the first argument
         mov stl, <1> ;get the second argument
         mov fdx, <2>
-        syscall 0, %ios
+        sysenter %ios
+        syscall
         halt proc, 0
     end
     db stk
@@ -1070,7 +1087,8 @@ Comments are also available:
     ; comment
     mov fdx , 1
     mov tlr , "hello" ; comment
-    syscall 0 , %ios ; comment again
+    sysenter %ios
+syscall ; comment again
 ```
 
 ## Interesting examples
@@ -1079,18 +1097,20 @@ Below is a list of interesting examples of using the language.
 
 ```asm
 . start
+    sysenter %fs
     mov fdx, 3
     mov tlr, "filename"
-    syscall 0, %fs
+    syscall
     mov stl, "TEXTeee"
     mov fdx, 6
-    syscall 0, %fs
+    syscall
     mov stl, 1
     mov fdx, 8
-    syscall 0, %fs
+    syscall
     mov stl, %endl
     mov fdx, 1
-    syscall 0, %ios
+    sysenter %ios
+    syscall
     retn 0
 ```
 
@@ -1106,12 +1126,14 @@ TEXTeee
 . start
     mov tlr, "child.nax" ; another nax file containing stuff such as config modifications, variables and procedures
     mov fdx, 1
-    syscall 0 , %exf ; create a process and execute it
+    sysenter %exf
+    syscall; create a process and execute it
 
     mov tlr , "Hi after the process" ; this line will be processed AFTER child.nax finishes executing
     mov stl , %endl
     mov fdx , 1
-    syscall 0 , %ios
+    sysenter %ios
+syscall
 
     retn 0
 ```
@@ -1125,7 +1147,8 @@ TEXTeee
     stor hea , mynum
     mov tlr , mynum
     mov fdx , 2
-    syscall 0 , %ios ; prints heap size (36)
+    sysenter %ios
+syscall ; prints heap size (36)
     heap -36 ; free up memory we occupied for the sake of the example
 ```
 
@@ -1178,32 +1201,39 @@ In this quite frankly low-level language, there are also structs! General syntax
     mov tlr , text @ mystruct
     mov stl , %endl
     mov fdx , 1
-    syscall 0 , %ios
+    sysenter %ios
+syscall
 
     mov tlr , decimal @ mystruct
     mov fdx , 2
-    syscall 0 , %ios
+    sysenter %ios
+syscall
 
     mov tlr , lol @ mystruct
     mov fdx , 2
-    syscall 0 , %ios
+    sysenter %ios
+syscall
 
     mov tlr , text @ mystruct2
     mov stl , %endl
     mov fdx , 1
-    syscall 0 , %ios
+    sysenter %ios
+syscall
 
     mov tlr , decimal @ mystruct2
     mov fdx , 2
-    syscall 0 , %ios
+    sysenter %ios
+syscall
 
     mov tlr , lol @ mystruct2
     mov fdx , 2
-    syscall 0 , %ios
+    sysenter %ios
+syscall
 
     mov tlr , reference @ mystruct2
     mov fdx , 6
-    syscall 0 , %ios
+    sysenter %ios
+syscall
 
     mov stl , 45657
 
@@ -1211,7 +1241,8 @@ In this quite frankly low-level language, there are also structs! General syntax
     mov tlr , lol @ mystruct2
     mov fdx , 2
     mov stl , %endl
-    syscall 0 , %ios
+    sysenter %ios
+syscall
 
     mov psx , "HIII243"
 
@@ -1219,7 +1250,8 @@ In this quite frankly low-level language, there are also structs! General syntax
     mov tlr , text @ mystruct
     mov fdx , 1
     mov stl , %endl
-    syscall 0 , %ios
+    sysenter %ios
+syscall
 ```
 
 Output:
@@ -1275,7 +1307,8 @@ dlibs : testlib, sayhi
 ```asm
 mov tlr , "hi from my dynamic library"
 mov fdx , 1
-syscall 0 , %ios
+sysenter %ios
+syscall
 ```
 
 In your entry file - `index.asm`, you can do this:
@@ -1313,7 +1346,8 @@ testenv = "hello from env var"
 . start
     mov tlr , * / testenv
     mov fdx , 1
-    syscall 0 , %ios
+    sysenter %ios
+syscall
 ```
 
 * **NOTE**: You must use `*/` before the environment variable name so the program knows you are using an environment variable and not a standard variable, which means this wouldn't work:
@@ -1322,7 +1356,8 @@ testenv = "hello from env var"
 . start
     mov tlr , testenv
     mov fdx , 1
-    syscall 0 , %ios
+    sysenter %ios
+syscall
 ```
 
 ## Containers and data structures
@@ -1335,25 +1370,29 @@ testenv = "hello from env var"
 
 `index.asm`:
 ```asm
-. data
+.data
     bit_arr  testbitarr : 0
-. start
+.start
+    sysenter %cmanip
     mov cpt , &testbitarr
     mov tlr , 2
     mov stl , 1
     mov fdx , 4
-    syscall 0 , %cmanip
+    syscall 
     mov tlr , 1
     mov fdx , 5
-    syscall 0 , %cmanip
+    syscall 
     mov fdx , 2
     mov stl , %endl
-    syscall 0 , %ios
+    sysenter %ios
+    syscall
     mov tlr , 2
     mov fdx , 5
-    syscall 0 , %cmanip
+    sysenter %cmanip
+    syscall 
     mov fdx , 2
-    syscall 0 , %ios
+    sysenter %ios
+    syscall
 ```
 Output:
 ```
@@ -1373,43 +1412,50 @@ Output:
     bin_tree  testbintree : 0
 .start
     mov cpt , &testbintree
-
+    sysenter %cmanip
     mov tlr , 0
     mov stl , 33
     mov fdx , 7
-    syscall . 0 , %cmanip
+    syscall 
     
     mov tlr , 0
     mov fdx , 9
-    syscall 0 , %cmanip
+    syscall 
 
     mov stl , %endl
     mov fdx , 2
-    syscall 0 , %ios
+    sysenter %ios
+    syscall
+    sysenter %cmanip
     
     mov tlr , 1
     mov fdx , 9
-    syscall 0 , %cmanip
+    syscall
 
     mov stl , %endl
     mov fdx , 2
-    syscall 0 , %ios
+    sysenter %ios
+    syscall
+
+    sysenter %cmanip
     
     mov tlr , 2
     mov fdx , 9
-    syscall 0 , %cmanip
+    syscall 
 
     mov stl , %endl
     mov fdx , 2
-    syscall 0 , %ios
-    
+    sysenter %ios
+    syscall
+    sysenter %cmanip
     mov tlr , 3
     mov fdx , 9
-    syscall 0 , %cmanip
+    syscall
 
     mov stl , %endl
     mov fdx , 2
-    syscall 0 , %ios
+    sysenter %ios
+    syscall
 
 ```
 
@@ -1465,7 +1511,8 @@ Example:
     zero stl
     mov tlr , mytext
     mov fdx , 1
-    syscall 0 , %ios
+    sysenter %ios
+syscall
 
     ;other code
 ```
