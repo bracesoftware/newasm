@@ -65,6 +65,7 @@ Documentation about `newasm` which includes following topics:
     - [`wait` instruction](#wait-instruction)
     - [`malloc` and `free` instructions](#malloc-and-free)
     - [`stack` instruction](#stack-instruction)
+    - [`xchg` instruction](#xchg-instruction)
 - [Procedures](#procedures)
 - [Exit codes](#exit-codes)
 - [Comments](#comments)
