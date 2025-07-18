@@ -46,7 +46,7 @@ Documentation about `newasm` which includes following topics:
     - [`retn` and `ret`](#retn-and-ret-instructions)
     - [`mov` and `stor`](#mov-and-stor-instructions)
         - [Register list](#available-register-list)
-    - [`syscall` and `sysenter`](#syscall-instruction)
+    - [`syscall` and `sysenter`](#syscall-and-sysenter-instructions)
         - [System call list](#syscall-list)
     - [`nop`](#nop-instruction)
     - [`rem`](#rem-instruction)
@@ -1001,6 +1001,21 @@ Clear up the call stack.
 Output:
 ```
 call stack works
+```
+
+### `xchg` instruction
+This instruction exchanges the values of `tlr` and `stl`.
+```asm
+mov tlr, 1
+mov stl, 2
+xchg
+db tlr
+db stl
+```
+Output:
+```
+2
+1
 ```
 
 ## Procedures

@@ -65,6 +65,8 @@ namespace newasm
             int callstkidx = 0;
 
             int module = 0;
+
+            std::string temp = "temp";
         }
         namespace constants
         {

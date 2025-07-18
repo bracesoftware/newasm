@@ -88,6 +88,7 @@ namespace newasm
             const int stack = 44;
             const int wait = 45;
             const int sysenter = 46;
+            const int xchg = 47;
             
             const int __say = 100;
 
@@ -141,6 +142,7 @@ namespace newasm
                 {stack, "stack"},
                 {wait, "wait"},
                 {sysenter, "sysenter"},
+                {xchg, "xchg"},
 
                 {__say, "__say"}
             };

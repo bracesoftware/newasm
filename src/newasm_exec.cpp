@@ -2805,6 +2805,14 @@ namespace newasm
             // do nothing
             return 1;
         }
+        //xchg
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::xchg))
+        {
+            newasm::header::data::temp = newasm::mem::regs::tlr;
+            newasm::mem::regs::tlr = newasm::mem::regs::stl;
+            newasm::mem::regs::stl = newasm::header::data::temp;
+            return 1;
+        }
         // syscall
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::syscall))
         {
