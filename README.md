@@ -251,6 +251,27 @@ There are 3 data types:
 ### `start` section
 In this section, you can perform instructions, and cannot create variables, or else program will end with exit code 1.
 
+### `text` section
+You can define macros here:
+
+```asm
+.text
+    sayhi : #
+        mov stl, %endl
+        mov tlr, "hi from macro"
+        mov fdx, 1
+        sysenter %ios
+        syscall
+    #
+.start
+    $sayhi  ;test
+```
+
+Output:
+```
+hi from macro
+```
+
 ## Built-in references
 This language brings some built-in references, or rather operands, with itself - list:
 
@@ -1094,6 +1115,10 @@ When a fatal error happens, program will shut down, returning a specific exit co
 | `39` | Tried to modify the memory manually before using `free`. |
 | `40` | Invalid stack call. |
 | `41` | Handle reassignment. |
+| `42` | `sysenter` failed. |
+| `43` | Macro redefinition. |
+| `44` | Unexpected hash. |
+| `45` | Undefined macro. |
 
 ## Comments
 Comments are also available:
