@@ -85,6 +85,7 @@ namespace newasm
         const int macro_redef = 43;
         const int unexpected_hash = 44;
         const int undefined_macro = 45;
+        const int invalid_sysint = 46;
 
         const std::unordered_map<int, std::string> identifier = {
             {noterm_point, "NoTerminationPoint"},
@@ -132,7 +133,8 @@ namespace newasm
             {sysenter_fail, "SysenterFail"},
             {macro_redef, "MacroRedefinition"},
             {unexpected_hash, "UnexpectedHash"},
-            {undefined_macro, "UndefinedMacro"}
+            {undefined_macro, "UndefinedMacro"},
+            {invalid_sysint, "InvalidSysInterrupt"}
         };
     }
     namespace cmp_results

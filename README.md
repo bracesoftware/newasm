@@ -37,10 +37,9 @@ Documentation about `newasm` which includes following topics:
 - [Sections](#sections)
     - [`hndl` section](#hndl-section)
         - [Available events](#available-events)
-    - [`config` section](#config-section)
-        - [Available configuration options](#list-of-available-settings)
     - [`data` section](#data-section)
     - [`start` section](#start-section)
+    - [`text` section](#text-section)
 - [Built-in references](#built-in-references)
 - [Instructions](#instructions)
     - [`retn` and `ret`](#retn-and-ret-instructions)
@@ -48,6 +47,8 @@ Documentation about `newasm` which includes following topics:
         - [Register list](#available-register-list)
     - [`syscall` and `sysenter`](#syscall-and-sysenter-instructions)
         - [System call list](#syscall-list)
+    - [`int`](#int-instruction)
+        - [System interrupt list](#list-of-system-interrupts)
     - [`nop`](#nop-instruction)
     - [`rem`](#rem-instruction)
     - [`sysreq`](#sysreq-instruction)
@@ -206,31 +207,6 @@ In this section, you can setup event handlers.
 | ------------ | --------- | ----------- |
 | `~exit` | / | Called when the program ends. |
 
-### `config` section
-In this section, you can setup some settings for your program. It is thus recommended to keep this section on top of the code. General syntax is:
-
-```asm
-. config
-    configuration ~ value_in_specific_datatype
-. data
-    ; some stuff
-. start
-    mov fdx , 100
-    ret fdx
-```
-
-A simple example would be:
-
-```asm
-. config
-    memsize ~ 256 ; can be any integer from 1 to 512
-```
-
-#### List of available settings
-| Setting name | Data type | Description |
-| ------------ | --------- | ----------- |
-| `memsize` | `num` | Reallocates the number of addresses for the heap and the stack of the program. |
-| `lazy_evhndlr` | `num` | Toggles the "lazy event handler" option on (1) or off (0). If it is turned on, event handlers will not check if procedures they're assigned actually exist. |
 
 ### `data` section
 In this section, you can declare variables to avoid repeated code. General syntax is:
@@ -431,6 +407,21 @@ Perform a specific system call within a system module.
 | `%mem` | `1` | `tlr` | Marks a variable as a constant, with `tlr` being a pointer to the specific variable. Trying to modify a variable using `stor` afterwards will cause errors. |
 | `%txtop` | `1` | `tlr`, `stl` | Concatenate 2 textual values, with these registers holding the two values. |
 | `%txtop` | `2` | `tlr` | Remove whitespaces from string ends. |
+
+### `int` instruction
+Send system interrupts, basically manipulate with the interpreter.
+```asm
+.start
+    mov tlr, 36
+    int 0x1 ; send a sys interrupt to modify memory size
+```
+
+#### List of system interrupts
+| ID | Arguments | Description |
+| ---------------- | --------- | ----------- |
+| `0x1` | `tlr` | Modifies the size of a shared heap-stack memory block, with `tlr` holding the new memory size. |
+| `0x2` | `tlr` | Tells the interpreter to skip checking for procedure validity when assigning event handlers with `tlr` being either 0 or 1 — off or on, respectively. |
+
 
 ### `nop` instruction
 Do nothing.

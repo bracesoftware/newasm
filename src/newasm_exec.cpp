@@ -2007,6 +2007,46 @@ namespace newasm
             //std::cout << newasm::system::cproc << " : " << newline << std::endl;
             return 1;
         }
+        //int
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::int__))
+        {
+            if(suf == static_cast<std::string>("0x1"))
+            {
+                if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    return 1;
+                }
+                if(!newasm::mem::functions::setup_memsize(std::stoi(newasm::mem::regs::tlr)))
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_config);
+                    return 1;
+                }
+                return 1;
+            }
+            if(suf == static_cast<std::string>("0x2"))
+            {
+                if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    return 1;
+                }
+                if(std::stoi(newasm::mem::regs::tlr) == 0)
+                {
+                    newasm::header::settings::lazy_evhndlr = false;
+                    return 1;
+                }
+                if(std::stoi(newasm::mem::regs::tlr) == 1)
+                {
+                    newasm::header::settings::lazy_evhndlr = true;
+                    return 1;
+                }
+                newasm::terminate(newasm::exit_codes::invalid_syntax);
+                return 1;
+            }
+            newasm::terminate(newasm::exit_codes::invalid_sysint);
+            return 1;
+        }
         //sysenter
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::sysenter))
         {
@@ -3381,45 +3421,7 @@ namespace newasm
         newasm::terminate(newasm::exit_codes::invalid_ins);//,wholeline);
         return 1;
     }
-    int process_c(std::string wholeline, std::string stat, std::string arg)
-    {
-        if(stat == static_cast<std::string>("memsize"))
-        {
-            if(!newasm::header::functions::isnumeric(arg))
-            {
-                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                return 1;
-            }
-            if(!newasm::mem::functions::setup_memsize(std::stoi(arg)))
-            {
-                newasm::terminate(newasm::exit_codes::invalid_config);
-                return 1;
-            }
-            return 1;
-        }
-        if(stat == static_cast<std::string>("lazy_evhndlr"))
-        {
-            if(!newasm::header::functions::isnumeric(arg))
-            {
-                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                return 1;
-            }
-            if(std::stoi(arg) == 0)
-            {
-                newasm::header::settings::lazy_evhndlr = false;
-                return 1;
-            }
-            if(std::stoi(arg) == 1)
-            {
-                newasm::header::settings::lazy_evhndlr = true;
-                return 1;
-            }
-            newasm::terminate(newasm::exit_codes::invalid_syntax);
-            return 1;
-        }
-        newasm::terminate(newasm::exit_codes::invalid_config);
-        return 1;
-    }
+    
     int process_hndl(std::string tohandle, std::string procedure)
     {
         if(newasm::header::settings::lazy_evhndlr == false) if(!newasm::mem::functions::datavalid(procedure, newasm::mem::funcs))
@@ -3595,7 +3597,7 @@ namespace newasm
             arg = newasm::header::functions::trim(arg);
             return newasm::process_text(stat,arg);
         }
-        if(newasm::system::section == newasm::code_stream::sections::config)
+        /*if(newasm::system::section == newasm::code_stream::sections::config)
         {
             if(line.find('~') == std::string::npos)
             {
@@ -3608,7 +3610,7 @@ namespace newasm
             stat = newasm::header::functions::trim(stat);
             arg = newasm::header::functions::trim(arg);
             return newasm::process_c(line,stat,arg);
-        }
+        }*/
         if(newasm::system::section == newasm::code_stream::sections::data)
         {
             try
