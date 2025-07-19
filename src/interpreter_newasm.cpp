@@ -107,6 +107,8 @@ namespace newasm
 #include "newasm_tests.cpp"
 #include "newasm_ctl.cpp"
 
+#include "runtime/_entry.h"
+
 namespace fs = std::filesystem;
 
 namespace newasm

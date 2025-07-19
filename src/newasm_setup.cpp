@@ -184,7 +184,8 @@ namespace newasm
             int fdx = 0;
             //std::string tlr = newasm::header::constants::inv_reg_val;
             newasm::_register<std::string> tlr("tlr", newasm::header::constants::inv_reg_val);
-            std::string stl = newasm::header::constants::inv_reg_val;
+            newasm::_register<std::string> stl("stl", newasm::header::constants::inv_reg_val);
+            //std::string stl = newasm::header::constants::inv_reg_val;
             std::string psx = newasm::header::constants::inv_reg_val;
             std::string prp = newasm::header::constants::inv_reg_val;
             int cpr = 0;

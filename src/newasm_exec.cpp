@@ -486,7 +486,7 @@ namespace newasm
         {
             strreg = newasm::mem::regs::tlr.get_value();
         }
-        if(suf == static_cast<std::string>("stl"))
+        if(suf == newasm::mem::regs::stl.identifier())
         {
             strreg = newasm::mem::regs::stl;
         }
@@ -955,7 +955,7 @@ namespace newasm
                 }
                 return 1;
             }
-            if(suf == static_cast<std::string>("stl"))
+            if(suf == newasm::mem::regs::stl.identifier())
             {
                 if(newasm::header::functions::isnumeric(newasm::mem::regs::stl))
                 {
@@ -1321,7 +1321,7 @@ namespace newasm
                 newasm::mem::regs::tr1 = (opr);
                 return 1;
             }
-            if(suf == static_cast<std::string>("stl"))
+            if(suf == newasm::mem::regs::stl.identifier())
             {
                 newasm::mem::regs::stl = (opr);
                 return 1;
@@ -1631,7 +1631,7 @@ namespace newasm
             {
                 strreg = newasm::mem::regs::tr1;
             }
-            if(suf == static_cast<std::string>("stl"))
+            if(suf == newasm::mem::regs::stl.identifier())
             {
                 strreg = newasm::mem::regs::stl;
             }
@@ -2218,7 +2218,7 @@ namespace newasm
                 debugRegister(suf, (newasm::mem::regs::tr1));
                 return 1;
             }
-            if(suf == static_cast<std::string>("stl"))
+            if(suf == newasm::mem::regs::stl.identifier())
             {
                 debugRegister(suf, (newasm::mem::regs::stl));
                 return 1;
@@ -2353,7 +2353,7 @@ namespace newasm
                     return 1;
                 }
             }
-            if(suf == static_cast<std::string>("stl"))
+            if(suf == newasm::mem::regs::stl.identifier())
             {
                 if(newasm::header::functions::isnumeric(newasm::mem::regs::stl))
                 {
@@ -2458,7 +2458,7 @@ namespace newasm
                 newasm::mem::regs::tr1 = newasm::header::constants::inv_reg_val;
                 return 1;
             }
-            if(suf == static_cast<std::string>("stl"))
+            if(suf == newasm::mem::regs::stl.identifier())
             {
                 newasm::mem::regs::stl = newasm::header::constants::inv_reg_val;
                 return 1;
@@ -2574,7 +2574,7 @@ namespace newasm
                 newasm::mem::regs::tlr = std::to_string(tmp);
                 return 1;
             }
-            if(suf == static_cast<std::string>("stl"))
+            if(suf == newasm::mem::regs::stl.identifier())
             {
                 if(!newasm::header::functions::isnumeric(newasm::mem::regs::stl))
                 {
@@ -2715,7 +2715,7 @@ namespace newasm
                 newasm::mem::regs::tlr = std::to_string(tmp);
                 return 1;
             }
-            if(suf == static_cast<std::string>("stl"))
+            if(suf == newasm::mem::regs::stl.identifier())
             {
                 if(!newasm::header::functions::isnumeric(newasm::mem::regs::stl))
                 {
@@ -2852,8 +2852,10 @@ namespace newasm
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::xchg))
         {
             newasm::header::data::temp = newasm::mem::regs::tlr;
-            newasm::mem::regs::tlr = newasm::mem::regs::stl;
-            newasm::mem::regs::stl = newasm::header::data::temp;
+            //newasm::mem::regs::tlr = newasm::mem::regs::stl;
+            newasm::mem::regs::tlr.set_value(newasm::mem::regs::stl.get_value());
+            //newasm::mem::regs::stl = newasm::header::data::temp;
+            newasm::mem::regs::stl.set_value(newasm::header::data::temp);
             return 1;
         }
         // syscall
