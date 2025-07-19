@@ -1,0 +1,54 @@
+{
+  "name": "NewASM Dark",
+  "type": "dark",
+  "colors": {
+    "editor.foreground": "#D4D4D4",
+    "editor.background": "#1E1E1E"
+  },
+  "tokenColors": [
+    {
+      "scope": "keyword.control.newasm",
+      "settings": {
+        "foreground": "#C586C0",
+        "fontStyle": "bold"
+      }
+    },
+    {
+      "scope": "keyword.section.newasm",
+      "settings": {
+        "foreground": "#569CD6"
+      }
+    },
+    {
+      "scope": "variable.register.newasm",
+      "settings": {
+        "foreground": "#4EC9B0"
+      }
+    },
+    {
+      "scope": "string.quoted.double.newasm",
+      "settings": {
+        "foreground": "#CE9178"
+      }
+    },
+    {
+      "scope": "comment.line.semicolon.newasm",
+      "settings": {
+        "foreground": "#6A9955",
+        "fontStyle": "italic"
+      }
+    },
+    {
+      "scope": "constant.numeric.newasm",
+      "settings": {
+        "foreground": "#B5CEA8"
+      }
+    },
+    {
+      "scope": "constant.hex.newasm",
+      "settings": {
+        "foreground": "#D7BA7D"
+      }
+    }
+  ]
+}

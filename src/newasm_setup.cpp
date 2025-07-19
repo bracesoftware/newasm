@@ -182,7 +182,8 @@ namespace newasm
             int heaptr = 0; // pointer to heap adr
             //NORMAL REGISTERS
             int fdx = 0;
-            std::string tlr = newasm::header::constants::inv_reg_val;
+            //std::string tlr = newasm::header::constants::inv_reg_val;
+            newasm::_register<std::string> tlr("tlr", newasm::header::constants::inv_reg_val);
             std::string stl = newasm::header::constants::inv_reg_val;
             std::string psx = newasm::header::constants::inv_reg_val;
             std::string prp = newasm::header::constants::inv_reg_val;
@@ -194,6 +195,8 @@ namespace newasm
             std::string cpt = newasm::header::constants::inv_reg_val;
             std::string tr0 = newasm::header::constants::inv_reg_val;
             std::string tr1 = newasm::header::constants::inv_reg_val;
+
+            //newasm::register<std::string> register_name("regn", );
             //int mcd = newasm::datatypes::decimal;
         }
 

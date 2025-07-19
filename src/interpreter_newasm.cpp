@@ -67,6 +67,8 @@ namespace newasm
     }
 }
 
+#include "runtime/register.h"
+
 #include "core/malloc.h"
 #include "core/handlers.cpp"
 #include "core/lang_inf.cpp"

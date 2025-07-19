@@ -1,0 +1,40 @@
+{
+  "name": "newasm-syntax",
+  "displayName": "NewASM Syntax Highlighting",
+  "description": "Syntax highlighting for the NewASM language",
+  "version": "1.0.0",
+  "publisher": "newasm-dev",
+  "engines": {
+    "vscode": "^1.50.0"
+  },
+  "categories": ["Programming Languages"],
+  "contributes": {
+    "languages": [
+      {
+        "id": "newasm",
+        "aliases": ["NewASM", "newasm"],
+        "extensions": [
+          ".newasm",
+          ".newasm_dl",
+          ".newasm_set",
+          ".asm"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "newasm",
+        "scopeName": "source.newasm",
+        "path": "./syntaxes/newasm.tmLanguage.json"
+      }
+    ],
+    "themes": [
+      {
+        "label": "NewASM Dark",
+        "uiTheme": "vs-dark",
+        "path": "./themes/newasm-color-theme.json"
+      }
+    ]
+  }
+}

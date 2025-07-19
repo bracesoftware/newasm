@@ -361,6 +361,8 @@ In this example, we basically do `fdx=1`, `myvar=fdx`, `return 1`:
 | `br0` | primary bit operation register | Register in which all the bitwise calculation results are stored. Read [this](#bit-operations) for more information...  |
 | `br1` | alternate bit operation register | Register which is used as a second operand in bitwise calculations. Read [this](#bit-operations) for more information... |
 | `cpt` | container pointer | Register holding an address specifically of a container or a data structure. Read [this](#containers-and-data-structures) for more information... |
+| `tr0` | primary thread register | Dummy for threads. |
+| `tr1` | alternate thread register | Another dummy for threads. |
 
 ### `syscall` and `sysenter` instructions
 Perform a specific system call within a system module.

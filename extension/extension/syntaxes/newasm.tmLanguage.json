@@ -1,0 +1,49 @@
+
+
+{
+  "scopeName": "source.newasm",
+  "name": "NewASM",
+  "patterns": [
+    {
+      "name": "keyword.control.newasm",
+      "match":  "\\b(load|stor|sysreq|pop|retn|mov|syscall|proc|call|rem|halt|push|jmp|heap|cmp|je|jne|jl|jg|jle|jge|ret|zero|inc|dec|exit|end|nop|add|sub|div|mul|exp|log|and|or|xor|not|shl|shr|db|malloc|free|stack|wait|sysenter|xchg|int|__say)\\b"
+    },
+    {
+      "name": "register.control.newasm",
+      "match":  "\\b(tlr|stl|)\\b"
+    },
+    {
+      "name": "keyword.section.newasm",
+      "match": "\\.(text|data|start|hndl)"
+    },
+    {
+      "name": "variable.register.newasm",
+      "match": "%\\w+"
+    },
+    {
+      "name": "string.quoted.double.newasm",
+      "begin": "\"",
+      "end": "\""
+    },
+    {
+      "name": "string.quoted.double.newasm",
+      "begin": "'",
+      "end": "'"
+    },
+    {
+      "name": "comment.line.semicolon.newasm",
+      "match": ";.*$"
+    },
+    {
+      "name": "constant.numeric.newasm",
+      "match": "\\b\\d+(\\.\\d+)?\\b"
+    },
+    {
+      "name": "constant.hex.newasm",
+      "match": "\\b0x[0-9a-fA-F]+\\b"
+    }
+  ],
+  "repository": {},
+  "fileTypes": ["newasm"],
+  "uuid": "00000000-0000-0000-0000-000000000001"
+}

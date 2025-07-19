@@ -482,9 +482,9 @@ namespace newasm
             floatreg = newasm::mem::regs::cr1;
         }
 
-        if(suf == static_cast<std::string>("tlr"))
+        if(suf == newasm::mem::regs::tlr.identifier())
         {
-            strreg = newasm::mem::regs::tlr;
+            strreg = newasm::mem::regs::tlr.get_value();
         }
         if(suf == static_cast<std::string>("stl"))
         {
@@ -787,7 +787,7 @@ namespace newasm
                 newasm::mem::data[opr] = std::to_string(newasm::mem::regs::fdx);
                 return 1;
             }
-            if(suf == static_cast<std::string>("tlr"))
+            if(suf == newasm::mem::regs::tlr.identifier())
             {
                 if(newasm::header::functions::isnumeric(newasm::mem::regs::tlr))
                 {
@@ -1300,7 +1300,7 @@ namespace newasm
                 newasm::mem::regs::fdx = std::stoi(opr);
                 return 1;
             }
-            if(suf == static_cast<std::string>("tlr"))
+            if(suf == newasm::mem::regs::tlr.identifier())
             {
                 //using std::cout, std::endl;
                 //cout << "\n\t >> tlr set to: " << opr << endl;
@@ -1619,7 +1619,7 @@ namespace newasm
                 floatreg = newasm::mem::regs::cr1;
             }
 
-            if(suf == static_cast<std::string>("tlr"))
+            if(suf == newasm::mem::regs::tlr.identifier())
             {
                 strreg = newasm::mem::regs::tlr;
             }
@@ -2203,7 +2203,7 @@ namespace newasm
                 debugRegister(suf, std::to_string(newasm::mem::regs::fdx));
                 return 1;
             }
-            if(suf == static_cast<std::string>("tlr"))
+            if(suf == newasm::mem::regs::tlr.identifier())
             {
                 debugRegister(suf, (newasm::mem::regs::tlr));
                 return 1;
@@ -2326,7 +2326,7 @@ namespace newasm
                 newasm::terminate(newasm::mem::regs::fdx);//,wholeline);
                 return 1;
             }
-            if(suf == static_cast<std::string>("tlr"))
+            if(suf == newasm::mem::regs::tlr.identifier())
             {
                 if(newasm::header::functions::isnumeric(newasm::mem::regs::tlr))
                 {
@@ -2443,7 +2443,7 @@ namespace newasm
                 newasm::mem::regs::fdx = 0;
                 return 1;
             }
-            if(suf == static_cast<std::string>("tlr"))
+            if(suf == newasm::mem::regs::tlr.identifier())
             {
                 newasm::mem::regs::tlr = newasm::header::constants::inv_reg_val;
                 return 1;
@@ -2563,7 +2563,7 @@ namespace newasm
             }
 
             //typeless registers require a different approach
-            if(suf == static_cast<std::string>("tlr"))
+            if(suf == newasm::mem::regs::tlr.identifier())
             {
                 if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr))
                 {
@@ -2704,7 +2704,7 @@ namespace newasm
             }
 
             //typeless registers require a different approach
-            if(suf == static_cast<std::string>("tlr"))
+            if(suf == newasm::mem::regs::tlr.identifier())
             {
                 if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr))
                 {
@@ -3129,8 +3129,8 @@ namespace newasm
                 //input text
                 if(newasm::mem::regs::fdx == 3)
                 {
-                    std::getline(std::cin, newasm::mem::regs::tlr);
-                    newasm::mem::regs::tlr = static_cast<std::string>("\"") + newasm::mem::regs::tlr + static_cast<std::string>("\"");
+                    std::getline(std::cin, newasm::mem::regs::tlr.ref_value());
+                    newasm::mem::regs::tlr = std::string("\"") + newasm::mem::regs::tlr + ("\"");
                     return 1;
                 }
                 //input numbers and floats
