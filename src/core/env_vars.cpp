@@ -58,7 +58,7 @@ namespace newasm
                             value = tokens[1];
                             value = newasm::header::functions::trim(value);
 
-                            for(auto i = newasm::core::env_vars::priv_env_var.begin(); i < newasm::core::env_vars::priv_env_var.end(); i++)
+                            for(auto i = newasm::core::env_vars::priv_env_var.begin(); i < newasm::core::env_vars::priv_env_var.end(); ++i)
                             {
                                 if(i->first == key)
                                 {

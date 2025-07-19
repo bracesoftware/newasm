@@ -464,7 +464,7 @@ namespace newasm
             }
             void parseopr(std::string &opr,std::unordered_map<std::string, std::string> &data)
             {
-                for(auto it = data.begin(); it != data.end(); it++)
+                for(auto it = data.begin(); it != data.end(); ++it)
                 {
                     if(opr == it->first)
                     {

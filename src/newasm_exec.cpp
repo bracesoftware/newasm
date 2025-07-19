@@ -151,7 +151,7 @@ namespace newasm
             }
             bool member_found = false;
             std::vector<newasm::mem::struct_member>::iterator i;
-            for(i = newasm::mem::structs[struct_name].begin(); i !=newasm::mem::structs[struct_name].end(); i++)
+            for(i = newasm::mem::structs[struct_name].begin(); i !=newasm::mem::structs[struct_name].end(); ++i)
             {
                 if(i->name == member_name)
                 {
@@ -428,7 +428,7 @@ namespace newasm
         }
         bool member_found = false;
         std::vector<newasm::mem::struct_member>::iterator struct_member_id;
-        for(struct_member_id = newasm::mem::structs[struct_name].begin(); struct_member_id !=newasm::mem::structs[struct_name].end(); struct_member_id++)
+        for(struct_member_id = newasm::mem::structs[struct_name].begin(); struct_member_id !=newasm::mem::structs[struct_name].end(); ++struct_member_id)
         {
             if(struct_member_id->name == member_name)
             {
@@ -597,7 +597,7 @@ namespace newasm
     int process_iso(std::string wholeline, std::string ins, std::string suf, std::string opr)
     {
         std::vector<std::string> tokens;
-        for(std::vector<std::pair<std::string,std::string>>::iterator i = newasm::env_vars->begin(); i < newasm::env_vars->end(); i++)
+        for(std::vector<std::pair<std::string,std::string>>::iterator i = newasm::env_vars->begin(); i < newasm::env_vars->end(); ++i)
         {
             tokens = newasm::header::functions::split_fixed(opr,'/');
             if(newasm::header::functions::trim(tokens[0]) == "*") if(newasm::header::functions::trim(tokens[1]) == i->first)
@@ -768,7 +768,7 @@ namespace newasm
                 newasm::terminate(newasm::exit_codes::invalid_memacc);
                 return 1;
             }
-            for(auto i = newasm::syscalls::mem::constvals.begin(); i != newasm::syscalls::mem::constvals.end(); i++)
+            for(auto i = newasm::syscalls::mem::constvals.begin(); i != newasm::syscalls::mem::constvals.end(); ++i)
             {
                 if(*i == newasm::header::functions::trim(opr))
                 {
@@ -1271,7 +1271,7 @@ namespace newasm
             newasm::terminate(newasm::exit_codes::invalid_syntax);
             return 1;
         }
-        /*for(std::vector<std::string>::iterator i = newasm::mem::uninitialized_pointer.begin(); i != newasm::mem::uninitialized_pointer.end(); i++)
+        /*for(std::vector<std::string>::iterator i = newasm::mem::uninitialized_pointer.begin(); i != newasm::mem::uninitialized_pointer.end(); ++i)
         {
             if(*i == opr)
             {
@@ -2285,7 +2285,7 @@ namespace newasm
                 return 1;
             }
             std::vector<std::string> tokens;
-            for(std::vector<std::pair<std::string,std::string>>::iterator i = newasm::env_vars->begin(); i < newasm::env_vars->end(); i++)
+            for(std::vector<std::pair<std::string,std::string>>::iterator i = newasm::env_vars->begin(); i < newasm::env_vars->end(); ++i)
             {
                 tokens = newasm::header::functions::split_fixed(suf,'/');
                 if(newasm::header::functions::trim(tokens[0]) == "*") if(newasm::header::functions::trim(tokens[1]) == i->first)
@@ -2629,7 +2629,7 @@ namespace newasm
                     return 1;
                 }
                 bool found = false;
-                for(std::map<std::string, std::vector<std::string>>::iterator i = newasm::mem::funcs.begin(); i != newasm::mem::funcs.end(); i++)
+                for(std::map<std::string, std::vector<std::string>>::iterator i = newasm::mem::funcs.begin(); i != newasm::mem::funcs.end(); ++i)
                 {
                     if(found)
                     {
@@ -2769,7 +2769,7 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::invalid_proc);
                     return 1;
                 }
-                for(std::map<std::string, std::vector<std::string>>::iterator i = newasm::mem::funcs.begin(); i != newasm::mem::funcs.end(); i++)
+                for(std::map<std::string, std::vector<std::string>>::iterator i = newasm::mem::funcs.begin(); i != newasm::mem::funcs.end(); ++i)
                 {
                     if(std::next(i) == newasm::mem::funcs.end())
                     {
@@ -3649,7 +3649,7 @@ namespace newasm
         {
             if(newasm::mem::functions::datavalid(line, newasm::mem::instructions))
             {
-                for(int i = 0; i < newasm::dynlib::mem::invalid_dynlibs.size(); i++)
+                for(int i = 0; i < newasm::dynlib::mem::invalid_dynlibs.size(); ++i)
                 {
                     if(line == newasm::dynlib::mem::invalid_dynlibs.at(i))
                     {
@@ -3657,7 +3657,7 @@ namespace newasm
                         return 1;
                     }
                 }
-                for(int i = 0; i < newasm::mem::instructions[line].size(); i++)
+                for(int i = 0; i < newasm::mem::instructions[line].size(); ++i)
                 {
                     if(newasm::system::terminated)
                     {
@@ -3672,7 +3672,7 @@ namespace newasm
                 std::string macroname = newasm::header::functions::trim(line.substr(1));
                 auto it = newasm::stack::macros; if(it.find(macroname) != it.end())
                 {
-                    for(int i = 0; i < it.at(macroname)->contents.size(); i++)
+                    for(int i = 0; i < it.at(macroname)->contents.size(); ++i)
                     {
                         newasm::procline(it.at(macroname)->contents.at(i));
                     }
@@ -3688,7 +3688,7 @@ namespace newasm
             instruction = linetokens.at(0);
             if(newasm::header::functions::ishex(instruction))
             {
-                for(std::unordered_map<int, std::string>::iterator i = newasm::opcodes::mem.begin(); i != newasm::opcodes::mem.end(); i++)
+                for(std::unordered_map<int, std::string>::iterator i = newasm::opcodes::mem.begin(); i != newasm::opcodes::mem.end(); ++i)
                 {
                     if(i->first == newasm::header::functions::hextoi(instruction))
                     {
@@ -3978,7 +3978,7 @@ namespace newasm
         #ifdef NEWASM_MEGA_ERROR
         if(newasm::threads::thread_count != 0)
         {
-            for(auto i = newasm::threads::valid_threads.begin(); i < newasm::threads::valid_threads.end(); i++)
+            for(auto i = newasm::threads::valid_threads.begin(); i < newasm::threads::valid_threads.end(); ++i)
             {
                 if(newasm::threads::functions::finished(*i))
                 {
@@ -4001,7 +4001,7 @@ namespace newasm
             }
         }
         #endif
-        for(auto i = newasm::threads::valid_threads.begin(); i != newasm::threads::valid_threads.end(); i++)
+        for(auto i = newasm::threads::valid_threads.begin(); i != newasm::threads::valid_threads.end(); ++i)
         {
             if(newasm::threads::memory.at(*i)->contents.empty())
             {

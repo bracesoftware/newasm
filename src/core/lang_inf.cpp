@@ -196,7 +196,7 @@ namespace newasm
             {
                 bool iskeyword(const std::string &str)
                 {
-                    for(auto i = newasm::core::lang_inf::instruction_set.begin(); i != newasm::core::lang_inf::instruction_set.end(); i++)
+                    for(auto i = newasm::core::lang_inf::instruction_set.begin(); i != newasm::core::lang_inf::instruction_set.end(); ++i)
                     {
                         if(i->second == str)
                         {

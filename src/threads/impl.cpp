@@ -67,7 +67,7 @@ namespace newasm
             #endif
             void free_mem()
             {
-                for(auto i = newasm::threads::memory.begin(); i != newasm::threads::memory.end(); i++)
+                for(auto i = newasm::threads::memory.begin(); i != newasm::threads::memory.end(); ++i)
                 {
                     if(i->second != nullptr)
                     {

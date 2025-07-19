@@ -52,7 +52,7 @@ namespace newasm
         void free_macro_mem()
         {
             for(std::unordered_map<std::string, newasm::stack::macro_data*>::iterator i = newasm::stack::macros.begin();
-            i != newasm::stack::macros.end(); i++)
+            i != newasm::stack::macros.end(); ++i)
             {
                 if(i->second != nullptr) delete i->second;
             }

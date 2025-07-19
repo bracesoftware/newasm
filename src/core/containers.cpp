@@ -157,7 +157,7 @@ namespace newasm
                 {
                     this->bitarraysize = 32;
                 }
-                for(int i = 0; i < sizeof(bitarrayvalue)/sizeof(int); i++)
+                for(int i = 0; i < sizeof(bitarrayvalue)/sizeof(int); ++i)
                 {
                     bitarrayvalue[i] = 0;
                 }
@@ -205,7 +205,7 @@ namespace newasm
             }
             int flip() override
             {
-                for(int i = 0; i < this->get_size(); i++)
+                for(int i = 0; i < this->get_size(); ++i)
                 {
                     if(this->get_at(i) == 1)
                     {
@@ -242,12 +242,12 @@ namespace newasm
             void free_dyn_mem()
             {
                 for(std::unordered_map<std::string, newasm::containers::bit_array__*>::iterator i = newasm::containers::bit_arrays.begin();
-                i != newasm::containers::bit_arrays.end(); i++)
+                i != newasm::containers::bit_arrays.end(); ++i)
                 {
                     if(i->second != nullptr) delete i->second;
                 }
                 for(std::unordered_map<std::string, newasm::containers::binary_tree__*>::iterator i = newasm::containers::binary_trees.begin();
-                i != newasm::containers::binary_trees.end(); i++)
+                i != newasm::containers::binary_trees.end(); ++i)
                 {
                     if(i->second != nullptr) delete i->second;
                 }

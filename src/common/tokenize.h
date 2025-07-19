@@ -63,10 +63,10 @@ namespace newasm
                     }
                 }
             }
-            for(int i = 0; i < tokens.size(); i++)
+            /*for(int i = 0; i < tokens.size(); i++)
             {
                 //std::cout << "\t\t\t" << i << " : '" << tokens.at(i) << "'\n"; 
-            }
+            }*/
             return tokens;
         }
         std::vector<std::string> tokenize2(const std::string& input)

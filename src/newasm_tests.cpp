@@ -30,7 +30,7 @@ namespace newasm
             binaryTree->set_at_parent_of(2, 66);
 
             using std::cout, std::endl;
-            for(int i = 0; i < 10; i++)
+            for(int i = 0; i < 10; ++i)
             {
                 cout << "bintree<" << i << "> = " << binaryTree->get_at(i) << endl;
             }
