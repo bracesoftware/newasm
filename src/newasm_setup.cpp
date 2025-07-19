@@ -231,7 +231,7 @@ namespace newasm
                 newasm::mem::regs::hea = 0;
                 newasm::mem::regs::heaptr = 0;
                 newasm::mem::regs::stk = size-1;
-                for(int i = 0; i < size; i++)
+                for(int i = 0; i < size; ++i)
                 {
                     newasm::mem::program_memory[i] = newasm::header::constants::nullstr;
                 }
@@ -243,7 +243,7 @@ namespace newasm
             }
             template<typename T> bool datavalid(std::string dataname, T &dat)
             {
-                for(auto it = dat.begin(); it != dat.end(); it++)
+                for(auto it = dat.begin(); it != dat.end(); ++it)
                 {
                     if(it->first == dataname)
                     {
@@ -254,7 +254,7 @@ namespace newasm
             }
             bool islbln(int line)
             {
-                for(std::unordered_map<std::string, int>::iterator i = labels.begin(); i != labels.end(); i++)
+                for(std::unordered_map<std::string, int>::iterator i = labels.begin(); i != labels.end(); ++i)
                 {
                     if(i->second == line)
                     {

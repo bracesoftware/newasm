@@ -47,7 +47,7 @@ namespace newasm
 
             std::string argument, params, description;
 
-            for(auto i = help_table_data.begin(); i != help_table_data.end(); i++)
+            for(auto i = help_table_data.begin(); i != help_table_data.end(); ++i)
             {
                 argument = i->first;
                 params = i->second.first;
@@ -98,7 +98,7 @@ namespace newasm
             int process_c(std::string cmd)
             {
                 std::vector<std::string> tokens = newasm::header::functions::split(newasm::header::functions::trim(cmd),' ');
-                for(int i = 0; i < tokens.size(); i++)
+                for(int i = 0; i < tokens.size(); ++i)
                 {
                     tokens[i] = newasm::header::functions::trim(tokens[i]);
                 }
@@ -301,7 +301,7 @@ namespace newasm
                             std::ofstream final_file(final_output);
                             if(final_file)
                             {
-                                for(auto i = newasm::ctl::install::dynlib_content.begin(); i != newasm::ctl::install::dynlib_content.end(); i++)
+                                for(auto i = newasm::ctl::install::dynlib_content.begin(); i != newasm::ctl::install::dynlib_content.end(); ++i)
                                 {
                                     final_file << *i << "\n";
                                 }

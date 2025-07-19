@@ -20,7 +20,7 @@ the Initial Developer. All Rights Reserved.
 #ifndef __newasm_included
     #error [New-ASM] Cannot compile.
 #endif
-
+#include <type_traits>
 namespace newasm
 {
     template<typename T> class _register
@@ -79,6 +79,10 @@ namespace newasm
         }
         void add_end_(std::string str__)
         {
+            if constexpr(!std::is_same_v<T, std::string>)
+            {
+                return;
+            }
             std::stringstream ss;
             ss << str__;
             ss << value;

@@ -33,7 +33,7 @@ namespace newasm
         {
             const std::string name = "[NewASM]";
             const std::string copyright_claim = "(c) 2024 Brace Software Co.";
-            const std::string fullname = "NewASM Runtime Environment";
+            const std::string fullname = "NewASM Virtual Machine";
         }
         namespace version
         {
@@ -192,7 +192,7 @@ namespace newasm
             //std::string trim(const std::string &str);
             bool check_args(std::string forarg, int argc, char *argv[], int &argid)
             {
-                if(argc > 1) for(int i = 1; i < argc; i++)
+                if(argc > 1) for(int i = 1; i < argc; ++i)
                 {
                     if(forarg == static_cast<std::string>(argv[i]))
                     {
@@ -218,6 +218,7 @@ namespace newasm
                 std::cout << newasm::header::col::reset << newasm::header::col::gray;
                 std::cout << "\n  Build: " << version << "-" << os << "_" << arch;
                 std::cout << "\n  Compiled with: C++" << __cplusplus;
+                std::cout << "\n\n  Runtime version: v" << newasm::runtime::version;
                 
                 std::cout << "\n  " << newasm::header::system_info::copyright_claim <<
                 newasm::header::col::reset << std::endl;
@@ -249,7 +250,7 @@ namespace newasm
 
                 std::string argument, params, description;
 
-                for(auto i = help_table_data.begin(); i != help_table_data.end(); i++)
+                for(auto i = help_table_data.begin(); i != help_table_data.end(); ++i)
                 {
                     argument = i->first;
                     params = i->second.first;
@@ -301,7 +302,7 @@ namespace newasm
             bool isbetween(const std::string str, char delim, char what)
             {
                 int pos1 = -1,pos2 = -1,delpos = -1;
-                for(int i = 0; i < str.size(); i++)
+                for(int i = 0; i < str.size(); ++i)
                 {
                     if(str.at(i) == delim)
                     {
@@ -345,7 +346,7 @@ namespace newasm
                 size_t i = 0;
                 while(i < input.size() && !std::isspace(static_cast<unsigned char>(input[i])))
                 {
-                    i++;
+                    ++i;
                 }
 
                 if(i == input.size())
@@ -489,7 +490,7 @@ namespace newasm
             bool istext(const std::string& str)
             {
                 int quocount = 0;
-                for(int i = 0; i < str.size(); i++)
+                for(int i = 0; i < str.size(); ++i)
                 {
                     if(str.at(i) == '\"')
                     {
@@ -501,7 +502,7 @@ namespace newasm
             bool isref(const std::string& str)
             {
                 int amp_count = 0;
-                for(int i = 0; i < str.size(); i++)
+                for(int i = 0; i < str.size(); ++i)
                 {
                     if(str.at(i) == '&')
                     {
@@ -525,7 +526,7 @@ namespace newasm
             bool ischar(const std::string &str)
             {
                 int singlequo_count = 0;
-                for(int i = 0; i < str.size(); i++)
+                for(int i = 0; i < str.size(); ++i)
                 {
                     if(str.at(i) == '\'')
                     {
@@ -582,7 +583,7 @@ namespace newasm
                 int size_b = b.size();
                 int result = 0;
 
-                for(int i = 0; i < size_a > size_b ? size_b : size_a; i++)
+                for(int i = 0; i < size_a > size_b ? size_b : size_a; ++i)
                 {
                     if(a.at(i) != b.at(i))
                     {
@@ -633,7 +634,7 @@ namespace newasm
                 if (str.size() < 3) return false;
                 if (str.at(0) != '0' || str.at(1) != 'x') return false;
                 
-                for (int i = 2; i < str.size(); i++)
+                for (int i = 2; i < str.size(); ++i)
                 {
                     char c = str.at(i);
                     if(!(('0' <= c && c <= '9') || ('a' <= c && c <= 'f') || ('A' <= c && c <= 'F')))
@@ -648,7 +649,7 @@ namespace newasm
                 if (str.size() < 3) return false;
                 if (str.at(0) != '0' || str.at(1) != 'b') return false;
                 
-                for (int i = 2; i < str.size(); i++)
+                for (int i = 2; i < str.size(); ++i)
                 {
                     char c = str.at(i);
                     if(c != '0' && c != '1')
@@ -660,7 +661,7 @@ namespace newasm
             }
             bool hasnull(std::string str, char &delim, int &pos)
             {
-                for(int i = 0; i < str.size(); i++)
+                for(int i = 0; i < str.size(); ++i)
                 {
                     if(
                         (str.at(i) == '\t') ||
@@ -774,7 +775,7 @@ namespace newasm
                     newasm::header::functions::info("Loading the dynamic libraries...");
                     //std::cout << "Debugging MEGA CRASH " << "1\n";
                     dynamic_libs = newasm::header::functions::split(value,',');
-                    for(int i = 0; i < dynamic_libs.size(); i++)
+                    for(int i = 0; i < dynamic_libs.size(); ++i)
                     {
                         dynamic_libs[i] = newasm::header::functions::trim(dynamic_libs[i]);
                         //std::cout << "dynamic_libs [" << i << "] : '" << dynamic_libs[i] << "'\n";

@@ -28,4 +28,8 @@ namespace newasm
     {
         std::vector<std::string> tokenize(const std::string line);
     }
+    namespace runtime
+    {
+        int version;
+    }
 }

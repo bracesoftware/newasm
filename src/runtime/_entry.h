@@ -27,6 +27,7 @@ namespace newasm
     {
         void main()
         {
+            version = 1;
             newasm::header::functions::log("Runtime loaded.");
         }
     }

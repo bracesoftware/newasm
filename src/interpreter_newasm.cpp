@@ -178,6 +178,8 @@ int main(int argc, char *argv[])
 
     return 1;
     #endif
+    newasm::runtime::main();
+
     fs::path data_folder = fs::path(newasm::core::constants::data_folder);
     if(!fs::exists(data_folder))
     {
@@ -316,7 +318,7 @@ int main(int argc, char *argv[])
     {
         newasm::global::event_now = true;
         newasm::copyproc(newasm::handlers::exit_handler);
-        for(auto i = newasm::global::event_codeblock.begin(); i != newasm::global::event_codeblock.end(); i++)
+        for(auto i = newasm::global::event_codeblock.begin(); i != newasm::global::event_codeblock.end(); ++i)
         {
             newasm::procline(*i);
         }
