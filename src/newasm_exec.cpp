@@ -3130,7 +3130,7 @@ namespace newasm
                 if(newasm::mem::regs::fdx == 3)
                 {
                     std::getline(std::cin, newasm::mem::regs::tlr.ref_value());
-                    newasm::mem::regs::tlr = std::string("\"") + newasm::mem::regs::tlr + ("\"");
+                    newasm::mem::regs::tlr.add_end_("\"");
                     return 1;
                 }
                 //input numbers and floats
@@ -3183,7 +3183,7 @@ namespace newasm
                 if(newasm::mem::regs::fdx == 8)
                 {
                     std::cin >> newasm::mem::regs::tlr;
-                    newasm::mem::regs::tlr = static_cast<std::string>("'") + newasm::mem::regs::tlr + static_cast<std::string>("'");
+                    newasm::mem::regs::tlr.add_end_("'");
                     if(!newasm::header::functions::ischar(newasm::mem::regs::tlr))
                     {
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);

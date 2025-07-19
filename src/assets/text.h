@@ -21,3 +21,11 @@ the Initial Developer. All Rights Reserved.
 #ifndef __newasm_included
     #error [New-ASM] Cannot compile.
 #endif
+
+namespace newasm
+{
+    namespace constv
+    {
+        const std::string quote = "\"";
+    }
+}

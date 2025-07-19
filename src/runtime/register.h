@@ -77,6 +77,14 @@ namespace newasm
             is >> r.value;
             return is;
         }
+        void add_end_(std::string str__)
+        {
+            std::stringstream ss;
+            ss << str__;
+            ss << value;
+            ss << str__;
+            value = ss.str();
+        }
 
     };
     template<typename T> std::string operator+(const _register<T>& reg, const std::string& rhs)
