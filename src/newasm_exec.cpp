@@ -66,13 +66,16 @@ namespace newasm
             }
             return 1;
         }
-      
         //newasm::header::data::lastln = line;
-        newasm::mem::regs::exc = exit_code;
-        newasm::system::terminated = true;
-        std::cout << std::endl;
-        newasm::header::functions::info(newasm::constv::pxstr + std::to_string(newasm::mem::regs::exc));
+        if(!newasm::system::terminated)
+        {
+            std::cout << std::endl;
+            newasm::mem::regs::exc = exit_code;
+            newasm::header::functions::info(newasm::constv::pxstr + std::to_string(newasm::mem::regs::exc));
+        }
         
+        newasm::system::terminated = true;
+
         if(newasm::header::data::exception)
         {
             std::cout <<
@@ -177,12 +180,6 @@ namespace newasm
         valid = false;
         if(stat == static_cast<std::string>("_"))
         {
-            if(arg == static_cast<std::string>("config"))
-            {
-                newasm::system::section = newasm::code_stream::sections::config;
-                valid = true;
-                return 1;
-            }
             if(arg == static_cast<std::string>("data"))
             {
                 newasm::system::section = newasm::code_stream::sections::data;
@@ -2010,7 +2007,7 @@ namespace newasm
         //int
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::int__))
         {
-            if(suf == static_cast<std::string>("0x1"))
+            if(suf == static_cast<std::string>("0x1")) // sys_memsize
             {
                 if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr))
                 {
@@ -2024,7 +2021,7 @@ namespace newasm
                 }
                 return 1;
             }
-            if(suf == static_cast<std::string>("0x2"))
+            if(suf == static_cast<std::string>("0x2")) // sys_lazy_evhndlr
             {
                 if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr))
                 {
