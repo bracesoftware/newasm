@@ -1,6 +1,6 @@
 /*
 
-The ORIGINAL CODE is the `NewASM Runtime Environment` Source Code.
+The ORIGINAL CODE is the `NewASM Virtual Machine` Source Code.
 The INITIAL DEVELOPER is Brace Software Co., DEntisT.
 The COPYRIGHT YEAR is 2024.
 
