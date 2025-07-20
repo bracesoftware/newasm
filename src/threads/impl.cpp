@@ -41,30 +41,6 @@ namespace newasm
         int thread_count = 0;
         namespace functions
         {
-            #ifdef NEWASM_MEGA_ERROR
-            bool finished(std::string thread_name)
-            {
-                if(newasm::threads::memory.at(thread_name)->lastlndx == newasm::threads::memory.at(thread_name)->size)
-                {
-                    return true;
-                }
-                return false;
-            }
-            std::string getlastline(std::string thread_name)
-            {
-                int line = 0;
-                for(auto i = newasm::threads::memory.at(thread_name)->contents.begin(); i < newasm::threads::memory.at(thread_name)->contents.end(); i++)
-                {
-                    if(line == newasm::threads::memory.at(thread_name)->lastlndx)
-                    {
-                        newasm::threads::memory.at(thread_name)->lastlndx++;
-                        return *i;
-                    }
-                    line++;
-                }
-                return static_cast<std::string>("__rip_thread__");
-            }
-            #endif
             void free_mem()
             {
                 for(auto i = newasm::threads::memory.begin(); i != newasm::threads::memory.end(); ++i)
@@ -76,10 +52,14 @@ namespace newasm
                     }
                 }
             }
-            /*void proceed()
+            int get_sysenter()
             {
-                
-            }*/
+                if(newasm::thread_line)
+                {
+                    return newasm::threads::sys_module;
+                }
+                return newasm::header::data::module;
+            }
         }
     }
 }

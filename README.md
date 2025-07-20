@@ -274,21 +274,12 @@ instruction suffix , operand
 ### `retn` and `ret` instructions
 Ends your program with specific exit code.
 
-#### Syntax for `retn`
-- `instruction` - `retn`
-- `suffix` - no suffix, use `retn exit_code`
-- `operand` - exit code
-
-#### Syntax for `ret`
-- `instruction` - `ret`
-- `suffix` - register name
-- `operand` - no operand (`0`)
-
-#### Example for `retn`
+#### Example for `ret`
+`ret` is a basic return, return a number or a variable value.
 
 ```asm
-. start
-    retn 23
+.start
+    ret 23
 ```
 
 Output:
@@ -298,12 +289,13 @@ Output:
 ```
 
 
-#### Example for `ret`
+#### Example for `retn`
+`retn` stands for "return near" and you return register values.
 
 ```asm
 . start
     mov tlr , 8
-    ret tlr
+    retn tlr
 ```
 
 Output:

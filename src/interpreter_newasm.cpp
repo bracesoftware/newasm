@@ -46,6 +46,10 @@ the Initial Developer. All Rights Reserved.
 
 #define __newasm_included
 
+// thread init
+#include "threads/_flags.cpp"
+
+// Resources (assets) used in the program
 #include "assets/text.h"
 #include "assets/def.h"
 
@@ -68,6 +72,10 @@ namespace newasm
     }
 }
 
+/*
+Essential stuff needed to run
+is in the runtime
+*/
 #include "runtime/register.h"
 
 #include "core/malloc.h"

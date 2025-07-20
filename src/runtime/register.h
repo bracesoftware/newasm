@@ -38,9 +38,10 @@ namespace newasm
         private:
         std::string name;
         T value;
+        T thread_value;
         public:
         _register(std::string regname, T val)
-            : name(regname), value(val)
+            : name(regname), value(val), thread_value(val)
         {
         }
         std::string identifier() const
@@ -49,51 +50,100 @@ namespace newasm
         }
         T get_value() const
         {
+            if(newasm::thread_line)
+            {
+                return this->thread_value;
+            }
             return this->value;
         }
         void set_value(T new_val)
         {
+            if(newasm::thread_line)
+            {
+                this->thread_value = new_val;
+                return;
+            }
             this->value = new_val;
+            return;
         }
         T& ref_value()
         {
+            if(newasm::thread_line)
+            {
+                return thread_value;
+            }
             return value;
         }
         _register<T>& operator=(const T& new_val)
         {
+            if(newasm::thread_line)
+            {
+                thread_value = new_val;
+                return *this;
+            }
             value = new_val;
             return *this;
         }
         operator T&()
         {
+            if(newasm::thread_line)
+            {
+                return thread_value;
+            }
             return value;
         }
 
         operator T() const
         {
+            if(newasm::thread_line)
+            {
+                return thread_value;
+            }
             return value;
         }
         operator const T&() const
         {
+            if(newasm::thread_line)
+            {
+                return thread_value;
+            }
             return value;
         }
         friend std::ostream& operator<<(std::ostream& os, const _register<T>& r)
         {
+            if(newasm::thread_line)
+            {
+                os << r.thread_value;
+                return os;
+            }
             os << r.value;
             return os;
         }
         friend std::istream& operator>>(std::istream& is, _register<T>& r)
         {
+            if(newasm::thread_line)
+            {
+                is >> r.thread_value;
+                return is;
+            }
             is >> r.value;
             return is;
         }
 
         bool operator==(const T& other) const
         {
+            if(newasm::thread_line)
+            {
+                return thread_value == other;
+            }
             return value == other;
         }
         friend bool operator==(const T& lhs, const _register<T>& rhs)
         {
+            if(newasm::thread_line)
+            {
+                return lhs = rhs.thread_value;
+            }
             return lhs == rhs.value;
         }
 
@@ -103,11 +153,21 @@ namespace newasm
             {
                 return;
             }
+            if(newasm::thread_line)
+            {
+                std::stringstream ss;
+                ss << str__;
+                ss << thread_value;
+                ss << str__;
+                thread_value = ss.str();
+                return;
+            }
             std::stringstream ss;
             ss << str__;
             ss << value;
             ss << str__;
             value = ss.str();
+            return;
         }
 
     };

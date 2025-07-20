@@ -2049,41 +2049,81 @@ namespace newasm
         {
             if(suf == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::ios))
             {
+                if(newasm::thread_line)
+                {
+                    newasm::threads::sys_module = newasm::core::lang_inf::refs::ios;
+                    return 1;
+                }
                 newasm::header::data::module = newasm::core::lang_inf::refs::ios;
                 return 1;
             }
             if(suf == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::fs))
             {
+                if(newasm::thread_line)
+                {
+                    newasm::threads::sys_module = newasm::core::lang_inf::refs::fs;
+                    return 1;
+                }
                 newasm::header::data::module = newasm::core::lang_inf::refs::fs;
                 return 1;
             }
             if(suf == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::exf))
             {
+                if(newasm::thread_line)
+                {
+                    newasm::threads::sys_module = newasm::core::lang_inf::refs::exf;
+                    return 1;
+                }
                 newasm::header::data::module = newasm::core::lang_inf::refs::exf;
                 return 1;
             }
             if(suf == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::cmanip))
             {
+                if(newasm::thread_line)
+                {
+                    newasm::threads::sys_module = newasm::core::lang_inf::refs::cmanip;
+                    return 1;
+                }
                 newasm::header::data::module = newasm::core::lang_inf::refs::cmanip;
                 return 1;
             }
             if(suf == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::txtop))
             {
+                if(newasm::thread_line)
+                {
+                    newasm::threads::sys_module = newasm::core::lang_inf::refs::txtop;
+                    return 1;
+                }
                 newasm::header::data::module = newasm::core::lang_inf::refs::txtop;
                 return 1;
             }
             if(suf == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::net))
             {
+                if(newasm::thread_line)
+                {
+                    newasm::threads::sys_module = newasm::core::lang_inf::refs::net;
+                    return 1;
+                }
                 newasm::header::data::module = newasm::core::lang_inf::refs::net;
                 return 1;
             }
             if(suf == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::mem))
             {
+                if(newasm::thread_line)
+                {
+                    newasm::threads::sys_module = newasm::core::lang_inf::refs::mem;
+                    return 1;
+                }
                 newasm::header::data::module = newasm::core::lang_inf::refs::mem;
                 return 1;
             }
             if(suf == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::chrono))
             {
+                if(newasm::thread_line)
+                {
+                    newasm::threads::sys_module = newasm::core::lang_inf::refs::chrono;
+                    return 1;
+                }
                 newasm::header::data::module = newasm::core::lang_inf::refs::chrono;
                 return 1;
             }
@@ -2152,6 +2192,11 @@ namespace newasm
             if(newasm::header::data::repl)
             {
                 newasm::unsins(ins); // incompatible instruction for repl
+                return 1;
+            }
+            if(newasm::thread_line)
+            {
+                newasm::terminate(newasm::exit_codes::invalid_syntax);
                 return 1;
             }
             if(newasm::header::functions::isalphanum(suf))
@@ -2281,8 +2326,8 @@ namespace newasm
             newasm::terminate(newasm::exit_codes::invalid_syntax);
             return 1;
         }
-        // RETURN
-        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::retn))
+        // ret - classic return
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::ret))
         {
             if(newasm::header::data::repl)
             {
@@ -2317,8 +2362,8 @@ namespace newasm
             newasm::terminate(newasm::mem::regs::exc);//,wholeline);
             return 1;
         }
-        //ret
-        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::ret))
+        //retn - return near, regs
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::retn))
         {
             if(newasm::header::data::repl)
             {
@@ -2879,7 +2924,7 @@ namespace newasm
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::syscall))
         {
             //chrono
-            if(newasm::header::data::module == newasm::core::lang_inf::refs::chrono)
+            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::chrono)
             {
                 if(newasm::mem::regs::fdx == 1) //getyear
                 {
@@ -2916,7 +2961,7 @@ namespace newasm
             }
             //////process management (execution flow)
             //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::exf))
-            if(newasm::header::data::module == newasm::core::lang_inf::refs::exf)
+            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::exf)
             {
                 if(newasm::header::execution_flow::exec_redirected)
                 {
@@ -2941,7 +2986,7 @@ namespace newasm
             }
             //net
             //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::net))
-            if(newasm::header::data::module == newasm::core::lang_inf::refs::net)
+            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::net)
             {
                 if(newasm::mem::regs::fdx == 1) //download files
                 {
@@ -2987,7 +3032,7 @@ namespace newasm
             }
             //memory/data manipulation
             //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::mem))
-            if(newasm::header::data::module == newasm::core::lang_inf::refs::mem)
+            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::mem)
             {
                 if(newasm::mem::regs::fdx == 1)
                 {
@@ -3009,7 +3054,7 @@ namespace newasm
             }
             //text manipulation
             //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::txtop))
-            if(newasm::header::data::module == newasm::core::lang_inf::refs::txtop)
+            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::txtop)
             {
                 if(newasm::mem::regs::fdx == 1)
                 {
@@ -3026,7 +3071,7 @@ namespace newasm
             }
             //////////// container manipulation
             //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::cmanip))
-            if(newasm::header::data::module == newasm::core::lang_inf::refs::cmanip)
+            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::cmanip)
             {
                 if(newasm::mem::regs::cpt == newasm::header::constants::inv_reg_val)
                 {
@@ -3150,7 +3195,7 @@ namespace newasm
             }
             ///// input-output stream
             //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::ios))
-            if(newasm::header::data::module == newasm::core::lang_inf::refs::ios)
+            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::ios)
             {
                 //print text
                 if(newasm::mem::regs::fdx == 1)
@@ -3251,7 +3296,7 @@ namespace newasm
             }
             //////file stream
             //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::fs))
-            if(newasm::header::data::module == newasm::core::lang_inf::refs::fs)
+            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::fs)
             {
                 //create folder
                 if(newasm::mem::regs::fdx == 1)
@@ -3954,7 +3999,7 @@ namespace newasm
         //else
         return 0;
     }
-    void handle_threads(); int execute(std::string file, int startline, int proceed)
+    void handle_threads(int method); int execute(std::string file, int startline, int proceed)
     {
         if(proceed == 0)
         {
@@ -3998,7 +4043,15 @@ namespace newasm
                 //threads
                 if(newasm::system::section == newasm::code_stream::sections::start)
                 {
-                    newasm::handle_threads();
+                    try
+                    {
+                        newasm::handle_threads(0);
+                    }
+                    catch(const std::exception& e)
+                    {
+                        std::cerr << "Handle threads :: " << e.what() << '\n';
+                    }
+                    
                 }
                 //////////
             }
@@ -4026,41 +4079,18 @@ namespace newasm
         }
         return 0;
     }
-    void handle_threads()
+    void handle_threads(int method)
     {
-        #ifdef NEWASM_MEGA_ERROR
-        if(newasm::threads::thread_count != 0)
-        {
-            for(auto i = newasm::threads::valid_threads.begin(); i < newasm::threads::valid_threads.end(); ++i)
-            {
-                if(newasm::threads::functions::finished(*i))
-                {
-                    if(std::find(newasm::threads::finished_threads.begin(),newasm::threads::finished_threads.end(),*i) == newasm::threads::finished_threads.end())
-                    {
-                        newasm::threads::finished_threads.push_back(*i);
-                        newasm::threads::thread_count--;
-                        newasm::header::functions::log("Thread `"+*i+"` finished.");
-                        continue;
-                    }
-                    continue;
-                }
-                if(!newasm::threads::functions::finished(*i))
-                {
-                    std::string linetoprocess = newasm::threads::functions::getlastline(*i); 
-                    newasm::procline(linetoprocess);
-                    newasm::header::functions::log("Thread `"+*i+"` -> " + linetoprocess);
-                    return;
-                }
-            }
-        }
-        #endif
+        if(method == 0)
         for(auto i = newasm::threads::valid_threads.begin(); i != newasm::threads::valid_threads.end(); ++i)
         {
             if(newasm::threads::memory.at(*i)->contents.empty())
             {
-                continue;   
+                continue;
             }
+            newasm::thread_line = true;
             newasm::procline(*newasm::threads::memory.at(*i)->contents.begin());
+            newasm::thread_line = false;
             newasm::threads::memory.at(*i)->contents.pop_front();
             //continue;
         }
