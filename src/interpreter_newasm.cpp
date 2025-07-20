@@ -95,6 +95,7 @@ namespace newasm
 #include "system_calls/text_operations.cpp"
 #include "system_calls/net.cpp"
 #include "system_calls/mem.cpp"
+#include "system_calls/chrono.cpp"
 
 #include "core/containers.cpp"
 #include "core/env_vars.cpp"

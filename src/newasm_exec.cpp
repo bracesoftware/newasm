@@ -2082,6 +2082,11 @@ namespace newasm
                 newasm::header::data::module = newasm::core::lang_inf::refs::mem;
                 return 1;
             }
+            if(suf == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::chrono))
+            {
+                newasm::header::data::module = newasm::core::lang_inf::refs::chrono;
+                return 1;
+            }
             newasm::terminate(newasm::exit_codes::sysenter_fail);
             return 1;
         }
@@ -2870,9 +2875,45 @@ namespace newasm
             newasm::mem::regs::stl.set_value(newasm::header::data::temp);
             return 1;
         }
-        // syscall
+        //syscall
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::syscall))
         {
+            //chrono
+            if(newasm::header::data::module == newasm::core::lang_inf::refs::chrono)
+            {
+                if(newasm::mem::regs::fdx == 1) //getyear
+                {
+                    newasm::mem::regs::tlr = std::to_string(newasm::chrono::year());
+                    return 1;
+                }
+                if(newasm::mem::regs::fdx == 2) //getmonth
+                {
+                    newasm::mem::regs::tlr = std::to_string(newasm::chrono::month());
+                    return 1;
+                }
+                if(newasm::mem::regs::fdx == 3) //day
+                {
+                    newasm::mem::regs::tlr = std::to_string(newasm::chrono::day());
+                    return 1;
+                }
+                if(newasm::mem::regs::fdx == 4) //hour
+                {
+                    newasm::mem::regs::tlr = std::to_string(newasm::chrono::hour());
+                    return 1;
+                }
+                if(newasm::mem::regs::fdx == 5) //min
+                {
+                    newasm::mem::regs::tlr = std::to_string(newasm::chrono::minute());
+                    return 1;
+                }
+                if(newasm::mem::regs::fdx == 6) //sec
+                {
+                    newasm::mem::regs::tlr = std::to_string(newasm::chrono::second());
+                    return 1;
+                }
+                newasm::terminate(newasm::exit_codes::unknown_fdx);
+                return 1;
+            }
             //////process management (execution flow)
             //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::exf))
             if(newasm::header::data::module == newasm::core::lang_inf::refs::exf)
