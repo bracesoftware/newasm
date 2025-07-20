@@ -90,6 +90,7 @@ namespace newasm
             const int sysenter = 46;
             const int xchg = 47;
             const int int__ = 48;
+            const int cls = 49;
             
             const int __say = 100;
 
@@ -145,6 +146,7 @@ namespace newasm
                 {sysenter, "sysenter"},
                 {xchg, "xchg"},
                 {int__, "int"},
+                {cls, "cls"},
 
                 {__say, "__say"}
             };
@@ -158,6 +160,7 @@ namespace newasm
                 const int txtop = 5;
                 const int net = 6;
                 const int mem = 7;
+                const int chrono = 8;
 
                 const std::unordered_map<int, std::string> identifiers__ = {
                     {ios, "\%ios"},
@@ -166,7 +169,8 @@ namespace newasm
                     {fs, "\%fs"},
                     {txtop, "\%txtop"},
                     {net, "\%net"},
-                    {mem, "\%mem"}
+                    {mem, "\%mem"},
+                    {chrono, "\%chrono"}
                 };
             }
 

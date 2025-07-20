@@ -70,6 +70,7 @@ namespace newasm
             {45, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::wait)},
             {46, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::sysenter)},
             {47, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::int__)},
+            {48, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::cls)},
 
             {100, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::__say)}
         };

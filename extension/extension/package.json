@@ -3,7 +3,7 @@
   "displayName": "NewASM Syntax Highlighting",
   "description": "Syntax highlighting for the NewASM language",
   "version": "1.0.0",
-  "publisher": "newasm-dev",
+  "publisher": "Brace Software Co.",
   "engines": {
     "vscode": "^1.50.0"
   },

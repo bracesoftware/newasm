@@ -39,6 +39,7 @@ the Initial Developer. All Rights Reserved.
 #include <chrono>
 #include <thread>
 
+#include <cstdlib>
 #include <iomanip>
 #include <stdio.h>
 #include <deque>

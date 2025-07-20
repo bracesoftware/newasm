@@ -2848,6 +2848,18 @@ namespace newasm
             // do nothing
             return 1;
         }
+
+        //cls
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::cls))
+        {
+            #ifdef _WIN32
+                std::system("cls");
+            #else
+                std::system("clear");
+            #endif
+
+            return 1;
+        }
         //xchg
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::xchg))
         {
