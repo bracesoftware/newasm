@@ -608,7 +608,8 @@ syscall
     mov tlr , testdecimal
     mov stl , %endl
     mov fdx , 2
-    syscall . 0 , %ios
+    sysenter %ios
+    syscall
 
     retn 0
 ```
@@ -693,7 +694,8 @@ Output:
 . start
     : labelname
         mov . fdx , 4
-        syscall . 0 , %ios
+        sysenter %ios
+        syscall
     jmp 0 , labelname
 ```
 
