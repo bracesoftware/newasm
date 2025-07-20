@@ -84,6 +84,7 @@ Documentation about `newasm` which includes following topics:
     - [Bit arrays](#bit-arrays)
     - [Binary trees](#binary-trees)
 - [Threads](#threads)
+    - [`await` and `retf`](#await-and-retf-instructions)
 - [Opcodes](#instruction-set-and-opcodes)
 
 ## Compiling
@@ -408,6 +409,8 @@ Perform a specific system call within a system module.
 | `%chrono` | `4` | `/` | Gets the current hour and stores it in `tlr`. |
 | `%chrono` | `5` | `/` | Gets the current minute and stores it in `tlr`. |
 | `%chrono` | `6` | `/` | Gets the current second and stores it in `tlr`. |
+| `%thread` | `1` | `tlr` | Prints the thread output, with `tlr` being a thread pointer. |
+| `%thread` | `2` | `tlr` | Gets the thread return and stores it in `tlr`, with `tlr` firstly being a thread pointer as well. |
 
 
 ### `int` instruction
@@ -1117,6 +1120,9 @@ When a fatal error happens, program will shut down, returning a specific exit co
 | `43` | Macro redefinition. |
 | `44` | Unexpected hash. |
 | `45` | Undefined macro. |
+| `46` | Unknown system interrupt ID. |
+| `47` | Expected `await` - happens when you don't use `await` before using thread system calls, but if the thread finished or returned they will work. |
+| `48` | Undefined thread. |
 
 ## Comments
 Comments are also available:
@@ -1511,7 +1517,7 @@ Threads are blocks of code declared within the `data` section. Once you switch t
 Threads are declared like this:
 ```asm
 . data
-    thread  test_thread : {
+    thread test_thread : {
         ; code
     }
 . start
@@ -1519,55 +1525,69 @@ Threads are declared like this:
 
 ; "code" and "more code" will be executed almost at same time.
 ```
+To avoid interfering with register values inside the `.start` section, threads also, while running simultaneously with `.start`, kind of run for themselves.
+Input-output stream system calls inside threads don't output text directly to the console, but save it internally. To display that output we use `%thread` system calls whose require `await` and the new `retf`.
 
-Since this is a low-level language, there is not much of use of these threads yet.
-
-Example:
-
-`index.asm`:
+### `await` and `retf` instructions
+What `await` does is that it stops the `.start` execution till the thread finishes, while return-far (`retf`) returns a value within the thread.
+To print the thread output in the console, you have to use the thread-system calls - same with the returned value.
+Exampe:
 ```asm
-. config
-    memsize ~ 87
-. data
-    txt  mytext : "Hello World"
+.data
+    txt string : "LOL"
 
     thread  testthread : {
-        __say 0,"thread debug 1"
-        __say 0,"thread debug 3"
-        __say 0,"thread debug 5"
-        __say 0,"thread debug 6"
-        __say 0,"thread debug 7"
-        __say 0,"thread debug 8"
-        __say 0,"thread debug 9"
-        __say 0,"thread debug 10"
-    }
-    thread  testthread2 : {
-        __say 0,"thread debug 2"
-        __say 0,"thread debug 4" 
+        mov tlr, "Hello from thread"
+        mov stl, %endl
+        mov fdx, 1
+        sysenter %ios
+        syscall
+      
+        mov fdx, 1
+        sysenter %chrono
+        syscall
+
+        mov fdx, 2
+        mov stl, %endl
+        sysenter %ios
+        syscall
+
+        mov tlr, "hi again"
+        mov fdx, 1
+        syscall
+
+        mov tlr, "this was returned"
+        stor tlr, string
+        retf string
+
+        sysenter %ios
+        mov tlr, "YOU SHOULD NOT SEE THIS"
+        mov stl, %endl
+        mov fdx, 1
+        syscall
     }
 
-. start
-    zero stl
-    mov tlr , mytext
-    mov fdx , 1
+
+.start
+    await &testthread ; wait for the thread to finish immediatelly
+    ;if the thread doesn't finish, we will get ExpectedAwait error
+    sysenter %thread
+    mov fdx, 1
+    mov tlr, &testthread
+    syscall ; display the thread output
+    mov fdx, 2
+    syscall ; fetch returned value
     sysenter %ios
-syscall
-
-    ;other code
+    mov stl, %endl
+    mov fdx, 1
+    syscall ; print the returned val
 ```
 
-Output will be:
+Output:
 ```
-thread debug 1
-thread debug 2
-thread debug 3
-thread debug 4
-thread debug 5
-thread debug 6
-thread debug 7
-thread debug 8
-thread debug 9
-Hello World             thread debug 10
+Hello from thread
+2025
+this was returned
 ```
 
 ## Instruction set and opcodes
