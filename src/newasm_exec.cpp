@@ -448,36 +448,36 @@ namespace newasm
         int floatreg = newasm::header::constants::inv_freg_val;
         std::string strreg = newasm::header::constants::inv_reg_val;
 
-        if(suf == static_cast<std::string>("fdx"))
+        if(suf == newasm::mem::regs::fdx.identifier())
         {
             intreg = newasm::mem::regs::fdx;
         }
-        if(suf == static_cast<std::string>("stk"))
+        if(suf == newasm::mem::regs::stk.identifier())
         {
             intreg = newasm::mem::regs::stk;
         }
-        if(suf == static_cast<std::string>("hea"))
+        if(suf == newasm::mem::regs::heaptr.identifier())
         {
             intreg = newasm::mem::regs::heaptr;
         }
-        if(suf == static_cast<std::string>("cpr"))
+        if(suf == newasm::mem::regs::cpr.identifier())
         {
             intreg = newasm::mem::regs::cpr;
         }
-        if(suf == static_cast<std::string>("br0"))
+        if(suf == newasm::mem::regs::br0.identifier())
         {
             intreg = newasm::mem::regs::br0;
         }
-        if(suf == static_cast<std::string>("br1"))
+        if(suf == newasm::mem::regs::br1.identifier())
         {
             intreg = newasm::mem::regs::br1;
         }
 
-        if(suf == static_cast<std::string>("cr0"))
+        if(suf == newasm::mem::regs::cr0.identifier())
         {
             floatreg = newasm::mem::regs::cr0;
         }
-        if(suf == static_cast<std::string>("cr1"))
+        if(suf == newasm::mem::regs::cr1.identifier())
         {
             floatreg = newasm::mem::regs::cr1;
         }
@@ -490,24 +490,24 @@ namespace newasm
         {
             strreg = newasm::mem::regs::stl;
         }
-        if(suf == static_cast<std::string>("psx"))
+        if(suf == newasm::mem::regs::psx.identifier())
         {
             strreg = newasm::mem::regs::psx;
         }
-        if(suf == static_cast<std::string>("prp"))
+        if(suf == newasm::mem::regs::prp.identifier())
         {
             strreg = newasm::mem::regs::prp;
         }
-        if(suf == static_cast<std::string>("cpt"))
+        if(suf == newasm::mem::regs::cpt.identifier())
         {
             strreg = newasm::mem::regs::cpt;
         }
 
-        if(suf == static_cast<std::string>("tr0"))
+        if(suf == newasm::mem::regs::tr0.identifier())
         {
             strreg = newasm::mem::regs::tr0;
         }
-        if(suf == static_cast<std::string>("tr1"))
+        if(suf == newasm::mem::regs::tr1.identifier())
         {
             strreg = newasm::mem::regs::tr1;
         }
@@ -777,7 +777,7 @@ namespace newasm
                 }
             }
 
-            if(suf == static_cast<std::string>("fdx"))
+            if(suf == newasm::mem::regs::fdx.identifier())
             {
                 if(newasm::mem::datatypes[opr] != newasm::datatypes::number)
                 {
@@ -843,7 +843,7 @@ namespace newasm
                 }
                 return 1;
             }
-            if(suf == static_cast<std::string>("tr0"))
+            if(suf == newasm::mem::regs::tr0.identifier())
             {
                 if(newasm::header::functions::isnumeric(newasm::mem::regs::tr0))
                 {
@@ -899,7 +899,7 @@ namespace newasm
                 }
                 return 1;
             }
-            if(suf == static_cast<std::string>("tr1"))
+            if(suf == newasm::mem::regs::tr1.identifier())
             {
                 if(newasm::header::functions::isnumeric(newasm::mem::regs::tr1))
                 {
@@ -1011,7 +1011,7 @@ namespace newasm
                 }
                 return 1;
             }
-            if(suf == static_cast<std::string>("psx"))
+            if(suf == newasm::mem::regs::psx.identifier())
             {
                 if(newasm::header::functions::isnumeric(newasm::mem::regs::psx))
                 {
@@ -1065,7 +1065,7 @@ namespace newasm
                 }
                 return 1;
             }
-            if(suf == static_cast<std::string>("stk"))
+            if(suf == newasm::mem::regs::stk.identifier())
             {
                 if(newasm::mem::datatypes[opr] != newasm::datatypes::number)
                 {
@@ -1075,7 +1075,7 @@ namespace newasm
                 newasm::mem::data[opr] = std::to_string(newasm::mem::regs::stk);
                 return 1;
             }
-            if(suf == static_cast<std::string>("hea"))
+            if(suf == newasm::mem::regs::heaptr.identifier())
             {
                 if(newasm::mem::datatypes[opr] != newasm::datatypes::number)
                 {
@@ -1085,7 +1085,7 @@ namespace newasm
                 newasm::mem::data[opr] = std::to_string(newasm::mem::regs::heaptr);
                 return 1;
             }
-            if(suf == static_cast<std::string>("prp"))
+            if(suf == newasm::mem::regs::prp.identifier())
             {
                 if(newasm::mem::datatypes[opr] != newasm::datatypes::reference)
                 {
@@ -1097,7 +1097,7 @@ namespace newasm
                 //if(i != newasm::mem::uninitialized_pointer.end()) newasm::mem::uninitialized_pointer.erase(i);
                 return 1;
             }
-            if(suf == static_cast<std::string>("cpt"))
+            if(suf == newasm::mem::regs::cpt.identifier())
             {
                 if(newasm::mem::datatypes[opr] != newasm::datatypes::reference)
                 {
@@ -1110,7 +1110,7 @@ namespace newasm
                 return 1;
             }
             
-            if(suf == static_cast<std::string>("cpr"))
+            if(suf == newasm::mem::regs::cpr.identifier())
             {
                 if(newasm::mem::datatypes[opr] != newasm::datatypes::number)
                 {
@@ -1120,7 +1120,7 @@ namespace newasm
                 newasm::mem::data[opr] = std::to_string(newasm::mem::regs::cpr);
                 return 1;
             }
-            if(suf == static_cast<std::string>("cr0"))
+            if(suf == newasm::mem::regs::cr0.identifier())
             {
                 if(newasm::mem::datatypes[opr] == newasm::datatypes::number)
                 {
@@ -1135,7 +1135,7 @@ namespace newasm
                 newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                 return 1;
             }
-            if(suf == static_cast<std::string>("cr1"))
+            if(suf == newasm::mem::regs::cr1.identifier())
             {
                 if(newasm::mem::datatypes[opr] == newasm::datatypes::number)
                 {
@@ -1150,7 +1150,7 @@ namespace newasm
                 newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                 return 1;
             }
-            if(suf == static_cast<std::string>("br0"))
+            if(suf == newasm::mem::regs::br0.identifier())
             {
                 if(newasm::mem::datatypes[opr] != newasm::datatypes::number)
                 {
@@ -1160,7 +1160,7 @@ namespace newasm
                 newasm::mem::data[opr] = std::to_string(newasm::mem::regs::br0);
                 return 1;
             }
-            if(suf == static_cast<std::string>("br1"))
+            if(suf == newasm::mem::regs::br1.identifier())
             {
                 if(newasm::mem::datatypes[opr] != newasm::datatypes::number)
                 {
@@ -1290,7 +1290,7 @@ namespace newasm
         // MOV
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::mov))
         {
-            if(suf == static_cast<std::string>("fdx"))
+            if(suf == newasm::mem::regs::fdx.identifier())
             {
                 if(!newasm::header::functions::isnumeric(opr))
                 {
@@ -1307,14 +1307,14 @@ namespace newasm
                 newasm::mem::regs::tlr = (opr);
                 return 1;
             }
-            if(suf == static_cast<std::string>("tr0"))
+            if(suf == newasm::mem::regs::tr0.identifier())
             {
                 //using std::cout, std::endl;
                 //cout << "\n\t >> tlr set to: " << opr << endl;
                 newasm::mem::regs::tr0 = (opr);
                 return 1;
             }
-            if(suf == static_cast<std::string>("tr1"))
+            if(suf == newasm::mem::regs::tr1.identifier())
             {
                 //using std::cout, std::endl;
                 //cout << "\n\t >> tlr set to: " << opr << endl;
@@ -1326,12 +1326,12 @@ namespace newasm
                 newasm::mem::regs::stl = (opr);
                 return 1;
             }
-            if(suf == static_cast<std::string>("psx"))
+            if(suf == newasm::mem::regs::psx.identifier())
             {
                 newasm::mem::regs::psx = (opr);
                 return 1;
             }
-            if(suf == static_cast<std::string>("stk"))
+            if(suf == newasm::mem::regs::stk.identifier())
             {
                 if(!newasm::header::functions::isnumeric(opr))
                 {
@@ -1341,7 +1341,7 @@ namespace newasm
                 newasm::mem::regs::stk = std::stoi(opr);
                 return 1;
             }
-            if(suf == static_cast<std::string>("hea"))
+            if(suf == newasm::mem::regs::heaptr.identifier())
             {
                 //malloc
                 if(newasm::header::functions::isallocref(opr).first)
@@ -1373,7 +1373,7 @@ namespace newasm
                 }
                 return 1;
             }
-            if(suf == static_cast<std::string>("prp")) //procedure pointer
+            if(suf == newasm::mem::regs::prp.identifier()) //procedure pointer
             {
                 if(!newasm::header::functions::isref(opr))
                 {
@@ -1391,7 +1391,7 @@ namespace newasm
                 newasm::mem::regs::prp = (opr);
                 return 1;
             }
-            if(suf == static_cast<std::string>("cpt")) //container pointer
+            if(suf == newasm::mem::regs::cpt.identifier()) //container pointer
             {
                 if(!newasm::header::functions::isref(opr))
                 {
@@ -1409,7 +1409,7 @@ namespace newasm
                 newasm::mem::regs::cpt = (opr);
                 return 1;
             }
-            if(suf == static_cast<std::string>("cpr"))
+            if(suf == newasm::mem::regs::cpr.identifier())
             {
                 if(!newasm::header::functions::isnumeric(opr))
                 {
@@ -1419,7 +1419,7 @@ namespace newasm
                 newasm::mem::regs::cpr = std::stoi(opr);
                 return 1;
             }
-            if(suf == static_cast<std::string>("cr0"))
+            if(suf == newasm::mem::regs::cr0.identifier())
             {
                 if(!newasm::header::functions::isnumeric(opr) && !newasm::header::functions::isfloat(opr))
                 {
@@ -1429,7 +1429,7 @@ namespace newasm
                 newasm::mem::regs::cr0 = std::stof(opr);
                 return 1;
             }
-            if(suf == static_cast<std::string>("cr1"))
+            if(suf == newasm::mem::regs::cr1.identifier())
             {
                 if(!newasm::header::functions::isnumeric(opr) && !newasm::header::functions::isfloat(opr))
                 {
@@ -1439,7 +1439,7 @@ namespace newasm
                 newasm::mem::regs::cr1 = std::stof(opr);
                 return 1;
             }
-            if(suf == static_cast<std::string>("br0"))
+            if(suf == newasm::mem::regs::br0.identifier())
             {
                 if(!newasm::header::functions::isnumeric(opr))
                 {
@@ -1450,7 +1450,7 @@ namespace newasm
                 newasm::mem::regs::br0 = std::stoi(opr);
                 return 1;
             }
-            if(suf == static_cast<std::string>("br1"))
+            if(suf == newasm::mem::regs::br1.identifier())
             {
                 if(!newasm::header::functions::isnumeric(opr))
                 {
@@ -1580,41 +1580,41 @@ namespace newasm
                 newasm::unsins(ins);
                 return 1;
             }
-            //if(suf == static_cast<std::string>("fdx"))
+            //if(suf == newasm::mem::regs::fdx.identifier())
             int intreg = newasm::header::constants::inv_ireg_val;
             int floatreg = newasm::header::constants::inv_freg_val;
             std::string strreg = newasm::header::constants::inv_reg_val;
 
-            if(suf == static_cast<std::string>("fdx"))
+            if(suf == newasm::mem::regs::fdx.identifier())
             {
                 intreg = newasm::mem::regs::fdx;
             }
-            if(suf == static_cast<std::string>("stk"))
+            if(suf == newasm::mem::regs::stk.identifier())
             {
                 intreg = newasm::mem::regs::stk;
             }
-            if(suf == static_cast<std::string>("hea"))
+            if(suf == newasm::mem::regs::heaptr.identifier())
             {
                 intreg = newasm::mem::regs::heaptr;
             }
-            if(suf == static_cast<std::string>("cpr"))
+            if(suf == newasm::mem::regs::cpr.identifier())
             {
                 intreg = newasm::mem::regs::cpr;
             }
-            if(suf == static_cast<std::string>("br0"))
+            if(suf == newasm::mem::regs::br0.identifier())
             {
                 intreg = newasm::mem::regs::br0;
             }
-            if(suf == static_cast<std::string>("br1"))
+            if(suf == newasm::mem::regs::br1.identifier())
             {
                 intreg = newasm::mem::regs::br1;
             }
 
-            if(suf == static_cast<std::string>("cr0"))
+            if(suf == newasm::mem::regs::cr0.identifier())
             {
                 floatreg = newasm::mem::regs::cr0;
             }
-            if(suf == static_cast<std::string>("cr1"))
+            if(suf == newasm::mem::regs::cr1.identifier())
             {
                 floatreg = newasm::mem::regs::cr1;
             }
@@ -1623,11 +1623,11 @@ namespace newasm
             {
                 strreg = newasm::mem::regs::tlr;
             }
-            if(suf == static_cast<std::string>("tr0"))
+            if(suf == newasm::mem::regs::tr0.identifier())
             {
                 strreg = newasm::mem::regs::tr0;
             }
-            if(suf == static_cast<std::string>("tr1"))
+            if(suf == newasm::mem::regs::tr1.identifier())
             {
                 strreg = newasm::mem::regs::tr1;
             }
@@ -1635,15 +1635,15 @@ namespace newasm
             {
                 strreg = newasm::mem::regs::stl;
             }
-            if(suf == static_cast<std::string>("psx"))
+            if(suf == newasm::mem::regs::psx.identifier())
             {
                 strreg = newasm::mem::regs::psx;
             }
-            if(suf == static_cast<std::string>("prp"))
+            if(suf == newasm::mem::regs::prp.identifier())
             {
                 strreg = newasm::mem::regs::prp;
             }
-            if(suf == static_cast<std::string>("cpt"))
+            if(suf == newasm::mem::regs::cpt.identifier())
             {
                 strreg = newasm::mem::regs::cpt;
             }
@@ -2198,7 +2198,7 @@ namespace newasm
                     static_cast<std::string>("`")
                 );
             };
-            if(suf == static_cast<std::string>("fdx"))
+            if(suf == newasm::mem::regs::fdx.identifier())
             {
                 debugRegister(suf, std::to_string(newasm::mem::regs::fdx));
                 return 1;
@@ -2208,12 +2208,12 @@ namespace newasm
                 debugRegister(suf, (newasm::mem::regs::tlr));
                 return 1;
             }
-            if(suf == static_cast<std::string>("tr0"))
+            if(suf == newasm::mem::regs::tr0.identifier())
             {
                 debugRegister(suf, (newasm::mem::regs::tr0));
                 return 1;
             }
-            if(suf == static_cast<std::string>("tr1"))
+            if(suf == newasm::mem::regs::tr1.identifier())
             {
                 debugRegister(suf, (newasm::mem::regs::tr1));
                 return 1;
@@ -2223,52 +2223,52 @@ namespace newasm
                 debugRegister(suf, (newasm::mem::regs::stl));
                 return 1;
             }
-            if(suf == static_cast<std::string>("psx"))
+            if(suf == newasm::mem::regs::psx.identifier())
             {
                 debugRegister(suf, (newasm::mem::regs::psx));
                 return 1;
             }
-            if(suf == static_cast<std::string>("stk"))
+            if(suf == newasm::mem::regs::stk.identifier())
             {
                 debugRegister(suf, std::to_string(newasm::mem::regs::stk));
                 return 1;
             }
-            if(suf == static_cast<std::string>("hea"))
+            if(suf == newasm::mem::regs::heaptr.identifier())
             {
                 debugRegister(suf, std::to_string(newasm::mem::regs::heaptr));
                 return 1;
             }
-            if(suf == static_cast<std::string>("prp"))
+            if(suf == newasm::mem::regs::prp.identifier())
             {
                 debugRegister(suf, (newasm::mem::regs::prp));
                 return 1;
             }
-            if(suf == static_cast<std::string>("cpt"))
+            if(suf == newasm::mem::regs::cpt.identifier())
             {
                 debugRegister(suf, (newasm::mem::regs::cpt));
                 return 1;
             }
-            if(suf == static_cast<std::string>("cpr"))
+            if(suf == newasm::mem::regs::cpr.identifier())
             {
                 debugRegister(suf, std::to_string(newasm::mem::regs::cpr));
                 return 1;
             }
-            if(suf == static_cast<std::string>("cr0"))
+            if(suf == newasm::mem::regs::cr0.identifier())
             {
                 debugRegister(suf, std::to_string(newasm::mem::regs::cr0));
                 return 1;
             }
-            if(suf == static_cast<std::string>("cr1"))
+            if(suf == newasm::mem::regs::cr1.identifier())
             {
                 debugRegister(suf, std::to_string(newasm::mem::regs::cr1));
                 return 1;
             }
-            if(suf == static_cast<std::string>("br0"))
+            if(suf == newasm::mem::regs::br0.identifier())
             {
                 debugRegister(suf, std::to_string(newasm::mem::regs::br0));
                 return 1;
             }
-            if(suf == static_cast<std::string>("br1"))
+            if(suf == newasm::mem::regs::br1.identifier())
             {
                 debugRegister(suf, std::to_string(newasm::mem::regs::br1));
                 return 1;
@@ -2320,7 +2320,7 @@ namespace newasm
                 newasm::unsins(ins);
                 return 1;
             }
-            if(suf == static_cast<std::string>("fdx"))
+            if(suf == newasm::mem::regs::fdx.identifier())
             {
                 newasm::header::data::exception = false;
                 newasm::terminate(newasm::mem::regs::fdx);//,wholeline);
@@ -2335,7 +2335,7 @@ namespace newasm
                     return 1;
                 }
             }
-            if(suf == static_cast<std::string>("tr0"))
+            if(suf == newasm::mem::regs::tr0.identifier())
             {
                 if(newasm::header::functions::isnumeric(newasm::mem::regs::tr0))
                 {
@@ -2344,7 +2344,7 @@ namespace newasm
                     return 1;
                 }
             }
-            if(suf == static_cast<std::string>("tr1"))
+            if(suf == newasm::mem::regs::tr1.identifier())
             {
                 if(newasm::header::functions::isnumeric(newasm::mem::regs::tr1))
                 {
@@ -2362,7 +2362,7 @@ namespace newasm
                     return 1;
                 }
             }
-            if(suf == static_cast<std::string>("psx"))
+            if(suf == newasm::mem::regs::psx.identifier())
             {
                 if(newasm::header::functions::isnumeric(newasm::mem::regs::psx))
                 {
@@ -2371,19 +2371,19 @@ namespace newasm
                     return 1;
                 }
             }
-            if(suf == static_cast<std::string>("stk"))
+            if(suf == newasm::mem::regs::stk.identifier())
             {
                 newasm::header::data::exception = false;
                 newasm::terminate(newasm::mem::regs::stk);//,wholeline);
                 return 1;
             }
-            if(suf == static_cast<std::string>("hea"))
+            if(suf == newasm::mem::regs::heaptr.identifier())
             {
                 newasm::header::data::exception = false;
                 newasm::terminate(newasm::mem::regs::heaptr);//,wholeline);
                 return 1;
             }
-            if(suf == static_cast<std::string>("prp"))
+            if(suf == newasm::mem::regs::prp.identifier())
             {
                 if(newasm::header::functions::isnumeric(newasm::mem::regs::prp))
                 {
@@ -2392,7 +2392,7 @@ namespace newasm
                     return 1;
                 }
             }
-            if(suf == static_cast<std::string>("cpt"))
+            if(suf == newasm::mem::regs::cpt.identifier())
             {
                 if(newasm::header::functions::isnumeric(newasm::mem::regs::cpt))
                 {
@@ -2401,31 +2401,31 @@ namespace newasm
                     return 1;
                 }
             }
-            if(suf == static_cast<std::string>("cpr"))
+            if(suf == newasm::mem::regs::cpr.identifier())
             {
                 newasm::header::data::exception = false;
                 newasm::terminate(newasm::mem::regs::cpr);//,wholeline);
                 return 1;
             }
-            if(suf == static_cast<std::string>("cr0"))
+            if(suf == newasm::mem::regs::cr0.identifier())
             {
                 newasm::header::data::exception = false;
                 newasm::terminate(static_cast<int>(newasm::mem::regs::cr0));//,wholeline);
                 return 1;
             }
-            if(suf == static_cast<std::string>("cr1"))
+            if(suf == newasm::mem::regs::cr1.identifier())
             {
                 newasm::header::data::exception = false;
                 newasm::terminate(static_cast<int>(newasm::mem::regs::cr1));//,wholeline);
                 return 1;
             }
-            if(suf == static_cast<std::string>("br0"))
+            if(suf == newasm::mem::regs::br0.identifier())
             {
                 newasm::header::data::exception = false;
                 newasm::terminate(newasm::mem::regs::br0);//,wholeline);
                 return 1;
             }
-            if(suf == static_cast<std::string>("br1"))
+            if(suf == newasm::mem::regs::br1.identifier())
             {
                 newasm::header::data::exception = false;
                 newasm::terminate(newasm::mem::regs::br1);//,wholeline);
@@ -2438,7 +2438,7 @@ namespace newasm
         //zero
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::zero))
         {
-            if(suf == static_cast<std::string>("fdx"))
+            if(suf == newasm::mem::regs::fdx.identifier())
             {
                 newasm::mem::regs::fdx = 0;
                 return 1;
@@ -2448,12 +2448,12 @@ namespace newasm
                 newasm::mem::regs::tlr = newasm::header::constants::inv_reg_val;
                 return 1;
             }
-            if(suf == static_cast<std::string>("tr0"))
+            if(suf == newasm::mem::regs::tr0.identifier())
             {
                 newasm::mem::regs::tr0 = newasm::header::constants::inv_reg_val;
                 return 1;
             }
-            if(suf == static_cast<std::string>("tr1"))
+            if(suf == newasm::mem::regs::tr1.identifier())
             {
                 newasm::mem::regs::tr1 = newasm::header::constants::inv_reg_val;
                 return 1;
@@ -2463,53 +2463,53 @@ namespace newasm
                 newasm::mem::regs::stl = newasm::header::constants::inv_reg_val;
                 return 1;
             }
-            if(suf == static_cast<std::string>("stk"))
+            if(suf == newasm::mem::regs::stk.identifier())
             {
                 newasm::mem::regs::stk = 0;
                 newasm::terminate(newasm::exit_codes::stkhea_col);//,wholeline); // Why'd you touch STK in the first place?
                 return 1;
             }
-            if(suf == static_cast<std::string>("hea"))
+            if(suf == newasm::mem::regs::heaptr.identifier())
             {
                 newasm::mem::regs::heaptr = 0;
                 return 1;
             }
-            if(suf == static_cast<std::string>("psx"))
+            if(suf == newasm::mem::regs::psx.identifier())
             {
                 newasm::mem::regs::psx = newasm::header::constants::inv_reg_val;
                 return 1;
             }
-            if(suf == static_cast<std::string>("prp"))
+            if(suf == newasm::mem::regs::prp.identifier())
             {
                 newasm::mem::regs::prp = newasm::header::constants::inv_reg_val;
                 return 1;
             }
-            if(suf == static_cast<std::string>("cpt"))
+            if(suf == newasm::mem::regs::cpt.identifier())
             {
                 newasm::mem::regs::cpt = newasm::header::constants::inv_reg_val;
                 return 1;
             }
-            if(suf == static_cast<std::string>("cpr"))
+            if(suf == newasm::mem::regs::cpr.identifier())
             {
                 newasm::mem::regs::cpr = 0;
                 return 1;
             }
-            if(suf == static_cast<std::string>("cr0"))
+            if(suf == newasm::mem::regs::cr0.identifier())
             {
                 newasm::mem::regs::cr0 = 0.0;
                 return 1;
             }
-            if(suf == static_cast<std::string>("cr1"))
+            if(suf == newasm::mem::regs::cr1.identifier())
             {
                 newasm::mem::regs::cr1 = 0.0;
                 return 1;
             }
-            if(suf == static_cast<std::string>("br0"))
+            if(suf == newasm::mem::regs::br0.identifier())
             {
                 newasm::mem::regs::br0 = 0;
                 return 1;
             }
-            if(suf == static_cast<std::string>("br1"))
+            if(suf == newasm::mem::regs::br1.identifier())
             {
                 newasm::mem::regs::br1 = 0;
                 return 1;
@@ -2521,42 +2521,42 @@ namespace newasm
         //inc
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::inc))
         {
-            if(suf == static_cast<std::string>("fdx"))
+            if(suf == newasm::mem::regs::fdx.identifier())
             {
                 newasm::mem::regs::fdx ++;
                 return 1;
             }
-            if(suf == static_cast<std::string>("stk"))
+            if(suf == newasm::mem::regs::stk.identifier())
             {
                 newasm::mem::regs::stk ++;
                 return 1;
             }
-            if(suf == static_cast<std::string>("hea"))
+            if(suf == newasm::mem::regs::heaptr.identifier())
             {
                 newasm::mem::regs::heaptr ++;
                 return 1;
             }
-            if(suf == static_cast<std::string>("cpr"))
+            if(suf == newasm::mem::regs::cpr.identifier())
             {
                 newasm::mem::regs::cpr ++;
                 return 1;
             }
-            if(suf == static_cast<std::string>("cr0"))
+            if(suf == newasm::mem::regs::cr0.identifier())
             {
                 newasm::mem::regs::cr0 ++;
                 return 1;
             }
-            if(suf == static_cast<std::string>("cr1"))
+            if(suf == newasm::mem::regs::cr1.identifier())
             {
                 newasm::mem::regs::cr1 ++;
                 return 1;
             }
-            if(suf == static_cast<std::string>("br0"))
+            if(suf == newasm::mem::regs::br0.identifier())
             {
                 newasm::mem::regs::br0 ++;
                 return 1;
             }
-            if(suf == static_cast<std::string>("br1"))
+            if(suf == newasm::mem::regs::br1.identifier())
             {
                 newasm::mem::regs::br1 ++;
                 return 1;
@@ -2585,7 +2585,7 @@ namespace newasm
                 newasm::mem::regs::stl = std::to_string(tmp);
                 return 1;
             }
-            if(suf == static_cast<std::string>("psx"))
+            if(suf == newasm::mem::regs::psx.identifier())
             {
                 if(!newasm::header::functions::isnumeric(newasm::mem::regs::psx))
                 {
@@ -2597,7 +2597,7 @@ namespace newasm
                 return 1;
             }
 
-            if(suf == static_cast<std::string>("tr0"))
+            if(suf == newasm::mem::regs::tr0.identifier())
             {
                 if(!newasm::header::functions::isnumeric(newasm::mem::regs::tr0))
                 {
@@ -2608,7 +2608,7 @@ namespace newasm
                 newasm::mem::regs::tr0 = std::to_string(tmp);
                 return 1;
             }
-            if(suf == static_cast<std::string>("tr1"))
+            if(suf == newasm::mem::regs::tr1.identifier())
             {
                 if(!newasm::header::functions::isnumeric(newasm::mem::regs::tr1))
                 {
@@ -2621,7 +2621,7 @@ namespace newasm
             }
             //and then, we have this beautiful procedure pointer...
             //we'll just pickup the next procedure from the map memory
-            if(suf == static_cast<std::string>("prp"))
+            if(suf == newasm::mem::regs::prp.identifier())
             {
                 if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::prp), newasm::mem::funcs))
                 {
@@ -2649,7 +2649,7 @@ namespace newasm
                 }
                 return 1;
             }
-            if(suf == static_cast<std::string>("cpt"))
+            if(suf == newasm::mem::regs::cpt.identifier())
             {
                 //make later
                 return 1;
@@ -2662,42 +2662,42 @@ namespace newasm
         //dec
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::dec))
         {
-            if(suf == static_cast<std::string>("fdx"))
+            if(suf == newasm::mem::regs::fdx.identifier())
             {
                 newasm::mem::regs::fdx --;
                 return 1;
             }
-            if(suf == static_cast<std::string>("stk"))
+            if(suf == newasm::mem::regs::stk.identifier())
             {
                 newasm::mem::regs::stk --;
                 return 1;
             }
-            if(suf == static_cast<std::string>("hea"))
+            if(suf == newasm::mem::regs::heaptr.identifier())
             {
                 newasm::mem::regs::heaptr --;
                 return 1;
             }
-            if(suf == static_cast<std::string>("cpr"))
+            if(suf == newasm::mem::regs::cpr.identifier())
             {
                 newasm::mem::regs::cpr --;
                 return 1;
             }
-            if(suf == static_cast<std::string>("cr0"))
+            if(suf == newasm::mem::regs::cr0.identifier())
             {
                 newasm::mem::regs::cr0 --;
                 return 1;
             }
-            if(suf == static_cast<std::string>("cr1"))
+            if(suf == newasm::mem::regs::cr1.identifier())
             {
                 newasm::mem::regs::cr1 --;
                 return 1;
             }
-            if(suf == static_cast<std::string>("br0"))
+            if(suf == newasm::mem::regs::br0.identifier())
             {
                 newasm::mem::regs::br0 --;
                 return 1;
             }
-            if(suf == static_cast<std::string>("br1"))
+            if(suf == newasm::mem::regs::br1.identifier())
             {
                 newasm::mem::regs::br1 --;
                 return 1;
@@ -2726,7 +2726,7 @@ namespace newasm
                 newasm::mem::regs::stl = std::to_string(tmp);
                 return 1;
             }
-            if(suf == static_cast<std::string>("psx"))
+            if(suf == newasm::mem::regs::psx.identifier())
             {
                 if(!newasm::header::functions::isnumeric(newasm::mem::regs::psx))
                 {
@@ -2738,7 +2738,7 @@ namespace newasm
                 return 1;
             }
 
-            if(suf == static_cast<std::string>("tr1"))
+            if(suf == newasm::mem::regs::tr1.identifier())
             {
                 if(!newasm::header::functions::isnumeric(newasm::mem::regs::tr1))
                 {
@@ -2749,7 +2749,7 @@ namespace newasm
                 newasm::mem::regs::tr1 = std::to_string(tmp);
                 return 1;
             }
-            if(suf == static_cast<std::string>("tr0"))
+            if(suf == newasm::mem::regs::tr0.identifier())
             {
                 if(!newasm::header::functions::isnumeric(newasm::mem::regs::tr0))
                 {
@@ -2762,7 +2762,7 @@ namespace newasm
             }
             //and then, we have this beautiful procedure pointer...
             //we'll just pickup the last procedure from the map memory
-            if(suf == static_cast<std::string>("prp"))
+            if(suf == newasm::mem::regs::prp.identifier())
             {
                 if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::prp), newasm::mem::funcs))
                 {
@@ -2784,7 +2784,7 @@ namespace newasm
                 }
                 return 1;
             }
-            if(suf == static_cast<std::string>("cpt"))
+            if(suf == newasm::mem::regs::cpt.identifier())
             {
                 //make later
                 return 1;

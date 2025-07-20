@@ -178,27 +178,27 @@ namespace newasm
             int exc = 0; // cant be used lol
             int hea = 0; // heap size
             //mem registers
-            int stk = newasm::mem::inf::max_mem_size - 1;
-            int heaptr = 0; // pointer to heap adr
+            newasm::_register<int> stk("stk", newasm::mem::inf::max_mem_size - 1);
+            newasm::_register<int> heaptr("hea", 0);
             //NORMAL REGISTERS
-            int fdx = 0;
-            //std::string tlr = newasm::header::constants::inv_reg_val;
+            
             newasm::_register<std::string> tlr("tlr", newasm::header::constants::inv_reg_val);
             newasm::_register<std::string> stl("stl", newasm::header::constants::inv_reg_val);
-            //std::string stl = newasm::header::constants::inv_reg_val;
-            std::string psx = newasm::header::constants::inv_reg_val;
-            std::string prp = newasm::header::constants::inv_reg_val;
-            int cpr = 0;
-            float cr0 = 0;
-            float cr1 = 0;
-            int br0 = 0;
-            int br1 = 0;
-            std::string cpt = newasm::header::constants::inv_reg_val;
-            std::string tr0 = newasm::header::constants::inv_reg_val;
-            std::string tr1 = newasm::header::constants::inv_reg_val;
 
-            //newasm::register<std::string> register_name("regn", );
-            //int mcd = newasm::datatypes::decimal;
+            newasm::_register<std::string> psx("psx", newasm::header::constants::inv_reg_val);
+            newasm::_register<std::string> prp("prp", newasm::header::constants::inv_reg_val);
+            newasm::_register<std::string> cpt("cpt", newasm::header::constants::inv_reg_val);
+
+            newasm::_register<std::string> tr0("tr0", newasm::header::constants::inv_reg_val);
+            newasm::_register<std::string> tr1("tr1", newasm::header::constants::inv_reg_val);
+            
+            newasm::_register<int> fdx("fdx", 0);
+            newasm::_register<int> cpr("cpr", 0);
+            newasm::_register<int> br0("br0", 0);
+            newasm::_register<int> br1("br1", 0);
+
+            newasm::_register<float> cr0("cr0", 0);
+            newasm::_register<float> cr1("cr1", 0);
         }
 
         struct struct_member
