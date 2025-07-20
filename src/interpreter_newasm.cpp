@@ -177,6 +177,12 @@ int main(int argc, char *argv[])
     
 
     return 1;
+    
+
+    newasm::_register<std::string> test("test", "xd");
+    test = '-' +static_cast<std::string>("\"")+'e'+test+static_cast<std::string>("\"")+'-'+static_cast<std::string>("ahaha");
+    std::cout << "Test :: " << test;
+    return 1;
     #endif
     newasm::runtime::main();
 

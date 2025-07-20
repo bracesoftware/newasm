@@ -23,6 +23,10 @@ the Initial Developer. All Rights Reserved.
 #include <type_traits>
 namespace newasm
 {
+    namespace internal
+    {
+        std::stringstream ss_;
+    }
     template<typename T> class _register
     {
         private:
@@ -93,16 +97,28 @@ namespace newasm
     };
     template<typename T> std::string operator+(const _register<T>& reg, const std::string& rhs)
     {
-        return reg.get_value() + rhs;
+        newasm::internal::ss_.str("");
+        newasm::internal::ss_.clear();
+        newasm::internal::ss_ << reg.get_value();
+        newasm::internal::ss_ << rhs;
+        return newasm::internal::ss_.str();
     }
     template<typename T> std::string operator+(const std::string& rhs, const _register<T>& reg)
     {
-        return reg.get_value() + rhs;
+        newasm::internal::ss_.str("");
+        newasm::internal::ss_.clear();
+        newasm::internal::ss_ << rhs;
+        newasm::internal::ss_ << reg.get_value();
+        return newasm::internal::ss_.str();
     }
 
     std::string operator+(const std::string& lhs, int rhs)
     {
-        return lhs + std::to_string(rhs);
+        newasm::internal::ss_.str("");
+        newasm::internal::ss_.clear();
+        newasm::internal::ss_ << lhs;
+        newasm::internal::ss_ << rhs;
+        return newasm::internal::ss_.str();
     }
 
     // int + string
