@@ -129,12 +129,20 @@ namespace newasm
 
     template<typename T> std::string operator+(const char* lhs, const newasm::_register<T>& rhs)
     {
-        return std::string(lhs) + rhs.get_value();
+        newasm::internal::ss_.str("");
+        newasm::internal::ss_.clear();
+        newasm::internal::ss_ << std::string(lhs);
+        newasm::internal::ss_ << rhs.get_value();
+        return newasm::internal::ss_.str();
     }
 
     template<typename T> std::string operator+(const newasm::_register<T>& lhs, const char* rhs)
     {
-        return lhs.get_value() + std::string(rhs);
+        newasm::internal::ss_.str("");
+        newasm::internal::ss_.clear();
+        newasm::internal::ss_ << lhs.get_value();
+        newasm::internal::ss_ << std::string(rhs);
+        return newasm::internal::ss_.str();
     }
 
 }
