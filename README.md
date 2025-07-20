@@ -67,6 +67,7 @@ Documentation about `newasm` which includes following topics:
     - [`malloc` and `free` instructions](#malloc-and-free)
     - [`stack` instruction](#stack-instruction)
     - [`xchg` instruction](#xchg-instruction)
+    - [`cls` instruction](#cls-instruction)
 - [Procedures](#procedures)
 - [Exit codes](#exit-codes)
 - [Comments](#comments)
@@ -1034,6 +1035,9 @@ Output:
 2
 1
 ```
+
+### `cls` instruction
+Clears the screen.
 
 ## Procedures
 Procedures allow you to use the same piece of code without having to actually repeat it. General syntax is:
