@@ -55,7 +55,7 @@ the Initial Developer. All Rights Reserved.
 
 namespace newasm
 {
-    const int BUILD_NUMBER = 3;
+    const int BUILD_NUMBER = 4;
     bool vercheck = true;
     const std::string tab = "\t\t\t";
     std::unordered_map<std::string,std::vector<std::string>>* dyn_ins_set;
