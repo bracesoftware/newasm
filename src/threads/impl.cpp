@@ -32,6 +32,8 @@ namespace newasm
             public:
             std::deque<std::string> contents;
             std::stringstream output;
+            std::string returned_val;
+            bool returned = false;
         };
         std::unordered_map<std::string, newasm::threads::object__*> memory;
         std::vector<std::string> valid_threads;

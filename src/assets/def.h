@@ -31,6 +31,10 @@ namespace newasm
     namespace runtime
     {
         int version;
+        namespace functions
+        {
+            void parse(std::string& suf);
+        }
     }
     int procline(std::string &line);
 }

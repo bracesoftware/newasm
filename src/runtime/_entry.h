@@ -30,5 +30,29 @@ namespace newasm
             version = 1;
             newasm::header::functions::log("Runtime loaded.");
         }
+        namespace functions
+        {
+            void parse(std::string& suf)
+            {
+                std::vector<std::string> tokens;
+                for(std::vector<std::pair<std::string,std::string>>::iterator i = newasm::env_vars->begin(); i < newasm::env_vars->end(); ++i)
+                {
+                    tokens = newasm::header::functions::split_fixed(suf,'/');
+                    if(newasm::header::functions::trim(tokens[0]) == "*") if(newasm::header::functions::trim(tokens[1]) == i->first)
+                    {
+                        suf = i->second;
+                    }
+                }
+
+                if(suf == newasm::header::constants::inv_reg_val)
+                {
+                    newasm::terminate(newasm::exit_codes::mem_overflow);//,wholeline);
+                    return;
+                }
+                newasm::header::functions::parseopr(suf, newasm::mem::data);
+                newasm::parseopr_struct(suf);
+                return;
+            }
+        }
     }
 }
