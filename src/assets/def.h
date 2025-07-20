@@ -32,4 +32,5 @@ namespace newasm
     {
         int version;
     }
+    int procline(std::string &line);
 }

@@ -26,6 +26,7 @@ namespace newasm
     bool thread_line = false;
     namespace threads
     {
+        std::string now;
         int sys_module = 0;
     }
 }

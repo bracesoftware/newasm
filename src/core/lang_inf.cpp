@@ -91,6 +91,8 @@ namespace newasm
             const int xchg = 47;
             const int int__ = 48;
             const int cls = 49;
+            const int await__ = 50;
+            const int retf = 51;
             
             const int __say = 100;
 
@@ -148,6 +150,9 @@ namespace newasm
                 {int__, "int"},
                 {cls, "cls"},
 
+                {await__, "await"},
+                {retf, "retf"},
+
                 {__say, "__say"}
             };
 
@@ -161,6 +166,7 @@ namespace newasm
                 const int net = 6;
                 const int mem = 7;
                 const int chrono = 8;
+                const int thread = 9;
 
                 const std::unordered_map<int, std::string> identifiers__ = {
                     {ios, "\%ios"},
@@ -170,7 +176,8 @@ namespace newasm
                     {txtop, "\%txtop"},
                     {net, "\%net"},
                     {mem, "\%mem"},
-                    {chrono, "\%chrono"}
+                    {chrono, "\%chrono"},
+                    {thread, "\%thread"}
                 };
             }
 

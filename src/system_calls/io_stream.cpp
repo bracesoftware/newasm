@@ -58,6 +58,14 @@ namespace newasm
                 {
                     std::cout << "";
                 }
+                if(reg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::chrono))
+                {
+                    std::cout << "";
+                }
+                if(reg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::thread))
+                {
+                    std::cout << "";
+                }
                 if(reg == "\%nl")
                 {
                     std::cout << "";
@@ -74,6 +82,63 @@ namespace newasm
                 {
                     std::cout << "";
                 }
+            }
+            std::string get_ref_val__2(const std::string &reg)
+            {
+                std::stringstream ss;
+                if(reg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::exf))
+                {
+                    ss << "";
+                }
+                if(reg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::cmanip))
+                {
+                    ss << "";
+                }
+                if(reg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::ios))
+                {
+                    ss << "";
+                }
+                if(reg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::fs))
+                {
+                    ss << "";
+                }
+                if(reg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::txtop))
+                {
+                    ss << "";
+                }
+                if(reg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::net))
+                {
+                    ss << "";
+                }
+                if(reg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::mem))
+                {
+                    ss << "";
+                }
+                if(reg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::chrono))
+                {
+                    ss << "";
+                }
+                if(reg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::thread))
+                {
+                    ss << "";
+                }
+                if(reg == "\%nl")
+                {
+                    ss << "";
+                }
+                if(reg == "&\%null")
+                {
+                    ss << "null";
+                }
+                if(reg == "\%endl")
+                {
+                    ss << "\n";
+                }
+                if(reg == newasm::header::constants::inv_reg_val)
+                {
+                    ss << "<?>";
+                }
+                return ss.str();
             }
         }
     }

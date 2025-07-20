@@ -31,13 +31,11 @@ namespace newasm
         {
             public:
             std::deque<std::string> contents;
-            //std::vector<std::string> contents_old;
-            //int lastlndx = 0;
-            //int size = 0;
+            std::stringstream output;
         };
         std::unordered_map<std::string, newasm::threads::object__*> memory;
         std::vector<std::string> valid_threads;
-        //std::vector<std::string> finished_threads;
+        
         int thread_count = 0;
         namespace functions
         {

@@ -2004,6 +2004,39 @@ namespace newasm
             //std::cout << newasm::system::cproc << " : " << newline << std::endl;
             return 1;
         }
+        //await
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::await__))
+        {
+            if(!newasm::header::functions::isref(suf))
+            {
+                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                return 1;
+            }
+            if(!newasm::mem::functions::datavalid(
+                newasm::header::functions::remamp(suf), newasm::threads::memory))
+            {
+                newasm::terminate(newasm::exit_codes::invalid_thread);
+                return 1;
+            }
+            std::string thread__ = newasm::header::functions::remamp(suf);
+            try
+            {
+                while(!newasm::threads::memory.at(thread__)->contents.empty())
+                {
+                    newasm::thread_line = true;
+                    newasm::threads::now = (thread__);
+                    newasm::procline(*newasm::threads::memory.at(thread__)->contents.begin());
+                    newasm::thread_line = false;
+                    newasm::threads::memory.at(thread__)->contents.pop_front();
+                }
+            }
+            catch(const std::exception& e)
+            {
+                std::cerr << "Zajebucnuo si se :: " << e.what() << '\n';
+            }
+            
+            return 1;
+        }
         //int
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::int__))
         {
@@ -2125,6 +2158,16 @@ namespace newasm
                     return 1;
                 }
                 newasm::header::data::module = newasm::core::lang_inf::refs::chrono;
+                return 1;
+            }
+            if(suf == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::thread))
+            {
+                if(newasm::thread_line)
+                {
+                    newasm::threads::sys_module = newasm::core::lang_inf::refs::thread;
+                    return 1;
+                }
+                newasm::header::data::module = newasm::core::lang_inf::refs::thread;
                 return 1;
             }
             newasm::terminate(newasm::exit_codes::sysenter_fail);
@@ -2923,6 +2966,34 @@ namespace newasm
         //syscall
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::syscall))
         {
+            //thread
+            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::thread)
+            {
+                if(newasm::mem::regs::fdx == 1) //print output of the thread
+                {
+                    if(!newasm::header::functions::isref(newasm::mem::regs::tlr))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    std::string thread__ = newasm::header::functions::remamp(newasm::mem::regs::tlr);
+                    if(!newasm::mem::functions::datavalid(thread__, newasm::threads::memory))
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_thread);
+                        return 1;
+                    }
+                    if(!newasm::threads::memory.at(thread__)->contents.empty())
+                    {
+                        newasm::terminate(newasm::exit_codes::expected_await);
+                        return 1;
+                    }
+                    std::cout << newasm::threads::memory.at(thread__)->output.str();
+                    newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
+                    return 1;
+                }
+                newasm::terminate(newasm::exit_codes::invalid_syntax);
+                return 1;
+            }
             //chrono
             if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::chrono)
             {
@@ -3208,6 +3279,12 @@ namespace newasm
                         return 1;
                     }
                     newasm::mem::regs::tlr = newasm::header::functions::remq(newasm::mem::regs::tlr);
+                    if(newasm::thread_line)
+                    {
+                        newasm::threads::memory.at(newasm::threads::now)->output << newasm::mem::regs::tlr.get_value();
+                        newasm::threads::memory.at(newasm::threads::now)->output << newasm::syscalls::iostream::get_ref_val__2(newasm::mem::regs::stl);
+                        return 1;
+                    }
                     std::cout << newasm::mem::regs::tlr;// << std::endl;
                     //newasm::mem::functions::out_bopr(newasm::mem::regs::stl);
                     newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
@@ -3219,6 +3296,12 @@ namespace newasm
                     if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr) && !newasm::header::functions::isfloat(newasm::mem::regs::tlr))
                     {
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    if(newasm::thread_line)
+                    {
+                        newasm::threads::memory.at(newasm::threads::now)->output << newasm::mem::regs::tlr.get_value();
+                        newasm::threads::memory.at(newasm::threads::now)->output << newasm::syscalls::iostream::get_ref_val__2(newasm::mem::regs::stl);
                         return 1;
                     }
                     std::cout << newasm::mem::regs::tlr;// << std::endl;
@@ -3247,6 +3330,11 @@ namespace newasm
                 //print values of builtin operands
                 if(newasm::mem::regs::fdx == 5)
                 {
+                    if(newasm::thread_line)
+                    {
+                        newasm::threads::memory.at(newasm::threads::now)->output << newasm::syscalls::iostream::get_ref_val__2(newasm::mem::regs::tlr);
+                        return 1;
+                    }
                     //newasm::mem::functions::out_bopr(newasm::mem::regs::tlr);
                     newasm::syscalls::iostream::out_bopr(newasm::mem::regs::tlr);
                     return 1;
@@ -3258,6 +3346,12 @@ namespace newasm
                     {
                         //std::cout << "tlr is " << newasm::mem::regs::tlr << std::endl;
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    if(newasm::thread_line)
+                    {
+                        newasm::threads::memory.at(newasm::threads::now)->output << newasm::header::functions::remamp(newasm::mem::regs::tlr);
+                        newasm::threads::memory.at(newasm::threads::now)->output << newasm::syscalls::iostream::get_ref_val__2(newasm::mem::regs::stl);
                         return 1;
                     }
                     std::cout << newasm::header::functions::remamp(newasm::mem::regs::tlr);
@@ -3273,6 +3367,12 @@ namespace newasm
                     {
                         //std::cout << "tlr is " << newasm::mem::regs::tlr << std::endl;
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    if(newasm::thread_line)
+                    {
+                        newasm::threads::memory.at(newasm::threads::now)->output << newasm::header::functions::remsq(newasm::mem::regs::tlr);
+                        newasm::threads::memory.at(newasm::threads::now)->output << newasm::syscalls::iostream::get_ref_val__2(newasm::mem::regs::stl);
                         return 1;
                     }
                     std::cout << newasm::header::functions::remsq(newasm::mem::regs::tlr);
@@ -3566,7 +3666,7 @@ namespace newasm
         newasm::terminate(newasm::exit_codes::invalid_syntax);
         return 1;
     }
-    int procline(std::string &line)
+    void handle_threads(int method); int procline(std::string &line)
     {
         if(!newasm::header::execution_flow::exec_redirected) if(newasm::mem::functions::islbln(newasm::header::data::lastlndx))
         {
@@ -3745,6 +3845,10 @@ namespace newasm
         }
         if(newasm::system::section == newasm::code_stream::sections::start)
         {
+            if(newasm::thread_line == false)
+            {
+                newasm::handle_threads(0);
+            }
             if(newasm::mem::functions::datavalid(line, newasm::mem::instructions))
             {
                 for(int i = 0; i < newasm::dynlib::mem::invalid_dynlibs.size(); ++i)
@@ -3881,6 +3985,7 @@ namespace newasm
         if(!newasm::header::functions::strfind(line,'.'))
             if(!newasm::header::functions::strfind(line,','))
                 return newasm::process_i(line,ins);*/
+        //threads
         newasm::terminate(newasm::exit_codes::invalid_syntax);
         return 0;
     }
@@ -3999,7 +4104,7 @@ namespace newasm
         //else
         return 0;
     }
-    void handle_threads(int method); int execute(std::string file, int startline, int proceed)
+    int execute(std::string file, int startline, int proceed)
     {
         if(proceed == 0)
         {
@@ -4040,19 +4145,6 @@ namespace newasm
                 newasm::procline(line);
                 lineidx++;
 
-                //threads
-                if(newasm::system::section == newasm::code_stream::sections::start)
-                {
-                    try
-                    {
-                        newasm::handle_threads(0);
-                    }
-                    catch(const std::exception& e)
-                    {
-                        std::cerr << "Handle threads :: " << e.what() << '\n';
-                    }
-                    
-                }
                 //////////
             }
             
@@ -4089,6 +4181,7 @@ namespace newasm
                 continue;
             }
             newasm::thread_line = true;
+            newasm::threads::now = (*i);
             newasm::procline(*newasm::threads::memory.at(*i)->contents.begin());
             newasm::thread_line = false;
             newasm::threads::memory.at(*i)->contents.pop_front();
