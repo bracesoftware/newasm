@@ -603,6 +603,11 @@ namespace newasm
             {
                 //std::cout << "Called (LAMBDA.INS) << proc" << std::endl;
                 newasm::lambda::lambda_now = true;
+                newasm::lambda::GLOBAL.thread = false;
+                if(newasm::thread_line)
+                {
+                    newasm::lambda::GLOBAL.thread = true;
+                }
                 if(!newasm::lambda::GLOBAL.contents.empty())
                 {
                     newasm::lambda::GLOBAL.contents.clear();
@@ -3747,6 +3752,7 @@ namespace newasm
     }
     void handle_threads(int method); int procline(std::string &line)
     {
+        
         if(!newasm::header::execution_flow::exec_redirected) if(newasm::mem::functions::islbln(newasm::header::data::lastlndx))
         {
             return 1;
@@ -3835,7 +3841,22 @@ namespace newasm
 
         if(newasm::lambda::lambda_now)
         {
-            newasm::lambda::GLOBAL.contents.push_back(line);
+            if(newasm::thread_line)
+            {
+                if(newasm::lambda::GLOBAL.thread)
+                {
+                    std::cout << "Thread :: lambda >> " << line << std::endl;
+                    newasm::lambda::GLOBAL.contents.push_back(line);
+                }
+            }
+            if(!newasm::thread_line)
+            {
+                if(!newasm::lambda::GLOBAL.thread)
+                {
+                    std::cout << "Thread.not :: lambda.not >> " << line << std::endl;
+                    newasm::lambda::GLOBAL.contents.push_back(line);
+                }
+            }
             return 1;
         }
 

@@ -28,9 +28,10 @@ namespace newasm
             std::vector<std::string> contents; //contents of a lambda proc
             std::string result; // returned value
             bool ret = false;
+            bool thread = false;
         };
-        newasm::lambda::_obj GLOBAL;
-        bool lambda_now = false;
-        bool process = false;
+        newasm::lambda::_obj GLOBAL; // crazy 
+        bool lambda_now = false; // if lambda is being declared
+        bool process = false; // if lambda contents is being processed
     }
 }
