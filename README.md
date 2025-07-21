@@ -86,7 +86,7 @@ Documentation about `newasm` which includes following topics:
 - [Threads](#threads)
     - [`await` and `retf`](#await-and-retf-instructions)
 - [Opcodes](#instruction-set-and-opcodes)
-- [Lambda procedures](doc/lambda.md)
+- [Lambda procedures](docs/lambda.md)
 
 ## Compiling
 This project is written purely in C++ using its standard libraries, so compiling it should be easy. To download C++ compiler, please follow instructions on the link below:
