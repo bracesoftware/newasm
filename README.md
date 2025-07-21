@@ -85,7 +85,7 @@ Documentation about `newasm` which includes following topics:
     - [Binary trees](#binary-trees)
 - [Threads](#threads)
     - [`await` and `retf`](#await-and-retf-instructions)
-- [Opcodes](#instruction-set-and-opcodes)
+- [Opcodes](docs/opcodes.md)
 - [Lambda procedures](docs/lambda.md)
 
 ## Compiling
@@ -1591,11 +1591,3 @@ Hello from thread
 this was returned
 ```
 
-## Instruction set and opcodes
-NewASM has a bunch of instructions, and in order to mimic real assemblers, there is a specific opcode linked to every instruction, for example `mov` is `0x6`:
-
-```asm
-.start
-    0x6 tlr, 1 ; same as `mov tlr, 1`
-    ; more code
-```
