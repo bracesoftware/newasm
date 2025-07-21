@@ -395,7 +395,7 @@ namespace newasm
             std::string form_iso(std::string ins, std::string suf, std::string opr)
             {
                 std::stringstream result;
-                result << ins << suf << "," << opr;
+                result << ins << " " << suf << "," << opr;
                 return result.str();
             }
 

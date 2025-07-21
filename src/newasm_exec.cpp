@@ -601,7 +601,7 @@ namespace newasm
         {
             if(lambda.second == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::proc))
             {
-                std::cout << "Called (LAMBDA.INS) << proc" << std::endl;
+                //std::cout << "Called (LAMBDA.INS) << proc" << std::endl;
                 newasm::lambda::lambda_now = true;
                 if(!newasm::lambda::GLOBAL.contents.empty())
                 {
@@ -3793,13 +3793,13 @@ namespace newasm
                 newasm::terminate(newasm::exit_codes::unexpected_end);
                 return 1;
             }
-            std::cout << "Called (LAMBDA.INS) << end" << std::endl;
+            //std::cout << "Called (LAMBDA.INS) << end" << std::endl;
             newasm::lambda::lambda_now = false;
             newasm::lambda::process = true;
             for(auto i = newasm::lambda::GLOBAL.contents.begin(); i != newasm::lambda::GLOBAL.contents.end(); ++i)
             {
-                std::cout << "lambda line >> " << *i << std::endl;
-                std::cout << "vector size >> " << newasm::lambda::GLOBAL.contents.size() << std::endl;
+                //std::cout << "lambda line >> " << *i << std::endl;
+                //std::cout << "vector size >> " << newasm::lambda::GLOBAL.contents.size() << std::endl;
                 newasm::procline(*i);
                 if(newasm::lambda::GLOBAL.ret)
                 {
@@ -3813,8 +3813,23 @@ namespace newasm
                 newasm::terminate(newasm::exit_codes::invalid_exp);
                 return 1;
             }
-            std::string eval = newasm::lambda::GLOBAL.line + newasm::lambda::GLOBAL.result;
-            newasm::procline(eval);
+            try
+            {
+                //std::cout << "EVAL >> " << newasm::lambda::GLOBAL.line + newasm::lambda::GLOBAL.result << std::endl;
+                std::string eval = newasm::lambda::GLOBAL.line + newasm::lambda::GLOBAL.result;
+                //std::cout << "RETURNED >> " << newasm::lambda::GLOBAL.result << '\n';
+                newasm::procline(eval);
+            }
+            catch (const std::out_of_range& e) {
+                std::cerr << "Out of range: " << e.what() << '\n';
+            }
+            catch (const std::invalid_argument& e) {
+                std::cerr << "Invalid argument: " << e.what() << '\n';
+            }
+            catch (const std::exception& e) {
+                std::cerr << "Standard exception: " << e.what() << '\n';
+            }
+            
             return 1;
         }
 
@@ -4014,7 +4029,10 @@ namespace newasm
             std::vector<std::string> linetokens = newasm::common::tokenize(line);
 
             std::string instruction;
-            instruction = linetokens.at(0);
+            if(!linetokens.empty())
+            {
+                instruction = linetokens.at(0);
+            }
             if(newasm::header::functions::ishex(instruction))
             {
                 for(std::unordered_map<int, std::string>::iterator i = newasm::opcodes::mem.begin(); i != newasm::opcodes::mem.end(); ++i)
