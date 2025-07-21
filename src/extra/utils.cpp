@@ -46,5 +46,40 @@ namespace newasm
             std::cout << std::endl;
             return 0;
         }
+        const float load_speed = 0.009f;
+        void loading(std::string text, float speed)
+        {
+            const char animation[] = {'\\', '|', '/', '-'};
+            const int anim_len = 4;
+
+            int percent = 0;
+            int anim_index = 0;
+
+            auto start_time = std::chrono::steady_clock::now();
+            auto next_percent_time = start_time + std::chrono::milliseconds(static_cast<int>(speed * 1000));
+
+            while (percent <= 100)
+            {
+                std::cout << newasm::header::col::gray
+                << "\r\t" << animation[anim_index] << " "<< newasm::header::style::underline << text 
+                << newasm::header::col::reset << newasm::header::col::gray
+                << " [" << percent << "%]" << std::flush;
+                std::cout << newasm::header::col::reset;
+
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                anim_index = (anim_index + 1) % anim_len;
+
+                if (std::chrono::steady_clock::now() >= next_percent_time)
+                {
+                    percent++;
+                    next_percent_time += std::chrono::milliseconds(static_cast<int>(speed * 1000));
+                }
+            }
+            std::cout << newasm::header::col::gray << "\r\t" << "* "<< newasm::header::style::underline << text 
+            << newasm::header::col::reset << newasm::header::col::green << " [100%]" << std::flush;
+
+            std::cout << newasm::header::col::reset << std::endl;
+        }
+
     }
 }

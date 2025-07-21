@@ -24,7 +24,7 @@ Below is the simple `Hello World` program written in New-Assembly.
     
     syscall
 
-    retn 0
+    ret 0
 ```
 
 # Table of contents

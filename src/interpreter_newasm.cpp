@@ -108,6 +108,7 @@ is in the runtime
 #include "core/containers.cpp"
 #include "core/env_vars.cpp"
 
+#include "lambda/_entry.cpp"
 #include "newasm_exec.cpp"
 
 #include "extra/procline_insert.cpp"
@@ -131,8 +132,8 @@ namespace newasm
             std::string url = "https://bracesoftware.github.io/web/newasm_server/vers.txt";
             std::string output_path = newasm::core::constants::data_folder + newasm::core::constants::separator + newasm::core::constants::temp_vers;
 
-            newasm::header::functions::info("Checking for updates...");
-            newasm::utils::loadingbar("\t* Progress:        ");
+            //newasm::header::functions::info("Checking for updates...");
+            newasm::utils::loading("Checking for updates...", newasm::utils::load_speed);
             bool checkres = newasm::net::download(url, output_path);
             if(checkres)
             {
@@ -354,7 +355,7 @@ int main(int argc, char *argv[])
         }
         if(newasm::header::settings::extra)
         {
-            newasm::utils::loadingbar("\t* Preparing REPL:        ");
+            newasm::utils::loading("Preparing REPL...",newasm::utils::load_speed);
             //newasm::utils::loadingbar("\t* Sexy:                  ");
         }
         std::cout << std::endl;

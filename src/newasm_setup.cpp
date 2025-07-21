@@ -87,6 +87,7 @@ namespace newasm
         const int invalid_sysint = 46;
         const int expected_await = 47;
         const int invalid_thread = 48;
+        const int invalid_exp = 49;
 
         const std::unordered_map<int, std::string> identifier = {
             {noterm_point, "NoTerminationPoint"},
@@ -137,7 +138,8 @@ namespace newasm
             {undefined_macro, "UndefinedMacro"},
             {invalid_sysint, "InvalidSysInterrupt"},
             {expected_await, "ExpectedAwait"},
-            {invalid_thread, "InvalidThread"}
+            {invalid_thread, "InvalidThread"},
+            {invalid_exp, "InvalidExpression"}
         };
     }
     namespace cmp_results

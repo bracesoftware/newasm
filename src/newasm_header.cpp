@@ -379,6 +379,25 @@ namespace newasm
                 std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
                 return 0; // sve ok
             }
+            std::pair<bool, std::string> is_lambda(std::string text)
+            {
+                std::string newstr = newasm::header::functions::trim(text);
+
+                if(newstr.size() >= 3 && newstr.front() == '(' && newstr.back() == ')')
+                {
+                    return {true, (newstr.substr(1, newstr.size() - 2))};
+                }
+   
+
+                return {false, "err"};
+            }
+
+            std::string form_iso(std::string ins, std::string suf, std::string opr)
+            {
+                std::stringstream result;
+                result << ins << suf << "," << opr;
+                return result.str();
+            }
 
             std::vector<std::string> split(const std::string &str, char delimiter)
             {

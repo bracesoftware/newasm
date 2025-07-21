@@ -596,6 +596,23 @@ namespace newasm
     }
     int process_iso(std::string wholeline, std::string ins, std::string suf, std::string opr)
     {
+        auto lambda = newasm::header::functions::is_lambda(opr);
+        if(lambda.first)
+        {
+            if(lambda.second == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::proc))
+            {
+                std::cout << "Called (LAMBDA.INS) << proc" << std::endl;
+                newasm::lambda::lambda_now = true;
+                if(!newasm::lambda::GLOBAL.contents.empty())
+                {
+                    newasm::lambda::GLOBAL.contents.clear();
+                }
+                newasm::lambda::GLOBAL.line = newasm::header::functions::form_iso(ins,suf,"");
+                return 1;
+            }
+            newasm::terminate(newasm::exit_codes::invalid_exp);
+            return 1;
+        }
         std::vector<std::string> tokens;
         for(std::vector<std::pair<std::string,std::string>>::iterator i = newasm::env_vars->begin(); i < newasm::env_vars->end(); ++i)
         {
@@ -1498,12 +1515,20 @@ namespace newasm
         //halt
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::halt))
         {
-            if(suf == static_cast<std::string>("proc"))
+            if(suf == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::proc))
             {
+                if(newasm::lambda::process)
+                {
+                    newasm::lambda::GLOBAL.result = opr;
+                    newasm::lambda::GLOBAL.ret = true;
+                    return 1;
+                }
                 newasm::system::stoproc = 1;
                 newasm::mem::regs::psx = (opr);
                 return 1;
             }
+            newasm::terminate(newasm::exit_codes::invalid_syntax);
+            return 1;
         }
         //push
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::push))
@@ -3760,6 +3785,45 @@ namespace newasm
             newasm::terminate(newasm::exit_codes::unexpected_cbrace);
             return 1;
         }
+        auto lambda = newasm::header::functions::is_lambda(line);
+        if(lambda.first) if(lambda.second == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::end))
+        {
+            if(newasm::lambda::GLOBAL.contents.empty())
+            {
+                newasm::terminate(newasm::exit_codes::unexpected_end);
+                return 1;
+            }
+            std::cout << "Called (LAMBDA.INS) << end" << std::endl;
+            newasm::lambda::lambda_now = false;
+            newasm::lambda::process = true;
+            for(auto i = newasm::lambda::GLOBAL.contents.begin(); i != newasm::lambda::GLOBAL.contents.end(); ++i)
+            {
+                std::cout << "lambda line >> " << *i << std::endl;
+                std::cout << "vector size >> " << newasm::lambda::GLOBAL.contents.size() << std::endl;
+                newasm::procline(*i);
+                if(newasm::lambda::GLOBAL.ret)
+                {
+                    break;
+                }
+            }
+            newasm::lambda::process = false;
+            if(!newasm::lambda::GLOBAL.ret)
+            {
+                // Must return a value inside a lambda procedure
+                newasm::terminate(newasm::exit_codes::invalid_exp);
+                return 1;
+            }
+            std::string eval = newasm::lambda::GLOBAL.line + newasm::lambda::GLOBAL.result;
+            newasm::procline(eval);
+            return 1;
+        }
+
+        if(newasm::lambda::lambda_now)
+        {
+            newasm::lambda::GLOBAL.contents.push_back(line);
+            return 1;
+        }
+
         //using namespace std;
         //cout << newasm::threads::thread_now << endl;
         if(newasm::threads::thread_now)
@@ -3784,6 +3848,7 @@ namespace newasm
                 return 1; //skip line
             }
         }
+        
         line = newasm::header::functions::remc(line);
         std::string ins, suf, opr, stat, arg, dtyp, ev, pr;
         std::vector<std::string> tmp, tmp1, tmp2, tmp3;
