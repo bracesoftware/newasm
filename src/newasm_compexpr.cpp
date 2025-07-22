@@ -53,13 +53,10 @@ namespace newasm
         std::string token = "";
         newasm::token* token_obj = nullptr;
         int type = 0;
-        auto is_btw_str = [](std::string text, int idx) -> bool {
+        auto is_str_ = [](std::string text, int idx) -> bool {
             std::vector<std::pair<int,int>> positions;
             int first_p = -1, second_p = -1;
-            if(text.at(idx) == '"')
-            {
-                return false;
-            }
+       
             for(int i = 0; i < text.size(); ++i)
             {
                 if(text.at(i) == '"')
@@ -90,21 +87,39 @@ namespace newasm
             }
             for(int i = 0; i < positions.size(); ++i)
             {
-                if(positions.at(i).first < idx && idx < positions.at(i).second)
+                if(positions.at(i).first <= idx && idx <= positions.at(i).second)
                 {
                     return true;
                 }
             }
             return false;
         };
+        auto remove_whitespace = [&](std::string &input) -> void {
+            std::string result;
+            for(int i = 0; i < input.size(); ++i)
+            {
+                if(is_str_(input, i))
+                {
+                    continue;
+                }
+                if(std::isspace(input.at(i)))
+                {
+                    continue;
+                }
+                result.push_back(input.at(i));
+            }
+            input = result;
+        };
+        remove_whitespace(str);
         std::string query = str;
         for(int i = 0; i < query.size(); ++i)
         {
-            if(std::isspace(query.at(i)) && !is_btw_str(query, i))
+            /*if(std::isspace(query.at(i)))
             {
+
                 continue;
-            }
-            if(std::isalnum(query.at(i)) || query.at(i) == '_' || is_btw_str(query, i))
+            }*/
+            if(std::isalnum(query.at(i)) || query.at(i) == '_' || is_str_(query, i))
             {
                 if(type == 0) type = newasm::alphanum_T;
                 if(type == newasm::operator_T)
@@ -113,6 +128,7 @@ namespace newasm
                     token_obj->type = newasm::operator_T;
                     if(newasm::operators::_mem.find(token) == newasm::operators::_mem.end())//Invalid exp
                     {
+                        //std::cout << "Token >> " << token << std::endl;
                         newasm::terminate(newasm::exit_codes::invalid_exp);
                         return;
                     }
@@ -144,6 +160,36 @@ namespace newasm
                 token.push_back(query.at(i));
             }//else
         }//for loop
+        if(!token.empty())
+        {
+            token_obj = new newasm::token();
+            if(type == newasm::alphanum_T)
+            {
+                token_obj->type = newasm::alphanum_T;
+                token_obj->symbol.assign(token);
+                token_obj->operator__ = 0;
+                newasm::tokens.push_back(token_obj);
+                
+                token_obj = nullptr;
+                token.clear();
+            }
+            if(type == newasm::operator_T)
+            {
+                token_obj->type = newasm::operator_T;
+                if(newasm::operators::_mem.find(token) == newasm::operators::_mem.end())//Invalid exp
+                {
+                    //std::cout << "Token >> " << token << std::endl;
+                    newasm::terminate(newasm::exit_codes::invalid_exp);
+                    return;
+                }
+                token_obj->operator__ = newasm::operators::_mem.at(token);
+                token_obj->symbol.assign(token);
+                newasm::tokens.push_back(token_obj);
+
+                token_obj = nullptr;
+                token.clear();
+            }
+        }
         return;
     }//func end
     namespace impl
@@ -157,6 +203,14 @@ namespace newasm
             std::string result, lhs, rhs, temp;
             newasm::tokens.clear();
             newasm::tokenize(query);
+            
+            /*for(int i = 0; i < newasm::tokens.size(); ++i)
+            {
+                std::cout << "TOKENS DATA :: " << i << std::endl;
+                std::cout << "operator__ >> `" << newasm::tokens.at(i)->operator__ << '`' <<std::endl;
+                std::cout << "symbol >> `" << newasm::tokens.at(i)->symbol << '`' <<std::endl;
+                std::cout << "type >> `" << newasm::tokens.at(i)->type << '`' <<std::endl;
+            }*/
 
             for(int i = 0; i < newasm::tokens.size(); ++i) // ALTERNATIVE OPERATOR ??
             {
@@ -167,13 +221,17 @@ namespace newasm
                         if(
                             (i == 0 || i + 1 >= newasm::tokens.size())
                         )/*check if this operator has a lhs and rhs*/{
+                            //std::cout << "EVAL db 1 >> query :: " << 
+                            //query << " size :: " << newasm::tokens.size() << std::endl;
                             newasm::terminate(newasm::exit_codes::invalid_exp);
                             return temp;
                         }
                         if(!(
                             newasm::tokens.at(i - 1)->type == newasm::alphanum_T &&
                             newasm::tokens.at(i + 1)->type == newasm::alphanum_T
-                        ))/**/{
+                        ))/*check if lhs and rhs are not operators*/{
+                            //std::cout << "EVAL db 2 >> query :: " << 
+                            //query << " size :: " << newasm::tokens.size() << std::endl;
                             newasm::terminate(newasm::exit_codes::invalid_exp);
                             return temp;
                         }
@@ -200,6 +258,8 @@ namespace newasm
                         }
                         continue;
                     }
+                    //std::cout << "EVAL db 3 >> query :: " << 
+                       //     query << " size :: " << newasm::tokens.size() << std::endl;
                     newasm::terminate(newasm::exit_codes::invalid_exp);
                     return temp;
                 }

@@ -41,7 +41,7 @@ namespace newasm
             int testint = 23874;
             printf("number is %i",testint);
 
-            /*std::string teststr = "sdf@gs??e@js??gggg@fffsf??nb/";
+           /* std::string teststr = "dhnkjs ?? \"Hello World /h\"";
             newasm::tokenize(teststr);
             for(int i = 0; i < newasm::tokens.size(); ++i)
             {
@@ -50,8 +50,8 @@ namespace newasm
                 << newasm::tokens.at(i)->symbol<<'-'
                 << newasm::tokens.at(i)->operator__
                 << std::endl; 
-            }*/
-
+            }
+*/
             std::cout << std::endl; newasm::header::functions::info("Tests finished.");
             return;
         }
