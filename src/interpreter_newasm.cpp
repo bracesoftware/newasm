@@ -111,10 +111,11 @@ is in the runtime
 #include "lambda/_entry.cpp"
 #include "newasm_exec.cpp"
 
-#include "extra/procline_insert.cpp"
-#include "extra/repl_mode.cpp"
-#include "extra/utils.cpp"
+#include "runtime/procline_insert.cpp"
+#include "runtime/repl_mode.cpp"
+#include "runtime/utils.cpp"
 
+#include "newasm_compexpr.cpp"
 #include "newasm_tests.cpp"
 #include "newasm_ctl.cpp"
 

@@ -57,4 +57,5 @@ namespace newasm
         }
     }
     int procline(std::string &line);
+    void tokenize(std::string str);
 }

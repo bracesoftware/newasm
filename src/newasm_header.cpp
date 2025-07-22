@@ -29,6 +29,10 @@ namespace newasm
 {
     namespace header
     {
+        namespace flags
+        {
+            bool compexpr = false;
+        }
         namespace system_info
         {
             const std::string name = "[NewASM]";
