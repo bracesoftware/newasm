@@ -596,6 +596,10 @@ namespace newasm
     }
     int process_iso(std::string wholeline, std::string ins, std::string suf, std::string opr)
     {
+        if(newasm::header::flags::compexpr)
+        {
+            newasm::impl::eval(opr);
+        }
         auto lambda = newasm::header::functions::is_lambda(opr);
         if(lambda.first)
         {
@@ -2133,6 +2137,11 @@ namespace newasm
                     return 1;
                 }
                 newasm::terminate(newasm::exit_codes::invalid_syntax);
+                return 1;
+            }
+            if(suf == static_cast<std::string>("0x3")) //sys_expect_compexpr
+            {
+                newasm::header::flags::compexpr = true;
                 return 1;
             }
             newasm::terminate(newasm::exit_codes::invalid_sysint);
@@ -3845,7 +3854,7 @@ namespace newasm
             {
                 if(newasm::lambda::GLOBAL.thread)
                 {
-                    std::cout << "Thread :: lambda >> " << line << std::endl;
+                    //std::cout << "Thread :: lambda >> " << line << std::endl;
                     newasm::lambda::GLOBAL.contents.push_back(line);
                 }
             }
@@ -3853,7 +3862,7 @@ namespace newasm
             {
                 if(!newasm::lambda::GLOBAL.thread)
                 {
-                    std::cout << "Thread.not :: lambda.not >> " << line << std::endl;
+                    //std::cout << "Thread.not :: lambda.not >> " << line << std::endl;
                     newasm::lambda::GLOBAL.contents.push_back(line);
                 }
             }

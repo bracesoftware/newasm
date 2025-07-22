@@ -58,4 +58,8 @@ namespace newasm
     }
     int procline(std::string &line);
     void tokenize(std::string str);
+    namespace impl
+    {
+        std::string eval(std::string str);
+    }
 }

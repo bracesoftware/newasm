@@ -150,6 +150,10 @@ namespace newasm
     {
         std::string eval(std::string query)
         {
+            if(newasm::header::flags::compexpr)
+            {
+                newasm::header::flags::compexpr = false;
+            }
             std::string result, lhs, rhs, temp;
             newasm::tokens.clear();
             newasm::tokenize(query);
