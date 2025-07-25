@@ -19,7 +19,9 @@ the Initial Developer. All Rights Reserved.
 
 
 #ifdef _WIN32
+#ifndef _WIN32_WINNT
 #define _WIN32_WINNT 0x0601
+#endif
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #pragma comment(lib, "Ws2_32.lib")
@@ -27,6 +29,7 @@ the Initial Developer. All Rights Reserved.
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <netinet/tcp.h> 
 #include <netinet/in.h>
 #include <cstring>
 #endif
@@ -118,14 +121,14 @@ static void OpenProgramConsole()
 {
     SendCommand("OpenProgramConsole");
     std::string resp = ReceiveResponse();
-    std::cout << resp;
+    //std::cout << resp;
 }
 
 static void PrintText(const std::string& text)
 {
     SendCommand("PrintText:" + text);
     std::string resp = ReceiveResponse();
-    std::cout << resp;
+    //std::cout << resp;
 }
 
 static std::string RequestInput()
@@ -178,7 +181,7 @@ namespace newasm
     {
         namespace api
         {
-            void start
+            void start()
             {
                 if(!ConnectConsole())
                 {
@@ -194,7 +197,7 @@ namespace newasm
             {
                 return RequestInput();
             }
-            void exit
+            void exit()
             {
                 CloseProgramConsole();
             }

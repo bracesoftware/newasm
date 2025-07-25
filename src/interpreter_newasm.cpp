@@ -38,11 +38,14 @@ the Initial Developer. All Rights Reserved.
 #include <cctype>
 #include <chrono>
 #include <thread>
-
+//LOl
 #include <cstdlib>
 #include <iomanip>
 #include <stdio.h>
 #include <deque>
+//For idk
+#include <functional>
+#include <utility>
 
 #define __newasm_included
 
@@ -199,6 +202,7 @@ int main(int argc, char *argv[])
     return 1;
     #endif
     newasm::runtime::main();
+    std::string cmd, input;
 
     fs::path data_folder = fs::path(newasm::core::constants::data_folder);
     if(!fs::exists(data_folder))
@@ -332,16 +336,21 @@ int main(int argc, char *argv[])
         newasm::header::functions::err("`progwin` not found.");
         return 1;
     }
-    std::system(
+    cmd =
         #ifdef _WIN32
             std::string("start ") + newasm::core::constants::progwin
         #else
             std::string("./") + newasm::core::constants::progwin + std::string("&")
-    );
+        #endif
+    ;
+
+    std::system(cmd.c_str());
 
     newasm::progwin::api::start();
 
     newasm::progwin::api::cout("HELLOOOOOOOOOO");
+    input = newasm::progwin::api::cin();
+    newasm::progwin::api::cout(input);
 
     // File to analyze.
     newasm::header::functions::trim(newasm::header::settings::script_file);

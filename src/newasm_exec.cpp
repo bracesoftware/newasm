@@ -650,6 +650,12 @@ namespace newasm
                 return 1;
             }
         }
+        //vmov
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::vmov))
+        {
+            newasm::terminate(newasm::exit_codes::invalid_syntax);
+            return 1;
+        }
         //LOAD.ref
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::load))
         {

@@ -30,6 +30,7 @@ the Initial Developer. All Rights Reserved.
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <netinet/tcp.h> 
 #include <netinet/in.h>
 #include <cstring>
 #endif

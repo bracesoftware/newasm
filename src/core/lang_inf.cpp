@@ -91,6 +91,7 @@ namespace newasm
             const int not__ = 38;
             const int shl = 39;
             const int shr = 40;
+            
             const int db = 41;
             const int malloc__ = 42;
             const int free__ = 43;
@@ -100,8 +101,10 @@ namespace newasm
             const int xchg = 47;
             const int int__ = 48;
             const int cls = 49;
+
             const int await__ = 50;
             const int retf = 51;
+            const int vmov = 52;
             
             const int __say = 100;
 
@@ -161,6 +164,7 @@ namespace newasm
 
                 {await__, "await"},
                 {retf, "retf"},
+                {vmov, "vmov"}
 
                 {__say, "__say"}
             };
