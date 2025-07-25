@@ -341,6 +341,8 @@ int main(int argc, char *argv[])
 
     newasm::progwin::api::start();
 
+    newasm::progwin::api::cout("HELLOOOOOOOOOO");
+
     // File to analyze.
     newasm::header::functions::trim(newasm::header::settings::script_file);
     newasm::execute
@@ -408,7 +410,10 @@ int main(int argc, char *argv[])
     
     newasm::threads::functions::free_mem();
 
-    newasm::
+    if(newasm::progwin::api::isConsoleRunning())
+    {
+        newasm::progwin::api::exit();
+    }
 
     return 0;
 }
