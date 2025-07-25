@@ -21,139 +21,105 @@ the Initial Developer. All Rights Reserved.
 
 */
 
-#ifdef _WIN32
-#define _WIN32_WINNT 0x0601
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#pragma comment(lib, "Ws2_32.lib")
-#else
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <netinet/tcp.h> 
-#include <netinet/in.h>
-#include <cstring>
-#endif
-
+#include <fstream>
 #include <iostream>
 #include <string>
+#include <chrono>
+#include <vector>
+#include <thread>
+#include <cstdio> // za remove()
 
-#ifdef _WIN32
-void init_winsock() {
-    WSADATA wsaData;
-    WSAStartup(MAKEWORD(2,2), &wsaData);
-}
-void cleanup_winsock() {
-    WSACleanup();
-}
-#else
-void init_winsock() {}
-void cleanup_winsock() {}
-#endif
+namespace newasm
+{
+    namespace ipc
+    {
+        const std::string separator =
+        #ifdef _WIN32
+            "\\"
+        #else
+            "/"
+        #endif
+        ;
+        const std::string fileloc = ".newasm" + separator + "_cache" + separator;
+        const std::string ipc_file = "ipc._sys";
 
-int main() {
-    init_winsock();
+        namespace impl
+        {
+            std::vector<std::string> split_fixed(const std::string &str, char delimiter)
+            {
+                size_t pos = str.find(delimiter);
+                std::vector<std::string> tokens;
 
-    int server_fd = socket(AF_INET, SOCK_STREAM, 0);
-    if (server_fd < 0) { std::cerr << "Socket failed\n"; return 1; }
+                if(pos != std::string::npos)
+                {
+                    tokens.push_back(str.substr(0, pos));
+                    tokens.push_back(str.substr(pos + 1));
+                }
+                else
+                {
+                    tokens.push_back(str);
+                }
+                
+                return tokens;
+            }
 
-    sockaddr_in address{};
-    address.sin_family = AF_INET;
-    address.sin_addr.s_addr = INADDR_ANY;
-    address.sin_port = htons(12345);
+            void pause() {
+            #ifdef _WIN32
+                system("pause");
+            #else
+                std::cout << "Press enter to continue...";
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            #endif
+            }
 
-    int opt = 1;
-#ifdef _WIN32
-    setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, (const char*)&opt, sizeof(opt));
-#else
-    setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
-#endif
-
-    if (bind(server_fd, (sockaddr*)&address, sizeof(address)) < 0) {
-        std::cerr << "Bind failed\n";
-        return 1;
-    }
-
-    if (listen(server_fd, 1) < 0) {
-        std::cerr << "Listen failed\n";
-        return 1;
-    }
-
-    std::cout << "Console waiting for connection...\n";
-
-    int addrlen = sizeof(address);
-    int new_socket = accept(server_fd, (sockaddr*)&address, (socklen_t*)&addrlen);
-    if (new_socket < 0) {
-        std::cerr << "Accept failed\n";
-        return 1;
-    }
-
-    std::cout << "Connected to runtime.\n";
-
-    char buffer[1024];
-    bool running = true;
-    while (running) {
-        memset(buffer, 0, sizeof(buffer));
-#ifdef _WIN32
-        int valread = recv(new_socket, buffer, sizeof(buffer)-1, 0);
-#else
-        int valread = read(new_socket, buffer, sizeof(buffer)-1);
-#endif
-        if (valread <= 0) {
-            std::cout << "Connection closed.\n";
-            break;
         }
 
-        std::string cmd(buffer);
-        if (cmd.find("PrintText:") == 0) {
-            std::string text = cmd.substr(10);
-            std::cout << text << std::endl;
-
-            // Ack back
-            std::string ack = "Printed\n";
-#ifdef _WIN32
-            send(new_socket, ack.c_str(), (int)ack.size(), 0);
-#else
-            write(new_socket, ack.c_str(), ack.size());
-#endif
-        }
-        else if (cmd.find("RequestInput") == 0) {
-            std::cout << "> ";
-            std::string input;
-            std::getline(std::cin, input);
-            input += "\n";
-
-#ifdef _WIN32
-            send(new_socket, input.c_str(), (int)input.size(), 0);
-#else
-            write(new_socket, input.c_str(), input.size());
-#endif
-        }
-        else if (cmd.find("CloseProgram") == 0) {
-            std::cout << "Closing console program.\n";
-            running = false;
-        }
-        else if (cmd.find("OpenProgramConsole") == 0) {
-            std::cout << "Console ready.\n";
-#ifdef _WIN32
-            std::string ack = "ConsoleOpened\n";
-            send(new_socket, ack.c_str(), (int)ack.size(), 0);
-#else
-            std::string ack = "ConsoleOpened\n";
-            write(new_socket, ack.c_str(), ack.size());
-#endif
+        namespace cmd
+        {
+            const std::string cout = "cout";
+            const std::string exit = "exit";
         }
     }
-
-#ifdef _WIN32
-    closesocket(new_socket);
-    closesocket(server_fd);
-#else
-    close(new_socket);
-    close(server_fd);
-#endif
-
-    cleanup_winsock();
-    return 0;
 }
 
+int main()
+{
+    std::string path_ = newasm::ipc::fileloc + newasm::ipc::ipc_file;
+    while (true)
+    {
+        std::ifstream in(
+            path_.c_str(),
+            std::ios::binary
+        );
+        if(in)
+        {
+            std::string request((std::istreambuf_iterator<char>(in)), {});
+            in.close();
+
+            if(request.find(':') == std::string::npos)
+            {
+                return 1;
+            }
+
+            std::vector<std::string> cmd = newasm::ipc::impl::split_fixed(request, ':');
+            if(cmd[0] == newasm::ipc::cmd::cout)
+            {
+                std::cout << cmd[1];
+            }
+            if(cmd[0] == newasm::ipc::cmd::exit)
+            {
+                if(cmd[1] == "0")
+                {
+                    newasm::ipc::impl::pause();
+                    return 1;
+                }
+            }
+
+
+            std::remove(path_.c_str());
+        }
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(1)); // spriječi 100% CPU
+    }
+    return 1;
+}

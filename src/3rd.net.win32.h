@@ -40,4 +40,30 @@ namespace newasm
             return res == S_OK;
         }
     }
+    namespace runtime
+    {
+        bool start_program(const std::string& path) {
+            STARTUPINFO si = { sizeof(si) };
+            PROCESS_INFORMATION pi;
+
+            std::string cmd = "\"" + path + "\"";
+            BOOL success = CreateProcessA(
+                NULL,               // application name
+                cmd.data(),         // command line
+                NULL, NULL,         // process/thread security
+                FALSE,              // handle inheritance
+                CREATE_NEW_CONSOLE, // creation flags
+                NULL,               // environment
+                NULL,               // current directory
+                &si, &pi            // startup and process info
+            );
+
+            if (success) {
+                CloseHandle(pi.hProcess);
+                CloseHandle(pi.hThread);
+            }
+
+            return success;
+        }
+    }
 }

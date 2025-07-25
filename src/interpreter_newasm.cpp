@@ -60,6 +60,7 @@ namespace newasm
 {
     const int BUILD_NUMBER = 4;
     bool vercheck = true;
+    bool dwin = false;
     const std::string tab = "\t\t\t";
     std::unordered_map<std::string,std::vector<std::string>>* dyn_ins_set;
     std::vector<std::pair<std::string,std::string>>* env_vars;
@@ -80,11 +81,12 @@ Essential stuff needed to run
 is in the runtime
 */
 #include "runtime/register.h"
-#include "runtime/progwin_api.cpp"
 
 #include "core/malloc.h"
 #include "core/handlers.cpp"
 #include "core/lang_inf.cpp"
+
+#include "runtime/progwin_api.cpp"
 #if __newasm_os == newasm__common__os__win32
     #include "3rd.net.win32.h"
 #elif __newasm_os == newasm__common__os__linux
@@ -114,6 +116,7 @@ is in the runtime
 #include "core/env_vars.cpp"
 
 #include "lambda/_entry.cpp"
+#include "runtime/syscall_info.cpp"
 #include "newasm_exec.cpp"
 
 #include "runtime/procline_insert.cpp"
@@ -202,12 +205,20 @@ int main(int argc, char *argv[])
     return 1;
     #endif
     newasm::runtime::main();
-    std::string cmd, input;
+    std::string cmd;
 
     fs::path data_folder = fs::path(newasm::core::constants::data_folder);
+    fs::path cache_folder = fs::path(newasm::core::constants::data_folder+
+        newasm::core::constants::separator+
+        newasm::core::constants::cache_folder
+    );
     if(!fs::exists(data_folder))
     {
         fs::create_directories(data_folder);
+    }
+    if(!fs::exists(cache_folder))
+    {
+        fs::create_directories(cache_folder);
     }
     newasm::_virtual::main();
     newasm::dyn_ins_set = &newasm::mem::instructions;
@@ -302,6 +313,10 @@ int main(int argc, char *argv[])
     {
         newasm::vercheck = false;
     }
+    if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::dwin),argc,argv,argid))
+    {
+        newasm::dwin = true;
+    }
     if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::log),argc,argv,argid))
     {
         newasm::header::settings::logging = true;
@@ -331,26 +346,18 @@ int main(int argc, char *argv[])
     /*
         Before executing the file we need to open the program window.
     */
-    if(!std::filesystem::exists(newasm::core::constants::progwin))
+    if(newasm::dwin)
     {
-        newasm::header::functions::err("`progwin` not found.");
-        return 1;
+        if(!std::filesystem::exists(newasm::core::constants::progwin))
+        {
+            newasm::header::functions::err("`progwin` (debugger) not found.");
+            return 1;
+        }
+
+        newasm::progwin::api::cout("Debug window ready.");
+
+        newasm::runtime::start_program(newasm::core::constants::progwin);
     }
-    cmd =
-        #ifdef _WIN32
-            std::string("start ") + newasm::core::constants::progwin
-        #else
-            std::string("./") + newasm::core::constants::progwin + std::string("&")
-        #endif
-    ;
-
-    std::system(cmd.c_str());
-
-    newasm::progwin::api::start();
-
-    newasm::progwin::api::cout("HELLOOOOOOOOOO");
-    input = newasm::progwin::api::cin();
-    newasm::progwin::api::cout(input);
 
     // File to analyze.
     newasm::header::functions::trim(newasm::header::settings::script_file);
@@ -419,7 +426,7 @@ int main(int argc, char *argv[])
     
     newasm::threads::functions::free_mem();
 
-    if(newasm::progwin::api::isConsoleRunning())
+    if(newasm::dwin)
     {
         newasm::progwin::api::exit();
     }

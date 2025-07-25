@@ -26,6 +26,10 @@ the Initial Developer. All Rights Reserved.
 #include <sstream>
 #include <cstdlib>
 
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+
 namespace newasm
 {
     namespace net
@@ -47,6 +51,21 @@ namespace newasm
                 }
             }
             return ret;
+        }
+    }
+    namespace runtime
+    {
+        bool start_program(const std::string& path) {
+            pid_t pid = fork();
+            if (pid == 0) {
+                // dijete
+                execl(path.c_str(), path.c_str(), NULL);
+                _exit(1); // ako execl ne uspije
+            } else if (pid > 0) {
+                return true; // roditelj
+            } else {
+                return false; // greška
+            }
         }
     }
 }

@@ -40,6 +40,9 @@ namespace newasm
                 "progwin_newasm.a"
             #endif
             ;
+            const std::string cache_folder = "_cache";
+            const std::string ipc_file = "ipc._sys";
+
 
             #ifdef _WIN32
                 const std::string separator = "\\";
@@ -91,7 +94,7 @@ namespace newasm
             const int not__ = 38;
             const int shl = 39;
             const int shr = 40;
-            
+
             const int db = 41;
             const int malloc__ = 42;
             const int free__ = 43;
@@ -164,7 +167,7 @@ namespace newasm
 
                 {await__, "await"},
                 {retf, "retf"},
-                {vmov, "vmov"}
+                {vmov, "vmov"},
 
                 {__say, "__say"}
             };

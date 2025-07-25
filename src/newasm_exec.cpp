@@ -653,7 +653,15 @@ namespace newasm
         //vmov
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::vmov))
         {
-            newasm::terminate(newasm::exit_codes::invalid_syntax);
+            if(!newasm::header::functions::isvmemref(suf).first)
+            {
+                newasm::terminate(newasm::exit_codes::invalid_syntax);
+                return 1;
+            }
+            newasm::_virtual::CELL.constant = 0;
+            newasm::_virtual::CELL.value = opr;
+            newasm::_virtual::set_at(newasm::header::functions::isvmemref(suf).second);
+            //newasm::terminate(newasm::exit_codes::invalid_syntax);
             return 1;
         }
         //LOAD.ref
@@ -1333,6 +1341,12 @@ namespace newasm
         // MOV
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::mov))
         {
+            if(newasm::header::functions::isvmemref(opr).first)
+            {
+                newasm::_virtual::get_at(newasm::header::functions::isvmemref(opr).second);
+                opr = newasm::_virtual::CELL.value;
+            }
+
             if(suf == newasm::mem::regs::fdx.identifier())
             {
                 if(!newasm::header::functions::isnumeric(opr))
