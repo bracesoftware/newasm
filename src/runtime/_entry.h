@@ -43,14 +43,15 @@ namespace newasm
                         suf = i->second;
                     }
                 }
+                newasm::header::functions::parseopr(suf, newasm::mem::data);
+                newasm::parseopr_struct(suf);
 
+                ///////////////////
                 if(suf == newasm::header::constants::inv_reg_val)
                 {
                     newasm::terminate(newasm::exit_codes::mem_overflow);//,wholeline);
                     return;
                 }
-                newasm::header::functions::parseopr(suf, newasm::mem::data);
-                newasm::parseopr_struct(suf);
                 return;
             }
         }

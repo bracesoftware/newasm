@@ -88,6 +88,7 @@ namespace newasm
         const int expected_await = 47;
         const int invalid_thread = 48;
         const int invalid_exp = 49;
+        const int vmem_overflow = 50;
 
         const std::unordered_map<int, std::string> identifier = {
             {noterm_point, "NoTerminationPoint"},
@@ -139,7 +140,8 @@ namespace newasm
             {invalid_sysint, "InvalidSysInterrupt"},
             {expected_await, "ExpectedAwait"},
             {invalid_thread, "InvalidThread"},
-            {invalid_exp, "InvalidExpression"}
+            {invalid_exp, "InvalidExpression"},
+            {vmem_overflow, "VirtualMemOverflow"}
         };
     }
     namespace cmp_results

@@ -77,6 +77,7 @@ Essential stuff needed to run
 is in the runtime
 */
 #include "runtime/register.h"
+#include "runtime/progwin_api.cpp"
 
 #include "core/malloc.h"
 #include "core/handlers.cpp"
@@ -93,6 +94,7 @@ is in the runtime
 #include "newasm_header.cpp"
 #include "common/tokenize.h"
 #include "newasm_setup.cpp"
+#include "runtime/virtual.h"
 
 #include "threads/impl.cpp"
 
@@ -203,6 +205,7 @@ int main(int argc, char *argv[])
     {
         fs::create_directories(data_folder);
     }
+    newasm::_virtual::main();
     newasm::dyn_ins_set = &newasm::mem::instructions;
     //std::cout << "IDIOTISM" << std::endl;
     newasm::env_vars = &newasm::core::env_vars::priv_env_var;
@@ -321,6 +324,23 @@ int main(int argc, char *argv[])
         newasm::project_data::name + static_cast<std::string>(" ") + newasm::project_data::version
         + newasm::header::col::reset);
 
+    /*
+        Before executing the file we need to open the program window.
+    */
+    if(!std::filesystem::exists(newasm::core::constants::progwin))
+    {
+        newasm::header::functions::err("`progwin` not found.");
+        return 1;
+    }
+    std::system(
+        #ifdef _WIN32
+            std::string("start ") + newasm::core::constants::progwin
+        #else
+            std::string("./") + newasm::core::constants::progwin + std::string("&")
+    );
+
+    newasm::progwin::api::start();
+
     // File to analyze.
     newasm::header::functions::trim(newasm::header::settings::script_file);
     newasm::execute
@@ -387,6 +407,8 @@ int main(int argc, char *argv[])
     }
     
     newasm::threads::functions::free_mem();
+
+    newasm::
 
     return 0;
 }

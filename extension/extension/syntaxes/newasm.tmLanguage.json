@@ -9,6 +9,10 @@
       "match":  "\\b(await|retf|cls|load|stor|sysreq|pop|retn|mov|syscall|proc|call|rem|halt|push|jmp|heap|cmp|je|jne|jl|jg|jle|jge|ret|zero|inc|dec|exit|end|nop|add|sub|div|mul|exp|log|and|or|xor|not|shl|shr|db|malloc|free|stack|wait|sysenter|xchg|int|__say)\\b"
     },
     {
+      "name": "keyword.control.newasm",
+      "match":  "\\b(num|decm|txt|char|ref|struct|thread)\\b"
+    },
+    {
       "name": "register.control.newasm",
       "match":  "\\b(tlr|stl|stk|hea|psx|prp|cpt|tr0|tr1|fdx|cpr|br0|br1|cr0|cr1)\\b"
     },

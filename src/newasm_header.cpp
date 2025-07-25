@@ -592,7 +592,7 @@ namespace newasm
                 std::size_t pos = line.find('&');
                 if(pos != std::string::npos)
                 {
-                    return line.substr(pos+1);
+                    return newasm::header::functions::trim(line.substr(pos+1));
                 }
                 return line;
             }
@@ -745,15 +745,19 @@ namespace newasm
 
                 if(newstr.size() >= 3 && newstr.front() == '[' && newstr.back() == ']')
                 {
-                    std::string number_part = newstr.substr(1, newstr.size() - 2);
+                    std::string number_part = newasm::header::functions::trim(newstr.substr(1, newstr.size() - 2));
+                    if(!newasm::header::functions::isnumeric(number_part))
+                    {
+                        newasm::runtime::functions::parse(number_part);
+                    }
                     if(newasm::header::functions::isnumeric(number_part))
                     {
                         return {true, std::stoi(number_part)};
                     }
                 }
-
                 return {false, 0};
             }
+
             std::pair<bool, int> isargref(std::string text)
             {
                 std::string newstr = newasm::header::functions::trim(text);
@@ -769,6 +773,43 @@ namespace newasm
 
                 return {false, 0};
             }
+            std::pair<bool, int> isvmemsize(std::string& text)
+            {
+                std::string newstr = newasm::header::functions::trim(text);
+
+                if(newstr.size() >= 2 && newstr.back() == '_')
+                {
+                    std::string number_part = newasm::header::functions::trim(newstr.substr(0, newstr.size() - 1));
+                    if(!newasm::header::functions::isnumeric(number_part))
+                    {
+                        newasm::runtime::functions::parse(number_part);
+                    }
+                    if(newasm::header::functions::isnumeric(number_part))
+                    {
+                        return {true, std::stoi(number_part)};
+                    }
+                }
+                return {false, 0};
+            }
+            std::pair<bool, int> isvmemref(std::string text)
+            {
+                std::string newstr = newasm::header::functions::trim(text);
+
+                if(newstr.size() >= 3 && newstr.front() == '{' && newstr.back() == '}')
+                {
+                    std::string number_part = newasm::header::functions::trim(newstr.substr(1, newstr.size() - 2));
+                    if(!newasm::header::functions::isnumeric(number_part))
+                    {
+                        newasm::runtime::functions::parse(number_part);
+                    }
+                    if(newasm::header::functions::isnumeric(number_part))
+                    {
+                        return {true, std::stoi(number_part)};
+                    }
+                }
+                return {false, 0};
+            }
+
 
         }
     }

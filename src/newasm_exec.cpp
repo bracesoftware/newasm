@@ -622,21 +622,7 @@ namespace newasm
             newasm::terminate(newasm::exit_codes::invalid_exp);
             return 1;
         }
-        std::vector<std::string> tokens;
-        for(std::vector<std::pair<std::string,std::string>>::iterator i = newasm::env_vars->begin(); i < newasm::env_vars->end(); ++i)
-        {
-            tokens = newasm::header::functions::split_fixed(opr,'/');
-            if(newasm::header::functions::trim(tokens[0]) == "*") if(newasm::header::functions::trim(tokens[1]) == i->first)
-            {
-                opr = i->second;
-            }
-        }
-
-        if(opr == newasm::header::constants::inv_reg_val)
-        {
-            newasm::terminate(newasm::exit_codes::mem_overflow);//,wholeline);
-            return 1;
-        }
+       
 
         if(newasm::system::stop == 1)
         {
@@ -646,6 +632,9 @@ namespace newasm
             //std::cout << newasm::system::cproc << " : " << newline << std::endl;
             return 1;
         }
+        //parse the operand
+        newasm::runtime::functions::parse(opr);
+
         //__say
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::__say))
         {
@@ -666,12 +655,15 @@ namespace newasm
         {
             if(suf == static_cast<std::string>("ref"))
             {
-                if(!newasm::header::functions::isalphanum(opr))
+                if(!newasm::header::functions::isref(opr))
                 {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                     return 1;
                 }
+                opr = newasm::header::functions::remamp(opr);
                 if(!newasm::mem::functions::datavalid(opr,newasm::mem::data))
                 {
+                    newasm::terminate(newasm::exit_codes::invalid_memacc);
                     return 1;
                 }
 
@@ -779,16 +771,22 @@ namespace newasm
         // STOR
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::stor))
         {
+            if(!newasm::header::functions::isref(opr))
+            {
+                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                return 1;
+            }
+            opr = newasm::header::functions::remamp(opr);
             if(newasm::header::functions::isrefat(opr) && !newasm::header::functions::istext(opr))
             {
                 newasm::stor_structmem(suf, opr);
                 return 1;
             }
-            if(!newasm::header::functions::isalphanum(opr))
+            /*if(!newasm::header::functions::isalphanum(opr))
             {
                 newasm::terminate(newasm::exit_codes::invalid_syntax);
                 return 1;
-            }
+            }*/
             if(!newasm::mem::functions::datavalid(opr,newasm::mem::data))
             {
                 newasm::terminate(newasm::exit_codes::invalid_memacc);
@@ -1202,6 +1200,12 @@ namespace newasm
         //sysreq
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::sysreq))
         {
+            if(!newasm::header::functions::isref(opr))
+            {
+                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                return 1;
+            }
+            opr = newasm::header::functions::remamp(opr);
             if(suf == static_cast<std::string>("proc"))
             {
                 if(!newasm::mem::functions::datavalid(opr,newasm::mem::funcs))
@@ -1238,8 +1242,15 @@ namespace newasm
                     newasm::mem::regs::stk = newasm::mem::regs::stk + 1;
                     return 1;
                 }
+                if(!newasm::header::functions::isref(opr))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    return 1;
+                }
+                opr = newasm::header::functions::remamp(opr);
                 if(!newasm::mem::functions::datavalid(opr,newasm::mem::data))
                 {
+                    //std::cout << "opr :: '" << opr << "'" << std::endl;
                     newasm::terminate(newasm::exit_codes::data_overflow);//,wholeline);
                     return 1;
                 }
@@ -2070,6 +2081,7 @@ namespace newasm
         {
             if(!newasm::header::functions::isref(suf))
             {
+                //std::cout << "suf - `" << suf << '`' << std::endl;
                 newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                 return 1;
             }
@@ -2262,6 +2274,11 @@ namespace newasm
         //malloc
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::malloc__))
         {
+            if(newasm::header::functions::isvmemsize(suf).first)
+            {
+                newasm::_virtual::realloc(newasm::header::functions::isvmemsize(suf).second);
+                return 1;
+            }
             if(newasm::allocation_data != nullptr) // malloc je vec upotrebljen //NoAlloc
             {
                 newasm::terminate(newasm::exit_codes::malloc_err);

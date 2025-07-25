@@ -30,8 +30,17 @@ namespace newasm
         {
             const std::string data_folder = ".newasm";
             const std::string temp_vers = "__temp_vers.txt";
+            const std::string virtual_mem = "vmem._sys";
             const std::string dynlib_ex = ".newasm_dl";
             const std::string setup_ex = ".newasm_set";
+            const std::string progwin = 
+            #ifdef _WIN32
+                "progwin_newasm.exe"
+            #else
+                "progwin_newasm.a"
+            #endif
+            ;
+
             #ifdef _WIN32
                 const std::string separator = "\\";
             #else

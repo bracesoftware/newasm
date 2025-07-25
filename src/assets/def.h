@@ -24,6 +24,7 @@ the Initial Developer. All Rights Reserved.
 
 namespace newasm
 {
+    int terminate(int exit_code);
     namespace header
     {
         namespace col
