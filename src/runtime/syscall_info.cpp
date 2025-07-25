@@ -58,7 +58,7 @@ const std::unordered_map<std::pair<int, int>, std::string, newasm::pair_hash> sy
     {{newasm::core::lang_inf::refs::chrono, 5}, "sys_getminute"},
     {{newasm::core::lang_inf::refs::chrono, 6}, "sys_getsecond"},
 
-    {{newasm::core::lang_inf::refs::exf, 1}, "sys_ccp"},
+    {{newasm::core::lang_inf::refs::exf, 1}, "sys_exf__1"},
 
     {{newasm::core::lang_inf::refs::net, 1}, "sys_download"},
 

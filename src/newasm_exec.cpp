@@ -257,7 +257,7 @@ namespace newasm
                 //newasm::threads::thread_count++;
                 return 1;
             }
-            if(dtyp == static_cast<std::string>("struct"))
+            if(dtyp == static_cast<std::string>("obj"))
             {
                 if(newasm::header::data::struct_now)
                 {

@@ -91,7 +91,7 @@ namespace newasm
             newasm::_virtual::virtual_mem.clear();
             newasm::_virtual::read_vmem();
 
-            if(newasm::_virtual::virtual_mem.size() >= addr)
+            if(newasm::_virtual::virtual_mem.size() <= addr)
             {
                 newasm::terminate(newasm::exit_codes::invalid_memacc);
                 return;
