@@ -540,10 +540,10 @@ namespace newasm
                 {
                     return false;
                 }
-                if(str.at(0) == '&' && !std::isalnum(str.at(1)) && str.at(1) != '_')
+                /*if(str.at(0) == '&' && !std::isalnum(str.at(1)) && str.at(1) != '_')
                 {
                     return false;
-                }
+                }*/
                 return true;
             }
             bool ischar(const std::string &str)

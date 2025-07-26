@@ -34,17 +34,8 @@ namespace newasm
         {
             void parse(std::string& suf)
             {
-                try{
-                std::size_t pos = suf.find('@'),
-                    pos2 = suf.find('&');
-                if(!(pos == std::string::npos && pos2 == std::string::npos))
+                if(newasm::header::functions::isref(suf))
                 {
-                    suf = suf.substr(pos2);
-                    return;
-                }}
-                catch(std::exception& err)
-                {
-                    std::cout << "PARSE OBJ ERR " << err.what() << std::endl;
                     return;
                 }
                 std::vector<std::string> tokens;

@@ -127,6 +127,7 @@ is in the runtime
 #include "newasm_tests.cpp"
 #include "newasm_ctl.cpp"
 
+#include "common/chars.h"
 #include "runtime/_entry.h"
 
 namespace fs = std::filesystem;

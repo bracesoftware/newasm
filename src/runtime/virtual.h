@@ -42,7 +42,7 @@ namespace newasm
 
         void main()
         {
-            std::ofstream file(newasm::_virtual::vmem_file, std::ios::app);
+            std::ofstream file(newasm::_virtual::vmem_file, std::ios::out | std::ios::trunc);
             file.close();
             return;
         }
@@ -69,16 +69,17 @@ namespace newasm
         // Overwrite memory.
         bool write_vmem()
         {
-            std::ofstream file(newasm::_virtual::vmem_file, std::ios::trunc); // trunc briše fajl prije pisanja
-            if (!file.is_open())
+            std::remove(newasm::_virtual::vmem_file.c_str());
+            std::ofstream file(newasm::_virtual::vmem_file, std::ios::out | std::ios::trunc);
+            if(!file.is_open())
             {
                 std::cerr << "WRITE VMEM ERROR" << std::endl;
                 return false;
             }
 
-            for(const auto& cell : newasm::_virtual::virtual_mem)
+            for(auto i = newasm::_virtual::virtual_mem.begin(); i != newasm::_virtual::virtual_mem.end(); ++i)
             {
-                file << cell << "\n";
+                file << *i + std::string("\n");
             }
             file.close();
             return true;
@@ -93,11 +94,14 @@ namespace newasm
 
             if(newasm::_virtual::virtual_mem.size() <= addr)
             {
+                //std::cout << "newasm::_virtual::virtual_mem.size() <= addr :::::: " <<
+                //newasm::_virtual::virtual_mem.size() << " :::::::: " << addr << std::endl;
                 newasm::terminate(newasm::exit_codes::invalid_memacc);
                 return;
             }
             if(addr < 0)
             {
+                //std::cout << "addr < 0 :::::: " << addr << std::endl;
                 newasm::terminate(newasm::exit_codes::invalid_memacc);
                 return;
             }
@@ -152,32 +156,23 @@ namespace newasm
         {
             newasm::_virtual::virtual_mem.clear();
             newasm::_virtual::read_vmem();
-            int old_size = newasm::_virtual::virtual_mem.size();
 
             if(size > newasm::_virtual::max_size)
             {
                 newasm::terminate(newasm::exit_codes::invalid_memacc);
                 return;
             }
+
             std::stringstream cell_ss;
-            if(old_size < size) for(int i = old_size - 1; i < size; ++i)
+            for(int i = 0; i < size; ++i)
             {
-                cell_ss.clear();
-                cell_ss << 0 << newasm::_virtual::separator_1 << i << newasm::_virtual::separator_2 << 0;
-                newasm::_virtual::virtual_mem.push_back(cell_ss.str());
-            }
-            if(old_size > size) for(int i = 0; i < size; ++i)
-            {
+                cell_ss.str("");
                 cell_ss.clear();
                 cell_ss << 0 << newasm::_virtual::separator_1 << i << newasm::_virtual::separator_2 << 0;
                 newasm::_virtual::virtual_mem.push_back(cell_ss.str());
             }
             newasm::_virtual::size = size;
             newasm::_virtual::write_vmem();
-            if(old_size == size)
-            {
-                return;
-            }
             return;
         }
 
