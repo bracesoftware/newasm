@@ -50,6 +50,11 @@ namespace newasm
                 newasm::header::functions::parseopr(suf, newasm::mem::data);
                 newasm::parseopr_struct(suf);
 
+                if(newasm::chars::map.find(suf) != newasm::chars::map.end())
+                {
+                    suf = newasm::chars::map.at(suf);
+                }
+
                 ///////////////////
                 if(suf == newasm::header::constants::inv_reg_val)
                 {

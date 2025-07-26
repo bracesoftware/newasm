@@ -74,13 +74,17 @@ namespace newasm
                 {
                     std::cout << "null";
                 }
-                if(reg == "\%endl")
+                /*if(reg == "\%endl")
                 {
                     std::cout << "\n";
-                }
+                }*/
                 if(reg == newasm::header::constants::inv_reg_val)
                 {
                     std::cout << "";
+                }
+                else
+                {
+                    std::cout << reg;
                 }
             }
             std::string get_ref_val__2(const std::string &reg)
@@ -130,13 +134,17 @@ namespace newasm
                 {
                     ss << "null";
                 }
-                if(reg == "\%endl")
+                /*if(reg == "\%endl")
                 {
                     ss << "\n";
-                }
+                }*/
                 if(reg == newasm::header::constants::inv_reg_val)
                 {
                     ss << "<?>";
+                }
+                else
+                {
+                    ss << reg;
                 }
                 return ss.str();
             }

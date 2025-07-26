@@ -243,7 +243,9 @@ namespace newasm
         }
         if(newasm::header::functions::isalphanum(name))
         {
-            if(dtyp == static_cast<std::string>("thread"))
+            if(dtyp == newasm::core::lang_inf::typenames::identifiers__.at(
+                newasm::core::lang_inf::typenames::thread
+            ))
             {
                 if(value != static_cast<std::string>("{"))
                 {
@@ -257,7 +259,9 @@ namespace newasm
                 //newasm::threads::thread_count++;
                 return 1;
             }
-            if(dtyp == static_cast<std::string>("obj"))
+            if(dtyp == newasm::core::lang_inf::typenames::identifiers__.at(
+                newasm::core::lang_inf::typenames::obj
+            ))
             {
                 if(newasm::header::data::struct_now)
                 {
@@ -276,7 +280,9 @@ namespace newasm
                 //if(!newasm::mem::functions::datavalid())
                 return 1;
             }
-            if(dtyp == static_cast<std::string>("num"))
+            if(dtyp == newasm::core::lang_inf::typenames::identifiers__.at(
+                newasm::core::lang_inf::typenames::num
+            ))
             {
                 if(!newasm::header::functions::isnumeric(value))
                 {
@@ -292,7 +298,9 @@ namespace newasm
                 newasm::mem::data[name] = value;
                 return 1;
             }
-            if(dtyp == static_cast<std::string>("decm"))
+            if(dtyp == newasm::core::lang_inf::typenames::identifiers__.at(
+                newasm::core::lang_inf::typenames::decm
+            ))
             {
                 if(!newasm::header::functions::isfloat(value))
                 {
@@ -308,7 +316,9 @@ namespace newasm
                 newasm::mem::data[name] = value;
                 return 1;
             }
-            if(dtyp == static_cast<std::string>("txt"))
+            if(dtyp == newasm::core::lang_inf::typenames::identifiers__.at(
+                newasm::core::lang_inf::typenames::txt
+            ))
             {
                 if(!newasm::header::functions::istext(value))
                 {
@@ -325,7 +335,9 @@ namespace newasm
                 newasm::mem::data[name] = value;
                 return 1;
             }
-            if(dtyp == static_cast<std::string>("ref"))
+            if(dtyp == newasm::core::lang_inf::typenames::identifiers__.at(
+                newasm::core::lang_inf::typenames::ref
+            ))
             {
                 if(!newasm::header::functions::isref(value) && value != static_cast<std::string>("&\%null"))
                 {
@@ -351,7 +363,9 @@ namespace newasm
                 newasm::mem::data[name] = value;
                 return 1;
             }
-            if(dtyp == static_cast<std::string>("char"))
+            if(dtyp == newasm::core::lang_inf::typenames::identifiers__.at(
+                newasm::core::lang_inf::typenames::char__
+            ))
             {
                 if(!newasm::header::functions::ischar(value))
                 {
@@ -369,7 +383,9 @@ namespace newasm
                 return 1;
             }
 
-            if(dtyp == static_cast<std::string>("bit_arr"))
+            if(dtyp == newasm::core::lang_inf::typenames::identifiers__.at(
+                newasm::core::lang_inf::typenames::bit_arr
+            ))
             {
                 if(!newasm::header::functions::isnumeric(value))
                 {
@@ -386,7 +402,9 @@ namespace newasm
                 return 1;
             }
 
-            if(dtyp == static_cast<std::string>("bin_tree"))
+            if(dtyp == newasm::core::lang_inf::typenames::identifiers__.at(
+                newasm::core::lang_inf::typenames::bin_tree
+            ))
             {
                 if(!newasm::header::functions::isnumeric(value))
                 {
@@ -2069,6 +2087,60 @@ namespace newasm
             //std::cout << newasm::system::cproc << " : " << newline << std::endl;
             return 1;
         }
+        //switch
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::switch__))
+        {
+            newasm::runtime::functions::parse(suf);
+
+            newasm::header::data::switched_value = suf;
+            newasm::header::data::case_matched = false;
+            return 1;
+        }
+        //case
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::case__))
+        {
+            if(newasm::header::data::case_matched)
+            {
+                return 1;
+            }
+            newasm::runtime::functions::parse(suf);
+            
+            if(suf == newasm::header::data::switched_value)
+            {
+                newasm::header::data::case_matched = true;
+                newasm::procline(newasm::header::data::case_line);
+                return 1;
+            }
+            if(newasm::header::functions::isnumeric(newasm::header::data::switched_value))
+            {
+                auto isrange = newasm::header::functions::isrange(suf);
+                //std::cout << "\tsuf = " << suf << std::endl;
+                //std::cout << "isrange.first = `" << isrange.first << "`\n";
+                //std::cout << "isrange.second.first = `" << isrange.second.first << "`\n";
+                //std::cout << "isrange.second.second = `" << isrange.second.second << "`\n";
+                if(isrange.first)
+                {
+                    if(isrange.second.first <= std::stoi(suf) || std::stoi(suf) <= isrange.second.second)
+                    {
+                        newasm::header::data::case_matched = true;
+                        newasm::procline(newasm::header::data::case_line);
+                        return 1;
+                    }
+                }
+            }
+            if(!newasm::header::functions::isnumeric(suf))
+            {
+                if(newasm::header::functions::case_typename(
+                    newasm::header::data::switched_value, suf
+                ))
+                {
+                    newasm::header::data::case_matched = true;
+                    newasm::procline(newasm::header::data::case_line);
+                    return 1;
+                }
+            }
+            return 1;
+        }
         //retf
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::retf))
         {
@@ -3049,6 +3121,17 @@ namespace newasm
             return 1;
         }
 
+        //default
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::default__))
+        {
+            if(newasm::header::data::case_matched)
+            {
+                return 1;
+            }
+            newasm::procline(newasm::header::data::case_line);
+            newasm::header::data::case_matched = true;
+            return 1;
+        }
         //cls
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::cls))
         {
@@ -3404,7 +3487,7 @@ namespace newasm
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
                     {
                         using std::endl, std::cout;
-                        cout << " ERROR CATCH - tlr is: " << newasm::mem::regs::tlr << endl;
+                        //cout << " ERROR CATCH - tlr is: " << newasm::mem::regs::tlr << endl;
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                         return 1;
                     }
@@ -4093,6 +4176,70 @@ namespace newasm
                 return 1;
             }
             //tokenizer starts here
+            auto is_str_ = [](std::string text, int idx) -> bool {
+                std::vector<std::pair<int,int>> positions;
+                int first_p = -1, second_p = -1;
+        
+                for(int i = 0; i < text.size(); ++i)
+                {
+                    if(text.at(i) == '"')
+                    {
+                        if(first_p == -1)
+                        {
+                            first_p = i;
+                            continue;
+                        }
+                        if(second_p == -1)
+                        {
+                            second_p = i;
+                            continue;
+                        }
+                        if((first_p != -1) && (second_p != -1))
+                        {
+                            positions.push_back({first_p, second_p});
+                            first_p = -1;
+                            second_p = -1;
+                            continue;
+                        }
+                    }
+                }
+                if(first_p == -1)
+                {
+                    //newasm::terminate(newasm::exit_codes::invalid_exp);
+                    return false;
+                }
+                for(int i = 0; i < positions.size(); ++i)
+                {
+                    if(positions.at(i).first <= idx && idx <= positions.at(i).second)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            };
+            int idx__ = line.find("->"); //conditionals
+            if(idx__ != std::string::npos)
+            {
+                if(is_str_(line, idx__) == false && is_str_(line, idx__ + 1) == false)
+                {
+                    if(line.size() != idx__+2)
+                    {
+                        std::vector<std::string> linetokens_inline = newasm::common::tokenize(line.substr(0, idx__));
+                        if(linetokens_inline.size() == 2)
+                        {
+                            //std::cout << linetokens_inline.at(0) << " + " << linetokens_inline.at(1) << std::endl;
+                            newasm::header::data::case_line = line.substr(idx__+2);
+                            return process_is(line, linetokens_inline.at(0), linetokens_inline.at(1));
+                        }
+                        if(linetokens_inline.size() == 1)
+                        {
+                            //std::cout << linetokens_inline.at(0) << " + " << linetokens_inline.at(1) << std::endl;
+                            newasm::header::data::case_line = line.substr(idx__+2);
+                            return process_i(line, linetokens_inline.at(0));
+                        }
+                    }
+                }
+            }
             std::vector<std::string> linetokens = newasm::common::tokenize(line);
 
             std::string instruction;

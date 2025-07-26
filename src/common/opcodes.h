@@ -71,6 +71,10 @@ namespace newasm
             {46, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::sysenter)},
             {47, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::int__)},
             {48, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::cls)},
+            {49, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::vmov)},
+            {50, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::switch__)},
+            {51, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::case__)},
+            {52, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::default__)},
 
             {100, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::__say)}
         };

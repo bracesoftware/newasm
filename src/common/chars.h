@@ -21,9 +21,9 @@ namespace newasm
 {
     namespace chars
     {
-        const int endl = "~endl"; //end of line
-        const int carret = "~cret"; //carriage return
-        const int tab = "~tab"; //tab
+        const std::string endl = "~endl"; //end of line
+        const std::string carret = "~cret"; //carriage return
+        const std::string tab = "~tab"; //tab
 
         const std::unordered_map<std::string, std::string> map = {
             {endl, "\n"},

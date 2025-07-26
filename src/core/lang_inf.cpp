@@ -108,6 +108,10 @@ namespace newasm
             const int await__ = 50;
             const int retf = 51;
             const int vmov = 52;
+
+            const int switch__ = 53;
+            const int case__ = 54;
+            const int default__ = 55;
             
             const int __say = 100;
 
@@ -169,6 +173,11 @@ namespace newasm
                 {retf, "retf"},
                 {vmov, "vmov"},
 
+                {switch__, "switch"},
+                {case__, "case"},
+
+                {default__, "default"},
+
                 {__say, "__say"}
             };
 
@@ -194,6 +203,31 @@ namespace newasm
                     {mem, "\%mem"},
                     {chrono, "\%chrono"},
                     {thread, "\%thread"}
+                };
+            }
+
+            namespace typenames
+            {
+                const int num = 1;
+                const int decm = 2;
+                const int txt = 3;
+                const int char__ = 4;
+                const int ref = 5;
+                const int obj = 6;
+                const int thread = 7;
+                const int bit_arr = 8;
+                const int bin_tree = 9;
+
+                const std::unordered_map<int, std::string> identifiers__ = {
+                    {num, "num"},
+                    {decm, "decm"},
+                    {txt, "txt"},
+                    {char__, "char"},
+                    {ref, "ref"},
+                    {obj, "obj"},
+                    {thread, "thread"},
+                    {bit_arr, "bit_arr"},
+                    {bin_tree, "bin_tree"}
                 };
             }
 

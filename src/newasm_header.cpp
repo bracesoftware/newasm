@@ -71,9 +71,13 @@ namespace newasm
             int module = 0;
 
             std::string temp = "temp";
-
+            //macros
             bool macro_now = false;
             std::string macro_decl = "";
+            //switch-case
+            std::string switched_value;
+            bool case_matched = false;
+            std::string case_line;
         }
         namespace constants
         {
@@ -809,7 +813,70 @@ namespace newasm
                 }
                 return {false, 0};
             }
+            std::pair<bool, std::pair<int, int>> isrange(const std::string& input)
+            {
+                size_t dots = input.find("..");
+                if (dots == std::string::npos) return {false, {0, 0}};
 
+                std::string lhs = input.substr(0, dots);
+                std::string rhs = input.substr(dots + 2);
+
+                lhs = newasm::header::functions::trim(lhs);
+                rhs = newasm::header::functions::trim(rhs);
+
+                if(!newasm::header::functions::isnumeric(lhs))
+                {
+                    newasm::runtime::functions::parse(lhs);
+                }
+                if(!newasm::header::functions::isnumeric(rhs))
+                {
+                    newasm::runtime::functions::parse(rhs);
+                }
+
+                if(!newasm::header::functions::isnumeric(lhs))
+                {
+                    //newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    return {false, {0, 0}};
+                }
+                if(!newasm::header::functions::isnumeric(rhs))
+                {
+                    //newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    return {false, {0, 0}};
+                }
+
+                int start = std::stoi(lhs);
+                int end = std::stoi(rhs);
+                return {true, {start, end}};
+            }
+
+            bool case_typename(std::string& switched_val, std::string& suf)
+            {
+                if(newasm::header::functions::isnumeric(switched_val))
+                if(suf == newasm::core::lang_inf::typenames::identifiers__.at(
+                        newasm::core::lang_inf::typenames::num
+                )) return true;
+
+                if(newasm::header::functions::isfloat(switched_val))
+                if(suf == newasm::core::lang_inf::typenames::identifiers__.at(
+                        newasm::core::lang_inf::typenames::decm
+                )) return true;
+
+                if(newasm::header::functions::istext(switched_val))
+                if(suf == newasm::core::lang_inf::typenames::identifiers__.at(
+                        newasm::core::lang_inf::typenames::txt
+                )) return true;
+
+                if(newasm::header::functions::ischar(switched_val))
+                if(suf == newasm::core::lang_inf::typenames::identifiers__.at(
+                        newasm::core::lang_inf::typenames::char__
+                )) return true;
+
+                if(newasm::header::functions::isref(switched_val))
+                if(suf == newasm::core::lang_inf::typenames::identifiers__.at(
+                        newasm::core::lang_inf::typenames::ref
+                )) return true;
+                return false;
+            }
 
         }
     }

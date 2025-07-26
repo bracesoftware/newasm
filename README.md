@@ -68,18 +68,16 @@ Documentation about `newasm` which includes following topics:
     - [`stack` instruction](#stack-instruction)
     - [`xchg` instruction](#xchg-instruction)
     - [`cls` instruction](#cls-instruction)
-- [Procedures](#procedures)
-- [Exit codes](#exit-codes)
-- [Comments](#comments)
-- [Interesting examples](#interesting-examples)
-    - [Writing to a file, and then reading it](#writing-to-a-file-and-printing-its-content)
-    - [Creating a child process](#creating-a-child-process)
-- [Unassigned references](#unassigned-pointers-or-references)
-- [Structures](#structures)
-- [Project files](#project-files)
-- [Dynamic libraries](#dynamic-libraries)
-    - [Runtime errors](#runtime-errors)
-- [Environment variables](#environment-variables)
+    - [`switch` and `case` instructions](docs/switch.md)
+- [Procedures](docs/proc.md)
+- [Exit codes](docs/exc.md)
+- [Comments](docs/commends.md)
+- [Unassigned references](docs/unref.md)
+- [Objects](docs/obj.md)
+- [Project files](docs/projfile.md)
+- [Dynamic libraries](docs/dyn.md)
+    - [Runtime errors](docs/dyn.md#runtime-errors)
+- [Environment variables](docs/env.md)
 - [Containers and data structures](docs/containers.md)
     - [Bit arrays](docs/containers.md#bit-arrays)
     - [Binary trees](docs/containers.md#binary-trees)
@@ -87,6 +85,10 @@ Documentation about `newasm` which includes following topics:
     - [`await` and `retf`](docs/threads.md#await-and-retf-instructions)
 - [Opcodes](docs/opcodes.md)
 - [Lambda procedures](docs/lambda.md)
+
+- [Interesting examples](#interesting-examples)
+    - [Writing to a file, and then reading it](#writing-to-a-file-and-printing-its-content)
+    - [Creating a child process](#creating-a-child-process)
 
 ## Compiling
 This project is written purely in C++ using its standard libraries, so compiling it should be easy. To download C++ compiler, please follow instructions on the link below:
@@ -1041,101 +1043,13 @@ Output:
 
 ### `cls` instruction
 Clears the screen.
-
-## Procedures
-Procedures allow you to use the same piece of code without having to actually repeat it. General syntax is:
-
 ```asm
-proc procedure_name
-    ; code
-end
+.start
+    cls
+    ret 0
 ```
 
-To call the procedure, use:
 
-```asm
-call procedure_name
-```
-
-- Here is an example:
-
-```asm
-. start
-    proc test
-        halt proc , 1
-    end
-    call test
-    retn 0
-```
-
-Basically, these are just functions, but in assembly.
-
-## Exit codes
-When a fatal error happens, program will shut down, returning a specific exit code, below is a list of exit codes.
-
-| Exit code | Description |
-| ---------------- | ----------- |
-| `0` | No termination point (standard exit code if you have no `ret` or `retn` in your script). |
-| `1` | Invalid section (for example, tried to enter a section named `.lol`). |
-| `2` | Attempted to call a procedure which does not exist. |
-| `3` | Invalid non-numeric value was passed to `retn`. |
-| `4` | `sysreq` failed, pretty self-explanatory. |
-| `5` | Stack/heap collision; pretty self-explanatory. |
-| `6` | Data overflow - tried to pop a value into unallocated address. |
-| `7` | Data type mismatch. |
-| `8` | Tried to redefine a label. |
-| `9` | Bus error; tried to access an invalid label with `jmp`. |
-| `10` | Invalid instruction; pretty self-explanatory, also happens if you use `.` or `,` (instruction parsing delimiters) in your `rem` comments. |
-| `11` | Memory overflow. |
-| `12` | Memory underflow. |
-| `13` | Procedure redefinition. |
-| `14` | Invalid memory access; tried to access an address using `mov.hea,...` that isn't allocated for the heap. |
-| `15` | Invalid syntax. |
-| `16` | Memory leak: neither `retn`, `ret` or `heap` were used at the end of the program while the `hea` register wasn't at 0. |
-| `17` | Invalid configuration. |
-| `18` | You tried to call a procedure within a procedure. |
-| `19 `| Unknown system call index (invalid value moved into `fdx`). |
-| `20 `| Tried to create a child process in a child process. |
-| `21 `| Tried to jump to a label in a child process. |
-| `22` | Attempted to use an unassigned pointer/reference variable. |
-| `23` | Tried to redefine a variable. |
-| `24` | Tried to redefine a structure. |
-| `25` | Unexpected closing brace. |
-| `26` | Tried to access a structure that hasn't been declared. |
-| `27` | Tried to access an undefined structure member. |
-| `28` | Tried to create a struct inside a struct. |
-| `29` | Expected closing brace. |
-| `30` | Tried to create an empty procedure. |
-| `31` | Tried to redefine a data structure. |
-| `32` | Unexpected usage of the `end` instruction. |
-| `33` | Tried to use an improperly loaded dynamic library instruction. |
-| `34` | Unknown event specified in the handler section. |
-| `35` | Assigned an invalid procedure as an event handler. |
-| `36` | Tried to modify a constant. |
-| `37` | Operating system-related error. |
-| `38` | Memory allocation error. |
-| `39` | Tried to modify the memory manually before using `free`. |
-| `40` | Invalid stack call. |
-| `41` | Handle reassignment. |
-| `42` | `sysenter` failed. |
-| `43` | Macro redefinition. |
-| `44` | Unexpected hash. |
-| `45` | Undefined macro. |
-| `46` | Unknown system interrupt ID. |
-| `47` | Expected `await` - happens when you don't use `await` before using thread system calls, but if the thread finished or returned they will work. |
-| `48` | Undefined thread. |
-
-## Comments
-Comments are also available:
-
-```asm
-. start
-    ; comment
-    mov fdx , 1
-    mov tlr , "hello" ; comment
-    sysenter %ios
-syscall ; comment again
-```
 
 ## Interesting examples
 Below is a list of interesting examples of using the language.
@@ -1209,199 +1123,3 @@ Hi after the process
 1. You cannot create labels and jump to them in child processes.
 2. If you use `ret` or `retn` inside a child process, it will terminate the whole program with that exit code and not just the child process.
 3. Procedures and variables created inside the child process can be used in the parent process (in our case `index.nax`) after the child process finishes executing.
-
-## Unassigned pointers or references
-```asm
-.data
-    ref  unassigned_pointer : &%null
-```
-
-This reference is left unassigned and an attempt to use it will result in an exception.
-
-## Structures
-In this quite frankly low-level language, there are also structs! General syntax is:
-```asm
-.data
-    struct  structure_name : {
-        ; members
-        data_type  member_name : member_value
-    }
-
-```
-
-### Example
-```asm
-. data
-    struct  mystruct : {
-        num  lol : 98
-        decm  decimal : 2.3
-        txt  text : "hi from struct"
-    }
-    struct  mystruct2 : {
-        num  lol : 45
-        decm  decimal : 833.4
-        txt  text : "hi from struct again"
-        ref  reference : &prptest
-    }
-. start
-    mov tlr , text @ mystruct
-    mov stl , %endl
-    mov fdx , 1
-    sysenter %ios
-syscall
-
-    mov tlr , decimal @ mystruct
-    mov fdx , 2
-    sysenter %ios
-syscall
-
-    mov tlr , lol @ mystruct
-    mov fdx , 2
-    sysenter %ios
-syscall
-
-    mov tlr , text @ mystruct2
-    mov stl , %endl
-    mov fdx , 1
-    sysenter %ios
-syscall
-
-    mov tlr , decimal @ mystruct2
-    mov fdx , 2
-    sysenter %ios
-syscall
-
-    mov tlr , lol @ mystruct2
-    mov fdx , 2
-    sysenter %ios
-syscall
-
-    mov tlr , reference @ mystruct2
-    mov fdx , 6
-    sysenter %ios
-syscall
-
-    mov stl , 45657
-
-    stor stl , lol @ mystruct2
-    mov tlr , lol @ mystruct2
-    mov fdx , 2
-    mov stl , %endl
-    sysenter %ios
-syscall
-
-    mov psx , "HIII243"
-
-    stor psx , text @ mystruct
-    mov tlr , text @ mystruct
-    mov fdx , 1
-    mov stl , %endl
-    sysenter %ios
-syscall
-```
-
-Output:
-
-```
-hi from struct
-2.3
-98
-hi from struct again
-833.4
-45
-prptest
-45657
-HIII243
-```
-
-### Notes
-1. Currently, if you want to store a value into a struct member, only the `stor` instruction will work - note that instructions such as `load` and `pop` will not work regarding this.
-2. This syntax is a must:
-```asm
-struct  name : { ; brace must be HERE
-; and not here
-    num  number : 384
-}
-```
-
-## Project files
-**Project files** (`.newasm_proj` file) are files that define information about your New-ASM project. General name format for them is:
-
-```
-<entry file name>.newasm_proj
-```
-For example, if my `-input` file is `input.asm`, project file for that would be `input.asm.newasm_proj`. This is basically an INI file.
-
-### Keys and values available
-| Key name | Description |
-| -------- | ----------- |
-| `name` | Name for your project. |
-| `version` | Version of your project. |
-| `dlibs` | Dynamic libraries your project is using. |
-
-Example `index.asm.newasm_proj` file:
-```ini
-name : Unnamed project
-version : 0.0.1
-dlibs : testlib, sayhi
-```
-
-## Dynamic libraries
-**Dynamic libraries** (`.newasm_dl` file) are files that provide user-made instructions. For example, let's say this is a NewASM dynamic library you wrote:
-
-`sayhi.newasm_dl`:
-```asm
-mov tlr , "hi from my dynamic library"
-mov fdx , 1
-sysenter %ios
-syscall
-```
-
-In your entry file - `index.asm`, you can do this:
-```asm
-. start
-    mov tlr , "some stuff"
-    inc prp ; bunch of operations
-    ; more stuff...
-
-    sayhi ; your very own custom instruction
-```
-
-This is literally a fancy way of making procedures, making them reusable across files, however there are limits:
-1. You cannot create labels.
-2. You thus cannot use jump instructions such as `jmp`, `je`, `jne` and more.
-
-### Runtime errors
-If you make an error inside a dynamic library, you will get a runtime error while the library was getting implemented. Below is a list of runtime errors that may occur:
-
-| Runtime error code | Description |
-| -------- | ----------- |
-| `1` | Tried to create a label. |
-| `2` | Tried to use an unsupported instruction. |
-
-## Environment variables
-Environment variables are typeless variables that are defined within the `.newasm/env_vars.ini` file. Let's take a look:
-
-`.newasm/env_vars.ini`:
-```ini
-testenv = "hello from env var"
-```
-
-`index.asm`:
-```asm
-. start
-    mov tlr , * / testenv
-    mov fdx , 1
-    sysenter %ios
-syscall
-```
-
-* **NOTE**: You must use `*/` before the environment variable name so the program knows you are using an environment variable and not a standard variable, which means this wouldn't work:
-
-```asm
-. start
-    mov tlr , testenv
-    mov fdx , 1
-    sysenter %ios
-syscall
-```
