@@ -253,7 +253,7 @@ Output:
 hi from macro
 ```
 
-## Built-in references
+## Built-in operands
 This language brings some built-in references, or rather operands, with itself - list:
 
 - `%ios` - used as an operand in `syscall`, represents a module of system calls responsible for input and output streaming;
@@ -262,11 +262,12 @@ This language brings some built-in references, or rather operands, with itself -
 - `%cmanip` - used as an operand in `syscall`, represents a module of system calls responsible for container and data structure manipulation;
 - `%net` - used as an operand in `syscall`, represents a module of system calls responsible for network features;
 - `%mem` - used as an operand in `syscall`, represents a module of system calls responsible for memory/data management;
-- `%endl` - line ending, used in `stl`;
+- `%txtop` - used as an operand in `syscall`, represents a module of system calls responsible for textual operations;
+- `%chrono` - used as an operand in `syscall`, represents a module of system calls responsible for time;
 - `&%null` - used to leave references/pointers unassigned/uninitialized.
 - `%nl` - used as a null operand in some instructions.
 
-**WARNING**: Syntax such as `% ios` is invalid.
+> **WARNING**: Syntax such as `% ios` is invalid.
 
 ## Instructions
 Below is a list of available instructions. General syntax is:
