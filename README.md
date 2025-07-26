@@ -131,7 +131,7 @@ The install-command allows you to download and install New-ASM dynamic libraries
 ```asm
 mov fdx , 1
 mov tlr , "Hi"
-mov stl , %endl
+mov stl , ~endl
 sysenter %ios
 syscall
 zero stl
@@ -162,7 +162,7 @@ Now, if we want to download a package (or a setup), we use the same command, but
 ~setup : impl
 	mov tlr , "INTERNET WORKS!"
 	mov fdx , 1
-	mov stl , %endl
+	mov stl , ~endl
     sysenter %ios
 	syscall 
 	zero stl
@@ -238,7 +238,7 @@ You can define macros here:
 ```asm
 .text
     sayhi : #
-        mov stl, %endl
+        mov stl, ~endl
         mov tlr, "hi from macro"
         mov fdx, 1
         sysenter %ios
@@ -594,10 +594,6 @@ syscall
 ### `load` instruction
 - Load data and store data from the heap and into the heap, respectively.
 
-#### Syntax
-- `instruction` - `load`
-- `suffix` - `adr`, `ref`
-- `operand` - literal value or a reference
 
 #### Example
 ```asm
@@ -613,7 +609,7 @@ syscall
     load ref , testdecimal ; myvar : hea
 
     mov tlr , testdecimal
-    mov stl , %endl
+    mov stl , ~endl
     mov fdx , 2
     sysenter %ios
     syscall
@@ -627,7 +623,7 @@ Output:
 736.38
 ```
 
-#### Example `#3`
+#### Example `#2`
 - If we expand our code, and manually assign addresses before cleaning up the heap, we can do this:
 
 ```asm
@@ -639,38 +635,38 @@ Output:
     load ref , testdecimal ; myvar : hea
 
     mov tlr , testdecimal
-    mov stl , %endl
+    mov stl , ~endl
     mov fdx , 2
     sysenter %ios
-syscall
+    syscall
 
     ; Allocate more space:
-    heap 0 , 1
+    heap 1
     load adr , 9821.38 ; hea : smth
     load ref , testdecm2 ; myvar : hea
     mov tlr , testdecm2
-    mov stl , %endl
+    mov stl , ~endl
     mov fdx , 2
     sysenter %ios
-syscall
+    syscall
     
     mov hea , 0 ; manually access the first address
     load ref , testdecm2 ; myvar : hea
     mov tlr , testdecm2
-    mov stl , %endl
+    mov stl , ~endl
     mov fdx , 2
     sysenter %ios
-syscall
+    syscall
 
     mov hea , 1 ; manually access the second address
     load ref , testdecm2 ; myvar : hea
     mov tlr , testdecm2
-    mov stl , %endl
+    mov stl , ~endl
     mov fdx , 2
     sysenter %ios
-syscall
+    syscall
 
-    heap 0 , -1 ; let all the memory go to avoid getting the memory leak
+    heap -1 ; let all the memory go to avoid getting the memory leak
 ```
 
 Output:
@@ -715,7 +711,7 @@ A little too complex example.
         mov tlr , "label called"
         mov fdx , 1
         sysenter %ios
-syscall
+    syscall
         mov fdx , 72
         jmp 0 , label3
         ret fdx
@@ -723,15 +719,15 @@ syscall
         mov tlr , "label2 called"
         mov fdx , 1
         sysenter %ios
-syscall
+        syscall
         jmp 0 , label
     : label3
         mov tlr , "label3 called"
         mov fdx , 1
         sysenter %ios
-syscall
+        syscall
 
-    retn 3873
+    ret 3873
 ```
 
 Output:
@@ -779,53 +775,53 @@ According to the result `cmp` stores in its own "hidden" register, you can use t
     : equal
         mov tlr , "EQUAL"
         mov fdx , 1
-        mov stl , %endl
+        mov stl , ~endl
         sysenter %ios
-syscall
+        syscall
         jmp 0 , endtheprogram
 
     : notequal
         mov tlr , "NOT EQUAL"
         mov fdx , 1
-        mov stl , %endl
+        mov stl , ~endl
         sysenter %ios
-syscall
+        syscall
         jmp 0 , endtheprogram
 
     : less
         mov tlr , "LESS"
         mov fdx , 1
-        mov stl , %endl
+        mov stl , ~endl
         sysenter %ios
-syscall
+        syscall
         jmp 0 , endtheprogram
 
     : greater
         mov tlr , "GREATER"
         mov fdx , 1
-        mov stl , %endl
+        mov stl , ~endl
         sysenter %ios
-syscall
+        syscall
         jmp 0 , endtheprogram
 
     : lesseq
         mov tlr , "LESS OR EQUAL"
         mov fdx , 1
-        mov stl , %endl
+        mov stl , ~endl
         sysenter %ios
-syscall
+        syscall
         jmp 0 , endtheprogram
 
     : greatereq
         mov tlr , "GREATER OR EQUAL"
         mov fdx , 1
-        mov stl , %endl
+        mov stl , ~endl
         sysenter %ios
-syscall
+        syscall
         jmp 0 , endtheprogram
 
     : endtheprogram
-    retn 0
+    ret 0
 ```
 
 Output:
@@ -909,13 +905,13 @@ Demonstration:
 . data
     ref  temporary : &%null
 . start
-    proc 0 , procedure_1
+    proc procedure_1
         halt proc , 0
     end
-    proc 0 , procedure_2
+    proc procedure_2
         halt proc , 0
     end
-    proc 0 , procedure_3
+    proc procedure_3
         halt proc , 0
     end
 
@@ -924,20 +920,20 @@ Demonstration:
 
     stor prp , temporary
     mov tlr , temporary
-    mov stl , %endl
+    mov stl , ~endl
     mov fdx , 6
     sysenter %ios
-syscall
+    syscall
 
     mov prp , &procedure_3
     dec prp
 
     stor prp , temporary
     mov tlr , temporary
-    mov stl , %endl
+    mov stl , ~endl
     mov fdx , 6
     sysenter %ios
-syscall
+    syscall
 ```
 
 Output:
@@ -1016,7 +1012,7 @@ Clear up the call stack.
     end
     db stk
     push 0, 1 ; push the third arg
-    push 0, %endl ; push the second arg
+    push 0, ~endl ; push the second arg
     push 0, "call stack works" ; push the first arg
     push 0, 0x827 ; call the procedure
     stack ;clear up the stack after the procedure call
@@ -1030,11 +1026,12 @@ call stack works
 ### `xchg` instruction
 This instruction exchanges the values of `tlr` and `stl`.
 ```asm
-mov tlr, 1
-mov stl, 2
-xchg
-db tlr
-db stl
+.start
+    mov tlr, 1
+    mov stl, 2
+    xchg
+    db tlr
+    db stl
 ```
 Output:
 ```
@@ -1068,7 +1065,7 @@ Below is a list of interesting examples of using the language.
     mov stl, 1
     mov fdx, 8
     syscall
-    mov stl, %endl
+    mov stl, ~endl
     mov fdx, 1
     sysenter %ios
     syscall
@@ -1084,32 +1081,32 @@ TEXTeee
 ### Creating a child process
 `index.nax`:
 ```asm
-. start
+.start
     mov tlr, "child.nax" ; another nax file containing stuff such as config modifications, variables and procedures
     mov fdx, 1
     sysenter %exf
     syscall; create a process and execute it
 
     mov tlr , "Hi after the process" ; this line will be processed AFTER child.nax finishes executing
-    mov stl , %endl
+    mov stl , ~endl
     mov fdx , 1
     sysenter %ios
-syscall
+    syscall
 
     retn 0
 ```
 
 `child.nax`:
 ```asm
-. data
+.data
     num  mynum : 0
-. start
+.start
     heap 36
     stor hea , mynum
     mov tlr , mynum
     mov fdx , 2
     sysenter %ios
-syscall ; prints heap size (36)
+    syscall ; prints heap size (36)
     heap -36 ; free up memory we occupied for the sake of the example
 ```
 
