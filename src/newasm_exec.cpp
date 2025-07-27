@@ -24,7 +24,7 @@ the Initial Developer. All Rights Reserved.
 
 namespace newasm
 {
-    int execute(std::string file, int startline, int proceed);
+    int execute(std::string file);
     void unsins(std::string ins)
     {
         newasm::header::functions::wrn(
@@ -3247,6 +3247,10 @@ namespace newasm
             //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::exf))
             if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::exf)
             {
+                if(true)
+                {
+                    return 1;
+                }
                 if(newasm::header::execution_flow::exec_redirected)
                 {
                     newasm::terminate(newasm::exit_codes::nested_redirect);
@@ -4435,6 +4439,11 @@ namespace newasm
     }
     int executechild()
     {
+        if(true)
+        {
+            return 0;
+        }
+        #ifdef _______s
         std::ifstream internal_fileobject(/*newasm::header::constants::scripts_folder + */newasm::header::execution_flow::file);
         if(internal_fileobject.is_open())
         {
@@ -4460,56 +4469,71 @@ namespace newasm
             newasm::execute(newasm::header::settings::script_file, newasm::header::execution_flow::entry_start_line, 1);
             return 1;
         }
+        #endif
         //else
         return 0;
     }
-    int execute(std::string file, int startline, int proceed)
+    int execute(std::string file)
     {
-        if(proceed == 0)
-        {
-            return proceed;
-        }
-        std::ifstream internal_fileobject(/*newasm::header::constants::scripts_folder + */file);
-        if(internal_fileobject.is_open())
-        {
-            std::string line;
-            int lineidx = 1;
+        newasm::mem::COD.clear();
+        newasm::mem::COD.push_back("_");
+        newasm::mem::regs::lcx.set_value(1);
 
-            while(std::getline(internal_fileobject, line))
+        std::string line;
+        int lineidx = newasm::mem::regs::lcx.get_value();
+        newasm::system::terminated = false;
+
+        std::ifstream _file(file);
+        if(_file.is_open())
+        {
+            lineidx = 1;
+            while(std::getline(_file, line))
             {
-                if(startline != newasm::code_stream::invalid_lnidx) if(!(lineidx >= startline))
+                line = newasm::header::functions::trim(line);
+
+                if(line.empty())
                 {
-                    lineidx++;
-                    //newasm::header::data::lastlndx = lineidx;
+                    newasm::mem::COD.push_back("; empty");
                     continue;
                 }
+
+                if(line.at(0) == ';')
+                {
+                    line = "; comment";
+                }
+                else
+                {
+                    line = newasm::header::functions::remc(line);
+                }
+                if(line.at(0) == ':')
+                {
+                    newasm::process_l(line, "_", newasm::header::functions::trim(line.substr(1)), lineidx);
+                }
+                newasm::mem::COD.push_back(line);
+                lineidx++;
+            }
+            lineidx = 1;
+            _file.close();
+
+            while(!(newasm::mem::regs::lcx.get_value() == newasm::mem::COD.size()))
+            {
                 if(newasm::system::terminated)
                 {
                     break;
                 }
-                if(newasm::code_stream::jump == 1)
+
+                newasm::mem::regs::lcx.set_value(newasm::mem::regs::lcx.get_value()+1);
+
+                if(newasm::code_stream::jump)
                 {
                     newasm::code_stream::jump = 0;
-                    newasm::execute(file, newasm::code_stream::jumpto, 1);
-                    break;
-                }
-                if(newasm::header::execution_flow::exec_redirected)
-                {
-                    newasm::executechild();
-                    break;
+                    newasm::mem::regs::lcx.set_value(newasm::code_stream::jumpto);
                 }
 
-                newasm::header::data::lastln = line;
-                newasm::header::data::lastlndx = lineidx;
-                newasm::procline(line);
-                lineidx++;
-
-                //////////
+                newasm::header::data::lastln = newasm::mem::COD.at(newasm::mem::regs::lcx.get_value());
+                newasm::header::data::lastlndx = newasm::mem::regs::lcx.get_value();
+                newasm::procline(newasm::mem::COD.at(newasm::mem::regs::lcx.get_value()));
             }
-            
-            
-
-            internal_fileobject.close();
             
             if(!newasm::system::terminated)
             {
@@ -4525,7 +4549,7 @@ namespace newasm
         else
         {
             newasm::header::functions::err(
-                static_cast<std::string>("Unable to open the file : ") + static_cast<std::string>("'") + 
+                static_cast<std::string>("Unable to open the file: ") + static_cast<std::string>("'") + 
                 /*newasm::header::constants::scripts_folder +*/ file + static_cast<std::string>("'"));
         }
         return 0;
