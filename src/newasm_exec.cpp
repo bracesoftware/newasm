@@ -3491,7 +3491,7 @@ namespace newasm
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
                     {
                         using std::endl, std::cout;
-                        //cout << " ERROR CATCH - tlr is: " << newasm::mem::regs::tlr << endl;
+                        //cout << "        ERROR CATCH - tlr is: " << newasm::mem::regs::tlr << endl;
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                         return 1;
                     }
@@ -4487,27 +4487,32 @@ namespace newasm
         if(_file.is_open())
         {
             lineidx = 1;
-            while(std::getline(_file, line))
+            std::cout << "file = `" << file << "`" << std::endl;
+            while(std::getline(_file, line)) //internal compile
             {
+                std::cout << lineidx << " |  " << line << std::endl;
                 line = newasm::header::functions::trim(line);
 
                 if(line.empty())
                 {
+                    lineidx++;
                     newasm::mem::COD.push_back("; empty");
                     continue;
                 }
 
                 if(line.at(0) == ';')
                 {
-                    line = "; comment";
+                    lineidx++;
+                    newasm::mem::COD.push_back("; comment");
+                    continue;
                 }
-                else
-                {
-                    line = newasm::header::functions::remc(line);
-                }
+                line = newasm::header::functions::remc(line);
                 if(line.at(0) == ':')
                 {
+                    lineidx++;
                     newasm::process_l(line, "_", newasm::header::functions::trim(line.substr(1)), lineidx);
+                    newasm::mem::COD.push_back("; label");
+                    continue;
                 }
                 newasm::mem::COD.push_back(line);
                 lineidx++;
@@ -4527,7 +4532,7 @@ namespace newasm
                 if(newasm::code_stream::jump)
                 {
                     newasm::code_stream::jump = 0;
-                    newasm::mem::regs::lcx.set_value(newasm::code_stream::jumpto);
+                    newasm::mem::regs::lcx.set_value(newasm::code_stream::jumpto - 1);
                 }
 
                 newasm::header::data::lastln = newasm::mem::COD.at(newasm::mem::regs::lcx.get_value());

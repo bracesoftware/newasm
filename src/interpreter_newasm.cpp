@@ -473,9 +473,13 @@ int main(int argc, char *argv[])
         NewASM Shell
     */
     std::string command;
+    std::string username = "root";
     while(true)
     {
-        std::cout << newasm::header::col::green << "~shell> " << newasm::header::col::reset;
+        std::cout << newasm::header::col::green << "shell@" << 
+        newasm::header::col::yellow<<username<<newasm::header::col::green
+        <<" $"
+        << newasm::header::col::reset;
         std::cin >> command;
         newasm::shell::main(command);
         if(newasm::shell::data::terminated)
