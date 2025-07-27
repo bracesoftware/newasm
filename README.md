@@ -10,6 +10,10 @@
     <img height="30" align="center" src="readme_resources/cpp_logo.png">
 </div>
 
+**NewASM** is an interpreted low-level programming language which combines explicit memory and register control, giving it a breeze of assembly-liks feel, with high-level functionalities such as objects, threads and more.
+**NewASM** language runs inside a NewASM Virtual Machine.
+
+
 # Documentation
 Below is the simple `Hello World` program written in New-Assembly.
 
