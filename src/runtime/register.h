@@ -39,14 +39,21 @@ namespace newasm
         std::string name;
         T value;
         T thread_value;
+        T initial_value;
+        
         public:
         _register(std::string regname, T val)
-            : name(regname), value(val), thread_value(val)
+            : name(regname), value(val), thread_value(val), initial_value(val)
         {
         }
         std::string identifier() const
         {
             return name;
+        }
+        void reset()
+        {
+            this->value = this->initial_value;
+            this->thread_value = this->initial_value;
         }
         T get_value() const
         {

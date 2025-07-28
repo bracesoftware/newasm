@@ -236,10 +236,12 @@ namespace newasm
                 const int exit__ = 1;
                 const int help__ = 2;
                 const int install__ = 3;
+                const int repl__ = 4;
 
                 const std::unordered_map<int, std::string> identifiers__ = {
                     {exit__, "exit"},
                     {help__, "help"},
+                    {repl__, "repl"},
                     {install__, "install"}
                 };
             }

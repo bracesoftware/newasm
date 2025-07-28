@@ -107,7 +107,6 @@ This project is written purely in C++ using its standard libraries, so compiling
 | `-ver` | - | Displays version information only, and doesn't start the interpreter at all. |
 | `-help` | - | Displays help information. |
 | `-input` | `<filename>` | Sets the input file; if `-input` was not provided, interpreter sets it to `input.asm`. |
-| `-repl` | - | Enter the read-evaluate-print mode. |
 | `-newproj` | - | Create a new project file if one doesn't already exist. |
 | `-tests` | - | Start the test function. |
 | `-log` | - | Toggle the logging system. |
@@ -117,14 +116,15 @@ This project is written purely in C++ using its standard libraries, so compiling
 ## Launch modes
 When running the `newasm` executeable, you can optionally use the `-mode` argument to open the application in different modes:
 * mode 0: this is the default interpreter mode, it just does the primary idea of what it is supposed to do - run the assembly code;
-* mode 1: this is the CTL, or control console, mode - application will run as the command prompt with its own commands, you can install packages and maintain your project.
+* mode 1: this is the shell, or control console, mode - application will run as the command prompt with its own commands, you can install packages and maintain your project.
 
-### CTL mode
-CTL mode brings new different commands with it. Below is a list of available commands:
+### Shell mode
+Shell mode brings new different commands with it. Below is a list of available commands:
 | Command | Arguments | Description |
 | ---------------- | --------- | ----------- |
 | `help` | - | Displays this panel within the console. |
 | `exit` | - | Closes the application. |
+| `repl` | - | Enter the read-evaluate-print console. |
 | `install` | `<lib>` | Install a library. |
 
 #### `install` command

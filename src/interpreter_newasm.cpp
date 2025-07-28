@@ -68,7 +68,7 @@ namespace newasm
     namespace global
     {
         const int MODE_INT = 0;
-        const int MODE_CTL = 1;
+        const int MODE_SHELL = 1;
         int mode = newasm::global::MODE_INT;
 
         std::deque<std::string> event_codeblock;
@@ -125,12 +125,10 @@ is in the runtime
 
 #include "newasm_compexpr.cpp"
 #include "newasm_tests.cpp"
-#include "newasm_ctl.cpp"
+#include "newasm_shell.cpp"
 
 #include "common/chars.h"
 #include "runtime/_entry.h"
-
-#include "runtime/shell__.cpp"
 
 namespace fs = std::filesystem;
 
@@ -179,140 +177,9 @@ namespace newasm
 // MAIN
 //#define NEWASM_STRICT_TEST
 
-int main(int argc, char *argv[])
-{
-    newasm::runtime::main();
-    std::string cmd;
-
-    fs::path data_folder = fs::path(newasm::core::constants::data_folder);
-    fs::path cache_folder = fs::path(newasm::core::constants::data_folder+
-        newasm::core::constants::separator+
-        newasm::core::constants::cache_folder
-    );
-    if(!fs::exists(data_folder))
-    {
-        fs::create_directories(data_folder);
-    }
-    if(!fs::exists(cache_folder))
-    {
-        fs::create_directories(cache_folder);
-    }
-    newasm::_virtual::main();
-    newasm::dyn_ins_set = &newasm::mem::instructions;
-    //std::cout << "IDIOTISM" << std::endl;
-    newasm::env_vars = &newasm::core::env_vars::priv_env_var;
-
-    std::cout << std::endl; newasm::header::functions::vers_info();
-
-    
-    newasm::header::functions::log("System loading...");
-
-    if(newasm::vercheck)
-    {
-        newasm::vers::main();
-        if(std::filesystem::exists(newasm::core::constants::data_folder + newasm::core::constants::separator + newasm::core::constants::temp_vers))
-        {
-            std::filesystem::remove(newasm::core::constants::data_folder + newasm::core::constants::separator + newasm::core::constants::temp_vers);
-        }
-    }
-
-    std::cout << std::endl;
-    newasm::header::execution_flow::entry_exec = newasm::header::settings::script_file;
-
-    newasm::core::env_vars::functions::setup_env();
-    /*newasm::project_data::impl::setup_proj();
-    newasm::header::functions::info(
-        static_cast<std::string>("Preparing to execute: ") + newasm::header::col::yellow +
-        newasm::project_data::name + static_cast<std::string>(" ") + newasm::project_data::version
-        + newasm::header::col::reset);
-*/
-    /*
-        Before executing the file we need to open the program window.
-    */
-    if(newasm::dwin)
-    {
-        if(!std::filesystem::exists(newasm::core::constants::progwin))
-        {
-            newasm::header::functions::err("`progwin` (debugger) not found.");
-            return 1;
-        }
-
-        newasm::progwin::api::cout("Debug window ready.");
-
-        newasm::runtime::start_program(newasm::core::constants::progwin);
-    }
-    /*
-        NewASM Shell
-    */
-    std::string command;
-    while(true)
-    {
-        std::cout << newasm::header::col::green << "~shell> " << newasm::header::col::reset;
-        std::cin >> command;
-        newasm::shell::main(command);
-        if(newasm::shell::data::terminated)
-        {
-            break;
-        }
-    }
-
-    // File to analyze.
-    
-    if(newasm::header::data::exception)
-    {
-        newasm::header::functions::log("Process terminated...");
-    }
-    
-
-
-    newasm::handles::delete_handles();
-    newasm::containers::functions::free_dyn_mem();
-    newasm::stack::free_macro_mem();
-    newasm::header::functions::log("System unloading...");
-
-    if(newasm::dyn_ins_set != nullptr)
-    {
-        delete newasm::dyn_ins_set;
-        newasm::dyn_ins_set = nullptr;
-    }
-    if(newasm::env_vars != nullptr)
-    {
-        delete newasm::env_vars;
-        newasm::env_vars = nullptr;
-    }
-    
-    newasm::threads::functions::free_mem();
-
-    if(newasm::dwin)
-    {
-        newasm::progwin::api::exit();
-    }
-
-    return 0;
-}
-/*
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-*/
-namespace newasm
-{
-    namespace _______
-    {
-        
 int main(int argc, char *argv[])
 {
     newasm::runtime::main();
@@ -372,22 +239,35 @@ int main(int argc, char *argv[])
             newasm::header::functions::err("Wrong application usage!\n\t\t\t\t\t" + newasm::header::col::gray + " newasm -mode <mode ID> -other_options");
         }
     }
-    //control mode
-    if(newasm::global::mode == newasm::global::MODE_CTL)
+    //shell mode
+    if(newasm::global::mode == newasm::global::MODE_SHELL)
     {
         EMPTYLINE;EMPTYLINE;
-        newasm::header::functions::info("Loading the CTL mode...");
+        newasm::header::functions::info("Loading the shell mode...");
         EMPTYLINE;
         newasm::ctl::main();
+
+
+        newasm::handles::delete_handles();
+        newasm::containers::functions::free_dyn_mem();
+        newasm::stack::free_macro_mem();
+        newasm::header::functions::log("System unloading...");
+
+        if(newasm::dyn_ins_set != nullptr)
+        {
+            delete newasm::dyn_ins_set;
+            newasm::dyn_ins_set = nullptr;
+        }
+        if(newasm::env_vars != nullptr)
+        {
+            delete newasm::env_vars;
+            newasm::env_vars = nullptr;
+        }
+        
+        newasm::threads::functions::free_mem();
         return 1;
     }
 
-    if(!newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::input),argc,argv,argid) &&
-    newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::repl),argc,argv,argid))
-    {
-        newasm::header::data::exception = false;
-        //goto repl_label;
-    }
     
     if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::input),argc,argv,argid))
     {
@@ -470,23 +350,22 @@ int main(int argc, char *argv[])
         newasm::runtime::start_program(newasm::core::constants::progwin);
     }
     /*
-        NewASM Shell
+        Executing
     */
-    std::string command;
-    std::string username = "root";
-    while(true)
+    newasm::header::functions::trim(newasm::header::settings::script_file);
+    newasm::execute(newasm::header::settings::script_file, -1);
+
+    if(newasm::mem::functions::datavalid(newasm::handlers::exit_handler, newasm::mem::funcs))
     {
-        std::cout << newasm::header::col::green << "shell@" << 
-        newasm::header::col::yellow<<username<<newasm::header::col::green
-        <<" $"
-        << newasm::header::col::reset;
-        std::cin >> command;
-        newasm::shell::main(command);
-        if(newasm::shell::data::terminated)
+        newasm::global::event_now = true;
+        newasm::copyproc(newasm::handlers::exit_handler);
+        for(auto i = newasm::global::event_codeblock.begin(); i != newasm::global::event_codeblock.end(); ++i)
         {
-            break;
+            newasm::procline(*i);
         }
+        newasm::global::event_now = false;
     }
+
 
     newasm::handles::delete_handles();
     newasm::containers::functions::free_dyn_mem();
@@ -513,8 +392,132 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+
+
+#ifdef ______I
+
+namespace newasm
+{
+    namespace __
+    {
+int main(int argc, char *argv[])
+{
+    newasm::runtime::main();
+    std::string cmd;
+
+    fs::path data_folder = fs::path(newasm::core::constants::data_folder);
+    fs::path cache_folder = fs::path(newasm::core::constants::data_folder+
+        newasm::core::constants::separator+
+        newasm::core::constants::cache_folder
+    );
+    if(!fs::exists(data_folder))
+    {
+        fs::create_directories(data_folder);
     }
-}
+    if(!fs::exists(cache_folder))
+    {
+        fs::create_directories(cache_folder);
+    }
+    newasm::_virtual::main();
+    newasm::dyn_ins_set = &newasm::mem::instructions;
+    //std::cout << "IDIOTISM" << std::endl;
+    newasm::env_vars = &newasm::core::env_vars::priv_env_var;
+
+    std::cout << std::endl; newasm::header::functions::vers_info();
+
+    
+    newasm::header::functions::log("System loading...");
+
+    if(newasm::vercheck)
+    {
+        newasm::vers::main();
+        if(std::filesystem::exists(newasm::core::constants::data_folder + newasm::core::constants::separator + newasm::core::constants::temp_vers))
+        {
+            std::filesystem::remove(newasm::core::constants::data_folder + newasm::core::constants::separator + newasm::core::constants::temp_vers);
+        }
+    }
+
+    std::cout << std::endl;
+    newasm::header::execution_flow::entry_exec = newasm::header::settings::script_file;
+
+    newasm::core::env_vars::functions::setup_env();
+    /*newasm::project_data::impl::setup_proj();
+    newasm::header::functions::info(
+        static_cast<std::string>("Preparing to execute: ") + newasm::header::col::yellow +
+        newasm::project_data::name + static_cast<std::string>(" ") + newasm::project_data::version
+        + newasm::header::col::reset);
+*/
+    /*
+        Before executing the file we need to open the program window.
+    */
+    if(newasm::dwin)
+    {
+        if(!std::filesystem::exists(newasm::core::constants::progwin))
+        {
+            newasm::header::functions::err("`progwin` (debugger) not found.");
+            return 1;
+        }
+
+        newasm::progwin::api::cout("Debug window ready.");
+
+        newasm::runtime::start_program(newasm::core::constants::progwin);
+    }
+    /*
+        NewASM Shell
+    */
+    std::string command;
+    std::string username = "root";
+    while(true)
+    {
+        std::cout << newasm::header::col::green << "shell@" << 
+        newasm::header::col::yellow<<username<<newasm::header::col::green
+        <<" $"
+        << newasm::header::col::reset;
+        std::cin >> command;
+        newasm::shell::main(command);
+        if(newasm::shell::data::terminated)
+        {
+            break;
+        }
+    }
+
+    // File to analyze.
+    
+    if(newasm::header::data::exception)
+    {
+        newasm::header::functions::log("Process terminated...");
+    }
+    
+    newasm::header::functions::info("Cleaning up...");
+
+    newasm::handles::delete_handles();
+    newasm::containers::functions::free_dyn_mem();
+    newasm::stack::free_macro_mem();
+    newasm::header::functions::log("System unloading...");
+
+    if(newasm::dyn_ins_set != nullptr)
+    {
+        delete newasm::dyn_ins_set;
+        newasm::dyn_ins_set = nullptr;
+    }
+    if(newasm::env_vars != nullptr)
+    {
+        delete newasm::env_vars;
+        newasm::env_vars = nullptr;
+    }
+    
+    newasm::threads::functions::free_mem();
+
+    if(newasm::dwin)
+    {
+        newasm::progwin::api::exit();
+    }
+
+    return 0;
+}}}
+
+        #endif
 
 namespace newasm
 {

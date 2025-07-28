@@ -24,7 +24,7 @@ the Initial Developer. All Rights Reserved.
 
 namespace newasm
 {
-    int execute(std::string file);
+    int execute(std::string file, int lineidx_____);
     void unsins(std::string ins)
     {
         newasm::header::functions::wrn(
@@ -1632,7 +1632,7 @@ namespace newasm
                     return 1;
                 }
                 newasm::code_stream::jump = 1;
-                newasm::code_stream::jumpto = 1 + newasm::mem::labels[opr];
+                newasm::code_stream::jumpto = newasm::mem::labels[opr];
                 return 1;
             }
         }
@@ -1923,7 +1923,7 @@ namespace newasm
                     return 1;
                 }
                 newasm::code_stream::jump = 1;
-                newasm::code_stream::jumpto = 1 + newasm::mem::labels[opr];
+                newasm::code_stream::jumpto = newasm::mem::labels[opr];
                 return 1;
             }
         }
@@ -1952,7 +1952,7 @@ namespace newasm
                     return 1;
                 }
                 newasm::code_stream::jump = 1;
-                newasm::code_stream::jumpto = 1 + newasm::mem::labels[opr];
+                newasm::code_stream::jumpto = newasm::mem::labels[opr];
                 return 1;
             }
         }
@@ -1981,7 +1981,7 @@ namespace newasm
                     return 1;
                 }
                 newasm::code_stream::jump = 1;
-                newasm::code_stream::jumpto = 1 + newasm::mem::labels[opr];
+                newasm::code_stream::jumpto = newasm::mem::labels[opr];
                 return 1;
             }
         }
@@ -2010,7 +2010,7 @@ namespace newasm
                     return 1;
                 }
                 newasm::code_stream::jump = 1;
-                newasm::code_stream::jumpto = 1 + newasm::mem::labels[opr];
+                newasm::code_stream::jumpto = newasm::mem::labels[opr];
                 return 1;
             }
         }
@@ -2039,7 +2039,7 @@ namespace newasm
                     return 1;
                 }
                 newasm::code_stream::jump = 1;
-                newasm::code_stream::jumpto = 1 + newasm::mem::labels[opr];
+                newasm::code_stream::jumpto = newasm::mem::labels[opr];
                 return 1;
             }
         }
@@ -2068,7 +2068,7 @@ namespace newasm
                     return 1;
                 }
                 newasm::code_stream::jump = 1;
-                newasm::code_stream::jumpto = 1 + newasm::mem::labels[opr];
+                newasm::code_stream::jumpto = newasm::mem::labels[opr];
                 return 1;
             }
         }
@@ -3491,7 +3491,7 @@ namespace newasm
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
                     {
                         using std::endl, std::cout;
-                        //cout << "        ERROR CATCH - tlr is: " << newasm::mem::regs::tlr << endl;
+                        cout << "        ERROR CATCH - tlr is: " << newasm::mem::regs::tlr << endl;
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                         return 1;
                     }
@@ -3883,13 +3883,9 @@ namespace newasm
         newasm::terminate(newasm::exit_codes::invalid_syntax);
         return 1;
     }
-    void handle_threads(int method); int procline(std::string &line)
+    void handle_threads(int method);
+    int procline(std::string &line)
     {
-        
-        if(!newasm::header::execution_flow::exec_redirected) if(newasm::mem::functions::islbln(newasm::header::data::lastlndx))
-        {
-            return 1;
-        }
         line = newasm::header::functions::trim(line);
         if(line[0] == ';')
         {
@@ -4473,11 +4469,18 @@ namespace newasm
         //else
         return 0;
     }
-    int execute(std::string file)
+    int execute(std::string file, int lineidx_____)
     {
-        newasm::mem::COD.clear();
-        newasm::mem::COD.push_back("_");
-        newasm::mem::regs::lcx.set_value(1);
+        if(lineidx_____ == -1)
+        {
+            newasm::mem::regs::resetRegisters();
+            newasm::mem::regs::hea = 0;
+
+            newasm::mem::COD.clear();
+            newasm::mem::COD.push_back("_");
+            newasm::mem::regs::lcx.set_value(1);
+        }
+        
 
         std::string line;
         int lineidx = newasm::mem::regs::lcx.get_value();
@@ -4487,10 +4490,10 @@ namespace newasm
         if(_file.is_open())
         {
             lineidx = 1;
-            std::cout << "file = `" << file << "`" << std::endl;
-            while(std::getline(_file, line)) //internal compile
+            //std::cout << "file = `" << file << "`" << std::endl;
+            if(lineidx_____ == -1) while(std::getline(_file, line)) //internal compile
             {
-                std::cout << lineidx << " |  " << line << std::endl;
+                //std::cout << lineidx << " |  " << line << std::endl;
                 line = newasm::header::functions::trim(line);
 
                 if(line.empty())
@@ -4529,15 +4532,19 @@ namespace newasm
 
                 newasm::mem::regs::lcx.set_value(newasm::mem::regs::lcx.get_value()+1);
 
+                newasm::header::data::lastln = newasm::mem::COD.at(newasm::mem::regs::lcx.get_value());
+                newasm::header::data::lastlndx = newasm::mem::regs::lcx.get_value();
+        
+                newasm::procline(newasm::mem::COD.at(newasm::mem::regs::lcx.get_value()));
+
                 if(newasm::code_stream::jump)
                 {
                     newasm::code_stream::jump = 0;
-                    newasm::mem::regs::lcx.set_value(newasm::code_stream::jumpto - 1);
+                    newasm::mem::regs::lcx.set_value(newasm::code_stream::jumpto-1);
+                    //std::cout << "\t\tJumped to line >> " << newasm::mem::regs::lcx.get_value() << std::endl;
+                    //std::cout << "\t\tProcessing :: " << newasm::mem::COD.at(newasm::mem::regs::lcx.get_value()) << std::endl;
+                    //std::cout << "\t\tProcessing++ :: " << newasm::mem::COD.at(newasm::mem::regs::lcx.get_value()+1) << std::endl;
                 }
-
-                newasm::header::data::lastln = newasm::mem::COD.at(newasm::mem::regs::lcx.get_value());
-                newasm::header::data::lastlndx = newasm::mem::regs::lcx.get_value();
-                newasm::procline(newasm::mem::COD.at(newasm::mem::regs::lcx.get_value()));
             }
             
             if(!newasm::system::terminated)

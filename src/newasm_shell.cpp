@@ -34,6 +34,7 @@ namespace newasm
         const std::vector<std::pair<std::string, std::pair<std::string,std::string>>> help_table_data = {
             {"help",      {"/",           "Displays the help panel."}},
             {"exit",      {"/",           "Exits the application."}},
+            {"repl",      {"/",           "Load the read-eval-print console."}},
             {"install",   {"<lib>", "Installs a dynamic library."}}
         };
         void help_info()
@@ -97,7 +98,31 @@ namespace newasm
         {
             int process_c(std::string cmd)
             {
-                std::vector<std::string> tokens = newasm::header::functions::split(newasm::header::functions::trim(cmd),' ');
+                auto tokenize = [](std::string str) -> std::vector<std::string> {
+                    std::vector<std::string> tokens;
+                    std::string token;
+                    std::istringstream stream(str);
+
+                    while(stream >> token)
+                    {
+                        tokens.push_back(token);
+                    }
+
+                    return tokens;
+                };
+                auto repl = []() -> void {
+                    newasm::header::data::repl_end = false;
+                    std::cout << std::endl;
+                    newasm::header::functions::nullprint_wnm(
+                        static_cast<std::string>("Read-Eval-Print Loop mode loaded; to leave, use the `")+
+                        newasm::header::style::underline+static_cast<std::string>("exit")+newasm::header::col::reset+
+                        static_cast<std::string>("` instruction."));
+                    newasm::header::data::lastlndx = 0;
+                    newasm::header::data::repl = true;
+                    
+                    newasm::repl();
+                };
+                std::vector<std::string> tokens = tokenize(cmd);
                 for(int i = 0; i < tokens.size(); ++i)
                 {
                     tokens[i] = newasm::header::functions::trim(tokens[i]);
@@ -111,11 +136,17 @@ namespace newasm
                     if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::exit__))
                     {
                         newasm::ctl::data::finish = true;
+                        newasm::header::functions::info("Cleaning up...");
                         return 1;
                     }
                     if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::help__))
                     {
                         newasm::ctl::help_info();
+                        return 1;
+                    }
+                    if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::repl__))
+                    {
+                        repl();
                         return 1;
                     }
                 }
@@ -330,6 +361,7 @@ namespace newasm
                         {
                             std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + static_cast<std::string>("Didn't find a such library or a setup!"));
                             std::cout << newasm::header::col::reset;
+                            return 1;
                         }
                         return 1;
                     }
@@ -346,12 +378,14 @@ namespace newasm
                 {
                     return;
                 }
-                using std::cin;
-                std::cout << newasm::header::col::gray << ">>> " << newasm::header::col::reset
-                << newasm::header::style::underline;
-                std::getline(cin, newasm::ctl::data::cmd);
-                std::cout << newasm::header::col::reset;
-                newasm::ctl::impl::process_c(newasm::ctl::data::cmd);
+                std::string command;
+                std::string username = "root";
+                std::cout << newasm::header::col::green << "shell@" << 
+                newasm::header::col::yellow<<username<<newasm::header::col::green
+                <<"-$"
+                << newasm::header::col::reset;
+                std::cin >> command;
+                newasm::ctl::impl::process_c(command);
             }
 
             return;

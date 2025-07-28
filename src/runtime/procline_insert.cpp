@@ -43,7 +43,7 @@ namespace newasm
             const int ver = 1;
             const int input = 2;
             const int help = 3;
-            const int repl = 4;
+
             const int extra = 5;
             const int cnpf = 6;
             const int tests = 7;
@@ -56,7 +56,6 @@ namespace newasm
                 {ver, "-ver"},
                 {input, "-input"},
                 {help, "-help"},
-                {repl, "-repl"},
                 {extra, "-extra"},
                 {cnpf, "-newproj"},
                 {tests, "-tests"},

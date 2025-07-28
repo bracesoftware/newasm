@@ -209,6 +209,32 @@ namespace newasm
 
             newasm::_register<float> cr0("cr0", 0);
             newasm::_register<float> cr1("cr1", 0);
+
+            void resetRegisters()
+            {
+                newasm::mem::regs::stk.reset();
+                newasm::mem::regs::heaptr.reset();
+
+                newasm::mem::regs::tlr.reset();
+                newasm::mem::regs::stl.reset();
+
+                newasm::mem::regs::psx.reset();
+                newasm::mem::regs::prp.reset();
+                newasm::mem::regs::cpt.reset();
+
+                newasm::mem::regs::tr0.reset();
+                newasm::mem::regs::tr1.reset();
+
+                newasm::mem::regs::fdx.reset();
+                newasm::mem::regs::cpr.reset();
+                newasm::mem::regs::br0.reset();
+                newasm::mem::regs::br1.reset();
+
+                newasm::mem::regs::lcx.reset();
+
+                newasm::mem::regs::cr0.reset();
+                newasm::mem::regs::cr1.reset();
+            }
         }
 
         struct struct_member
