@@ -125,6 +125,7 @@ is in the runtime
 
 #include "newasm_compexpr.cpp"
 #include "newasm_tests.cpp"
+#include "shell_tools/user.cpp"
 #include "newasm_shell.cpp"
 
 #include "common/chars.h"
@@ -190,6 +191,10 @@ int main(int argc, char *argv[])
         newasm::core::constants::separator+
         newasm::core::constants::cache_folder
     );
+    fs::path user_folder = fs::path(newasm::core::constants::data_folder+
+        newasm::core::constants::separator+
+        newasm::core::constants::user_folder
+    );
     if(!fs::exists(data_folder))
     {
         fs::create_directories(data_folder);
@@ -198,7 +203,12 @@ int main(int argc, char *argv[])
     {
         fs::create_directories(cache_folder);
     }
+    if(!fs::exists(user_folder))
+    {
+        fs::create_directories(user_folder);
+    }
     newasm::_virtual::main();
+    newasm::user::main();
     newasm::dyn_ins_set = &newasm::mem::instructions;
     //std::cout << "IDIOTISM" << std::endl;
     newasm::env_vars = &newasm::core::env_vars::priv_env_var;

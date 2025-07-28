@@ -141,17 +141,25 @@ namespace newasm
                     }
                     if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::help__))
                     {
+                        _newasm_CHECKLOGIN;
                         newasm::ctl::help_info();
                         return 1;
                     }
                     if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::repl__))
                     {
+                        _newasm_CHECKLOGIN;
                         repl();
+                        return 1;
+                    }
+                    if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::login__))
+                    {
+                        newasm::user::impl::login();
                         return 1;
                     }
                 }
                 if(tokens.size() == 2)
                 {
+                    _newasm_CHECKLOGIN;
                     if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::install__))
                     {
                         newasm::header::functions::info(static_cast<std::string>("Attempting to install the \"") + tokens[1] + static_cast<std::string>("\" package."));
@@ -379,12 +387,14 @@ namespace newasm
                     return;
                 }
                 std::string command;
-                std::string username = "root";
+                std::string username = newasm::user::global::username;
                 std::cout << newasm::header::col::green << "shell@" << 
                 newasm::header::col::yellow<<username<<newasm::header::col::green
                 <<"-$"
                 << newasm::header::col::reset;
-                std::cin >> command;
+                
+                std::getline(std::cin, command);
+
                 newasm::ctl::impl::process_c(command);
             }
 

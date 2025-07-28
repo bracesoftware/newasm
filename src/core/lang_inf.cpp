@@ -43,6 +43,7 @@ namespace newasm
             const std::string cache_folder = "_cache";
             const std::string ipc_file = "ipc._sys";
 
+            const std::string user_folder = "user";
 
             #ifdef _WIN32
                 const std::string separator = "\\";
@@ -237,12 +238,14 @@ namespace newasm
                 const int help__ = 2;
                 const int install__ = 3;
                 const int repl__ = 4;
+                const int login__ = 5;
 
                 const std::unordered_map<int, std::string> identifiers__ = {
                     {exit__, "exit"},
                     {help__, "help"},
                     {repl__, "repl"},
-                    {install__, "install"}
+                    {install__, "install"},
+                    {login__, "login"}
                 };
             }
 
