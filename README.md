@@ -126,6 +126,8 @@ Shell mode brings new different commands with it. Below is a list of available c
 | `exit` | - | Closes the application. |
 | `repl` | - | Enter the read-evaluate-print console. |
 | `install` | `<lib>` | Install a library. |
+| `login` | - | Log into your local account. |
+| `logout` | - | Log out of your local account. |
 
 #### `install` command
 The install-command allows you to download and install New-ASM dynamic libraries and packages. There are 2 types of downloadable files - dynamic libraries (`.newasm_dl` files) and library setups (`.newasm_set` files). Setups allow library developers to provide more information about the library itself.

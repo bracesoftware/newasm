@@ -32,10 +32,12 @@ namespace newasm
         const int third_column = 20;
         const std::string tabs = "\t";
         const std::vector<std::pair<std::string, std::pair<std::string,std::string>>> help_table_data = {
-            {"help",      {"/",           "Displays the help panel."}},
-            {"exit",      {"/",           "Exits the application."}},
-            {"repl",      {"/",           "Load the read-eval-print console."}},
-            {"install",   {"<lib>", "Installs a dynamic library."}}
+            {"help",      {"/",             "Displays the help panel."}},
+            {"exit",      {"/",             "Exits the application."}},
+            {"repl",      {"/",             "Load the read-eval-print console."}},
+            {"install",   {"<lib>",         "Installs a dynamic library."}},
+            {"login",     {"/",             "Login into your local account."}},
+            {"logout",    {"/",             "Log out of your local account."}}
         };
         void help_info()
         {
@@ -154,6 +156,11 @@ namespace newasm
                     if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::login__))
                     {
                         newasm::user::impl::login();
+                        return 1;
+                    }
+                    if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::logout__))
+                    {
+                        newasm::user::main();
                         return 1;
                     }
                 }

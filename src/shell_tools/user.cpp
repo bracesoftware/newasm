@@ -17,7 +17,7 @@ the Initial Developer. All Rights Reserved.
 
 */
 
-#define _newasm_CHECKLOGIN if(!newasm::user::loggedin)newasm::header::functions::err("You have to be logged in.");return(1)
+#define _newasm_CHECKLOGIN if(!newasm::user::loggedin){newasm::header::functions::err("You have to be logged in.");return(1);}std::cout<<""
 
 namespace newasm
 {
