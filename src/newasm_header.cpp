@@ -32,6 +32,7 @@ namespace newasm
         namespace flags
         {
             bool compexpr = false;
+            bool autobos = false;
         }
         namespace system_info
         {

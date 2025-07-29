@@ -470,6 +470,10 @@ namespace newasm
         {
             intreg = newasm::mem::regs::fdx;
         }
+        if(suf == newasm::mem::regs::bos.identifier())
+        {
+            intreg = newasm::mem::regs::bos;
+        }
         if(suf == newasm::mem::regs::stk.identifier())
         {
             intreg = newasm::mem::regs::stk;
@@ -841,6 +845,16 @@ namespace newasm
                     return 1;
                 }
                 newasm::mem::data[opr] = std::to_string(newasm::mem::regs::fdx);
+                return 1;
+            }
+            if(suf == newasm::mem::regs::bos.identifier())
+            {
+                if(newasm::mem::datatypes[opr] != newasm::datatypes::number)
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                    return 1;
+                }
+                newasm::mem::data[opr] = std::to_string(newasm::mem::regs::bos);
                 return 1;
             }
             if(suf == newasm::mem::regs::tlr.identifier())
@@ -1375,6 +1389,16 @@ namespace newasm
                 newasm::mem::regs::fdx = std::stoi(opr);
                 return 1;
             }
+            if(suf == newasm::mem::regs::bos.identifier())
+            {
+                if(!newasm::header::functions::isnumeric(opr))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                    return 1;
+                }
+                newasm::mem::regs::bos = std::stoi(opr);
+                return 1;
+            }
             if(suf == newasm::mem::regs::tlr.identifier())
             {
                 //using std::cout, std::endl;
@@ -1671,6 +1695,10 @@ namespace newasm
             if(suf == newasm::mem::regs::fdx.identifier())
             {
                 intreg = newasm::mem::regs::fdx;
+            }
+            if(suf == newasm::mem::regs::bos.identifier())
+            {
+                intreg = newasm::mem::regs::bos;
             }
             if(suf == newasm::mem::regs::stk.identifier())
             {
@@ -2243,9 +2271,14 @@ namespace newasm
                 newasm::terminate(newasm::exit_codes::invalid_syntax);
                 return 1;
             }
-            if(suf == static_cast<std::string>("0x3")) //sys_expect_compexpr
+            if(suf == static_cast<std::string>("0x3")) //sys_autobos
             {
-                newasm::header::flags::compexpr = true;
+                if(newasm::header::flags::autobos)
+                {
+                    newasm::header::flags::autobos = false;
+                    return 1;
+                }
+                newasm::header::flags::autobos = true;
                 return 1;
             }
             newasm::terminate(newasm::exit_codes::invalid_sysint);
@@ -2475,6 +2508,11 @@ namespace newasm
                 debugRegister(suf, std::to_string(newasm::mem::regs::fdx));
                 return 1;
             }
+            if(suf == newasm::mem::regs::bos.identifier())
+            {
+                debugRegister(suf, std::to_string(newasm::mem::regs::bos));
+                return 1;
+            }
             if(suf == newasm::mem::regs::tlr.identifier())
             {
                 debugRegister(suf, (newasm::mem::regs::tlr));
@@ -2598,6 +2636,12 @@ namespace newasm
                 newasm::terminate(newasm::mem::regs::fdx);//,wholeline);
                 return 1;
             }
+            if(suf == newasm::mem::regs::bos.identifier())
+            {
+                newasm::header::data::exception = false;
+                newasm::terminate(newasm::mem::regs::bos);//,wholeline);
+                return 1;
+            }
             if(suf == newasm::mem::regs::tlr.identifier())
             {
                 if(newasm::header::functions::isnumeric(newasm::mem::regs::tlr))
@@ -2715,6 +2759,11 @@ namespace newasm
                 newasm::mem::regs::fdx = 0;
                 return 1;
             }
+            if(suf == newasm::mem::regs::bos.identifier())
+            {
+                newasm::mem::regs::bos = 0;
+                return 1;
+            }
             if(suf == newasm::mem::regs::tlr.identifier())
             {
                 newasm::mem::regs::tlr = newasm::header::constants::inv_reg_val;
@@ -2796,6 +2845,11 @@ namespace newasm
             if(suf == newasm::mem::regs::fdx.identifier())
             {
                 newasm::mem::regs::fdx ++;
+                return 1;
+            }
+            if(suf == newasm::mem::regs::bos.identifier())
+            {
+                newasm::mem::regs::bos ++;
                 return 1;
             }
             if(suf == newasm::mem::regs::stk.identifier())
@@ -2937,6 +2991,11 @@ namespace newasm
             if(suf == newasm::mem::regs::fdx.identifier())
             {
                 newasm::mem::regs::fdx --;
+                return 1;
+            }
+            if(suf == newasm::mem::regs::bos.identifier())
+            {
+                newasm::mem::regs::bos --;
                 return 1;
             }
             if(suf == newasm::mem::regs::stk.identifier())
@@ -3502,8 +3561,21 @@ namespace newasm
                         newasm::threads::memory.at(newasm::threads::now)->output << newasm::syscalls::iostream::get_ref_val__2(newasm::mem::regs::stl);
                         return 1;
                     }
-                    std::cout << newasm::mem::regs::tlr;// << std::endl;
-                    //newasm::mem::functions::out_bopr(newasm::mem::regs::stl);
+
+                    if(!newasm::header::flags::autobos)
+                    {
+                        if(newasm::mem::regs::bos.get_value() > newasm::mem::regs::tlr.get_value().size())
+                        {
+                            newasm::header::functions::wrn("Incorrect `bos` size.");
+                            newasm::mem::regs::bos.set_value(newasm::mem::regs::tlr.get_value().size());
+                        }
+                        std::cout << newasm::mem::regs::tlr.get_value().substr(0, newasm::mem::regs::bos);
+                    }
+                    else
+                    {
+                        std::cout << newasm::mem::regs::tlr;
+                    }
+                    
                     newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
                     return 1;
                 }

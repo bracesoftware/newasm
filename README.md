@@ -355,6 +355,7 @@ In this example, we basically do `fdx=1`, `myvar=fdx`, `return 1`:
 | `fdx` | function index | Holds an index of a function `syscall` will call. |
 | `tlr` | typeless register | Typeless register (can hold any value, even code literals). Used as an output argument in some `syscall`s. |
 | `stl` | secondary typeless register | Typeless register; however used to hold built-in operands for `syscall`s. |
+| `bos` | byte output size | Specify the number of bytes you want to print out. Works only on `syscall` 1 in `%ios`. |
 | `stk` | stack pointer | Points at the top of the stack. |
 | `hea` | heap pointer | Points at an address in the heap. |
 | `psx` | procedure scope exit value | Holds value returned inside a procedure using `halt`. |
@@ -383,7 +384,7 @@ Perform a specific system call within a system module.
 #### `syscall` list
 | Module | ID    | Arguments | Description |
 | ----- | ---------------- | --------- | ----------- |
-| `%ios` | `1` | `tlr`, `stl` | Prints exclusively text. Uses `stl` as a help argument. |
+| `%ios` | `1` | `tlr`, `stl`, `bos` | Prints exclusively text with the size of `bos` (byte output size). Uses `stl` as a help argument. |
 | `%ios` | `2` | `tlr`, `stl` | Prints integers and floating point numbers. Uses `stl` as a help argument. |
 | `%ios` | `3` | - | Requests textual user input and stores the value in `tlr`. |
 | `%ios` | `4` | - | Requests numeric (including floats) user input and stores the value in `tlr`. |

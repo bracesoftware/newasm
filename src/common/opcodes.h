@@ -75,6 +75,8 @@ namespace newasm
             {50, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::switch__)},
             {51, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::case__)},
             {52, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::default__)},
+            {53, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::in)},
+            {54, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::out)},
 
             {100, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::__say)}
         };

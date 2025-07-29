@@ -185,6 +185,7 @@ namespace newasm
             // non accessible registers
             int exc = 0; // cant be used lol
             int hea = 0; // heap size
+            newasm::_register<int> lcx("lcx", 0); //controlled with jmp variants
             //mem registers
             newasm::_register<int> stk("stk", newasm::mem::inf::max_mem_size - 1);
             newasm::_register<int> heaptr("hea", 0);
@@ -204,8 +205,7 @@ namespace newasm
             newasm::_register<int> cpr("cpr", 0);
             newasm::_register<int> br0("br0", 0);
             newasm::_register<int> br1("br1", 0);
-
-            newasm::_register<int> lcx("lcx", 0);
+            newasm::_register<int> bos("bos", 0);
 
             newasm::_register<float> cr0("cr0", 0);
             newasm::_register<float> cr1("cr1", 0);
