@@ -119,7 +119,7 @@ int main()
             std::remove(path_.c_str());
         }
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(1)); // spriječi 100% CPU
+        std::this_thread::sleep_for(std::chrono::milliseconds(1)); // prevent 100% CPU
     }
     return 1;
 }

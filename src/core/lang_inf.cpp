@@ -114,8 +114,8 @@ namespace newasm
             const int case__ = 54;
             const int default__ = 55;
 
-            const int in = 56;
-            const int out = 57;
+            const int in__ = 56;
+            const int out__ = 57;
             
             const int __say = 100;
 
@@ -181,8 +181,8 @@ namespace newasm
                 {case__, "case"},
                 {default__, "default"},
 
-                {in, "in"},
-                {out, "out"},
+                {in__, "in"},
+                {out__, "out"},
 
                 {__say, "__say"}
             };

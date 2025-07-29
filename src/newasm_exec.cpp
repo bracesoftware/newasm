@@ -672,6 +672,7 @@ namespace newasm
                 return 1;
             }
         }
+        
         //vmov
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::vmov))
         {
@@ -2113,6 +2114,37 @@ namespace newasm
             std::string newline = ins + static_cast<std::string>(" ") + suf;
             newasm::mem::funcs[newasm::system::cproc].push_back(newline);
             //std::cout << newasm::system::cproc << " : " << newline << std::endl;
+            return 1;
+        }
+        //out
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::out__))
+        {
+            newasm::runtime::functions::parse(suf);
+            if(!newasm::header::functions::isnumeric(suf))
+            {
+                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                return 1;
+            }
+            if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr.get_value()))
+            {
+                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                return 1;
+            }
+
+            newasm::hardware::outIOPOrt(std::stoi(suf), std::stoi(newasm::mem::regs::tlr.get_value()));
+            return 1;
+        }
+        //in
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::in__))
+        {
+            newasm::runtime::functions::parse(suf);
+            if(!newasm::header::functions::isnumeric(suf))
+            {
+                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                return 1;
+            }
+
+            newasm::mem::regs::tlr.set_value(newasm::hardware::inIOPort(std::stoi(suf)));
             return 1;
         }
         //switch

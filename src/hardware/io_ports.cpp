@@ -62,6 +62,10 @@ namespace newasm
                 if(i.get_value() == 6) std::cout << newasm::header::col::cyan;
                 if(i.get_value() == 7) std::cout << newasm::header::col::gray;
                 if(i.get_value() == 8) std::cout << newasm::header::col::reset;
+                else if(i.get_value() < 1 || i.get_value() > 8)
+                {
+                    i.set_value(0); //invalid request
+                }
                 return;
             }
             return;
