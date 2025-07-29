@@ -21,14 +21,18 @@ namespace newasm
 {
     namespace chars
     {
-        const std::string endl = "~endl"; //end of line
-        const std::string carret = "~cret"; //carriage return
-        const std::string tab = "~tab"; //tab
+        const std::string endl = "0c1"; //end of line
+        const std::string carret = "0c2"; //carriage return
+        const std::string tab = "0c3"; //tab
+        const std::string alert = "0c4"; //alert
+        const std::string backspace = "0c5"; //backspace
 
         const std::unordered_map<std::string, std::string> map = {
             {endl, "\n"},
             {carret, "\r"},
-            {tab, "\t"}
+            {tab, "\t"},
+            {alert, "\a"},
+            {backspace, "\b"}
         };
     }
 }

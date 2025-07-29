@@ -6,7 +6,7 @@
   "patterns": [
     {
       "name": "keyword.control.newasm",
-      "match":  "\\b(default|switch|case|vmov|await|retf|cls|load|stor|sysreq|pop|retn|mov|syscall|proc|call|rem|halt|push|jmp|heap|cmp|je|jne|jl|jg|jle|jge|ret|zero|inc|dec|exit|end|nop|add|sub|div|mul|exp|log|and|or|xor|not|shl|shr|db|malloc|free|stack|wait|sysenter|xchg|int|__say)\\b"
+      "match":  "\\b(in|out|default|switch|case|vmov|await|retf|cls|load|stor|sysreq|pop|retn|mov|syscall|proc|call|rem|halt|push|jmp|heap|cmp|je|jne|jl|jg|jle|jge|ret|zero|inc|dec|exit|end|nop|add|sub|div|mul|exp|log|and|or|xor|not|shl|shr|db|malloc|free|stack|wait|sysenter|xchg|int|__say)\\b"
     },
     {
       "name": "keyword.control.newasm",
@@ -14,7 +14,7 @@
     },
     {
       "name": "register.control.newasm",
-      "match":  "\\b(tlr|stl|stk|hea|psx|prp|cpt|tr0|tr1|fdx|cpr|br0|br1|cr0|cr1)\\b"
+      "match":  "\\b(bos|tlr|stl|stk|hea|psx|prp|cpt|tr0|tr1|fdx|cpr|br0|br1|cr0|cr1)\\b"
     },
     {
       "name": "labels.newasm",
@@ -29,8 +29,12 @@
       "match": "%\\w+"
     },
     {
-      "name": "keyword.control.newasm",
-      "match": "~\\w+"
+      "name": "constant.numeric.newasm",
+      "match": "0c\\w+"
+    },
+    {
+      "name": "constant.numeric.newasm",
+      "match": "\\b\\d+_\\b"
     },
     {
       "name": "string.quoted.double.newasm",

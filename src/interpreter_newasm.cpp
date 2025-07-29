@@ -233,6 +233,10 @@ int main(int argc, char *argv[])
     }
 
     std::cout << std::endl; newasm::header::functions::vers_info();
+    std::cout << "\a";
+    std::cout << "\a";
+    std::cout << "\a";
+    std::cout << "\a";
     //mode stuff
     if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::mode),argc,argv,argid))
     {
