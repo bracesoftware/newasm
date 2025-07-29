@@ -23,6 +23,7 @@ Below is the simple `Hello World` program written in New-Assembly.
 .start
     mov tlr , string
     mov fdx , 1
+    mov bos, 11
 
     sysenter %ios
     
