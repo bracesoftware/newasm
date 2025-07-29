@@ -52,8 +52,8 @@ namespace newasm
         {
             if(id == newasm::hardware::IO_ports::txtcol.get_addr()) // text color on screen
             {
-                auto i = newasm::hardware::IO_ports::txtcol;
-                i.set_value(id);
+                auto& i = newasm::hardware::IO_ports::txtcol;
+                i.set_value(signal);
                 if(i.get_value() == 1) std::cout << newasm::header::col::red;
                 if(i.get_value() == 2) std::cout << newasm::header::col::yellow;
                 if(i.get_value() == 3) std::cout << newasm::header::col::green;
@@ -77,6 +77,8 @@ namespace newasm
             {
                 output = std::to_string(newasm::hardware::IO_ports::txtcol.get_value());
             }
+
+            std::cout << "output = `" << output << "`\n";
             return output;
         }
     }
