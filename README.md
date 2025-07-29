@@ -3,14 +3,13 @@
 </div>
 
 <h1 align = "center">Welcome to the <i><b>New-ASM</b></i> Wiki</h1>
-<h3 align = "center">Interpreted Low-Level Language that Mimics Assembly</h3>
 
 <div align="center" style="border-radius: 5px;">
     <img height="30" align="center" src="readme_resources/brace_product.png">
     <img height="30" align="center" src="readme_resources/cpp_logo.png">
 </div>
 
-
+<h3 align = "center">Interpreted Low-Level Language that Mimics Assembly</h3>
 
 **NewASM** is an interpreted low-level programming language which combines explicit memory and register control, giving it a breeze of assembly-liks feel, with high-level functionalities such as objects, threads and more.
 > **NewASM** language runs inside a NewASM Virtual Machine.
