@@ -117,6 +117,7 @@ is in the runtime
 
 #include "lambda/_entry.cpp"
 #include "runtime/syscall_info.cpp"
+#include "hardware/io_ports.cpp"
 #include "newasm_exec.cpp"
 
 #include "runtime/procline_insert.cpp"
