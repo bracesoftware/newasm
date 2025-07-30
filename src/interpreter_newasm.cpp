@@ -130,6 +130,7 @@ is in the runtime
 #include "newasm_compexpr.cpp"
 #include "newasm_tests.cpp"
 #include "shell_tools/user.cpp"
+#include "shell_tools/env_control.cpp"
 #include "newasm_shell.cpp"
 
 #include "runtime/common/chars.h"
@@ -263,6 +264,8 @@ int main(int argc, char *argv[])
         EMPTYLINE;EMPTYLINE;
         newasm::header::functions::info("Loading the shell mode...");
         EMPTYLINE;
+        newasm::core::env_vars::functions::setup_env();
+
         newasm::ctl::main();
 
 
@@ -283,6 +286,7 @@ int main(int argc, char *argv[])
         }
         
         newasm::threads::functions::free_mem();
+        newasm::core::env_vars::functions::save_env();
         return 1;
     }
 
@@ -402,6 +406,7 @@ int main(int argc, char *argv[])
     }
     
     newasm::threads::functions::free_mem();
+    newasm::core::env_vars::functions::save_env();
 
     if(newasm::dwin)
     {

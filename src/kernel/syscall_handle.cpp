@@ -358,8 +358,7 @@ namespace newasm
                 {
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
                     {
-                        using std::endl, std::cout;
-                        cout << "        ERROR CATCH - tlr is: " << newasm::mem::regs::tlr << endl;
+                        newasm::header::functions::krnl("`tlr` ("+newasm::mem::regs::tlr.get_value()+") is not a valid value.");
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                         return 1;
                     }

@@ -52,13 +52,13 @@ namespace newasm
             {
                 std::cout <<
                 "\t\t\t" <<
-                newasm::header::col::magenta <<
+                newasm::header::col::red <<
                 "Exception \"" <<
                 newasm::header::col::gray<<
                 newasm::header::style::underline<<
                 newasm::exit_codes::identifier.at(exit_code)<<
                 newasm::header::col::reset<<
-                newasm::header::col::magenta << "\" occured >> "<<
+                newasm::header::col::red << "\" occured >> "<<
                 newasm::header::col::gray<<
                 newasm::header::data::lastln << std::endl;
 
@@ -80,13 +80,13 @@ namespace newasm
         {
             std::cout <<
             "\t\t\t" <<
-            newasm::header::col::magenta <<
+            newasm::header::col::red <<
             "Exception \"" <<
             newasm::header::col::gray<<
             newasm::header::style::underline<<
             newasm::exit_codes::identifier.at(exit_code)<<
             newasm::header::col::reset <<
-            newasm::header::col::magenta <<
+            newasm::header::col::red <<
             "\" in ";
 
             if(newasm::header::execution_flow::exec_redirected == false) if(newasm::header::data::proc_now == false)
@@ -120,7 +120,7 @@ namespace newasm
 
             std::cout <<
             newasm::header::col::reset <<
-            newasm::header::col::magenta <<
+            newasm::header::col::red <<
             " >> " <<
             newasm::header::col::gray <<
             newasm::header::data::lastln << 
@@ -3306,7 +3306,7 @@ namespace newasm
         //syscall
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::syscall))
         {
-            newasm::kernel::handleSysCall();
+            newasm::kernel::handleSysCall(); //call the kernel to do the handling
             return 1;
         }
         //stack

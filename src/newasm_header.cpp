@@ -185,12 +185,12 @@ namespace newasm
             }
             void info(std::string text)
             {
-                std::cout << newasm::header::col::cyan << newasm::header::system_info::name << "  PROGRAM THREAD @ System info | " << newasm::header::col::gray << text << newasm::header::col::reset << std::endl;
+                std::cout << newasm::header::col::blue << newasm::header::system_info::name << "  PROGRAM THREAD @ System info | " << newasm::header::col::gray << text << newasm::header::col::reset << std::endl;
             }
             void dbg(std::string text)
             {
                 if(newasm::header::settings::debug == 1)
-                    std::cout << newasm::header::col::magenta << newasm::header::system_info::name << "   PROGRAM THREAD @ Debug | " << newasm::header::col::reset << text << std::endl;
+                    std::cout << newasm::header::col::gray << newasm::header::system_info::name << "   PROGRAM THREAD @ Debug | " << newasm::header::col::reset << text << std::endl;
             }
             
             /*void init()

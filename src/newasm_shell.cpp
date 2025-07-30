@@ -37,7 +37,10 @@ namespace newasm
             {"repl",      {"/",             "Load the read-eval-print console."}},
             {"install",   {"<lib>",         "Installs a dynamic library."}},
             {"login",     {"/",             "Login into your local account."}},
-            {"logout",    {"/",             "Log out of your local account."}}
+            {"logout",    {"/",             "Log out of your local account."}},
+            {"addenv",    {"/",             "Add an environment variable."}},
+            {"remenv",    {"/",             "Remove an environment variable."}},
+            {"modenv",    {"/",             "Modify an environment variable."}}
         };
         void help_info()
         {
@@ -141,6 +144,19 @@ namespace newasm
                         newasm::header::functions::info("Cleaning up...");
                         return 1;
                     }
+                    if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::login__))
+                    {
+                        newasm::user::impl::login();
+                        return 1;
+                    }
+                    if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::logout__))
+                    {
+                        newasm::user::main();
+                        return 1;
+                    }
+                    /*
+                        NEED LOGIN
+                    */
                     if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::help__))
                     {
                         _newasm_CHECKLOGIN;
@@ -153,14 +169,22 @@ namespace newasm
                         repl();
                         return 1;
                     }
-                    if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::login__))
+                    if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::addenv__))
                     {
-                        newasm::user::impl::login();
+                        _newasm_CHECKLOGIN;
+                        newasm::env_control::addenv();
                         return 1;
                     }
-                    if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::logout__))
+                    if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::modenv__))
                     {
-                        newasm::user::main();
+                        _newasm_CHECKLOGIN;
+                        newasm::env_control::modenv();
+                        return 1;
+                    }
+                    if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::remenv__))
+                    {
+                        _newasm_CHECKLOGIN;
+                        newasm::env_control::remenv();
                         return 1;
                     }
                 }

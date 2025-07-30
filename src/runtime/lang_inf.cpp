@@ -250,6 +250,9 @@ namespace newasm
                 const int repl__ = 4;
                 const int login__ = 5;
                 const int logout__ = 6;
+                const int addenv__ = 7;
+                const int remenv__ = 8;
+                const int modenv__ = 9;
 
                 const std::unordered_map<int, std::string> identifiers__ = {
                     {exit__, "exit"},
@@ -257,7 +260,10 @@ namespace newasm
                     {repl__, "repl"},
                     {install__, "install"},
                     {login__, "login"},
-                    {logout__, "logout"}
+                    {logout__, "logout"},
+                    {addenv__, "addenv"},
+                    {remenv__, "remenv"},
+                    {modenv__, "modenv"}
                 };
             }
 

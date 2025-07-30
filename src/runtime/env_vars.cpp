@@ -32,9 +32,6 @@ namespace newasm
             {
                 int setup_env()
                 {
-                    /*std::fstream launch_file(newasm::core::constants::data_folder + newasm::core::constants::separator + "launch.ini",std::ios::app|std::ios::out|std::ios::in);
-                     launch_file << "no";
-                      launch_file.close();*/
                     std::string env_vars_file = newasm::core::constants::data_folder + newasm::core::constants::separator + "env_vars.ini";
                     std::ifstream internal_fileobject(env_vars_file);
                     if(internal_fileobject.is_open())
@@ -84,6 +81,63 @@ namespace newasm
                         }
                     }
                     return 1;
+                }
+
+                bool env_exists(std::string key)
+                {
+                    auto& vec = newasm::core::env_vars::priv_env_var;
+                    auto it = std::find_if(vec.begin(), vec.end(), [&](const auto& p) {
+                        return p.first == key;
+                    });
+
+                    if (it != vec.end()) return true;
+    
+                    return false;
+                }
+
+                void save_env()
+                {
+                    std::string env_vars_file = newasm::core::constants::data_folder + newasm::core::constants::separator + "env_vars.ini";
+                    std::ofstream file(env_vars_file, std::ios::out | std::ios::trunc);
+
+                    for(auto i = newasm::core::env_vars::priv_env_var.begin(); i < newasm::core::env_vars::priv_env_var.end(); ++i)
+                    {
+                        file << i->first << "=" << i->second << "\n";
+                    }
+
+                    file.close();
+                    return;
+                }
+
+                //shell cmds
+                void rem_env(std::string key)
+                {
+                    auto& vec = newasm::core::env_vars::priv_env_var;
+                    vec.erase(
+                        std::remove_if(vec.begin(), vec.end(), [&](const std::pair<std::string, std::string>& p) {
+                            return p.first == key;
+                        }),
+                        vec.end()
+                    );
+                    return;
+                }
+
+                void add_env(std::string key, std::string value)
+                {
+                    auto& vec = newasm::core::env_vars::priv_env_var;
+                    vec.push_back({newasm::header::functions::trim(key), newasm::header::functions::trim(value)});
+                }
+
+                void mod_env(std::string key, std::string value)
+                {
+                    for(auto i = newasm::core::env_vars::priv_env_var.begin(); i < newasm::core::env_vars::priv_env_var.end(); ++i)
+                    {
+                        if(i->first == key)
+                        {
+                            i->second = value;
+                            break;
+                        }
+                    }
                 }
             }
         }
