@@ -63,7 +63,7 @@ namespace newasm
                 out.close();
             }
         }
-
+		
         static void getFileContent(const std::string& file, std::string& dest)
         {
             std::ifstream in(file);
