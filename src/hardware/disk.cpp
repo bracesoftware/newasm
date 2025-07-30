@@ -21,17 +21,30 @@ namespace newasm
 {
     namespace hardware
     {
-        class DISK
+        const std::string disk_file = newasm::core::constants::data_folder + 
+        newasm::core::constants::separator + newasm::core::constants::disk_file;
+        class DISK_
         {
             private:
             std::string path;
             int size;
             public:
-            DISK(std::string disk_file, int mb_size) : path(disk_file), size(mb_size)
+            DISK_(std::string disk_file, int mb_size) : path(disk_file), size(mb_size)
             {
-                std::ofstream file(path, std::ios::binary | std::ios::trunc);
-                for (int i = 0; i < size*1024*1024; ++i) file.put(0);
+                if(!std::filesystem::exists(path))
+                {
+                    std::ofstream file(path, std::ios::binary | std::ios::trunc);
+                    for(int i = 0; i < size*1024*1024; ++i) file.put(0);
+                    file.close();
+                }
+            }
+
+            void format(int size_)
+            {
+                std::ofstream file(path, std::ios::binary);
+                for(int i = 0; i < size_*1024*1024; ++i) file.put(0);
                 file.close();
+                this->size = size_;
             }
 
             std::string readDisk(std::streampos start, std::streampos end)
@@ -50,20 +63,17 @@ namespace newasm
                 return buffer;
             }
 
-            std::string writeToDisk(std::streampos start, std::streampos end, const std::string& content)
+            void writeToDisk(std::streampos start, std::streampos end, const std::string& content)
             {
-                std::ifstream file(this->path, std::ios::binary);
-                if (!file) return std::string("");
+                std::fstream file(this->path, std::ios::in | std::ios::out | std::ios::binary);
 
                 std::streamsize size = end - start;
                 file.seekp(start);
-                if (!file) return std::string("");
                 file.write(content.data(), size);
-                if (!file) return std::string("");
                 file.close();
-
-                return buffer;
             }
         };
+        
+        newasm::hardware::DISK_ Disk(newasm::hardware::disk_file, 10);
     }
 }

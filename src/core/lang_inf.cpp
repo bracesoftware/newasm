@@ -42,6 +42,7 @@ namespace newasm
             ;
             const std::string cache_folder = "_cache";
             const std::string ipc_file = "ipc._sys";
+            const std::string disk_file = "disk.bin";
 
             const std::string user_folder = "user";
 
