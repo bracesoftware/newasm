@@ -21,7 +21,7 @@ the Initial Developer. All Rights Reserved.
 
 */
 
-#include "common/os.h"
+#include "runtime/common/os.h"
 
 #define EMPTYLINE std::cout<<"\n"
 #include <iostream>
@@ -50,11 +50,11 @@ the Initial Developer. All Rights Reserved.
 #define __newasm_included
 
 // thread init
-#include "threads/_flags.cpp"
+#include "kernel/threads/_flags.cpp"
 
 // Resources (assets) used in the program
-#include "assets/text.h"
-#include "assets/def.h"
+#include "runtime/assets/text.h"
+#include "runtime/assets/def.h"
 
 namespace newasm
 {
@@ -82,9 +82,9 @@ is in the runtime
 */
 #include "runtime/register.h"
 
-#include "core/malloc.h"
-#include "core/handlers.cpp"
-#include "core/lang_inf.cpp"
+#include "kernel/malloc.h"
+#include "runtime/handlers.cpp"
+#include "runtime/lang_inf.cpp"
 
 #include "runtime/progwin_api.cpp"
 #if __newasm_os == newasm__common__os__win32
@@ -93,32 +93,34 @@ is in the runtime
     #include "3rd.net.linux.h"
 #endif
 
-#include "common/opcodes.h"
+#include "runtime/common/opcodes.h"
 
 #include "newasm_dynlib.cpp"
 #include "newasm_header.cpp"
-#include "common/tokenize.h"
+#include "runtime/common/tokenize.h"
 #include "newasm_setup.cpp"
 #include "runtime/virtual.h"
 
-#include "threads/impl.cpp"
+#include "kernel/threads/impl.cpp"
 
-#include "system_calls/io_stream.cpp"
-#include "system_calls/file_stream.cpp"
-#include "system_calls/exec_flow.cpp"
-#include "system_calls/c_manip.cpp"
-#include "system_calls/text_operations.cpp"
-#include "system_calls/net.cpp"
-#include "system_calls/mem.cpp"
-#include "system_calls/chrono.cpp"
+#include "kernel/system_calls/io_stream.cpp"
+#include "kernel/system_calls/file_stream.cpp"
+#include "kernel/system_calls/exec_flow.cpp"
+#include "kernel/system_calls/c_manip.cpp"
+#include "kernel/system_calls/text_operations.cpp"
+#include "kernel/system_calls/net.cpp"
+#include "kernel/system_calls/mem.cpp"
+#include "kernel/system_calls/chrono.cpp"
 
-#include "core/containers.cpp"
-#include "core/env_vars.cpp"
+#include "runtime/containers.cpp"
+#include "runtime/env_vars.cpp"
 
-#include "lambda/_entry.cpp"
-#include "runtime/syscall_info.cpp"
-#include "hardware/io_ports.cpp"
-#include "hardware/disk.cpp"
+#include "runtime/lambda/_entry.cpp"
+#include "kernel/syscall_info.cpp"
+#include "kernel/hardware/io_ports.cpp"
+#include "kernel/hardware/disk.cpp"
+
+#include "kernel/syscall_handle.cpp"
 #include "newasm_exec.cpp"
 
 #include "runtime/procline_insert.cpp"
@@ -130,7 +132,7 @@ is in the runtime
 #include "shell_tools/user.cpp"
 #include "newasm_shell.cpp"
 
-#include "common/chars.h"
+#include "runtime/common/chars.h"
 #include "runtime/_entry.h"
 
 namespace fs = std::filesystem;
