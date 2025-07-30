@@ -6,7 +6,7 @@
   "patterns": [
     {
       "name": "keyword.control.newasm",
-      "match":  "\\b(in|out|default|switch|case|vmov|await|retf|cls|load|stor|sysreq|pop|retn|mov|syscall|proc|call|rem|halt|push|jmp|heap|cmp|je|jne|jl|jg|jle|jge|ret|zero|inc|dec|exit|end|nop|add|sub|div|mul|exp|log|and|or|xor|not|shl|shr|db|malloc|free|stack|wait|sysenter|xchg|int|__say)\\b"
+      "match":  "\\b(cast|in|out|default|switch|case|vmov|await|retf|cls|load|stor|sysreq|pop|retn|mov|syscall|proc|call|rem|halt|push|jmp|heap|cmp|je|jne|jl|jg|jle|jge|ret|zero|inc|dec|exit|end|nop|add|sub|div|mul|exp|log|and|or|xor|not|shl|shr|db|malloc|free|stack|wait|sysenter|xchg|int|__say)\\b"
     },
     {
       "name": "keyword.control.newasm",

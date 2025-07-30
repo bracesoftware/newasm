@@ -681,10 +681,36 @@ namespace newasm
                 newasm::terminate(newasm::exit_codes::invalid_syntax);
                 return 1;
             }
-            newasm::_virtual::CELL.constant = 0;
-            newasm::_virtual::CELL.value = opr;
-            newasm::_virtual::set_at(newasm::header::functions::isvmemref(suf).second);
-            //newasm::terminate(newasm::exit_codes::invalid_syntax);
+            
+            if(newasm::header::functions::isnumeric(opr))
+            {
+                int value = std::stoi(opr);
+
+                newasm::_virtual::virtualMemory.writeintat(newasm::header::functions::isvmemref(suf).second, value);
+                return 1;
+            }
+            if(newasm::header::functions::isfloat(opr))
+            {
+                float value = std::stof(opr);
+
+                newasm::_virtual::virtualMemory.writefloatat(newasm::header::functions::isvmemref(suf).second, value);
+                return 1;
+            }
+            if(newasm::header::functions::istext(opr))
+            {
+                std::string value = newasm::header::functions::remq(opr);
+
+                newasm::_virtual::virtualMemory.writestringat(newasm::header::functions::isvmemref(suf).second, value);
+                return 1;
+            }
+            if(newasm::header::functions::ischar(opr))
+            {
+                std::string value = newasm::header::functions::remsq(opr);
+
+                newasm::_virtual::virtualMemory.writebyteat(newasm::header::functions::isvmemref(suf).second, value);
+                return 1;
+            }
+            newasm::terminate(newasm::exit_codes::invalid_syntax);
             return 1;
         }
         //LOAD.ref
@@ -1376,8 +1402,7 @@ namespace newasm
         {
             if(newasm::header::functions::isvmemref(opr).first)
             {
-                newasm::_virtual::get_at(newasm::header::functions::isvmemref(opr).second);
-                opr = newasm::_virtual::CELL.value;
+                opr = newasm::_virtual::readData(newasm::header::functions::isvmemref(opr).second);
             }
 
             if(suf == newasm::mem::regs::fdx.identifier())
@@ -2116,6 +2141,40 @@ namespace newasm
             //std::cout << newasm::system::cproc << " : " << newline << std::endl;
             return 1;
         }
+        //cast
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::cast__))
+        {
+            if(suf == newasm::core::lang_inf::typenames::identifiers__.at(
+                newasm::core::lang_inf::typenames::num
+            ))
+            {
+                newasm::_virtual::readMode = newasm::_virtual::readmode_num;
+                return 1;
+            }
+            if(suf == newasm::core::lang_inf::typenames::identifiers__.at(
+                newasm::core::lang_inf::typenames::decm
+            ))
+            {
+                newasm::_virtual::readMode = newasm::_virtual::readmode_decm;
+                return 1;
+            }
+            if(suf == newasm::core::lang_inf::typenames::identifiers__.at(
+                newasm::core::lang_inf::typenames::char__
+            ))
+            {
+                newasm::_virtual::readMode = newasm::_virtual::readmode_char;
+                return 1;
+            }
+            if(suf == newasm::core::lang_inf::typenames::identifiers__.at(
+                newasm::core::lang_inf::typenames::txt
+            ))
+            {
+                newasm::_virtual::readMode = newasm::_virtual::readmode_txt;
+                return 1;
+            }
+            newasm::terminate(newasm::exit_codes::invalid_syntax);
+            return 1;
+        }
         //out
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::out__))
         {
@@ -2433,7 +2492,7 @@ namespace newasm
         {
             if(newasm::header::functions::isvmemsize(suf).first)
             {
-                newasm::_virtual::realloc(newasm::header::functions::isvmemsize(suf).second);
+                newasm::_virtual::virtualMemory.init(newasm::header::functions::isvmemsize(suf).second);
                 return 1;
             }
             if(newasm::allocation_data != nullptr) // malloc je vec upotrebljen //NoAlloc

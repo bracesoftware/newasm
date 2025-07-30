@@ -21,6 +21,205 @@ namespace newasm
 {
     namespace _virtual
     {
+        const std::string vmem_file = newasm::core::constants::data_folder + 
+        newasm::core::constants::separator + newasm::core::constants::virtual_mem;
+        class RAM
+        {
+        private:
+            std::string path;
+            int size;
+        public:
+            RAM(std::string filename, int bytes) : path(filename), size(bytes) {}
+
+            void init(int bytes)
+            {
+                std::ofstream file(path, std::ios::binary | std::ios::trunc);
+                for (int i = 0; i < bytes; ++i) file.put(0);
+                file.close();
+                //std::cout << "Inicijaliziran ram.bin sa " << bytes << " bajtova.\n";
+            }
+
+            void writebyteat(int index, std::string character)
+            {
+                std::fstream file(path, std::ios::binary | std::ios::in | std::ios::out);
+                if (!file.is_open())
+                {
+                    //std::cerr << "Greška pri otvaranju ram.bin!\n";
+                    return;
+                }
+
+                file.seekp(index);
+                file.put(character[0]);
+                file.close();
+                //std::cout << "Zapisano '" << character[0] << "' na poziciju " << index << ".\n";
+            }
+
+            std::string readbyteat(int index)
+            {
+                std::ifstream file(path, std::ios::binary);
+                if (!file.is_open())
+                {
+                    //std::cerr << "Greška pri otvaranju ram.bin!\n";
+                    return "[ERROR]";
+                }
+
+                file.seekg(index);
+                char c;
+                file.get(c);
+                file.close();
+
+                if (std::isprint(c)) return std::string(1, c);
+                else
+                {
+                    std::stringstream ss;
+                    ss << "\\x" << std::hex << std::setw(2) << std::setfill('0') << (int)(unsigned char)c;
+                    return ss.str();
+                }
+            }
+
+            void writeintat(int index, int value)
+            {
+                std::fstream file(path, std::ios::binary | std::ios::in | std::ios::out);
+                if (!file.is_open())
+                {
+                    return;
+                }
+
+                file.seekp(index);
+                for (int i = 0; i < 4; ++i)
+                {
+                    file.put((value >> (i * 8)) & 0xFF);
+                }
+                file.close();
+                //std::cout << "Zapisano int: " << value << " na poziciju " << index << ".\n";
+            }
+
+            int readintat(int index)
+            {
+                std::ifstream file(path, std::ios::binary);
+                if (!file.is_open())
+                {
+                    return -1;
+                }
+
+                file.seekg(index);
+                int value = 0;
+                for (int i = 0; i < 4; ++i)
+                {
+                    char byte;
+                    file.get(byte);
+                    value |= ((unsigned char)byte << (i * 8));
+                }
+                file.close();
+                return value;
+            }
+            void writefloatat(int index, float value)
+            {
+                std::fstream file(path, std::ios::binary | std::ios::in | std::ios::out);
+                if (!file.is_open())
+                {
+                    return;
+                }
+
+                file.seekp(index);
+                char* bytes = reinterpret_cast<char*>(&value);
+                file.write(bytes, sizeof(float));
+                file.close();
+
+                //std::cout << "Zapisano float: " << value << " na poziciju " << index << ".\n";
+            }
+
+            float readfloatat(int index)
+            {
+                std::ifstream file(path, std::ios::binary);
+                if (!file.is_open())
+                {
+                    return -1.0f;
+                }
+
+                file.seekg(index);
+                float value;
+                file.read(reinterpret_cast<char*>(&value), sizeof(float));
+                file.close();
+
+                return value;
+            }
+            void writestringat(int index, const std::string& text)
+            {
+                std::fstream file(path, std::ios::binary | std::ios::in | std::ios::out);
+                if (!file.is_open())
+                {
+                    return;
+                }
+
+                file.seekp(index);
+
+                int length = text.size();
+                file.write(reinterpret_cast<char*>(&length), sizeof(int));
+                file.write(text.c_str(), length);
+
+                file.close();
+                //std::cout << "Zapisano string: \"" << text << "\" na poziciju " << index << ".\n";
+            }
+
+            std::string readstringat(int index)
+            {
+                std::ifstream file(path, std::ios::binary);
+                if (!file.is_open())
+                {
+                    return "[ERROR]";
+                }
+
+                file.seekg(index);
+
+                int length;
+                file.read(reinterpret_cast<char*>(&length), sizeof(int));
+
+                std::string result(length, '\0');
+                file.read(&result[0], length);
+
+                file.close();
+                return result;
+            }
+        };
+
+        newasm::_virtual::RAM virtualMemory(newasm::_virtual::vmem_file, 64);
+
+        const int readmode_num = 1;
+        const int readmode_decm = 2;
+        const int readmode_char = 3;
+        const int readmode_txt = 4;
+
+        int readMode = readmode_char;
+
+        std::string readData(int index)
+        {
+            if(newasm::_virtual::readMode == readmode_num)
+            {
+                return std::to_string(newasm::_virtual::virtualMemory.readintat(index));
+            }
+            if(newasm::_virtual::readMode == readmode_decm)
+            {
+                return std::to_string(newasm::_virtual::virtualMemory.readfloatat(index));
+            }
+            if(newasm::_virtual::readMode == readmode_char)
+            {
+                return std::string("'")+(newasm::_virtual::virtualMemory.readbyteat(index))+std::string("'");
+            }
+            if(newasm::_virtual::readMode == readmode_txt)
+            {
+                return (std::string("\"") + newasm::_virtual::virtualMemory.readstringat(index) + std::string("\""));
+            }
+            return "err";
+        }
+    }
+}
+
+#ifdef __ERR__
+namespace newasm
+{
+    namespace _virtual
+    {
         template<typename T>
         concept simple_types = std::same_as<std::remove_cvref_t<T>, int> || 
             std::same_as<std::remove_cvref_t<T>, float> ||
@@ -199,3 +398,4 @@ namespace newasm
         }
     }
 }
+#endif

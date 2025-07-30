@@ -116,6 +116,8 @@ namespace newasm
 
             const int in__ = 56;
             const int out__ = 57;
+
+            const int cast__ = 58;
             
             const int __say = 100;
 
@@ -183,6 +185,8 @@ namespace newasm
 
                 {in__, "in"},
                 {out__, "out"},
+
+                {cast__, "cast"},
 
                 {__say, "__say"}
             };

@@ -118,6 +118,7 @@ is in the runtime
 #include "lambda/_entry.cpp"
 #include "runtime/syscall_info.cpp"
 #include "hardware/io_ports.cpp"
+#include "hardware/disk.cpp"
 #include "newasm_exec.cpp"
 
 #include "runtime/procline_insert.cpp"
@@ -184,6 +185,7 @@ namespace newasm
 
 int main(int argc, char *argv[])
 {
+    newasm::_virtual::virtualMemory.init(512); //512 bytes of virtual memory that can be reallocated using "malloc <number>_"
     newasm::runtime::main();
     std::string cmd;
 
@@ -208,7 +210,7 @@ int main(int argc, char *argv[])
     {
         fs::create_directories(user_folder);
     }
-    newasm::_virtual::main();
+    //newasm::_virtual::main();
     newasm::user::main();
     newasm::dyn_ins_set = &newasm::mem::instructions;
     //std::cout << "IDIOTISM" << std::endl;
