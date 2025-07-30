@@ -182,8 +182,7 @@ namespace newasm
 // MAIN
 //#define NEWASM_STRICT_TEST
 
-
-
+#include "kernel/_utils.cpp"
 
 int main(int argc, char *argv[])
 {

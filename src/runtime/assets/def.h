@@ -44,6 +44,11 @@ namespace newasm
             const std::string underline = "\033[4m";
             const std::string bold = "\033[1m";
         }
+
+        namespace functions
+        {
+            void krnl(std::string text);
+        }
     }
     namespace common
     {

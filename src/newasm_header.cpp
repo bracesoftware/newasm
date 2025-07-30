@@ -192,6 +192,7 @@ namespace newasm
                 if(newasm::header::settings::debug == 1)
                     std::cout << newasm::header::col::magenta << newasm::header::system_info::name << "   PROGRAM THREAD @ Debug | " << newasm::header::col::reset << text << std::endl;
             }
+            
             /*void init()
             {
                 newasm::header::functions::info("Init finished.");
