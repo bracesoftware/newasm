@@ -5,7 +5,7 @@ I/O ports allow you to communicate with hardware directly for tasks that cannot 
 
 ```asm
 .start
-	mov tlr, 1 is red
+	mov tlr, 1 ;1 is red
 	out 1 ; 1 is IO port for screen text color
 
 	int 0x3 ; autobos

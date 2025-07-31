@@ -77,6 +77,7 @@ Documentation about `newasm` which includes following topics:
     - [`cls` instruction](#cls-instruction)
     - [`switch` and `case` instructions](docs/switch.md)
     - [`I/O ports`](docs/ioports.md)
+    - [`async`](docs/async.md)
 - [Procedures](docs/proc.md)
 - [Exit codes](docs/exc.md)
 - [Comments](docs/commends.md)
