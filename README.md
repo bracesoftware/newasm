@@ -96,7 +96,6 @@ Documentation about `newasm` which includes following topics:
 
 - [Interesting examples](#interesting-examples)
     - [Writing to a file, and then reading it](#writing-to-a-file-and-printing-its-content)
-    - [Creating a child process](#creating-a-child-process)
 
 ## Compiling
 This project is written purely in C++ using its standard libraries, so compiling it should be easy. To download C++ compiler, please follow instructions on the link below:
@@ -132,6 +131,10 @@ Shell mode brings new different commands with it. Below is a list of available c
 | `install` | `<lib>` | Install a library. |
 | `login` | - | Log into your local account. |
 | `logout` | - | Log out of your local account. |
+| `addenv` | - | Adds an environment variable. |
+| `remenv` | - | Deletes an environment variable. |
+| `modenv` | - | Modifies the environment variable. |
+
 
 #### `install` command
 The install-command allows you to download and install New-ASM dynamic libraries and packages. There are 2 types of downloadable files - dynamic libraries (`.newasm_dl` files) and library setups (`.newasm_set` files). Setups allow library developers to provide more information about the library itself.
@@ -372,6 +375,17 @@ In this example, we basically do `fdx=1`, `myvar=fdx`, `return 1`:
 | `cpt` | container pointer | Register holding an address specifically of a container or a data structure. Read [this](#containers-and-data-structures) for more information... |
 | `tr0` | primary thread register | Dummy for threads. |
 | `tr1` | alternate thread register | Another dummy for threads. |
+
+#### Special character list
+Special characters supported by the virtual machine are listed below.
+| Character code | Description |
+| ----- | ---------------- |
+| `0c1` | new line |
+| `0c2` | carriage return |
+| `0c3` | tabulator |
+| `0c4` | alert |
+| `0c5` | backspace |
+
 
 ### `syscall` and `sysenter` instructions
 Perform a specific system call within a system module.
