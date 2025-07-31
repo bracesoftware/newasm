@@ -37,7 +37,7 @@ namespace newasm
         namespace system_info
         {
             const std::string name = "[NewASM]";
-            const std::string copyright_claim = "(c) 2024 Brace Software Co.";
+            const std::string copyright_claim = "(c) 2025 Brace Software Co.";
             const std::string fullname = "NewASM Virtual Machine";
         }
         namespace version
@@ -877,6 +877,29 @@ namespace newasm
                 )) return true;
                 return false;
             }
+
+            std::pair<bool, int> issizeof(const std::string& str)
+            {
+                std::string opr;
+                std::cout << "STR IN ISSIZEOF : `" << str << "`\n";
+                if(str.size() > 2 && str[0] == '$' && str[1] == '-')
+                {
+                    opr = str.substr(2);
+                    if(!newasm::header::functions::istext(opr))
+                    {
+                        newasm::runtime::functions::parse(opr);
+                    }
+                    if(!newasm::header::functions::istext(opr))
+                    {
+                        return {false, 0};
+                    }
+                    opr = newasm::header::functions::remq(opr);
+                    return {true, opr.size()};
+
+                }
+                return {false, 0};
+            }
+
 
         }
     }

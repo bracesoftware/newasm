@@ -26,18 +26,19 @@ the Initial Developer. All Rights Reserved.
 #define EMPTYLINE std::cout<<"\n"
 #include <iostream>
 #include <vector>
+#include <filesystem>
 #include <unordered_map>
-#include <map>
+#include <stdexcept>
 #include <string>
 #include <fstream>
 #include <cstdio>
 #include <sstream>
-#include <filesystem>
 #include <cmath>
 #include <algorithm>
 #include <cctype>
 #include <chrono>
 #include <thread>
+#include <map>
 //LOl
 #include <cstdlib>
 #include <iomanip>
@@ -46,7 +47,11 @@ the Initial Developer. All Rights Reserved.
 //For idk
 #include <functional>
 #include <utility>
+// For registers
+#include <type_traits>
+#include <concepts>
 
+#include "sysext/maps.cpp"
 #define __newasm_included
 
 // thread init

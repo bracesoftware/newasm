@@ -284,6 +284,10 @@ namespace newasm
                 newasm::core::lang_inf::typenames::num
             ))
             {
+                if(newasm::header::functions::issizeof(value).first)
+                {
+                    value = std::to_string(newasm::header::functions::issizeof(value).second);
+                }
                 if(!newasm::header::functions::isnumeric(value))
                 {
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
@@ -4147,7 +4151,7 @@ namespace newasm
                 continue;
             }
             newasm::thread_line = true;
-            newasm::threads::now = (*i);
+            newasm::threads::now = (*i); // thread name
             newasm::procline(*newasm::threads::memory.at(*i)->contents.begin());
             newasm::thread_line = false;
             newasm::threads::memory.at(*i)->contents.pop_front();
