@@ -23,6 +23,10 @@ namespace newasm
     {
         void main()
         {
+            return;
+        }
+        void main_()
+        {
             newasm::header::functions::info("Starting tests...");
             auto* binaryTree = new newasm::containers::binary_tree<10>();
             binaryTree->set_at_left_child_of(1, 64);

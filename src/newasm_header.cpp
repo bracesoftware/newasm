@@ -221,9 +221,9 @@ namespace newasm
                 newasm::header::functions::getos(os);
                 newasm::header::functions::getversion(version);
 
-                std::cout << newasm::header::col::yellow << newasm::header::style::bold << newasm::header::style::underline;
-                std::cout << "\n" << newasm::header::system_info::fullname;
-                std::cout << newasm::header::col::reset << newasm::header::col::gray;
+                std::cout << "\033[48;5;208m" << newasm::header::style::bold << newasm::header::style::underline;
+                std::cout << " " << newasm::header::system_info::fullname<<" ";
+                std::cout << newasm::header::col::reset <<"\n"<< newasm::header::col::gray;
                 std::cout << "\n  Build: " << version << "-" << os << "_" << arch;
                 std::cout << "\n  Compiled with: C++" << __cplusplus;
                 std::cout << "\n\n  Runtime version: v" << newasm::runtime::version;

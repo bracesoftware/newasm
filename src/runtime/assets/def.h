@@ -25,6 +25,7 @@ the Initial Developer. All Rights Reserved.
 namespace newasm
 {
     int terminate(int exit_code);
+    void async(std::string name);
     namespace header
     {
         namespace col

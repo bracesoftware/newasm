@@ -27,6 +27,6 @@ namespace newasm
     namespace threads
     {
         std::string now;
-        int sys_module = 0;
+        newasm::_std::map<std::string, int> sys_module;
     }
 }

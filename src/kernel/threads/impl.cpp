@@ -56,7 +56,7 @@ namespace newasm
             {
                 if(newasm::thread_line)
                 {
-                    return newasm::threads::sys_module;
+                    return newasm::threads::sys_module.at(newasm::threads::now);
                 }
                 return newasm::header::data::module;
             }
