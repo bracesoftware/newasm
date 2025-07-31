@@ -20,10 +20,12 @@ Below is the simple `Hello World` program written in New-Assembly.
 ```asm
 .data
     txt string : "Hello world"
+    num len : $-string
 .start
-    mov tlr , string
-    mov fdx , 1
-    mov bos, 11
+    mov tlr, string
+    mov stl, 0c1
+    mov fdx, 1
+    mov bos, len
 
     sysenter %ios
     
