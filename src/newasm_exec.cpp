@@ -225,6 +225,11 @@ namespace newasm
     }
     int process_d(std::string wholeline, std::string dtyp, std::string name, std::string value)
     {
+        if(newasm::header::functions::issizeof(value).first)
+        {
+            value = std::to_string(newasm::header::functions::issizeof(value).second);
+            //std::cout << "SIZEOF OPERATOR DETECTED :: " << value << std::endl;
+        }
         //std::cout << dtyp << ":" << name << ":" << value << std::endl;
         if(newasm::mem::functions::datavalid(name, newasm::mem::data))
         {
@@ -284,10 +289,6 @@ namespace newasm
                 newasm::core::lang_inf::typenames::num
             ))
             {
-                if(newasm::header::functions::issizeof(value).first)
-                {
-                    value = std::to_string(newasm::header::functions::issizeof(value).second);
-                }
                 if(!newasm::header::functions::isnumeric(value))
                 {
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);

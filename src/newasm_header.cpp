@@ -881,22 +881,26 @@ namespace newasm
             std::pair<bool, int> issizeof(const std::string& str)
             {
                 std::string opr;
-                std::cout << "STR IN ISSIZEOF : `" << str << "`\n";
+                //std::cout << "\t" << "STR IN ISSIZEOF : `" << str << "`\n";
                 if(str.size() > 2 && str[0] == '$' && str[1] == '-')
                 {
-                    opr = str.substr(2);
+                    opr = newasm::header::functions::trim(str.substr(2));
                     if(!newasm::header::functions::istext(opr))
                     {
+                        //std::cout << "\t" << "opr IN ISSIZEOF : `" << opr << "`\n";
                         newasm::runtime::functions::parse(opr);
                     }
                     if(!newasm::header::functions::istext(opr))
                     {
+                        //std::cout << "\t" << "opr IN ISSIZEOF2 : `" << opr << "`\n";
                         return {false, 0};
                     }
                     opr = newasm::header::functions::remq(opr);
+                    //std::cout << "\t" << "STR IN ISSIZEOF final : `" << opr << "`\n";
                     return {true, opr.size()};
 
                 }
+                //std::cout << "\t" << "fail : `" << str << opr << "`\n";
                 return {false, 0};
             }
 
