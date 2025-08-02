@@ -4087,7 +4087,7 @@ namespace newasm
 
             newasm::mem::COD.clear();
             newasm::mem::COD.push_back("_");
-            newasm::mem::regs::lcx.set_value(1);
+            newasm::mem::regs::lcx.set_value(0);
         }
         
 
