@@ -49,7 +49,6 @@ namespace newasm
             const int tests = 7;
             const int log = 8;
             const int nover = 9;
-            const int dwin = 10;
 
             std::unordered_map<int, std::string> arg_map = {
                 {mode, "-mode"},
@@ -60,8 +59,7 @@ namespace newasm
                 {cnpf, "-newproj"},
                 {tests, "-tests"},
                 {log, "-log"},
-                {nover, "-nover"},
-                {dwin, "-dwin"}
+                {nover, "-nover"}
             };
         }
     }

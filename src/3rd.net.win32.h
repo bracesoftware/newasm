@@ -42,8 +42,17 @@ namespace newasm
     }
     namespace runtime
     {
-        bool start_program(const std::string& path) {
-            STARTUPINFO si = { sizeof(si) };
+        bool start_program(const std::string& path)
+        {
+            std::string full_path = std::filesystem::current_path().string() + newasm::core::constants::separator + path;
+            if(!std::filesystem::exists(full_path))
+            {
+                std::cerr << "Cannot create a process -> `"<< full_path << "` not found.\n";
+                return false;
+            }
+            ShellExecute(NULL, "open", full_path.c_str(), NULL, NULL, SW_SHOWDEFAULT);
+            return true;
+            /*STARTUPINFO si = { sizeof(si) };
             PROCESS_INFORMATION pi;
 
             std::string cmd = "\"" + path + "\"";
@@ -63,7 +72,7 @@ namespace newasm
                 CloseHandle(pi.hThread);
             }
 
-            return success;
+            return success;*/
         }
     }
 }

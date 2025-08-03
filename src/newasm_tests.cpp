@@ -24,6 +24,14 @@ namespace newasm
         void main()
         {
             return;
+
+            ///ignore
+            newasm::runtime::start_program(newasm::core::constants::progwin);
+            for(int i = 0; i < 100; i++)
+            {
+                newasm::progwin::api::cout(newasm::header::col::magenta + std::string("HELLLLLLLLO ") + std::to_string(i) + "\n");
+            }
+            return;
         }
         void main_()
         {
@@ -32,6 +40,7 @@ namespace newasm
             binaryTree->set_at_left_child_of(1, 64);
             binaryTree->set_at_right_child_of(1, 44);
             binaryTree->set_at_parent_of(2, 66);
+            if(true == false) binaryTree->set_at_parent_of(9, 3);
 
             using std::cout, std::endl;
             for(int i = 0; i < 10; ++i)

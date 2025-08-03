@@ -29,8 +29,36 @@ the Initial Developer. All Rights Reserved.
 #include <thread>
 #include <cstdio> // za remove()
 
+
 namespace newasm
 {
+    namespace header
+    {
+        namespace col
+        {
+            const std::string red = "\033[31m";
+            const std::string green = "\033[32m";
+            const std::string yellow = "\033[33m";
+            const std::string blue = "\033[34m";
+            const std::string magenta = "\033[35m";
+            const std::string cyan = "\033[36m";
+            const std::string gray = "\033[90m";
+
+            const std::string reset = "\033[0m";
+        }
+        namespace style
+        {
+            const std::string underline = "\033[4m";
+            const std::string bold = "\033[1m";
+        }
+
+        namespace system_info
+        {
+            const std::string name = "[NewASM]";
+            const std::string copyright_claim = "(c) 2025 Brace Software Co.";
+            const std::string fullname = "NewASM Virtual Machine";
+        }
+    }
     namespace ipc
     {
         const std::string separator =
@@ -63,13 +91,15 @@ namespace newasm
                 return tokens;
             }
 
-            void pause() {
-            #ifdef _WIN32
-                system("pause");
-            #else
-                std::cout << "Press enter to continue...";
+            void print(std::string text)
+            {
+                std::cout << newasm::header::col::blue << newasm::header::system_info::name << "  PROGWIN API @ Info | " << newasm::header::col::gray << text << newasm::header::col::reset << std::endl;
+            }
+
+            void pause()
+            {
+                newasm::ipc::impl::print("Press enter to exit the system...");
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            #endif
             }
 
         }
@@ -111,6 +141,7 @@ int main()
                 if(cmd[1] == "0")
                 {
                     newasm::ipc::impl::pause();
+                    std::remove(path_.c_str());
                     return 1;
                 }
             }

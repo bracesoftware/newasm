@@ -62,11 +62,11 @@ namespace newasm
         const int nested_csm = 21;
         const int uninptr_usage = 22;
         const int var_redef = 23;
-        const int struct_redef = 24;
+        const int object_redef = 24;
         const int unexpected_cbrace = 25;
-        const int undefined_struct = 26;
-        const int undefined_structmem = 27;
-        const int nested_struct = 28;
+        const int undefined_object = 26;
+        const int undefined_objectmem = 27;
+        const int nested_object = 28;
         const int expected_cbrace = 29;
         const int empty_proc = 30;
         const int datastruct_redef = 31;
@@ -115,11 +115,11 @@ namespace newasm
             {nested_csm, "NestedCodeStreamModif"},
             {uninptr_usage, "UnassignedRefUsage"},
             {var_redef, "VariableRedefinition"},
-            {struct_redef, "ObjectRedefinition"},
+            {object_redef, "ObjectRedefinition"},
             {unexpected_cbrace, "UnexpectedClosingBrace"},
-            {undefined_struct, "UndefinedObject"},
-            {undefined_structmem, "UndefinedObjectMember"},
-            {nested_struct, "NestedObject"},
+            {undefined_object, "UndefinedObject"},
+            {undefined_objectmem, "UndefinedObjectMember"},
+            {nested_object, "NestedObject"},
             {expected_cbrace, "ExpectedClosingBrace"},
             {empty_proc, "EmptyProcedureBlock"},
             {datastruct_redef, "DataStructureRedefinition"},

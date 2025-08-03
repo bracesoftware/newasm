@@ -106,6 +106,7 @@ is in the runtime
 #include "newasm_setup.cpp"
 #include "runtime/virtual.h"
 
+#include "runtime/expcfg/decorators.cpp"
 #include "kernel/threads/impl.cpp"
 
 #include "kernel/system_calls/io_stream.cpp"
@@ -331,10 +332,6 @@ int main(int argc, char *argv[])
     {
         newasm::vercheck = false;
     }
-    if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::dwin),argc,argv,argid))
-    {
-        newasm::dwin = true;
-    }
     if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::log),argc,argv,argid))
     {
         newasm::header::settings::logging = true;
@@ -364,6 +361,7 @@ int main(int argc, char *argv[])
     /*
         Before executing the file we need to open the program window.
     */
+    newasm::dwin = true;
     if(newasm::dwin)
     {
         if(!std::filesystem::exists(newasm::core::constants::progwin))
@@ -372,9 +370,8 @@ int main(int argc, char *argv[])
             return 1;
         }
 
-        newasm::progwin::api::cout("Debug window ready.");
-
         newasm::runtime::start_program(newasm::core::constants::progwin);
+        //newasm::progwin::api::cout("Debug window ready.");
     }
     /*
         Executing
@@ -393,6 +390,7 @@ int main(int argc, char *argv[])
         newasm::global::event_now = false;
     }
 
+    newasm::progwin::api::exit();
 
     newasm::handles::delete_handles();
     newasm::containers::functions::free_dyn_mem();
@@ -412,11 +410,6 @@ int main(int argc, char *argv[])
     
     newasm::threads::functions::free_mem();
     newasm::core::env_vars::functions::save_env();
-
-    if(newasm::dwin)
-    {
-        newasm::progwin::api::exit();
-    }
 
     return 0;
 }

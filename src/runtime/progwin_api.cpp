@@ -44,7 +44,7 @@ namespace newasm
         {
             void cout(std::string text)
             {
-                send_req("cout:"+text);
+                send_req("cout:"+text+"\n");
             }
             void exit()
             {

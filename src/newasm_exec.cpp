@@ -146,7 +146,7 @@ namespace newasm
 
             if(!newasm::mem::functions::datavalid(struct_name, newasm::mem::structs))
             {
-                newasm::terminate(newasm::exit_codes::undefined_struct);
+                newasm::terminate(newasm::exit_codes::undefined_object);
                 return 1;
             }
             bool member_found = false;
@@ -161,7 +161,7 @@ namespace newasm
             }
             if(!member_found)
             {
-                newasm::terminate(newasm::exit_codes::undefined_structmem);
+                newasm::terminate(newasm::exit_codes::undefined_objectmem);
                 return 1;
             }
             opr = i->value;
@@ -238,12 +238,12 @@ namespace newasm
         }
         if(newasm::mem::functions::datavalid(name, newasm::mem::structs))
         {
-            newasm::terminate(newasm::exit_codes::struct_redef);
+            newasm::terminate(newasm::exit_codes::object_redef);
             return 1;
         }
         if(newasm::mem::functions::datavalid(name, newasm::threads::memory))
         {
-            newasm::terminate(newasm::exit_codes::struct_redef);
+            newasm::terminate(newasm::exit_codes::object_redef);
             return 1;
         }
         if(newasm::header::functions::isalphanum(name))
@@ -270,7 +270,7 @@ namespace newasm
             {
                 if(newasm::header::data::struct_now)
                 {
-                    newasm::terminate(newasm::exit_codes::nested_struct);
+                    newasm::terminate(newasm::exit_codes::nested_object);
                     return 1;
                 }
                 if(value != static_cast<std::string>("{"))
@@ -446,7 +446,7 @@ namespace newasm
 
         if(!newasm::mem::functions::datavalid(struct_name, newasm::mem::structs))
         {
-            newasm::terminate(newasm::exit_codes::undefined_struct);
+            newasm::terminate(newasm::exit_codes::undefined_object);
             return 1;
         }
         bool member_found = false;
@@ -461,7 +461,7 @@ namespace newasm
         }
         if(!member_found)
         {
-            newasm::terminate(newasm::exit_codes::undefined_structmem);
+            newasm::terminate(newasm::exit_codes::undefined_objectmem);
             return 1;
         }
 
@@ -2613,7 +2613,7 @@ namespace newasm
         {
             auto debugRegister = [](std::string str1, std::string str2)
             {
-                newasm::header::functions::dbg(str1 + static_cast<std::string>(" = `") + 
+                newasm::progwin::api::cout(str1 + static_cast<std::string>(" = `") + 
                     str2 + 
                     static_cast<std::string>("`")
                 );
