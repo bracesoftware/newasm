@@ -911,7 +911,7 @@ namespace newasm
                 std::string deco;
                 if(_text_.size() >= 3 && _text_.front() == '[' && _text_.back() == ']')
                 {
-                    deco = _text_.substr(1, _text_.size() - 1);
+                    deco = _text_.substr(1, _text_.size() - 2);
                     deco = newasm::header::functions::trim(deco);
                     //newasm::progwin::api::cout("Decorator " + text + " valid.");
                     return {true, deco};

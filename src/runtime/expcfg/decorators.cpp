@@ -32,6 +32,7 @@ namespace newasm
         //impl
         void process_dec(std::string text)
         {
+            newasm::progwin::api::cout("Deco::"+text);
             if(text == newasm::expcfg::decorators.at(newasm::expcfg::lock))
             {
                 newasm::expcfg::current = newasm::expcfg::lock;
