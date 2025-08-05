@@ -81,5 +81,46 @@ namespace newasm
             std::cout << newasm::header::col::reset << std::endl;
         }
 
+        void type(const std::string& text, int delay_ms = 50)
+        {
+            for(char c : text)
+            {
+                std::cout << c << std::flush;
+                std::this_thread::sleep_for(std::chrono::milliseconds(delay_ms));
+            }
+        }
+
+        void type_and_erase(const std::string& text)
+        {
+            for(char c : text)
+            {
+                std::cout << c << std::flush;
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            }
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+            for(size_t i = 0; i < text.size(); ++i)
+            {
+                std::cout << "\b \b" << std::flush;
+                std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            }
+        }
+
+        void glitch_text(const std::string& text)
+        {
+            std::string corrupted = text;
+            for(int i = 0; i < 30; ++i)
+            {
+                for(char& c : corrupted)
+                {
+                    if(rand() % 5 == 0) c = 'A' + rand() % 26;
+                }
+                std::cout << "\r" << corrupted << std::flush;
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            }
+            std::cout << "\r" << text;
+        }
+
     }
 }

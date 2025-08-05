@@ -98,6 +98,7 @@ is in the runtime
     #include "3rd.net.linux.h"
 #endif
 
+#include "runtime/utils.cpp"
 #include "runtime/common/opcodes.h"
 
 #include "newasm_dynlib.cpp"
@@ -126,12 +127,15 @@ is in the runtime
 #include "kernel/hardware/io_ports.cpp"
 #include "kernel/hardware/disk.cpp"
 
+#include "kernel/dynamic/libs.cpp"
+#include "kernel/krnlcfg.cpp"
 #include "kernel/syscall_handle.cpp"
+
+#include "pp/directives.cpp"
 #include "newasm_exec.cpp"
 
 #include "runtime/procline_insert.cpp"
 #include "runtime/repl_mode.cpp"
-#include "runtime/utils.cpp"
 
 #include "newasm_compexpr.cpp"
 #include "newasm_tests.cpp"
@@ -185,11 +189,45 @@ namespace newasm
         }
     }
 }
-
 // MAIN
 //#define NEWASM_STRICT_TEST
 
 #include "kernel/_utils.cpp"
+
+namespace newasm
+{
+    namespace GLOBAL
+    {
+        void cleanup()
+        {
+            std::cout << "\n";
+            newasm::header::functions::log("System cleaning up...");
+            
+            newasm::containers::functions::free_dyn_mem();
+            newasm::header::functions::info("Cleaning up containers...");
+            newasm::stack::free_macro_mem();
+            newasm::header::functions::info("Cleaning up macro data...");
+
+            if(newasm::dyn_ins_set != nullptr)
+            {
+                delete newasm::dyn_ins_set;
+                //newasm::dyn_ins_set = nullptr;
+            }
+            newasm::header::functions::info("Cleaning up DL data...");
+            if(newasm::env_vars != nullptr)
+            {
+                delete newasm::env_vars;
+                //newasm::env_vars = nullptr;
+            }
+            newasm::header::functions::info("Cleaning up environment variable memory...");
+            
+            newasm::threads::functions::free_mem();
+            newasm::header::functions::info("Cleaning up thread data...");
+            newasm::core::env_vars::functions::save_env();
+            newasm::header::functions::info("Saving environment variables...");
+        }
+    }
+}
 
 int main(int argc, char *argv[])
 {
@@ -244,9 +282,6 @@ int main(int argc, char *argv[])
 
     std::cout << std::endl; newasm::header::functions::vers_info();
     std::cout << "\a";
-    std::cout << "\a";
-    std::cout << "\a";
-    std::cout << "\a";
     //mode stuff
     if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::mode),argc,argv,argid))
     {
@@ -274,25 +309,7 @@ int main(int argc, char *argv[])
 
         newasm::ctl::main();
 
-
-        newasm::handles::delete_handles();
-        newasm::containers::functions::free_dyn_mem();
-        newasm::stack::free_macro_mem();
-        newasm::header::functions::log("System unloading...");
-
-        if(newasm::dyn_ins_set != nullptr)
-        {
-            delete newasm::dyn_ins_set;
-            newasm::dyn_ins_set = nullptr;
-        }
-        if(newasm::env_vars != nullptr)
-        {
-            delete newasm::env_vars;
-            newasm::env_vars = nullptr;
-        }
-        
-        newasm::threads::functions::free_mem();
-        newasm::core::env_vars::functions::save_env();
+        newasm::GLOBAL::cleanup();
         return 1;
     }
 
@@ -371,7 +388,8 @@ int main(int argc, char *argv[])
         }
 
         newasm::runtime::start_program(newasm::core::constants::progwin);
-        //newasm::progwin::api::cout("Debug window ready.");
+        std::string text = newasm::header::col::yellow + newasm::header::style::bold + "NewASM Debug Window loaded...\n" + newasm::header::col::reset;
+        newasm::progwin::api::cout(text);
     }
     /*
         Executing
@@ -390,26 +408,12 @@ int main(int argc, char *argv[])
         newasm::global::event_now = false;
     }
 
+    newasm::header::functions::pause();
     newasm::progwin::api::exit();
 
-    newasm::handles::delete_handles();
-    newasm::containers::functions::free_dyn_mem();
-    newasm::stack::free_macro_mem();
-    newasm::header::functions::log("System unloading...");
+    newasm::header::functions::info("Cleaning up...");
 
-    if(newasm::dyn_ins_set != nullptr)
-    {
-        delete newasm::dyn_ins_set;
-        newasm::dyn_ins_set = nullptr;
-    }
-    if(newasm::env_vars != nullptr)
-    {
-        delete newasm::env_vars;
-        newasm::env_vars = nullptr;
-    }
-    
-    newasm::threads::functions::free_mem();
-    newasm::core::env_vars::functions::save_env();
+    newasm::GLOBAL::cleanup();
 
     return 0;
 }

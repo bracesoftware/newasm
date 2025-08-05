@@ -30,7 +30,7 @@ namespace newasm
         {
             void out_bopr(const std::string &reg)
             {
-                if(reg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::exf))
+                if(reg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::ext))
                 {
                     std::cout << "";
                 }
@@ -90,7 +90,7 @@ namespace newasm
             std::string get_ref_val__2(const std::string &reg)
             {
                 std::stringstream ss;
-                if(reg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::exf))
+                if(reg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::ext))
                 {
                     ss << "";
                 }

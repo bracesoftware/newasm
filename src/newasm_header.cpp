@@ -222,7 +222,7 @@ namespace newasm
                 newasm::header::functions::getversion(version);
 
                 std::cout << newasm::header::col::yellow << newasm::header::style::bold << newasm::header::style::underline;
-                std::cout << newasm::header::system_info::fullname;
+                newasm::utils::glitch_text(newasm::header::system_info::fullname);
                 std::cout << newasm::header::col::reset << newasm::header::col::gray;
                 std::cout << "\n  Build: " << version << "-" << os << "_" << arch;
                 std::cout << "\n  Compiled with: C++" << __cplusplus;
@@ -904,9 +904,63 @@ namespace newasm
                 return {false, 0};
             }
 
+            std::pair<bool, std::string> isdeco(std::string text)
+            {
+                std::string _text_ = newasm::header::functions::trim(text);
+                std::string deco;
+                if(_text_.size() >= 3 && _text_.front() == '[' && _text_.back() == ']')
+                {
+                    deco = _text_.substr(1, _text_.size() - 1);
+                    deco = newasm::header::functions::trim(deco);
+                    //newasm::progwin::api::cout("Decorator " + text + " valid.");
+                    return {true, deco};
+                }
+                //newasm::progwin::api::cout("Decorator " + text + " not valid.");
+                return {false, ""};
+            }
+
+            void pause()
+            {
+                std::cout << newasm::header::col::gray << "\tPress enter to terminate the session..." << newasm::header::col::reset;
+                std::cin.get();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            }
+
+            std::pair<bool, std::pair<std::string, std::string>> parseDirective(const std::string& line)
+            {
+                size_t i = 0;
+                while (i < line.length() && std::isspace(line[i])) i++;
+                if (i >= line.length() || line[i] != '.') return {false, {"", ""}};
+                i++;
+                while (i < line.length() && std::isspace(line[i])) i++;
+                if (i >= line.length() || line[i] != '$') return {false, {"", ""}};
+                i++;
+                while (i < line.length() && std::isspace(line[i])) i++;
+                std::string directive;
+                while (i < line.length() && !std::isspace(line[i]))
+                {
+                    directive += line[i++];
+                }
+                while (i < line.length() && std::isspace(line[i])) i++;
+                std::string argument;
+                while (i < line.length() && !std::isspace(line[i]))
+                {
+                    argument += line[i++];
+                }
+
+                if (!directive.empty())
+                {
+                    return {true, {directive, argument}};
+                }
+
+                return {false, {"", ""}};
+            }
+
+
 
         }
     }
+    ////////////////////////////
 
     namespace project_data
     {

@@ -58,7 +58,7 @@ namespace newasm
         const int invalid_config = 17;
         const int inline_proc = 18;
         const int unknown_fdx = 19;
-        const int nested_redirect = 20;
+        const int unknown_directive = 20;
         const int nested_csm = 21;
         const int uninptr_usage = 22;
         const int var_redef = 23;
@@ -111,7 +111,7 @@ namespace newasm
             {invalid_config, "InvalidSysConfiguration"},
             {inline_proc, "InlineProcedure"},
             {unknown_fdx, "UnknownSystemCall"},
-            {nested_redirect, "NestedExecFlowRedirection"},
+            {unknown_directive, "UnknownParserDirective"},
             {nested_csm, "NestedCodeStreamModif"},
             {uninptr_usage, "UnassignedRefUsage"},
             {var_redef, "VariableRedefinition"},
@@ -200,6 +200,8 @@ namespace newasm
 
             newasm::_register<std::string> tr0("tr0", newasm::header::constants::inv_reg_val);
             newasm::_register<std::string> tr1("tr1", newasm::header::constants::inv_reg_val);
+
+            newasm::_register<std::string> dlx("dlx", newasm::header::constants::inv_reg_val);
             
             newasm::_register<int> fdx("fdx", 0);
             newasm::_register<int> cpr("cpr", 0);
@@ -234,6 +236,8 @@ namespace newasm
 
                 newasm::mem::regs::cr0.reset();
                 newasm::mem::regs::cr1.reset();
+
+                newasm::mem::regs::dlx.reset();
             }
         }
 
@@ -246,6 +250,11 @@ namespace newasm
 
         std::unordered_map<std::string, std::string> data;
         std::unordered_map<std::string, int> datatypes;
+        struct attrib
+        {
+            bool locked = false;
+        };
+        std::unordered_map<std::string, newasm::mem::attrib> data_attrib;
 
         std::map<std::string, std::vector<std::string>> funcs;
         std::unordered_map<std::string, std::vector<std::string>> instructions;

@@ -24,7 +24,15 @@ namespace newasm
     {
         int handleSysCall()
         {
+            //ext
+            if(newasm::kernel::cfg::Extensions)
+            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::ext)
+            {
+                newasm::kernel::dynamic::CALL(newasm::mem::regs::dlx, std::to_string(newasm::mem::regs::fdx));
+                return 1;
+            }
             //thread
+            if(newasm::kernel::cfg::Thread)
             if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::thread)
             {
                 if(newasm::mem::regs::fdx == 1) //print output of the thread
@@ -76,6 +84,7 @@ namespace newasm
                 return 1;
             }
             //chrono
+            if(newasm::kernel::cfg::Chrono)
             if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::chrono)
             {
                 if(newasm::mem::regs::fdx == 1) //getyear
@@ -113,7 +122,7 @@ namespace newasm
             }
             //////process management (execution flow)
             //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::exf))
-            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::exf)
+            /*if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::exf)
             {
                 if(true)
                 {
@@ -139,9 +148,10 @@ namespace newasm
                 }
                 newasm::terminate(newasm::exit_codes::unknown_fdx);
                 return 1;
-            }
+            }*/
             //net
             //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::net))
+            if(newasm::kernel::cfg::Network)
             if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::net)
             {
                 if(newasm::mem::regs::fdx == 1) //download files
@@ -188,6 +198,7 @@ namespace newasm
             }
             //memory/data manipulation
             //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::mem))
+            if(newasm::kernel::cfg::Memory)
             if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::mem)
             {
                 if(newasm::mem::regs::fdx == 1)
@@ -210,6 +221,7 @@ namespace newasm
             }
             //text manipulation
             //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::txtop))
+            if(newasm::kernel::cfg::TextOperations)
             if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::txtop)
             {
                 if(newasm::mem::regs::fdx == 1)
@@ -227,6 +239,7 @@ namespace newasm
             }
             //////////// container manipulation
             //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::cmanip))
+            if(newasm::kernel::cfg::ContainerManipulation)
             if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::cmanip)
             {
                 if(newasm::mem::regs::cpt == newasm::header::constants::inv_reg_val)
@@ -351,6 +364,7 @@ namespace newasm
             }
             ///// input-output stream
             //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::ios))
+            if(newasm::kernel::cfg::IOStream)
             if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::ios)
             {
                 //print text
@@ -493,6 +507,7 @@ namespace newasm
             }
             //////file stream
             //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::fs))
+            if(newasm::kernel::cfg::FileStream)
             if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::fs)
             {
                 //create folder

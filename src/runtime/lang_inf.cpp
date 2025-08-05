@@ -197,7 +197,7 @@ namespace newasm
             namespace refs
             {
                 const int ios = 1;
-                const int exf = 2;
+                const int ext = 2;
                 const int cmanip = 3;
                 const int fs = 4;
                 const int txtop = 5;
@@ -208,7 +208,7 @@ namespace newasm
 
                 const std::unordered_map<int, std::string> identifiers__ = {
                     {ios, "\%ios"},
-                    {exf, "\%exf"},
+                    {ext, "\%ext"},
                     {cmanip, "\%cmanip"},
                     {fs, "\%fs"},
                     {txtop, "\%txtop"},
@@ -216,6 +216,14 @@ namespace newasm
                     {mem, "\%mem"},
                     {chrono, "\%chrono"},
                     {thread, "\%thread"}
+                };
+            }
+            namespace directives
+            {
+                const int using__ = 1;
+
+                const std::unordered_map<int, std::string> identifiers__ = {
+                    {using__, "using"}
                 };
             }
 

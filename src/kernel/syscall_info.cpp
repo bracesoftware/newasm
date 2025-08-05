@@ -59,7 +59,7 @@ namespace newasm
             {{newasm::core::lang_inf::refs::chrono, 5}, "sys_getminute"},
             {{newasm::core::lang_inf::refs::chrono, 6}, "sys_getsecond"},
 
-            {{newasm::core::lang_inf::refs::exf, 1}, "sys_exf__1"},
+            //{{newasm::core::lang_inf::refs::ext, 1}, "sys_"},
 
             {{newasm::core::lang_inf::refs::net, 1}, "sys_download"},
 

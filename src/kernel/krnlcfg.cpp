@@ -19,26 +19,19 @@ the Initial Developer. All Rights Reserved.
 
 namespace newasm
 {
-    namespace expcfg
+    namespace kernel
     {
-        const int lock = 1;
-
-        std::unordered_map<int, std::string> decorators = {
-            {lock, "lock"}
-        };
-
-        int current = 0;
-
-        //impl
-        void process_dec(std::string text)
+        namespace cfg
         {
-            if(text == newasm::expcfg::decorators.at(newasm::expcfg::lock))
-            {
-                newasm::expcfg::current = newasm::expcfg::lock;
-                return;
-            }
-            newasm::terminate(newasm::exit_codes::invalid_syntax);
-            return;
+            bool IOStream = false;
+            bool Extensions = false;
+            bool Thread = false;
+            bool Chrono = false;
+            bool Network = false;
+            bool Memory = false;
+            bool TextOperations = false;
+            bool ContainerManipulation = false;
+            bool FileStream = false;
         }
     }
 }

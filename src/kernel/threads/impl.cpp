@@ -48,7 +48,6 @@ namespace newasm
                     if(i->second != nullptr)
                     {
                         delete i->second;
-                        i->second = nullptr;
                     }
                 }
             }

@@ -339,10 +339,5 @@ namespace newasm
 
         std::unique_ptr<newasm::syscalls::filestream::file<newasm::syscalls::filestream::filetype::txt>> file_handle = std::make_unique<newasm::syscalls::filestream::file<newasm::syscalls::filestream::filetype::txt>>();
 
-        void delete_handles()
-        {
-            /*delete dir_handle;
-            delete file_handle;*/
-        }
     }
 }

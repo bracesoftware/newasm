@@ -27,7 +27,7 @@ the Initial Developer. All Rights Reserved.
 #include <chrono>
 #include <vector>
 #include <thread>
-#include <cstdio> // za remove()
+#include <cstdio> // FOR remove()
 
 
 namespace newasm
@@ -134,13 +134,13 @@ int main()
             std::vector<std::string> cmd = newasm::ipc::impl::split_fixed(request, ':');
             if(cmd[0] == newasm::ipc::cmd::cout)
             {
-                std::cout << cmd[1];
+                std::cout << newasm::header::col::magenta << newasm::header::system_info::name << " DEBUG | System output -> " << newasm::header::col::gray << cmd[1];
+                std::cout << newasm::header::col::reset;
             }
             if(cmd[0] == newasm::ipc::cmd::exit)
             {
                 if(cmd[1] == "0")
                 {
-                    newasm::ipc::impl::pause();
                     std::remove(path_.c_str());
                     return 1;
                 }
