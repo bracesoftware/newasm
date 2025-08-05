@@ -18,6 +18,7 @@
 Below is the simple `Hello World` program written in New-Assembly.
 
 ```asm
+.$using %ios
 .data
     txt string : "Hello world"
     num len : $-string
