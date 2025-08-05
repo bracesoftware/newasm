@@ -52,13 +52,23 @@ namespace newasm
         {
             int CALL(std::string libname, std::string func)
             {
-                std::string libname_OS = (
+                std::filesystem::path base = std::filesystem::current_path();
+                std::filesystem::path lib;
+
                 #ifdef _WIN32
-                    newasm::header::functions::remq(libname) + ".dll"
+                    lib = base / (newasm::header::functions::remq(libname) + ".dll");
                 #else
-                    "./" + newasm::header::functions::remq(libname) + ".so"
+                    lib = base / (newasm::header::functions::remq(libname) + ".so");
                 #endif
-                );
+
+                std::string libname_OS = lib.string();
+                newasm::progwin::api::cout("Trying to load: " + libname_OS);
+
+                if (!std::filesystem::exists(lib))
+                {
+                    newasm::progwin::api::cout("Library file does not exist at: " + libname_OS);
+                    return 1;
+                }
 
                 newasm::library = loadLibrary(libname_OS.c_str());
 
