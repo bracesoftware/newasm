@@ -225,7 +225,8 @@ namespace newasm
                 newasm::utils::glitch_text(newasm::header::system_info::fullname);
                 std::cout << newasm::header::col::reset << newasm::header::col::gray;
                 std::cout << "\n  Build: " << version << "-" << os << "_" << arch;
-                std::cout << "\n  Compiled with: C++" << __cplusplus;
+                std::cout << "\n  Compiled with: C++" << __cplusplus << " on " << __DATE__ << " at " << __TIME__;
+                
                 std::cout << "\n\n  Runtime version: v" << newasm::runtime::version;
                 
                 std::cout << "\n  " << newasm::header::system_info::copyright_claim <<
