@@ -38,6 +38,10 @@ namespace newasm
                 {
                     return;
                 }
+                if(newasm::mem::data_attrib[suf].locked)
+                {
+                    suf = "\"unknown??\"";
+                }
                 std::vector<std::string> tokens;
                 for(std::vector<std::pair<std::string,std::string>>::iterator i = newasm::env_vars->begin(); i < newasm::env_vars->end(); ++i)
                 {

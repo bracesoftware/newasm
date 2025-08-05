@@ -24,6 +24,10 @@ the Initial Developer. All Rights Reserved.
 
 namespace newasm
 {
+    namespace user
+    {
+        int udb_hash(const std::string& input);
+    }
     int terminate(int exit_code);
     void async(std::string name);
     namespace header

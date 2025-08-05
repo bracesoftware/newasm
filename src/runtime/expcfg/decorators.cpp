@@ -27,15 +27,33 @@ namespace newasm
             {lock, "lock"}
         };
 
-        int current = 0;
+        //decorator settings
+        bool lockbool;
 
         //impl
         void process_dec(std::string text)
         {
             newasm::progwin::api::cout("Deco::"+text);
+            /*
+            DESTRUCTIVE DECORATORS
+            */
+            if(text.at(0) == '!')
+            {
+                if(newasm::header::functions::trim(text.substr(1)) == newasm::expcfg::decorators.at(newasm::expcfg::lock))
+                {
+                    if(newasm::expcfg::lockbool)
+                    {
+                        newasm::expcfg::lockbool = false;
+                        return;
+                    }
+                }
+            }
+            /*
+            CONSTRUCTIVE DECORATORS
+            */
             if(text == newasm::expcfg::decorators.at(newasm::expcfg::lock))
             {
-                newasm::expcfg::current = newasm::expcfg::lock;
+                newasm::expcfg::lockbool = true;
                 return;
             }
             newasm::terminate(newasm::exit_codes::invalid_syntax);

@@ -45,7 +45,7 @@ namespace newasm
             newasm::user::global::username = newasm::user::global::default_user;
         }
         ///////////////
-        static int udb_hash(const std::string& input)
+        int udb_hash(const std::string& input)
         {
             std::size_t hash = 0;
             for (char c : input)

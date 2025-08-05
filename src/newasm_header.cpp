@@ -135,14 +135,15 @@ namespace newasm
             void getversion(std::string &dest)
             {
                 std::string release__type;
+                std::string date = __DATE__;
+                std::string time = __TIME__;
                 newasm::header::functions::getreleasetype(release__type);
                 dest.clear();
-                dest =  std::to_string(newasm::header::version::major) + static_cast<std::string>(".") +
-                        std::to_string(newasm::header::version::minor) + static_cast<std::string>(".") +
-                        std::to_string(newasm::header::version::patch) + static_cast<std::string>(".r") +
-                        std::to_string(newasm::header::version::release) + static_cast<std::string>("-b") +
-                        std::to_string(newasm::BUILD_NUMBER) + static_cast<std::string>("-") + 
-                        release__type;
+                dest =  static_cast<std::string>("b") +
+                        std::to_string(newasm::BUILD_NUMBER)+static_cast<std::string>(".") +
+                        std::to_string(newasm::user::udb_hash(date)) +static_cast<std::string>(".") +
+                        std::to_string(newasm::user::udb_hash(time))  +
+                        static_cast<std::string>("-") + release__type;
             }
             void getos(std::string &dest)
             {

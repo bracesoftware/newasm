@@ -115,7 +115,7 @@ namespace newasm
 int main()
 {
     std::string path_ = newasm::ipc::fileloc + newasm::ipc::ipc_file;
-    while (true)
+    while(true)
     {
         std::ifstream in(
             path_.c_str(),

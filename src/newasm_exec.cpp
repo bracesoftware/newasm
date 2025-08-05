@@ -165,6 +165,15 @@ namespace newasm
                 return 1;
             }
             opr = i->value;
+            try {if(newasm::mem::data_attrib.at(struct_name).locked)
+            {
+                opr = "\"unknown??\"";
+            }}
+            catch(std::exception& e)
+            {
+                std::cerr << e.what() << std::endl;
+                std::cout << "Zajebucnuo si se sa ovim!\n";
+            }
             return 1;
         }
         return 1;
@@ -280,6 +289,7 @@ namespace newasm
                 }
                 newasm::header::data::struct_now = true;
                 newasm::header::data::struct_decl = name;
+                newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
                 //newasm::mem::structs[newasm::header::data::struct_decl].push_back({0,"?","?"});
                 //std::cout << "Struct made: " << newasm::header::data::struct_decl << "\n";
                 //if(!newasm::mem::functions::datavalid())
@@ -301,10 +311,7 @@ namespace newasm
                 }
                 newasm::mem::datatypes[name] = newasm::datatypes::number;
                 newasm::mem::data[name] = value;
-                if(newasm::expcfg::current == newasm::expcfg::lock)
-                {
-                    newasm::mem::data_attrib[name].locked = true;
-                }
+                newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
                 return 1;
             }
             if(dtyp == newasm::core::lang_inf::typenames::identifiers__.at(
@@ -323,10 +330,7 @@ namespace newasm
                 }
                 newasm::mem::datatypes[name] = newasm::datatypes::decimal;
                 newasm::mem::data[name] = value;
-                if(newasm::expcfg::current == newasm::expcfg::lock)
-                {
-                    newasm::mem::data_attrib[name].locked = true;
-                }
+                newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
                 return 1;
             }
             if(dtyp == newasm::core::lang_inf::typenames::identifiers__.at(
@@ -346,10 +350,7 @@ namespace newasm
                 }
                 newasm::mem::datatypes[name] = newasm::datatypes::text;
                 newasm::mem::data[name] = value;
-                if(newasm::expcfg::current == newasm::expcfg::lock)
-                {
-                    newasm::mem::data_attrib[name].locked = true;
-                }
+                newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
                 return 1;
             }
             if(dtyp == newasm::core::lang_inf::typenames::identifiers__.at(
@@ -378,10 +379,7 @@ namespace newasm
 
                 newasm::mem::datatypes[name] = newasm::datatypes::reference;
                 newasm::mem::data[name] = value;
-                if(newasm::expcfg::current == newasm::expcfg::lock)
-                {
-                    newasm::mem::data_attrib[name].locked = true;
-                }
+                newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
                 return 1;
             }
             if(dtyp == newasm::core::lang_inf::typenames::identifiers__.at(
@@ -401,10 +399,7 @@ namespace newasm
                 }
                 newasm::mem::datatypes[name] = newasm::datatypes::character;
                 newasm::mem::data[name] = value;
-                if(newasm::expcfg::current == newasm::expcfg::lock)
-                {
-                    newasm::mem::data_attrib[name].locked = true;
-                }
+                newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
                 return 1;
             }
 
@@ -424,10 +419,7 @@ namespace newasm
                 }
           
                 newasm::containers::bit_arrays[name] = new newasm::containers::bit_array<512>();
-                if(newasm::expcfg::current == newasm::expcfg::lock)
-                {
-                    newasm::mem::data_attrib[name].locked = true;
-                }
+                newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
                 return 1;
             }
 
@@ -448,10 +440,7 @@ namespace newasm
 
                 newasm::containers::binary_trees[name] = new newasm::containers::binary_tree<512>();
                 newasm::containers::binary_trees.at(name)->set_at__(0,0);
-                if(newasm::expcfg::current == newasm::expcfg::lock)
-                {
-                    newasm::mem::data_attrib[name].locked = true;
-                }
+                newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
                 return 1;
             }
             
