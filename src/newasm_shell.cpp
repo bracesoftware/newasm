@@ -40,7 +40,8 @@ namespace newasm
             {"logout",    {"/",             "Log out of your local account."}},
             {"addenv",    {"/",             "Add an environment variable."}},
             {"remenv",    {"/",             "Remove an environment variable."}},
-            {"modenv",    {"/",             "Modify an environment variable."}}
+            {"modenv",    {"/",             "Modify an environment variable."}},
+            {"dwin",    {"/",               "Start the debug window."}}
         };
         void help_info()
         {
@@ -73,6 +74,7 @@ namespace newasm
         {
             std::string cmd;
             bool finish = false;
+            bool progwin = false;
         }
 
         namespace install
@@ -117,8 +119,7 @@ namespace newasm
                 };
                 auto repl = []() -> void {
                     newasm::header::data::repl_end = false;
-                    std::cout << std::endl;
-                    newasm::header::functions::nullprint_wnm(
+                    newasm::header::functions::nullprint_wnm(newasm::header::col::gray+
                         static_cast<std::string>("Read-Eval-Print Loop mode loaded; to leave, use the `")+
                         newasm::header::style::underline+static_cast<std::string>("exit")+newasm::header::col::reset+
                         static_cast<std::string>("` instruction."));
@@ -126,6 +127,25 @@ namespace newasm
                     newasm::header::data::repl = true;
                     
                     newasm::repl();
+                };
+                auto dwin = []() -> void {
+                    if(newasm::ctl::data::progwin)
+                    {
+                        newasm::header::functions::err("`progwin` (debugger) already running.");
+                        return;
+                    }
+                    if(!std::filesystem::exists(newasm::core::constants::progwin))
+                    {
+                        newasm::header::functions::err("`progwin` (debugger) not found.");
+                        return;
+                    }
+
+                    newasm::runtime::start_program(newasm::core::constants::progwin);
+                    std::string text = newasm::header::col::yellow + newasm::header::style::bold + "NewASM Debug Window loaded...\n" + newasm::header::col::reset;
+                    newasm::progwin::api::cout(text);
+
+                    newasm::ctl::data::progwin = true;
+                    return;
                 };
                 std::vector<std::string> tokens = tokenize(cmd);
                 for(int i = 0; i < tokens.size(); ++i)
@@ -185,6 +205,12 @@ namespace newasm
                     {
                         _newasm_CHECKLOGIN;
                         newasm::env_control::remenv();
+                        return 1;
+                    }
+                    if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::dwin__))
+                    {
+                        _newasm_CHECKLOGIN;
+                        dwin();
                         return 1;
                     }
                 }

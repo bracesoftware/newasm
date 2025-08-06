@@ -376,26 +376,26 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                         return 1;
                     }
-                    newasm::mem::regs::tlr = newasm::header::functions::remq(newasm::mem::regs::tlr);
+                    std::string _chars_ = newasm::header::functions::remq(newasm::mem::regs::tlr);
                     if(newasm::thread_line)
                     {
-                        newasm::threads::memory.at(newasm::threads::now)->output << newasm::mem::regs::tlr.get_value();
+                        newasm::threads::memory.at(newasm::threads::now)->output << _chars_;
                         newasm::threads::memory.at(newasm::threads::now)->output << newasm::syscalls::iostream::get_ref_val__2(newasm::mem::regs::stl);
                         return 1;
                     }
 
                     if(!newasm::header::flags::autobos)
                     {
-                        if(newasm::mem::regs::bos.get_value() > newasm::mem::regs::tlr.get_value().size())
+                        if(newasm::mem::regs::bos.get_value() > _chars_.size())
                         {
                             newasm::header::functions::wrn("Incorrect `bos` size.");
-                            newasm::mem::regs::bos.set_value(newasm::mem::regs::tlr.get_value().size());
+                            newasm::mem::regs::bos.set_value(_chars_.size());
                         }
-                        std::cout << newasm::mem::regs::tlr.get_value().substr(0, newasm::mem::regs::bos);
+                        std::cout << _chars_.substr(0, newasm::mem::regs::bos);
                     }
                     else
                     {
-                        std::cout << newasm::mem::regs::tlr;
+                        std::cout << _chars_;
                     }
                     
                     newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
