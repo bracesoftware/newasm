@@ -23,7 +23,7 @@
     mov fdx , 5
     syscall 
     mov fdx , 2
-    mov stl , %endl
+    mov stl , 0c1
     sysenter %ios
     syscall
     mov tlr , 2
@@ -62,7 +62,7 @@ Output:
     mov fdx , 9
     syscall 
 
-    mov stl , %endl
+    mov stl , 0c1
     mov fdx , 2
     sysenter %ios
     syscall
@@ -72,7 +72,7 @@ Output:
     mov fdx , 9
     syscall
 
-    mov stl , %endl
+    mov stl , 0c1
     mov fdx , 2
     sysenter %ios
     syscall
@@ -83,7 +83,7 @@ Output:
     mov fdx , 9
     syscall 
 
-    mov stl , %endl
+    mov stl , 0c1
     mov fdx , 2
     sysenter %ios
     syscall
@@ -92,7 +92,7 @@ Output:
     mov fdx , 9
     syscall
 
-    mov stl , %endl
+    mov stl , 0c1
     mov fdx , 2
     sysenter %ios
     syscall

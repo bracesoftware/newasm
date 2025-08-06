@@ -1751,11 +1751,11 @@ namespace newasm
         //jmp
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::jmp))
         {
-            if(newasm::header::execution_flow::exec_redirected)
+            /*if(newasm::header::execution_flow::exec_redirected)
             {
                 newasm::terminate(newasm::exit_codes::nested_csm);
                 return 1;
-            }
+            }*/
             if(newasm::header::data::repl)
             {
                 newasm::unsins(ins);
@@ -2046,11 +2046,11 @@ namespace newasm
         //je
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::je))
         {
-            if(newasm::header::execution_flow::exec_redirected)
+            /*if(newasm::header::execution_flow::exec_redirected)
             {
                 newasm::terminate(newasm::exit_codes::nested_csm);
                 return 1;
-            }
+            }*/
             if(newasm::header::data::repl)
             {
                 newasm::unsins(ins);
@@ -2075,11 +2075,11 @@ namespace newasm
         //jne
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::jne))
         {
-            if(newasm::header::execution_flow::exec_redirected)
+            /*if(newasm::header::execution_flow::exec_redirected)
             {
                 newasm::terminate(newasm::exit_codes::nested_csm);
                 return 1;
-            }
+            }*/
             if(newasm::header::data::repl)
             {
                 newasm::unsins(ins);
@@ -2104,11 +2104,11 @@ namespace newasm
         //jl
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::jl))
         {
-            if(newasm::header::execution_flow::exec_redirected)
+            /*if(newasm::header::execution_flow::exec_redirected)
             {
                 newasm::terminate(newasm::exit_codes::nested_csm);
                 return 1;
-            }
+            }*/
             if(newasm::header::data::repl)
             {
                 newasm::unsins(ins);
@@ -2133,11 +2133,11 @@ namespace newasm
         //jg
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::jg))
         {
-            if(newasm::header::execution_flow::exec_redirected)
+            /*if(newasm::header::execution_flow::exec_redirected)
             {
                 newasm::terminate(newasm::exit_codes::nested_csm);
                 return 1;
-            }
+            }*/
             if(newasm::header::data::repl)
             {
                 newasm::unsins(ins);
@@ -2162,11 +2162,11 @@ namespace newasm
         //jle
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::jle))
         {
-            if(newasm::header::execution_flow::exec_redirected)
+            /*if(newasm::header::execution_flow::exec_redirected)
             {
                 newasm::terminate(newasm::exit_codes::nested_csm);
                 return 1;
-            }
+            }*/
             if(newasm::header::data::repl)
             {
                 newasm::unsins(ins);
@@ -2191,11 +2191,11 @@ namespace newasm
         //jge
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::jge))
         {
-            if(newasm::header::execution_flow::exec_redirected)
+            /*if(newasm::header::execution_flow::exec_redirected)
             {
                 newasm::terminate(newasm::exit_codes::nested_csm);
                 return 1;
-            }
+            }*/
             if(newasm::header::data::repl)
             {
                 newasm::unsins(ins);

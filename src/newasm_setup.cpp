@@ -59,7 +59,7 @@ namespace newasm
         const int inline_proc = 18;
         const int unknown_fdx = 19;
         const int unknown_directive = 20;
-        const int nested_csm = 21;
+        //const int nested_csm = 21;
         const int uninptr_usage = 22;
         const int var_redef = 23;
         const int object_redef = 24;
@@ -112,7 +112,6 @@ namespace newasm
             {inline_proc, "InlineProcedure"},
             {unknown_fdx, "UnknownSystemCall"},
             {unknown_directive, "UnknownParserDirective"},
-            {nested_csm, "NestedCodeStreamModif"},
             {uninptr_usage, "UnassignedRefUsage"},
             {var_redef, "VariableRedefinition"},
             {object_redef, "ObjectRedefinition"},

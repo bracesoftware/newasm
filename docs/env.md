@@ -26,3 +26,5 @@ testenv = "hello from env var"
     sysenter %ios
     syscall
 ```
+
+You can also add, modify and remove environment variables inside the shell mode.

@@ -25,8 +25,8 @@ When a fatal error happens, program will shut down, returning a specific exit co
 | `17` | Invalid configuration. |
 | `18` | You tried to call a procedure within a procedure. |
 | `19 `| Unknown system call index (invalid value moved into `fdx`). |
-| `20 `| Tried to create a child process in a child process. |
-| `21 `| Tried to jump to a label in a child process. |
+| `20 `| Unknown parser directive. |
+| `21 `| EMPTY |
 | `22` | Attempted to use an unassigned pointer/reference variable. |
 | `23` | Tried to redefine a variable. |
 | `24` | Tried to redefine a structure. |
