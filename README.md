@@ -421,7 +421,6 @@ Perform a specific system call within a system module.
 | `%fs` | `6` | `tlr`, `stl` | Append content to file; with `tlr` being a string containing the file name, and `stl` being a string containing the content to append. |
 | `%fs` | `7` | `tlr` | Remove all file content; with `tlr` being a string containing the file name. |
 | `%fs` | `8` | `tlr`, `stl` | Read a file line; with `tlr` being a string containing the file name, and `stl` being the line number. Read content is subsequently stored in `tlr`. |
-| `%exf` | `1` | `tlr` | Start a new child process; with `tlr` being a string containing the file name. |
 | `%cmanip` | `1` | `cpt` | Clear the bit array, with `cpt` being a pointer holding the address of your bit array. |
 | `%cmanip` | `2` | `cpt` | Flip the bit array, with `cpt` being a pointer holding the address of your bit array. |
 | `%cmanip` | `3` | `cpt` | Reverse the bit array, with `cpt` being a pointer holding the address of your bit array. |
@@ -443,7 +442,7 @@ Perform a specific system call within a system module.
 | `%chrono` | `6` | `/` | Gets the current second and stores it in `tlr`. |
 | `%thread` | `1` | `tlr` | Prints the thread output, with `tlr` being a thread pointer. |
 | `%thread` | `2` | `tlr` | Gets the thread return and stores it in `tlr`, with `tlr` firstly being a thread pointer as well. |
-
+| `%ext` | `/` | `/` | Call a system call from a specific extension (dynamic library). |
 
 ### `int` instruction
 Send system interrupts, basically manipulate with the interpreter.
