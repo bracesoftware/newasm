@@ -79,6 +79,7 @@ Documentation about `newasm` which includes following topics:
     - [`switch` and `case` instructions](docs/switch.md)
     - [`I/O ports`](docs/ioports.md)
     - [`async`](docs/async.md)
+    - [`vmov`](docs/virtual.md)
 - [Procedures](docs/proc.md)
 - [Exit codes](docs/exc.md)
 - [Comments](docs/commends.md)
