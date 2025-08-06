@@ -150,7 +150,7 @@ namespace newasm
                 #if _NEWASM_OS == _NEWASM_OS_windows
                     dest = "windows";
                 #elif _NEWASM_OS == _NEWASM_OS_windows_old
-                    dest = "windows_old"
+                    dest = "windows_old";
                 #elif _NEWASM_OS == _NEWASM_OS_linux
                     dest = "linux";
                 #endif

@@ -119,7 +119,7 @@ namespace newasm
                 };
                 auto repl = []() -> void {
                     newasm::header::data::repl_end = false;
-                    newasm::header::functions::nullprint_wnm(newasm::header::col::gray+
+                    newasm::header::functions::nullprint_wnm(
                         static_cast<std::string>("Read-Eval-Print Loop mode loaded; to leave, use the `")+
                         newasm::header::style::underline+static_cast<std::string>("exit")+newasm::header::col::reset+
                         static_cast<std::string>("` instruction."));
