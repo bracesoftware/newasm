@@ -147,7 +147,7 @@ The install-command allows you to download and install New-ASM dynamic libraries
 ```asm
 mov fdx , 1
 mov tlr , "Hi"
-mov stl , ~endl
+mov stl , 0c1
 sysenter %ios
 syscall
 zero stl
@@ -178,7 +178,7 @@ Now, if we want to download a package (or a setup), we use the same command, but
 ~setup : impl
 	mov tlr , "INTERNET WORKS!"
 	mov fdx , 1
-	mov stl , ~endl
+	mov stl , 0c1
     sysenter %ios
 	syscall 
 	zero stl
@@ -254,7 +254,7 @@ You can define macros here:
 ```asm
 .text
     sayhi : #
-        mov stl, ~endl
+        mov stl, 0c1
         mov tlr, "hi from macro"
         mov fdx, 1
         sysenter %ios
@@ -637,7 +637,7 @@ syscall
     load ref , testdecimal ; myvar : hea
 
     mov tlr , testdecimal
-    mov stl , ~endl
+    mov stl , 0c1
     mov fdx , 2
     sysenter %ios
     syscall
@@ -663,7 +663,7 @@ Output:
     load ref , testdecimal ; myvar : hea
 
     mov tlr , testdecimal
-    mov stl , ~endl
+    mov stl , 0c1
     mov fdx , 2
     sysenter %ios
     syscall
@@ -673,7 +673,7 @@ Output:
     load adr , 9821.38 ; hea : smth
     load ref , testdecm2 ; myvar : hea
     mov tlr , testdecm2
-    mov stl , ~endl
+    mov stl , 0c1
     mov fdx , 2
     sysenter %ios
     syscall
@@ -681,7 +681,7 @@ Output:
     mov hea , 0 ; manually access the first address
     load ref , testdecm2 ; myvar : hea
     mov tlr , testdecm2
-    mov stl , ~endl
+    mov stl , 0c1
     mov fdx , 2
     sysenter %ios
     syscall
@@ -689,7 +689,7 @@ Output:
     mov hea , 1 ; manually access the second address
     load ref , testdecm2 ; myvar : hea
     mov tlr , testdecm2
-    mov stl , ~endl
+    mov stl , 0c1
     mov fdx , 2
     sysenter %ios
     syscall
@@ -803,7 +803,7 @@ According to the result `cmp` stores in its own "hidden" register, you can use t
     : equal
         mov tlr , "EQUAL"
         mov fdx , 1
-        mov stl , ~endl
+        mov stl , 0c1
         sysenter %ios
         syscall
         jmp 0 , endtheprogram
@@ -811,7 +811,7 @@ According to the result `cmp` stores in its own "hidden" register, you can use t
     : notequal
         mov tlr , "NOT EQUAL"
         mov fdx , 1
-        mov stl , ~endl
+        mov stl , 0c1
         sysenter %ios
         syscall
         jmp 0 , endtheprogram
@@ -819,7 +819,7 @@ According to the result `cmp` stores in its own "hidden" register, you can use t
     : less
         mov tlr , "LESS"
         mov fdx , 1
-        mov stl , ~endl
+        mov stl , 0c1
         sysenter %ios
         syscall
         jmp 0 , endtheprogram
@@ -827,7 +827,7 @@ According to the result `cmp` stores in its own "hidden" register, you can use t
     : greater
         mov tlr , "GREATER"
         mov fdx , 1
-        mov stl , ~endl
+        mov stl , 0c1
         sysenter %ios
         syscall
         jmp 0 , endtheprogram
@@ -835,7 +835,7 @@ According to the result `cmp` stores in its own "hidden" register, you can use t
     : lesseq
         mov tlr , "LESS OR EQUAL"
         mov fdx , 1
-        mov stl , ~endl
+        mov stl , 0c1
         sysenter %ios
         syscall
         jmp 0 , endtheprogram
@@ -843,7 +843,7 @@ According to the result `cmp` stores in its own "hidden" register, you can use t
     : greatereq
         mov tlr , "GREATER OR EQUAL"
         mov fdx , 1
-        mov stl , ~endl
+        mov stl , 0c1
         sysenter %ios
         syscall
         jmp 0 , endtheprogram
@@ -948,7 +948,7 @@ Demonstration:
 
     stor prp , temporary
     mov tlr , temporary
-    mov stl , ~endl
+    mov stl , 0c1
     mov fdx , 6
     sysenter %ios
     syscall
@@ -958,7 +958,7 @@ Demonstration:
 
     stor prp , temporary
     mov tlr , temporary
-    mov stl , ~endl
+    mov stl , 0c1
     mov fdx , 6
     sysenter %ios
     syscall
@@ -1040,7 +1040,7 @@ Clear up the call stack.
     end
     db stk
     push 0, 1 ; push the third arg
-    push 0, ~endl ; push the second arg
+    push 0, 0c1 ; push the second arg
     push 0, "call stack works" ; push the first arg
     push 0, 0x827 ; call the procedure
     stack ;clear up the stack after the procedure call
@@ -1093,7 +1093,7 @@ Below is a list of interesting examples of using the language.
     mov stl, 1
     mov fdx, 8
     syscall
-    mov stl, ~endl
+    mov stl, 0c1
     mov fdx, 1
     sysenter %ios
     syscall
@@ -1116,7 +1116,7 @@ TEXTeee
     syscall; create a process and execute it
 
     mov tlr , "Hi after the process" ; this line will be processed AFTER child.nax finishes executing
-    mov stl , ~endl
+    mov stl , 0c1
     mov fdx , 1
     sysenter %ios
     syscall
