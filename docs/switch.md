@@ -17,7 +17,7 @@ Example:
     case 347 .. 9838 -> mov tlr, "it is in range"
     default->mov tlr, "it is default"
 
-    mov stl, ~endl
+    mov stl, 0c1
     mov fdx, 1
     sysenter %ios
     syscall
@@ -27,7 +27,7 @@ Example:
     case txt -> mov tlr, "it is text"
     default -> mov tlr, "bleh"
 
-    mov stl, ~endl
+    mov stl, 0c1
     mov fdx, 1
     sysenter %ios
     syscall

@@ -27,7 +27,7 @@ Exampe:
 
     thread  testthread : {
         mov tlr, "Hello from thread"
-        mov stl, %endl
+        mov stl, 0c1
         mov fdx, 1
         sysenter %ios
         syscall
@@ -37,7 +37,7 @@ Exampe:
         syscall
 
         mov fdx, 2
-        mov stl, %endl
+        mov stl, 0c1
         sysenter %ios
         syscall
 
@@ -51,7 +51,7 @@ Exampe:
 
         sysenter %ios
         mov tlr, "YOU SHOULD NOT SEE THIS"
-        mov stl, %endl
+        mov stl, 0c1
         mov fdx, 1
         syscall
     }
@@ -67,7 +67,7 @@ Exampe:
     mov fdx, 2
     syscall ; fetch returned value
     sysenter %ios
-    mov stl, %endl
+    mov stl, 0c1
     mov fdx, 1
     syscall ; print the returned val
 ```

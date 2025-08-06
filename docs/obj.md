@@ -27,7 +27,7 @@ In this quite frankly low-level language, there are also objects! General syntax
     }
 .start
     mov tlr , text @ myobj
-    mov stl , %endl
+    mov stl , 0c1
     mov fdx , 1
     sysenter %ios
     syscall
@@ -43,7 +43,7 @@ In this quite frankly low-level language, there are also objects! General syntax
     syscall
 
     mov tlr , text @ myobj2
-    mov stl , %endl
+    mov stl , 0c1
     mov fdx , 1
     sysenter %ios
     syscall
@@ -68,7 +68,7 @@ In this quite frankly low-level language, there are also objects! General syntax
     stor stl , lol @ myobj2
     mov tlr , lol @ myobj2
     mov fdx , 2
-    mov stl , %endl
+    mov stl , 0c1
     sysenter %ios
     syscall
 
@@ -77,7 +77,7 @@ In this quite frankly low-level language, there are also objects! General syntax
     stor psx , text @ myobj
     mov tlr , text @ myobj
     mov fdx , 1
-    mov stl , %endl
+    mov stl , 0c1
     sysenter %ios
     syscall
 ```
