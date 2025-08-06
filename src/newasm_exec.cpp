@@ -3436,9 +3436,9 @@ namespace newasm
         //cls
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::cls))
         {
-            #ifdef _WIN32
+            #if _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
                 std::system("cls");
-            #else
+            #elif _NEWASM_OS == _NEWASM_OS_linux
                 std::system("clear");
             #endif
 

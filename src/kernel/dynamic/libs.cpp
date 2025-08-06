@@ -55,9 +55,9 @@ namespace newasm
                 std::filesystem::path base = std::filesystem::current_path();
                 std::filesystem::path lib;
 
-                #ifdef _WIN32
+                #if _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
                     lib = base / (newasm::header::functions::remq(libname) + ".dll");
-                #else
+                #elif _NEWASM_OS == _NEWASM_OS_linux
                     lib = base / (newasm::header::functions::remq(libname) + ".so");
                 #endif
 

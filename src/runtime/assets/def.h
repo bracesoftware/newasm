@@ -34,6 +34,7 @@ namespace newasm
     {
         namespace col
         {
+            #if _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_linux
             const std::string red = "\033[31m";
             const std::string green = "\033[32m";
             const std::string yellow = "\033[33m";
@@ -43,11 +44,27 @@ namespace newasm
             const std::string gray = "\033[90m";
 
             const std::string reset = "\033[0m";
+            #elif _NEWASM_OS == _NEWASM_OS_windows_old
+            const std::string red = "";
+            const std::string green = "";
+            const std::string yellow = "";
+            const std::string blue = "";
+            const std::string magenta = "";
+            const std::string cyan = "";
+            const std::string gray = "";
+
+            const std::string reset = "";
+            #endif
         }
         namespace style
         {
+            #if _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_linux
             const std::string underline = "\033[4m";
             const std::string bold = "\033[1m";
+            #elif _NEWASM_OS == _NEWASM_OS_windows_old
+            const std::string underline = "";
+            const std::string bold = "";
+            #endif
         }
 
         namespace functions

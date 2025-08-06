@@ -92,9 +92,9 @@ is in the runtime
 #include "runtime/lang_inf.cpp"
 
 #include "runtime/progwin_api.cpp"
-#if __newasm_os == newasm__common__os__win32
+#if _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
     #include "3rd.net.win32.h"
-#elif __newasm_os == newasm__common__os__linux
+#elif _NEWASM_OS == _NEWASM_OS_linux
     #include "3rd.net.linux.h"
 #endif
 

@@ -34,9 +34,9 @@ namespace newasm
             const std::string dynlib_ex = ".newasm_dl";
             const std::string setup_ex = ".newasm_set";
             const std::string progwin = 
-            #ifdef _WIN32
+            #if _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
                 "progwin_newasm.exe"
-            #else
+            #elif _NEWASM_OS == _NEWASM_OS_linux
                 "progwin_newasm.a"
             #endif
             ;
@@ -46,9 +46,9 @@ namespace newasm
 
             const std::string user_folder = "user";
 
-            #ifdef _WIN32
+            #if _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
                 const std::string separator = "\\";
-            #else
+            #elif _NEWASM_OS == _NEWASM_OS_linux
                 const std::string separator = "/";
             #endif
         }

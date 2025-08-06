@@ -26,7 +26,12 @@ namespace newasm
         {
             void krnl(std::string text)
             {
-                std::cout << "\033[38;2;85;107;47m" << newasm::header::system_info::name << " KERNEL >> `"
+                #if _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_linux
+                std::string col = "\033[38;2;85;107;47m";
+                #elif _NEWASM_OS == _NEWASM_OS_windows_old
+                std::string col = "";
+                #endif
+                std::cout << col << newasm::header::system_info::name << " KERNEL >> `"
                 << newasm::kernel::syscalls.at({newasm::threads::functions::get_sysenter(),newasm::mem::regs::fdx.get_value()})
                 <<"` | " << newasm::header::col::gray << text << newasm::header::col::reset << std::endl;
             }

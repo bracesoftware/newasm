@@ -18,33 +18,40 @@ the Initial Developer. All Rights Reserved.
 */
 
 
+#define _NEWASM_OS_windows 0
+#define _NEWASM_OS_linux 1
+#define _NEWASM_OS_windows_old 2
+
+#ifdef _WIN32_OLD
+    #define _NEWASM_OS _NEWASM_OS_windows_old
+#elif defined(_WIN32)
+    #define _NEWASM_OS _NEWASM_OS_windows
+#elif defined(__linux__)
+    #define _NEWASM_OS _NEWASM_OS_linux
+#endif
+
+
 namespace newasm
 {
     namespace common
     {
         namespace os
         {
-            const int win32 = 0;
+            const int windows = 0;
             const int linux = 1;
+            const int windows_old = 2;
         }
         int getos()
         {
             return
-                #ifdef _WIN32
-                    newasm::common::os::win32
-                #else
+                #if _NEWASM_OS == _NEWASM_OS_windows
+                    newasm::common::os::windows
+                #elif _NEWASM_OS == _NEWASM_OS_windows_old
+                    newasm::common::os::windows_old
+                #elif _NEWASM_OS == _NEWASM_OS_linux
                     newasm::common::os::linux
                 #endif
             ;
         }
     }
 }
-
-#define newasm__common__os__win32 0
-#define newasm__common__os__linux 1
-
-#ifdef _WIN32
-    #define __newasm_os newasm__common__os__win32
-#else
-    #define __newasm_os newasm__common__os__linux
-#endif

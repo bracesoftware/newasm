@@ -147,9 +147,11 @@ namespace newasm
             }
             void getos(std::string &dest)
             {
-                #ifdef _WIN32
+                #if _NEWASM_OS == _NEWASM_OS_windows
                     dest = "windows";
-                #elif defined(__linux__)
+                #elif _NEWASM_OS == _NEWASM_OS_windows_old
+                    dest = "windows_old"
+                #elif _NEWASM_OS == _NEWASM_OS_linux
                     dest = "linux";
                 #endif
             }
