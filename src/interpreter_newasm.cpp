@@ -212,17 +212,7 @@ namespace newasm
             newasm::stack::free_macro_mem();
             newasm::header::functions::info("Cleaning up macro data...");
 
-            if(newasm::dyn_ins_set != nullptr)
-            {
-                delete newasm::dyn_ins_set;
-                //newasm::dyn_ins_set = nullptr;
-            }
             newasm::header::functions::info("Cleaning up DL data...");
-            if(newasm::env_vars != nullptr)
-            {
-                delete newasm::env_vars;
-                //newasm::env_vars = nullptr;
-            }
             newasm::header::functions::info("Cleaning up environment variable memory...");
             
             newasm::threads::functions::free_mem();

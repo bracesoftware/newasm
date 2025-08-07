@@ -2275,13 +2275,8 @@ namespace newasm
                 newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                 return 1;
             }
-            if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr.get_value()))
-            {
-                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                return 1;
-            }
 
-            newasm::hardware::outIOPOrt(std::stoi(suf), std::stoi(newasm::mem::regs::tlr.get_value()));
+            newasm::hardware::outIOPOrt(std::stoi(suf));
             return 1;
         }
         //in

@@ -50,14 +50,20 @@ namespace newasm
             // disk
             newasm::hardware::IOPort<int> dskfmat(10, 0); 
             newasm::hardware::IOPort<int> dskw(11, 0);
-            newasm::hardware::IOPort<std::string> dskr(12, 0);
+            newasm::hardware::IOPort<int> dskr(12, 0);
         }
 
-        void outIOPOrt(int id, int signal) // write to port
+        void outIOPOrt(int id) // write to port
         {
             if(id == newasm::hardware::IO_ports::txtcol.get_addr()) // text color on screen
             {
                 auto& i = newasm::hardware::IO_ports::txtcol;
+                if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr.get_value()))
+                {
+                    i.set_value(0);
+                    return;
+                }
+                int signal = std::stoi(newasm::mem::regs::tlr.get_value());
                 i.set_value(signal);
                 if(i.get_value() == 1) std::cout << newasm::header::col::red;
                 if(i.get_value() == 2) std::cout << newasm::header::col::yellow;
@@ -104,19 +110,19 @@ namespace newasm
                 auto& i = newasm::hardware::IO_ports::dskr;
                 if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr))
                 {
-                    i.set_value("err");
+                    i.set_value(0);
                     return;
                 }
                 if(!newasm::header::functions::isnumeric(newasm::mem::regs::stl))
                 {
-                    i.set_value("err");
+                    i.set_value(0);
                     return;
                 }
 
                 int startByte = std::stoi(newasm::mem::regs::tlr);
                 int endByte = std::stoi(newasm::mem::regs::stl);
                 newasm::hardware::Disk.readDisk(startByte, endByte);
-                i.set_value(newasm::hardware::Disk.data);
+                i.set_value(1);
             }
             return;
         }
@@ -137,7 +143,14 @@ namespace newasm
             }
             if(id == newasm::hardware::IO_ports::dskr.get_addr())
             {
-                output = "\"" + (newasm::hardware::IO_ports::dskr.get_value()) + "\"";
+                if(newasm::hardware::IO_ports::dskr.get_value() == 1)
+                {
+                    output = "\"" + (newasm::hardware::Disk.data) + "\"";
+                }
+                else
+                {
+                    output = "\"" + static_cast<std::string>("err") + "\"";
+                }
             }
 
             //std::cout << "output = `" << output << "`\n";
