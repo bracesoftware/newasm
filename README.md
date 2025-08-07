@@ -1,5 +1,5 @@
 <div align="center">
-    <img height="200" src="readme_resources/newasm_logo.png">
+    <img height="300" src="readme_resources/newasm_logo.png">
 </div>
 
 <h1 align = "center">Welcome to the <i><b>New-ASM</b></i> Wiki</h1>
