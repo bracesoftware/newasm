@@ -28,7 +28,9 @@ namespace newasm
             private:
             std::string path;
             int size;
+
             public:
+            std::string data;
             DISK_(std::string disk_file, int mb_size) : path(disk_file), size(mb_size)
             {
                 if(!std::filesystem::exists(path))
@@ -47,7 +49,12 @@ namespace newasm
                 this->size = size_;
             }
 
-            std::string readDisk(std::streampos start, std::streampos end)
+            void format()
+            {
+                this->format(this->size);
+            }
+
+            std::string readDisk_(std::streampos start, std::streampos end)
             {
                 std::ifstream file(this->path, std::ios::binary);
                 if (!file) return std::string("");
@@ -61,6 +68,11 @@ namespace newasm
                 file.close();
 
                 return buffer;
+            }
+
+            void readDisk(int start, int end)
+            {
+                this->data = this->readDisk_(start,end);
             }
 
             void writeToDisk(std::streampos start, std::streampos end, const std::string& content)

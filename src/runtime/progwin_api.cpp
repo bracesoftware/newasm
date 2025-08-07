@@ -44,10 +44,17 @@ namespace newasm
         {
             void cout(std::string text)
             {
+                #if _NEWASM_OS == _NEWASM_OS_windows_old
+                    std::cout << "[NewASM] PROGWIN | " << text <<"\n";
+                    return;
+                #endif
                 send_req("cout:"+text+"\n");
             }
             void exit()
             {
+                #if _NEWASM_OS == _NEWASM_OS_windows_old
+                    return;
+                #endif
                 send_req("exit:0");
             }
         }

@@ -92,7 +92,7 @@ is in the runtime
 #include "runtime/lang_inf.cpp"
 
 #include "runtime/progwin_api.cpp"
-#if _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
+#if _NEWASM_OS == _NEWASM_OS_windows
     #include "3rd.net.win32.h"
 #elif _NEWASM_OS == _NEWASM_OS_linux
     #include "3rd.net.linux.h"
@@ -103,6 +103,9 @@ is in the runtime
 
 #include "newasm_dynlib.cpp"
 #include "newasm_header.cpp"
+#if _NEWASM_OS == _NEWASM_OS_windows_old
+    #include "3rd.net.winold.h"
+#endif
 #include "runtime/common/tokenize.h"
 #include "newasm_setup.cpp"
 #include "runtime/virtual.h"
@@ -124,8 +127,9 @@ is in the runtime
 
 #include "runtime/lambda/_entry.cpp"
 #include "kernel/syscall_info.cpp"
-#include "kernel/hardware/io_ports.cpp"
+
 #include "kernel/hardware/disk.cpp"
+#include "kernel/hardware/io_ports.cpp"
 
 #include "kernel/dynamic/libs.cpp"
 #include "kernel/krnlcfg.cpp"
@@ -378,6 +382,7 @@ int main(int argc, char *argv[])
     /*
         Before executing the file we need to open the program window.
     */
+    #if _NEWASM_OS != _NEWASM_OS_windows_old
     newasm::dwin = true;
     if(newasm::dwin)
     {
@@ -391,6 +396,7 @@ int main(int argc, char *argv[])
         std::string text = newasm::header::col::yellow + newasm::header::style::bold + "NewASM Debug Window loaded...\n" + newasm::header::col::reset;
         newasm::progwin::api::cout(text);
     }
+    #endif
     /*
         Executing
     */

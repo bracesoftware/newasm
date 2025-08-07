@@ -45,7 +45,12 @@ namespace newasm
         };
         namespace IO_ports
         {
+            //screen
             newasm::hardware::IOPort<int> txtcol(1, 0);
+            // disk
+            newasm::hardware::IOPort<int> dskfmat(10, 0); 
+            newasm::hardware::IOPort<int> dskw(11, 0);
+            newasm::hardware::IOPort<std::string> dskr(12, 0);
         }
 
         void outIOPOrt(int id, int signal) // write to port
@@ -68,6 +73,51 @@ namespace newasm
                 }
                 return;
             }
+            if(id == newasm::hardware::IO_ports::dskfmat.get_addr()) // disk formatting
+            {
+                newasm::hardware::Disk.format();
+                auto& i = newasm::hardware::IO_ports::dskfmat;
+                i.set_value(1);
+            }
+            if(id == newasm::hardware::IO_ports::dskw.get_addr()) // disk writing
+            {
+                auto& i = newasm::hardware::IO_ports::dskw;
+                if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
+                {
+                    i.set_value(0);
+                    return;
+                }
+                int startByte = std::stoi(newasm::mem::regs::stl.get_value());
+                int endByte = startByte + newasm::header::functions::remq(newasm::mem::regs::tlr.get_value()).size();
+                std::string content = newasm::header::functions::remq(newasm::mem::regs::tlr.get_value());
+                if(!newasm::header::functions::isnumeric(newasm::mem::regs::stl))
+                {
+                    i.set_value(0);
+                    return;
+                }
+
+                newasm::hardware::Disk.writeToDisk(startByte, endByte, content);
+                i.set_value(1);
+            }
+            if(id == newasm::hardware::IO_ports::dskr.get_addr()) // disk reading
+            {
+                auto& i = newasm::hardware::IO_ports::dskr;
+                if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr))
+                {
+                    i.set_value("err");
+                    return;
+                }
+                if(!newasm::header::functions::isnumeric(newasm::mem::regs::stl))
+                {
+                    i.set_value("err");
+                    return;
+                }
+
+                int startByte = std::stoi(newasm::mem::regs::tlr);
+                int endByte = std::stoi(newasm::mem::regs::stl);
+                newasm::hardware::Disk.readDisk(startByte, endByte);
+                i.set_value(newasm::hardware::Disk.data);
+            }
             return;
         }
         std::string inIOPort(int id) // read from port
@@ -77,8 +127,20 @@ namespace newasm
             {
                 output = std::to_string(newasm::hardware::IO_ports::txtcol.get_value());
             }
+            if(id == newasm::hardware::IO_ports::dskfmat.get_addr())
+            {
+                output = std::to_string(newasm::hardware::IO_ports::dskfmat.get_value());
+            }
+            if(id == newasm::hardware::IO_ports::dskw.get_addr())
+            {
+                output = std::to_string(newasm::hardware::IO_ports::dskw.get_value());
+            }
+            if(id == newasm::hardware::IO_ports::dskr.get_addr())
+            {
+                output = "\"" + (newasm::hardware::IO_ports::dskr.get_value()) + "\"";
+            }
 
-            std::cout << "output = `" << output << "`\n";
+            //std::cout << "output = `" << output << "`\n";
             return output;
         }
     }
