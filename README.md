@@ -1084,9 +1084,9 @@ Below is a list of interesting examples of using the language.
 . start
     sysenter %fs
     mov fdx, 3
-    mov tlr, "filename"
+    mov tlr, "filename.txt"
     syscall
-    mov stl, "TEXTeee"
+    mov stl, "file content"
     mov fdx, 6
     syscall
     mov stl, 1
@@ -1102,49 +1102,5 @@ Below is a list of interesting examples of using the language.
 Output:
 
 ```
-TEXTeee
+file content
 ```
-
-### Creating a child process
-`index.nax`:
-```asm
-.start
-    mov tlr, "child.nax" ; another nax file containing stuff such as config modifications, variables and procedures
-    mov fdx, 1
-    sysenter %exf
-    syscall; create a process and execute it
-
-    mov tlr , "Hi after the process" ; this line will be processed AFTER child.nax finishes executing
-    mov stl , 0c1
-    mov fdx , 1
-    sysenter %ios
-    syscall
-
-    retn 0
-```
-
-`child.nax`:
-```asm
-.data
-    num  mynum : 0
-.start
-    heap 36
-    stor hea , mynum
-    mov tlr , mynum
-    mov fdx , 2
-    sysenter %ios
-    syscall ; prints heap size (36)
-    heap -36 ; free up memory we occupied for the sake of the example
-```
-
-Output:
-
-```
-36
-Hi after the process
-```
-
-#### Notes regarding child processes
-1. You cannot create labels and jump to them in child processes.
-2. If you use `ret` or `retn` inside a child process, it will terminate the whole program with that exit code and not just the child process.
-3. Procedures and variables created inside the child process can be used in the parent process (in our case `index.nax`) after the child process finishes executing.
