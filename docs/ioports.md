@@ -18,8 +18,9 @@ I/O ports allow you to communicate with hardware directly for tasks that cannot 
 ```
 
 ### List of available I/O ports
+
 | Port ID | Port name | Description |
-| ======= | ========= | =========== |
+| ------------ | ----------- | ----------- |
 |1|`txtcol`|Used to send text colour data with `out`. `in` instruction returns `0` if the signal wasn't successful.|
 |10|`dskfmat`|Used to format the disk. `out` doesn't require any external parameters. `in` always returns `1`.|
 |11|`dskw`|Used to write data on the disk; `out` writes data in the `tlr` register, `stl` is the starting byte. `in` instruction returns `1` if the operation was successful and `0` if the operation failed.|
