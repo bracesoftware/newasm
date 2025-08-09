@@ -1040,6 +1040,26 @@ namespace newasm
 				return {true, segments};
 			}
 
+			std::string mangleName(const std::vector<std::string>& namespaces, const std::string& symbol_name)
+			{
+				std::string fullpath;
+
+				// Spoji sve namespaceove sa separatorom
+				for (const auto& ns : namespaces)
+				{
+					fullpath += ns + "::";
+				}
+				fullpath += symbol_name + static_cast<std::string>(__TIME__) + static_cast<std::string>(__DATE__); // prevent bad code
+
+				// Izračunaj hash
+				size_t hash_val = std::hash<std::string>{}(fullpath);
+
+				// Pretvori hash u heksadecimalni string (za čitljivost)
+				char buffer[17];
+				snprintf(buffer, sizeof(buffer), "%016zx", hash_val);
+
+				return std::string("var_") + buffer;
+			}
 
 
         }

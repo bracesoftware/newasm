@@ -40,8 +40,12 @@ namespace newasm
 					auto i = newasm::header::functions::parseNamespaceSegments(suf);
 					std::string symbol_name = i.second.back();
 					auto vec = i.second;
-					vec.pop_back();
-					int expected_size = vec.size();
+					vec.pop_back(); // namespace list
+					
+					suf = newasm::header::functions::mangleName(vec, symbol_name);
+					
+					/**/
+					#ifdef eyy__slay
 					if(vec.size() != newasm::mem::data_attrib[symbol_name].namespaces.size())
 					{
 						newasm::terminate(newasm::exit_codes::invalid_memacc);
@@ -56,9 +60,22 @@ namespace newasm
 						}
 					}
 					suf = newasm::header::functions::parseNamespaceSegments(suf).second.back();
+					#endif
 				}
                 if(newasm::header::functions::isref(suf))
                 {
+					std::string newsuf = newasm::header::functions::trim(suf.substr(1));
+					if(newasm::header::functions::parseNamespaceSegments(newsuf).first)
+					{
+						newasm::progwin::api::cout("Yes NMS -> " + suf);
+						auto i = newasm::header::functions::parseNamespaceSegments(newsuf);
+						std::string symbol_name = i.second.back();
+						auto vec = i.second;
+						vec.pop_back(); // namespace list
+						
+						suf = static_cast<std::string>("&") + newasm::header::functions::mangleName(vec, symbol_name);
+						return;
+					}
                     return;
                 }
                 if(newasm::mem::data_attrib[suf].locked)
