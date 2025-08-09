@@ -28,7 +28,7 @@ namespace newasm
         };
 
         //decorator settings
-        bool lockbool;
+        bool lockbool = false;
 
         //impl
         void process_dec(std::string text)

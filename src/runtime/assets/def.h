@@ -17,6 +17,12 @@ the Initial Developer. All Rights Reserved.
 
 */
 
+#ifdef _newasm_ERR
+	extern "C" void testfunc()
+	{
+		return;
+	}
+#endif
 
 #ifndef __newasm_included
     #error [New-ASM] Cannot compile.

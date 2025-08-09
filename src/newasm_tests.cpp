@@ -67,6 +67,7 @@ namespace newasm
 */
             std::cout << std::endl; newasm::header::functions::info("Tests finished.");
             return;
+			
         }
     }
 }
