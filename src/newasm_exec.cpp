@@ -144,6 +144,17 @@ namespace newasm
             member_name = newasm::header::functions::trim(member_name);
             struct_name = newasm::header::functions::trim(struct_name);
 
+			if(newasm::header::functions::parseNamespaceSegments(struct_name).first)
+			{
+				newasm::progwin::api::cout("Object<yes> NMS -> " + struct_name);
+				auto i = newasm::header::functions::parseNamespaceSegments(struct_name);
+				std::string symbol_name = i.second.back();
+				auto vec = i.second;
+				vec.pop_back(); // namespace list
+				
+				struct_name = newasm::header::functions::mangleName(vec, symbol_name);
+			}
+
             if(!newasm::mem::functions::datavalid(struct_name, newasm::mem::structs))
             {
                 newasm::terminate(newasm::exit_codes::undefined_object);
@@ -261,12 +272,12 @@ namespace newasm
         }
         //std::cout << dtyp << ":" << name << ":" << value << std::endl;
 		std::string name = _name;
-		if(newasm::nms::count != 0)
+		if(!newasm::header::data::struct_now) if(newasm::nms::count != 0)
 		{
 			name = newasm::header::functions::mangleName(newasm::nms::stack, name);
 		}
 		
-        if(newasm::mem::functions::datavalid(name, newasm::mem::data))
+        if(!newasm::header::data::struct_now) if(newasm::mem::functions::datavalid(name, newasm::mem::data))
         {
 			if(true)
 			{
@@ -274,7 +285,7 @@ namespace newasm
 				return 1;
 			}
         }
-        if(newasm::mem::functions::datavalid(name, newasm::mem::structs))
+        if(!newasm::header::data::struct_now) if(newasm::mem::functions::datavalid(name, newasm::mem::structs))
         {
             if(true)//if(newasm::namespaceCollision(name))
 			{
@@ -282,7 +293,7 @@ namespace newasm
 				return 1;
 			}
         }
-        if(newasm::mem::functions::datavalid(name, newasm::threads::memory))
+        if(!newasm::header::data::struct_now) if(newasm::mem::functions::datavalid(name, newasm::threads::memory))
         {
             if(true)//if(newasm::namespaceCollision(name))
 			{
@@ -1427,87 +1438,7 @@ namespace newasm
                 return 1;
             }
         }
-        //pop
-        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::pop))
-        {
-            if(suf == static_cast<std::string>("0"))
-            {
-                if(newasm::mem::regs::stk == newasm::mem::inf::mem_size - 1)
-                {
-                    newasm::terminate(newasm::exit_codes::mem_overflow);//,wholeline);
-                    return 1;
-                }
-                if(opr == static_cast<std::string>("\%nl"))
-                {
-                    newasm::mem::regs::stk = newasm::mem::regs::stk + 1;
-                    return 1;
-                }
-                if(!newasm::header::functions::isref(opr))
-                {
-                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                    return 1;
-                }
-                opr = newasm::header::functions::remamp(opr);
-                if(!newasm::mem::functions::datavalid(opr,newasm::mem::data))
-                {
-                    //std::cout << "opr :: '" << opr << "'" << std::endl;
-                    newasm::terminate(newasm::exit_codes::data_overflow);//,wholeline);
-                    return 1;
-                }
-
-                if(newasm::header::functions::isnumeric(newasm::mem::program_memory[newasm::mem::regs::stk + 1]))
-                {
-                    if(newasm::mem::datatypes[opr] != newasm::datatypes::number)
-                    {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                        return 1;
-                    }
-                    newasm::mem::data[opr] = newasm::mem::program_memory[newasm::mem::regs::stk + 1];
-                    newasm::mem::regs::stk = newasm::mem::regs::stk + 1;
-                    return 1;
-                }
-                if(newasm::header::functions::isfloat(newasm::mem::program_memory[newasm::mem::regs::stk + 1]))
-                {
-                    if(newasm::mem::datatypes[opr] != newasm::datatypes::decimal)
-                    {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                        return 1;
-                    }
-                    newasm::mem::data[opr] = newasm::mem::program_memory[newasm::mem::regs::stk + 1];
-                    newasm::mem::regs::stk = newasm::mem::regs::stk + 1;
-                    return 1;
-                }
-                if(newasm::header::functions::istext(newasm::mem::program_memory[newasm::mem::regs::stk + 1]))
-                {
-                    if(newasm::mem::datatypes[opr] != newasm::datatypes::text)
-                    {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                        return 1;
-                    }
-                    newasm::mem::data[opr] = newasm::mem::program_memory[newasm::mem::regs::stk + 1];
-                    newasm::mem::regs::stk = newasm::mem::regs::stk + 1;
-                    return 1;
-                }
-                if(newasm::header::functions::isref(newasm::mem::program_memory[newasm::mem::regs::stk + 1]))
-                {
-                    if(newasm::mem::datatypes[opr] != newasm::datatypes::reference)
-                    {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                        return 1;
-                    }
-                    newasm::mem::data[opr] = newasm::mem::program_memory[newasm::mem::regs::stk + 1];
-                    newasm::mem::regs::stk = newasm::mem::regs::stk + 1;
-
-                    //auto i = std::find(newasm::mem::uninitialized_pointer.begin(), newasm::mem::uninitialized_pointer.end(), opr);
-                    //if(i != newasm::mem::uninitialized_pointer.end()) newasm::mem::uninitialized_pointer.erase(i);
-                    return 1;
-                }
-                newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                return 1;
-            }
-            newasm::terminate(newasm::exit_codes::invalid_syntax);
-            return 1;
-        }
+        
         /*for(std::vector<std::string>::iterator i = newasm::mem::uninitialized_pointer.begin(); i != newasm::mem::uninitialized_pointer.end(); ++i)
         {
             if(*i == opr)
@@ -1769,29 +1700,6 @@ namespace newasm
             }
             newasm::terminate(newasm::exit_codes::invalid_syntax);
             return 1;
-        }
-        //push
-        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::push))
-        {
-            if(suf == static_cast<std::string>("0"))
-            {
-                if(newasm::mem::functions::check_stkhea_col())
-                {
-                    newasm::terminate(newasm::exit_codes::stkhea_col);//,wholeline);
-                    return 1;
-                }
-                newasm::mem::program_memory[newasm::mem::regs::stk] = opr;
-                newasm::mem::regs::stk = newasm::mem::regs::stk - 1;
-                if(newasm::header::functions::ishex(opr))
-                {
-                    newasm::header::data::callstkidx = newasm::mem::regs::stk;
-                    if(newasm::stack::events.find(opr) != newasm::stack::events.end())
-                    {
-                        newasm::callproc(newasm::stack::events.at(opr));
-                    }
-                }
-                return 1;
-            }
         }
         //jmp
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::jmp))
@@ -2276,6 +2184,104 @@ namespace newasm
             newasm::mem::funcs[newasm::system::cproc].push_back(newline);
             //std::cout << newasm::system::cproc << " : " << newline << std::endl;
             return 1;
+        }
+		//pop
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::pop))
+        {
+            auto opr = suf;
+			if(newasm::mem::regs::stk == newasm::mem::inf::mem_size - 1)
+			{
+				newasm::terminate(newasm::exit_codes::mem_overflow);//,wholeline);
+				return 1;
+			}
+			if(opr == static_cast<std::string>("\%nl"))
+			{
+				newasm::mem::regs::stk = newasm::mem::regs::stk + 1;
+				return 1;
+			}
+			if(!newasm::header::functions::isref(opr))
+			{
+				newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+				return 1;
+			}
+			opr = newasm::header::functions::remamp(opr);
+			if(!newasm::mem::functions::datavalid(opr,newasm::mem::data))
+			{
+				//std::cout << "opr :: '" << opr << "'" << std::endl;
+				newasm::terminate(newasm::exit_codes::data_overflow);//,wholeline);
+				return 1;
+			}
+
+			if(newasm::header::functions::isnumeric(newasm::mem::program_memory[newasm::mem::regs::stk + 1]))
+			{
+				if(newasm::mem::datatypes[opr] != newasm::datatypes::number)
+				{
+					newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+					return 1;
+				}
+				newasm::mem::data[opr] = newasm::mem::program_memory[newasm::mem::regs::stk + 1];
+				newasm::mem::regs::stk = newasm::mem::regs::stk + 1;
+				return 1;
+			}
+			if(newasm::header::functions::isfloat(newasm::mem::program_memory[newasm::mem::regs::stk + 1]))
+			{
+				if(newasm::mem::datatypes[opr] != newasm::datatypes::decimal)
+				{
+					newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+					return 1;
+				}
+				newasm::mem::data[opr] = newasm::mem::program_memory[newasm::mem::regs::stk + 1];
+				newasm::mem::regs::stk = newasm::mem::regs::stk + 1;
+				return 1;
+			}
+			if(newasm::header::functions::istext(newasm::mem::program_memory[newasm::mem::regs::stk + 1]))
+			{
+				if(newasm::mem::datatypes[opr] != newasm::datatypes::text)
+				{
+					newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+					return 1;
+				}
+				newasm::mem::data[opr] = newasm::mem::program_memory[newasm::mem::regs::stk + 1];
+				newasm::mem::regs::stk = newasm::mem::regs::stk + 1;
+				return 1;
+			}
+			if(newasm::header::functions::isref(newasm::mem::program_memory[newasm::mem::regs::stk + 1]))
+			{
+				if(newasm::mem::datatypes[opr] != newasm::datatypes::reference)
+				{
+					newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+					return 1;
+				}
+				newasm::mem::data[opr] = newasm::mem::program_memory[newasm::mem::regs::stk + 1];
+				newasm::mem::regs::stk = newasm::mem::regs::stk + 1;
+
+				//auto i = std::find(newasm::mem::uninitialized_pointer.begin(), newasm::mem::uninitialized_pointer.end(), opr);
+				//if(i != newasm::mem::uninitialized_pointer.end()) newasm::mem::uninitialized_pointer.erase(i);
+				return 1;
+			}
+			newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+			return 1;
+        }
+		//push
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::push))
+        {
+			auto opr = suf;
+			if(newasm::mem::functions::check_stkhea_col())
+			{
+				newasm::terminate(newasm::exit_codes::stkhea_col);//,wholeline);
+				return 1;
+			}
+			newasm::mem::program_memory[newasm::mem::regs::stk] = opr;
+			newasm::mem::regs::stk = newasm::mem::regs::stk - 1;
+			if(newasm::header::functions::ishex(opr))
+			{
+				newasm::header::data::callstkidx = newasm::mem::regs::stk;
+				if(newasm::stack::events.find(opr) != newasm::stack::events.end())
+				{
+					newasm::callproc(newasm::stack::events.at(opr));
+				}
+			}
+			return 1;
         }
         //cast
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::cast__))

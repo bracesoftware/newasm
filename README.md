@@ -458,6 +458,7 @@ Send system interrupts, basically manipulate with the interpreter.
 | ---------------- | --------- | ----------- |
 | `0x1` | `tlr` | Modifies the size of a shared heap-stack memory block, with `tlr` holding the new memory size. |
 | `0x2` | `tlr` | Tells the interpreter to skip checking for procedure validity when assigning event handlers with `tlr` being either 0 or 1 — off or on, respectively. |
+| `0x3` | `/` | Enables/disables the automatic `bos` calculation. |
 
 
 ### `nop` instruction

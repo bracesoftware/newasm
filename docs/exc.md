@@ -26,7 +26,7 @@ When a fatal error happens, program will shut down, returning a specific exit co
 | `18` | You tried to call a procedure within a procedure. |
 | `19 `| Unknown system call index (invalid value moved into `fdx`). |
 | `20 `| Unknown parser directive. |
-| `21 `| EMPTY |
+| `21 `| Namespace error. |
 | `22` | Attempted to use an unassigned pointer/reference variable. |
 | `23` | Tried to redefine a variable. |
 | `24` | Tried to redefine a structure. |

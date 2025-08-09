@@ -34,6 +34,7 @@ namespace newasm
         {
             void parse(std::string& suf)
             {
+				bool mangled = false;
 				if(newasm::header::functions::parseNamespaceSegments(suf).first)
 				{
 					newasm::progwin::api::cout("Yes NMS -> " + suf);
@@ -43,6 +44,7 @@ namespace newasm
 					vec.pop_back(); // namespace list
 					
 					suf = newasm::header::functions::mangleName(vec, symbol_name);
+					mangled = true;
 					
 					/**/
 					#ifdef eyy__slay
@@ -91,6 +93,15 @@ namespace newasm
                         suf = i->second;
                     }
                 }
+				
+				if(newasm::mem::data.find(suf) == newasm::mem::data.end())
+				{
+					if(mangled)
+					{
+						//std::cout << "ZAJEBUCNUOOO SIS EEEEEEEEEE\n";
+						newasm::terminate(newasm::exit_codes::invalid_memacc);
+					}
+				}
                 newasm::header::functions::parseopr(suf, newasm::mem::data);
                 newasm::parseopr_struct(suf);
 
