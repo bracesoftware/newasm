@@ -40,8 +40,7 @@ namespace newasm
             {"logout",    {"/",             "Log out of your local account."}},
             {"addenv",    {"/",             "Add an environment variable."}},
             {"remenv",    {"/",             "Remove an environment variable."}},
-            {"modenv",    {"/",             "Modify an environment variable."}},
-            {"dwin",    {"/",               "Start the debug window."}}
+            {"modenv",    {"/",             "Modify an environment variable."}}
         };
         void help_info()
         {
@@ -205,12 +204,6 @@ namespace newasm
                     {
                         _newasm_CHECKLOGIN;
                         newasm::env_control::remenv();
-                        return 1;
-                    }
-                    if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::dwin__))
-                    {
-                        _newasm_CHECKLOGIN;
-                        dwin();
                         return 1;
                     }
                 }

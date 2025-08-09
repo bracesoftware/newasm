@@ -232,6 +232,24 @@ namespace newasm
         }
         return 1;
     }
+	static bool namespaceCollision(std::string name)
+	{
+		if(newasm::nms::count != newasm::mem::data_attrib[name].namespaces.size())
+		{
+			return false;
+		}
+		if(newasm::nms::count == newasm::mem::data_attrib.at(name).namespaces.size())
+		{
+			for(int i = 0; i < newasm::nms::count; ++i)
+			{
+				if(newasm::nms::stack.at(i) != newasm::mem::data_attrib.at(name).namespaces.at(i))
+				{
+					return false;
+				}
+			}
+		}
+		return true;
+	}
     int process_d(std::string wholeline, std::string dtyp, std::string name, std::string value)
     {
         if(newasm::header::functions::issizeof(value).first)
@@ -242,18 +260,27 @@ namespace newasm
         //std::cout << dtyp << ":" << name << ":" << value << std::endl;
         if(newasm::mem::functions::datavalid(name, newasm::mem::data))
         {
-            newasm::terminate(newasm::exit_codes::var_redef);
-            return 1;
+			if(newasm::namespaceCollision(name))
+			{
+				newasm::terminate(newasm::exit_codes::var_redef);
+				return 1;
+			}
         }
         if(newasm::mem::functions::datavalid(name, newasm::mem::structs))
         {
-            newasm::terminate(newasm::exit_codes::object_redef);
-            return 1;
+            if(newasm::namespaceCollision(name))
+			{
+				newasm::terminate(newasm::exit_codes::object_redef);
+				return 1;
+			}
         }
         if(newasm::mem::functions::datavalid(name, newasm::threads::memory))
         {
-            newasm::terminate(newasm::exit_codes::object_redef);
-            return 1;
+            if(newasm::namespaceCollision(name))
+			{
+				newasm::terminate(newasm::exit_codes::object_redef);
+				return 1;
+			}
         }
         if(newasm::header::functions::isalphanum(name))
         {
@@ -290,6 +317,8 @@ namespace newasm
                 newasm::header::data::struct_now = true;
                 newasm::header::data::struct_decl = name;
                 newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
+				
+				_newasm_addnamespaces(name)
                 //newasm::mem::structs[newasm::header::data::struct_decl].push_back({0,"?","?"});
                 //std::cout << "Struct made: " << newasm::header::data::struct_decl << "\n";
                 //if(!newasm::mem::functions::datavalid())
@@ -312,6 +341,7 @@ namespace newasm
                 newasm::mem::datatypes[name] = newasm::datatypes::number;
                 newasm::mem::data[name] = value;
                 newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
+				_newasm_addnamespaces(name)
                 return 1;
             }
             if(dtyp == newasm::core::lang_inf::typenames::identifiers__.at(
@@ -331,6 +361,7 @@ namespace newasm
                 newasm::mem::datatypes[name] = newasm::datatypes::decimal;
                 newasm::mem::data[name] = value;
                 newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
+				_newasm_addnamespaces(name)
                 return 1;
             }
             if(dtyp == newasm::core::lang_inf::typenames::identifiers__.at(
@@ -351,6 +382,7 @@ namespace newasm
                 newasm::mem::datatypes[name] = newasm::datatypes::text;
                 newasm::mem::data[name] = value;
                 newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
+				_newasm_addnamespaces(name)
                 return 1;
             }
             if(dtyp == newasm::core::lang_inf::typenames::identifiers__.at(
@@ -380,6 +412,7 @@ namespace newasm
                 newasm::mem::datatypes[name] = newasm::datatypes::reference;
                 newasm::mem::data[name] = value;
                 newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
+				_newasm_addnamespaces(name)
                 return 1;
             }
             if(dtyp == newasm::core::lang_inf::typenames::identifiers__.at(
@@ -400,6 +433,7 @@ namespace newasm
                 newasm::mem::datatypes[name] = newasm::datatypes::character;
                 newasm::mem::data[name] = value;
                 newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
+				_newasm_addnamespaces(name)
                 return 1;
             }
 
@@ -420,6 +454,7 @@ namespace newasm
           
                 newasm::containers::bit_arrays[name] = new newasm::containers::bit_array<512>();
                 newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
+				_newasm_addnamespaces(name)
                 return 1;
             }
 
@@ -441,6 +476,7 @@ namespace newasm
                 newasm::containers::binary_trees[name] = new newasm::containers::binary_tree<512>();
                 newasm::containers::binary_trees.at(name)->set_at__(0,0);
                 newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
+				_newasm_addnamespaces(name)
                 return 1;
             }
             
@@ -3625,6 +3661,12 @@ namespace newasm
             newasm::expcfg::process_dec(newasm::header::functions::isdeco(line).second);
             return 1;
         }
+		if(newasm::system::section == newasm::code_stream::sections::data)
+		if(newasm::header::functions::parseNamespace(line).first)
+		{
+			newasm::nms::process_nms(newasm::header::functions::parseNamespace(line).second);
+			return 1;
+		}
         if(line == static_cast<std::string>("}"))
         {
             if(newasm::header::data::struct_now)

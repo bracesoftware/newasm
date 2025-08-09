@@ -959,6 +959,86 @@ namespace newasm
 
                 return {false, {"", ""}};
             }
+			std::pair<bool, std::string> parseNamespace(const std::string& line)
+			{
+				size_t i = 0;
+				while (i < line.length() && std::isspace(line[i])) i++;
+				if (i >= line.length() || line[i] != '.') return {false, ""};
+				i++;
+				while (i < line.length() && std::isspace(line[i])) i++;
+				if (i >= line.length() || line[i] != '/') return {false, ""};
+				i++;
+				while (i < line.length() && std::isspace(line[i])) i++;
+
+				std::string namespace_name;
+				while (i < line.length() && !std::isspace(line[i]))
+				{
+					namespace_name += line[i++];
+				}
+				if (namespace_name.empty()) return {false, ""};
+
+				return {true, namespace_name};
+			}
+			
+			std::pair<bool, std::vector<std::string>> parseNamespaceSegments(const std::string& line)
+			{
+				if(line.at(0) == ':')
+				{
+					return {false, {}};
+				}
+				
+				if(line.back() == ':')
+				{
+					return {false, {}};
+				}
+				
+				if(line.find("::") == std::string::npos)
+				{
+					return {false, {}};
+				}
+				
+				std::vector<std::string> segments;
+				size_t pos = 0;
+				size_t len = line.length();
+
+				while (pos < len)
+				{
+					size_t next_sep = line.find("::", pos);
+					if (next_sep == std::string::npos)
+					{
+						// Zadnji segment (ili jedini)
+						std::string segment = line.substr(pos);
+						if (!segment.empty())
+							segments.push_back(segment);
+						break;
+					}
+					else
+					{
+						std::string segment = line.substr(pos, next_sep - pos);
+						if (segment.empty())
+						{
+							// Dvostruki separator sa praznim segmentom nije validan
+							return {false, {}};
+						}
+						segments.push_back(segment);
+						pos = next_sep + 2; // preskoči "::"
+					}
+				}
+
+				if (segments.empty())
+					return {false, {}};
+				
+				for(int i = 0; i < segments.size(); ++i)
+				{
+					if(!newasm::header::functions::isalphanum(segments.at(i)))
+					{
+						return {false, {}};
+					}
+					segments.at(i) = newasm::header::functions::trim(segments.at(i));
+				}
+
+				return {true, segments};
+			}
 
 
 

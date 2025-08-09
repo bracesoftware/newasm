@@ -34,6 +34,29 @@ namespace newasm
         {
             void parse(std::string& suf)
             {
+				if(newasm::header::functions::parseNamespaceSegments(suf).first)
+				{
+					newasm::progwin::api::cout("Yes NMS -> " + suf);
+					auto i = newasm::header::functions::parseNamespaceSegments(suf);
+					std::string symbol_name = i.second.back();
+					auto vec = i.second;
+					vec.pop_back();
+					int expected_size = vec.size();
+					if(vec.size() != newasm::mem::data_attrib[symbol_name].namespaces.size())
+					{
+						newasm::terminate(newasm::exit_codes::invalid_memacc);
+						return;
+					}
+					for(int i = 0; i < expected_size; ++i)
+					{
+						if(vec.at(i) != newasm::mem::data_attrib[symbol_name].namespaces.at(i))
+						{
+							newasm::terminate(newasm::exit_codes::invalid_memacc);
+							return;
+						}
+					}
+					suf = newasm::header::functions::parseNamespaceSegments(suf).second.back();
+				}
                 if(newasm::header::functions::isref(suf))
                 {
                     return;

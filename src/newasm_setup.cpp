@@ -59,7 +59,7 @@ namespace newasm
         const int inline_proc = 18;
         const int unknown_fdx = 19;
         const int unknown_directive = 20;
-        //const int nested_csm = 21;
+        const int namespace_err = 21;
         const int uninptr_usage = 22;
         const int var_redef = 23;
         const int object_redef = 24;
@@ -140,7 +140,8 @@ namespace newasm
             {expected_await, "ExpectedAwait"},
             {invalid_thread, "InvalidThread"},
             {invalid_exp, "InvalidExpression"},
-            {vmem_overflow, "VirtualMemOverflow"}
+            {vmem_overflow, "VirtualMemOverflow"},
+			{namespace_err, "NamespaceError"}
         };
     }
     namespace cmp_results
@@ -251,6 +252,7 @@ namespace newasm
         std::unordered_map<std::string, int> datatypes;
         struct attrib
         {
+			std::vector<std::string> namespaces;
             bool locked = false;
         };
         std::unordered_map<std::string, newasm::mem::attrib> data_attrib;

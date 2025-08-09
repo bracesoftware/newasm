@@ -135,6 +135,7 @@ is in the runtime
 #include "kernel/krnlcfg.cpp"
 #include "kernel/syscall_handle.cpp"
 
+#include "runtime/namespaces.cpp"
 #include "pp/directives.cpp"
 #include "newasm_exec.cpp"
 

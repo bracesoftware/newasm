@@ -96,6 +96,7 @@ Documentation about `newasm` which includes following topics:
     - [`await` and `retf`](docs/threads.md#await-and-retf-instructions)
 - [Opcodes](docs/opcodes.md)
 - [Lambda procedures](docs/lambda.md)
+- [Namespaces](docs/namespaces.md)
 
 - [Interesting examples](#interesting-examples)
     - [Writing to a file, and then reading it](#writing-to-a-file-and-printing-its-content)
