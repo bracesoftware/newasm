@@ -37,7 +37,7 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 
 ## Important notes
 
-- No important notes.
+* Added support for older versions of Windows (Vista, 7, 8, 8.1).
 
 --------------------------------------------------------------------------------
 
