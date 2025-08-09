@@ -1,7 +1,5 @@
 - [Go back...](../README.md)
 
-> This feature is not available yet!
-
 ## Namespaces
 
 ```asm
