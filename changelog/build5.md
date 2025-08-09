@@ -28,6 +28,7 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 
 ## What's changed
 * The following instructions have had their deprecated suffix part removed: `push`, `pop`
+* Removed the `-test` argument.
 
 
 ## Fixed issues

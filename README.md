@@ -115,7 +115,6 @@ This project is written purely in C++ using its standard libraries, so compiling
 | `-help` | - | Displays help information. |
 | `-input` | `<filename>` | Sets the input file; if `-input` was not provided, interpreter sets it to `input.asm`. |
 | `-newproj` | - | Create a new project file if one doesn't already exist. |
-| `-tests` | - | Start the test function. |
 | `-log` | - | Toggle the logging system. |
 | `-nover` | - | Turn off version checking. |
 | `-mode` | `<id>` | Change the launch mode. |
