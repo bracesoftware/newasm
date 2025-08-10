@@ -301,6 +301,14 @@ namespace newasm
 				return 1;
 			}
         }
+		if(!newasm::header::data::struct_now) if(newasm::mem::functions::datavalid(name, newasm::mem::tuple))
+        {
+            if(true)//if(newasm::namespaceCollision(name))
+			{
+				newasm::terminate(newasm::exit_codes::tuple_redef);
+				return 1;
+			}
+        }
         if(newasm::header::functions::isalphanum(name))
         {
             if(dtyp == newasm::core::lang_inf::typenames::identifiers__.at(
@@ -456,7 +464,21 @@ namespace newasm
 				//_newasm_addnamespaces(name)
                 return 1;
             }
-
+			if(dtyp == newasm::core::lang_inf::typenames::identifiers__.at(
+                newasm::core::lang_inf::typenames::tuple
+            ))
+            {
+                if(!newasm::header::functions::istuple(value))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                    return 1;
+                }
+        
+                newasm::mem::tuple[name].contents = newasm::header::functions::parseTuple(value);
+                return 1;
+            }
+			
+			// complex containers
             if(dtyp == newasm::core::lang_inf::typenames::identifiers__.at(
                 newasm::core::lang_inf::typenames::bit_arr
             ))

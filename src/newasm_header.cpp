@@ -1060,6 +1060,192 @@ namespace newasm
 
 				return std::string("var_") + buffer;
 			}
+			
+			bool istuple(std::string str)
+			{
+				if(str.front() == '(' && str.back() == ')')
+				{
+					return true;
+				}
+				return false;
+			}
+			
+			std::vector<std::string> parseTuple(const std::string& line)
+			{
+				std::vector<std::string> result;
+				size_t i = 0;
+				size_t n = line.size();
+
+				while(i < n && std::isspace(line[i])) i++;
+				if(i < n && line[i] == '(') i++;
+
+				while(i < n)
+				{
+					while( i < n && std::isspace(line[i])) i++;
+
+					if(i >= n || line[i] == ')') break;
+
+					if(line[i] == '"')
+					{
+						std::string val;
+						val += line[i++];
+						while (i < n)
+						{
+							val += line[i];
+							if (line[i] == '"' && val.back() != '\\')
+							{
+								i++;
+								break;
+							}
+							i++;
+						}
+						result.push_back(val);
+					}
+					else
+					{
+						std::string val;
+						while(i < n && line[i] != ',' && line[i] != ')')
+						{
+							if(!std::isspace(line[i]))
+								val += line[i];
+							else if(!val.empty())
+								break;
+							i++;
+						}
+						result.push_back(val);
+					}
+					while (i < n && (std::isspace(line[i]) || line[i] == ',')) i++;
+				}
+				return result;
+			}
+			std::pair<bool, std::pair<std::string, std::string>> checkTupleFormat(const std::string& input)
+			{
+				size_t i = 0;
+				size_t n = input.size();
+
+				auto skipSpaces = [&](size_t& pos)
+				{
+					while (pos < n && std::isspace(static_cast<unsigned char>(input[pos])))
+					{
+						++pos;
+					}
+				};
+
+				// Parsiraj TEXT (do prve zagrade '(' ili razmaka)
+				skipSpaces(i);
+				size_t startText = i;
+
+				// TEXT dozvoljava skoro sve osim '(', razmaka i kontrolnih znakova
+				while (i < n && !std::isspace(static_cast<unsigned char>(input[i])) && input[i] != '(')
+				{
+					++i;
+				}
+
+				if (startText == i)
+				{
+					return {false, {"", ""}};
+				}
+
+				std::string text = input.substr(startText, i - startText);
+
+				skipSpaces(i);
+
+				if (i >= n || input[i] != '(')
+				{
+					return {false, {"", ""}};
+				}
+				++i;
+
+				skipSpaces(i);
+
+				size_t startText2 = i;
+				while(i < n && input[i] != ')')
+				{
+					++i;
+				}
+				if(i >= n)
+				{
+					return {false, {"", ""}};
+				}
+				if(startText2 == i)
+				{
+					return {false, {"", ""}};
+				}
+
+				std::string text2 = input.substr(startText2, i - startText2);
+
+				++i;
+				skipSpaces(i);
+
+				if(i != n)
+				{
+					return {false, {"", ""}};
+				}
+
+				return {true, {text, text2}};
+			}
+			std::pair<bool, std::pair<std::string, std::string>> checkTupleFormat2(const std::string& input)
+			{
+				size_t i = 0;
+				size_t n = input.size();
+
+				auto skipSpaces = [&](size_t& pos)
+				{
+					while(pos < n && std::isspace(static_cast<unsigned char>(input[pos])))
+					{
+						++pos;
+					}
+				};
+				skipSpaces(i);
+				size_t startText = i;
+
+				while(i < n && (std::isalnum(static_cast<unsigned char>(input[i])) || input[i] == '_'))
+				{
+					++i;
+				}
+
+				if (startText == i)
+				{
+					return {false, {"", ""}};
+				}
+
+				std::string text = input.substr(startText, i - startText);
+
+				skipSpaces(i);
+
+				if (i >= n || input[i] != '(')
+				{
+					return {false, {"", ""}};
+				}
+				++i;
+
+				skipSpaces(i);
+
+				size_t startText2 = i;
+				while (i < n && input[i] != ')') {
+					++i;
+				}
+				if (i >= n)
+				{
+					return {false, {"", ""}};
+				}
+				if (startText2 == i)
+				{
+					return {false, {"", ""}};
+				}
+
+				std::string text2 = input.substr(startText2, i - startText2);
+
+				++i;
+				skipSpaces(i);
+
+				if (i != n)
+				{
+					return {false, {"", ""}};
+				}
+
+				return {true, {text, text2}};
+			}
 
 
         }

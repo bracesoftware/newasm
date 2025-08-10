@@ -89,6 +89,8 @@ namespace newasm
         const int invalid_thread = 48;
         const int invalid_exp = 49;
         const int vmem_overflow = 50;
+		const int tuple_redef = 51;
+		const int invalid_tuple = 52;
 
         const std::unordered_map<int, std::string> identifier = {
             {noterm_point, "NoTerminationPoint"},
@@ -141,7 +143,9 @@ namespace newasm
             {invalid_thread, "InvalidThread"},
             {invalid_exp, "InvalidExpression"},
             {vmem_overflow, "VirtualMemOverflow"},
-			{namespace_err, "NamespaceError"}
+			{namespace_err, "NamespaceError"},
+			{tuple_redef, "TupleRedefinition"},
+			{invalid_tuple, "InvalidTuple"}
         };
     }
     namespace cmp_results
@@ -247,7 +251,7 @@ namespace newasm
             std::string name;
             std::string value;
         };
-
+		////////
         std::unordered_map<std::string, std::string> data;
         std::unordered_map<std::string, int> datatypes;
         struct attrib
@@ -256,6 +260,12 @@ namespace newasm
             bool locked = false;
         };
         std::unordered_map<std::string, newasm::mem::attrib> data_attrib;
+		///////////
+		struct tuple_data
+		{
+			std::vector<std::string> contents;
+		};
+		std::unordered_map<std::string, newasm::mem::tuple_data> tuple;
 
         std::map<std::string, std::vector<std::string>> funcs;
         std::unordered_map<std::string, std::vector<std::string>> instructions;

@@ -80,6 +80,25 @@ namespace newasm
 					}
                     return;
                 }
+				//if tuple
+				if(newasm::header::functions::checkTupleFormat(suf).first)
+				{
+					//std::cout << "IF TUPLE x1 << " << suf << "\n";
+					auto tupleName = newasm::header::functions::trim(newasm::header::functions::checkTupleFormat(suf).second.first);
+					auto tupleIndex = newasm::header::functions::trim(newasm::header::functions::checkTupleFormat(suf).second.second);
+					
+					if(newasm::header::functions::parseNamespaceSegments(tupleName).first)
+					{
+						newasm::progwin::api::cout("Yes NMS -> " + suf);
+						auto i = newasm::header::functions::parseNamespaceSegments(tupleName);
+						std::string symbol_name = i.second.back();
+						auto vec = i.second;
+						vec.pop_back(); // namespace list
+						parse(tupleIndex); // i love recursion :D
+						
+						suf = newasm::header::functions::mangleName(vec, symbol_name) + "(" + tupleIndex + ")";
+					}
+				}
                 if(newasm::mem::data_attrib[suf].locked)
                 {
                     suf = "\"unknown??\"";
@@ -108,6 +127,63 @@ namespace newasm
                 if(newasm::chars::map.find(suf) != newasm::chars::map.end())
                 {
                     suf = newasm::chars::map.at(suf);
+                }
+				
+				// Just a specific tuple index
+				if(newasm::header::functions::checkTupleFormat(suf).first)
+				{
+					//std::cout << "IF TUPLE x2 << " << suf << "\n";
+					auto tupleName = newasm::header::functions::trim(newasm::header::functions::checkTupleFormat(suf).second.first);
+					auto tupleIndex = newasm::header::functions::trim(newasm::header::functions::checkTupleFormat(suf).second.second);
+					
+					bool validTuple = newasm::mem::tuple.find(tupleName) != newasm::mem::tuple.end();
+					bool indexNumeric = newasm::header::functions::isnumeric(tupleIndex);
+					if(!validTuple)
+					{
+						suf = newasm::header::constants::inv_reg_val;
+					}
+					parse(tupleIndex);
+					if(!indexNumeric)
+					{
+						suf = newasm::header::constants::inv_reg_val;
+					}
+					
+					if(validTuple && indexNumeric)
+					{
+						int index = std::stoi(tupleIndex);
+						if(index >= newasm::mem::tuple.at(tupleName).contents.size() || index < 0)
+						{
+							suf = newasm::header::constants::inv_reg_val;
+						}
+						else
+						{
+							suf = newasm::mem::tuple.at(tupleName).contents.at(index);
+						}
+					}
+				}
+				// Whole tuple
+				if(newasm::mem::tuple.find(suf) != newasm::mem::tuple.end())
+                {
+					//std::cout << "IF TUPLE x3 << " << suf << "\n";
+					std::string tuple_content, temp;
+					int tuple_size = newasm::mem::tuple.at(suf).contents.size();
+					auto vec = newasm::mem::tuple.at(suf).contents;
+					tuple_content = "(";
+					for(int i = 0; i < tuple_size; ++i)
+					{
+						temp = vec.at(i);
+						parse(temp); // recursion :D
+						tuple_content.append(temp);
+						if(i + 1 != tuple_size)
+						{
+							tuple_content.append(",");
+						}
+						if(i + 1 == tuple_size)
+						{
+							tuple_content.append(")");
+						}
+					}
+                    suf = tuple_content;
                 }
 
                 ///////////////////

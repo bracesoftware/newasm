@@ -235,8 +235,10 @@ namespace newasm
                 const int ref = 5;
                 const int obj = 6;
                 const int thread = 7;
-                const int bit_arr = 8;
-                const int bin_tree = 9;
+				const int tuple = 8;
+				
+                const int bit_arr = 9;
+                const int bin_tree = 10;
 
                 const std::unordered_map<int, std::string> identifiers__ = {
                     {num, "num"},
@@ -246,6 +248,8 @@ namespace newasm
                     {ref, "ref"},
                     {obj, "obj"},
                     {thread, "thread"},
+					{tuple, "tuple"},
+					
                     {bit_arr, "bit_arr"},
                     {bin_tree, "bin_tree"}
                 };

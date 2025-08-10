@@ -10,7 +10,7 @@
     },
     {
       "name": "keyword.control.newasm",
-      "match":  "\\b(num|decm|txt|char|ref|obj|thread|bit_arr|bin_tree)\\b"
+      "match":  "\\b(num|decm|txt|char|ref|obj|thread|tuple|bit_arr|bin_tree)\\b"
     },
     {
       "name": "keyword.control.newasm",
