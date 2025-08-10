@@ -139,13 +139,13 @@
     {
       "scope": "namespace.newasm",
       "settings": {
-        "foreground": "#8689df"
+        "foreground": "#569CD6"
       }
     },
     {
       "scope": "declaration.newasm",
       "settings": {
-        "foreground": "#22e7c6"
+        "foreground": "#D7BA7D"
       }
     }
   ]

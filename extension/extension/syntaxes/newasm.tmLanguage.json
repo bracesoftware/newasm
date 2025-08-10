@@ -9,6 +9,10 @@
       "match": "\\b([a-zA-Z_][a-zA-Z0-9_]*::)\\s*"
     },
     {
+      "name": "namespace.newasm",
+      "match": "\\./\\s*[a-zA-Z_][a-zA-Z0-9_]*"
+    },
+    {
       "name": "declaration.newasm",
       "match": "\\b([a-zA-Z_][a-zA-Z0-9_]*(::[a-zA-Z_][a-zA-Z0-9_]*)*)\\s*:"
     },
