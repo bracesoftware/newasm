@@ -135,6 +135,18 @@
       "settings": {
         "foreground": "#D7BA7D"
       }
+    },
+    {
+      "scope": "namespace.newasm",
+      "settings": {
+        "foreground": "#8689df"
+      }
+    },
+    {
+      "scope": "declaration.newasm",
+      "settings": {
+        "foreground": "#22e7c6"
+      }
     }
   ]
 }
