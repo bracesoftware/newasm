@@ -78,6 +78,26 @@ namespace newasm
 						suf = static_cast<std::string>("&") + newasm::header::functions::mangleName(vec, symbol_name);
 						return;
 					}
+					if(newasm::header::functions::parseObject(newsuf).first)
+					{
+						newasm::progwin::api::cout("Object<yes::ref> NMS -> " + suf);
+
+						auto objectData = newasm::header::functions::parseObject(newsuf);
+						auto objectName = objectData.second.first;
+						auto objectMember = objectData.second.second;
+						if(newasm::header::functions::parseNamespaceSegments(objectName).first)
+						{
+							auto i = newasm::header::functions::parseNamespaceSegments(objectName);
+							std::cout << "objectName -> " << objectName << "| i.size() -> " << i.second.size() << std::endl;
+							std::string symbol_name = i.second.back();
+							auto vec = i.second;
+							vec.pop_back(); // namespace list
+							
+							suf = static_cast<std::string>("&") + newasm::header::functions::mangleName(vec, symbol_name) + 
+							static_cast<std::string>("{")+objectMember+static_cast<std::string>("}");
+							return;
+						}
+					}
                     return;
                 }
 				//if tuple

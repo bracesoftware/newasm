@@ -1259,8 +1259,18 @@ namespace newasm
 				return {true, {text, text2}};
 			}
 
-            std::pair<bool, std::pair<std::string, std::string>> parseObject(const std::string &input)
+            std::pair<bool, std::pair<std::string, std::string>> parseObject(const std::string &input_)
             {
+                std::string input = newasm::header::functions::trim(input_);
+                if(input.empty())
+                {
+                    return {false, {"", ""}};
+                }
+                if(input.front() == '{')
+                {
+                    return {false, {"", ""}};
+                }
+
                 size_t openPos = input.find('{');
                 size_t closePos = input.find('}');
 
@@ -1269,37 +1279,19 @@ namespace newasm
                     return { false, { "", "" } };
                 }
 
-                std::string before = input.substr(0, openPos);
+                std::string before = newasm::header::functions::trim(input.substr(0, openPos));
 
-                while(!before.empty() && std::isspace((unsigned char)before.back()))
+                std::string inside = newasm::header::functions::trim(input.substr(openPos + 1));
+                inside.pop_back(); // get rid of }
+                inside = newasm::header::functions::trim(inside);
+
+                if(before.size() == 0)
                 {
-                    before.pop_back();
+                    return {false, {"", ""}};
                 }
-                for(char c : before)
+                if(inside.size() == 0)
                 {
-                    if(!std::isalnum((unsigned char)c) && c != '_')
-                    {
-                        return { false, { "", "" } };
-                    }
-                }
-
-                // Dio unutar '{}'
-                std::string inside = input.substr(openPos + 1, closePos - openPos - 1);
-
-                size_t start = 0;
-                while(start < inside.size() && std::isspace((unsigned char)inside[start]))
-                    start++;
-                size_t end = inside.size();
-                while(end > start && std::isspace((unsigned char)inside[end - 1]))
-                    end--;
-                inside = inside.substr(start, end - start);
-
-                for(char c : inside)
-                {
-                    if (!std::isalnum((unsigned char)c) && c != '_')
-                    {
-                        return { false, { "", "" } };
-                    }
+                    return {false, {"", ""}};
                 }
 
                 return { true, { before, inside } };
