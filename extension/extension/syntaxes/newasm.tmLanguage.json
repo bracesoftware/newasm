@@ -13,12 +13,16 @@
       "match": "\\./\\s*[a-zA-Z_][a-zA-Z0-9_]*"
     },
     {
+      "name": "namespace.newasm",
+      "match": "\\./!\\s*[a-zA-Z_][a-zA-Z0-9_]*"
+    },
+    {
       "name": "declaration.newasm",
       "match": "\\b([a-zA-Z_][a-zA-Z0-9_]*(::[a-zA-Z_][a-zA-Z0-9_]*)*)\\s*:"
     },
     {
       "name": "keyword.control.newasm",
-      "match":  "\\b(async|cast|in|out|default|switch|case|vmov|await|retf|cls|load|stor|sysreq|pop|retn|mov|syscall|proc|call|rem|halt|push|jmp|heap|cmp|je|jne|jl|jg|jle|jge|ret|zero|inc|dec|exit|end|nop|add|sub|div|mul|exp|log|and|or|xor|not|shl|shr|db|malloc|free|stack|wait|sysenter|xchg|int|__say)\\b"
+      "match":  "\\b(lea|async|cast|in|out|default|switch|case|vmov|await|retf|cls|load|stor|sysreq|pop|retn|mov|syscall|proc|call|rem|halt|push|jmp|heap|cmp|je|jne|jl|jg|jle|jge|ret|zero|inc|dec|exit|end|nop|add|sub|div|mul|exp|log|and|or|xor|not|shl|shr|db|malloc|free|stack|wait|sysenter|xchg|int|__say)\\b"
     },
     {
       "name": "keyword.control.newasm",

@@ -44,7 +44,8 @@
         "keyword.other.using",
         "keyword.other.directive.using",
         "keyword.other.operator",
-        "entity.name.operator"
+        "entity.name.operator",
+        "namespace"
       ],
       "settings": {
         "foreground": "#C586C0"
@@ -82,7 +83,7 @@
     {
       "scope": "keyword.control.newasm",
       "settings": {
-        "foreground": "#cc4444"
+        "foreground": "#569CD6"
       }
     },
     {
@@ -127,19 +128,20 @@
     {
       "scope": "constant.numeric.newasm",
       "settings": {
-        "foreground": "#cc4444"
+        "foreground": "#6A9955"
       }
     },
     {
       "scope": "constant.hex.newasm",
       "settings": {
-        "foreground": "#D7BA7D"
+        "foreground": "#6A9955"
       }
     },
     {
       "scope": "namespace.newasm",
       "settings": {
-        "foreground": "#569CD6"
+        "foreground": "#569CD6",
+        "fontStyle": "italic"
       }
     },
     {

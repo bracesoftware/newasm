@@ -79,6 +79,8 @@ namespace newasm
             std::string switched_value;
             bool case_matched = false;
             std::string case_line;
+            //tuples
+            int tupleIndex = -1; 
         }
         namespace constants
         {

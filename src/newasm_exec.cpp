@@ -776,7 +776,45 @@ namespace newasm
                 return 1;
             }
         }
-        
+        //lea
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::vmov))
+        {
+            if(newasm::header::functions::isnumeric(opr))
+            {
+                if(std::stoi(opr) == -1)
+                {
+                    if(suf == "null")
+                    {
+                        newasm::header::data::tupleIndex = -1;
+                        return;
+                    }
+                }
+            }
+            if(!newasm::mem::functions::datavalid(suf, newasm::mem::tuple))
+            {
+                newasm::terminate(newasm::exit_codes::invalid_tuple);
+                return 1;
+            }
+            if(!newasm::header::functions::isnumeric(opr))
+            {
+                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                return 1;
+            }
+
+            int localidx = std::stoi(opr);
+
+            if(localidx >= newasm::mem::tuple.at(suf).contents.size())
+            {
+                int oldsize = newasm::mem::tuple.at(suf).contents.size();
+                for(int i = 0; i < (localidx - oldsize + 1); ++i)
+                {
+                    newasm::mem::tuple.at(suf).contents.push_back("0");
+                }
+            }
+
+            newasm::header::data::tupleIndex = localidx;
+            return 1;
+        }
         //vmov
         if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::vmov))
         {
@@ -943,7 +981,22 @@ namespace newasm
                 newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                 return 1;
             }
-            opr = newasm::header::functions::remamp(opr);
+            opr = newasm::header::functions::trim(newasm::header::functions::remamp(opr));
+            if(newasm::header::data::tupleIndex != -1)
+            {
+                if(!newasm::mem::functions::datavalid(opr, newasm::mem::tuple))
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_tuple);
+                    return 1;
+                }
+                if(suf == newasm::mem::regs::tlr.identifier())
+                {
+                    newasm::mem::tuple.at(opr).contents.at(newasm::header::data::tupleIndex) = newasm::mem::regs::tlr.get_value();
+                }
+                
+                newasm::header::data::tupleIndex = -1;
+                return 1;
+            }
             if(newasm::header::functions::isrefat(opr) && !newasm::header::functions::istext(opr))
             {
                 newasm::stor_structmem(suf, opr);
