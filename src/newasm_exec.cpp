@@ -1006,6 +1006,27 @@ namespace newasm
                 newasm::header::data::tupleIndex = -1;
                 return 1;
             }
+            if(newasm::header::data::tupleIndex == -1)
+            {
+                if(newasm::mem::functions::datavalid(opr, newasm::mem::tuple))
+                {
+                    //storing tlr into a tuple
+                    if(suf == newasm::mem::regs::tlr.identifier())
+                    {
+                        //auto tupleData = newasm::header::functions::checkTupleFormat(newasm::mem::regs::tlr.get_value());
+                        if(!newasm::header::functions::istuple(newasm::mem::regs::tlr.get_value()))
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                            return 1;
+                        }
+                        auto vec = newasm::header::functions::parseTuple(newasm::mem::regs::tlr.get_value());
+                        newasm::mem::tuple.at(suf).contents = vec;
+                        return 1;
+                    }
+                    newasm::terminate(newasm::exit_codes::invalid_syntax);
+                    return 1;
+                }
+            }
             if(newasm::header::functions::isrefat(opr) && !newasm::header::functions::istext(opr))
             {
                 newasm::stor_structmem(suf, opr);

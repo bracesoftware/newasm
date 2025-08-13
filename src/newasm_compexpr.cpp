@@ -50,6 +50,11 @@ namespace newasm
 
     void tokenize(std::string str)
     {
+        if(true)
+        {
+            return;
+        }
+
         std::string token = "";
         newasm::token* token_obj = nullptr;
         int type = 0;

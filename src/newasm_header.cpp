@@ -1249,6 +1249,53 @@ namespace newasm
 				return {true, {text, text2}};
 			}
 
+            std::pair<bool, std::pair<std::string, std::string>> parseObject(const std::string &input)
+            {
+                size_t openPos = input.find('{');
+                size_t closePos = input.find('}');
+
+                if(openPos == std::string::npos || closePos == std::string::npos || closePos < openPos)
+                {
+                    return { false, { "", "" } };
+                }
+
+                std::string before = input.substr(0, openPos);
+
+                while(!before.empty() && std::isspace((unsigned char)before.back()))
+                {
+                    before.pop_back();
+                }
+                for(char c : before)
+                {
+                    if(!std::isalnum((unsigned char)c) && c != '_')
+                    {
+                        return { false, { "", "" } };
+                    }
+                }
+
+                // Dio unutar '{}'
+                std::string inside = input.substr(openPos + 1, closePos - openPos - 1);
+
+                size_t start = 0;
+                while(start < inside.size() && std::isspace((unsigned char)inside[start]))
+                    start++;
+                size_t end = inside.size();
+                while(end > start && std::isspace((unsigned char)inside[end - 1]))
+                    end--;
+                inside = inside.substr(start, end - start);
+
+                for(char c : inside)
+                {
+                    if (!std::isalnum((unsigned char)c) && c != '_')
+                    {
+                        return { false, { "", "" } };
+                    }
+                }
+
+                return { true, { before, inside } };
+            }
+
+
 
         }
     }
