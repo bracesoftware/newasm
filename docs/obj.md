@@ -26,47 +26,47 @@ In this quite frankly low-level language, there are also objects! General syntax
         ref  reference : &prptest
     }
 .start
-    mov tlr , text @ myobj
+    mov tlr , myobj{text}
     mov stl , 0c1
     mov fdx , 1
     sysenter %ios
     syscall
 
-    mov tlr , decimal @ myobj
+    mov tlr , myobj{decimal}
     mov fdx , 2
     sysenter %ios
     syscall
 
-    mov tlr , lol @ myobj
+    mov tlr , myobj{lol}
     mov fdx , 2
     sysenter %ios
     syscall
 
-    mov tlr , text @ myobj2
+    mov tlr , myobj2{text}
     mov stl , 0c1
     mov fdx , 1
     sysenter %ios
     syscall
 
-    mov tlr , decimal @ myobj2
+    mov tlr , myobj2{decimal}
     mov fdx , 2
     sysenter %ios
     syscall
 
-    mov tlr , lol @ myobj2
+    mov tlr , myobj2{lol}
     mov fdx , 2
     sysenter %ios
     syscall
 
-    mov tlr , reference @ myobj2
+    mov tlr , myobj2{reference}
     mov fdx , 6
     sysenter %ios
     syscall
 
     mov stl , 45657
 
-    stor stl , lol @ myobj2
-    mov tlr , lol @ myobj2
+    stor stl , &myobj2{lol}
+    mov tlr , myobj2{lol}
     mov fdx , 2
     mov stl , 0c1
     sysenter %ios
@@ -74,8 +74,8 @@ In this quite frankly low-level language, there are also objects! General syntax
 
     mov psx , "HIII243"
 
-    stor psx , text @ myobj
-    mov tlr , text @ myobj
+    stor psx , &myobj{text}
+    mov tlr , myobj{text}
     mov fdx , 1
     mov stl , 0c1
     sysenter %ios
