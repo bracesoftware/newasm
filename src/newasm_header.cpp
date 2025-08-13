@@ -393,15 +393,25 @@ namespace newasm
                 std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
                 return 0; // sve ok
             }
+            const std::vector<std::string> lambda_ = {
+                "proc", "end"
+            };
             std::pair<bool, std::string> is_lambda(std::string text)
             {
                 std::string newstr = newasm::header::functions::trim(text);
 
                 if(newstr.size() >= 3 && newstr.front() == '(' && newstr.back() == ')')
                 {
-                    return {true, (newstr.substr(1, newstr.size() - 2))};
+                    auto lambda_proc = (newstr.substr(1, newstr.size() - 2));
+                    for(const auto& keyword : lambda_)
+                    {
+                        if(keyword == lambda_proc)
+                        {
+                            return {true, lambda_proc};
+                        }
+                    }
+                    return {false, "err"};
                 }
-   
 
                 return {false, "err"};
             }

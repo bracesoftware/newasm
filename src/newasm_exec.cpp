@@ -1020,7 +1020,7 @@ namespace newasm
                             return 1;
                         }
                         auto vec = newasm::header::functions::parseTuple(newasm::mem::regs::tlr.get_value());
-                        newasm::mem::tuple.at(suf).contents = vec;
+                        newasm::mem::tuple.at(opr).contents = vec;
                         return 1;
                     }
                     newasm::terminate(newasm::exit_codes::invalid_syntax);
