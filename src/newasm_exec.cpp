@@ -777,7 +777,7 @@ namespace newasm
             }
         }
         //lea
-        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::vmov))
+        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::lea))
         {
             if(newasm::header::functions::isnumeric(opr))
             {
@@ -786,10 +786,17 @@ namespace newasm
                     if(suf == "null")
                     {
                         newasm::header::data::tupleIndex = -1;
-                        return;
+                        return 1;
                     }
                 }
             }
+            if(!newasm::header::functions::isref(suf))
+            {
+                newasm::terminate(newasm::exit_codes::invalid_memacc);
+                return 1;
+            }
+            newasm::runtime::functions::parse(suf);
+            //std::cout << "lea -> suf is :: " << suf << std::endl;
             if(!newasm::mem::functions::datavalid(suf, newasm::mem::tuple))
             {
                 newasm::terminate(newasm::exit_codes::invalid_tuple);

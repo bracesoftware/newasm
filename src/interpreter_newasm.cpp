@@ -21,6 +21,7 @@ the Initial Developer. All Rights Reserved.
 
 */
 
+#pragma GCC diagnostic ignored "-Wunused-result"
 #include "runtime/common/os.h"
 
 #define EMPTYLINE std::cout<<"\n"

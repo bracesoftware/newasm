@@ -14,10 +14,26 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 .start
     mov tlr, mytuble(0) ; access the tuple value at a specific index
     mov tlr, (43, 1.7, "Hi") ; or set `tlr` to be a tuple
-    stor tlr, &mytuple ; update the tuple
-    stor tlr, &mytuple(0) ; update the specific index
 ```
 Tuples can be only one-dimensional.
+
+In order to update the specific index inside a tuple, you have to use the new `lea` instruction:
+```asm
+lea &tuple_name, 0 ; numeric index
+mov tlr, some_value
+stor tlr, &tuple_name ; just update the value at index 0
+```
+In order to completely change the tuple, just set the specific register to a tuple:
+```asm
+mov tlr, (“ey”, 67, 1.2, ‘aʼ)
+stor tlr, &tuple_name ; change the whole tuple
+```
+To expand the new tuple functionality, new kernel module has been introduced, `%tuple`.
+
+| Module | ID | Arguments | Description |
+| -------------|---------|------------|--------------- |
+| `%tuple` | `1` | `tlr` | `tlr` is a pointer to a tuple. Stores the size of a tuple inside the `tlr` register. |
+
 
 ## What's changed
 - No important changes.
