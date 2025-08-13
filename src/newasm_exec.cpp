@@ -132,17 +132,11 @@ namespace newasm
     }
     int parseopr_struct(std::string& opr)
     {
-        if(opr.find("@") != std::string::npos)
+        if(newasm::header::functions::parseObject(opr).first)
         {
-            std::vector<std::string> tokens;
-            std::string member_name;
-            std::string struct_name;
-
-            tokens = newasm::header::functions::split_fixed(opr, '@');
-            member_name = tokens[0];
-            struct_name = tokens[1];
-            member_name = newasm::header::functions::trim(member_name);
-            struct_name = newasm::header::functions::trim(struct_name);
+            auto objectData = newasm::header::functions::parseObject(opr);
+            std::string member_name = newasm::header::functions::trim(objectData.second.second);
+            std::string struct_name = newasm::header::functions::trim(objectData.second.first);
 
 			if(newasm::header::functions::parseNamespaceSegments(struct_name).first)
 			{
@@ -529,15 +523,8 @@ namespace newasm
     }
     int stor_structmem(const std::string &suf, const std::string &into)
     {
-        std::vector<std::string> tokens;
-        std::string member_name;
-        std::string struct_name;
-
-        tokens = newasm::header::functions::split_fixed(into, '@');
-        member_name = tokens[0];
-        struct_name = tokens[1];
-        member_name = newasm::header::functions::trim(member_name);
-        struct_name = newasm::header::functions::trim(struct_name);
+        std::string member_name = newasm::header::functions::trim(newasm::header::functions::parseObject(into).second.second);
+        std::string struct_name = newasm::header::functions::trim(newasm::header::functions::parseObject(into).second.first);
 
         if(!newasm::mem::functions::datavalid(struct_name, newasm::mem::structs))
         {
@@ -1027,7 +1014,7 @@ namespace newasm
                     return 1;
                 }
             }
-            if(newasm::header::functions::isrefat(opr) && !newasm::header::functions::istext(opr))
+            if(newasm::header::functions::parseObject(opr).first && !newasm::header::functions::istext(opr))
             {
                 newasm::stor_structmem(suf, opr);
                 return 1;
