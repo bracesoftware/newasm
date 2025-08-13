@@ -36,16 +36,25 @@ To expand the new tuple functionality, new kernel module has been introduced, `%
 
 
 ## What's changed
-- No important changes.
+* Since we added tuples, also known as dynamic objects, standard object syntax has been changed to:
+```asm
+mov tlr, member @ object ; old syntax
+mov tlr, object{member} ; new syntax to match tuple(index)
+```
+To change the value of a member inside an object, just add the ampersand:
+```asm
+stor tlr, &object{member}
+```
+
 
 
 ## Fixed issues
-- No important fixes.
+
 - We've been focused on code optimisation.
 
 ## Important notes
 
-- No important notes.
+* Tuple management can be only done with the `tlr` register.
 
 --------------------------------------------------------------------------------
 

@@ -64,7 +64,7 @@ the Initial Developer. All Rights Reserved.
 
 namespace newasm
 {
-    const int BUILD_NUMBER = 5;
+    const int BUILD_NUMBER = 6;
     bool vercheck = true;
     bool dwin = false;
     const std::string tab = "\t\t\t";
