@@ -132,9 +132,9 @@ namespace newasm
     }
     int parseopr_struct(std::string& opr)
     {
-        if(newasm::header::functions::parseObject(opr).first)
+        auto objectData = newasm::header::functions::parseObject(opr);
+        if(objectData.first)
         {
-            auto objectData = newasm::header::functions::parseObject(opr);
             std::string member_name = newasm::header::functions::trim(objectData.second.second);
             std::string struct_name = newasm::header::functions::trim(objectData.second.first);
 
@@ -2938,23 +2938,7 @@ namespace newasm
                 newasm::unsins(ins);
                 return 1;
             }
-            std::vector<std::string> tokens;
-            for(std::vector<std::pair<std::string,std::string>>::iterator i = newasm::env_vars->begin(); i < newasm::env_vars->end(); ++i)
-            {
-                tokens = newasm::header::functions::split_fixed(suf,'/');
-                if(newasm::header::functions::trim(tokens[0]) == "*") if(newasm::header::functions::trim(tokens[1]) == i->first)
-                {
-                    suf = i->second;
-                }
-            }
-
-            if(suf == newasm::header::constants::inv_reg_val)
-            {
-                newasm::terminate(newasm::exit_codes::mem_overflow);//,wholeline);
-                return 1;
-            }
-            newasm::header::functions::parseopr(suf, newasm::mem::data);
-            newasm::parseopr_struct(suf);
+            newasm::runtime::functions::parse(suf);
             if(newasm::header::functions::isnumeric(suf))
             {
                 newasm::mem::regs::exc = std::stoi(suf);

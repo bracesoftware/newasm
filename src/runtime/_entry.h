@@ -123,6 +123,13 @@ namespace newasm
 				}
                 newasm::header::functions::parseopr(suf, newasm::mem::data);
                 newasm::parseopr_struct(suf);
+				try{
+					std::cout;
+				}
+				catch(std::exception& e)
+				{
+					std::cout << "ParseObject :: ZAJEBUCNUO TE -> " << e.what() << std::endl;
+				}
 
                 if(newasm::chars::map.find(suf) != newasm::chars::map.end())
                 {
@@ -192,6 +199,12 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::mem_overflow);//,wholeline);
                     return;
                 }
+				try{
+					std::cout << "";
+				}catch(std::exception& e)
+				{
+					std::cout << "Parser te zajebucnuo -> hihi :: " << e.what() << std::endl;
+				}
                 return;
             }
         }
