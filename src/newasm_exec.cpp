@@ -797,6 +797,8 @@ namespace newasm
             }
             newasm::runtime::functions::parse(suf);
             //std::cout << "lea -> suf is :: " << suf << std::endl;
+            
+            suf = newasm::header::functions::remamp(suf);
             if(!newasm::mem::functions::datavalid(suf, newasm::mem::tuple))
             {
                 newasm::terminate(newasm::exit_codes::invalid_tuple);
