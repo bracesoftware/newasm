@@ -88,7 +88,7 @@ namespace newasm
 						if(newasm::header::functions::parseNamespaceSegments(objectName).first)
 						{
 							auto i = newasm::header::functions::parseNamespaceSegments(objectName);
-							std::cout << "objectName -> " << objectName << "| i.size() -> " << i.second.size() << std::endl;
+							//std::cout << "objectName -> " << objectName << "| i.size() -> " << i.second.size() << std::endl;
 							std::string symbol_name = i.second.back();
 							auto vec = i.second;
 							vec.pop_back(); // namespace list
