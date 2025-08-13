@@ -105,3 +105,29 @@ obj  name : { ; brace must be HERE
     num  number : 384
 }
 ```
+
+
+## Tuples (dynamic objects)
+Tuples, also known as dynamic objects, can dynamically change sizes and types of its members. Basically an array that can hold any data.
+```asm
+.$using %ios
+.data
+    tuple mytuple: (87, "hi", 64.3, 'p')
+    tuple empty_tuple: () ; empty tuple
+.start
+    mov tlr, mytuble(0) ; access the tuple value at a specific index
+    mov tlr, (43, 1.7, "Hi") ; or set `tlr` to be a tuple
+```
+Tuples can be only one-dimensional.
+
+In order to update the specific index inside a tuple, you have to use the new `lea` instruction:
+```asm
+lea &tuple_name, 0 ; numeric index
+mov tlr, some_value
+stor tlr, &tuple_name ; just update the value at index 0
+```
+In order to completely change the tuple, just set the specific register to a tuple:
+```asm
+mov tlr, (“ey”, 67, 1.2, ‘aʼ)
+stor tlr, &tuple_name ; change the whole tuple
+```
