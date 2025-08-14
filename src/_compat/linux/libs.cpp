@@ -1,51 +1,47 @@
+/*
 
+Version: MPL 1.1
 
-#include <iostream>
+The contents of this file are subject to the Mozilla Public License Version 
+1.1 the "License"; you may not use this file except in compliance with 
+the License. You may obtain a copy of the License at 
+http://www.mozilla.org/MPL/
 
-#ifdef _WIN32
-  #include <windows.h>
-  using LibHandle = HMODULE;
+Software distributed under the License is distributed on an "AS IS" basis,
+WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+for the specific language governing rights and limitations under the
+License.
 
-  LibHandle loadLibrary(const char* libname) {
-      return LoadLibraryA(libname);
-  }
+Portions created by the Initial Developer are Copyright (c) The COPYRIGHT YEAR
+the Initial Developer. All Rights Reserved.
 
-  void* loadFunction(LibHandle lib, const char* funcname) {
-      return (void*)GetProcAddress(lib, funcname);
-  }
+*/
 
-  void closeLibrary(LibHandle lib) {
-      FreeLibrary(lib);
-  }
-
-#else // Linux/macOS
-  #include <dlfcn.h>
-  using LibHandle = void*;
-
-  LibHandle loadLibrary(const char* libname) {
-      return dlopen(libname, RTLD_LAZY);
-  }
-
-  void* loadFunction(LibHandle lib, const char* funcname) {
-      return dlsym(lib, funcname);
-  }
-
-  void closeLibrary(LibHandle lib) {
-      dlclose(lib);
-  }
-
-#endif
-
-#if _NEWASM_OS != _NEWASM_OS_android
+#include <dlfcn.h>
+using LibHandle = void*;
 using FuncHandler = std::string(*)();
+LibHandle loadLibrary(const char* libname)
+{
+    return dlopen(libname, RTLD_LAZY);
+}
+
+void* loadFunction(LibHandle lib, const char* funcname)
+{
+    return dlsym(lib, funcname);
+}
+
+void closeLibrary(LibHandle lib)
+{
+    dlclose(lib);
+}
+
 namespace newasm 
 {
     LibHandle library = nullptr;
     FuncHandler funcHandler = nullptr;
 }
 
-#define _NEWASM_CALL_FUNC() (newasm::funcHandler ? newasm::funcHandler() : "err")
-#endif
+
 
 namespace newasm
 {
@@ -54,21 +50,11 @@ namespace newasm
         namespace dynamic
         {
             int CALL(std::string libname, std::string func)
-            #if _NEWASM_OS == _NEWASM_OS_android
-            {
-                std::cout << "Failed to call -> " << libname << "::" << func << std::endl;
-                return 1;
-            }
-            #else
             {
                 std::filesystem::path base = std::filesystem::current_path();
                 std::filesystem::path lib;
 
-                #if _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
-                    lib = base / (newasm::header::functions::remq(libname) + ".dll");
-                #elif _NEWASM_OS == _NEWASM_OS_linux
-                    lib = base / (newasm::header::functions::remq(libname) + ".so");
-                #endif
+                lib = base / (newasm::header::functions::remq(libname) + ".so");
 
                 std::string libname_OS = lib.string();
                 newasm::progwin::api::cout("Trying to load: " + libname_OS);

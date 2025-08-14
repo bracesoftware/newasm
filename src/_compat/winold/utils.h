@@ -78,7 +78,7 @@ namespace newasm
     {
         bool start_program(const std::string& path)
         {
-            SHELLEXECUTEA execInfo;
+            SHELLEXECUTEINFOA execInfo;
             memset(&execInfo, 0, sizeof(execInfo));
             execInfo.cbSize = sizeof(execInfo);
             execInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
@@ -87,7 +87,7 @@ namespace newasm
             execInfo.nShow = SW_SHOWNORMAL;
 
             HINSTANCE result = ShellExecuteA(NULL, execInfo.lpVerb, execInfo.lpFile, NULL, NULL, execInfo.nShow);
-            return reinterpret_cast<int>(result) > 32;
+            return reinterpret_cast<intptr_t>(result) > 32;
         }
     }
 }

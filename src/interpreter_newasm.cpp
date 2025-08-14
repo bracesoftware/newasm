@@ -134,8 +134,18 @@ is in the runtime
 
 #include "kernel/hardware/disk.cpp"
 #include "kernel/hardware/io_ports.cpp"
-
-#include "kernel/dynamic/libs.cpp"
+//
+#include "kernel/dynamic/commonlibs.cpp"
+#if _NEWASM_OS == _NEWASM_OS_windows
+    #include "_compat/win32/libs.cpp"
+#elif _NEWASM_OS == _NEWASM_OS_linux
+    #include "_compat/linux/libs.cpp"
+#elif _NEWASM_OS == _NEWASM_OS_windows_old
+    #include "_compat/winold/libs.cpp"
+#elif _NEWASM_OS == _NEWASM_OS_android
+    #include "_compat/android/libs.cpp"
+#endif
+//
 #include "kernel/krnlcfg.cpp"
 #include "kernel/syscall_handle.cpp"
 
