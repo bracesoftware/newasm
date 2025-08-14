@@ -4409,7 +4409,14 @@ namespace newasm
 
                 newasm::mem::regs::lcx.set_value(newasm::mem::regs::lcx.get_value()+1);
 
+                if(newasm::mem::regs::lcx.get_value() == newasm::mem::COD.size())
+                {
+                    // prevent crash
+                    break;
+                }
+
                 newasm::header::data::lastln = newasm::mem::COD.at(newasm::mem::regs::lcx.get_value());
+                
                 newasm::header::data::lastlndx = newasm::mem::regs::lcx.get_value();
         
                 newasm::procline(newasm::mem::COD.at(newasm::mem::regs::lcx.get_value()));
