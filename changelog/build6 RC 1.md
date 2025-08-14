@@ -25,7 +25,7 @@ stor tlr, &tuple_name ; just update the value at index 0
 ```
 In order to completely change the tuple, just set the specific register to a tuple:
 ```asm
-mov tlr, (“ey”, 67, 1.2, ‘aʼ)
+mov tlr, ("ey", 67, 1.2, 'a')
 stor tlr, &tuple_name ; change the whole tuple
 ```
 To expand the new tuple functionality, new kernel module has been introduced, `%tuple`.

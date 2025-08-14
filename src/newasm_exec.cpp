@@ -3562,6 +3562,8 @@ namespace newasm
                 std::system("cls");
             #elif _NEWASM_OS == _NEWASM_OS_linux
                 std::system("clear");
+            #elif _NEWASM_OS == _NEWASM_OS_android
+                std::cout << "\033[2J\033[H";
             #endif
 
             return 1;

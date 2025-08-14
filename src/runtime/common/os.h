@@ -21,9 +21,12 @@ the Initial Developer. All Rights Reserved.
 #define _NEWASM_OS_windows 0
 #define _NEWASM_OS_linux 1
 #define _NEWASM_OS_windows_old 2
+#define _NEWASM_OS_android 3
 
 #ifdef _WIN32_OLD
     #define _NEWASM_OS _NEWASM_OS_windows_old
+#elif defined(__android__)
+    #define _NEWASM_OS _NEWASM_OS_android
 #elif defined(_WIN32)
     #define _NEWASM_OS _NEWASM_OS_windows
 #elif defined(__linux__)
@@ -40,6 +43,7 @@ namespace newasm
             const int windows = 0;
             const int linux = 1;
             const int windows_old = 2;
+            const int android = 3;
         }
         int getos()
         {
@@ -50,6 +54,8 @@ namespace newasm
                     newasm::common::os::windows_old
                 #elif _NEWASM_OS == _NEWASM_OS_linux
                     newasm::common::os::linux
+                #elif _NEWASM_OS == _NEWASM_OS_android
+                    newasm::common::os::android
                 #endif
             ;
         }
