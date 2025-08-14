@@ -43,6 +43,10 @@ namespace newasm
         {
             void free_mem()
             {
+                if(newasm::threads::memory.empty())
+                {
+                    return;
+                }
                 for(auto i = newasm::threads::memory.begin(); i != newasm::threads::memory.end(); ++i)
                 {
                     if(i->second != nullptr)

@@ -241,6 +241,14 @@ namespace newasm
         {
             void free_dyn_mem()
             {
+                if(bit_arrays.empty())
+                {
+                    return;
+                }
+                if(binary_trees.empty())
+                {
+                    return;
+                }
                 for(std::unordered_map<std::string, newasm::containers::bit_array__*>::iterator i = newasm::containers::bit_arrays.begin();
                 i != newasm::containers::bit_arrays.end(); ++i)
                 {

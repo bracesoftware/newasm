@@ -223,17 +223,17 @@ namespace newasm
             newasm::header::functions::log("System cleaning up...");
             std::cout << newasm::header::col::gray;
             newasm::containers::functions::free_dyn_mem();
-            printf("\t\tCleaning up containers...");
+            printf("\t\tCleaning up containers...\n");
             newasm::stack::free_macro_mem();
-            printf("\t\tCleaning up macro data...");
+            printf("\t\tCleaning up macro data...\n");
 
-            printf("\t\tCleaning up DL data...");
-            printf("\t\tCleaning up environment variable memory...");
+            printf("\t\tCleaning up DL data...\n");
+            printf("\t\tCleaning up environment variable memory...\n");
             
             newasm::threads::functions::free_mem();
-            printf("\t\tCleaning up thread data...");
+            printf("\t\tCleaning up thread data...\n");
             newasm::core::env_vars::functions::save_env();
-            printf("\t\tSaving environment variables...");
+            printf("\t\tSaving environment variables...\n");
             std::cout << newasm::header::col::reset;
         }
     }
