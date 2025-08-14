@@ -219,7 +219,7 @@ namespace newasm
     {
         void cleanup()
         {
-            std::cout << "\n";
+            //std::cout << "\n";
             newasm::header::functions::log("System cleaning up...");
             std::cout << newasm::header::col::gray;
             newasm::containers::functions::free_dyn_mem();
@@ -422,12 +422,13 @@ int main(int argc, char *argv[])
     }
 
     newasm::header::functions::pause();
-    newasm::header::functions::wait(4000);
-    newasm::progwin::api::exit();
+    //newasm::header::functions::wait(4000);
 
     newasm::header::functions::info("Cleaning up...");
 
     newasm::GLOBAL::cleanup();
+
+    newasm::progwin::api::exit();
 
     return 0;
 }

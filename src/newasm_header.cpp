@@ -940,8 +940,9 @@ namespace newasm
             void pause()
             {
                 std::cout << newasm::header::col::gray << "\tPress enter to terminate the session..." << newasm::header::col::reset;
-                std::cin.get();
+                std::cout << std::endl;
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cin.get();
             }
 
             std::pair<bool, std::pair<std::string, std::string>> parseDirective(const std::string& line)
