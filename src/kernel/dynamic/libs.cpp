@@ -36,6 +36,7 @@
 
 #endif
 
+#if _NEWASM_OS != _NEWASM_OS_android
 using FuncHandler = std::string(*)();
 namespace newasm 
 {
@@ -44,7 +45,7 @@ namespace newasm
 }
 
 #define _NEWASM_CALL_FUNC() (newasm::funcHandler ? newasm::funcHandler() : "err")
-
+#endif
 
 namespace newasm
 {
@@ -53,6 +54,12 @@ namespace newasm
         namespace dynamic
         {
             int CALL(std::string libname, std::string func)
+            #if _NEWASM_OS == _NEWASM_OS_android
+            {
+                std::cout << "Failed to call -> " << libname << "::" << func << std::endl;
+                return 1;
+            }
+            #else
             {
                 std::filesystem::path base = std::filesystem::current_path();
                 std::filesystem::path lib;

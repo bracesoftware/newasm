@@ -20,9 +20,8 @@ Portions created by the Initial Developer are Copyright (c) The COPYRIGHT YEAR
 the Initial Developer. All Rights Reserved.
 
 */
-#if _NEWASM_OS != _NEWASM_OS_android
+
 #pragma GCC diagnostic ignored "-Wunused-result"
-#endif
 
 #include "runtime/common/os.h"
 
@@ -94,11 +93,15 @@ is in the runtime
 #include "runtime/handlers.cpp"
 #include "runtime/lang_inf.cpp"
 
-#include "_compat/runtime/progwin_api.cpp"
+#include "runtime/progwin_api.cpp"
 #if _NEWASM_OS == _NEWASM_OS_windows
-    #include "3rd.net.win32.h"
+    #include "_compat/win32/utils.h"
 #elif _NEWASM_OS == _NEWASM_OS_linux
-    #include "3rd.net.linux.h"
+    #include "_compat/linux/utils.h"
+#elif _NEWASM_OS == _NEWASM_OS_windows_old
+    #include "_compat/winold/utils.h"
+#elif _NEWASM_OS == _NEWASM_OS_android
+    #include "_compat/android/utils.h"
 #endif
 
 #include "runtime/utils.cpp"
@@ -106,12 +109,7 @@ is in the runtime
 
 #include "newasm_dynlib.cpp"
 #include "newasm_header.cpp"
-#if _NEWASM_OS == _NEWASM_OS_windows_old
-    #include "3rd.net.winold.h"
-#endif
-#if _NEWASM_OS == _NEWASM_OS_android
-    #include "3rd.net.android.h"
-#endif
+
 #include "runtime/common/tokenize.h"
 #include "newasm_setup.cpp"
 #include "runtime/virtual.h"
@@ -137,7 +135,7 @@ is in the runtime
 #include "kernel/hardware/disk.cpp"
 #include "kernel/hardware/io_ports.cpp"
 
-#include "_compat/kernel/dynamic/libs.cpp"
+#include "kernel/dynamic/libs.cpp"
 #include "kernel/krnlcfg.cpp"
 #include "kernel/syscall_handle.cpp"
 

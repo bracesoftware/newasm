@@ -44,7 +44,7 @@ namespace newasm
         {
             void cout(std::string text)
             {
-                #if _NEWASM_OS == _NEWASM_OS_windows_old
+                #if _NEWASM_OS == _NEWASM_OS_windows_old || _NEWASM_OS == _NEWASM_OS_android
                     std::cout << "[NewASM] PROGWIN | " << text <<"\n";
                     return;
                 #endif
@@ -52,7 +52,7 @@ namespace newasm
             }
             void exit()
             {
-                #if _NEWASM_OS == _NEWASM_OS_windows_old
+                #if _NEWASM_OS == _NEWASM_OS_windows_old || _NEWASM_OS == _NEWASM_OS_android
                     return;
                 #endif
                 send_req("exit:0");

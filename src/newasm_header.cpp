@@ -155,6 +155,8 @@ namespace newasm
                     dest = "windows_old";
                 #elif _NEWASM_OS == _NEWASM_OS_linux
                     dest = "linux";
+                #elif _NEWASM_OS == _NEWASM_OS_android
+                    dest = "android";
                 #endif
             }
             void getarch(std::string &dest)

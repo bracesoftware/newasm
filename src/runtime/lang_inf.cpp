@@ -47,7 +47,7 @@ namespace newasm
 
             #if _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
                 const std::string separator = "\\";
-            #elif _NEWASM_OS == _NEWASM_OS_linux
+            #elif _NEWASM_OS == _NEWASM_OS_linux || _NEWASM_OS == _NEWASM_OS_android
                 const std::string separator = "/";
             #endif
         }
