@@ -35,7 +35,7 @@ namespace newasm
             const std::string progwin = 
             #if _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
                 "progwin_newasm.exe"
-            #elif _NEWASM_OS == _NEWASM_OS_linux
+            #elif _NEWASM_OS == _NEWASM_OS_linux || _NEWASM_OS == _NEWASM_OS_android
                 "progwin_newasm.a"
             #endif
             ;

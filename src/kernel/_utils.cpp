@@ -26,7 +26,7 @@ namespace newasm
         {
             void krnl(std::string text)
             {
-                #if _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_linux
+                #if _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_linux || _NEWASM_OS == _NEWASM_OS_android
                 std::string col = "\033[38;2;85;107;47m";
                 #elif _NEWASM_OS == _NEWASM_OS_windows_old
                 std::string col = "";
