@@ -221,19 +221,20 @@ namespace newasm
         {
             std::cout << "\n";
             newasm::header::functions::log("System cleaning up...");
-            
+            std::cout << newasm::header::col::gray;
             newasm::containers::functions::free_dyn_mem();
-            newasm::header::functions::info("Cleaning up containers...");
+            printf("\t\tCleaning up containers...");
             newasm::stack::free_macro_mem();
-            newasm::header::functions::info("Cleaning up macro data...");
+            printf("\t\tCleaning up macro data...");
 
-            newasm::header::functions::info("Cleaning up DL data...");
-            newasm::header::functions::info("Cleaning up environment variable memory...");
+            printf("\t\tCleaning up DL data...");
+            printf("\t\tCleaning up environment variable memory...");
             
             newasm::threads::functions::free_mem();
-            newasm::header::functions::info("Cleaning up thread data...");
+            printf("\t\tCleaning up thread data...");
             newasm::core::env_vars::functions::save_env();
-            newasm::header::functions::info("Saving environment variables...");
+            printf("\t\tSaving environment variables...");
+            std::cout << newasm::header::col::reset;
         }
     }
 }
@@ -387,7 +388,7 @@ int main(int argc, char *argv[])
     /*
         Before executing the file we need to open the program window.
     */
-    #if _NEWASM_OS != _NEWASM_OS_windows_old
+    #if _NEWASM_OS != _NEWASM_OS_windows_old && _NEWASM_OS != _NEWASM_OS_android
     newasm::dwin = true;
     if(newasm::dwin)
     {
@@ -398,8 +399,9 @@ int main(int argc, char *argv[])
         }
 
         newasm::runtime::start_program(newasm::core::constants::progwin);
-        std::string text = newasm::header::col::yellow + newasm::header::style::bold + "NewASM Debug Window loaded...\n" + newasm::header::col::reset;
+        std::string text = newasm::header::col::yellow + newasm::header::style::bold + "NewASM Debug Window\n" + newasm::header::col::gray + "\tBuilt for the Virtual Machine\n\n" + newasm::header::col::reset;
         newasm::progwin::api::cout(text);
+        newasm::header::functions::wait(4000);
     }
     #endif
     /*
@@ -420,6 +422,7 @@ int main(int argc, char *argv[])
     }
 
     newasm::header::functions::pause();
+    newasm::header::functions::wait(4000);
     newasm::progwin::api::exit();
 
     newasm::header::functions::info("Cleaning up...");
