@@ -23,6 +23,36 @@ namespace newasm
 {
     namespace compiler
     {
+        namespace data
+        {
+            bool aborted = false;
+            std::string line;
+            int lnidx = 0;
+        }
+        namespace fail
+        {
+            const int unmatched_syntax = 1;
+
+            const std::unordered_map<int, std::string> id = {
+                {unmatched_syntax, "UnmatchedSyntax"}
+            };
+        }
+
+        void abort(int exc)
+        {
+            std::cout << newasm::header::col::red << "\t";
+            std::cout << "Compilation aborted.\n";
+            std::cout << "\tEncountered \"" << newasm::header::col::gray << newasm::header::style::underline;
+            std::cout << newasm::compiler::fail::id.at(exc) << newasm::header::col::reset << newasm::header::col::red;
+            std::cout << "\" on line:\n";
+            std::cout << newasm::header::col::gray << "\t\t" << newasm::compiler::data::lnidx << " |  " << newasm::header::col::reset
+            << newasm::compiler::data::line << newasm::header::col::red << std::endl;
+            //print_pointer(col);
+            std::cout << newasm::header::col::reset << std::endl;
+
+            newasm::compiler::data::aborted = true;
+        }
+
         const int empty = 0;
         const int directive = 1;
         const int decorator = 2;
@@ -42,6 +72,7 @@ namespace newasm
 
         newasm::compiler::lineData DO(std::string& line)
         {
+            newasm::compiler::data::line = line;
             newasm::compiler::lineData lineCompiled;
 
             lineCompiled.raw = line;
@@ -69,6 +100,11 @@ namespace newasm
                 lineCompiled.type = newasm::compiler::directive;
                 lineCompiled.tokens.push_back(it.second.first);
                 lineCompiled.tokens.push_back(it.second.second);
+
+                if(!newasm::header::functions::isalphanum(it.second.first))
+                {
+                    newasm::compiler::abort(newasm::compiler::fail::unmatched_syntax);
+                }
                 return lineCompiled;
             }
             //decorator
@@ -266,7 +302,7 @@ namespace newasm
             }
 
             // failed to compile
-            newasm::terminate(newasm::exit_codes::invalid_syntax);
+            newasm::compiler::abort(newasm::compiler::fail::unmatched_syntax);
             return lineCompiled;
         }
     }

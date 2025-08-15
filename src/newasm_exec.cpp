@@ -4729,13 +4729,23 @@ namespace newasm
             lineidx = 1;
             _file.close();
 
-            std::cout << "\t\t" << newasm::header::col::gray << "[JIT] -> Compiling...\n";
+            std::cout << "  " << newasm::header::col::gray << "[JIT] -> Compiling...\n";
+            newasm::compiler::data::lnidx = 1;
             for(auto i = newasm::mem::COD.begin(); i != newasm::mem::COD.end(); ++i)
             {
                 newasm::compiler::compiledCode.push_back(newasm::compiler::DO(*i));
+                newasm::compiler::data::lnidx ++;
             }
-            std::cout << "\t\t" << newasm::header::col::gray << "[JIT] -> Compiled. Running...\n\n";
+            if(!newasm::compiler::data::aborted)
+            {
+                std::cout << "  " << newasm::header::col::gray << "[JIT] -> Compiled. Running...\n\n";
+            }
             std::cout << newasm::header::col::reset;
+            if(newasm::compiler::data::aborted)
+            {
+                std::cout << std::endl;
+                return 1;
+            }
 
             newasm::header::functions::wait(1000);
             newasm::perf::start = std::chrono::high_resolution_clock::now();
