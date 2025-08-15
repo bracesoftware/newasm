@@ -1846,75 +1846,84 @@ namespace newasm
                 int floatreg = newasm::header::constants::inv_freg_val;
                 std::string strreg = newasm::header::constants::inv_reg_val;
 
-                if(suf == newasm::mem::regs::fdx.identifier())
+                auto _iter = newasm::mem::regs::identifiers.find(suf);
+                if(_iter == newasm::mem::regs::identifiers.end())
                 {
-                    intreg = newasm::mem::regs::fdx;
+                    newasm::terminate(newasm::exit_codes::bus_err);
+                    return 1;
                 }
-                if(suf == newasm::mem::regs::bos.identifier())
+                switch(_iter->second)
                 {
-                    intreg = newasm::mem::regs::bos;
-                }
-                if(suf == newasm::mem::regs::stk.identifier())
-                {
-                    intreg = newasm::mem::regs::stk;
-                }
-                if(suf == newasm::mem::regs::heaptr.identifier())
-                {
-                    intreg = newasm::mem::regs::heaptr;
-                }
-                if(suf == newasm::mem::regs::cpr.identifier())
-                {
-                    intreg = newasm::mem::regs::cpr;
-                }
-                if(suf == newasm::mem::regs::br0.identifier())
-                {
-                    intreg = newasm::mem::regs::br0;
-                }
-                if(suf == newasm::mem::regs::br1.identifier())
-                {
-                    intreg = newasm::mem::regs::br1;
-                }
+                    case newasm::mem::regs::fdx__:
+                    {
+                        intreg = newasm::mem::regs::fdx;
+                    }
+                    case newasm::mem::regs::bos__:
+                    {
+                        intreg = newasm::mem::regs::bos;
+                    }
+                    case newasm::mem::regs::stk__:
+                    {
+                        intreg = newasm::mem::regs::stk;
+                    }
+                    case newasm::mem::regs::heaptr__:
+                    {
+                        intreg = newasm::mem::regs::heaptr;
+                    }
+                    case newasm::mem::regs::cpr__:
+                    {
+                        intreg = newasm::mem::regs::cpr;
+                    }
+                    case newasm::mem::regs::br0__:
+                    {
+                        intreg = newasm::mem::regs::br0;
+                    }
+                    case newasm::mem::regs::br1__:
+                    {
+                        intreg = newasm::mem::regs::br1;
+                    }
 
-                if(suf == newasm::mem::regs::cr0.identifier())
-                {
-                    floatreg = newasm::mem::regs::cr0;
-                }
-                if(suf == newasm::mem::regs::cr1.identifier())
-                {
-                    floatreg = newasm::mem::regs::cr1;
-                }
+                    case newasm::mem::regs::cr0__:
+                    {
+                        floatreg = newasm::mem::regs::cr0;
+                    }
+                    case newasm::mem::regs::cr1__:
+                    {
+                        floatreg = newasm::mem::regs::cr1;
+                    }
 
-                if(suf == newasm::mem::regs::tlr.identifier())
-                {
-                    strreg = newasm::mem::regs::tlr;
-                }
-                if(suf == newasm::mem::regs::dlx.identifier())
-                {
-                    strreg = newasm::mem::regs::dlx;
-                }
-                if(suf == newasm::mem::regs::tr0.identifier())
-                {
-                    strreg = newasm::mem::regs::tr0;
-                }
-                if(suf == newasm::mem::regs::tr1.identifier())
-                {
-                    strreg = newasm::mem::regs::tr1;
-                }
-                if(suf == newasm::mem::regs::stl.identifier())
-                {
-                    strreg = newasm::mem::regs::stl;
-                }
-                if(suf == newasm::mem::regs::psx.identifier())
-                {
-                    strreg = newasm::mem::regs::psx;
-                }
-                if(suf == newasm::mem::regs::prp.identifier())
-                {
-                    strreg = newasm::mem::regs::prp;
-                }
-                if(suf == newasm::mem::regs::cpt.identifier())
-                {
-                    strreg = newasm::mem::regs::cpt;
+                    case newasm::mem::regs::tlr__:
+                    {
+                        strreg = newasm::mem::regs::tlr;
+                    }
+                    case newasm::mem::regs::dlx__:
+                    {
+                        strreg = newasm::mem::regs::dlx;
+                    }
+                    case newasm::mem::regs::tr0__:
+                    {
+                        strreg = newasm::mem::regs::tr0;
+                    }
+                    case newasm::mem::regs::tr1__:
+                    {
+                        strreg = newasm::mem::regs::tr1;
+                    }
+                    case newasm::mem::regs::stl__:
+                    {
+                        strreg = newasm::mem::regs::stl;
+                    }
+                    case newasm::mem::regs::psx__:
+                    {
+                        strreg = newasm::mem::regs::psx;
+                    }
+                    case newasm::mem::regs::prp__:
+                    {
+                        strreg = newasm::mem::regs::prp;
+                    }
+                    case newasm::mem::regs::cpt__:
+                    {
+                        strreg = newasm::mem::regs::cpt;
+                    }
                 }
 
                 if(intreg != newasm::header::constants::inv_ireg_val)
@@ -3099,406 +3108,375 @@ namespace newasm
             //zero
             case newasm::core::lang_inf::zero:
             {
-                if(suf == newasm::mem::regs::fdx.identifier())
+                auto it_ = newasm::mem::regs::identifiers.find(suf);
+                if(it_ == newasm::mem::regs::identifiers.end())
                 {
-                    newasm::mem::regs::fdx = 0;
+                    newasm::terminate(newasm::exit_codes::bus_err);
                     return 1;
                 }
-                if(suf == newasm::mem::regs::bos.identifier())
+
+                switch(it_->second)
                 {
-                    newasm::mem::regs::bos = 0;
-                    return 1;
+                    case newasm::mem::regs::fdx__: newasm::mem::regs::fdx.reset();
+                    case newasm::mem::regs::bos__: newasm::mem::regs::bos.reset();
+                    case newasm::mem::regs::tlr__: newasm::mem::regs::tlr.reset();
+                    case newasm::mem::regs::dlx__: newasm::mem::regs::dlx.reset();
+                    case newasm::mem::regs::tr0__: newasm::mem::regs::tr0.reset();
+                    case newasm::mem::regs::tr1__: newasm::mem::regs::tr1.reset();
+                    case newasm::mem::regs::stl__: newasm::mem::regs::stl.reset();
+                    case newasm::mem::regs::stk__:
+                    {
+                        newasm::mem::regs::stk.reset();
+                        newasm::terminate(newasm::exit_codes::stkhea_col); // Why'd you touch STK in the first place?
+                        return 1;
+                    }
+                    case newasm::mem::regs::heaptr__: newasm::mem::regs::heaptr.reset();
+                    case newasm::mem::regs::psx__: newasm::mem::regs::psx.reset();
+                    case newasm::mem::regs::prp__: newasm::mem::regs::prp.reset();
+                    case newasm::mem::regs::cpt__: newasm::mem::regs::cpt.reset();
+                    case newasm::mem::regs::cpr__: newasm::mem::regs::cpr.reset();
+                    case newasm::mem::regs::cr0__: newasm::mem::regs::cr0.reset();
+                    case newasm::mem::regs::cr1__: newasm::mem::regs::cr1.reset();
+                    case newasm::mem::regs::br0__: newasm::mem::regs::br0.reset();
+                    case newasm::mem::regs::br1__: newasm::mem::regs::br1.reset();
+                    default:
+                    {
+                        newasm::terminate(newasm::exit_codes::os_error);
+                        return 1;
+                    }
                 }
-                if(suf == newasm::mem::regs::tlr.identifier())
-                {
-                    newasm::mem::regs::tlr = newasm::header::constants::inv_reg_val;
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::dlx.identifier())
-                {
-                    newasm::mem::regs::dlx = newasm::header::constants::inv_reg_val;
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::tr0.identifier())
-                {
-                    newasm::mem::regs::tr0 = newasm::header::constants::inv_reg_val;
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::tr1.identifier())
-                {
-                    newasm::mem::regs::tr1 = newasm::header::constants::inv_reg_val;
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::stl.identifier())
-                {
-                    newasm::mem::regs::stl = newasm::header::constants::inv_reg_val;
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::stk.identifier())
-                {
-                    newasm::mem::regs::stk = 0;
-                    newasm::terminate(newasm::exit_codes::stkhea_col);//,wholeline); // Why'd you touch STK in the first place?
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::heaptr.identifier())
-                {
-                    newasm::mem::regs::heaptr = 0;
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::psx.identifier())
-                {
-                    newasm::mem::regs::psx = newasm::header::constants::inv_reg_val;
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::prp.identifier())
-                {
-                    newasm::mem::regs::prp = newasm::header::constants::inv_reg_val;
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::cpt.identifier())
-                {
-                    newasm::mem::regs::cpt = newasm::header::constants::inv_reg_val;
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::cpr.identifier())
-                {
-                    newasm::mem::regs::cpr = 0;
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::cr0.identifier())
-                {
-                    newasm::mem::regs::cr0 = 0.0;
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::cr1.identifier())
-                {
-                    newasm::mem::regs::cr1 = 0.0;
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::br0.identifier())
-                {
-                    newasm::mem::regs::br0 = 0;
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::br1.identifier())
-                {
-                    newasm::mem::regs::br1 = 0;
-                    return 1;
-                }
-                newasm::terminate(newasm::exit_codes::bus_err); // non existing register; 
-                //however this error is highly misleading since registers arent in RAM
                 return 1;
             }
             //inc
             case newasm::core::lang_inf::inc:
             {
-                if(suf == newasm::mem::regs::fdx.identifier())
+                auto it_ = newasm::mem::regs::identifiers.find(suf);
+                if(it_ == newasm::mem::regs::identifiers.end())
                 {
-                    newasm::mem::regs::fdx ++;
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::bos.identifier())
-                {
-                    newasm::mem::regs::bos ++;
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::stk.identifier())
-                {
-                    newasm::mem::regs::stk ++;
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::heaptr.identifier())
-                {
-                    newasm::mem::regs::heaptr ++;
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::cpr.identifier())
-                {
-                    newasm::mem::regs::cpr ++;
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::cr0.identifier())
-                {
-                    newasm::mem::regs::cr0 ++;
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::cr1.identifier())
-                {
-                    newasm::mem::regs::cr1 ++;
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::br0.identifier())
-                {
-                    newasm::mem::regs::br0 ++;
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::br1.identifier())
-                {
-                    newasm::mem::regs::br1 ++;
+                    newasm::terminate(newasm::exit_codes::bus_err);
                     return 1;
                 }
 
-                //typeless registers require a different approach
-                if(suf == newasm::mem::regs::tlr.identifier())
+                switch(it_->second)
                 {
-                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr))
+                    case newasm::mem::regs::fdx__:
                     {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        newasm::mem::regs::fdx ++;
                         return 1;
                     }
-                    int tmp = std::stoi(newasm::mem::regs::tlr)+1;
-                    newasm::mem::regs::tlr = std::to_string(tmp);
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::dlx.identifier())
-                {
-                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::dlx))
+                    case newasm::mem::regs::bos__:
                     {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        newasm::mem::regs::bos ++;
                         return 1;
                     }
-                    int tmp = std::stoi(newasm::mem::regs::dlx)+1;
-                    newasm::mem::regs::dlx = std::to_string(tmp);
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::stl.identifier())
-                {
-                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::stl))
+                    case newasm::mem::regs::stk__:
                     {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        newasm::mem::regs::stk ++;
                         return 1;
                     }
-                    int tmp = std::stoi(newasm::mem::regs::stl)+1;
-                    newasm::mem::regs::stl = std::to_string(tmp);
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::psx.identifier())
-                {
-                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::psx))
+                    case newasm::mem::regs::heaptr__:
                     {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        newasm::mem::regs::heaptr ++;
                         return 1;
                     }
-                    int tmp = std::stoi(newasm::mem::regs::psx)+1;
-                    newasm::mem::regs::psx = std::to_string(tmp);
-                    return 1;
-                }
+                    case newasm::mem::regs::cpr__:
+                    {
+                        newasm::mem::regs::cpr ++;
+                        return 1;
+                    }
+                    case newasm::mem::regs::cr0__:
+                    {
+                        newasm::mem::regs::cr0 ++;
+                        return 1;
+                    }
+                    case newasm::mem::regs::cr1__:
+                    {
+                        newasm::mem::regs::cr1 ++;
+                        return 1;
+                    }
+                    case newasm::mem::regs::br0__:
+                    {
+                        newasm::mem::regs::br0 ++;
+                        return 1;
+                    }
+                    case newasm::mem::regs::br1__:
+                    {
+                        newasm::mem::regs::br1 ++;
+                        return 1;
+                    }
 
-                if(suf == newasm::mem::regs::tr0.identifier())
-                {
-                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::tr0))
+                    //typeless registers require a different approach
+                    case newasm::mem::regs::tlr__:
                     {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                        return 1;
-                    }
-                    int tmp = std::stoi(newasm::mem::regs::tr0)+1;
-                    newasm::mem::regs::tr0 = std::to_string(tmp);
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::tr1.identifier())
-                {
-                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::tr1))
-                    {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                        return 1;
-                    }
-                    int tmp = std::stoi(newasm::mem::regs::tr1)+1;
-                    newasm::mem::regs::tr1 = std::to_string(tmp);
-                    return 1;
-                }
-                //and then, we have this beautiful procedure pointer...
-                //we'll just pickup the next procedure from the map memory
-                if(suf == newasm::mem::regs::prp.identifier())
-                {
-                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::prp), newasm::mem::funcs))
-                    {
-                        newasm::terminate(newasm::exit_codes::invalid_proc);
-                        return 1;
-                    }
-                    bool found = false;
-                    for(std::map<std::string, std::vector<std::string>>::iterator i = newasm::mem::funcs.begin(); i != newasm::mem::funcs.end(); ++i)
-                    {
-                        if(found)
+                        if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr))
                         {
-                            newasm::mem::regs::prp = static_cast<std::string>("&") + i->first;
-                            break;
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                            return 1;
                         }
-                        if(i->first == newasm::header::functions::remamp(newasm::mem::regs::prp))
+                        int tmp = std::stoi(newasm::mem::regs::tlr)+1;
+                        newasm::mem::regs::tlr = std::to_string(tmp);
+                        return 1;
+                    }
+                    case newasm::mem::regs::dlx__:
+                    {
+                        if(!newasm::header::functions::isnumeric(newasm::mem::regs::dlx))
                         {
-                            found = true;
-                            if(std::next(i) == newasm::mem::funcs.end())
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                            return 1;
+                        }
+                        int tmp = std::stoi(newasm::mem::regs::dlx)+1;
+                        newasm::mem::regs::dlx = std::to_string(tmp);
+                        return 1;
+                    }
+                    case newasm::mem::regs::stl__:
+                    {
+                        if(!newasm::header::functions::isnumeric(newasm::mem::regs::stl))
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                            return 1;
+                        }
+                        int tmp = std::stoi(newasm::mem::regs::stl)+1;
+                        newasm::mem::regs::stl = std::to_string(tmp);
+                        return 1;
+                    }
+                    case newasm::mem::regs::psx__:
+                    {
+                        if(!newasm::header::functions::isnumeric(newasm::mem::regs::psx))
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                            return 1;
+                        }
+                        int tmp = std::stoi(newasm::mem::regs::psx)+1;
+                        newasm::mem::regs::psx = std::to_string(tmp);
+                        return 1;
+                    }
+
+                    case newasm::mem::regs::tr0__:
+                    {
+                        if(!newasm::header::functions::isnumeric(newasm::mem::regs::tr0))
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                            return 1;
+                        }
+                        int tmp = std::stoi(newasm::mem::regs::tr0)+1;
+                        newasm::mem::regs::tr0 = std::to_string(tmp);
+                        return 1;
+                    }
+                    case newasm::mem::regs::tr1__:
+                    {
+                        if(!newasm::header::functions::isnumeric(newasm::mem::regs::tr1))
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                            return 1;
+                        }
+                        int tmp = std::stoi(newasm::mem::regs::tr1)+1;
+                        newasm::mem::regs::tr1 = std::to_string(tmp);
+                        return 1;
+                    }
+                    //and then, we have this beautiful procedure pointer...
+                    //we'll just pickup the next procedure from the map memory
+                    case newasm::mem::regs::prp__:
+                    {
+                        if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::prp), newasm::mem::funcs))
+                        {
+                            newasm::terminate(newasm::exit_codes::invalid_proc);
+                            return 1;
+                        }
+                        bool found = false;
+                        for(std::map<std::string, std::vector<std::string>>::iterator i = newasm::mem::funcs.begin(); i != newasm::mem::funcs.end(); ++i)
+                        {
+                            if(found)
                             {
-                                newasm::terminate(newasm::exit_codes::mem_overflow);
-                                return 1;
+                                newasm::mem::regs::prp = static_cast<std::string>("&") + i->first;
+                                break;
                             }
-                            continue;
+                            if(i->first == newasm::header::functions::remamp(newasm::mem::regs::prp))
+                            {
+                                found = true;
+                                if(std::next(i) == newasm::mem::funcs.end())
+                                {
+                                    newasm::terminate(newasm::exit_codes::mem_overflow);
+                                    return 1;
+                                }
+                                continue;
+                            }
                         }
+                        return 1;
                     }
-                    return 1;
+                    case newasm::mem::regs::cpt__:
+                    {
+                        //make later
+                        return 1;
+                    }
+                    default:
+                    {
+                        newasm::terminate(newasm::exit_codes::os_error);
+                        return 1;
+                    }
                 }
-                if(suf == newasm::mem::regs::cpt.identifier())
-                {
-                    //make later
-                    return 1;
-                }
-                
-                newasm::terminate(newasm::exit_codes::invalid_syntax); // non existing register; 
-                //however this error is highly misleading since registers arent in RAM
                 return 1;
             }
             //dec
             case newasm::core::lang_inf::dec:
             {
-                if(suf == newasm::mem::regs::fdx.identifier())
+                auto it_ = newasm::mem::regs::identifiers.find(suf);
+                if(it_ == newasm::mem::regs::identifiers.end())
                 {
-                    newasm::mem::regs::fdx --;
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::bos.identifier())
-                {
-                    newasm::mem::regs::bos --;
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::stk.identifier())
-                {
-                    newasm::mem::regs::stk --;
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::heaptr.identifier())
-                {
-                    newasm::mem::regs::heaptr --;
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::cpr.identifier())
-                {
-                    newasm::mem::regs::cpr --;
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::cr0.identifier())
-                {
-                    newasm::mem::regs::cr0 --;
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::cr1.identifier())
-                {
-                    newasm::mem::regs::cr1 --;
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::br0.identifier())
-                {
-                    newasm::mem::regs::br0 --;
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::br1.identifier())
-                {
-                    newasm::mem::regs::br1 --;
+                    newasm::terminate(newasm::exit_codes::bus_err);
                     return 1;
                 }
 
-                //typeless registers require a different approach
-                if(suf == newasm::mem::regs::tlr.identifier())
+                switch(it_->second)
                 {
-                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr))
+                    case newasm::mem::regs::fdx__:
                     {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        newasm::mem::regs::fdx --;
                         return 1;
                     }
-                    int tmp = std::stoi(newasm::mem::regs::tlr)-1;
-                    newasm::mem::regs::tlr = std::to_string(tmp);
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::dlx.identifier())
-                {
-                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::dlx))
+                    case newasm::mem::regs::bos__:
                     {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        newasm::mem::regs::bos --;
                         return 1;
                     }
-                    int tmp = std::stoi(newasm::mem::regs::dlx)-1;
-                    newasm::mem::regs::dlx = std::to_string(tmp);
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::stl.identifier())
-                {
-                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::stl))
+                    case newasm::mem::regs::stk__:
                     {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        newasm::mem::regs::stk --;
                         return 1;
                     }
-                    int tmp = std::stoi(newasm::mem::regs::stl)-1;
-                    newasm::mem::regs::stl = std::to_string(tmp);
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::psx.identifier())
-                {
-                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::psx))
+                    case newasm::mem::regs::heaptr__:
                     {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        newasm::mem::regs::heaptr --;
                         return 1;
                     }
-                    int tmp = std::stoi(newasm::mem::regs::psx)-1;
-                    newasm::mem::regs::psx = std::to_string(tmp);
-                    return 1;
-                }
+                    case newasm::mem::regs::cpr__:
+                    {
+                        newasm::mem::regs::cpr --;
+                        return 1;
+                    }
+                    case newasm::mem::regs::cr0__:
+                    {
+                        newasm::mem::regs::cr0 --;
+                        return 1;
+                    }
+                    case newasm::mem::regs::cr1__:
+                    {
+                        newasm::mem::regs::cr1 --;
+                        return 1;
+                    }
+                    case newasm::mem::regs::br0__:
+                    {
+                        newasm::mem::regs::br0 --;
+                        return 1;
+                    }
+                    case newasm::mem::regs::br1__:
+                    {
+                        newasm::mem::regs::br1 --;
+                        return 1;
+                    }
 
-                if(suf == newasm::mem::regs::tr1.identifier())
-                {
-                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::tr1))
+                    //typeless registers require a different approach
+                    case newasm::mem::regs::tlr__:
                     {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                        return 1;
-                    }
-                    int tmp = std::stoi(newasm::mem::regs::tr1)-1;
-                    newasm::mem::regs::tr1 = std::to_string(tmp);
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::tr0.identifier())
-                {
-                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::tr0))
-                    {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                        return 1;
-                    }
-                    int tmp = std::stoi(newasm::mem::regs::tr0)-1;
-                    newasm::mem::regs::tr0 = std::to_string(tmp);
-                    return 1;
-                }
-                //and then, we have this beautiful procedure pointer...
-                //we'll just pickup the last procedure from the map memory
-                if(suf == newasm::mem::regs::prp.identifier())
-                {
-                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::prp), newasm::mem::funcs))
-                    {
-                        newasm::terminate(newasm::exit_codes::invalid_proc);
-                        return 1;
-                    }
-                    for(std::map<std::string, std::vector<std::string>>::iterator i = newasm::mem::funcs.begin(); i != newasm::mem::funcs.end(); ++i)
-                    {
-                        if(std::next(i) == newasm::mem::funcs.end())
+                        if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr))
                         {
-                            newasm::terminate(newasm::exit_codes::mem_underflow);
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                             return 1;
                         }
-                        if(std::next(i)->first == newasm::header::functions::remamp(newasm::mem::regs::prp))
-                        {
-                            newasm::mem::regs::prp = static_cast<std::string>("&") + i->first;
-                            break;
-                        }
+                        int tmp = std::stoi(newasm::mem::regs::tlr)-1;
+                        newasm::mem::regs::tlr = std::to_string(tmp);
+                        return 1;
                     }
-                    return 1;
+                    case newasm::mem::regs::dlx__:
+                    {
+                        if(!newasm::header::functions::isnumeric(newasm::mem::regs::dlx))
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                            return 1;
+                        }
+                        int tmp = std::stoi(newasm::mem::regs::dlx)-1;
+                        newasm::mem::regs::dlx = std::to_string(tmp);
+                        return 1;
+                    }
+                    case newasm::mem::regs::stl__:
+                    {
+                        if(!newasm::header::functions::isnumeric(newasm::mem::regs::stl))
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                            return 1;
+                        }
+                        int tmp = std::stoi(newasm::mem::regs::stl)-1;
+                        newasm::mem::regs::stl = std::to_string(tmp);
+                        return 1;
+                    }
+                    case newasm::mem::regs::psx__:
+                    {
+                        if(!newasm::header::functions::isnumeric(newasm::mem::regs::psx))
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                            return 1;
+                        }
+                        int tmp = std::stoi(newasm::mem::regs::psx)-1;
+                        newasm::mem::regs::psx = std::to_string(tmp);
+                        return 1;
+                    }
+
+                    case newasm::mem::regs::tr1__:
+                    {
+                        if(!newasm::header::functions::isnumeric(newasm::mem::regs::tr1))
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                            return 1;
+                        }
+                        int tmp = std::stoi(newasm::mem::regs::tr1)-1;
+                        newasm::mem::regs::tr1 = std::to_string(tmp);
+                        return 1;
+                    }
+                    case newasm::mem::regs::tr0__:
+                    {
+                        if(!newasm::header::functions::isnumeric(newasm::mem::regs::tr0))
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                            return 1;
+                        }
+                        int tmp = std::stoi(newasm::mem::regs::tr0)-1;
+                        newasm::mem::regs::tr0 = std::to_string(tmp);
+                        return 1;
+                    }
+                    //and then, we have this beautiful procedure pointer...
+                    //we'll just pickup the last procedure from the map memory
+                    case newasm::mem::regs::prp__:
+                    {
+                        if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::prp), newasm::mem::funcs))
+                        {
+                            newasm::terminate(newasm::exit_codes::invalid_proc);
+                            return 1;
+                        }
+                        for(std::map<std::string, std::vector<std::string>>::iterator i = newasm::mem::funcs.begin(); i != newasm::mem::funcs.end(); ++i)
+                        {
+                            if(std::next(i) == newasm::mem::funcs.end())
+                            {
+                                newasm::terminate(newasm::exit_codes::mem_underflow);
+                                return 1;
+                            }
+                            if(std::next(i)->first == newasm::header::functions::remamp(newasm::mem::regs::prp))
+                            {
+                                newasm::mem::regs::prp = static_cast<std::string>("&") + i->first;
+                                break;
+                            }
+                        }
+                        return 1;
+                    }
+                    case newasm::mem::regs::cpt__:
+                    {
+                        //make later
+                        return 1;
+                    }
+                    default:
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_exp);
+                        return 1;
+                    }
                 }
-                if(suf == newasm::mem::regs::cpt.identifier())
-                {
-                    //make later
-                    return 1;
-                }
-                newasm::terminate(newasm::exit_codes::invalid_syntax); // non existing register; 
-                //however this error is highly misleading since registers arent in RAM
-                return 1;
-            }
-            default:
-            {
-                newasm::terminate(newasm::exit_codes::invalid_exp);
                 return 1;
             }
         }
