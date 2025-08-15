@@ -282,40 +282,10 @@ namespace newasm
                 return;
             }
             
-                
-                /*newasm::header::functions::nullprint_wnm("Application arguments:\n");
-                newasm::header::functions::nullprint(
-                    newasm::header::col::reset + "\t-help" + 
-                    newasm::header::col::gray + "\t\t\tDisplays this panel."
-                );
-                newasm::header::functions::nullprint(
-                    newasm::header::col::reset + "\t-ver" + 
-                    newasm::header::col::gray + "\t\t\tDisplays version information."
-                );
-                newasm::header::functions::nullprint(
-                    newasm::header::col::reset + "\t-input <file>" + 
-                    newasm::header::col::gray + "\t\tSets the input file."
-                );
-                newasm::header::functions::nullprint(
-                    newasm::header::col::reset + "\t-repl" + 
-                    newasm::header::col::gray + "\t\t\tEnter the read-evaluate-print mode."
-                );
-                newasm::header::functions::nullprint(
-                    newasm::header::col::reset + "\t-newproj" + 
-                    newasm::header::col::gray + "\t\t\tCreate a new project file if it doesn't already exist."
-                );
-                newasm::header::functions::nullprint(
-                    newasm::header::col::reset + "\t-tests" + 
-                    newasm::header::col::gray + "\t\t\tLoads the test function."
-                );
-                newasm::header::functions::nullprint(
-                    newasm::header::col::reset + "\t-log" + 
-                    newasm::header::col::gray + "\t\t\tToggles the logging system."
-                );
-                std::cout << newasm::header::col::reset;*/
+       
             
             std::string trim(const std::string &str);
-            bool isbetween(const std::string str, char delim, char what)
+            bool isbetween(const std::string& str, char delim, char what)
             {
                 int pos1 = -1,pos2 = -1,delpos = -1;
                 for(int i = 0; i < str.size(); ++i)
@@ -1383,6 +1353,11 @@ namespace newasm
 
                 // Prvi TEXT
                 size_t start1 = i;
+                if(isbetween(s, ':', '"') || isbetween(s, ':', '\''))
+                {
+
+                    return {0, {}};
+                }
                 while (i < n && s[i] != ':' && !std::isspace(s[i])) i++;
                 if (i == start1) return {0, {}};
                 std::string text1 = newasm::header::functions::trim(s.substr(start1, i - start1));
@@ -1390,7 +1365,8 @@ namespace newasm
                 skipSpaces(s, i);
 
                 // FORMAT1: TEXT1 : TEXT2
-                if (i < n && s[i] == ':') {
+                if (i < n && s[i] == ':')
+                {
                     i++; // preskoči ':'
                     skipSpaces(s, i);
                     std::string text2 = newasm::header::functions::trim(s.substr(i));

@@ -4213,6 +4213,7 @@ namespace newasm
     }
     int procline(newasm::compiler::lineData& line)
     {
+        #if 0
         std::cout << "WHAT THE FUCK :: PROCESSING -> " << line.raw << std::endl;
         std::cout << "\t\t\t" << line.type << std::endl;
         std::cout << "\t\t\t";
@@ -4222,6 +4223,7 @@ namespace newasm
         }
         std::cout << std::endl;
         std::cout << "\t\t\t" << line.other << std::endl;
+        #endif
         switch(line.type)
         {
             // EMPTY
@@ -4498,7 +4500,7 @@ namespace newasm
                     }
                     if(line.tokens.size() == 2)
                     {
-                        newasm::process_is(line.raw, line.tokens.at(0), line.tokens.at(0));
+                        newasm::process_is(line.raw, line.tokens.at(0), line.tokens.at(1));
                         return 1;
                     }
                     if(line.tokens.size() == 3)
