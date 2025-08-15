@@ -79,7 +79,7 @@ namespace newasm
         if(newasm::header::data::exception)
         {
             std::cout <<
-            "\t\t\t" <<
+            "\t\t" <<
             newasm::header::col::red <<
             "Exception \"" <<
             newasm::header::col::gray<<
@@ -1857,72 +1857,89 @@ namespace newasm
                     case newasm::mem::regs::fdx__:
                     {
                         intreg = newasm::mem::regs::fdx;
+                        break;
                     }
                     case newasm::mem::regs::bos__:
                     {
                         intreg = newasm::mem::regs::bos;
+                        break;
                     }
                     case newasm::mem::regs::stk__:
                     {
                         intreg = newasm::mem::regs::stk;
+                        break;
                     }
                     case newasm::mem::regs::heaptr__:
                     {
                         intreg = newasm::mem::regs::heaptr;
+                        break;
                     }
                     case newasm::mem::regs::cpr__:
                     {
                         intreg = newasm::mem::regs::cpr;
+                        break;
                     }
                     case newasm::mem::regs::br0__:
                     {
                         intreg = newasm::mem::regs::br0;
+                        break;
                     }
                     case newasm::mem::regs::br1__:
                     {
                         intreg = newasm::mem::regs::br1;
+                        break;
                     }
 
                     case newasm::mem::regs::cr0__:
                     {
                         floatreg = newasm::mem::regs::cr0;
+                        break;
                     }
                     case newasm::mem::regs::cr1__:
                     {
                         floatreg = newasm::mem::regs::cr1;
+                        break;
                     }
 
                     case newasm::mem::regs::tlr__:
                     {
                         strreg = newasm::mem::regs::tlr;
+                        break;
                     }
                     case newasm::mem::regs::dlx__:
                     {
                         strreg = newasm::mem::regs::dlx;
+                        break;
                     }
                     case newasm::mem::regs::tr0__:
                     {
                         strreg = newasm::mem::regs::tr0;
+                        break;
                     }
                     case newasm::mem::regs::tr1__:
                     {
                         strreg = newasm::mem::regs::tr1;
+                        break;
                     }
                     case newasm::mem::regs::stl__:
                     {
                         strreg = newasm::mem::regs::stl;
+                        break;
                     }
                     case newasm::mem::regs::psx__:
                     {
                         strreg = newasm::mem::regs::psx;
+                        break;
                     }
                     case newasm::mem::regs::prp__:
                     {
                         strreg = newasm::mem::regs::prp;
+                        break;
                     }
                     case newasm::mem::regs::cpt__:
                     {
                         strreg = newasm::mem::regs::cpt;
+                        break;
                     }
                 }
 
@@ -3117,28 +3134,28 @@ namespace newasm
 
                 switch(it_->second)
                 {
-                    case newasm::mem::regs::fdx__: newasm::mem::regs::fdx.reset();
-                    case newasm::mem::regs::bos__: newasm::mem::regs::bos.reset();
-                    case newasm::mem::regs::tlr__: newasm::mem::regs::tlr.reset();
-                    case newasm::mem::regs::dlx__: newasm::mem::regs::dlx.reset();
-                    case newasm::mem::regs::tr0__: newasm::mem::regs::tr0.reset();
-                    case newasm::mem::regs::tr1__: newasm::mem::regs::tr1.reset();
-                    case newasm::mem::regs::stl__: newasm::mem::regs::stl.reset();
+                    case newasm::mem::regs::fdx__: newasm::mem::regs::fdx.reset(); break;
+                    case newasm::mem::regs::bos__: newasm::mem::regs::bos.reset(); break;
+                    case newasm::mem::regs::tlr__: newasm::mem::regs::tlr.reset(); break;
+                    case newasm::mem::regs::dlx__: newasm::mem::regs::dlx.reset(); break;
+                    case newasm::mem::regs::tr0__: newasm::mem::regs::tr0.reset(); break;
+                    case newasm::mem::regs::tr1__: newasm::mem::regs::tr1.reset(); break;
+                    case newasm::mem::regs::stl__: newasm::mem::regs::stl.reset(); break;
                     case newasm::mem::regs::stk__:
                     {
                         newasm::mem::regs::stk.reset();
                         newasm::terminate(newasm::exit_codes::stkhea_col); // Why'd you touch STK in the first place?
                         return 1;
                     }
-                    case newasm::mem::regs::heaptr__: newasm::mem::regs::heaptr.reset();
-                    case newasm::mem::regs::psx__: newasm::mem::regs::psx.reset();
-                    case newasm::mem::regs::prp__: newasm::mem::regs::prp.reset();
-                    case newasm::mem::regs::cpt__: newasm::mem::regs::cpt.reset();
-                    case newasm::mem::regs::cpr__: newasm::mem::regs::cpr.reset();
-                    case newasm::mem::regs::cr0__: newasm::mem::regs::cr0.reset();
-                    case newasm::mem::regs::cr1__: newasm::mem::regs::cr1.reset();
-                    case newasm::mem::regs::br0__: newasm::mem::regs::br0.reset();
-                    case newasm::mem::regs::br1__: newasm::mem::regs::br1.reset();
+                    case newasm::mem::regs::heaptr__: newasm::mem::regs::heaptr.reset(); break;
+                    case newasm::mem::regs::psx__: newasm::mem::regs::psx.reset(); break;
+                    case newasm::mem::regs::prp__: newasm::mem::regs::prp.reset(); break;
+                    case newasm::mem::regs::cpt__: newasm::mem::regs::cpt.reset(); break;
+                    case newasm::mem::regs::cpr__: newasm::mem::regs::cpr.reset(); break;
+                    case newasm::mem::regs::cr0__: newasm::mem::regs::cr0.reset(); break;
+                    case newasm::mem::regs::cr1__: newasm::mem::regs::cr1.reset(); break;
+                    case newasm::mem::regs::br0__: newasm::mem::regs::br0.reset(); break;
+                    case newasm::mem::regs::br1__: newasm::mem::regs::br1.reset(); break;
                     default:
                     {
                         newasm::terminate(newasm::exit_codes::os_error);
