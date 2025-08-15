@@ -30,6 +30,7 @@ the Initial Developer. All Rights Reserved.
 #include <vector>
 #include <filesystem>
 #include <unordered_map>
+#include <string_view>
 #include <stdexcept>
 #include <string>
 #include <fstream>
@@ -142,6 +143,7 @@ is in the runtime
 
 #include "runtime/namespaces.cpp"
 #include "pp/directives.cpp"
+#include "compiler/asmc.cpp"
 #include "newasm_exec.cpp"
 
 #include "runtime/procline_insert.cpp"

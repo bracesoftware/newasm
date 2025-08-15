@@ -34,6 +34,7 @@ namespace newasm
         {
             void parse(std::string& suf)
             {
+				newasm::header::functions::parseRegDeref(suf);
 				bool mangled = false;
 				if(newasm::header::functions::parseNamespaceSegments(suf).first)
 				{

@@ -24,6 +24,31 @@ namespace newasm
     {
         int handleSysCall()
         {
+            //tuple
+            if(newasm::kernel::cfg::Tuple)
+            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::tuple)
+            {
+                if(newasm::mem::regs::fdx == 1) // tuple size
+                {
+                    if(!newasm::header::functions::isref(newasm::mem::regs::tlr.get_value()))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+
+                    std::string tuple_name = newasm::mem::regs::tlr.get_value().substr(1);
+                    if(!newasm::mem::functions::datavalid(tuple_name, newasm::mem::tuple))
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_tuple);
+                        return 1;
+                    }
+
+                    newasm::mem::regs::tlr.set_value(std::to_string(newasm::mem::tuple.at(tuple_name).contents.size()));
+                    return 1;
+                }
+                newasm::terminate(newasm::exit_codes::unknown_fdx);
+                return 1;
+            }
             //ext
             if(newasm::kernel::cfg::Extensions)
             if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::ext)

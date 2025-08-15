@@ -32,6 +32,7 @@ namespace newasm
             bool TextOperations = false;
             bool ContainerManipulation = false;
             bool FileStream = false;
+            bool Tuple = false;
         }
     }
 }

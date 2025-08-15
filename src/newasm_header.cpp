@@ -1166,18 +1166,16 @@ namespace newasm
 
 				auto skipSpaces = [&](size_t& pos)
 				{
-					while (pos < n && std::isspace(static_cast<unsigned char>(input[pos])))
+					while(pos < n && std::isspace(static_cast<unsigned char>(input[pos])))
 					{
 						++pos;
 					}
 				};
 
-				// Parsiraj TEXT (do prve zagrade '(' ili razmaka)
 				skipSpaces(i);
 				size_t startText = i;
 
-				// TEXT dozvoljava skoro sve osim '(', razmaka i kontrolnih znakova
-				while (i < n && !std::isspace(static_cast<unsigned char>(input[i])) && input[i] != '(')
+				while(i < n && !std::isspace(static_cast<unsigned char>(input[i])) && input[i] != '(')
 				{
 					++i;
 				}
@@ -1326,7 +1324,94 @@ namespace newasm
                 return { true, { before, inside } };
             }
 
+            bool parseHandleModifier(const std::string& s)
+            {
+                size_t i = 0;
+                size_t n = s.size();
 
+                while (i < n && std::isspace(s[i])) i++;
+
+                size_t start1 = i;
+                while (i < n && s[i] != '=') i++; // sve do zareza
+                if (i == start1) return false; // prvi TEXT ne smije biti prazan
+
+                std::string text1 = s.substr(start1, i - start1);
+
+                size_t comma = i;
+                while (comma < n && (s[comma] == '=' || std::isspace(s[comma]))) comma++;
+                if (comma == n) return false;
+
+                std::string text2 = s.substr(comma);
+
+                if (text2.empty() || text2.find('=') != std::string::npos) return false;
+                return true;
+            }
+            static bool parseDataMacroDecl_(const std::string& s)
+            {
+                size_t i = 0;
+                size_t n = s.size();
+
+                while (i < n && std::isspace(s[i])) i++;
+
+                size_t start1 = i;
+                while (i < n && s[i] != ':') i++; // sve do zareza
+                if (i == start1) return false; // prvi TEXT ne smije biti prazan
+
+                std::string text1 = s.substr(start1, i - start1);
+
+                size_t comma = i;
+                while (comma < n && (s[comma] == ':' || std::isspace(s[comma]))) comma++;
+                if (comma == n) return false;
+
+                std::string text2 = s.substr(comma);
+
+                if (text2.empty() || text2.find(':') != std::string::npos) return false;
+                return true;
+            }
+
+            static void skipSpaces(const std::string& s, size_t& i)
+            {
+                while (i < s.size() && std::isspace(s[i])) i++;
+            }
+
+
+            std::pair<int, std::vector<std::string>> parseDataMacroDecl(const std::string& s)
+            {
+                size_t n = s.size();
+                size_t i = 0;
+                skipSpaces(s, i);
+
+                // Prvi TEXT
+                size_t start1 = i;
+                while (i < n && s[i] != ':' && !std::isspace(s[i])) i++;
+                if (i == start1) return {0, {}};
+                std::string text1 = newasm::header::functions::trim(s.substr(start1, i - start1));
+
+                skipSpaces(s, i);
+
+                // FORMAT1: TEXT1 : TEXT2
+                if (i < n && s[i] == ':') {
+                    i++; // preskoči ':'
+                    skipSpaces(s, i);
+                    std::string text2 = newasm::header::functions::trim(s.substr(i));
+                    if (text2.empty()) return {0, {}};
+                    return {1, {text1, text2}};
+                }
+
+                // FORMAT2: TEXT1 TEXT2 : TEXT3
+                size_t start2 = i;
+                while (i < n && s[i] != ':') i++;
+                if (i == n) return {0, {}}; // nema ':', invalid
+                std::string text2 = newasm::header::functions::trim(s.substr(start2, i - start2));
+                if (text2.empty()) return {0, {}};
+
+                i++; // preskoči ':'
+                skipSpaces(s, i);
+                std::string text3 = newasm::header::functions::trim(s.substr(i));
+                if (text3.empty()) return {0, {}};
+
+                return {2, {text1, text2, text3}};
+            }
 
         }
     }

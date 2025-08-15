@@ -30,6 +30,8 @@ the Initial Developer. All Rights Reserved.
 
 namespace newasm
 {
+    int process_s_(bool &valid, std::string wholeline, std::string stat, std::string arg);
+    int process_s(std::string& section);
     namespace user
     {
         int udb_hash(const std::string& input);
@@ -76,6 +78,7 @@ namespace newasm
         namespace functions
         {
             void krnl(std::string text);
+            //void parseRegDeref(std::string& arg);
         }
     }
     namespace common
@@ -90,7 +93,18 @@ namespace newasm
             void parse(std::string& suf);
         }
     }
-    int procline(std::string &line);
+    namespace compiler
+    {
+        struct lineData
+        {
+            std::string raw;
+            int type;
+            std::vector<std::string> tokens;
+            std::string other;
+        };
+    }
+    int procline(newasm::compiler::lineData& line);
+    int procline(std::string& text);
     void tokenize(std::string str);
     namespace impl
     {

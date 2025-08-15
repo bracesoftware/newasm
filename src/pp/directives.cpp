@@ -72,6 +72,11 @@ namespace newasm
                         newasm::kernel::cfg::Thread = true;
                         return;
                     }
+                    if(arg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::tuple))
+                    {
+                        newasm::kernel::cfg::Tuple = true;
+                        return;
+                    }
                     newasm::terminate(newasm::exit_codes::invalid_config);
                     return;
                 }

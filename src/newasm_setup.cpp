@@ -344,14 +344,15 @@ namespace newasm
             }
             template<typename T> bool datavalid(std::string dataname, T &dat)
             {
-                for(auto it = dat.begin(); it != dat.end(); ++it)
+                return dat.find(dataname) != dat.end();
+                /*for(auto it = dat.begin(); it != dat.end(); ++it)
                 {
                     if(it->first == dataname)
                     {
                         return true;
                     }
                 }
-                return false;
+                return false;*/
             }
             bool islbln(int line)
             {
@@ -363,6 +364,123 @@ namespace newasm
                     }
                 }
                 return false;
+            }
+        }
+    }
+}
+
+namespace newasm
+{
+    namespace header
+    {
+        namespace functions
+        {
+            void parseRegDeref(std::string& arg)
+            {
+                if(newasm::header::functions::trim(arg).at(0) == '*' && arg.find('/') == std::string::npos)
+                {
+                    auto it = newasm::mem::regs::identifiers.find(newasm::header::functions::trim(arg.substr(1)));
+                    if(it == newasm::mem::regs::identifiers.end())
+                    {
+                        newasm::terminate(newasm::exit_codes::bus_err);
+                        return;
+                    }
+
+                    switch(it->second)
+                    {
+                        case newasm::mem::regs::tlr__:
+                        {
+                            arg = newasm::mem::regs::tlr.get_value();
+                            break;
+                        }
+                        case newasm::mem::regs::stl__:
+                        {
+                            arg = newasm::mem::regs::stl.get_value();
+                            break;
+                        }
+                        case newasm::mem::regs::psx__:
+                        {
+                            arg = newasm::mem::regs::psx.get_value();
+                            break;
+                        }
+                        case newasm::mem::regs::prp__:
+                        {
+                            arg = newasm::mem::regs::prp.get_value();
+                            break;
+                        }
+                        case newasm::mem::regs::cpt__:
+                        {
+                            arg = newasm::mem::regs::cpt.get_value();
+                            break;
+                        }
+                        case newasm::mem::regs::tr0__:
+                        {
+                            arg = newasm::mem::regs::tr0.get_value();
+                            break;
+                        }
+                        case newasm::mem::regs::tr1__:
+                        {
+                            arg = newasm::mem::regs::tr1.get_value();
+                            break;
+                        }
+                        case newasm::mem::regs::dlx__:
+                        {
+                            arg = newasm::mem::regs::dlx.get_value();
+                            break;
+                        }
+                        case newasm::mem::regs::fdx__:
+                        {
+                            arg = newasm::mem::regs::fdx.get_value();
+                            break;
+                        }
+                        case newasm::mem::regs::cpr__:
+                        {
+                            arg = newasm::mem::regs::cpr.get_value();
+                            break;
+                        }
+                        case newasm::mem::regs::br0__:
+                        {
+                            arg = newasm::mem::regs::br0.get_value();
+                            break;
+                        }
+                        case newasm::mem::regs::br1__:
+                        {
+                            arg = newasm::mem::regs::br1.get_value();
+                            break;
+                        }
+                        case newasm::mem::regs::bos__:
+                        {
+                            arg = newasm::mem::regs::bos.get_value();
+                            break;
+                        }
+                        case newasm::mem::regs::cr0__:
+                        {
+                            arg = newasm::mem::regs::cr0.get_value();
+                            break;
+                        }
+                        case newasm::mem::regs::cr1__:
+                        {
+                            arg = newasm::mem::regs::cr1.get_value();
+                            break;
+                        }
+                        case newasm::mem::regs::stk__:
+                        {
+                            arg = newasm::mem::regs::stk.get_value();
+                            break;
+                        }
+                        case newasm::mem::regs::heaptr__:
+                        {
+                            arg = newasm::mem::regs::heaptr.get_value();
+                            break;
+                        }
+                        default:
+                        {
+                            newasm::terminate(newasm::exit_codes::os_error);
+                            break;
+                        }
+                    }
+                }
+                return;
             }
         }
     }

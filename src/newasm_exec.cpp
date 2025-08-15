@@ -184,7 +184,32 @@ namespace newasm
         return 1;
     }
     void callproc(std::string name);
-    int process_s(bool &valid, std::string wholeline, std::string stat, std::string arg)
+    int process_s(std::string& section)
+    {
+        if(section == static_cast<std::string>("data"))
+        {
+            newasm::system::section = newasm::code_stream::sections::data;
+            return 1;
+        }
+        if(section == static_cast<std::string>("start"))
+        {
+            newasm::system::section = newasm::code_stream::sections::start;
+            return 1;
+        }
+        if(section == static_cast<std::string>("hndl"))
+        {
+            newasm::system::section = newasm::code_stream::sections::hndl;
+            return 1;
+        }
+        if(section == static_cast<std::string>("text"))
+        {
+            newasm::system::section = newasm::code_stream::sections::text;
+            return 1;
+        }
+        newasm::terminate(newasm::exit_codes::invalid_section);
+        return 1;
+    }
+    int process_s_(bool &valid, std::string wholeline, std::string stat, std::string arg)
     {
         if(newasm::system::stop == 1)
         {
@@ -237,7 +262,7 @@ namespace newasm
         }
         return 1;
     }
-	#ifdef _omg
+	#if 0
 	static bool namespaceCollision(std::string name)
 	{
 		if(newasm::nms::count != newasm::mem::data_attrib[name].namespaces.size())
@@ -2759,6 +2784,16 @@ namespace newasm
                         newasm::header::data::module = newasm::core::lang_inf::refs::thread;
                         return 1;
                     }
+                    case newasm::core::lang_inf::refs::tuple:
+                    {
+                        if(newasm::thread_line)
+                        {
+                            newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::tuple;
+                            return 1;
+                        }
+                        newasm::header::data::module = newasm::core::lang_inf::refs::tuple;
+                        return 1;
+                    }
                     default:
                     {
                         newasm::terminate(newasm::exit_codes::os_error);
@@ -3767,7 +3802,7 @@ namespace newasm
         return 1;
     }
     void handle_threads(int method);
-    int procline(std::string &line)
+    int proclineUncompiled(std::string &line)
     {
         line = newasm::header::functions::remc(line);
         line = newasm::header::functions::trim(line);
@@ -3934,27 +3969,12 @@ namespace newasm
         {
             bool valid = false;
             std::string sec = newasm::header::functions::trim(line.substr(1,line.size()));
-            newasm::process_s(valid,line,"_",sec);
+            newasm::process_s_(valid,line,"_",sec);
             if(valid)
             {
                 return 1;
             }
         }
-
-        /*if(newasm::header::functions::strfind(line,':'))
-        {
-            bool valid = false;
-            tmp2 = newasm::header::functions::split_fixed(line, ':');
-            stat = tmp2[0];
-            arg = tmp2[1];
-            stat = newasm::header::functions::trim(stat);
-            arg = newasm::header::functions::trim(arg);
-            newasm::process_s(valid,line,stat,arg);
-            if(valid)
-            {
-                return 1;
-            }
-        }*/
 
         if(newasm::system::section == newasm::code_stream::sections::hndl)
         {
@@ -4179,74 +4199,338 @@ namespace newasm
                 {
                     if(newasm::header::functions::isargref(linetokens.at(2)).first)
                     {
-                        //std::cout << "token is arg | token :: `" << linetokens.at(2) << "` | argc :: " << newasm::header::data::argc << std::endl;
                         newasm::header::data::argc++;
                         operand = newasm::mem::program_memory[newasm::header::data::callstkidx + 2 + newasm::header::functions::isargref(linetokens.at(2)).second];
-                        //std::cout << "newasm::header::data::callstkidx is " << newasm::header::data::callstkidx << std::endl;
-                        //std::cout << "operand is " << operand << std::endl;
                     }
                 }
                 return newasm::process_iso(line, instruction,linetokens.at(1),operand);
             }
-            /*if(newasm::header::functions::strfind(line,'.')) if(newasm::header::functions::strfind(line,','))
+         
+        }
+       
+        newasm::terminate(newasm::exit_codes::invalid_syntax);
+        return 0;
+    }
+    int procline(newasm::compiler::lineData& line)
+    {
+        std::cout << "WHAT THE FUCK :: PROCESSING -> " << line.raw << std::endl;
+        std::cout << "\t\t\t" << line.type << std::endl;
+        std::cout << "\t\t\t";
+        for(int i = 0; i < line.tokens.size(); ++i)
+        {
+            std::cout << line.tokens.at(i);
+        }
+        std::cout << std::endl;
+        std::cout << "\t\t\t" << line.other << std::endl;
+        switch(line.type)
+        {
+            // EMPTY
+            case newasm::compiler::empty:
             {
-                if(line.find('.') > line.find(','))
+                return 1;
+            }
+            // DIRECTIVES
+            case newasm::compiler::directive:
+            {
+                newasm::pp::impl::processDirectives(line.tokens.at(0), line.tokens.at(1));
+                return 1;
+            }
+            // DECORATORS
+            case newasm::compiler::decorator:
+            {
+                if(newasm::system::section != newasm::code_stream::sections::data)
                 {
                     newasm::terminate(newasm::exit_codes::invalid_syntax);
                     return 1;
                 }
-                tmp = newasm::header::functions::split_fixed(line, '.');
-                tmp1 = newasm::header::functions::split_fixed(tmp[1], ',');
-                ins = tmp[0];
-                suf = tmp1[0];
-                opr = tmp1[1];
-                ins = newasm::header::functions::trim(ins);
-                suf = newasm::header::functions::trim(suf);
-                opr = newasm::header::functions::trim(opr);
-               
+                newasm::expcfg::process_dec(line.tokens.at(0));
+                return 1;
+            }
+            // NAMESPACE
+            case newasm::compiler::namespace__:
+            {
+                if(newasm::system::section != newasm::code_stream::sections::data)
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_syntax);
+                    return 1;
+                }
+                newasm::nms::process_nms(line.tokens.at(0));
+                return 1;
+            }
+            // CLOSING BRACE
+            case newasm::compiler::closingBrace:
+            {
+                if(newasm::header::data::struct_now)
+                {
+                    newasm::header::data::struct_now = false;
+                    return 1;
+                }
+                if(newasm::threads::thread_now)
+                {
+                    newasm::threads::thread_now = false;
+                    return 1;
+                }
+                newasm::terminate(newasm::exit_codes::unexpected_cbrace);
+                return 1;
+            }
+            // MACRO TERMINATOR
+            case newasm::compiler::macroTerminator:
+            {
+                if(newasm::header::data::macro_now)
+                {
+                    newasm::header::data::macro_now = false;
+                    return 1;
+                }
+                newasm::terminate(newasm::exit_codes::unexpected_hash);
+                return 1;
+            }
+            // LAMBDA TERMINATOR
+            case newasm::compiler::lambdaTerminator:
+            {
+                if(newasm::lambda::GLOBAL.contents.empty())
+                {
+                    newasm::terminate(newasm::exit_codes::unexpected_end); // if the lambda func was empty
+                    return 1;
+                }
+                newasm::lambda::lambda_now = false;
+                newasm::lambda::process = true;
+                for(auto i = newasm::lambda::GLOBAL.contents.begin(); i != newasm::lambda::GLOBAL.contents.end(); ++i)
+                {
+                    //std::cout << "lambda line >> " << *i << std::endl;
+                    //std::cout << "vector size >> " << newasm::lambda::GLOBAL.contents.size() << std::endl;
+                    auto JIT_COMPILE = newasm::compiler::DO(*i);
+                    newasm::procline(JIT_COMPILE);
+                    if(newasm::lambda::GLOBAL.ret)
+                    {
+                        break;
+                    }
+                }
+                newasm::lambda::process = false;
+                if(!newasm::lambda::GLOBAL.ret)
+                {
+                    // Must return a value inside a lambda procedure
+                    newasm::terminate(newasm::exit_codes::invalid_exp);
+                    return 1;
+                }
+                try
+                {
+                    //std::cout << "EVAL >> " << newasm::lambda::GLOBAL.line + newasm::lambda::GLOBAL.result << std::endl;
+                    std::string eval = newasm::lambda::GLOBAL.line + newasm::lambda::GLOBAL.result;
+                    auto JIT_COMPILE = newasm::compiler::DO(eval);
+                    //std::cout << "RETURNED >> " << newasm::lambda::GLOBAL.result << '\n';
+                    newasm::procline(JIT_COMPILE);
+                }
+                catch (const std::out_of_range& e) {
+                    std::cerr << "Out of range: " << e.what() << '\n';
+                }
+                catch (const std::invalid_argument& e) {
+                    std::cerr << "Invalid argument: " << e.what() << '\n';
+                }
+                catch (const std::exception& e) {
+                    std::cerr << "Standard exception: " << e.what() << '\n';
+                }
                 
-                return newasm::process_iso(line,ins,suf,opr);
+                return 1;
             }
-            if(newasm::header::functions::strfind(line,'.')) if(!newasm::header::functions::strfind(line,','))
+        }
+
+        if(newasm::lambda::lambda_now)
+        {
+            if(newasm::thread_line)
             {
-                tmp = newasm::header::functions::split_fixed(line, '.');
-                ins = tmp[0];
-                suf = tmp[1];
-                ins = newasm::header::functions::trim(ins);
-                suf = newasm::header::functions::trim(suf);
-                return newasm::process_is(line,ins,suf);
+                if(newasm::lambda::GLOBAL.thread)
+                {
+                    newasm::lambda::GLOBAL.contents.push_back(line.raw);
+                }
             }
-            if(!newasm::header::functions::strfind(line,'.')) if(!newasm::header::functions::strfind(line,','))
+            if(!newasm::thread_line)
             {
-                ins = line;
-                ins = newasm::header::functions::trim(ins);
-                return newasm::process_i(line,ins);
-            }*/
+                if(!newasm::lambda::GLOBAL.thread)
+                {
+                    newasm::lambda::GLOBAL.contents.push_back(line.raw);
+                }
+            }
+            return 1;
+        }
+
+        if(newasm::threads::thread_now)
+        {
+            newasm::threads::memory.at(newasm::threads::thread_decl)->contents.push_back(line.raw);
+            return 1;
+        }
+        if(newasm::header::data::macro_now)
+        {
+            newasm::stack::macros.at(newasm::header::data::macro_decl)->contents.push_back(line.raw);
+            return 1;
+        }
+        if(newasm::thread_line)
+        {
+            if(newasm::threads::memory.at(newasm::threads::now)->returned)
+            {
+                return 1;
+            }
+        }
+
+
+        switch(line.type)
+        {
+            // SECTION MODIFIERS
+            case newasm::compiler::sectionModifier:
+            {
+                //auto testbool = true;
+                newasm::process_s(line.tokens.at(0));
+                return 1;
+            }
+            // HANDLE MODIFIERS
+            case newasm::compiler::handleModifier:
+            {
+                if(newasm::system::section != newasm::code_stream::sections::hndl)
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_syntax); // make compiler happy :D
+                    return 1;
+                }
+                newasm::process_hndl(line.tokens.at(0), line.tokens.at(1));
+                return 1;
+            }
+            // MACRO DECL
+            case newasm::compiler::macroDecl:
+            {
+                if(newasm::system::section != newasm::code_stream::sections::text)
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_syntax);
+                    return 1;
+                }
+                newasm::process_text(line.tokens.at(0), line.tokens.at(1));
+                return 1;
+            }
+            // DATA DECL
+            case newasm::compiler::dataDecl:
+            {
+                if(newasm::system::section != newasm::code_stream::sections::data)
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_syntax);
+                    return 1;
+                }
+                newasm::process_d("??",line.tokens.at(0),line.tokens.at(1),line.tokens.at(2));
+                return 1;
+            }
+            // MACRO CALL
+            case newasm::compiler::macroCall:
+            {
+                auto it = newasm::stack::macros; if(it.find(line.tokens.at(0)) != it.end())
+                {
+                    for(int i = 0; i < it.at(line.tokens.at(0))->contents.size(); ++i)
+                    {
+                        auto JIT_COMPILE = newasm::compiler::DO(it.at(line.tokens.at(0))->contents.at(i));
+                        newasm::procline(JIT_COMPILE);
+                    }
+                    return 1;
+                }
+                newasm::terminate(newasm::exit_codes::undefined_macro);
+                return 1;
+            }
+        }
+
+        if(newasm::header::data::struct_now)
+        {
+            newasm::terminate(newasm::exit_codes::expected_cbrace);
+            return 1;
+        }
+
+        if(newasm::system::section == newasm::code_stream::sections::start)
+        {
+            if(newasm::thread_line == false)
+            {
+                newasm::handle_threads(0);
+            }
+        }
+
+        if(newasm::system::section == newasm::code_stream::sections::start)
+        {
+            auto libname = line.tokens.at(0);
+            if(newasm::mem::functions::datavalid(libname, newasm::mem::instructions))
+            {
+                for(int i = 0; i < newasm::dynlib::mem::invalid_dynlibs.size(); ++i)
+                {
+                    if(libname == newasm::dynlib::mem::invalid_dynlibs.at(i))
+                    {
+                        newasm::terminate(newasm::exit_codes::improper_dynlib);
+                        return 1;
+                    }
+                }
+                for(int i = 0; i < newasm::mem::instructions[libname].size(); ++i)
+                {
+                    if(newasm::system::terminated)
+                    {
+                        return 1;
+                    }
+                    auto JIT_COMPILE = newasm::compiler::DO(newasm::mem::instructions[libname].at(i));
+                    newasm::procline(JIT_COMPILE);
+                }
+                return 1;
+            }
+            
+            switch(line.type)
+            {
+                case newasm::compiler::conditional:
+                {
+                    if(line.tokens.size() == 1)
+                    {
+                        newasm::header::data::case_line = line.other;
+                        newasm::process_i(line.raw, line.tokens.at(0));
+                        return 1;
+                    }
+                    if(line.tokens.size() == 2)
+                    {
+                        newasm::header::data::case_line = line.other;
+                        newasm::process_is(line.raw, line.tokens.at(0), line.tokens.at(1));
+                        return 1;
+                    }
+                    newasm::terminate(newasm::exit_codes::os_error);
+                    return 1;
+                }
+                case newasm::compiler::instruction:
+                {
+                    if(line.tokens.size() == 1)
+                    {
+                        newasm::process_i(line.raw, line.tokens.at(0));
+                        return 1;
+                    }
+                    if(line.tokens.size() == 2)
+                    {
+                        newasm::process_is(line.raw, line.tokens.at(0), line.tokens.at(0));
+                        return 1;
+                    }
+                    if(line.tokens.size() == 3)
+                    {
+                        auto operand = line.tokens.at(2);
+                        if(newasm::header::data::proc_now)
+                        {
+                            if(newasm::header::functions::isargref(line.tokens.at(2)).first)
+                            {
+                                newasm::header::data::argc++;
+                                operand = newasm::mem::program_memory[newasm::header::data::callstkidx + 2 + newasm::header::functions::isargref(line.tokens.at(2)).second];
+                            }
+                        }
+                        newasm::process_iso(line.raw, line.tokens.at(0), line.tokens.at(1), operand);
+                        return 1;
+                    }
+                    newasm::terminate(newasm::exit_codes::os_error);
+                    return 1;
+                }
+                newasm::terminate(newasm::exit_codes::os_error);
+                return 1;
+            }
         }
         
-        /*if(!newasm::header::functions::strfind(line,'.'))
-            if(!newasm::header::functions::strfind(line,','))
-                if(newasm::header::functions::strfind(line,':'))
-                    return newasm::process_s(line,stat,arg);*/
-
-        /*if(!newasm::header::functions::strfind(line,'.'))
-            if(!newasm::header::functions::strfind(line,','))
-                if(newasm::header::functions::strfind(line,'$'))
-                    if(newasm::header::functions::strfind(line,'='))
-                        return newasm::process_d(line,dtyp,stat,arg);*/
-        
-        /*if(newasm::header::functions::strfind(line,'.'))
-            if(newasm::header::functions::strfind(line,','))
-                return newasm::process_iso(line,ins,suf,opr);
-        if(newasm::header::functions::strfind(line,'.'))
-            if(!newasm::header::functions::strfind(line,','))
-                return newasm::process_is(line,ins,suf);
-        if(!newasm::header::functions::strfind(line,'.'))
-            if(!newasm::header::functions::strfind(line,','))
-                return newasm::process_i(line,ins);*/
-        //threads
         newasm::terminate(newasm::exit_codes::invalid_syntax);
         return 0;
+    }
+    int procline(std::string& line)
+    {
+        auto JIT_COMPILED = newasm::compiler::DO(line);
+        newasm::procline(JIT_COMPILED);
+        return 1;
     }
     void analyzeline(std::string &line, int lineidx)
     {
@@ -4290,7 +4574,8 @@ namespace newasm
                     break;
                 }
                 newasm::header::data::lastln = line;
-                newasm::procline(line);
+                auto JIT_COMPILED = newasm::compiler::DO(line);
+                newasm::procline(JIT_COMPILED);
                 //std::cout << "Executed : " << line << std::endl;
             }
             newasm::header::data::proc_now = false;
@@ -4391,7 +4676,11 @@ namespace newasm
             newasm::mem::regs::hea = 0;
 
             newasm::mem::COD.clear();
-            newasm::mem::COD.push_back("_");
+            newasm::compiler::compiledCode.clear();
+            //newasm::compiler::lineData first;
+            //first.type = newasm::compiler::empty;
+            //newasm::compiler::compiledCode.push_back(first);
+            newasm::mem::COD.push_back("; comment");
             newasm::mem::regs::lcx.set_value(0);
         }
         
@@ -4437,6 +4726,13 @@ namespace newasm
             lineidx = 1;
             _file.close();
 
+            std::cout << "\t\t" << newasm::header::col::gray << "Compiling...\n";
+            for(auto i = newasm::mem::COD.begin(); i != newasm::mem::COD.end(); ++i)
+            {
+                newasm::compiler::compiledCode.push_back(newasm::compiler::DO(*i));
+            }
+            std::cout << "\t\t" << newasm::header::col::gray << "Compiled. Running...\n\n";
+
             while(!(newasm::mem::regs::lcx.get_value() == newasm::mem::COD.size()))
             {
                 if(newasm::system::terminated)
@@ -4444,7 +4740,7 @@ namespace newasm
                     break;
                 }
 
-                newasm::mem::regs::lcx.set_value(newasm::mem::regs::lcx.get_value()+1);
+                newasm::mem::regs::lcx.set_value(newasm::mem::regs::lcx.get_value() + 1);
 
                 if(newasm::mem::regs::lcx.get_value() == newasm::mem::COD.size())
                 {
@@ -4456,15 +4752,22 @@ namespace newasm
                 
                 newasm::header::data::lastlndx = newasm::mem::regs::lcx.get_value();
         
-                newasm::procline(newasm::mem::COD.at(newasm::mem::regs::lcx.get_value()));
+                //newasm::proclineUncompiled(newasm::mem::COD.at(newasm::mem::regs::lcx.get_value()));
+                
+                try
+                {
+                    newasm::procline(newasm::compiler::compiledCode.at(newasm::mem::regs::lcx.get_value()));
+                }
+                catch(const std::exception& e)
+                {
+                    std::cerr << "Kompajler te zajebucnuo" << e.what() << '\n';
+                }
+                
 
                 if(newasm::code_stream::jump)
                 {
                     newasm::code_stream::jump = 0;
-                    newasm::mem::regs::lcx.set_value(newasm::code_stream::jumpto-1);
-                    //std::cout << "\t\tJumped to line >> " << newasm::mem::regs::lcx.get_value() << std::endl;
-                    //std::cout << "\t\tProcessing :: " << newasm::mem::COD.at(newasm::mem::regs::lcx.get_value()) << std::endl;
-                    //std::cout << "\t\tProcessing++ :: " << newasm::mem::COD.at(newasm::mem::regs::lcx.get_value()+1) << std::endl;
+                    newasm::mem::regs::lcx.set_value(newasm::code_stream::jumpto - 1);
                 }
             }
             
