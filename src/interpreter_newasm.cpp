@@ -87,6 +87,7 @@ namespace newasm
     }
 
     std::unordered_map<std::string, int> inverted_ins;
+    std::unordered_map<std::string, int> inverted_kernel;
 }
 
 /*
@@ -235,6 +236,10 @@ namespace newasm
         for(auto i = newasm::core::lang_inf::instruction_set.begin(); i != newasm::core::lang_inf::instruction_set.end(); ++i)
         {
             newasm::inverted_ins[i->second] = i->first;
+        }
+        for(auto i = newasm::core::lang_inf::refs::identifiers__.begin(); i != newasm::core::lang_inf::refs::identifiers__.end(); ++i)
+        {
+            newasm::inverted_kernel[i->second] = i->first;
         }
         newasm::_virtual::virtualMemory.init(512); //512 bytes of virtual memory that can be reallocated using "malloc <number>_"
         newasm::runtime::main();

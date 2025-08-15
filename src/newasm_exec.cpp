@@ -2660,97 +2660,111 @@ namespace newasm
             //sysenter
             case newasm::core::lang_inf::sysenter:
             {
-                if(suf == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::ios))
+                auto kernel_module = newasm::inverted_kernel.find(suf);
+                if(kernel_module == newasm::inverted_kernel.end())
                 {
-                    if(newasm::thread_line)
-                    {
-                        newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::ios;
-                        return 1;
-                    }
-                    newasm::header::data::module = newasm::core::lang_inf::refs::ios;
+                    newasm::terminate(newasm::exit_codes::sysenter_fail);
                     return 1;
                 }
-                if(suf == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::fs))
+
+                switch(kernel_module->second)
                 {
-                    if(newasm::thread_line)
+                    case newasm::core::lang_inf::refs::ios:
                     {
-                        newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::fs;
+                        if(newasm::thread_line)
+                        {
+                            newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::ios;
+                            return 1;
+                        }
+                        newasm::header::data::module = newasm::core::lang_inf::refs::ios;
                         return 1;
                     }
-                    newasm::header::data::module = newasm::core::lang_inf::refs::fs;
-                    return 1;
-                }
-                if(suf == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::ext))
-                {
-                    if(newasm::thread_line)
+                    case newasm::core::lang_inf::refs::fs:
                     {
-                        newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::ext;
+                        if(newasm::thread_line)
+                        {
+                            newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::fs;
+                            return 1;
+                        }
+                        newasm::header::data::module = newasm::core::lang_inf::refs::fs;
                         return 1;
                     }
-                    newasm::header::data::module = newasm::core::lang_inf::refs::ext;
-                    return 1;
-                }
-                if(suf == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::cmanip))
-                {
-                    if(newasm::thread_line)
+                    case newasm::core::lang_inf::refs::ext:
                     {
-                        newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::cmanip;
+                        if(newasm::thread_line)
+                        {
+                            newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::ext;
+                            return 1;
+                        }
+                        newasm::header::data::module = newasm::core::lang_inf::refs::ext;
                         return 1;
                     }
-                    newasm::header::data::module = newasm::core::lang_inf::refs::cmanip;
-                    return 1;
-                }
-                if(suf == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::txtop))
-                {
-                    if(newasm::thread_line)
+                    case newasm::core::lang_inf::refs::cmanip:
                     {
-                        newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::txtop;
+                        if(newasm::thread_line)
+                        {
+                            newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::cmanip;
+                            return 1;
+                        }
+                        newasm::header::data::module = newasm::core::lang_inf::refs::cmanip;
                         return 1;
                     }
-                    newasm::header::data::module = newasm::core::lang_inf::refs::txtop;
-                    return 1;
-                }
-                if(suf == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::net))
-                {
-                    if(newasm::thread_line)
+                    case newasm::core::lang_inf::refs::txtop:
                     {
-                        newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::net;
+                        if(newasm::thread_line)
+                        {
+                            newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::txtop;
+                            return 1;
+                        }
+                        newasm::header::data::module = newasm::core::lang_inf::refs::txtop;
                         return 1;
                     }
-                    newasm::header::data::module = newasm::core::lang_inf::refs::net;
-                    return 1;
-                }
-                if(suf == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::mem))
-                {
-                    if(newasm::thread_line)
+                    case newasm::core::lang_inf::refs::net:
                     {
-                        newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::mem;
+                        if(newasm::thread_line)
+                        {
+                            newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::net;
+                            return 1;
+                        }
+                        newasm::header::data::module = newasm::core::lang_inf::refs::net;
                         return 1;
                     }
-                    newasm::header::data::module = newasm::core::lang_inf::refs::mem;
-                    return 1;
-                }
-                if(suf == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::chrono))
-                {
-                    if(newasm::thread_line)
+                    case newasm::core::lang_inf::refs::mem:
                     {
-                        newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::chrono;
+                        if(newasm::thread_line)
+                        {
+                            newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::mem;
+                            return 1;
+                        }
+                        newasm::header::data::module = newasm::core::lang_inf::refs::mem;
                         return 1;
                     }
-                    newasm::header::data::module = newasm::core::lang_inf::refs::chrono;
-                    return 1;
-                }
-                if(suf == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::thread))
-                {
-                    if(newasm::thread_line)
+                    case newasm::core::lang_inf::refs::chrono:
                     {
-                        newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::thread;
+                        if(newasm::thread_line)
+                        {
+                            newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::chrono;
+                            return 1;
+                        }
+                        newasm::header::data::module = newasm::core::lang_inf::refs::chrono;
                         return 1;
                     }
-                    newasm::header::data::module = newasm::core::lang_inf::refs::thread;
-                    return 1;
+                    case newasm::core::lang_inf::refs::thread:
+                    {
+                        if(newasm::thread_line)
+                        {
+                            newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::thread;
+                            return 1;
+                        }
+                        newasm::header::data::module = newasm::core::lang_inf::refs::thread;
+                        return 1;
+                    }
+                    default:
+                    {
+                        newasm::terminate(newasm::exit_codes::os_error);
+                        return 1;
+                    }
                 }
-                newasm::terminate(newasm::exit_codes::sysenter_fail);
                 return 1;
             }
             //

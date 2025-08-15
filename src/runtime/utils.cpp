@@ -110,14 +110,14 @@ namespace newasm
         void glitch_text(const std::string& text)
         {
             std::string corrupted = text;
-            for(int i = 0; i < 30; ++i)
+            for(int i = 0; i < 150; ++i)
             {
                 for(char& c : corrupted)
                 {
                     if(rand() % 5 == 0) c = 'A' + rand() % 26;
                 }
                 std::cout << "\r" << corrupted << std::flush;
-                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                std::this_thread::sleep_for(std::chrono::milliseconds(5));
             }
             std::cout << "\r" << text;
         }
