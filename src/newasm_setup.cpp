@@ -216,6 +216,48 @@ namespace newasm
             newasm::_register<float> cr0("cr0", 0);
             newasm::_register<float> cr1("cr1", 0);
 
+            const int tlr__ = 1;
+            const int stl__ = 2;
+            const int psx__ = 3;
+            const int prp__ = 4;
+            const int cpt__ = 5;
+
+            const int tr0__ = 6;
+            const int tr1__ = 7;
+            const int dlx__ = 8;
+            const int fdx__ = 9;
+            const int cpr__ = 10;
+
+            const int br0__ = 11;
+            const int br1__ = 12;
+
+            const int bos__ = 13;
+            const int cr0__ = 14;
+            const int cr1__ = 15;
+
+            const int stk__ = 16;
+            const int heaptr__ = 17;
+
+            std::unordered_map<std::string, int> identifiers = {
+                {"tlr", tlr__},
+                {"stl", stl__},
+                {"psx", psx__},
+                {"prp", prp__},
+                {"cpt", cpt__},
+                {"tr0", tr0__},
+                {"tr1", tr1__},
+                {"dlx", dlx__},
+                {"fdx", fdx__},
+                {"cpr", cpr__},
+                {"br0", br0__},
+                {"br1", br1__},
+                {"bos", bos__},
+                {"cr0", cr0__},
+                {"cr1", cr1__},
+                {"stk", stk__},
+                {"hea", heaptr__},
+            };
+
             void resetRegisters()
             {
                 newasm::mem::regs::stk.reset();
@@ -236,13 +278,16 @@ namespace newasm
                 newasm::mem::regs::br0.reset();
                 newasm::mem::regs::br1.reset();
 
-                newasm::mem::regs::lcx.reset();
-
                 newasm::mem::regs::cr0.reset();
                 newasm::mem::regs::cr1.reset();
 
                 newasm::mem::regs::dlx.reset();
+
+                //PRIVATE
+                newasm::mem::regs::lcx.reset();
             }
+
+
         }
 
         struct struct_member

@@ -37,6 +37,7 @@ namespace newasm
     {
         private:
         std::string name;
+        //char name_cexpr[cexpr_size];
         T value;
         newasm::_std::map<std::string, T> thread_values;
         T initial_value;
@@ -45,7 +46,15 @@ namespace newasm
         _register(std::string regname, T val)
             : name(regname), value(val), initial_value(val)
         {
+            /*for(size_t i = 0; i < cexpr_size; ++i)
+            {
+                name_cexpr[i] = this->name[i];
+            }*/
         }
+        /*constexpr const char* identifier_cexpr() const
+        {
+            return this->name_cexpr;
+        }*/
         std::string identifier() const
         {
             return name;
