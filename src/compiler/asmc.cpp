@@ -238,6 +238,7 @@ namespace newasm
             }
             if(newasm::header::functions::ishex(instruction))
             {
+                //std::cout << "Debug 1 -> " << instruction << " is hex" << std::endl;
                 for(std::unordered_map<int, std::string>::iterator i = newasm::opcodes::mem.begin(); i != newasm::opcodes::mem.end(); ++i)
                 {
                     if(i->first == newasm::header::functions::hextoi(instruction))
@@ -247,6 +248,7 @@ namespace newasm
                         cout << i->first << endl;
                         cout << i->second << endl;*/
                         instruction = i->second;
+
                         //cout << instruction << endl;
                     }
                 }
@@ -255,7 +257,8 @@ namespace newasm
             {
                 lineCompiled.type = newasm::compiler::instruction;
                 lineCompiled.tokens = linetokens;
-                for(int i = 0; i < linetokens.size(); i++)
+                lineCompiled.tokens.at(0) = instruction;
+                for(int i = 0; i < lineCompiled.tokens.size(); i++)
                 {
                     lineCompiled.tokens.at(i) = newasm::header::functions::trim(lineCompiled.tokens.at(i));
                 }

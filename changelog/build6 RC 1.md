@@ -35,6 +35,12 @@ To expand the new tuple functionality, new kernel module has been introduced, `%
 | `%tuple` | `1` | `tlr` | `tlr` is a pointer to a tuple. Stores the size of a tuple inside the `tlr` register. |
 
 
+* Added the new register dereferencing operator `*`:
+```asm
+mov tlr, *stl ; set tlr to a value of stl
+```
+
+
 ## What's changed
 * Since we added tuples, also known as dynamic objects, standard object syntax has been changed to:
 ```asm
@@ -45,7 +51,7 @@ To change the value of a member inside an object, just add the ampersand:
 ```asm
 stor tlr, &object{member}
 ```
-
+* Performance of the virtual machine was improved with custom JIT compiler that compiles your code to bytecode before it is executed.
 
 
 ## Fixed issues

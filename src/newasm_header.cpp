@@ -1316,7 +1316,7 @@ namespace newasm
                 if (text2.empty() || text2.find('=') != std::string::npos) return false;
                 return true;
             }
-            static bool parseDataMacroDecl_(const std::string& s)
+            static bool parseDataMacroDecl_2(const std::string& s)
             {
                 size_t i = 0;
                 size_t n = s.size();
@@ -1347,6 +1347,71 @@ namespace newasm
 
             std::pair<int, std::vector<std::string>> parseDataMacroDecl(const std::string& s)
             {
+                int pos = s.find(':');
+                int pos2 = s.find("::");
+                if(pos == std::string::npos)
+                {
+                    return {0, {}};
+                }
+                if(isbetween(s, ':', '"') || isbetween(s, ':', '\''))
+                {
+                    return {0, {}};
+                }
+                if(pos == pos2)
+                {
+                    return {0, {}};
+                }
+
+                auto parse_tokens = [&](const std::string& str) -> std::vector<std::string> {
+                    std::vector<std::string> tokens;
+                    std::istringstream iss(str);
+                    std::string token;
+                    while(iss >> token)
+                    {
+                        tokens.push_back(token);
+                    }
+                    return tokens;
+                };
+
+                std::vector<std::string> parser = newasm::header::functions::split_fixed(s, ':');
+                parser[0] = newasm::header::functions::trim(parser[0]);
+                parser[1] = newasm::header::functions::trim(parser[1]);
+
+                if(parser.at(0).empty())
+                {
+                    return {0, {}};
+                }
+                if(parser.at(1).empty())
+                {
+                    return {0, {}};
+                }
+
+                auto left = parse_tokens(parser.at(0));
+
+                for(int i = 0; i < parser.size(); ++i)
+                {
+                    if(parser.at(i).find("::") != std::string::npos)
+                    {
+                        if(parser.at(i).find("::") == pos)
+                        {
+                            return {0, {}};
+                        }
+                    }
+                }
+
+                // all checks passed
+                if(left.size() == 1)
+                {
+                    return {1, {left.at(0), parser.at(1)}};
+                }
+                if(left.size() == 2)
+                {
+                    return {2, {left.at(0), left.at(1), parser.at(1)}};
+                }
+                return {0, {}};
+            }
+            static std::pair<int, std::vector<std::string>> parseDataMacroDecl_(const std::string& s)
+            {
                 size_t n = s.size();
                 size_t i = 0;
                 skipSpaces(s, i);
@@ -1355,7 +1420,6 @@ namespace newasm
                 size_t start1 = i;
                 if(isbetween(s, ':', '"') || isbetween(s, ':', '\''))
                 {
-
                     return {0, {}};
                 }
                 while (i < n && s[i] != ':' && !std::isspace(s[i])) i++;

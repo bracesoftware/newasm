@@ -89,6 +89,12 @@ namespace newasm
 
     std::unordered_map<std::string, int> inverted_ins;
     std::unordered_map<std::string, int> inverted_kernel;
+
+    namespace perf
+    {
+        auto start = std::chrono::high_resolution_clock::now();
+        auto end = std::chrono::high_resolution_clock::now();
+    }
 }
 
 /*
@@ -409,11 +415,9 @@ namespace newasm
         /*
             Executing
         */
-        auto start = std::chrono::high_resolution_clock::now();
         newasm::header::functions::trim(newasm::header::settings::script_file);
         newasm::execute(newasm::header::settings::script_file, -1);
-        auto end = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double, std::milli> elapsed = end - start;
+        std::chrono::duration<double, std::milli> elapsed = newasm::perf::end - newasm::perf::start;
 
         std::cout << newasm::header::col::gray << "\t\tTime elapsed: " << elapsed.count() << " ms\n";
         std::cout << newasm::header::col::reset;

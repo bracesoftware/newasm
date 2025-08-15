@@ -4213,9 +4213,10 @@ namespace newasm
     }
     int procline(newasm::compiler::lineData& line)
     {
+        
+        //std::cout << "WHAT THE FUCK :: PROCESSING -> " << line.raw << std::endl;
+        //std::cout << "\t\t\t LINE TYPE -> " << line.type << std::endl;
         #if 0
-        std::cout << "WHAT THE FUCK :: PROCESSING -> " << line.raw << std::endl;
-        std::cout << "\t\t\t" << line.type << std::endl;
         std::cout << "\t\t\t";
         for(int i = 0; i < line.tokens.size(); ++i)
         {
@@ -4728,12 +4729,16 @@ namespace newasm
             lineidx = 1;
             _file.close();
 
-            std::cout << "\t\t" << newasm::header::col::gray << "Compiling...\n";
+            std::cout << "\t\t" << newasm::header::col::gray << "[JIT] -> Compiling...\n";
             for(auto i = newasm::mem::COD.begin(); i != newasm::mem::COD.end(); ++i)
             {
                 newasm::compiler::compiledCode.push_back(newasm::compiler::DO(*i));
             }
-            std::cout << "\t\t" << newasm::header::col::gray << "Compiled. Running...\n\n";
+            std::cout << "\t\t" << newasm::header::col::gray << "[JIT] -> Compiled. Running...\n\n";
+            std::cout << newasm::header::col::reset;
+
+            newasm::header::functions::wait(1000);
+            newasm::perf::start = std::chrono::high_resolution_clock::now();
 
             while(!(newasm::mem::regs::lcx.get_value() == newasm::mem::COD.size()))
             {
@@ -4782,6 +4787,7 @@ namespace newasm
                 }
                 newasm::terminate(newasm::exit_codes::noterm_point); // You got to end your programs.
             }
+            newasm::perf::end = std::chrono::high_resolution_clock::now();
             return 1;
         }
         else
