@@ -51,7 +51,7 @@ namespace newasm
             if(newasm::header::data::exception)
             {
                 std::cout <<
-                "\t\t\t" <<
+                "\t\t" <<
                 newasm::header::col::red <<
                 "Exception \"" <<
                 newasm::header::col::gray<<
@@ -3495,40 +3495,49 @@ namespace newasm
     }
     int process_i(std::string line, std::string ins)
     {
-        
-        //exit
-        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::exit))
+        auto it = newasm::inverted_ins.find(ins);
+        if(it == newasm::inverted_ins.end())
         {
-            if(!newasm::header::data::repl)
-            {
-                newasm::unsins_repl(ins);
-                return 1;
-            }
-            newasm::header::data::repl_end = true;
-            newasm::header::functions::info("REPL mode exit.");
+            newasm::terminate(newasm::exit_codes::invalid_ins);
             return 1;
         }
-        //end
-        if(ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::end))
+
+        switch(it->second)
         {
-            if(newasm::header::data::repl)
+            //exit
+            case newasm::core::lang_inf::exit:
             {
-                newasm::unsins(ins);
+                if(!newasm::header::data::repl)
+                {
+                    newasm::unsins_repl(ins);
+                    return 1;
+                }
+                newasm::header::data::repl_end = true;
+                newasm::header::functions::info("REPL mode exit.");
                 return 1;
             }
-            if(newasm::system::stop == 0)
+            //end
+            case newasm::core::lang_inf::end:
             {
-                newasm::terminate(newasm::exit_codes::unexpected_end);
+                if(newasm::header::data::repl)
+                {
+                    newasm::unsins(ins);
+                    return 1;
+                }
+                if(newasm::system::stop == 0)
+                {
+                    newasm::terminate(newasm::exit_codes::unexpected_end);
+                    return 1;
+                }
+                if(newasm::system::proclines == 0)
+                {
+                    newasm::terminate(newasm::exit_codes::empty_proc);
+                    return 1;
+                }
+                newasm::system::stop = 0;
+                //std::cout << "Finished proc: " << newasm::system::cproc << std::endl;
                 return 1;
             }
-            if(newasm::system::proclines == 0)
-            {
-                newasm::terminate(newasm::exit_codes::empty_proc);
-                return 1;
-            }
-            newasm::system::stop = 0;
-            //std::cout << "Finished proc: " << newasm::system::cproc << std::endl;
-            return 1;
         }
         if(newasm::system::stop == 1)
         {
@@ -3678,7 +3687,6 @@ namespace newasm
             newasm::mem::regs::br0 = newasm::mem::regs::br0 >> newasm::mem::regs::br1;
             return 1;
         }
-        newasm::terminate(newasm::exit_codes::invalid_ins);//,wholeline);
         return 1;
     }
     

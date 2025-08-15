@@ -85,6 +85,8 @@ namespace newasm
         std::deque<std::string> event_codeblock;
         bool event_now = false;
     }
+
+    std::unordered_map<std::string, int> inverted_ins;
 }
 
 /*
@@ -230,6 +232,10 @@ namespace newasm
 {
     int entry(int argc, char *argv[])
     {
+        for(auto i = newasm::core::lang_inf::instruction_set.begin(); i != newasm::core::lang_inf::instruction_set.end(); ++i)
+        {
+            newasm::inverted_ins[i->second] = i->first;
+        }
         newasm::_virtual::virtualMemory.init(512); //512 bytes of virtual memory that can be reallocated using "malloc <number>_"
         newasm::runtime::main();
         std::string cmd;
