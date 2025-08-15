@@ -937,12 +937,38 @@ namespace newasm
                 return {false, ""};
             }
 
+            std::atomic<char> pressed('?');
+            bool killInputListener = false;
+
+            void inputListener()
+            {
+                while(true)
+                {
+                    if(killInputListener)
+                    {
+                        return;
+                    }
+                    pressed = newasm::_compat::getch();
+
+                    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                }
+            }
+
+
             void pause()
             {
-                std::cout << newasm::header::col::gray << "\tPress enter to terminate the session..." << newasm::header::col::reset;
-                std::cin.clear();
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                std::cin.get();
+                std::cout << newasm::header::col::gray << "\tPress `q` to terminate the session..." << newasm::header::col::reset;
+                std::thread listener(inputListener);
+                while(true)
+                {
+                    if(pressed == 'q')
+                    {
+                        killInputListener = true;
+                        break;
+                    }
+                }
+                listener.join();
+                std::cout << std::endl;
             }
 
             std::pair<bool, std::pair<std::string, std::string>> parseDirective(const std::string& line)

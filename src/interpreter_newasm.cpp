@@ -40,8 +40,10 @@ the Initial Developer. All Rights Reserved.
 #include <cctype>
 #include <chrono>
 #include <thread>
+#include <atomic>
 #include <map>
 //LOl
+#include <limits>
 #include <cstdlib>
 #include <iomanip>
 #include <stdio.h>
@@ -55,6 +57,8 @@ the Initial Developer. All Rights Reserved.
 
 #include "sysext/maps.cpp"
 #define __newasm_included
+
+#include "getch._compat.cpp"
 
 // thread init
 #include "kernel/threads/_flags.cpp"
@@ -94,15 +98,7 @@ is in the runtime
 #include "runtime/lang_inf.cpp"
 
 #include "runtime/progwin_api.cpp"
-#if _NEWASM_OS == _NEWASM_OS_windows
-    #include "_compat/win32/utils.h"
-#elif _NEWASM_OS == _NEWASM_OS_linux
-    #include "_compat/linux/utils.h"
-#elif _NEWASM_OS == _NEWASM_OS_windows_old
-    #include "_compat/winold/utils.h"
-#elif _NEWASM_OS == _NEWASM_OS_android
-    #include "_compat/android/utils.h"
-#endif
+#include "utils._compat.cpp"
 
 #include "runtime/utils.cpp"
 #include "runtime/common/opcodes.h"
@@ -136,15 +132,7 @@ is in the runtime
 #include "kernel/hardware/io_ports.cpp"
 //
 #include "kernel/dynamic/commonlibs.cpp"
-#if _NEWASM_OS == _NEWASM_OS_windows
-    #include "_compat/win32/libs.cpp"
-#elif _NEWASM_OS == _NEWASM_OS_linux
-    #include "_compat/linux/libs.cpp"
-#elif _NEWASM_OS == _NEWASM_OS_windows_old
-    #include "_compat/winold/libs.cpp"
-#elif _NEWASM_OS == _NEWASM_OS_android
-    #include "_compat/android/libs.cpp"
-#endif
+#include "libs._compat.cpp"
 //
 #include "kernel/krnlcfg.cpp"
 #include "kernel/syscall_handle.cpp"
@@ -238,202 +226,210 @@ namespace newasm
         }
     }
 }
-
-int main(int argc, char *argv[])
+namespace newasm
 {
-    newasm::_virtual::virtualMemory.init(512); //512 bytes of virtual memory that can be reallocated using "malloc <number>_"
-    newasm::runtime::main();
-    std::string cmd;
+    int entry(int argc, char *argv[])
+    {
+        newasm::_virtual::virtualMemory.init(512); //512 bytes of virtual memory that can be reallocated using "malloc <number>_"
+        newasm::runtime::main();
+        std::string cmd;
 
-    fs::path data_folder = fs::path(newasm::core::constants::data_folder);
-    fs::path cache_folder = fs::path(newasm::core::constants::data_folder+
-        newasm::core::constants::separator+
-        newasm::core::constants::cache_folder
-    );
-    fs::path user_folder = fs::path(newasm::core::constants::data_folder+
-        newasm::core::constants::separator+
-        newasm::core::constants::user_folder
-    );
-    if(!fs::exists(data_folder))
-    {
-        fs::create_directories(data_folder);
-    }
-    if(!fs::exists(cache_folder))
-    {
-        fs::create_directories(cache_folder);
-    }
-    if(!fs::exists(user_folder))
-    {
-        fs::create_directories(user_folder);
-    }
-    //newasm::_virtual::main();
-    newasm::user::main();
-    newasm::dyn_ins_set = &newasm::mem::instructions;
-    //std::cout << "IDIOTISM" << std::endl;
-    newasm::env_vars = &newasm::core::env_vars::priv_env_var;
-    if(argc == 1)
-    {
-        newasm::header::functions::vers_info();
-        std::cout << "Use `" << newasm::header::style::underline <<
-        newasm::setup::args::arg_map.at(newasm::setup::args::help)
-        << newasm::header::col::reset << "` for more information." << std::endl;
-        std::cout << "\n";
-        std::cout << "\n";
-        return 1;
-    }
-
-    int argid = 0;
-
-    if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::ver),argc,argv,argid))
-    {
-        newasm::header::functions::vers_info();
-        return 0;
-    }
-
-    std::cout << std::endl; newasm::header::functions::vers_info();
-    std::cout << "\a";
-    //mode stuff
-    if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::mode),argc,argv,argid))
-    {
-        if(argid < argc - 1)
+        fs::path data_folder = fs::path(newasm::core::constants::data_folder);
+        fs::path cache_folder = fs::path(newasm::core::constants::data_folder+
+            newasm::core::constants::separator+
+            newasm::core::constants::cache_folder
+        );
+        fs::path user_folder = fs::path(newasm::core::constants::data_folder+
+            newasm::core::constants::separator+
+            newasm::core::constants::user_folder
+        );
+        if(!fs::exists(data_folder))
         {
-            newasm::global::mode = std::stoi(newasm::header::functions::trim(static_cast<std::string>(argv[argid+1])));
-            /*else
-            {
-                newasm::header::functions::wrn("Invalid mode, resetting to default.");
-                newasm::global::mode = newasm::global::MODE_INT;
-            }*/
+            fs::create_directories(data_folder);
         }
-        else
+        if(!fs::exists(cache_folder))
         {
-            newasm::header::functions::err("Wrong application usage!\n\t\t\t\t\t" + newasm::header::col::gray + " newasm -mode <mode ID> -other_options");
+            fs::create_directories(cache_folder);
         }
-    }
-    //shell mode
-    if(newasm::global::mode == newasm::global::MODE_SHELL)
-    {
-        EMPTYLINE;EMPTYLINE;
-        newasm::header::functions::info("Loading the shell mode...");
-        EMPTYLINE;
-        newasm::core::env_vars::functions::setup_env();
-
-        newasm::ctl::main();
-
-        newasm::GLOBAL::cleanup();
-        return 1;
-    }
-
-    
-    if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::input),argc,argv,argid))
-    {
-        if(argid < argc - 1)
+        if(!fs::exists(user_folder))
         {
-            newasm::header::settings::script_file = newasm::header::functions::trim(static_cast<std::string>(argv[argid+1]));
+            fs::create_directories(user_folder);
         }
-        else
+        //newasm::_virtual::main();
+        newasm::user::main();
+        newasm::dyn_ins_set = &newasm::mem::instructions;
+        //std::cout << "IDIOTISM" << std::endl;
+        newasm::env_vars = &newasm::core::env_vars::priv_env_var;
+        if(argc == 1)
         {
-            newasm::header::functions::err("Wrong application usage!\n\t\t\t\t\t" + newasm::header::col::gray + " newasm -input <filename> -other_options");
-            newasm::header::functions::wrn("Input file is set to `"+newasm::header::constants::default_input+"`.");
-            newasm::header::settings::script_file = newasm::header::constants::default_input;
-        }
-    }
-    
-    //other funny options
-    if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::help),argc,argv,argid))
-    {
-        newasm::header::functions::help_info();
-    }
-    if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::extra),argc,argv,argid))
-    {
-        newasm::header::settings::extra = true;
-    }
-    if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::cnpf),argc,argv,argid))
-    {
-        newasm::header::settings::create_new_projfile = true;
-    }
-    if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::tests),argc,argv,argid))
-    {
-        newasm::tests::main();
-    }
-    if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::nover),argc,argv,argid))
-    {
-        newasm::vercheck = false;
-    }
-    if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::log),argc,argv,argid))
-    {
-        newasm::header::settings::logging = true;
-        //newasm::header::functions::log("yo");
-    }
-    newasm::header::functions::log("System loading...");
-
-    if(newasm::vercheck)
-    {
-        newasm::vers::main();
-        if(std::filesystem::exists(newasm::core::constants::data_folder + newasm::core::constants::separator + newasm::core::constants::temp_vers))
-        {
-            std::filesystem::remove(newasm::core::constants::data_folder + newasm::core::constants::separator + newasm::core::constants::temp_vers);
-        }
-    }
-
-    std::cout << std::endl;
-    newasm::header::execution_flow::entry_exec = newasm::header::settings::script_file;
-
-    newasm::core::env_vars::functions::setup_env();
-    newasm::project_data::impl::setup_proj();
-    newasm::header::functions::info(
-        static_cast<std::string>("Preparing to execute: ") + newasm::header::col::yellow +
-        newasm::project_data::name + static_cast<std::string>(" ") + newasm::project_data::version
-        + newasm::header::col::reset);
-
-    /*
-        Before executing the file we need to open the program window.
-    */
-    #if _NEWASM_OS != _NEWASM_OS_windows_old && _NEWASM_OS != _NEWASM_OS_android
-    newasm::dwin = true;
-    if(newasm::dwin)
-    {
-        if(!std::filesystem::exists(newasm::core::constants::progwin))
-        {
-            newasm::header::functions::err("`progwin` (debugger) not found.");
+            newasm::header::functions::vers_info();
+            std::cout << "Use `" << newasm::header::style::underline <<
+            newasm::setup::args::arg_map.at(newasm::setup::args::help)
+            << newasm::header::col::reset << "` for more information." << std::endl;
+            std::cout << "\n";
+            std::cout << "\n";
             return 1;
         }
 
-        newasm::runtime::start_program(newasm::core::constants::progwin);
-        std::string text = newasm::header::col::yellow + newasm::header::style::bold + "NewASM Debug Window\n" + newasm::header::col::gray + "\tBuilt for the Virtual Machine\n\n" + newasm::header::col::reset;
-        newasm::progwin::api::cout(text);
-        newasm::header::functions::wait(4000);
-    }
-    #endif
-    /*
-        Executing
-    */
-    newasm::header::functions::trim(newasm::header::settings::script_file);
-    newasm::execute(newasm::header::settings::script_file, -1);
+        int argid = 0;
 
-    if(newasm::mem::functions::datavalid(newasm::handlers::exit_handler, newasm::mem::funcs))
-    {
-        newasm::global::event_now = true;
-        newasm::copyproc(newasm::handlers::exit_handler);
-        for(auto i = newasm::global::event_codeblock.begin(); i != newasm::global::event_codeblock.end(); ++i)
+        if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::ver),argc,argv,argid))
         {
-            newasm::procline(*i);
+            newasm::header::functions::vers_info();
+            return 0;
         }
-        newasm::global::event_now = false;
+
+        std::cout << std::endl; newasm::header::functions::vers_info();
+        std::cout << "\a";
+        //mode stuff
+        if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::mode),argc,argv,argid))
+        {
+            if(argid < argc - 1)
+            {
+                newasm::global::mode = std::stoi(newasm::header::functions::trim(static_cast<std::string>(argv[argid+1])));
+                /*else
+                {
+                    newasm::header::functions::wrn("Invalid mode, resetting to default.");
+                    newasm::global::mode = newasm::global::MODE_INT;
+                }*/
+            }
+            else
+            {
+                newasm::header::functions::err("Wrong application usage!\n\t\t\t\t\t" + newasm::header::col::gray + " newasm -mode <mode ID> -other_options");
+            }
+        }
+        //shell mode
+        if(newasm::global::mode == newasm::global::MODE_SHELL)
+        {
+            EMPTYLINE;EMPTYLINE;
+            newasm::header::functions::info("Loading the shell mode...");
+            EMPTYLINE;
+            newasm::core::env_vars::functions::setup_env();
+
+            newasm::ctl::main();
+
+            newasm::GLOBAL::cleanup();
+            return 1;
+        }
+
+        
+        if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::input),argc,argv,argid))
+        {
+            if(argid < argc - 1)
+            {
+                newasm::header::settings::script_file = newasm::header::functions::trim(static_cast<std::string>(argv[argid+1]));
+            }
+            else
+            {
+                newasm::header::functions::err("Wrong application usage!\n\t\t\t\t\t" + newasm::header::col::gray + " newasm -input <filename> -other_options");
+                newasm::header::functions::wrn("Input file is set to `"+newasm::header::constants::default_input+"`.");
+                newasm::header::settings::script_file = newasm::header::constants::default_input;
+            }
+        }
+        
+        //other funny options
+        if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::help),argc,argv,argid))
+        {
+            newasm::header::functions::help_info();
+        }
+        if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::extra),argc,argv,argid))
+        {
+            newasm::header::settings::extra = true;
+        }
+        if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::cnpf),argc,argv,argid))
+        {
+            newasm::header::settings::create_new_projfile = true;
+        }
+        if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::tests),argc,argv,argid))
+        {
+            newasm::tests::main();
+        }
+        if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::nover),argc,argv,argid))
+        {
+            newasm::vercheck = false;
+        }
+        if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::log),argc,argv,argid))
+        {
+            newasm::header::settings::logging = true;
+            //newasm::header::functions::log("yo");
+        }
+        newasm::header::functions::log("System loading...");
+
+        if(newasm::vercheck)
+        {
+            newasm::vers::main();
+            if(std::filesystem::exists(newasm::core::constants::data_folder + newasm::core::constants::separator + newasm::core::constants::temp_vers))
+            {
+                std::filesystem::remove(newasm::core::constants::data_folder + newasm::core::constants::separator + newasm::core::constants::temp_vers);
+            }
+        }
+
+        std::cout << std::endl;
+        newasm::header::execution_flow::entry_exec = newasm::header::settings::script_file;
+
+        newasm::core::env_vars::functions::setup_env();
+        newasm::project_data::impl::setup_proj();
+        newasm::header::functions::info(
+            static_cast<std::string>("Preparing to execute: ") + newasm::header::col::yellow +
+            newasm::project_data::name + static_cast<std::string>(" ") + newasm::project_data::version
+            + newasm::header::col::reset);
+
+        /*
+            Before executing the file we need to open the program window.
+        */
+        #if _NEWASM_OS != _NEWASM_OS_windows_old && _NEWASM_OS != _NEWASM_OS_android
+        newasm::dwin = true;
+        if(newasm::dwin)
+        {
+            if(!std::filesystem::exists(newasm::core::constants::progwin))
+            {
+                newasm::header::functions::err("`progwin` (debugger) not found.");
+                return 1;
+            }
+
+            newasm::runtime::start_program(newasm::core::constants::progwin);
+            std::string text = newasm::header::col::yellow + newasm::header::style::bold + "NewASM Debug Window\n" + newasm::header::col::gray + "\tBuilt for the Virtual Machine\n\n" + newasm::header::col::reset;
+            newasm::progwin::api::cout(text);
+            newasm::header::functions::wait(4000);
+        }
+        #endif
+        /*
+            Executing
+        */
+        auto start = std::chrono::high_resolution_clock::now();
+        newasm::header::functions::trim(newasm::header::settings::script_file);
+        newasm::execute(newasm::header::settings::script_file, -1);
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> elapsed = end - start;
+
+        std::cout << newasm::header::col::gray << "\t\tTime elapsed: " << elapsed.count() << " ms\n";
+        std::cout << newasm::header::col::reset;
+
+        if(newasm::mem::functions::datavalid(newasm::handlers::exit_handler, newasm::mem::funcs))
+        {
+            newasm::global::event_now = true;
+            newasm::copyproc(newasm::handlers::exit_handler);
+            for(auto i = newasm::global::event_codeblock.begin(); i != newasm::global::event_codeblock.end(); ++i)
+            {
+                newasm::procline(*i);
+            }
+            newasm::global::event_now = false;
+        }
+
+        newasm::header::functions::pause();
+        //newasm::header::functions::wait(4000);
+
+        newasm::header::functions::info("Cleaning up...");
+
+        newasm::GLOBAL::cleanup();
+
+        newasm::progwin::api::exit();
+
+        return 0;
     }
-
-    newasm::header::functions::pause();
-    //newasm::header::functions::wait(4000);
-
-    newasm::header::functions::info("Cleaning up...");
-
-    newasm::GLOBAL::cleanup();
-
-    newasm::progwin::api::exit();
-
-    return 0;
 }
 
-
+#include "_entry.cpp"
 
 #ifdef ______I
 
