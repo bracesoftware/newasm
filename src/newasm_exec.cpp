@@ -784,6 +784,8 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                     return 1;
                 }
+
+                newasm::runtime::functions::parse(suf);
                 suf = newasm::header::functions::remamp(suf);
 
                 if(newasm::containers::thread_channels.find(suf) == newasm::containers::thread_channels.end())
@@ -2592,6 +2594,8 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                     return 1;
                 }
+
+                newasm::runtime::functions::parse(suf);
                 suf = newasm::header::functions::remamp(suf);
 
                 if(newasm::containers::thread_channels.find(suf) == newasm::containers::thread_channels.end())
