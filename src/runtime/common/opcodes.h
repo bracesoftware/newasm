@@ -80,6 +80,7 @@ namespace newasm
             {55, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::cast__)},
             {56, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::async__)},
             {57, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::lea)},
+            {58, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::thread__)},
 
             {100, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::__say)}
         };

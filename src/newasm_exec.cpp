@@ -331,22 +331,6 @@ namespace newasm
         if(newasm::header::functions::isalphanum(name))
         {
             if(dtyp == newasm::core::lang_inf::typenames::identifiers__.at(
-                newasm::core::lang_inf::typenames::thread
-            ))
-            {
-                if(value != static_cast<std::string>("{"))
-                {
-                    newasm::terminate(newasm::exit_codes::invalid_syntax);
-                    return 1;
-                }
-                newasm::threads::thread_now = true;
-                newasm::threads::thread_decl = name;
-                newasm::threads::memory[name] = new newasm::threads::object__();
-                newasm::threads::valid_threads.push_back(name);
-                //newasm::threads::thread_count++;
-                return 1;
-            }
-            if(dtyp == newasm::core::lang_inf::typenames::identifiers__.at(
                 newasm::core::lang_inf::typenames::obj
             ))
             {
@@ -2548,6 +2532,20 @@ namespace newasm
                 }
                 return 1;
             }
+            case newasm::core::lang_inf::thread__:
+            {
+                if(newasm::header::data::case_line != static_cast<std::string>("{"))
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_syntax);
+                    return 1;
+                }
+                newasm::threads::thread_now = true;
+                newasm::threads::thread_decl = suf;
+                newasm::threads::memory[suf] = new newasm::threads::object__();
+                newasm::threads::valid_threads.push_back(suf);
+                //newasm::threads::thread_count++;
+                return 1;
+            }
             //retf
             case newasm::core::lang_inf::retf:
             {
@@ -4414,7 +4412,7 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::invalid_syntax);
                     return 1;
                 }
-                newasm::process_d("??",line.tokens.at(0),line.tokens.at(1),line.tokens.at(2));
+                newasm::process_d(line.raw, line.tokens.at(0),line.tokens.at(1),line.tokens.at(2));
                 return 1;
             }
             // MACRO CALL

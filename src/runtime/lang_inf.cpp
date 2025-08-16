@@ -121,6 +121,7 @@ namespace newasm
             const int async__ = 59;
 
             const int lea = 60;
+            const int thread__ = 61;
             
             const int __say = 100;
 
@@ -192,6 +193,7 @@ namespace newasm
                 {cast__, "cast"},
                 {async__, "async"},
                 {lea, "lea"},
+                {thread__, "thread"},
 
                 {__say, "__say"}
             };
@@ -239,7 +241,7 @@ namespace newasm
                 const int char__ = 4;
                 const int ref = 5;
                 const int obj = 6;
-                const int thread = 7;
+                //const int _ = 7;
 				const int tuple = 8;
 				
                 const int bit_arr = 9;
@@ -252,7 +254,7 @@ namespace newasm
                     {char__, "char"},
                     {ref, "ref"},
                     {obj, "obj"},
-                    {thread, "thread"},
+                    //{_, "??????????????::::::::::::::::::_____________"},
 					{tuple, "tuple"},
 					
                     {bit_arr, "bit_arr"},

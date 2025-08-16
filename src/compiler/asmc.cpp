@@ -250,7 +250,7 @@ namespace newasm
                         if(linetokens_inline.size() == 2)
                         {
                             lineCompiled.type = newasm::compiler::conditional;
-                            lineCompiled.other = line.substr(idx__ + 2);
+                            lineCompiled.other = newasm::header::functions::trim(line.substr(idx__ + 2));
                             lineCompiled.tokens.push_back(linetokens_inline.at(0));
                             lineCompiled.tokens.push_back(linetokens_inline.at(1));
                             return lineCompiled;
@@ -258,7 +258,7 @@ namespace newasm
                         if(linetokens_inline.size() == 1) // process_is(line, linetokens_inline.at(0), linetokens_inline.at(1))
                         {
                             lineCompiled.type = newasm::compiler::conditional;
-                            lineCompiled.other = line.substr(idx__ + 2);
+                            lineCompiled.other = newasm::header::functions::trim(line.substr(idx__ + 2));
                             lineCompiled.tokens.push_back(linetokens_inline.at(0));
                             return lineCompiled;
                         }
