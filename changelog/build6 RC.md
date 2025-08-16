@@ -52,6 +52,19 @@ To change the value of a member inside an object, just add the ampersand:
 stor tlr, &object{member}
 ```
 * Performance of the virtual machine was improved with custom JIT compiler that compiles your code to bytecode before it is executed.
+* `hndl` section syntax has been changed to:
+```asm
+.hdnl
+    op = procedure_name
+```
+* Thread declaration syntax has been moved from the `data` section over to the `start` one. Now to declare a thread, do:
+```asm
+.start
+  thread threadName -> { ; now just a normal instruction, like proc, or (proc)
+    retf 0
+  }
+  ; more stuff
+```
 
 
 ## Fixed issues
