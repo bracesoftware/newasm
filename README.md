@@ -94,6 +94,7 @@ Documentation about `newasm` which includes following topics:
     - [Binary trees](docs/containers.md#binary-trees)
 - [Threads](docs/threads.md)
     - [`await` and `retf`](docs/threads.md#await-and-retf-instructions)
+    - [Thread channels](docs/chan.md)
 - [Opcodes](docs/opcodes.md)
 - [Lambda procedures](docs/lambda.md)
 - [Namespaces](docs/namespaces.md)
@@ -214,7 +215,7 @@ Sections are built-in "tags" used to classify code. Each section uses different 
 In this section, you can setup event handlers.
 ```asm
 . hndl
-    ~exit , MY_EXIT_PROC
+    ~exit = MY_EXIT_PROC
 . start
     proc MY_EXIT_PROC
         ; code

@@ -11,7 +11,7 @@
 `index.asm`:
 ```asm
 .data
-    bit_arr  testbitarr : 0
+    cont testbitarr : ?bit_arr
 .start
     sysenter %cmanip
     mov cpt , &testbitarr
@@ -49,7 +49,7 @@ Output:
 ```asm
 
 .data
-    bin_tree  testbintree : 0
+    cont testbintree : ?bin_tree
 .start
     mov cpt , &testbintree
     sysenter %cmanip
