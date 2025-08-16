@@ -58,6 +58,8 @@ In order to use thread channels, manipulate them with `send` and `recv` instruct
 
   send &channel, something ; send some data
   ; the thread myThread will continue to run asynchronously right after it receives data in the channel
+
+  ; we still need to call 1->%thread so the thread continues running
   ret 0
 ```
 
