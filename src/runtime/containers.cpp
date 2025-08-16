@@ -234,8 +234,16 @@ namespace newasm
             }
         };
 
+        class thread_channel__
+        {
+            public:
+            bool empty = true;
+            std::string data;
+        }
+
         std::unordered_map<std::string, newasm::containers::bit_array__*> bit_arrays;
         std::unordered_map<std::string, newasm::containers::binary_tree__*> binary_trees;
+        std::unordered_map<std::string, newasm::containers::thread_channel__*> thread_channels;
 
         namespace functions
         {
@@ -249,6 +257,10 @@ namespace newasm
                 {
                     return;
                 }
+                if(thread_channels.empty())
+                {
+                    return;
+                }
                 for(std::unordered_map<std::string, newasm::containers::bit_array__*>::iterator i = newasm::containers::bit_arrays.begin();
                 i != newasm::containers::bit_arrays.end(); ++i)
                 {
@@ -256,6 +268,11 @@ namespace newasm
                 }
                 for(std::unordered_map<std::string, newasm::containers::binary_tree__*>::iterator i = newasm::containers::binary_trees.begin();
                 i != newasm::containers::binary_trees.end(); ++i)
+                {
+                    if(i->second != nullptr) delete i->second;
+                }
+                for(std::unordered_map<std::string, newasm::containers::thread_channel__*>::iterator i = newasm::containers::thread_channels.begin();
+                i != newasm::containers::thread_channels.end(); ++i)
                 {
                     if(i->second != nullptr) delete i->second;
                 }

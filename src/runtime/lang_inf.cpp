@@ -122,6 +122,9 @@ namespace newasm
 
             const int lea = 60;
             const int thread__ = 61;
+
+            const int send = 62;
+            const int recv = 63;
             
             const int __say = 100;
 
@@ -195,6 +198,9 @@ namespace newasm
                 {lea, "lea"},
                 {thread__, "thread"},
 
+                {send, "send"},
+                {recv, "recv"},
+
                 {__say, "__say"}
             };
 
@@ -241,11 +247,12 @@ namespace newasm
                 const int char__ = 4;
                 const int ref = 5;
                 const int obj = 6;
-                //const int _ = 7;
+                const int cont = 7;
 				const int tuple = 8;
 				
                 const int bit_arr = 9;
                 const int bin_tree = 10;
+                const int chan = 11;
 
                 const std::unordered_map<int, std::string> identifiers__ = {
                     {num, "num"},
@@ -254,11 +261,12 @@ namespace newasm
                     {char__, "char"},
                     {ref, "ref"},
                     {obj, "obj"},
-                    //{_, "??????????????::::::::::::::::::_____________"},
+                    {cont, "cont"},
 					{tuple, "tuple"},
 					
                     {bit_arr, "bit_arr"},
-                    {bin_tree, "bin_tree"}
+                    {bin_tree, "bin_tree"},
+                    {chan, "chan"}
                 };
             }
 

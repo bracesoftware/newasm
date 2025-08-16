@@ -2543,7 +2543,41 @@ namespace newasm
                 newasm::threads::thread_decl = suf;
                 newasm::threads::memory[suf] = new newasm::threads::object__();
                 newasm::threads::valid_threads.push_back(suf);
+                newasm::threads::memory.at(suf)->paused = false;
                 //newasm::threads::thread_count++;
+                return 1;
+            }
+            case newasm::core::lang_inf::recv:
+            {
+                if(!newasm::thread_line)
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_exp);
+                    return 1;
+                }
+                if(!newasm::header::functions::isref(suf))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    return 1;
+                }
+                suf = newasm::header::functions::remamp(suf);
+
+                if(newasm::containers::thread_channels.find(suf) == newasm::containers::thread_channels.end())
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_memacc);
+                    return 1;
+                }
+
+                auto channel = newasm::containers::thread_channels.find(suf);
+
+                if(channel->second->empty)
+                {
+                    newasm::threads::memory.at(newasm::threads::now)->paused = true;
+                    return 1;
+                }
+
+                channel->second->empty = true;
+                newasm::threads::memory.at(newasm::threads::now)->paused = false;
+                newasm::mem::regs::tlr.set_value(channel->second->data);
                 return 1;
             }
             //retf

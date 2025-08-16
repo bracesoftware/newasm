@@ -34,6 +34,7 @@ namespace newasm
             std::stringstream output;
             std::string returned_val;
             bool returned = false;
+            bool paused = false;
         };
         std::unordered_map<std::string, newasm::threads::object__*> memory;
         std::vector<std::string> valid_threads;
