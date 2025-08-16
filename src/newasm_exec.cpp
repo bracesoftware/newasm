@@ -2686,14 +2686,12 @@ namespace newasm
                         newasm::thread_line = true;
                         newasm::threads::now = (thread__);
                         newasm::procline(*newasm::threads::memory.at(thread__)->contents.begin());
-                        while(newasm::threads::memory.at(thread__)->paused)
+                        newasm::thread_line = false;
+                        if(newasm::threads::memory.at(thread__)->paused)
                         {
-                            //newasm::threads::memory.at(thread__)->paused = false;
-                            //newasm::procline(*newasm::threads::memory.at(thread__)->contents.begin());
                             newasm::terminate(newasm::exit_codes::channel_deadlock);
                             return 1;
                         }
-                        newasm::thread_line = false;
                         newasm::threads::memory.at(thread__)->contents.pop_front();
                     }
                 }
@@ -4285,7 +4283,6 @@ namespace newasm
     }
     int procline(newasm::compiler::lineData& line)
     {
-        
         //std::cout << "WHAT THE FUCK :: PROCESSING -> " << line.raw << std::endl;
         //std::cout << "\t\t\t LINE TYPE -> " << line.type << std::endl;
         #if 0
@@ -4297,6 +4294,11 @@ namespace newasm
         std::cout << std::endl;
         std::cout << "\t\t\t" << line.other << std::endl;
         #endif
+        if(newasm::system::terminated)
+        {
+            return 1;
+        }
+
         switch(line.type)
         {
             // EMPTY
