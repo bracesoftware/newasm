@@ -40,6 +40,28 @@ To expand the new tuple functionality, new kernel module has been introduced, `%
 mov tlr, *stl ; set tlr to a value of stl
 ```
 
+* Added new thread channels, used for efficient communication between running concurrent threads.
+In order to use thread channels, manipulate them with `send` and `recv` instructions to set and read data from channels, respectively.
+```asm
+.$using %ios
+.data
+  cont channel: ? chan
+.start
+  thread myThread -> {
+    recv &channel ; thread execution will be paused until the thread detects that the channel has some data
+    mov stl, 0c1
+    mov fdx, 1
+    sysenter %ios
+    syscall
+    retf 0
+  }
+
+  send &channel, something ; send some data
+  ; the thread myThread will continue to run asynchronously right after it receives data in the channel
+  ret 0
+```
+
+
 
 ## What's changed
 * Since we added tuples, also known as dynamic objects, standard object syntax has been changed to:
@@ -65,6 +87,13 @@ stor tlr, &object{member}
   }
   ; more stuff
 ```
+
+* Container declaration also was reworked:
+```asm
+.data
+  cont container_name: ? container_type
+```
+Existing container types are `bit_arr`, `bin_tree` and `chan`.
 
 
 ## Fixed issues
