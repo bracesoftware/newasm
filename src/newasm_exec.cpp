@@ -765,6 +765,26 @@ namespace newasm
         }
         switch(it->second)
         {
+            //send
+            case newasm::core::lang_inf::send:
+            {
+                if(!newasm::header::functions::isref(suf))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    return 1;
+                }
+                suf = newasm::header::functions::remamp(suf);
+
+                if(newasm::containers::thread_channels.find(suf) == newasm::containers::thread_channels.end())
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_memacc);
+                    return 1;
+                }
+
+                newasm::containers::thread_channels.at(suf)->empty = false;
+                newasm::containers::thread_channels.at(suf)->data = opr;
+                return 1;
+            }
             //__say
             case newasm::core::lang_inf::__say:
             {
@@ -4847,6 +4867,11 @@ namespace newasm
         {
             if(newasm::threads::memory.at(*i)->contents.empty())
             {
+                continue;
+            }
+            if(newasm::threads::memory.at(*i)->paused)
+            {
+                newasm::threads::memory.at(*i)->paused = false;
                 continue;
             }
             newasm::thread_line = true;
