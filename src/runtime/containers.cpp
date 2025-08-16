@@ -239,7 +239,7 @@ namespace newasm
             public:
             bool empty = true;
             std::string data;
-        }
+        };
 
         std::unordered_map<std::string, newasm::containers::bit_array__*> bit_arrays;
         std::unordered_map<std::string, newasm::containers::binary_tree__*> binary_trees;
