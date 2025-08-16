@@ -56,4 +56,6 @@ When a fatal error happens, program will shut down, returning a specific exit co
 | `48` | Undefined thread. |
 | `49` | Invalid expression. |
 | `50` | Virtual memory overflow. |
-
+| `51` | Attempted to redefine a tuple. |
+| `52` | Invalid tuple. |
+| `53` | Cannot execute the thread using `await` because the thread is trying to access unreachable data. |
