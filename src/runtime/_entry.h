@@ -143,7 +143,31 @@ namespace newasm
 					}
 				}
                 newasm::header::functions::parseopr(suf, newasm::mem::data);
-                newasm::parseopr_struct(suf);
+				//newasm::header::functions::parseFromRAM(suf);
+                auto parseFromRAM = [](std::string& suf) -> void {
+					if(newasm::variables::ids.find(suf) != newasm::variables::ids.end())
+					{
+						auto i = newasm::variables::ids.at(suf);
+						if(i.type == newasm::datatypes::number)
+						{
+							suf = std::to_string(newasm::hardware::randAccessMem.peek<int>(i.addr));
+							return;
+						}
+						if(i.type == newasm::datatypes::decimal)
+						{
+							suf = std::to_string(newasm::hardware::randAccessMem.peek<float>(i.addr));
+							return;
+						}
+						if(i.type == newasm::datatypes::character)
+						{
+							suf = "'" + std::to_string(newasm::hardware::randAccessMem.peek<char>(i.addr)) + "'";
+							return;
+						}
+					}
+					return;
+				};
+				parseFromRAM(suf);
+				newasm::parseopr_struct(suf);
 				try{
 					std::cout;
 				}

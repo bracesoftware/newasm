@@ -369,6 +369,18 @@ namespace newasm
             }
         }
     }
+    namespace variables
+    {
+        struct varData
+        {
+            int addr; // address where it is stored
+            int type; // type
+
+            //decorator data
+            bool locked = false;
+        };
+        std::unordered_map<std::string, newasm::variables::varData> ids;
+    }
 }
 
 namespace newasm
@@ -484,6 +496,7 @@ namespace newasm
                 }
                 return;
             }
+            
         }
     }
 }

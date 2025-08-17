@@ -371,10 +371,15 @@ namespace newasm
                         newasm::mem::structs[newasm::header::data::struct_decl].push_back({newasm::datatypes::number, name, value});
                         return 1;
                     }
-                    newasm::mem::datatypes[name] = newasm::datatypes::number;
-                    newasm::mem::data[name] = value;
-                    newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
+                    //newasm::mem::datatypes[name] = newasm::datatypes::number;
+                    //newasm::mem::data[name] = value;
+                    //newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
                     //_newasm_addnamespaces(name)
+
+                    newasm::variables::ids[name].type = newasm::datatypes::number;
+
+                    newasm::variables::ids.at(name).addr = newasm::hardware::randAccessMem.write<int>(std::stoi(value));
+                    newasm::variables::ids.at(name).locked = newasm::expcfg::lockbool;
                     return 1;
                 }
                 //decimal numbers
@@ -390,10 +395,15 @@ namespace newasm
                         newasm::mem::structs[newasm::header::data::struct_decl].push_back({newasm::datatypes::decimal, name, value});
                         return 1;
                     }
-                    newasm::mem::datatypes[name] = newasm::datatypes::decimal;
-                    newasm::mem::data[name] = value;
-                    newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
+                    //newasm::mem::datatypes[name] = newasm::datatypes::decimal;
+                    //newasm::mem::data[name] = value;
+                    //newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
                     //_newasm_addnamespaces(name)
+
+                    newasm::variables::ids[name].type = newasm::datatypes::decimal;
+
+                    newasm::variables::ids.at(name).addr = newasm::hardware::randAccessMem.write<float>(std::stof(value));
+                    newasm::variables::ids.at(name).locked = newasm::expcfg::lockbool;
                     return 1;
                 }
                 // text
@@ -457,9 +467,11 @@ namespace newasm
                         newasm::mem::structs[newasm::header::data::struct_decl].push_back({newasm::datatypes::character, name, value});
                         return 1;
                     }
-                    newasm::mem::datatypes[name] = newasm::datatypes::character;
-                    newasm::mem::data[name] = value;
-                    newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
+                    
+                    newasm::variables::ids[name].type = newasm::datatypes::character;
+
+                    newasm::variables::ids.at(name).addr = newasm::hardware::randAccessMem.write<char>(newasm::header::functions::remsq(value).at(0));
+                    newasm::variables::ids.at(name).locked = newasm::expcfg::lockbool;
                     return 1;
                 }
                 // tuples
@@ -1620,6 +1632,54 @@ namespace newasm
                 if(newasm::header::functions::isvmemref(opr).first)
                 {
                     opr = newasm::_virtual::readData(newasm::header::functions::isvmemref(opr).second);
+                }
+
+                if(newasm::header::functions::isref(suf))
+                {
+                    newasm::runtime::functions::parse(suf); // for namespaces
+                    suf = newasm::header::functions::trim(newasm::header::functions::remamp(suf));
+                    if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids))
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+
+                    auto i = newasm::variables::ids.at(suf);
+                    if(i.type == newasm::datatypes::number)
+                    {
+                        if(!newasm::header::functions::isnumeric(opr))
+                        {
+                            std::cout << "opr is " << opr << std::endl;
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                            return 1;
+                        }
+
+                        newasm::hardware::randAccessMem.overwrite<int>(i.addr, std::stoi(opr));
+                        return 1;
+                    }
+                    if(i.type == newasm::datatypes::decimal)
+                    {
+                        if(!newasm::header::functions::isfloat(opr))
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                            return 1;
+                        }
+
+                        newasm::hardware::randAccessMem.overwrite<float>(i.addr, std::stof(opr));
+                        return 1;
+                    }
+                    if(i.type == newasm::datatypes::character)
+                    {
+                        if(!newasm::header::functions::ischar(opr))
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                            return 1;
+                        }
+
+                        newasm::hardware::randAccessMem.overwrite<char>(i.addr, newasm::header::functions::remsq(opr).at(0));
+                        return 1;
+                    }
+                    return 1;
                 }
 
                 auto reg = newasm::mem::regs::identifiers.find(suf);

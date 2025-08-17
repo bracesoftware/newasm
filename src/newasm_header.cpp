@@ -1453,7 +1453,7 @@ namespace newasm
                 return {2, {text1, text2, text3}};
             }
 
-            std::pair<bool, std::string> parseContainerType(const std::string &s)
+            std::pair<bool, std::string> parseContainerType(const std::string& s)
             {
                 if(newasm::header::functions::trim(s).at(0) == '?')
                 {
@@ -1461,7 +1461,6 @@ namespace newasm
                 }
                 return {false, ""};
             }
-
         }
     }
     ////////////////////////////

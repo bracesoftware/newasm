@@ -43,6 +43,7 @@ the Initial Developer. All Rights Reserved.
 #include <thread>
 #include <atomic>
 #include <map>
+#include <cstring>
 //LOl
 #include <limits>
 #include <cstdlib>
@@ -70,7 +71,7 @@ the Initial Developer. All Rights Reserved.
 
 namespace newasm
 {
-    const int BUILD_NUMBER = 6;
+    const int BUILD_NUMBER = 7;
     bool vercheck = true;
     bool dwin = false;
     const std::string tab = "\t\t\t";
@@ -152,6 +153,8 @@ is in the runtime
 #include "runtime/namespaces.cpp"
 #include "pp/directives.cpp"
 #include "compiler/asmc.cpp"
+
+#include "kernel/hardware/ram.cpp"
 #include "newasm_exec.cpp"
 
 #include "runtime/procline_insert.cpp"
@@ -394,6 +397,8 @@ namespace newasm
 
         newasm::core::env_vars::functions::setup_env();
         newasm::project_data::impl::setup_proj();
+        newasm::hardware::randAccessMem.init();
+        newasm::header::functions::info("Sucessfully allocated 10 MB of memory.");
         newasm::header::functions::info(
             static_cast<std::string>("Preparing to execute: ") + newasm::header::col::yellow +
             newasm::project_data::name + static_cast<std::string>(" ") + newasm::project_data::version
