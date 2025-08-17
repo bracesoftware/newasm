@@ -922,6 +922,7 @@ namespace newasm
             {
                 if(suf == static_cast<std::string>("adr"))
                 {
+                    #if 0
                     if(!newasm::header::functions::isnumeric(opr) && !newasm::header::functions::isfloat(opr) &&
                     !newasm::header::functions::istext(opr) && !newasm::header::functions::isref(opr) &&
                     !newasm::header::functions::ischar(opr))
@@ -931,6 +932,36 @@ namespace newasm
                         return 1;
                     }
                     newasm::mem::program_memory[newasm::mem::regs::hea] = opr;
+                    #endif
+                    if(newasm::header::functions::isnumeric(opr))
+                    {
+                        auto value = std::stoi(opr);
+                        // write at heap pointer
+                        newasm::hardware::randAccessMem.write<int>(newasm::mem::regs::hea, value);
+                        return 0;
+                    }
+                    if(newasm::header::functions::isfloat(opr))
+                    {
+                        auto value = std::stof(opr);
+                        // write at heap pointer
+                        newasm::hardware::randAccessMem.write<float>(newasm::mem::regs::hea, value);
+                        return 0;
+                    }
+                    if(newasm::header::functions::ischar(opr))
+                    {
+                        auto value = newasm::header::functions::remsq(opr).at(0);
+                        // write at heap pointer
+                        newasm::hardware::randAccessMem.write<char>(newasm::mem::regs::hea, value);
+                        return 0;
+                    }
+                    if(newasm::header::functions::istext(opr))
+                    {
+                        auto value = newasm::header::functions::remq(opr);
+                        // write at heap pointer
+                        newasm::hardware::randAccessMem.write<std::string>(newasm::mem::regs::hea, value);
+                        return 0;
+                    }
+                    newasm::terminate(newasm::exit_codes::invalid_syntax);
                     return 1;
                 }
                 if(suf == static_cast<std::string>("ref"))
@@ -941,6 +972,37 @@ namespace newasm
                         return 1;
                     }
                     opr = newasm::header::functions::remamp(opr);
+
+                    if(newasm::mem::functions::datavalid(opr, newasm::variables::ids))
+                    {
+                        auto it = newasm::variables::ids.find(opr);
+                        if(it.type == newasm::datatypes::number)
+                        {
+                            auto value = newasm::hardware::randAccessMem.peek<int>(newasm::mem::regs::hea);
+                            newasm::hardware::randAccessMem.overwrite<int>(i.addr, value);
+                            return 1;
+                        }
+                        if(it.type == newasm::datatypes::decimal)
+                        {
+                            auto value = newasm::hardware::randAccessMem.peek<float>(newasm::mem::regs::hea);
+                            newasm::hardware::randAccessMem.overwrite<float>(i.addr, value);
+                            return 1;
+                        }
+                        if(it.type == newasm::datatypes::character)
+                        {
+                            auto value = newasm::hardware::randAccessMem.peek<char>(newasm::mem::regs::hea);
+                            newasm::hardware::randAccessMem.overwrite<char>(i.addr, value);
+                            return 1;
+                        }
+                        if(it.type == newasm::datatypes::text)
+                        {
+                            auto value = newasm::hardware::randAccessMem.peek<std::string>(newasm::mem::regs::hea);
+                            newasm::hardware::randAccessMem.overwrite<std::string>(i.addr, value);
+                            return 1;
+                        }
+                        return 1;
+                    }
+
                     if(!newasm::mem::functions::datavalid(opr,newasm::mem::data))
                     {
                         newasm::terminate(newasm::exit_codes::invalid_memacc);
@@ -1774,19 +1836,22 @@ namespace newasm
                     case newasm::mem::regs::hea__:
                     {
                         //malloc
-                        if(newasm::header::functions::isallocref(opr).first)
+                        auto i = newasm::header::functions::isallocref(opr);
+                        if(i.first)
                         {
-                            if(newasm::allocation_data == nullptr) //NoAlloc
+                            auto addrnew = i.second;
+                            auto addr = newasm::malloc::meta.back();
+
+                            int malloc_size = 0;
+                            std::memcpy(&malloc_size, &newasm::hardware::randAccessMem.__memory__[addr], sizeof(int));
+
+                            if(i.second >= malloc_size)
                             {
-                                newasm::terminate(newasm::exit_codes::malloc_err);
+                                newasm::terminate(newasm::exit_codes::seg_fault);
                                 return 1;
                             }
-                            if(newasm::header::functions::isallocref(opr).second >= newasm::allocation_data->size) //AllocSizeExceeded
-                            {
-                                newasm::terminate(newasm::exit_codes::invalid_memacc);
-                                return 1;
-                            }
-                            newasm::mem::regs::hea = 1+newasm::allocation_data->heapsize_new - newasm::allocation_data->size + newasm::header::functions::isallocref(opr).second;
+
+                            newasm::mem::regs::hea = addrnew + sizeof(int) + i.second;
                             return 1;
                         }
 
@@ -1796,10 +1861,10 @@ namespace newasm
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                             return 1;
                         }
-                        newasm::mem::regs::hea = std::stoi(opr);
-                        if(newasm::mem::regs::hea > newasm::mem::regs::hea)
+                        newasm::mem::regs::hea = std::stoi(opr) < 0 ? 0 : std::stoi(opr);
+                        if(newasm::mem::regs::hea >= newasm::hardware::randAccessMem.get_heap_end())
                         {
-                            newasm::terminate(newasm::exit_codes::invalid_memacc);
+                            newasm::terminate(newasm::exit_codes::seg_fault);
                         }
                         return 1;
                     }

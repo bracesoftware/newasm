@@ -23,11 +23,11 @@ namespace newasm
     {
         template<int memsize> class randAccessMem__
         {
-            private:
+            public:
             static constexpr int MEM_SIZE = memsize * 1024 * 1024;
             char __memory__[MEM_SIZE];
             newasm::containers::bit_array<MEM_SIZE> __memory_free__;
-            public:
+            
             int get_size()
             {
                 return MEM_SIZE;
