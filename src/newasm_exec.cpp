@@ -599,9 +599,9 @@ namespace newasm
         {
             intreg = newasm::mem::regs::stk;
         }
-        if(suf == newasm::mem::regs::heaptr.identifier())
+        if(suf == newasm::mem::regs::hea.identifier())
         {
-            intreg = newasm::mem::regs::heaptr;
+            intreg = newasm::mem::regs::hea;
         }
         if(suf == newasm::mem::regs::cpr.identifier())
         {
@@ -930,7 +930,7 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::invalid_syntax);
                         return 1;
                     }
-                    newasm::mem::program_memory[newasm::mem::regs::heaptr] = opr;
+                    newasm::mem::program_memory[newasm::mem::regs::hea] = opr;
                     return 1;
                 }
                 if(suf == static_cast<std::string>("ref"))
@@ -951,7 +951,7 @@ namespace newasm
                     (
                         newasm::mem::program_memory
                         [
-                            newasm::mem::regs::heaptr
+                            newasm::mem::regs::hea
                         ]
                     ))
                     {
@@ -962,7 +962,7 @@ namespace newasm
                         }
                         newasm::mem::data[opr] = newasm::mem::program_memory
                         [
-                            newasm::mem::regs::heaptr
+                            newasm::mem::regs::hea
                         ];
                         return 1;
                     }
@@ -970,7 +970,7 @@ namespace newasm
                     (
                         newasm::mem::program_memory
                         [
-                            newasm::mem::regs::heaptr
+                            newasm::mem::regs::hea
                         ]
                     ))
                     {
@@ -981,7 +981,7 @@ namespace newasm
                         }
                         newasm::mem::data[opr] = newasm::mem::program_memory
                         [
-                            newasm::mem::regs::heaptr
+                            newasm::mem::regs::hea
                         ];
                         return 1;
                     }
@@ -989,7 +989,7 @@ namespace newasm
                     (
                         newasm::mem::program_memory
                         [
-                            newasm::mem::regs::heaptr
+                            newasm::mem::regs::hea
                         ]
                     ))
                     {
@@ -1000,7 +1000,7 @@ namespace newasm
                         }
                         newasm::mem::data[opr] = newasm::mem::program_memory
                         [
-                            newasm::mem::regs::heaptr
+                            newasm::mem::regs::hea
                         ];
                         return 1;
                     }
@@ -1008,7 +1008,7 @@ namespace newasm
                     (
                         newasm::mem::program_memory
                         [
-                            newasm::mem::regs::heaptr
+                            newasm::mem::regs::hea
                         ]
                     ))
                     {
@@ -1019,7 +1019,7 @@ namespace newasm
                         }
                         newasm::mem::data[opr] = newasm::mem::program_memory
                         [
-                            newasm::mem::regs::heaptr
+                            newasm::mem::regs::hea
                         ];
                         //auto i = std::find(newasm::mem::uninitialized_pointer.begin(), newasm::mem::uninitialized_pointer.end(), opr);
                         //if(i != newasm::mem::uninitialized_pointer.end()) newasm::mem::uninitialized_pointer.erase(i);
@@ -1029,7 +1029,7 @@ namespace newasm
                     (
                         newasm::mem::program_memory
                         [
-                            newasm::mem::regs::heaptr
+                            newasm::mem::regs::hea
                         ]
                     ))
                     {
@@ -1040,7 +1040,7 @@ namespace newasm
                         }
                         newasm::mem::data[opr] = newasm::mem::program_memory
                         [
-                            newasm::mem::regs::heaptr
+                            newasm::mem::regs::hea
                         ];
                         return 1;
                     }
@@ -1493,14 +1493,14 @@ namespace newasm
                         newasm::mem::data[opr] = std::to_string(newasm::mem::regs::stk);
                         return 1;
                     }
-                    case newasm::mem::regs::heaptr__:
+                    case newasm::mem::regs::hea__:
                     {
                         if(newasm::mem::datatypes[opr] != newasm::datatypes::number)
                         {
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                             return 1;
                         }
-                        newasm::mem::data[opr] = std::to_string(newasm::mem::regs::heaptr);
+                        newasm::mem::data[opr] = std::to_string(newasm::mem::regs::hea);
                         return 1;
                     }
                     case newasm::mem::regs::prp__:
@@ -1771,7 +1771,7 @@ namespace newasm
                         newasm::mem::regs::stk = std::stoi(opr);
                         return 1;
                     }
-                    case newasm::mem::regs::heaptr__:
+                    case newasm::mem::regs::hea__:
                     {
                         //malloc
                         if(newasm::header::functions::isallocref(opr).first)
@@ -1786,7 +1786,7 @@ namespace newasm
                                 newasm::terminate(newasm::exit_codes::invalid_memacc);
                                 return 1;
                             }
-                            newasm::mem::regs::heaptr = 1+newasm::allocation_data->heapsize_new - newasm::allocation_data->size + newasm::header::functions::isallocref(opr).second;
+                            newasm::mem::regs::hea = 1+newasm::allocation_data->heapsize_new - newasm::allocation_data->size + newasm::header::functions::isallocref(opr).second;
                             return 1;
                         }
 
@@ -1796,8 +1796,8 @@ namespace newasm
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                             return 1;
                         }
-                        newasm::mem::regs::heaptr = std::stoi(opr);
-                        if(newasm::mem::regs::heaptr > newasm::mem::regs::hea)
+                        newasm::mem::regs::hea = std::stoi(opr);
+                        if(newasm::mem::regs::hea > newasm::mem::regs::hea)
                         {
                             newasm::terminate(newasm::exit_codes::invalid_memacc);
                         }
@@ -1987,9 +1987,9 @@ namespace newasm
                         intreg = newasm::mem::regs::stk;
                         break;
                     }
-                    case newasm::mem::regs::heaptr__:
+                    case newasm::mem::regs::hea__:
                     {
-                        intreg = newasm::mem::regs::heaptr;
+                        intreg = newasm::mem::regs::hea;
                         break;
                     }
                     case newasm::mem::regs::cpr__:
@@ -2509,6 +2509,7 @@ namespace newasm
             //push
             case newasm::core::lang_inf::push:
             {
+                #if 0
                 auto opr = suf;
                 if(newasm::mem::functions::check_stkhea_col())
                 {
@@ -2525,6 +2526,7 @@ namespace newasm
                         newasm::callproc(newasm::stack::events.at(opr));
                     }
                 }
+                #endif
                 return 1;
             }
             //cast
@@ -2790,11 +2792,7 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                         return 1;
                     }
-                    if(!newasm::mem::functions::setup_memsize(std::stoi(newasm::mem::regs::tlr)))
-                    {
-                        newasm::terminate(newasm::exit_codes::invalid_config);
-                        return 1;
-                    }
+                    std::cout << "`sys_memsize` is deprecated.\n" << std::flush;
                     return 1;
                 }
                 if(suf == static_cast<std::string>("0x2")) // sys_lazy_evhndlr
@@ -2974,6 +2972,21 @@ namespace newasm
                     newasm::_virtual::virtualMemory.init(newasm::header::functions::isvmemsize(suf).second);
                     return 1;
                 }
+
+                if(!newasm::header::functions::isnumeric(suf))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    return 1;
+                }
+                auto i = newasm::hardware::randAccessMem.malloc(std::stoi(suf));
+                if(i == -1)
+                {
+                    newasm::terminate(newasm::exit_codes::malloc_err);
+                    return 1;
+                }
+                newasm::malloc::meta.push_back(i);
+                
+                #if 0
                 if(newasm::allocation_data != nullptr) // malloc je vec upotrebljen //NoAlloc
                 {
                     newasm::terminate(newasm::exit_codes::malloc_err);
@@ -2989,6 +3002,7 @@ namespace newasm
                 newasm::mem::regs::hea += std::stoi(suf);
                 newasm::allocation_data->heapsize_new = newasm::mem::regs::hea;
                 // medjutim nece heap pointer biti promienjen, to cemo ostaviti za mov i free
+                #endif
 
                 return 1;
             }
@@ -3044,7 +3058,6 @@ namespace newasm
                 if(newasm::header::functions::isnumeric(suf))
                 {
                     newasm::mem::regs::hea = newasm::mem::regs::hea + std::stoi(suf);
-                    newasm::mem::regs::heaptr = newasm::mem::regs::hea;
                     if(newasm::mem::regs::hea > newasm::mem::inf::mem_size - 1)
                     {
                         newasm::terminate(newasm::exit_codes::mem_overflow);//,wholeline);
@@ -3062,6 +3075,8 @@ namespace newasm
                     }
                     return 1;
                 }
+                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                return 1;
             }
             //db - debug
             case newasm::core::lang_inf::db:
@@ -3118,9 +3133,9 @@ namespace newasm
                     debugRegister(suf, std::to_string(newasm::mem::regs::stk));
                     return 1;
                 }
-                if(suf == newasm::mem::regs::heaptr.identifier())
+                if(suf == newasm::mem::regs::hea.identifier())
                 {
-                    debugRegister(suf, std::to_string(newasm::mem::regs::heaptr));
+                    debugRegister(suf, std::to_string(newasm::mem::regs::hea));
                     return 1;
                 }
                 if(suf == newasm::mem::regs::prp.identifier())
@@ -3261,10 +3276,10 @@ namespace newasm
                     newasm::terminate(newasm::mem::regs::stk);//,wholeline);
                     return 1;
                 }
-                if(suf == newasm::mem::regs::heaptr.identifier())
+                if(suf == newasm::mem::regs::hea.identifier())
                 {
                     newasm::header::data::exception = false;
-                    newasm::terminate(newasm::mem::regs::heaptr);//,wholeline);
+                    newasm::terminate(newasm::mem::regs::hea);//,wholeline);
                     return 1;
                 }
                 if(suf == newasm::mem::regs::prp.identifier())
@@ -3344,7 +3359,7 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::stkhea_col); // Why'd you touch STK in the first place?
                         return 1;
                     }
-                    case newasm::mem::regs::heaptr__: newasm::mem::regs::heaptr.reset(); break;
+                    case newasm::mem::regs::hea__: newasm::mem::regs::hea.reset(); break;
                     case newasm::mem::regs::psx__: newasm::mem::regs::psx.reset(); break;
                     case newasm::mem::regs::prp__: newasm::mem::regs::prp.reset(); break;
                     case newasm::mem::regs::cpt__: newasm::mem::regs::cpt.reset(); break;
@@ -3388,9 +3403,9 @@ namespace newasm
                         newasm::mem::regs::stk ++;
                         return 1;
                     }
-                    case newasm::mem::regs::heaptr__:
+                    case newasm::mem::regs::hea__:
                     {
-                        newasm::mem::regs::heaptr ++;
+                        newasm::mem::regs::hea ++;
                         return 1;
                     }
                     case newasm::mem::regs::cpr__:
@@ -3557,9 +3572,9 @@ namespace newasm
                         newasm::mem::regs::stk --;
                         return 1;
                     }
-                    case newasm::mem::regs::heaptr__:
+                    case newasm::mem::regs::hea__:
                     {
-                        newasm::mem::regs::heaptr --;
+                        newasm::mem::regs::hea --;
                         return 1;
                     }
                     case newasm::mem::regs::cpr__:
@@ -3815,6 +3830,7 @@ namespace newasm
             //free
             case newasm::core::lang_inf::free__:
             {
+                #if 0
                 if(newasm::allocation_data == nullptr) // malloc nije upotrebljen // NoAlloc
                 {
                     newasm::terminate(newasm::exit_codes::malloc_err);
@@ -3826,9 +3842,21 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::manual_heap);
                     return 1;
                 }
-                newasm::mem::regs::heaptr = newasm::mem::regs::hea;
+                newasm::mem::regs::hea = newasm::mem::regs::hea;
                 delete newasm::allocation_data;
                 newasm::allocation_data = nullptr;
+                #endif
+
+                if(newasm::malloc::meta.size() == 0)
+                {
+                    newasm::terminate(newasm::exit_codes::seg_fault);
+                    return 1;
+                }
+
+                int addr = newasm::malloc::meta.back();
+                newasm::malloc::meta.pop_back();
+
+                newasm::hardware::randAccessMem.free(addr);
                 return 1;
             }
             //MATH OPERATIONS

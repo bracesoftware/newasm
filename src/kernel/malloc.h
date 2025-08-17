@@ -23,6 +23,17 @@ the Initial Developer. All Rights Reserved.
 
 namespace newasm
 {
+    namespace malloc
+    {
+        std::vector<int> meta;
+        //int memory[10 * 1024 * 1024];
+        std::unordered_map<int, int> types;
+    }
+}
+
+#if 0
+namespace newasm
+{
     namespace mem
     {
         class malloc_info
@@ -64,3 +75,4 @@ namespace newasm
         }
     }
 }
+#endif

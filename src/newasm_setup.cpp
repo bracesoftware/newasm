@@ -77,7 +77,7 @@ namespace newasm
         const int constant_modif = 36;
         const int os_error = 37;
         const int malloc_err = 38;
-        const int manual_heap = 39;
+        const int seg_fault = 39;
         const int invalid_call = 40;
         const int hndl_reassign = 41;
         const int sysenter_fail = 42;
@@ -132,7 +132,7 @@ namespace newasm
             {constant_modif, "ConstValModification"},
             {os_error, "OSErr"},
             {malloc_err, "MallocErr"},
-            {manual_heap, "ManualHeapModif"},
+            {seg_fault, "SegmentationFault"},
             {invalid_call, "InvalidProcCall"},
             {hndl_reassign, "HexReassignment"},
             {sysenter_fail, "SysenterFail"},
@@ -190,11 +190,10 @@ namespace newasm
         {
             // non accessible registers
             int exc = 0; // cant be used lol
-            int hea = 0; // heap size
             newasm::_register<int> lcx("lcx", 0); //controlled with jmp variants
             //mem registers
             newasm::_register<int> stk("stk", newasm::mem::inf::max_mem_size - 1);
-            newasm::_register<int> heaptr("hea", 0);
+            newasm::_register<int> hea("hea", 0);
             //NORMAL REGISTERS
             
             newasm::_register<std::string> tlr("tlr", newasm::header::constants::inv_reg_val);
@@ -238,7 +237,7 @@ namespace newasm
             const int cr1__ = 15;
 
             const int stk__ = 16;
-            const int heaptr__ = 17;
+            const int hea__ = 17;
 
             std::unordered_map<std::string, int> identifiers = {
                 {"tlr", tlr__},
@@ -257,13 +256,15 @@ namespace newasm
                 {"cr0", cr0__},
                 {"cr1", cr1__},
                 {"stk", stk__},
-                {"hea", heaptr__},
+                {"hea", hea__},
             };
 
             void resetRegisters()
             {
                 newasm::mem::regs::stk.reset();
-                newasm::mem::regs::heaptr.reset();
+                newasm::mem::regs::hea.reset();
+
+                //newasm::hardware::randAccessMem.init();
 
                 newasm::mem::regs::tlr.reset();
                 newasm::mem::regs::stl.reset();
@@ -324,6 +325,7 @@ namespace newasm
 
         namespace functions
         {
+            #if 0
             bool setup_memsize(int size)
             {
                 if(size > newasm::mem::inf::max_mem_size)
@@ -340,6 +342,7 @@ namespace newasm
                 }
                 return true;
             }
+            #endif
             bool check_stkhea_col()
             {
                 return (!(newasm::mem::regs::hea < newasm::mem::regs::stk));
@@ -482,9 +485,9 @@ namespace newasm
                             arg = std::to_string(newasm::mem::regs::stk.get_value());
                             break;
                         }
-                        case newasm::mem::regs::heaptr__:
+                        case newasm::mem::regs::hea__:
                         {
-                            arg = std::to_string(newasm::mem::regs::heaptr.get_value());
+                            arg = std::to_string(newasm::mem::regs::hea.get_value());
                             break;
                         }
                         default:

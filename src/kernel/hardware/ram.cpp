@@ -28,6 +28,10 @@ namespace newasm
             char __memory__[MEM_SIZE];
             newasm::containers::bit_array<MEM_SIZE> __memory_free__;
             public:
+            int get_size()
+            {
+                return MEM_SIZE;
+            }
             int get_free_alloc(int bytes)
             {
                 for(int i = 0; i <= MEM_SIZE - bytes; ++i)
@@ -51,6 +55,21 @@ namespace newasm
                 }
                 return -1;
             }
+            int get_heap_end()
+            {
+                for(int i = MEM_SIZE - 1; i >= 0; i--)
+                {
+                    if(i >= newasm::mem::regs::stk.get_value())
+                    {
+                        continue;
+                    }
+                    if(__memory_free__.get_at(i) == 1)
+                    {
+                        return i + 1;
+                    }
+                }
+                return -1;
+            }
 
             void init()
             {
@@ -58,10 +77,14 @@ namespace newasm
                 {
                     __memory_free__.set_at(i, 0);
                 }
+
+                newasm::mem::regs::hea.set_value(0);
+                newasm::mem::regs::stk.set_value(MEM_SIZE - 1);
                 return;
             }
             // for int, float, char
-            template<typename T> int write(T value)
+            template<typename T>
+            int write(T value)
             {
                 if constexpr(std::is_same<T, std::string>::value)
                 {
@@ -82,6 +105,7 @@ namespace newasm
                         __memory_free__.set_at(i, 1); // tell the thing it is occupied
                     }
 
+                    newasm::mem::regs::hea.set_value(get_heap_end());
                     return address;
                 }
 
@@ -96,10 +120,42 @@ namespace newasm
                 {
                     __memory_free__.set_at(i, 1); // tell the thing it is occupied
                 }
+                newasm::mem::regs::hea.set_value(get_heap_end());
                 return address;
             }
 
-            template<typename T> int overwrite(int addr, T value)
+            template<typename T>
+            int write(int address, T value)
+            {
+                if constexpr(std::is_same<T, std::string>::value)
+                {
+                    auto len = value.size();
+                    // Firstly write the header
+                    std::memcpy(&__memory__[address], &len, sizeof(int));
+                    // Then the value
+                    std::memcpy(&__memory__[address + sizeof(int)], value.data(), len);
+
+                    for(int i = address; i < address + sizeof(int) + len; ++i)
+                    {
+                        __memory_free__.set_at(i, 1); // tell the thing it is occupied
+                    }
+
+                    newasm::mem::regs::hea.set_value(get_heap_end());
+
+                    return address;
+                }
+
+                std::memcpy(&__memory__[address], &value, sizeof(T));
+                for(int i = address; i < address + sizeof(T); ++i)
+                {
+                    __memory_free__.set_at(i, 1); // tell the thing it is occupied
+                }
+                newasm::mem::regs::hea.set_value(get_heap_end());
+                return address;
+            }
+
+            template<typename T>
+            int overwrite(int addr, T value)
             {
                 if constexpr(std::is_same<T, std::string>::value)
                 {
@@ -136,12 +192,13 @@ namespace newasm
                     }
                     return addr;
                 }
-                // We're modifying an existing memory block, thus we just have to modify it
+                // We're modifying an existing memory block, thus we just have to change it
                 std::memcpy(&__memory__[addr], &value, sizeof(T));
                 return addr;
             }
 
-            template<typename T> T peek(int addr)
+            template<typename T>
+            T peek(int addr)
             {
                 if constexpr(std::is_same<T, std::string>::value)
                 {
@@ -155,6 +212,107 @@ namespace newasm
                 std::memcpy(&value, &__memory__[addr], sizeof(T));
                 return value;
             }
+
+            //malloc, free, heap, push, pop
+            int malloc(int bytes)
+            {
+                int addr = get_free_alloc(sizeof(int) + bytes);
+                if(addr == -1)
+                {
+                    return -1;
+                }
+                int header = bytes;
+                // copy the header
+                std::memcpy(&__memory__[addr], &header, sizeof(int));
+                // now actually fill the memory
+                for(int i = addr; i < addr + sizeof(int) + bytes; ++i)
+                {
+                    __memory_free__.set_at(i, 1);
+                }
+
+                newasm::mem::regs::hea.set_value(get_heap_end());
+                return addr;
+            }
+
+            void free(int addr)
+            {
+                int bytes = 0;
+                std::memcpy(&bytes, &__memory__[addr], sizeof(int));
+                for(int i = addr; i < addr + sizeof(int) + bytes; ++i)
+                {
+                    // just free
+                    __memory_free__.set_at(i, 0);
+                }
+
+                newasm::mem::regs::hea.set_value(get_heap_end());
+                return;
+            }
+           
+            template<typename T>
+            void push__STACK(T value)
+            {
+                if constexpr(std::is_same<T, std::string>::value)
+                {
+                    auto len = value.size();
+                    int address = newasm::mem::regs::stk.get_value() - sizeof(int) - len;
+                    newasm::mem::regs::stk.set_value(address);
+                    // Firstly write the header
+                    std::memcpy(&__memory__[address], &len, sizeof(int));
+                    // Then the value
+                    std::memcpy(&__memory__[address + sizeof(int)], value.data(), len);
+
+                    for(int i = address; i < address + sizeof(int) + len; ++i)
+                    {
+                        __memory_free__.set_at(i, 1); // tell the thing it is occupied
+                    }
+
+                    return;
+                }
+
+                int address = newasm::mem::regs::stk.get_value() - sizeof(T);
+                newasm::mem::regs::stk.set_value(address);
+
+                std::memcpy(&__memory__[address], &value, sizeof(T));
+                for(int i = address; i < address + sizeof(T); ++i)
+                {
+                    __memory_free__.set_at(i, 1); // tell the thing it is occupied
+                }
+                return;
+            }
+
+            template<typename T>
+            void pop__STACK(T& value)
+            {
+                if constexpr(std::is_same<T, std::string>::value)
+                {
+                    int buffer_len = 0;
+                    std::memcpy(&buffer_len, &__memory__[newasm::mem::regs::stk.get_value()], sizeof(int));
+                    std::string buffer(buffer_len, '\0');
+                    std::memcpy(buffer.data(), &__memory__[newasm::mem::regs::stk.get_value() + buffer_len], buffer_len);
+                    value = buffer;
+
+                    for(int i = newasm::mem::regs::stk; i < newasm::mem::regs::stk + sizeof(int) + buffer_len; ++i)
+                    {
+                        __memory_free__.set_at(i, 0);
+                    }
+
+                    newasm::mem::regs::stk.set_value(newasm::mem::regs::stk.get_value() + sizeof(int) + buffer_len);
+                    return;
+                }
+
+                T val;
+                std::memcpy(&val, &__memory__[newasm::mem::regs::stk.get_value()], sizeof(T));
+                value = val;
+
+                for(int i = newasm::mem::regs::stk; i < newasm::mem::regs::stk + sizeof(T); ++i)
+                {
+                    __memory_free__.set_at(i, 0);
+                }
+
+                newasm::mem::regs::stk.set_value(newasm::mem::regs::stk.get_value() + sizeof(int));
+                return;
+            }
+            //
         };
 
         newasm::hardware::randAccessMem__<10> randAccessMem; // 10 MB OF MEMORY :D
