@@ -163,6 +163,11 @@ namespace newasm
 							suf = "'" + std::to_string(newasm::hardware::randAccessMem.peek<char>(i.addr)) + "'";
 							return;
 						}
+						if(i.type == newasm::datatypes::text)
+						{
+							suf = '"' + newasm::hardware::randAccessMem.peek<std::string>(i.addr) + '"';
+							return;
+						}
 					}
 					return;
 				};

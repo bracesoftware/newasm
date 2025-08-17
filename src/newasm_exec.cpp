@@ -1681,6 +1681,18 @@ namespace newasm
                         newasm::hardware::randAccessMem.overwrite<char>(i.addr, newasm::header::functions::remsq(opr).at(0));
                         return 1;
                     }
+                    if(i.type == newasm::datatypes::text)
+                    {
+                        if(!newasm::header::functions::istext(opr))
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                            return 1;
+                        }
+
+                        // We have to change the pointer if the string gets reallocated
+                        newasm::variables::ids.at(suf).addr = newasm::hardware::randAccessMem.overwrite<std::string>(i.addr, newasm::header::functions::remq(opr));;
+                        return 1;
+                    }
                     return 1;
                 }
 
