@@ -28,7 +28,7 @@ namespace newasm
             char __memory__[MEM_SIZE];
             newasm::containers::bit_array<MEM_SIZE> __memory_free__;
             public:
-            int getFreeMemIdx_(int bytes)
+            int get_free_alloc(int bytes)
             {
                 for(int i = 0; i <= MEM_SIZE - bytes; ++i)
                 {
@@ -63,7 +63,29 @@ namespace newasm
             // for int, float, char
             template<typename T> int write(T value)
             {
-                int address = getFreeMemIdx_(sizeof(T));
+                if constexpr(std::is_same<T, std::string>::value)
+                {
+                    auto len = value.size();
+                    int address = get_free_alloc(sizeof(int) + len);
+                    if(address == -1)
+                    {
+                        newasm::terminate(newasm::exit_codes::mem_overflow);
+                        return -1;
+                    }
+                    // Firstly write the header
+                    std::memcpy(&__memory__[address], &len, sizeof(int));
+                    // Then the value
+                    std::memcpy(&__memory__[address + sizeof(int)], value.data(), len);
+
+                    for(int i = address; i < address + sizeof(int) + len; ++i)
+                    {
+                        __memory_free__.set_at(i, 1); // tell the thing it is occupied
+                    }
+
+                    return address;
+                }
+
+                int address = get_free_alloc(sizeof(T));
                 if(address == -1)
                 {
                     newasm::terminate(newasm::exit_codes::mem_overflow);
@@ -77,22 +99,62 @@ namespace newasm
                 return address;
             }
 
-            template<typename T> void overwrite(int addr, T value)
+            template<typename T> int overwrite(int addr, T value)
             {
+                if constexpr(std::is_same<T, std::string>::value)
+                {
+                    int buffer_len = 0;
+                    std::memcpy(&buffer_len, &__memory__[addr], sizeof(int));
+
+                    if(value.size() > buffer_len) // we check if the new value is smaller
+                    {
+                        for(int i = addr; i < addr + sizeof(int) + buffer_len; ++i) // free the memory
+                        {
+                            __memory_free__.set_at(i, 0);
+                        }
+
+                        // do not duplicate the code and just write the new thing
+                        return write<std::string>(value);
+                    }
+                    if(value.size() == buffer_len)
+                    {
+                        // if the new string is the same size as the old string,
+                        // just overwrite it as we would with fixed-size data
+                        std::memcpy(&__memory__[addr + sizeof(int)], value.data(), buffer_len);
+                    }
+                    if(value.size() < buffer_len)
+                    {
+                        // if the new string is smaller, then we want to free unused data
+                        int buf_size = static_cast<int>(value.size());
+                        std::memcpy(&__memory__[addr], &buf_size, sizeof(int));
+                        std::memcpy(&__memory__[addr + sizeof(int)], value.data(), value.size());
+
+                        for(int i = addr + sizeof(int) + value.size(); i < addr + sizeof(int) + buffer_len; ++i)
+                        {
+                            __memory_free__.set_at(i, 0); // free unused stuff
+                        }
+                    }
+                    return addr;
+                }
                 // We're modifying an existing memory block, thus we just have to modify it
                 std::memcpy(&__memory__[addr], &value, sizeof(T));
-                return;
+                return addr;
             }
 
             template<typename T> T peek(int addr)
             {
+                if constexpr(std::is_same<T, std::string>::value)
+                {
+                    int buffer_len = 0;
+                    std::memcpy(&buffer_len, &__memory__[addr], sizeof(int));
+                    std::string buffer(buffer_len, '\0');
+                    std::memcpy(buffer.data(), &__memory__[addr + sizeof(int)], buffer_len);
+                    return buffer;
+                }
                 T value;
                 std::memcpy(&value, &__memory__[addr], sizeof(T));
                 return value;
             }
-
-            // for strings
-            // coming soon
         };
 
         newasm::hardware::randAccessMem__<10> randAccessMem; // 10 MB OF MEMORY :D
