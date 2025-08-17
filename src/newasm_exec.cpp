@@ -420,9 +420,11 @@ namespace newasm
                         newasm::mem::structs[newasm::header::data::struct_decl].push_back({newasm::datatypes::text, name, value});
                         return 1;
                     }
-                    newasm::mem::datatypes[name] = newasm::datatypes::text;
-                    newasm::mem::data[name] = value;
-                    newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
+                    
+                    newasm::variables::ids[name].type = newasm::datatypes::text;
+
+                    newasm::variables::ids.at(name).addr = newasm::hardware::randAccessMem.write<std::string>(newasm::header::functions::remq(value));
+                    newasm::variables::ids.at(name).locked = newasm::expcfg::lockbool;
                     return 1;
                 }
                 // pointers
