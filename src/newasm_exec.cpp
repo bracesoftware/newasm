@@ -1649,7 +1649,7 @@ namespace newasm
                     {
                         if(!newasm::header::functions::isnumeric(opr))
                         {
-                            std::cout << "opr is " << opr << std::endl;
+                            //std::cout << "opr is " << opr << std::endl;
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                             return 1;
                         }

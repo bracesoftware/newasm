@@ -444,47 +444,47 @@ namespace newasm
                         }
                         case newasm::mem::regs::fdx__:
                         {
-                            arg = newasm::mem::regs::fdx.get_value();
+                            arg = std::to_string(newasm::mem::regs::fdx.get_value());
                             break;
                         }
                         case newasm::mem::regs::cpr__:
                         {
-                            arg = newasm::mem::regs::cpr.get_value();
+                            arg = std::to_string(newasm::mem::regs::cpr.get_value());
                             break;
                         }
                         case newasm::mem::regs::br0__:
                         {
-                            arg = newasm::mem::regs::br0.get_value();
+                            arg = std::to_string(newasm::mem::regs::br0.get_value());
                             break;
                         }
                         case newasm::mem::regs::br1__:
                         {
-                            arg = newasm::mem::regs::br1.get_value();
+                            arg = std::to_string(newasm::mem::regs::br1.get_value());
                             break;
                         }
                         case newasm::mem::regs::bos__:
                         {
-                            arg = newasm::mem::regs::bos.get_value();
+                            arg = std::to_string(newasm::mem::regs::bos.get_value());
                             break;
                         }
                         case newasm::mem::regs::cr0__:
                         {
-                            arg = newasm::mem::regs::cr0.get_value();
+                            arg = std::to_string(newasm::mem::regs::cr0.get_value());
                             break;
                         }
                         case newasm::mem::regs::cr1__:
                         {
-                            arg = newasm::mem::regs::cr1.get_value();
+                            arg = std::to_string(newasm::mem::regs::cr1.get_value());
                             break;
                         }
                         case newasm::mem::regs::stk__:
                         {
-                            arg = newasm::mem::regs::stk.get_value();
+                            arg = std::to_string(newasm::mem::regs::stk.get_value());
                             break;
                         }
                         case newasm::mem::regs::heaptr__:
                         {
-                            arg = newasm::mem::regs::heaptr.get_value();
+                            arg = std::to_string(newasm::mem::regs::heaptr.get_value());
                             break;
                         }
                         default:

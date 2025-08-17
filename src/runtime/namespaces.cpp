@@ -31,7 +31,7 @@ namespace newasm
 			newasm::progwin::api::cout("Namespace -> " + text);
 			std::string namespace_id;
             /*
-            DESTRUCTIVE DECORATORS
+            NAMESPACE DESTRUCTOR
             */
             if(text.at(0) == '!')
             {
@@ -53,7 +53,7 @@ namespace newasm
 				return;
             }
             /*
-            CONSTRUCTIVE DECORATORS
+            NAMESPACE CONSTRUCTOR
             */
 			if(!newasm::header::functions::isalphanum(text))
 			{
