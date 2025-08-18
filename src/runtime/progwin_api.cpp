@@ -49,18 +49,11 @@ namespace newasm
             }
             void flush()
             {
-                #if _NEWASM_OS == _NEWASM_OS_windows_old || _NEWASM_OS == _NEWASM_OS_android
-                    std::cout << "[NewASM] PROGWIN | " << text <<"\n";
-                    return;
-                #endif
                 send_req("cout:" + newasm::progwin::buffer);
                 newasm::progwin::buffer = "";
             }
             void exit()
             {
-                #if _NEWASM_OS == _NEWASM_OS_windows_old || _NEWASM_OS == _NEWASM_OS_android
-                    return;
-                #endif
                 send_req("exit:0");
             }
         }

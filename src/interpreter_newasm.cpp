@@ -410,7 +410,6 @@ namespace newasm
         /*
             Before executing the file we need to open the program window.
         */
-        #if _NEWASM_OS != _NEWASM_OS_windows_old && _NEWASM_OS != _NEWASM_OS_android
         newasm::dwin = true;
         if(newasm::dwin)
         {
@@ -426,7 +425,6 @@ namespace newasm
             newasm::progwin::api::flush();
             newasm::header::functions::wait(4000);
         }
-        #endif
         /*
             Executing
         */
