@@ -329,6 +329,12 @@ namespace newasm
                 newasm::mem::regs::stk.set_value(newasm::mem::regs::stk.get_value() + sizeof(int));
                 return address;
             }
+            template<typename T>
+            int pop__STACK()
+            {
+                T value;
+                return pop__STACK<T>(value);
+            }
             //
         };
 

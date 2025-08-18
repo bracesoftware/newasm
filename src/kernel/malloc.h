@@ -27,7 +27,7 @@ namespace newasm
     {
         std::vector<int> meta;
         //int memory[10 * 1024 * 1024];
-        std::unordered_map<int, int> types;
+        newasm::_std::linear_map<int, int> types;
     }
     namespace stack
     {

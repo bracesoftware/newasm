@@ -38,7 +38,7 @@ namespace newasm
                 }
 
                 __map__.push_back({index, U{}});
-                return &__map__.at(__map__.size() - 1).second;
+                return __map__.at(__map__.size() - 1).second;
             }
 
             const U& at(T index, int offset) const

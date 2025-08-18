@@ -18,6 +18,7 @@ the Initial Developer. All Rights Reserved.
 */
 
 #include "sysext/shared_mem.cpp"
+#include "sysext/linear_map.cpp"
 
 namespace newasm
 {

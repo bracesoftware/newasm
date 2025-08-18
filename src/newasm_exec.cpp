@@ -2682,11 +2682,12 @@ namespace newasm
 
                 if(newasm::header::functions::ishex(suf))
                 {
-                    newasm::hardware::randAccessMem.push__STACK<std::string>(opr);
+                    newasm::hardware::randAccessMem.push__STACK<std::string>(suf);
                     newasm::header::data::callstkidx = newasm::mem::regs::stk;
-                    if(newasm::stack::events.find(opr) != newasm::stack::events.end())
+                    if(newasm::stack::events.find(suf) != newasm::stack::events.end())
                     {
-                        newasm::callproc(newasm::stack::events.at(opr));
+                        newasm::callproc(newasm::stack::events.at(suf));
+                        return 1;
                     }
                 }
 
@@ -4047,10 +4048,47 @@ namespace newasm
             {
                 if(newasm::header::data::callstkidx == 0)
                 {
-                    newasm::terminate(newasm::exit_codes::invalid_memacc);
+                    newasm::terminate(newasm::exit_codes::seg_fault);
                     return 1;
                 }
-                newasm::mem::regs::stk = newasm::mem::regs::stk + 1 + newasm::header::data::argc;
+                //newasm::mem::regs::stk = newasm::mem::regs::stk + 1 + newasm::header::data::argc;
+                int addr;
+
+                // firsly pop the function call
+                newasm::hardware::randAccessMem.pop__STACK<std::string>(); // no ref
+                newasm::malloc::types.erase(newasm::header::data::callstkidx);
+
+                // then the function arguments
+                for(int i = 0; i < newasm::header::data::argc; ++i)
+                {
+                    addr = newasm::malloc::types.at(newasm::header::data::callstkidx, 1 + i);
+                    if(newasm::malloc::types[addr] == newasm::datatypes::number)
+                    {
+                        newasm::hardware::randAccessMem.pop__STACK<int>(); // no ref
+                        newasm::malloc::types.erase(addr);
+                        continue;
+                    }
+                    if(newasm::malloc::types[addr] == newasm::datatypes::decimal)
+                    {
+                        newasm::hardware::randAccessMem.pop__STACK<float>(); // no ref
+                        newasm::malloc::types.erase(addr);
+                        continue;
+                    }
+                    if(newasm::malloc::types[addr] == newasm::datatypes::character)
+                    {
+                        newasm::hardware::randAccessMem.pop__STACK<char>(); // no ref
+                        newasm::malloc::types.erase(addr);
+                        continue;
+                    }
+                    if(newasm::malloc::types[addr] == newasm::datatypes::text)
+                    {
+                        newasm::hardware::randAccessMem.pop__STACK<std::string>(); // no ref
+                        newasm::malloc::types.erase(addr);
+                        continue;
+                    }
+                }
+
+                
                 newasm::header::data::argc = 0;
                 newasm::header::data::callstkidx = 0;
                 return 1;
@@ -4919,8 +4957,30 @@ namespace newasm
                         {
                             if(newasm::header::functions::isargref(line.tokens.at(2)).first)
                             {
-                                newasm::header::data::argc++;
-                                operand = newasm::mem::program_memory[newasm::header::data::callstkidx + 2 + newasm::header::functions::isargref(line.tokens.at(2)).second];
+                                newasm::header::data::argc ++;
+                                //operand = newasm::mem::program_memory[newasm::header::data::callstkidx + 2 + newasm::header::functions::isargref(line.tokens.at(2)).second];
+                                
+                                // If the address of the func handler is i,
+                                // then we are looking for i-argid address
+                                // that i is callstkidx
+                                int argid = newasm::header::functions::isargref(line.tokens.at(2)).second;
+                                int argaddr = newasm::malloc::types.at(newasm::header::data::callstkidx, argid);
+                                if(newasm::malloc::types[argaddr] == newasm::datatypes::number)
+                                {
+                                    operand = std::to_string(newasm::hardware::randAccessMem.peek<int>(argaddr));
+                                }
+                                if(newasm::malloc::types[argaddr] == newasm::datatypes::decimal)
+                                {
+                                    operand = std::to_string(newasm::hardware::randAccessMem.peek<float>(argaddr));
+                                }
+                                if(newasm::malloc::types[argaddr] == newasm::datatypes::character)
+                                {
+                                    operand = "'" + std::to_string(newasm::hardware::randAccessMem.peek<char>(argaddr)) + "'";
+                                }
+                                if(newasm::malloc::types[argaddr] == newasm::datatypes::text)
+                                {
+                                    operand = "\"" + newasm::hardware::randAccessMem.peek<std::string>(argaddr) + "\"";
+                                }
                             }
                         }
                         newasm::process_iso(line.raw, line.tokens.at(0), line.tokens.at(1), operand);
