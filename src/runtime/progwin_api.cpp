@@ -45,7 +45,7 @@ namespace newasm
             void cout(std::string text)
             {
                 //send_req("cout:"+text+"\n");
-                newasm::progwin::buffer = newasm::progwin::buffer + text;
+                newasm::progwin::buffer = newasm::progwin::buffer + text + "\n";
             }
             void flush()
             {

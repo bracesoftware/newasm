@@ -160,7 +160,8 @@ namespace newasm
 						}
 						if(i.type == newasm::datatypes::character)
 						{
-							suf = "'" + std::to_string(newasm::hardware::randAccessMem.peek<char>(i.addr)) + "'";
+							std::string buf(1, newasm::hardware::randAccessMem.peek<char>(i.addr));
+							suf = "'" + buf + "'";
 							return;
 						}
 						if(i.type == newasm::datatypes::text)

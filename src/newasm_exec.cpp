@@ -969,6 +969,7 @@ namespace newasm
                     {
                         auto value = newasm::header::functions::remq(opr);
                         // write at heap pointer
+                        //std::cout << "Writing text " << value << " into addr* " << newasm::mem::regs::hea << std::endl;
                         newasm::hardware::randAccessMem.write<std::string>(newasm::mem::regs::hea, value);
                         return 0;
                     }
@@ -1009,7 +1010,8 @@ namespace newasm
                         if(it->second.type == newasm::datatypes::text)
                         {
                             auto value = newasm::hardware::randAccessMem.peek<std::string>(newasm::mem::regs::hea);
-                            newasm::hardware::randAccessMem.overwrite<std::string>(it->second.addr, value);
+                            //std::cout << "Writing text " << value << " into addr& " << it->second.addr << " from addr* " << newasm::mem::regs::hea << std::endl;
+                            it->second.addr = newasm::hardware::randAccessMem.overwrite<std::string>(it->second.addr, value);
                             return 1;
                         }
                         return 1;
@@ -3253,7 +3255,7 @@ namespace newasm
                 if(newasm::header::functions::isnumeric(suf))
                 {
                     newasm::mem::regs::hea = newasm::mem::regs::hea + std::stoi(suf);
-                    if(newasm::mem::regs::hea > newasm::mem::inf::mem_size - 1)
+                    if(newasm::mem::regs::hea > 10 * 1024 * 1024)
                     {
                         newasm::terminate(newasm::exit_codes::mem_overflow);//,wholeline);
                         return 1;

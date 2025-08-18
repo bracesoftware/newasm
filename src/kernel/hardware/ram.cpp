@@ -105,7 +105,7 @@ namespace newasm
                         __memory_free__.set_at(i, 1); // tell the thing it is occupied
                     }
 
-                    newasm::mem::regs::hea.set_value(get_heap_end());
+                    //newasm::mem::regs::hea.set_value(get_heap_end());
                     return address;
                 }
 
@@ -120,7 +120,7 @@ namespace newasm
                 {
                     __memory_free__.set_at(i, 1); // tell the thing it is occupied
                 }
-                newasm::mem::regs::hea.set_value(get_heap_end());
+                //newasm::mem::regs::hea.set_value(get_heap_end());
                 return address;
             }
 
@@ -140,7 +140,7 @@ namespace newasm
                         __memory_free__.set_at(i, 1); // tell the thing it is occupied
                     }
 
-                    newasm::mem::regs::hea.set_value(get_heap_end());
+                    //newasm::mem::regs::hea.set_value(get_heap_end());
 
                     return address;
                 }
@@ -150,7 +150,7 @@ namespace newasm
                 {
                     __memory_free__.set_at(i, 1); // tell the thing it is occupied
                 }
-                newasm::mem::regs::hea.set_value(get_heap_end());
+                //newasm::mem::regs::hea.set_value(get_heap_end());
                 return address;
             }
 
@@ -230,7 +230,7 @@ namespace newasm
                     __memory_free__.set_at(i, 1);
                 }
 
-                newasm::mem::regs::hea.set_value(get_heap_end());
+                //newasm::mem::regs::hea.set_value(get_heap_end());
                 return addr;
             }
 
@@ -244,7 +244,7 @@ namespace newasm
                     __memory_free__.set_at(i, 0);
                 }
 
-                newasm::mem::regs::hea.set_value(get_heap_end());
+                //newasm::mem::regs::hea.set_value(get_heap_end());
                 return;
             }
 
