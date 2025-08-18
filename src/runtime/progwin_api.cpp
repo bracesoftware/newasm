@@ -17,7 +17,6 @@ the Initial Developer. All Rights Reserved.
 
 */
 
-
 static void send_req(const std::string& msg)
 {
     std::string path = newasm::core::constants::data_folder+
@@ -40,15 +39,22 @@ namespace newasm
 {
     namespace progwin
     {
+        std::string buffer;
         namespace api
         {
             void cout(std::string text)
+            {
+                //send_req("cout:"+text+"\n");
+                newasm::progwin::buffer = newasm::progwin::buffer + text;
+            }
+            void flush()
             {
                 #if _NEWASM_OS == _NEWASM_OS_windows_old || _NEWASM_OS == _NEWASM_OS_android
                     std::cout << "[NewASM] PROGWIN | " << text <<"\n";
                     return;
                 #endif
-                send_req("cout:"+text+"\n");
+                send_req("cout:" + newasm::progwin::buffer);
+                newasm::progwin::buffer = "";
             }
             void exit()
             {

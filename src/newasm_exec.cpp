@@ -920,7 +920,8 @@ namespace newasm
             //LOAD.adr/ref
             case newasm::core::lang_inf::load:
             {
-                if(suf == static_cast<std::string>("adr"))
+                //addr
+                if(suf == static_cast<std::string>("*"))
                 {
                     #if 0
                     if(!newasm::header::functions::isnumeric(opr) && !newasm::header::functions::isfloat(opr) &&
@@ -964,7 +965,8 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::invalid_syntax);
                     return 1;
                 }
-                if(suf == static_cast<std::string>("ref"))
+                //ref
+                if(suf == static_cast<std::string>("&"))
                 {
                     if(!newasm::header::functions::isref(opr))
                     {
@@ -976,28 +978,28 @@ namespace newasm
                     if(newasm::mem::functions::datavalid(opr, newasm::variables::ids))
                     {
                         auto it = newasm::variables::ids.find(opr);
-                        if(it.type == newasm::datatypes::number)
+                        if(it->second.type == newasm::datatypes::number)
                         {
                             auto value = newasm::hardware::randAccessMem.peek<int>(newasm::mem::regs::hea);
-                            newasm::hardware::randAccessMem.overwrite<int>(i.addr, value);
+                            newasm::hardware::randAccessMem.overwrite<int>(it->second.addr, value);
                             return 1;
                         }
-                        if(it.type == newasm::datatypes::decimal)
+                        if(it->second.type == newasm::datatypes::decimal)
                         {
                             auto value = newasm::hardware::randAccessMem.peek<float>(newasm::mem::regs::hea);
-                            newasm::hardware::randAccessMem.overwrite<float>(i.addr, value);
+                            newasm::hardware::randAccessMem.overwrite<float>(it->second.addr, value);
                             return 1;
                         }
-                        if(it.type == newasm::datatypes::character)
+                        if(it->second.type == newasm::datatypes::character)
                         {
                             auto value = newasm::hardware::randAccessMem.peek<char>(newasm::mem::regs::hea);
-                            newasm::hardware::randAccessMem.overwrite<char>(i.addr, value);
+                            newasm::hardware::randAccessMem.overwrite<char>(it->second.addr, value);
                             return 1;
                         }
-                        if(it.type == newasm::datatypes::text)
+                        if(it->second.type == newasm::datatypes::text)
                         {
                             auto value = newasm::hardware::randAccessMem.peek<std::string>(newasm::mem::regs::hea);
-                            newasm::hardware::randAccessMem.overwrite<std::string>(i.addr, value);
+                            newasm::hardware::randAccessMem.overwrite<std::string>(it->second.addr, value);
                             return 1;
                         }
                         return 1;

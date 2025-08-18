@@ -17,6 +17,24 @@ the Initial Developer. All Rights Reserved.
 
 */
 
+#include "sysext/shared_mem.cpp"
+
+namespace newasm
+{
+    namespace tests
+    {
+        void main()
+        {
+            return;
+        }
+        void main(int argc, char** argv)
+        {
+            return;
+        }
+    }
+}
+
+#if 0
 namespace newasm
 {
     namespace tests
@@ -71,3 +89,4 @@ namespace newasm
         }
     }
 }
+#endif

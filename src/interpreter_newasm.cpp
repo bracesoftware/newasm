@@ -59,6 +59,7 @@ the Initial Developer. All Rights Reserved.
 
 #include "sysext/maps.cpp"
 #define __newasm_included
+#include "newasm_stdex.cpp"
 
 #include "getch._compat.cpp"
 
@@ -71,6 +72,7 @@ the Initial Developer. All Rights Reserved.
 
 namespace newasm
 {
+    //newasm::_std::shared_memory sharedMem;
     const int BUILD_NUMBER = 7;
     bool vercheck = true;
     bool dwin = false;
@@ -161,7 +163,6 @@ is in the runtime
 #include "runtime/repl_mode.cpp"
 
 #include "newasm_compexpr.cpp"
-#include "newasm_tests.cpp"
 #include "shell_tools/user.cpp"
 #include "shell_tools/env_control.cpp"
 #include "newasm_shell.cpp"
@@ -258,6 +259,7 @@ namespace newasm
         {
             newasm::inverted_types[i->second] = i->first;
         }
+        //newasm::sharedMem.create("__newasm_debug", 1024); // 1024bytes of virtual mapped memory
         newasm::_virtual::virtualMemory.init(512); //512 bytes of virtual memory that can be reallocated using "malloc <number>_"
         newasm::runtime::main();
         std::string cmd;
@@ -418,8 +420,9 @@ namespace newasm
             }
 
             newasm::runtime::start_program(newasm::core::constants::progwin);
-            std::string text = newasm::header::col::yellow + newasm::header::style::bold + "NewASM Debug Window\n" + newasm::header::col::gray + "\tBuilt for the Virtual Machine\n\n" + newasm::header::col::reset;
+            std::string text = "Loading...\n\n" + newasm::header::col::yellow + newasm::header::style::bold + "NewASM Debug Window\n" + newasm::header::col::gray + "\tBuilt for the Virtual Machine\n\n" + newasm::header::col::reset;
             newasm::progwin::api::cout(text);
+            newasm::progwin::api::flush();
             newasm::header::functions::wait(4000);
         }
         #endif
@@ -443,6 +446,10 @@ namespace newasm
             }
             newasm::global::event_now = false;
         }
+
+        // Print the debug buffer
+        newasm::progwin::api::cout("Cleaning up the buffer...............\n--logout--\n");
+        newasm::progwin::api::flush();
 
         newasm::header::functions::pause();
         //newasm::header::functions::wait(4000);

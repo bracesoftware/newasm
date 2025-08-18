@@ -29,25 +29,6 @@ namespace newasm
         //int memory[10 * 1024 * 1024];
         std::unordered_map<int, int> types;
     }
-}
-
-#if 0
-namespace newasm
-{
-    namespace mem
-    {
-        class malloc_info
-        {
-            public:
-                int size = 0;
-                int heapsize_new = 0;
-        };
-    }
-}
-
-namespace newasm
-{
-    newasm::mem::malloc_info *allocation_data = nullptr;
     namespace stack
     {
         std::unordered_map<std::string, std::string> events = {
@@ -74,5 +55,24 @@ namespace newasm
             return;
         }
     }
+}
+
+#if 0
+namespace newasm
+{
+    namespace mem
+    {
+        class malloc_info
+        {
+            public:
+                int size = 0;
+                int heapsize_new = 0;
+        };
+    }
+}
+
+namespace newasm
+{
+    newasm::mem::malloc_info *allocation_data = nullptr;
 }
 #endif
