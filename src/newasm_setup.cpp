@@ -192,7 +192,7 @@ namespace newasm
             int exc = 0; // cant be used lol
             newasm::_register<int> lcx("lcx", 0); //controlled with jmp variants
             //mem registers
-            newasm::_register<int> stk("stk", newasm::mem::inf::max_mem_size - 1);
+            newasm::_register<int> stk("stk", 10 * 1024 * 1024 - 1);
             newasm::_register<int> hea("hea", 0);
             //NORMAL REGISTERS
             

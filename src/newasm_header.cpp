@@ -489,7 +489,7 @@ namespace newasm
                     }
                 }
             }
-            bool isfloat(const std::string& str)
+            static bool isfloat_(const std::string& str)
             {
                 try
                 {
@@ -502,6 +502,35 @@ namespace newasm
                     return false;
                 }
             }
+
+            bool isfloat(const std::string& s)
+            {
+                int dotCount = 0;
+
+                if (s.empty()) return false;
+
+                for (size_t i = 0; i < s.size(); ++i)
+                {
+                    char c = s[i];
+                    if(std::isdigit(c))
+                    {
+                        continue;
+                    }
+                    else if(c == '.')
+                    {
+                        dotCount++;
+                        if (dotCount > 1) return false;
+                        if (i == 0 || i == s.size() - 1) return false;
+                    } 
+                    else 
+                    {
+                        return false; // nevažeći karakter
+                    }
+                }
+
+                return dotCount == 1; // mora biti točno jedna točka
+            }
+
             bool istext(const std::string& str)
             {
                 int quocount = 0;

@@ -41,6 +41,16 @@ namespace newasm
                 return __map__.at(__map__.size() - 1).second;
             }
 
+            void debug__()
+            {
+                for(auto& p : __map__)
+                {
+                    std::cout << "["<<p.first<<"] = " << p.second << std::endl;
+                }
+
+                return;
+            }
+
             const U& at(T index, int offset) const
             {
                 for(int i = 0; i < __map__.size(); ++i)
@@ -55,7 +65,30 @@ namespace newasm
                         return __map__[pos].second;
                     }
                 }
-                throw std::out_of_range("linear_map: Key not found in `::at(T, int)`.");
+                std::stringstream ss;
+                ss << "linear_map: Key not found in `::at(T, int)`.\n\tT = ";
+                ss << index;
+                ss << ", int = ";
+                ss << offset;
+                ss << "\n";
+                throw std::out_of_range(ss.str());
+            }
+
+            const U& __(T index, int offset) const
+            {
+                for(int i = 0; i < __map__.size(); ++i)
+                {
+                    if(__map__[i].first == index)
+                    {
+                        auto pos = i - offset;
+                        if(pos < 0 || pos >= __map__.size())
+                        {
+                            throw std::out_of_range("linear_map: Invalid offset (which is " + std::to_string(offset) + ").");
+                        }
+                        return __map__[pos].first;
+                    }
+                }
+                throw std::out_of_range("linear_map: Key not found in `::__(T, int)`.");
             }
 
             void erase(T index)

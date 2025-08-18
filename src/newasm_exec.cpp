@@ -4058,12 +4058,11 @@ namespace newasm
 
                 // firsly pop the function call
                 newasm::hardware::randAccessMem.pop__STACK<std::string>(); // no ref
-                newasm::malloc::types.erase(newasm::header::data::callstkidx);
 
                 // then the function arguments
                 for(int i = 0; i < newasm::header::data::argc; ++i)
                 {
-                    addr = newasm::malloc::types.at(newasm::header::data::callstkidx, 1 + i);
+                    addr = newasm::malloc::types.__(newasm::header::data::callstkidx, 1 + i);
                     if(newasm::malloc::types[addr] == newasm::datatypes::number)
                     {
                         newasm::hardware::randAccessMem.pop__STACK<int>(); // no ref
@@ -4090,7 +4089,8 @@ namespace newasm
                     }
                 }
 
-                
+                newasm::malloc::types.erase(newasm::header::data::callstkidx);
+
                 newasm::header::data::argc = 0;
                 newasm::header::data::callstkidx = 0;
                 return 1;
@@ -4965,8 +4965,14 @@ namespace newasm
                                 // If the address of the func handler is i,
                                 // then we are looking for i-argid address
                                 // that i is callstkidx
+                                //std::cout << "--------------" << std::endl;
                                 int argid = newasm::header::functions::isargref(line.tokens.at(2)).second;
-                                int argaddr = newasm::malloc::types.at(newasm::header::data::callstkidx, argid);
+                                //std::cout << "argid is " << argid << std::endl;
+                                int argaddr = newasm::malloc::types.__(newasm::header::data::callstkidx, argid + 1);
+                                //std::cout << "argaddr is " << argaddr << std::endl;
+
+                                //newasm::malloc::types.debug__();
+
                                 if(newasm::malloc::types[argaddr] == newasm::datatypes::number)
                                 {
                                     operand = std::to_string(newasm::hardware::randAccessMem.peek<int>(argaddr));
@@ -4977,12 +4983,15 @@ namespace newasm
                                 }
                                 if(newasm::malloc::types[argaddr] == newasm::datatypes::character)
                                 {
-                                    operand = "'" + std::to_string(newasm::hardware::randAccessMem.peek<char>(argaddr)) + "'";
+                                    std::string buf(1, newasm::hardware::randAccessMem.peek<char>(argaddr));
+                                    operand = "'" + buf + "'";
                                 }
                                 if(newasm::malloc::types[argaddr] == newasm::datatypes::text)
                                 {
                                     operand = "\"" + newasm::hardware::randAccessMem.peek<std::string>(argaddr) + "\"";
                                 }
+                                //std::cout << "operand is `" << operand << "`" << std::endl;
+                                //std::cout << "stk is " << newasm::mem::regs::stk.get_value() << std::endl;
                             }
                         }
                         newasm::process_iso(line.raw, line.tokens.at(0), line.tokens.at(1), operand);
