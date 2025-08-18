@@ -902,19 +902,19 @@ namespace newasm
                 if(str.size() > 2 && str[0] == '$' && str[1] == '-')
                 {
                     opr = newasm::header::functions::trim(str.substr(2));
-                    if(!newasm::header::functions::istext(opr))
+                    newasm::mem::functions::parse(opr);
+                    opr = newasm::header::functions::remamp(opr);
+                    
+                    auto it = newasm::variables::ids.find(opr);
+                    if(it->second.type == newasm::datatypes::number) return {true, 4};
+                    if(it->second.type == newasm::datatypes::decimal) return {true, 4};
+                    if(it->second.type == newasm::datatypes::character) return {true, 1};
+                    if(it->second.type == newasm::datatypes::text)
                     {
-                        //std::cout << "\t" << "opr IN ISSIZEOF : `" << opr << "`\n";
-                        newasm::runtime::functions::parse(opr);
+                        std::string buf;
+                        buf = newasm::hardware::randAccessMem.peek<std::string>(it->second.addr);
+                        return {true, buf.size()};
                     }
-                    if(!newasm::header::functions::istext(opr))
-                    {
-                        //std::cout << "\t" << "opr IN ISSIZEOF2 : `" << opr << "`\n";
-                        return {false, 0};
-                    }
-                    opr = newasm::header::functions::remq(opr);
-                    //std::cout << "\t" << "STR IN ISSIZEOF final : `" << opr << "`\n";
-                    return {true, opr.size()};
 
                 }
                 //std::cout << "\t" << "fail : `" << str << opr << "`\n";
