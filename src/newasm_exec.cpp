@@ -1692,11 +1692,10 @@ namespace newasm
                 }
                 if(suf == static_cast<std::string>("data"))
                 {
-                    if(!newasm::mem::functions::datavalid(opr,newasm::mem::data))
+                    if(!newasm::mem::functions::datavalid(opr,newasm::mem::data) && !newasm::mem::functions::datavalid(opr,newasm::variables::ids))
                     {
                         //std::cout << opr << " not found <data>" << std::endl;
                         newasm::terminate(newasm::exit_codes::sysreq_fail);//,wholeline);
-                        return 1;
                     }
                     return 1;
                 }
