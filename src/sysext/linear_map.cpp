@@ -1,0 +1,86 @@
+/*
+
+Version: MPL 1.1
+
+The contents of this file are subject to the Mozilla Public License Version 
+1.1 the "License"; you may not use this file except in compliance with 
+the License. You may obtain a copy of the License at 
+http://www.mozilla.org/MPL/
+
+Software distributed under the License is distributed on an "AS IS" basis,
+WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+for the specific language governing rights and limitations under the
+License.
+
+Portions created by the Initial Developer are Copyright (c) The COPYRIGHT YEAR
+the Initial Developer. All Rights Reserved.
+
+*/
+
+namespace newasm
+{
+    namespace _std
+    {
+        template<typename T, typename U>
+        class linear_map
+        {
+            private:
+            std::vector<std::pair<T, U>> __map__;
+            public:
+            U& operator[](T index)
+            {
+                for(auto& p : __map__)
+                {
+                    if(p.first == index)
+                    {
+                        return p.second;
+                    }
+                }
+
+                __map__.push_back({index, U{}});
+                return &__map__.at(__map__.size() - 1).second;
+            }
+
+            const U& at(T index, int offset) const
+            {
+                for(int i = 0; i < __map__.size(); ++i)
+                {
+                    if(__map__[i].first == index)
+                    {
+                        auto pos = i - offset;
+                        if(pos < 0 || pos >= __map__.size())
+                        {
+                            throw std::out_of_range("linear_map: Invalid offset (which is " + std::to_string(offset) + ").");
+                        }
+                        return __map__[pos].second;
+                    }
+                }
+                throw std::out_of_range("linear_map: Key not found in `::at(T, int)`.");
+            }
+
+            void erase(T index)
+            {
+                for(int i = 0; i < __map__.size(); ++i)
+                {
+                    if(__map__[i].first == index)
+                    {
+                        __map__.erase(__map__.begin() + i);
+                        return;
+                    }
+                }
+            }
+
+            const U& at(T index) const
+            {
+                for(auto& p : __map__)
+                {
+                    if(p.first == index)
+                    {
+                        return p.second;
+                    }
+                }
+                throw std::out_of_range("linear_map: Key not found in `::at(T)`.");
+            }
+        };
+    }
+}

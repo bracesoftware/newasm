@@ -296,7 +296,7 @@ namespace newasm
             }
 
             template<typename T>
-            void pop__STACK(T& value)
+            int pop__STACK(T& value)
             {
                 if constexpr(std::is_same<T, std::string>::value)
                 {
@@ -313,11 +313,12 @@ namespace newasm
                     }
 
                     newasm::mem::regs::stk.set_value(newasm::mem::regs::stk.get_value() + sizeof(int) + buffer_len);
-                    return;
+                    return address;
                 }
 
                 T val;
-                std::memcpy(&val, &__memory__[newasm::mem::regs::stk.get_value()], sizeof(T));
+                int address = newasm::mem::regs::stk.get_value();
+                std::memcpy(&val, &__memory__[address], sizeof(T));
                 value = val;
 
                 for(int i = newasm::mem::regs::stk; i < newasm::mem::regs::stk + sizeof(T); ++i)
@@ -326,7 +327,7 @@ namespace newasm
                 }
 
                 newasm::mem::regs::stk.set_value(newasm::mem::regs::stk.get_value() + sizeof(int));
-                return;
+                return address;
             }
             //
         };
