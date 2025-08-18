@@ -2508,6 +2508,7 @@ namespace newasm
             //pop
             case newasm::core::lang_inf::pop:
             {
+                #if 0
                 auto opr = suf;
                 if(newasm::mem::regs::stk == newasm::mem::inf::mem_size - 1)
                 {
@@ -2580,6 +2581,8 @@ namespace newasm
                     return 1;
                 }
                 newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                #endif
+
                 return 1;
             }
             //push
@@ -2603,6 +2606,8 @@ namespace newasm
                     }
                 }
                 #endif
+
+                newasm::hardware::randAccessMem.push__STACK();
                 return 1;
             }
             //cast

@@ -247,7 +247,7 @@ namespace newasm
                 newasm::mem::regs::hea.set_value(get_heap_end());
                 return;
             }
-           
+
             template<typename T>
             void push__STACK(T value)
             {
@@ -266,6 +266,8 @@ namespace newasm
                         __memory_free__.set_at(i, 1); // tell the thing it is occupied
                     }
 
+                    newasm::malloc::types[address] = newasm::datatypes::text; // initialize metadata
+
                     return;
                 }
 
@@ -277,6 +279,19 @@ namespace newasm
                 {
                     __memory_free__.set_at(i, 1); // tell the thing it is occupied
                 }
+
+                if constexpr(std::is_same<T, int>::value)
+                {
+                    newasm::malloc::types[address] = newasm::datatypes::number;
+                }
+                if constexpr(std::is_same<T, float>::value)
+                {
+                    newasm::malloc::types[address] = newasm::datatypes::decimal;
+                }
+                if constexpr(std::is_same<T, char>::value)
+                {
+                    newasm::malloc::types[address] = newasm::datatypes::character;
+                }
                 return;
             }
 
@@ -286,9 +301,10 @@ namespace newasm
                 if constexpr(std::is_same<T, std::string>::value)
                 {
                     int buffer_len = 0;
-                    std::memcpy(&buffer_len, &__memory__[newasm::mem::regs::stk.get_value()], sizeof(int));
+                    int address = newasm::mem::regs::stk.get_value();
+                    std::memcpy(&buffer_len, &__memory__[address], sizeof(int));
                     std::string buffer(buffer_len, '\0');
-                    std::memcpy(buffer.data(), &__memory__[newasm::mem::regs::stk.get_value() + buffer_len], buffer_len);
+                    std::memcpy(buffer.data(), &__memory__[address + buffer_len], buffer_len);
                     value = buffer;
 
                     for(int i = newasm::mem::regs::stk; i < newasm::mem::regs::stk + sizeof(int) + buffer_len; ++i)
