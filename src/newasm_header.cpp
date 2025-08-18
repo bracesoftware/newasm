@@ -895,32 +895,6 @@ namespace newasm
                 return false;
             }
 
-            std::pair<bool, int> issizeof(const std::string& str)
-            {
-                std::string opr;
-                //std::cout << "\t" << "STR IN ISSIZEOF : `" << str << "`\n";
-                if(str.size() > 2 && str[0] == '$' && str[1] == '-')
-                {
-                    opr = newasm::header::functions::trim(str.substr(2));
-                    newasm::mem::functions::parse(opr);
-                    opr = newasm::header::functions::remamp(opr);
-                    
-                    auto it = newasm::variables::ids.find(opr);
-                    if(it->second.type == newasm::datatypes::number) return {true, 4};
-                    if(it->second.type == newasm::datatypes::decimal) return {true, 4};
-                    if(it->second.type == newasm::datatypes::character) return {true, 1};
-                    if(it->second.type == newasm::datatypes::text)
-                    {
-                        std::string buf;
-                        buf = newasm::hardware::randAccessMem.peek<std::string>(it->second.addr);
-                        return {true, buf.size()};
-                    }
-
-                }
-                //std::cout << "\t" << "fail : `" << str << opr << "`\n";
-                return {false, 0};
-            }
-
             std::pair<bool, std::string> isdeco(std::string text)
             {
                 std::string _text_ = newasm::header::functions::trim(text);

@@ -134,7 +134,7 @@ namespace newasm
                     }
                 }
 				
-				if(newasm::mem::data.find(suf) == newasm::mem::data.end())
+				if(newasm::mem::data.find(suf) == newasm::mem::data.end() && newasm::variables::ids.find(suf) == newasm::variables::ids.end())
 				{
 					if(mangled)
 					{
@@ -150,22 +150,42 @@ namespace newasm
 						auto i = newasm::variables::ids.at(suf);
 						if(i.type == newasm::datatypes::number)
 						{
+							if(i.locked)
+							{
+								suf = std::to_string(0);
+								return;
+							}
 							suf = std::to_string(newasm::hardware::randAccessMem.peek<int>(i.addr));
 							return;
 						}
 						if(i.type == newasm::datatypes::decimal)
 						{
+							if(i.locked)
+							{
+								suf = std::to_string(0.0);
+								return;
+							}
 							suf = std::to_string(newasm::hardware::randAccessMem.peek<float>(i.addr));
 							return;
 						}
 						if(i.type == newasm::datatypes::character)
 						{
+							if(i.locked)
+							{
+								suf = ("'?'");
+								return;
+							}
 							std::string buf(1, newasm::hardware::randAccessMem.peek<char>(i.addr));
 							suf = "'" + buf + "'";
 							return;
 						}
 						if(i.type == newasm::datatypes::text)
 						{
+							if(i.locked)
+							{
+								suf = "\"unknown??\"";
+								return;
+							}
 							suf = '"' + newasm::hardware::randAccessMem.peek<std::string>(i.addr) + '"';
 							return;
 						}

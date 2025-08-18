@@ -79,6 +79,7 @@ namespace newasm
         {
             void krnl(std::string text);
             //void parseRegDeref(std::string& arg);
+            std::pair<bool, int> issizeof(const std::string& str);
         }
     }
     namespace common

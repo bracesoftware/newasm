@@ -157,6 +157,7 @@ is in the runtime
 #include "compiler/asmc.cpp"
 
 #include "kernel/hardware/ram.cpp"
+#include "runtime/memory_impl.cpp"
 #include "newasm_exec.cpp"
 
 #include "runtime/procline_insert.cpp"
