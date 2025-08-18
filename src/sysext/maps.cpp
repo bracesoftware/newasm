@@ -39,7 +39,7 @@ namespace newasm
                 auto it = std::unordered_map<K, V>::find(key);
                 if(it == std::unordered_map<K, V>::end())
                 {
-                    throw std::out_of_range("Key not found in const `::at`.");
+                    throw std::out_of_range("Key \"" + key + "\" not found in const `::at`.");
                 }
                 return it->second;
             }

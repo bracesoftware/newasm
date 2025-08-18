@@ -304,6 +304,14 @@ namespace newasm
 				return 1;
 			}
         }
+        if(!newasm::header::data::struct_now) if(newasm::mem::functions::datavalid(name, newasm::variables::ids))
+        {
+			if(true)
+			{
+				newasm::terminate(newasm::exit_codes::var_redef);
+				return 1;
+			}
+        }
         if(!newasm::header::data::struct_now) if(newasm::mem::functions::datavalid(name, newasm::mem::structs))
         {
             if(true)//if(newasm::namespaceCollision(name))
@@ -439,6 +447,8 @@ namespace newasm
                     newasm::header::functions::remamp(value), newasm::mem::data) 
                     && !newasm::mem::functions::datavalid(
                     newasm::header::functions::remamp(value), newasm::mem::funcs)
+                    && !newasm::mem::functions::datavalid(
+                    newasm::header::functions::remamp(value), newasm::variables::ids)
                     && value != static_cast<std::string>("&\%null"))
                     {
                         newasm::terminate(newasm::exit_codes::invalid_memacc);
@@ -2722,6 +2732,9 @@ namespace newasm
                 newasm::threads::memory[suf] = new newasm::threads::object__();
                 newasm::threads::valid_threads.push_back(suf);
                 newasm::threads::memory.at(suf)->paused = false;
+                newasm::threads::sys_module[suf] = 0;
+                newasm::mem::regs::resetRegisters(suf);
+                
                 //newasm::threads::thread_count++;
                 return 1;
             }
@@ -2826,6 +2839,12 @@ namespace newasm
                     return 1;
                 }
                 std::string thread__ = newasm::header::functions::remamp(suf);
+                auto it = newasm::threads::memory.find(thread__);
+                if(it == newasm::threads::memory.end())
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_thread);
+                    return 1;
+                }
                 try
                 {
                     while(!newasm::threads::memory.at(thread__)->contents.empty())
@@ -2844,7 +2863,7 @@ namespace newasm
                 }
                 catch(const std::exception& e)
                 {
-                    std::cerr << "Zajebucnuo si se thred->lmao :: " << e.what() << '\n';
+                    std::cerr << "Zajebucnuo si se thred->lmao :: " << thread__ << " -----> " << e.what() << '\n';
                 }
                 
                 return 1;

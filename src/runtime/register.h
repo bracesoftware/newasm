@@ -67,6 +67,10 @@ namespace newasm
                 i->second = this->initial_value;
             }
         }
+        void reset(std::string thread_name)
+        {
+            thread_values[thread_name] = initial_value;
+        }
         T get_value() const
         {
             if(newasm::thread_line)
@@ -79,6 +83,7 @@ namespace newasm
         {
             if(newasm::thread_line)
             {
+                //std::cout << "THIS IS AN ERROR ! \n";
                 this->thread_values.at(newasm::threads::now) = new_val;
                 return;
             }

@@ -289,6 +289,33 @@ namespace newasm
                 //PRIVATE
                 newasm::mem::regs::lcx.reset();
             }
+            void resetRegisters(std::string thread_name)
+            {
+                newasm::mem::regs::stk.reset(thread_name);
+                newasm::mem::regs::hea.reset(thread_name);
+                newasm::mem::regs::tlr.reset(thread_name);
+                newasm::mem::regs::stl.reset(thread_name);
+
+                newasm::mem::regs::psx.reset(thread_name);
+                newasm::mem::regs::prp.reset(thread_name);
+                newasm::mem::regs::cpt.reset(thread_name);
+
+                newasm::mem::regs::tr0.reset(thread_name);
+                newasm::mem::regs::tr1.reset(thread_name);
+
+                newasm::mem::regs::fdx.reset(thread_name);
+                newasm::mem::regs::cpr.reset(thread_name);
+                newasm::mem::regs::br0.reset(thread_name);
+                newasm::mem::regs::br1.reset(thread_name);
+
+                newasm::mem::regs::cr0.reset(thread_name);
+                newasm::mem::regs::cr1.reset(thread_name);
+
+                newasm::mem::regs::dlx.reset(thread_name);
+
+                //PRIVATE
+                newasm::mem::regs::lcx.reset(thread_name);
+            }
 
 
         }
