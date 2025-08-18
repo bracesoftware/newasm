@@ -32,17 +32,32 @@ namespace newasm
                 {
                     opr = newasm::header::functions::trim(str.substr(2));
                     newasm::runtime::functions::parse(opr);
-                    opr = newasm::header::functions::remamp(opr);
-                    
-                    auto it = newasm::variables::ids.find(opr);
-                    if(it->second.type == newasm::datatypes::number) return {true, 4};
-                    if(it->second.type == newasm::datatypes::decimal) return {true, 4};
-                    if(it->second.type == newasm::datatypes::character) return {true, 1};
-                    if(it->second.type == newasm::datatypes::text)
+
+                    newasm::progwin::api::cout("issizeof()::we_got.. -> " + opr);
+
+                    if(newasm::header::functions::istext(opr))
                     {
-                        std::string buf;
-                        buf = newasm::hardware::randAccessMem.peek<std::string>(it->second.addr);
-                        return {true, buf.size()};
+                        return {true, newasm::header::functions::remq(opr).size()};
+                    }
+                    if(newasm::header::functions::isref(opr))
+                    {
+                        opr = newasm::header::functions::remamp(opr);
+                    
+                        auto it = newasm::variables::ids.find(opr);
+                        if(it == newasm::variables::ids.end())
+                        {
+                            newasm::terminate(newasm::exit_codes::invalid_memacc);
+                            return {true, 0};
+                        }
+                        if(it->second.type == newasm::datatypes::number) return {true, 4};
+                        if(it->second.type == newasm::datatypes::decimal) return {true, 4};
+                        if(it->second.type == newasm::datatypes::character) return {true, 1};
+                        if(it->second.type == newasm::datatypes::text)
+                        {
+                            std::string buf;
+                            buf = newasm::hardware::randAccessMem.peek<std::string>(it->second.addr);
+                            return {true, buf.size()};
+                        }
                     }
 
                 }

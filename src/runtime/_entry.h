@@ -134,16 +134,17 @@ namespace newasm
                     }
                 }
 				
-				if(newasm::mem::data.find(suf) == newasm::mem::data.end() && newasm::variables::ids.find(suf) == newasm::variables::ids.end())
+				if((newasm::mem::data.find(suf) == newasm::mem::data.end()) && (newasm::variables::ids.find(suf) == newasm::variables::ids.end()))
 				{
 					if(mangled)
 					{
-						//std::cout << "ZAJEBUCNUOOO SIS EEEEEEEEEE\n";
+						std::cout << "PravoSiSeZajebucnuoException::0x873 -> "<< suf << "\n";
 						newasm::terminate(newasm::exit_codes::invalid_memacc);
 					}
 				}
+
                 newasm::header::functions::parseopr(suf, newasm::mem::data);
-				//newasm::header::functions::parseFromRAM(suf);
+				
                 auto parseFromRAM = [](std::string& suf) -> void {
 					if(newasm::variables::ids.find(suf) != newasm::variables::ids.end())
 					{

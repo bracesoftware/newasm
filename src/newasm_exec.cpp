@@ -370,7 +370,7 @@ namespace newasm
                 {
                     if(!newasm::header::functions::isnumeric(value))
                     {
-                        newasm::progwin::api::cout("Zajebucnuo si se");
+                        newasm::progwin::api::cout("IT HAS TO BE A NUMBER (ZajebucnuoSiSeException) -> " + value);
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                         return 1;
                     }
