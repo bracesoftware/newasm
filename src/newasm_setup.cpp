@@ -163,6 +163,7 @@ namespace newasm
         const int text = 3;
         const int reference = 4;
         const int character = 5;
+        const int tuple = 6;
     }
     namespace constv
     {
@@ -399,12 +400,19 @@ namespace newasm
             }
         }
     }
+    // absolutely normal structure
     namespace variables
     {
+        struct tupleData
+        {
+            std::vector<int> addr;
+            std::vector<int> type;
+        };
         struct varData
         {
             int addr; // address where it is stored
             int type; // type
+            tupleData* tuple = nullptr; // if it is a tuple, we use this instead of addr
 
             //decorator data
             bool locked = false;

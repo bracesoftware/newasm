@@ -503,8 +503,53 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                         return 1;
                     }
-            
-                    newasm::mem::tuple[name].contents = newasm::header::functions::parseTuple(value);
+
+                    auto contents = newasm::header::functions::parseTuple(value);
+
+                    newasm::variables::ids[name].type = newasm::datatypes::tuple;
+
+                    newasm::variables::ids.at(name).tuple = new newasm::variables::tupleData;
+                    for(int i = 0; i < contents.size(); ++i)
+                    {
+                        int address;
+                        std::string value_buf = contents.at(i);
+                        newasm::runtime::functions::parse(value_buf);
+                        //integerz
+                        if(newasm::header::functions::isnumeric(value_buf))
+                        {
+                            address = newasm::hardware::randAccessMem.write<int>(std::stoi(value_buf));
+                            newasm::variables::ids.at(name).tuple->addr.push_back(address);
+                            newasm::variables::ids.at(name).tuple->type.push_back(newasm::datatypes::number);
+                            continue;
+                        }
+                        //floatz
+                        if(newasm::header::functions::isfloat(value_buf))
+                        {
+                            address = newasm::hardware::randAccessMem.write<float>(std::stof(value_buf));
+                            newasm::variables::ids.at(name).tuple->addr.push_back(address);
+                            newasm::variables::ids.at(name).tuple->type.push_back(newasm::datatypes::decimal);
+                            continue;
+                        }
+                        //charz
+                        if(newasm::header::functions::ischar(value_buf))
+                        {
+                            address = newasm::hardware::randAccessMem.write<char>(newasm::header::functions::remsq(value_buf).at(0));
+                            newasm::variables::ids.at(name).tuple->addr.push_back(address);
+                            newasm::variables::ids.at(name).tuple->type.push_back(newasm::datatypes::character);
+                            continue;
+                        }
+                        //stringz
+                        if(newasm::header::functions::istext(value_buf))
+                        {
+                            address = newasm::hardware::randAccessMem.write<char>(newasm::header::functions::remq(value_buf));
+                            newasm::variables::ids.at(name).tuple->addr.push_back(address);
+                            newasm::variables::ids.at(name).tuple->type.push_back(newasm::datatypes::text);
+                            continue;
+                        }
+                        newasm::terminate(newasm::exit_codes::invalid_syntax);
+                        return 1;
+                    }
+                    //newasm::mem::tuple[name].contents = newasm::header::functions::parseTuple(value);
                     return 1;
                 }
                 // containers
@@ -871,9 +916,9 @@ namespace newasm
                 //std::cout << "lea -> suf is :: " << suf << std::endl;
                 
                 suf = newasm::header::functions::remamp(suf);
-                if(!newasm::mem::functions::datavalid(suf, newasm::mem::tuple))
+                if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids))
                 {
-                    newasm::terminate(newasm::exit_codes::invalid_tuple);
+                    newasm::terminate(newasm::exit_codes::invalid_memacc);
                     return 1;
                 }
                 if(!newasm::header::functions::isnumeric(opr))
@@ -881,16 +926,18 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                     return 1;
                 }
+                if(newasm::variables::ids.at(suf).tuple == nullptr)
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_tuple);
+                    return 1;
+                }
 
                 int localidx = std::stoi(opr);
 
-                if(localidx >= newasm::mem::tuple.at(suf).contents.size())
+                if(localidx >= newasm::variables::ids.at(suf).tuple->addr.size())
                 {
-                    int oldsize = newasm::mem::tuple.at(suf).contents.size();
-                    for(int i = 0; i < (localidx - oldsize + 1); ++i)
-                    {
-                        newasm::mem::tuple.at(suf).contents.push_back("0");
-                    }
+                    newasm::terminate(newasm::exit_codes::seg_fault);
+                    return 1;
                 }
 
                 newasm::header::data::tupleIndex = localidx;
