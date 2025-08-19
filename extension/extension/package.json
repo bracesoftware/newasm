@@ -1,9 +1,9 @@
 {
   "name": "newasm-syntax",
   "displayName": "NewASM Syntax Highlighting",
-  "description": "Syntax highlighting for the NewASM language",
-  "version": "1.0.0",
+  "description": "Syntax highlighting for the NewASM language.",
   "publisher": "Brace Software Co.",
+  "version": "1.0",
   "engines": {
     "vscode": "^1.50.0"
   },
@@ -36,5 +36,25 @@
         "path": "./themes/newasm-color-theme.json"
       }
     ]
+  },
+  "configurationDefaults": {
+    "[newasm]": {
+      "editor.bracketPairColorization.enabled": false
+    },
+    "editor.tokenColorCustomizations": {
+      "textMateRules": [
+        { "scope": "keyword.control.newasm",        "settings": { "foreground": "#569CD6" } },
+        { "scope": "keyword.section.newasm",        "settings": { "foreground": "#569CD6" } },
+        { "scope": "register.control.newasm",       "settings": { "foreground": "#A1C4E8", "fontStyle": "italic" } },
+        { "scope": "labels.newasm",                 "settings": { "foreground": "#C792EA", "fontStyle": "italic" } },
+        { "scope": "variable.register.newasm",      "settings": { "foreground": "#7FDBCA" } },
+        { "scope": "string.quoted.double.newasm",   "settings": { "foreground": "#ECC48D" } },
+        { "scope": "comment.line.semicolon.newasm", "settings": { "foreground": "#7c817a", "fontStyle": "italic" } },
+        { "scope": "constant.numeric.newasm",       "settings": { "foreground": "#F78C6C" } },
+        { "scope": "constant.hex.newasm",           "settings": { "foreground": "#F78C6C" } },
+        { "scope": "namespace.newasm",              "settings": { "foreground": "#7FDBCA" } },
+        { "scope": "declaration.newasm",            "settings": { "foreground": "#e5e0e9" } }
+      ]
+    }
   }
 }
