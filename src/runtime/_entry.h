@@ -138,7 +138,7 @@ namespace newasm
 				{
 					if(mangled)
 					{
-						std::cout << "PravoSiSeZajebucnuoException::0x873 -> "<< suf << "\n";
+						//std::cout << "PravoSiSeZajebucnuoException::0x873 -> "<< suf << "\n";
 						newasm::terminate(newasm::exit_codes::invalid_memacc);
 					}
 				}

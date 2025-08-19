@@ -370,7 +370,7 @@ namespace newasm
                 {
                     if(!newasm::header::functions::isnumeric(value))
                     {
-                        newasm::progwin::api::cout("IT HAS TO BE A NUMBER (ZajebucnuoSiSeException) -> " + value);
+                        //newasm::progwin::api::cout("IT HAS TO BE A NUMBER (ZajebucnuoSiSeException) -> " + value);
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                         return 1;
                     }
@@ -433,9 +433,18 @@ namespace newasm
 
                     newasm::variables::ids.at(name).addr = newasm::hardware::randAccessMem.write<std::string>(newasm::header::functions::remq(value));
                     newasm::variables::ids.at(name).locked = newasm::expcfg::lockbool;
+
+                    /*
+                    std::cout << "_____________BACKTRACE_____________\n";
+                    std::cout << "Writing a string......";
+                    std::cout << "Variable name: " << name << std::endl;
+                    std::cout << "Addess: " << newasm::variables::ids.at(name).addr << std::endl;
+                    std::cout << "Value: " << newasm::hardware::randAccessMem.peek<std::string>(newasm::variables::ids.at(name).addr) << std::endl;
+                    std::cout << "___________________________________\n";
+                    */
                     return 1;
                 }
-                // pointers
+                // pointers->max bs
                 case newasm::core::lang_inf::typenames::ref:
                 {
                     if(!newasm::header::functions::isref(value) && value != static_cast<std::string>("&\%null"))

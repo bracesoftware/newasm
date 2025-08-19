@@ -414,8 +414,9 @@ namespace newasm
                     {
                         if(newasm::mem::regs::bos.get_value() > _chars_.size())
                         {
-                            newasm::header::functions::wrn("Incorrect `bos` size.");
+                            //newasm::header::functions::wrn("Incorrect `bos` size.");
                             newasm::mem::regs::bos.set_value(_chars_.size());
+                            newasm::terminate(newasm::exit_codes::seg_fault);
                         }
                         std::cout << _chars_.substr(0, newasm::mem::regs::bos);
                     }

@@ -32,10 +32,10 @@ namespace newasm
                 {
                     opr = newasm::header::functions::trim(str.substr(2));
 
+                    // dobijamo &lol
                     newasm::runtime::functions::parse(opr);
 
-                    newasm::progwin::api::cout("issizeof()::we_got .. -> " + opr);
-
+                    //newasm::progwin::api::cout("issizeof()::we_got .. -> " + opr);
                     if(newasm::header::functions::isref(opr))
                     {
                         opr = newasm::header::functions::remamp(opr);
@@ -43,8 +43,9 @@ namespace newasm
                         auto it = newasm::variables::ids.find(opr);
                         if(it == newasm::variables::ids.end())
                         {
+                            //std::cout << "JEL SE RADI O OVOM? -----> " <<opr<< std::endl;
                             newasm::terminate(newasm::exit_codes::invalid_memacc);
-                            return {true, 0};
+                            return {false, 0};
                         }
                         if(it->second.type == newasm::datatypes::number) return {true, 4};
                         if(it->second.type == newasm::datatypes::decimal) return {true, 4};
@@ -58,17 +59,10 @@ namespace newasm
                     }
                     else
                     {
-                        auto it = newasm::variables::ids.find(opr);
-                        if(it == newasm::variables::ids.end())
-                        {
-                            newasm::terminate(newasm::exit_codes::invalid_memacc);
-                            return {true, 0};
-                        }
-
-                        if(it->second.type == newasm::datatypes::text)
+                        if(newasm::header::functions::istext(opr))
                         {
                             std::string buf;
-                            buf = newasm::hardware::randAccessMem.peek<std::string>(it->second.addr);
+                            buf = newasm::header::functions::remq(opr);
                             return {true, buf.size()};
                         }
                     }
