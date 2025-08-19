@@ -4,9 +4,6 @@
   "description": "Syntax highlighting for the NewASM language.",
   "publisher": "Brace Software Co.",
   "version": "1.0",
-  "engines": {
-    "vscode": "^1.50.0"
-  },
   "categories": ["Programming Languages"],
   "contributes": {
     "languages": [
@@ -19,28 +16,25 @@
           ".newasm_set",
           ".asm"
         ],
-        "configuration": "./language-configuration.json"
+        "configuration": "language-configuration.json"
       }
     ],
     "grammars": [
       {
         "language": "newasm",
         "scopeName": "source.newasm",
-        "path": "./syntaxes/newasm.tmLanguage.json"
+        "path": "syntaxes/newasm.tmLanguage.json"
       }
     ],
     "themes": [
       {
         "label": "NewASM Dark",
         "uiTheme": "vs-dark",
-        "path": "./themes/newasm-color-theme.json"
+        "path": "themes/newasm-color-theme.json"
       }
     ]
   },
   "configurationDefaults": {
-    "[newasm]": {
-      "editor.bracketPairColorization.enabled": false
-    },
     "editor.tokenColorCustomizations": {
       "textMateRules": [
         { "scope": "keyword.control.newasm",        "settings": { "foreground": "#569CD6" } },
