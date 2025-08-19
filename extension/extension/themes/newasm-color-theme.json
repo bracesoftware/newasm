@@ -8,6 +8,17 @@
   },
   "tokenColors": [
     {
+      "name": "Brackets",
+      "scope": [
+        "punctuation.bracket",
+        "punctuation.parenthesis",
+        "punctuation.brace"
+      ],
+      "settings": {
+        "foreground": "#D4D4D4"
+      }
+    },
+    {
       "name": "Function declarations",
       "scope": [
         "entity.name.function",
@@ -146,7 +157,7 @@
     {
       "scope": "declaration.newasm",
       "settings": {
-        "foreground": "#C792EA"
+        "foreground": "#e5e0e9"
       }
     }
   ]
