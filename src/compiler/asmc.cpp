@@ -274,18 +274,11 @@ namespace newasm
             }
             if(newasm::header::functions::ishex(instruction))
             {
-                //std::cout << "Debug 1 -> " << instruction << " is hex" << std::endl;
                 for(std::unordered_map<int, std::string>::iterator i = newasm::opcodes::mem.begin(); i != newasm::opcodes::mem.end(); ++i)
                 {
                     if(i->first == newasm::header::functions::hextoi(instruction))
                     {
-                        /*using namespace std;
-                        cout << instruction << endl;
-                        cout << i->first << endl;
-                        cout << i->second << endl;*/
                         instruction = i->second;
-
-                        //cout << instruction << endl;
                     }
                 }
             }

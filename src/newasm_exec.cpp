@@ -1018,6 +1018,10 @@ namespace newasm
                         }
                         if(it->second.type == newasm::datatypes::text)
                         {
+                            if(newasm::hardware::randAccessMem.__memory_free__.get_at(it->second.addr) == 0)
+                            {
+                                std::cout << "YOOOOOOOOOO SEG FAULT AAA" << std::endl;
+                            }
                             auto value = newasm::hardware::randAccessMem.peek<std::string>(newasm::mem::regs::hea);
                             //std::cout << "Writing text " << value << " into addr& " << it->second.addr << " from addr* " << newasm::mem::regs::hea << std::endl;
                             it->second.addr = newasm::hardware::randAccessMem.overwrite<std::string>(it->second.addr, value);
@@ -2516,6 +2520,49 @@ namespace newasm
         }
         switch(it->second)
         {
+            //del
+            case newasm::core::lang_inf::del:
+            {
+                //newasm::progwin::api::cout("Processin' del");
+                if(!newasm::header::functions::isref(suf))
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_memacc);
+                    return 1;
+                }
+                suf = newasm::header::functions::remamp(suf);
+                auto it = newasm::variables::ids.find(suf);
+
+                if(it == newasm::variables::ids.end())
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_memacc);
+                    return 1;
+                }
+
+                //newasm::progwin::api::cout("called del :: suf -> " + suf + " :: valid -> TRUE");
+
+                if(it->second.type == newasm::datatypes::number)
+                {
+                    newasm::hardware::randAccessMem.delete__HEAP(it->second.addr, it->second.addr + sizeof(int));
+                    return 1;
+                }
+                if(it->second.type == newasm::datatypes::decimal)
+                {
+                    newasm::hardware::randAccessMem.delete__HEAP(it->second.addr, it->second.addr + sizeof(float));
+                    return 1;
+                }
+                if(it->second.type == newasm::datatypes::character)
+                {
+                    newasm::hardware::randAccessMem.delete__HEAP(it->second.addr, it->second.addr + sizeof(char));
+                    return 1;
+                }
+                if(it->second.type == newasm::datatypes::text)
+                {
+                    int buffer_len = newasm::hardware::randAccessMem.peek<int>(it->second.addr);
+                    newasm::hardware::randAccessMem.delete__HEAP(it->second.addr, it->second.addr + sizeof(int) + buffer_len);
+                    return 1;
+                }
+                return 1;
+            }
             //pop
             case newasm::core::lang_inf::pop:
             {

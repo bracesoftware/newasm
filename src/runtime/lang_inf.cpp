@@ -125,6 +125,8 @@ namespace newasm
 
             const int send = 62;
             const int recv = 63;
+
+            const int del = 64;
             
             const int __say = 100;
 
@@ -200,6 +202,8 @@ namespace newasm
 
                 {send, "send"},
                 {recv, "recv"},
+
+                {del, "del"},
 
                 {__say, "__say"}
             };

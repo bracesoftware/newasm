@@ -83,6 +83,7 @@ namespace newasm
             {58, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::thread__)},
             {59, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::send)},
             {60, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::recv)},
+            {61, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::del)},
 
             {100, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::__say)}
         };

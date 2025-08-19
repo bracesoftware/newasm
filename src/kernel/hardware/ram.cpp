@@ -55,6 +55,18 @@ namespace newasm
                 }
                 return -1;
             }
+
+            void delete__HEAP(int addr, int stopaddr)
+            {
+                newasm::progwin::api::cout("<----delete__HEAP---------------------------->");
+                for(int i = addr; i < stopaddr; ++i)
+                {
+                    newasm::progwin::api::cout("Deleting address: " + std::to_string(i));
+                    __memory_free__.set_at(i, 0);
+                }
+                return;
+            }
+
             int get_heap_end()
             {
                 for(int i = MEM_SIZE - 1; i >= 0; i--)
@@ -157,6 +169,12 @@ namespace newasm
             template<typename T>
             int overwrite(int addr, T value)
             {
+                newasm::progwin::api::cout("Overwriting address: " + std::to_string(addr));
+                if(__memory_free__.get_at(addr) == 0)
+                {
+                    newasm::terminate(newasm::exit_codes::seg_fault);
+                    return addr;
+                }
                 if constexpr(std::is_same<T, std::string>::value)
                 {
                     int buffer_len = 0;
