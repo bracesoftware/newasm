@@ -1,54 +1,125 @@
 {
-  "name": "newasm-syntax",
-  "displayName": "NewASM Syntax Highlighting",
-  "description": "Syntax highlighting for the NewASM language.",
-  "publisher": "Brace Software Co.",
-  "version": "1.0",
-  "categories": ["Programming Languages"],
-  "contributes": {
-    "languages": [
-      {
-        "id": "newasm",
-        "aliases": ["NewASM", "newasm"],
-        "extensions": [
-          ".newasm",
-          ".newasm_dl",
-          ".newasm_set",
-          ".asm"
-        ],
-        "configuration": "language-configuration.json"
-      }
-    ],
-    "grammars": [
-      {
-        "language": "newasm",
-        "scopeName": "source.newasm",
-        "path": "syntaxes/newasm.tmLanguage.json"
-      }
-    ],
-    "themes": [
-      {
-        "label": "NewASM Dark",
-        "uiTheme": "vs-dark",
-        "path": "themes/newasm-color-theme.json"
-      }
-    ]
-  },
-  "configurationDefaults": {
-    "editor.tokenColorCustomizations": {
-      "textMateRules": [
-        { "scope": "keyword.control.newasm",        "settings": { "foreground": "#569CD6" } },
-        { "scope": "keyword.section.newasm",        "settings": { "foreground": "#569CD6" } },
-        { "scope": "register.control.newasm",       "settings": { "foreground": "#A1C4E8", "fontStyle": "italic" } },
-        { "scope": "labels.newasm",                 "settings": { "foreground": "#C792EA", "fontStyle": "italic" } },
-        { "scope": "variable.register.newasm",      "settings": { "foreground": "#7FDBCA" } },
-        { "scope": "string.quoted.double.newasm",   "settings": { "foreground": "#ECC48D" } },
-        { "scope": "comment.line.semicolon.newasm", "settings": { "foreground": "#7c817a", "fontStyle": "italic" } },
-        { "scope": "constant.numeric.newasm",       "settings": { "foreground": "#F78C6C" } },
-        { "scope": "constant.hex.newasm",           "settings": { "foreground": "#F78C6C" } },
-        { "scope": "namespace.newasm",              "settings": { "foreground": "#7FDBCA" } },
-        { "scope": "declaration.newasm",            "settings": { "foreground": "#e5e0e9" } }
-      ]
-    }
-  }
+	"name": "newasm-syntax",
+	"displayName": "NewASM Syntax Highlighting",
+	"description": "Syntax highlighting for the NewASM language",
+	"version": "1.0.0",
+	"publisher": "Brace Software Co.",
+	"engines": {
+		"vscode": "^1.50.0"
+	},
+	"categories": [
+		"Programming Languages"
+	],
+	"contributes": {
+		"languages": [
+			{
+				"id": "newasm",
+				"aliases": [
+					"NewASM",
+					"newasm"
+				],
+				"extensions": [
+					".newasm",
+					".newasm_dl",
+					".newasm_set",
+					".asm"
+				],
+				"configuration": "./language-configuration.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "newasm",
+				"scopeName": "source.newasm",
+				"path": "./syntaxes/newasm.tmLanguage.json"
+			}
+		],
+		"themes": [
+			{
+				"label": "NewASM Dark",
+				"uiTheme": "vs-dark",
+				"path": "./themes/newasm-color-theme.json"
+			}
+		],
+		"configurationDefaults": {
+			"[newasm]": {
+				"editor.bracketPairColorization.enabled": false
+			},
+			"editor.tokenColorCustomizations": {
+				"textMateRules": [
+					{
+						"scope": "keyword.control.newasm",
+						"settings": {
+							"foreground": "#569CD6"
+						}
+					},
+					{
+						"scope": "keyword.section.newasm",
+						"settings": {
+							"foreground": "#569CD6"
+						}
+					},
+					{
+						"scope": "register.control.newasm",
+						"settings": {
+							"foreground": "#A1C4E8"
+						}
+					},
+					{
+						"scope": "labels.newasm",
+						"settings": {
+							"foreground": "#C792EA"
+						}
+					},
+					{
+						"scope": "variable.register.newasm",
+						"settings": {
+							"foreground": "#7FDBCA"
+						}
+					},
+					{
+						"scope": "string.quoted.double.newasm",
+						"settings": {
+							"foreground": "#ECC48D"
+						}
+					},
+					{
+						"scope": "comment.line.semicolon.newasm",
+						"settings": {
+							"foreground": "#7c817a"
+						}
+					},
+					{
+						"scope": "constant.numeric.newasm",
+						"settings": {
+							"foreground": "#F78C6C"
+						}
+					},
+					{
+						"scope": "constant.hex.newasm",
+						"settings": {
+							"foreground": "#F78C6C"
+						}
+					},
+					{
+						"scope": "namespace.newasm",
+						"settings": {
+							"foreground": "#7FDBCA"
+						}
+					},
+					{
+						"scope": "declaration.newasm",
+						"settings": {
+							"foreground": "#e5e0e9"
+						}
+					}
+				]
+			}
+		}
+	},
+	"__metadata": {
+		"installedTimestamp": 1755595638554,
+		"targetPlatform": "undefined",
+		"size": 9175
+	}
 }
