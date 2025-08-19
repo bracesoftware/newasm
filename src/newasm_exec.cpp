@@ -1018,10 +1018,6 @@ namespace newasm
                         }
                         if(it->second.type == newasm::datatypes::text)
                         {
-                            if(newasm::hardware::randAccessMem.__memory_free__.get_at(it->second.addr) == 0)
-                            {
-                                std::cout << "YOOOOOOOOOO SEG FAULT AAA" << std::endl;
-                            }
                             auto value = newasm::hardware::randAccessMem.peek<std::string>(newasm::mem::regs::hea);
                             //std::cout << "Writing text " << value << " into addr& " << it->second.addr << " from addr* " << newasm::mem::regs::hea << std::endl;
                             it->second.addr = newasm::hardware::randAccessMem.overwrite<std::string>(it->second.addr, value);
@@ -1865,19 +1861,19 @@ namespace newasm
                         auto i = newasm::header::functions::isallocref(opr);
                         if(i.first)
                         {
-                            auto addrnew = i.second;
+                            auto byte = i.second;
                             auto addr = newasm::malloc::meta.back();
 
                             int malloc_size = 0;
                             std::memcpy(&malloc_size, &newasm::hardware::randAccessMem.__memory__[addr], sizeof(int));
-
-                            if(i.second >= malloc_size)
+                            
+                            if(byte >= malloc_size)
                             {
                                 newasm::terminate(newasm::exit_codes::seg_fault);
                                 return 1;
                             }
 
-                            newasm::mem::regs::hea = addrnew + sizeof(int) + i.second;
+                            newasm::mem::regs::hea = addr + sizeof(int) + byte + 1;
                             return 1;
                         }
 
