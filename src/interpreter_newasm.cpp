@@ -58,6 +58,7 @@ the Initial Developer. All Rights Reserved.
 #include <concepts>
 
 #include "sysext/maps.cpp"
+#include "vm/impl.cpp"
 #define __newasm_included
 #include "newasm_stdex.cpp"
 
@@ -143,8 +144,8 @@ is in the runtime
 #include "runtime/lambda/_entry.cpp"
 #include "kernel/syscall_info.cpp"
 
-#include "kernel/hardware/disk.cpp"
-#include "kernel/hardware/io_ports.cpp"
+#include "vm/hardware/disk.cpp"
+#include "vm/hardware/io_ports.cpp"
 //
 #include "kernel/dynamic/commonlibs.cpp"
 #include "libs._compat.cpp"
@@ -156,7 +157,7 @@ is in the runtime
 #include "pp/directives.cpp"
 #include "compiler/asmc.cpp"
 
-#include "kernel/hardware/ram.cpp"
+#include "vm/hardware/__absolut__.cpp"
 #include "runtime/memory_impl.cpp"
 #include "newasm_exec.cpp"
 

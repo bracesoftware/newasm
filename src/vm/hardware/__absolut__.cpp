@@ -356,6 +356,6 @@ namespace newasm
             //
         };
 
-        newasm::hardware::randAccessMem__<10> randAccessMem; // 10 MB OF MEMORY :D
+        newasm::hardware::randAccessMem__<__newasm_MEMORY_SIZE> randAccessMem; // 10 MB OF MEMORY :D
     }
 }
