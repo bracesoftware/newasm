@@ -1729,7 +1729,7 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::invalid_memacc);
                     return 1;
                 }
-                
+                suf = newasm::header::functions::remamp(suf);
                 auto it = newasm::variables::ids.find(suf);
                 if(it == newasm::variables::ids.end())
                 {
