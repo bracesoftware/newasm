@@ -38,7 +38,7 @@ namespace newasm
             };
         }
 
-        void abort(int exc)
+        void abort_(int exc)
         {
             std::cout << newasm::header::col::red << "\t";
             std::cout << "Compilation aborted.\n";
@@ -56,6 +56,20 @@ namespace newasm
             std::cout << newasm::header::col::reset << std::endl;
 
             newasm::compiler::data::aborted = true;
+        }
+
+        void abort(int exc)
+        {
+            try
+            {
+                abort_(exc);
+            }
+            catch(const std::exception& e)
+            {
+                std::cerr << "CompilerAbortZajebucnuoSiSeException ---> " << e.what() << '\n';
+            }
+            
+            return;
         }
 
         const int empty = 0;
