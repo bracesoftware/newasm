@@ -37,13 +37,17 @@ namespace newasm
                     }
 
                     std::string tuple_name = newasm::mem::regs::tlr.get_value().substr(1);
-                    if(!newasm::mem::functions::datavalid(tuple_name, newasm::mem::tuple))
+                  
+                    auto it = newasm::variables::ids.find(tuple_name);
+                    if(it != newasm::variables::ids.end())
                     {
-                        newasm::terminate(newasm::exit_codes::invalid_tuple);
-                        return 1;
+                        if(it->second.type == newasm::datatypes::tuple)
+                        {
+                            newasm::mem::regs::tlr.set_value(std::to_string(it->second.tuple->addr.size()));
+                            return 1;
+                        }
                     }
-
-                    newasm::mem::regs::tlr.set_value(std::to_string(newasm::mem::tuple.at(tuple_name).contents.size()));
+                    newasm::terminate(newasm::exit_codes::invalid_memacc);
                     return 1;
                 }
                 newasm::terminate(newasm::exit_codes::unknown_fdx);

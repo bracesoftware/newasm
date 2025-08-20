@@ -215,55 +215,132 @@ namespace newasm
 					auto tupleName = newasm::header::functions::trim(newasm::header::functions::checkTupleFormat(suf).second.first);
 					auto tupleIndex = newasm::header::functions::trim(newasm::header::functions::checkTupleFormat(suf).second.second);
 					
-					bool validTuple = newasm::mem::tuple.find(tupleName) != newasm::mem::tuple.end();
-					bool indexNumeric = newasm::header::functions::isnumeric(tupleIndex);
-					if(!validTuple)
-					{
-						suf = newasm::header::constants::inv_reg_val;
-					}
 					parse(tupleIndex);
+					bool indexNumeric = newasm::header::functions::isnumeric(tupleIndex);
 					if(!indexNumeric)
 					{
 						suf = newasm::header::constants::inv_reg_val;
 					}
-					
+
+					bool validTuple = true;
+					auto it = newasm::variables::ids.find(tupleName);
+					if(it == newasm::variables::ids.end())
+					{
+						validTuple = false;
+					}
+					if(it->second.type != newasm::datatypes::tuple)
+					{
+						validTuple = false;
+					}
+					if(!validTuple)
+					{
+						newasm::terminate(newasm::exit_codes::invalid_memacc);
+					}
 					if(validTuple && indexNumeric)
 					{
 						int index = std::stoi(tupleIndex);
-						if(index >= newasm::mem::tuple.at(tupleName).contents.size() || index < 0)
+						if(index >= it->second.tuple->addr.size() || index < 0)
 						{
-							suf = newasm::header::constants::inv_reg_val;
+							newasm::terminate(newasm::exit_codes::seg_fault);
+							return;
 						}
-						else
+						if(it->second.tuple->type[index] == newasm::datatypes::number)
 						{
-							suf = newasm::mem::tuple.at(tupleName).contents.at(index);
+							if(it->second.locked)
+							{
+								suf = "0";
+								return;
+							}
+							suf = std::to_string(newasm::hardware::randAccessMem.peek<int>(it->second.tuple->addr[index]));
+						}
+						if(it->second.tuple->type[index] == newasm::datatypes::decimal)
+						{
+							if(it->second.locked)
+							{
+								suf = "0.0";
+								return;
+							}
+							suf = std::to_string(newasm::hardware::randAccessMem.peek<float>(it->second.tuple->addr[index]));
+						}
+						if(it->second.tuple->type[index] == newasm::datatypes::character)
+						{
+							if(it->second.locked)
+							{
+								suf = "'?'";
+								return;
+							}
+							std::string buf(1, newasm::hardware::randAccessMem.peek<char>(it->second.tuple->addr[index]));
+							suf = "'" + buf + "'";
+						}
+						if(it->second.tuple->type[index] == newasm::datatypes::text)
+						{
+							if(it->second.locked)
+							{
+								suf = "\"unknown??\"";
+								return;
+							}
+							std::string buf = newasm::hardware::randAccessMem.peek<std::string>(it->second.tuple->addr[index]);
+							suf = "\"" + buf + "\"";
 						}
 					}
 				}
 				// Whole tuple
-				if(newasm::mem::tuple.find(suf) != newasm::mem::tuple.end())
-                {
-					//std::cout << "IF TUPLE x3 << " << suf << "\n";
-					std::string tuple_content, temp;
-					int tuple_size = newasm::mem::tuple.at(suf).contents.size();
-					auto vec = newasm::mem::tuple.at(suf).contents;
-					tuple_content = "(";
-					for(int i = 0; i < tuple_size; ++i)
+				auto it = newasm::variables::ids.find(suf);
+				if(it != newasm::variables::ids.end())
+				{
+					if(it->second.type == newasm::datatypes::tuple)
 					{
-						temp = vec.at(i);
-						parse(temp); // recursion :D
-						tuple_content.append(temp);
-						if(i + 1 != tuple_size)
+						std::vector<std::string> contents;
+						std::string temp, parsed_contents;
+						auto tuple_size = int(it->second.tuple->addr.size());
+						for(int i = 0; i < tuple_size; ++i)
 						{
-							tuple_content.append(",");
+							if(it->second.tuple->type[i] == newasm::datatypes::number)
+							{
+								temp = std::to_string(newasm::hardware::randAccessMem.peek<int>(it->second.tuple->addr[i]));
+								contents.push_back(temp);
+								continue;
+							}
+							if(it->second.tuple->type[i] == newasm::datatypes::decimal)
+							{
+								temp = std::to_string(newasm::hardware::randAccessMem.peek<float>(it->second.tuple->addr[i]));
+								contents.push_back(temp);
+								continue;
+							}
+							if(it->second.tuple->type[i] == newasm::datatypes::character)
+							{
+								std::string buf(1, newasm::hardware::randAccessMem.peek<float>(it->second.tuple->addr[i]));
+								temp = "'" + buf + "'";
+								contents.push_back(temp);
+								continue;
+							}
+							if(it->second.tuple->type[i] == newasm::datatypes::character)
+							{
+								std::string buf = (newasm::hardware::randAccessMem.peek<std::string>(it->second.tuple->addr[i]));
+								temp = "\"" + buf + "\"";
+								contents.push_back(temp);
+								continue;
+							}
 						}
-						if(i + 1 == tuple_size)
+						temp.clear();
+						parsed_contents = "(";
+						for(int i = 0; i < tuple_size; ++i)
 						{
-							tuple_content.append(")");
+							temp = contents.at(i);
+							parsed_contents.append(temp);
+							if(i + 1 != tuple_size)
+							{
+								parsed_contents.append(",");
+							}
+							if(i + 1 == tuple_size)
+							{
+								parsed_contents.append(")");
+							}
 						}
+						suf = parsed_contents;
 					}
-                    suf = tuple_content;
-                }
+				}
+		
 
                 ///////////////////
                 if(suf == newasm::header::constants::inv_reg_val)
