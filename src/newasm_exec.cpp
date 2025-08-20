@@ -2793,6 +2793,7 @@ namespace newasm
             //del
             case newasm::core::lang_inf::del:
             {
+                newasm::runtime::functions::parse(suf);
                 //newasm::progwin::api::cout("Processin' del");
                 if(!newasm::header::functions::isref(suf))
                 {
