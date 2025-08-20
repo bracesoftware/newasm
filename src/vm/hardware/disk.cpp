@@ -86,6 +86,6 @@ namespace newasm
             }
         };
         
-        newasm::hardware::DISK_ Disk(newasm::hardware::disk_file, 20);
+        newasm::hardware::DISK_ Disk(newasm::hardware::disk_file, __newasm_DISK_SIZE);
     }
 }
