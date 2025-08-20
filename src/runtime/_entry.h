@@ -32,8 +32,26 @@ namespace newasm
         }
         namespace functions
         {
+			bool fixref(std::string& s)
+			{
+				if (s.empty() || s[0] != '&') return false;
+
+				size_t i = 1;
+				while(i < s.size() && std::isspace(static_cast<unsigned char>(s[i])))
+				{
+					++i;
+				}
+
+				if(i > 1)
+				{
+					s.erase(1, i - 1);
+				}
+
+				return true;
+			}
             void parse(std::string& suf)
             {
+				fixref(suf);
 				newasm::header::functions::parseRegDeref(suf);
 				bool mangled = false;
 				if(newasm::header::functions::parseNamespaceSegments(suf).first)
