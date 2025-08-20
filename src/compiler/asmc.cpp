@@ -45,7 +45,12 @@ namespace newasm
             std::cout << "\tEncountered \"" << newasm::header::col::gray << newasm::header::style::underline;
             std::cout << newasm::compiler::fail::id.at(exc) << newasm::header::col::reset << newasm::header::col::red;
             std::cout << "\" on line:\n";
-            std::cout << newasm::header::col::gray << "\t\t" << newasm::compiler::data::lnidx << " |  " << newasm::header::col::reset
+            std::cout << newasm::header::col::gray << "\t\t";
+
+            if(!newasm::header::data::repl) std::cout << newasm::compiler::data::lnidx << " |  ";
+            if(newasm::header::data::repl) std::cout << ">>> ";
+            
+            std::cout << newasm::header::col::reset
             << newasm::compiler::data::line << newasm::header::col::red << std::endl;
             //print_pointer(col);
             std::cout << newasm::header::col::reset << std::endl;
