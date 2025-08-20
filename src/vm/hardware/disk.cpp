@@ -43,6 +43,11 @@ namespace newasm
                 }
             }
 
+            std::string get_label()
+            {
+                return this->volume_label;
+            }
+
             void format(int size_)
             {
                 std::ofstream file(path, std::ios::binary);
@@ -88,6 +93,6 @@ namespace newasm
             }
         };
         
-        newasm::hardware::DISK_ Disk(newasm::hardware::disk_file, __newasm_DISK_SIZE);
+        newasm::hardware::DISK_ Disk(newasm::hardware::disk_file, __newasm_DISK_SIZE, "main_disk");
     }
 }
