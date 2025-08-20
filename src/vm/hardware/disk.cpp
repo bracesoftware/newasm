@@ -28,10 +28,12 @@ namespace newasm
             private:
             std::string path;
             int size;
+            std::string volume_label;
 
             public:
             std::string data;
-            DISK_(std::string disk_file, int mb_size) : path(disk_file), size(mb_size)
+            DISK_(std::string disk_file, int mb_size, std::string label)
+            : path(disk_file), size(mb_size), volume_label(label)
             {
                 if(!std::filesystem::exists(path))
                 {
