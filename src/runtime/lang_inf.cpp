@@ -127,7 +127,8 @@ namespace newasm
             const int recv = 63;
 
             const int del = 64;
-            
+            const int movaddr = 65;
+
             const int __say = 100;
 
             const std::unordered_map<int, std::string> instruction_set = {
@@ -204,6 +205,7 @@ namespace newasm
                 {recv, "recv"},
 
                 {del, "del"},
+                {movaddr, "movaddr"},
 
                 {__say, "__say"}
             };

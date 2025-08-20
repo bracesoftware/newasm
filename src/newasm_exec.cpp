@@ -1197,7 +1197,7 @@ namespace newasm
                     newasm::stor_structmem(suf, opr);
                     return 1;
                 }
-                
+
                 if(!newasm::mem::functions::datavalid(opr,newasm::mem::data))
                 {
                     newasm::terminate(newasm::exit_codes::invalid_memacc);
@@ -1721,6 +1721,34 @@ namespace newasm
             }
             
             // MOV
+            case newasm::core::lang_inf::movaddr:
+            {
+                newasm::runtime::functions::parse(suf);
+                if(!newasm::header::functions::isref(suf))
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_memacc);
+                    return 1;
+                }
+                
+                auto it = newasm::variables::ids.find(suf);
+                if(it == newasm::variables::ids.end())
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_memacc);
+                    return 1;
+                }
+                if(it->second.type == newasm::datatypes::tuple)
+                {
+                    newasm::terminate(newasm::exit_codes::seg_fault);
+                    return 1;
+                }
+                if(!newasm::header::functions::isnumeric(opr))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    return 1;
+                }
+                it->second.addr = std::stoi(opr);
+                return 1;
+            }
             case newasm::core::lang_inf::mov:
             {
                 if(newasm::header::functions::isvmemref(opr).first)
