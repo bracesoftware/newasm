@@ -541,7 +541,7 @@ namespace newasm
                         //stringz
                         if(newasm::header::functions::istext(value_buf))
                         {
-                            address = newasm::hardware::randAccessMem.write<char>(newasm::header::functions::remq(value_buf));
+                            address = newasm::hardware::randAccessMem.write<std::string>(newasm::header::functions::remq(value_buf));
                             newasm::variables::ids.at(name).tuple->addr.push_back(address);
                             newasm::variables::ids.at(name).tuple->type.push_back(newasm::datatypes::text);
                             continue;
@@ -1840,21 +1840,21 @@ namespace newasm
                                 {
                                     newasm::hardware::randAccessMem.delete__HEAP(i.tuple->addr[newasm::header::data::tupleIndex], i.tuple->addr[newasm::header::data::tupleIndex] + sizeof(int));
                                     i.tuple->addr[newasm::header::data::tupleIndex] = newasm::hardware::randAccessMem.write<float>(std::stof(opr));
-                                    i.tuple->type[newasm::header::data::tupleIndex] = newasm::datatype::decimal;
+                                    i.tuple->type[newasm::header::data::tupleIndex] = newasm::datatypes::decimal;
                                     return 1;
                                 }
                                 if(newasm::header::functions::ischar(opr))
                                 {
                                     newasm::hardware::randAccessMem.delete__HEAP(i.tuple->addr[newasm::header::data::tupleIndex], i.tuple->addr[newasm::header::data::tupleIndex] + sizeof(int));
                                     i.tuple->addr[newasm::header::data::tupleIndex] = newasm::hardware::randAccessMem.write<char>(newasm::header::functions::remsq(opr).at(0));
-                                    i.tuple->type[newasm::header::data::tupleIndex] = newasm::datatype::character;
+                                    i.tuple->type[newasm::header::data::tupleIndex] = newasm::datatypes::character;
                                     return 1;
                                 }
                                 if(newasm::header::functions::istext(opr))
                                 {
                                     newasm::hardware::randAccessMem.delete__HEAP(i.tuple->addr[newasm::header::data::tupleIndex], i.tuple->addr[newasm::header::data::tupleIndex] + sizeof(int));
                                     i.tuple->addr[newasm::header::data::tupleIndex] = newasm::hardware::randAccessMem.write<std::string>(newasm::header::functions::remq(opr));
-                                    i.tuple->type[newasm::header::data::tupleIndex] = newasm::datatype::text;
+                                    i.tuple->type[newasm::header::data::tupleIndex] = newasm::datatypes::text;
                                     return 1;
                                 }
                             }
@@ -1865,7 +1865,7 @@ namespace newasm
                                 {
                                     newasm::hardware::randAccessMem.delete__HEAP(i.tuple->addr[newasm::header::data::tupleIndex], i.tuple->addr[newasm::header::data::tupleIndex] + sizeof(float));
                                     i.tuple->addr[newasm::header::data::tupleIndex] = newasm::hardware::randAccessMem.write<int>(std::stoi(opr));
-                                    i.tuple->type[newasm::header::data::tupleIndex] = newasm::datatype::number;
+                                    i.tuple->type[newasm::header::data::tupleIndex] = newasm::datatypes::number;
                                     return 1;
                                 }
                                 if(newasm::header::functions::isfloat(opr))
@@ -1877,14 +1877,14 @@ namespace newasm
                                 {
                                     newasm::hardware::randAccessMem.delete__HEAP(i.tuple->addr[newasm::header::data::tupleIndex], i.tuple->addr[newasm::header::data::tupleIndex] + sizeof(float));
                                     i.tuple->addr[newasm::header::data::tupleIndex] = newasm::hardware::randAccessMem.write<char>(newasm::header::functions::remsq(opr).at(0));
-                                    i.tuple->type[newasm::header::data::tupleIndex] = newasm::datatype::character;
+                                    i.tuple->type[newasm::header::data::tupleIndex] = newasm::datatypes::character;
                                     return 1;
                                 }
                                 if(newasm::header::functions::istext(opr))
                                 {
                                     newasm::hardware::randAccessMem.delete__HEAP(i.tuple->addr[newasm::header::data::tupleIndex], i.tuple->addr[newasm::header::data::tupleIndex] + sizeof(float));
                                     i.tuple->addr[newasm::header::data::tupleIndex] = newasm::hardware::randAccessMem.write<std::string>(newasm::header::functions::remq(opr));
-                                    i.tuple->type[newasm::header::data::tupleIndex] = newasm::datatype::text;
+                                    i.tuple->type[newasm::header::data::tupleIndex] = newasm::datatypes::text;
                                     return 1;
                                 }
                             }
@@ -1895,14 +1895,14 @@ namespace newasm
                                 {
                                     newasm::hardware::randAccessMem.delete__HEAP(i.tuple->addr[newasm::header::data::tupleIndex], i.tuple->addr[newasm::header::data::tupleIndex] + sizeof(char));
                                     i.tuple->addr[newasm::header::data::tupleIndex] = newasm::hardware::randAccessMem.write<int>(std::stoi(opr));
-                                    i.tuple->type[newasm::header::data::tupleIndex] = newasm::datatype::number;
+                                    i.tuple->type[newasm::header::data::tupleIndex] = newasm::datatypes::number;
                                     return 1;
                                 }
                                 if(newasm::header::functions::isfloat(opr))
                                 {
                                     newasm::hardware::randAccessMem.delete__HEAP(i.tuple->addr[newasm::header::data::tupleIndex], i.tuple->addr[newasm::header::data::tupleIndex] + sizeof(char));
                                     i.tuple->addr[newasm::header::data::tupleIndex] = newasm::hardware::randAccessMem.write<float>(std::stof(opr));
-                                    i.tuple->type[newasm::header::data::tupleIndex] = newasm::datatype::decimal;
+                                    i.tuple->type[newasm::header::data::tupleIndex] = newasm::datatypes::decimal;
                                     return 1;
                                 }
                                 if(newasm::header::functions::ischar(opr))
@@ -1914,7 +1914,7 @@ namespace newasm
                                 {
                                     newasm::hardware::randAccessMem.delete__HEAP(i.tuple->addr[newasm::header::data::tupleIndex], i.tuple->addr[newasm::header::data::tupleIndex] + sizeof(char));
                                     i.tuple->addr[newasm::header::data::tupleIndex] = newasm::hardware::randAccessMem.write<std::string>(newasm::header::functions::remq(opr));
-                                    i.tuple->type[newasm::header::data::tupleIndex] = newasm::datatype::text;
+                                    i.tuple->type[newasm::header::data::tupleIndex] = newasm::datatypes::text;
                                     return 1;
                                 }
                             }
@@ -1928,21 +1928,21 @@ namespace newasm
                                 {
                                     newasm::hardware::randAccessMem.delete__HEAP(i.tuple->addr[newasm::header::data::tupleIndex], i.tuple->addr[newasm::header::data::tupleIndex] + bytes);
                                     i.tuple->addr[newasm::header::data::tupleIndex] = newasm::hardware::randAccessMem.write<int>(std::stoi(opr));
-                                    i.tuple->type[newasm::header::data::tupleIndex] = newasm::datatype::number;
+                                    i.tuple->type[newasm::header::data::tupleIndex] = newasm::datatypes::number;
                                     return 1;
                                 }
                                 if(newasm::header::functions::isfloat(opr))
                                 {
                                     newasm::hardware::randAccessMem.delete__HEAP(i.tuple->addr[newasm::header::data::tupleIndex], i.tuple->addr[newasm::header::data::tupleIndex] + bytes);
                                     i.tuple->addr[newasm::header::data::tupleIndex] = newasm::hardware::randAccessMem.write<float>(std::stof(opr));
-                                    i.tuple->type[newasm::header::data::tupleIndex] = newasm::datatype::decimal;
+                                    i.tuple->type[newasm::header::data::tupleIndex] = newasm::datatypes::decimal;
                                     return 1;
                                 }
                                 if(newasm::header::functions::ischar(opr))
                                 {
                                     newasm::hardware::randAccessMem.delete__HEAP(i.tuple->addr[newasm::header::data::tupleIndex], i.tuple->addr[newasm::header::data::tupleIndex] + bytes);
                                     i.tuple->addr[newasm::header::data::tupleIndex] = newasm::hardware::randAccessMem.write<char>(newasm::header::functions::remsq(opr).at(0));
-                                    i.tuple->type[newasm::header::data::tupleIndex] = newasm::datatype::character;
+                                    i.tuple->type[newasm::header::data::tupleIndex] = newasm::datatypes::character;
                                     return 1;
                                 }
                                 if(newasm::header::functions::istext(opr))
@@ -2032,7 +2032,7 @@ namespace newasm
                                 //stringz
                                 if(newasm::header::functions::istext(value_buf))
                                 {
-                                    address = newasm::hardware::randAccessMem.write<char>(newasm::header::functions::remq(value_buf));
+                                    address = newasm::hardware::randAccessMem.write<std::string>(newasm::header::functions::remq(value_buf));
                                     newasm::variables::ids.at(name).tuple->addr.push_back(address);
                                     newasm::variables::ids.at(name).tuple->type.push_back(newasm::datatypes::text);
                                     continue;
