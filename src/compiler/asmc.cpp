@@ -291,6 +291,12 @@ namespace newasm
             {
                 instruction = linetokens.at(0);
             }
+            if(newasm::compiler::instructions.find(instruction) != newasm::compiler::instructions.end() && linetokens.size() == 3)
+            {
+                lineCompiled.type = newasm::compiler::empty;
+                newasm::compiler::process_comptiso(instruction, linetokens.at(1), linetokens.at(2));
+                return lineCompiled;
+            }
             if(newasm::header::functions::ishex(instruction))
             {
                 for(std::unordered_map<int, std::string>::iterator i = newasm::opcodes::mem.begin(); i != newasm::opcodes::mem.end(); ++i)
@@ -309,6 +315,7 @@ namespace newasm
                 for(int i = 0; i < lineCompiled.tokens.size(); i++)
                 {
                     lineCompiled.tokens.at(i) = newasm::header::functions::trim(lineCompiled.tokens.at(i));
+                    newasm::compiler::parse_def(lineCompiled.tokens.at(i));
                 }
                 return lineCompiled;
             }

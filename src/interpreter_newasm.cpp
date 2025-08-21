@@ -156,6 +156,8 @@ is in the runtime
 
 #include "runtime/namespaces.cpp"
 #include "pp/directives.cpp"
+
+#include "compiler/comptins.cpp"
 #include "compiler/asmc.cpp"
 
 #include "vm/hardware/absolut.cpp"
@@ -242,7 +244,7 @@ namespace newasm
             printf("\t\tCleaning up thread data...\n");
             newasm::core::env_vars::functions::save_env();
             printf("\t\tSaving environment variables...\n");
-
+            
             printf("\t\tCleaning up dynamic tuple data...\n");
             for(auto i = newasm::variables::ids.begin(); i != newasm::variables::ids.end(); ++i)
             {
