@@ -17,8 +17,11 @@ the Initial Developer. All Rights Reserved.
 
 */
 
-pub extern "C" fn sayhello()
+use std::io;
+
+fn main()
 {
-    println!("Hello from RUSTSRC!");
-    return;
+    println!("Press enter to continue...");
+    let mut input = String::new();
+    let _ = io::stdin().read_line(&mut input);
 }
