@@ -243,7 +243,7 @@ namespace newasm
             newasm::core::env_vars::functions::save_env();
             printf("\t\tSaving environment variables...\n");
 
-            printf("\t\tCleaning up dynamic tuple data...");
+            printf("\t\tCleaning up dynamic tuple data...\n");
             for(auto i = newasm::variables::ids.begin(); i != newasm::variables::ids.end(); ++i)
             {
                 if(i->second.type == newasm::datatypes::tuple)
@@ -255,6 +255,7 @@ namespace newasm
                 }
             }
             std::cout << newasm::header::col::reset;
+            std::cout << std::endl;
             return;
         }
     }
