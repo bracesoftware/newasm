@@ -77,6 +77,11 @@ namespace newasm
                         newasm::kernel::cfg::Tuple = true;
                         return;
                     }
+                    if(arg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::tcp))
+                    {
+                        newasm::kernel::cfg::TCProtocol = true;
+                        return;
+                    }
                     newasm::terminate(newasm::exit_codes::invalid_config);
                     return;
                 }

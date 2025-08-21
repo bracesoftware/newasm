@@ -33,6 +33,7 @@ namespace newasm
             bool ContainerManipulation = false;
             bool FileStream = false;
             bool Tuple = false;
+            bool TCProtocol = false;
         }
     }
 }

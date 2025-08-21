@@ -49,6 +49,7 @@ the Initial Developer. All Rights Reserved.
 #include <cstdlib>
 #include <iomanip>
 #include <stdio.h>
+#include <stdlib.h> // for go
 #include <deque>
 //For idk
 #include <functional>
@@ -138,6 +139,7 @@ is in the runtime
 #include "kernel/system_calls/mem.cpp"
 #include "kernel/system_calls/chrono.cpp"
 #include "kernel/system_calls/tuple.cpp"
+#include "kernel/system_calls/tcp.cpp"
 
 #include "runtime/containers.cpp"
 #include "runtime/env_vars.cpp"

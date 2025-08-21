@@ -18,7 +18,9 @@ the Initial Developer. All Rights Reserved.
 */
 
 package main
-
+/*
+#include <stdlib.h>
+*/
 import "C"
 import (
     "fmt"
@@ -66,9 +68,15 @@ func recv_tcp(addr *C.char) *C.char {
     return C.CString(string(buf[:n]))
 }
 
-//export newasm_networking_init
-func newasm_networking_init() {
+//export free_string
+func free_string(str *C.char) {
+    C.free(unsafe.Pointer(str))
+}
+
+
+//export tcp_init
+func tcp_init() {
 	fmt.Println("NewASM GO :: Successfully loaded the netwoking system.")
-} 
+}
 
 func main() {}

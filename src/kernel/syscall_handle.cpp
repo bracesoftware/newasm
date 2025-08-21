@@ -24,6 +24,45 @@ namespace newasm
     {
         int handleSysCall()
         {
+            //tcp
+            if(newasm::kernel::cfg::TCProtocol)
+            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::tuple)
+            {
+                if(newasm::mem::regs::fdx == 1) // send tcp
+                {
+                    if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    if(!newasm::header::functions::istext(newasm::mem::regs::stl))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    int result = newasm::syscalls::tcp::send(
+                        newasm::header::functions::remq(newasm::mem::regs::tlr.get_value()), 
+                        newasm::header::functions::remq(newasm::mem::regs::stl.get_value())
+                    );
+                    newasm::mem::regs::tlr.set_value(std::to_string(result));
+                    return 1;
+                }
+                if(newasm::mem::regs::fdx == 2) // recv tcp
+                {
+                    if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    std::string result = newasm::syscalls::tcp::recv(
+                        newasm::header::functions::remq(newasm::mem::regs::tlr.get_value())
+                    );
+                    newasm::mem::regs::tlr.set_value("\"" + (result) + "\"");
+                    return 1;
+                }
+                newasm::terminate(newasm::exit_codes::unknown_fdx);
+                return 1;
+            }
             //tuple
             if(newasm::kernel::cfg::Tuple)
             if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::tuple)
