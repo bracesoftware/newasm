@@ -25,7 +25,7 @@ namespace newasm
         {
             public:
             static constexpr int MEM_SIZE = memsize * 1024 * 1024;
-            char __memory__[MEM_SIZE];
+            unsigned char __memory__[MEM_SIZE];
             newasm::containers::bit_array<MEM_SIZE> __memory_free__;
             
             int get_size()
