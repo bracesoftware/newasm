@@ -48,8 +48,8 @@ namespace newasm
         void process_comptiso(std::string ins, std::string arg1, std::string arg2)
         {
             ins = newasm::header::functions::trim(ins);
-            arg1 = newasm::header::functions::trim(ins);
-            arg2 = newasm::header::functions::trim(ins);
+            arg1 = newasm::header::functions::trim(arg1);
+            arg2 = newasm::header::functions::trim(arg2);
 
             auto it = newasm::compiler::instructions.find(ins);
             if(it == newasm::compiler::instructions.end())
