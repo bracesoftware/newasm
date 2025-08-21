@@ -402,7 +402,7 @@ namespace newasm
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
                     {
                         newasm::header::functions::krnl("`tlr` ("+newasm::mem::regs::tlr.get_value()+") is not a valid value.");
-                        std::cout << "DEBUG -> " << newasm::thread_line << " -> " << newasm::threads::now << std::endl;
+                        //std::cout << "DEBUG -> " << newasm::thread_line << " -> " << newasm::threads::now << std::endl;
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                         return 1;
                     }

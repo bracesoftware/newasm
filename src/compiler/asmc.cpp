@@ -315,7 +315,7 @@ namespace newasm
                 for(int i = 0; i < lineCompiled.tokens.size(); i++)
                 {
                     lineCompiled.tokens.at(i) = newasm::header::functions::trim(lineCompiled.tokens.at(i));
-                    newasm::compiler::parse_def(lineCompiled.tokens.at(i));
+                    lineCompiled.tokens.at(i) = newasm::compiler::parse_def(lineCompiled.tokens.at(i));
                 }
                 return lineCompiled;
             }

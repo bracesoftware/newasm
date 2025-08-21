@@ -112,6 +112,12 @@
 						"settings": {
 							"foreground": "#e5e0e9"
 						}
+					},
+					{
+						"scope": "comptins.newasm",
+						"settings": {
+							"foreground": "#26C6DA"
+						}
 					}
 				]
 			}

@@ -34,15 +34,15 @@ namespace newasm
             std::unordered_map<std::string, std::string> defines;
         }
 
-        void parse_def(std::string& suf)
+        std::string parse_def(std::string suf)
         {
-            suf = newasm::header::functions::trim(suf);
-            auto it = newasm::compiler::meta::defines.find(suf);
+            std::string tobeparsed = newasm::header::functions::trim(suf);
+            auto it = newasm::compiler::meta::defines.find(tobeparsed);
             if(it != newasm::compiler::meta::defines.end())
             {
-                suf = newasm::compiler::meta::defines.at(suf);
+                tobeparsed = newasm::compiler::meta::defines.at(tobeparsed);
             }
-            return;
+            return tobeparsed;
         }
 
         void process_comptiso(std::string ins, std::string arg1, std::string arg2)
