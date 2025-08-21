@@ -66,7 +66,7 @@ func recv_tcp(addr *C.char) *C.char {
     return C.CString(string(buf[:n]))
 }
 
-//export
+//export newasm_networking_init
 func newasm_networking_init() {
 	fmt.Println("NewASM GO :: Successfully loaded the netwoking system.")
 } 
