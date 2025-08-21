@@ -2832,6 +2832,8 @@ namespace newasm
                     newasm::hardware::randAccessMem.delete__HEAP(it->second.addr, it->second.addr + sizeof(int) + buffer_len);
                     return 1;
                 }
+
+                newasm::terminate(newasm::exit_codes::os_error);
                 return 1;
             }
             //pop

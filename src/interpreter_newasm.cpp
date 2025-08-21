@@ -59,6 +59,7 @@ the Initial Developer. All Rights Reserved.
 
 #include "sysext/maps.cpp"
 #include "vm/impl.cpp"
+#include "sysext/csimple.cpp"
 #define __newasm_included
 #include "newasm_stdex.cpp"
 
@@ -241,7 +242,20 @@ namespace newasm
             printf("\t\tCleaning up thread data...\n");
             newasm::core::env_vars::functions::save_env();
             printf("\t\tSaving environment variables...\n");
+
+            printf("\t\tCleaning up dynamic tuple data...");
+            for(auto i = newasm::variables::ids.begin(); i != newasm::variables::ids.end(); ++i)
+            {
+                if(i->second.type == newasm::datatypes::tuple)
+                {
+                    if(i->second.tuple != nullptr)
+                    {
+                        delete i->second.tuple;
+                    }
+                }
+            }
             std::cout << newasm::header::col::reset;
+            return;
         }
     }
 }

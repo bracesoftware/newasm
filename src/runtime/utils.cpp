@@ -58,7 +58,7 @@ namespace newasm
             auto start_time = std::chrono::steady_clock::now();
             auto next_percent_time = start_time + std::chrono::milliseconds(static_cast<int>(speed * 1000));
 
-            while (percent <= 100)
+            while(percent <= 100)
             {
                 std::cout << newasm::header::col::gray
                 << "\r\t" << animation[anim_index] << " "<< newasm::header::style::underline << text 
