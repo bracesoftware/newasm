@@ -78,6 +78,9 @@ namespace newasm
             {{newasm::core::lang_inf::refs::cmanip, 8}, "sys_bintree_setatleftchildof"},
             {{newasm::core::lang_inf::refs::cmanip, 9}, "sys_bintree_getat"},
 
+            {{newasm::core::lang_inf::refs::tuple, 1}, "sys_tuple_size"},
+
+            {{newasm::core::lang_inf::refs::tcp, 1}, "sys_tuple_size"},
             {{newasm::core::lang_inf::refs::tuple, 1}, "sys_tuple_size"}
         };
     }

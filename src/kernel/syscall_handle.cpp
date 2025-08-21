@@ -26,7 +26,7 @@ namespace newasm
         {
             //tcp
             if(newasm::kernel::cfg::TCProtocol)
-            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::tuple)
+            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::tcp)
             {
                 if(newasm::mem::regs::fdx == 1) // send tcp
                 {
