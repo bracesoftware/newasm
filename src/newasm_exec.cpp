@@ -3357,6 +3357,13 @@ namespace newasm
             //sysenter
             case newasm::core::lang_inf::sysenter:
             {
+                if(!newasm::header::functions::istext(suf))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    return;
+                }
+                suf = newasm::header::functions::remq(suf);
+
                 auto kernel_module = newasm::inverted_kernel.find(suf);
                 if(kernel_module == newasm::inverted_kernel.end())
                 {

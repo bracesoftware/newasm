@@ -65,7 +65,9 @@ namespace newasm
 					suf = newasm::header::functions::mangleName(vec, symbol_name);
 					mangled = true;
 					
-					/**/
+					/*
+						this is abnormal
+					*/
 					#ifdef eyy__slay
 					if(vec.size() != newasm::mem::data_attrib[symbol_name].namespaces.size())
 					{

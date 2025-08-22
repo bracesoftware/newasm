@@ -27,6 +27,12 @@ namespace newasm
             {
                 if(directive == newasm::core::lang_inf::directives::identifiers__.at(newasm::core::lang_inf::directives::using__))
                 {
+                    if(!newasm::header::functions::istext(arg))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return;
+                    }
+                    arg = newasm::header::functions::remq(arg);
                     if(arg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::ios))
                     {
                         newasm::kernel::cfg::IOStream = true;

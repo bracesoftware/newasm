@@ -225,17 +225,17 @@ namespace newasm
                 const int tcp = 11;
 
                 const std::unordered_map<int, std::string> identifiers__ = {
-                    {ios, "\%ios"},
-                    {ext, "\%ext"},
-                    {cmanip, "\%cmanip"},
-                    {fs, "\%fs"},
-                    {txtop, "\%txtop"},
-                    {net, "\%net"},
-                    {mem, "\%mem"},
-                    {chrono, "\%chrono"},
-                    {thread, "\%thread"},
-                    {tuple, "\%tuple"},
-                    {tcp, "\%tcp"}
+                    {ios, "ios"},
+                    {ext, "ext"},
+                    {cmanip, "cmanip"},
+                    {fs, "fs"},
+                    {txtop, "txtop"},
+                    {net, "net"},
+                    {mem, "mem"},
+                    {chrono, "chrono"},
+                    {thread, "thread"},
+                    {tuple, "tuple"},
+                    {tcp, "tcp"}
                 };
             }
             namespace directives
