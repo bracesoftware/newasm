@@ -3360,7 +3360,7 @@ namespace newasm
                 if(!newasm::header::functions::istext(suf))
                 {
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                    return;
+                    return 1;
                 }
                 suf = newasm::header::functions::remq(suf);
 
