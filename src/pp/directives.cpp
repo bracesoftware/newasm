@@ -88,6 +88,11 @@ namespace newasm
                         newasm::kernel::cfg::TCProtocol = true;
                         return;
                     }
+                    if(arg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::http))
+                    {
+                        newasm::kernel::cfg::HTTP = true;
+                        return;
+                    }
                     newasm::terminate(newasm::exit_codes::invalid_config);
                     return;
                 }

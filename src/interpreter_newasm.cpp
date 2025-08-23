@@ -141,6 +141,7 @@ is in the runtime
 #include "kernel/system_calls/chrono.cpp"
 #include "kernel/system_calls/tuple.cpp"
 #include "kernel/system_calls/tcp.cpp"
+#include "kernel/system_calls/http.cpp"
 
 #include "runtime/containers.cpp"
 #include "runtime/env_vars.cpp"

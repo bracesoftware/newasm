@@ -229,6 +229,7 @@ namespace newasm
                 const int thread = 9;
                 const int tuple = 10;
                 const int tcp = 11;
+                const int http = 12;
 
                 const std::unordered_map<int, std::string> identifiers__ = {
                     {ios, "ios"},
@@ -241,7 +242,8 @@ namespace newasm
                     {chrono, "chrono"},
                     {thread, "thread"},
                     {tuple, "tuple"},
-                    {tcp, "tcp"}
+                    {tcp, "tcp"},
+                    {http, "http"}
                 };
             }
             namespace directives

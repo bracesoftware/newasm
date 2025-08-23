@@ -54,7 +54,7 @@
     },
     {
       "name": "variable.register.newasm",
-      "match": "\"(ios|fs|thread|chrono|cmanip|mem|net|ext|txtop|tcp|tuple)\""
+      "match": "\"(ios|fs|thread|chrono|cmanip|mem|net|ext|txtop|tcp|tuple|http)\""
     },
     {
       "name": "constant.numeric.newasm",

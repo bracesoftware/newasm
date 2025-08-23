@@ -13,6 +13,7 @@
 .$using "ext"
 .$using "tcp"
 .$using "tuple"
+.$using "http"
 
 .data
     intg myintgber: 736
@@ -1593,6 +1594,14 @@ sysenter "ios"
     mov tlr, std::myTextFromEnv
     mov stl, 0c1
     mov fdx, 1
+    syscall
+
+    mov tlr, "google.com"
+    mov fdx, 1
+    sysenter "http"
+    syscall
+
+    sysenter "ios"
     syscall
 
 	;mov tlr, ui::29042384_w

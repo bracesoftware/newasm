@@ -25,6 +25,9 @@ import "C"
 import (
     "fmt"
     "net"
+    "net/http"
+    "io"
+    "strings"
     "unsafe"
 )
 
@@ -80,3 +83,45 @@ func tcp_init() {
 }
 
 func main() {}
+
+
+/*
+HTTP FUNCTIONS
+*/
+
+//export http_get
+func http_get(url *C.char) *C.char {
+    goURL := C.GoString(url)
+
+    resp, err := http.Get(goURL)
+    if err != nil {
+        return C.CString(fmt.Sprintf("NewASM GO :: HTTP GET error -> %v", err))
+    }
+    defer resp.Body.Close()
+
+    body, err := io.ReadAll(resp.Body)
+    if err != nil {
+        return C.CString(fmt.Sprintf("NewASM GO :: Read body error -> %v", err))
+    }
+
+    return C.CString(string(body))
+}
+
+//export http_post
+func http_post(url *C.char, data *C.char) *C.char {
+    goURL := C.GoString(url)
+    goData := C.GoString(data)
+
+    resp, err := http.Post(goURL, "application/x-www-form-urlencoded", strings.NewReader(goData))
+    if err != nil {
+        return C.CString(fmt.Sprintf("NewASM GO :: HTTP POST error -> %v", err))
+    }
+    defer resp.Body.Close()
+
+    body, err := io.ReadAll(resp.Body)
+    if err != nil {
+        return C.CString(fmt.Sprintf("NewASM GO :: Read body error -> %v", err))
+    }
+
+    return C.CString(string(body))
+}
