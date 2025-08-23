@@ -8,4 +8,6 @@
     #include "_compat/winold/libs.cpp"
 #elif _NEWASM_OS == _NEWASM_OS_android
     #include "_compat/android/libs.cpp"
+#elif _NEWASM_OS == _NEWASM_OS_macos
+    #include "_compat/macos/libs.cpp"
 #endif

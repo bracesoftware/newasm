@@ -63,6 +63,7 @@ the Initial Developer. All Rights Reserved.
 #include "sysext/csimple.cpp"
 #define __newasm_included
 #include "newasm_stdex.cpp"
+#include "col._compat.cpp"
 
 #include "getch._compat.cpp"
 

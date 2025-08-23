@@ -17,19 +17,4 @@ the Initial Developer. All Rights Reserved.
 
 */
 
-
-namespace newasm
-{
-    namespace header
-    {
-        namespace functions
-        {
-            void krnl(std::string text)
-            {
-                std::cout << newasm::header::col::kernel << newasm::header::system_info::name << " KERNEL >> `"
-                << newasm::kernel::syscalls.at({newasm::threads::functions::get_sysenter(),newasm::mem::regs::fdx.get_value()})
-                <<"` | " << newasm::header::col::gray << text << newasm::header::col::reset << std::endl;
-            }
-        }
-    }
-}
+#error [NewASM] MacOS ain't supported.

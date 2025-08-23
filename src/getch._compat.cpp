@@ -8,4 +8,6 @@
     #include "_compat/winold/getch.cpp"
 #elif _NEWASM_OS == _NEWASM_OS_android
     #include "_compat/android/getch.cpp"
+#elif _NEWASM_OS == _NEWASM_OS_macos
+    #include "_compat/macos/getch.cpp"
 #endif

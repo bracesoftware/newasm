@@ -17,18 +17,16 @@ the Initial Developer. All Rights Reserved.
 
 */
 
-
 namespace newasm
 {
-    namespace header
+    namespace kernel
     {
-        namespace functions
+        namespace dynamic
         {
-            void krnl(std::string text)
+            int CALL(std::string libname, std::string func)
             {
-                std::cout << newasm::header::col::kernel << newasm::header::system_info::name << " KERNEL >> `"
-                << newasm::kernel::syscalls.at({newasm::threads::functions::get_sysenter(),newasm::mem::regs::fdx.get_value()})
-                <<"` | " << newasm::header::col::gray << text << newasm::header::col::reset << std::endl;
+                std::cout << "MacOS doesn't yet support dynamic library (extension) loading...\n";
+                return 1;
             }
         }
     }

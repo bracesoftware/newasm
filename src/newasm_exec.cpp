@@ -2286,31 +2286,6 @@ namespace newasm
                 newasm::terminate(newasm::exit_codes::invalid_syntax);
                 return 1;
             }
-            //jmp
-            case newasm::core::lang_inf::jmp:
-            {
-                /*if(newasm::header::execution_flow::exec_redirected)
-                {
-                    newasm::terminate(newasm::exit_codes::nested_csm);
-                    return 1;
-                }*/
-                if(newasm::header::data::repl)
-                {
-                    newasm::unsins(ins);
-                    return 1;
-                }
-                if(suf == static_cast<std::string>("0"))
-                {
-                    if(!newasm::mem::functions::datavalid(opr, newasm::mem::labels))
-                    {
-                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                        return 1;
-                    }
-                    newasm::code_stream::jump = 1;
-                    newasm::code_stream::jumpto = newasm::mem::labels[opr];
-                    return 1;
-                }
-            }
 
             //cmp
             case newasm::core::lang_inf::cmp:
@@ -2589,180 +2564,7 @@ namespace newasm
                 newasm::terminate(newasm::exit_codes::invalid_syntax);
                 return 1;
             }
-            //je
-            case newasm::core::lang_inf::je:
-            {
-                /*if(newasm::header::execution_flow::exec_redirected)
-                {
-                    newasm::terminate(newasm::exit_codes::nested_csm);
-                    return 1;
-                }*/
-                if(newasm::header::data::repl)
-                {
-                    newasm::unsins(ins);
-                    return 1;
-                }
-                if(suf == static_cast<std::string>("0"))
-                {
-                    if(!newasm::mem::functions::datavalid(opr, newasm::mem::labels))
-                    {
-                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                        return 1;
-                    }
-                    if(newasm::mem::regs::cpr != newasm::cmp_results::equal)
-                    {
-                        return 1;
-                    }
-                    newasm::code_stream::jump = 1;
-                    newasm::code_stream::jumpto = newasm::mem::labels[opr];
-                    return 1;
-                }
-            }
-            //jne
-            case newasm::core::lang_inf::jne:
-            {
-                /*if(newasm::header::execution_flow::exec_redirected)
-                {
-                    newasm::terminate(newasm::exit_codes::nested_csm);
-                    return 1;
-                }*/
-                if(newasm::header::data::repl)
-                {
-                    newasm::unsins(ins);
-                    return 1;
-                }
-                if(suf == static_cast<std::string>("0"))
-                {
-                    if(!newasm::mem::functions::datavalid(opr, newasm::mem::labels))
-                    {
-                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                        return 1;
-                    }
-                    if(newasm::mem::regs::cpr == newasm::cmp_results::equal)
-                    {
-                        return 1;
-                    }
-                    newasm::code_stream::jump = 1;
-                    newasm::code_stream::jumpto = newasm::mem::labels[opr];
-                    return 1;
-                }
-            }
-            //jl
-            case newasm::core::lang_inf::jl:
-            {
-                /*if(newasm::header::execution_flow::exec_redirected)
-                {
-                    newasm::terminate(newasm::exit_codes::nested_csm);
-                    return 1;
-                }*/
-                if(newasm::header::data::repl)
-                {
-                    newasm::unsins(ins);
-                    return 1;
-                }
-                if(suf == static_cast<std::string>("0"))
-                {
-                    if(!newasm::mem::functions::datavalid(opr, newasm::mem::labels))
-                    {
-                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                        return 1;
-                    }
-                    if(newasm::mem::regs::cpr != newasm::cmp_results::less)
-                    {
-                        return 1;
-                    }
-                    newasm::code_stream::jump = 1;
-                    newasm::code_stream::jumpto = newasm::mem::labels[opr];
-                    return 1;
-                }
-            }
-            //jg
-            case newasm::core::lang_inf::jg:
-            {
-                /*if(newasm::header::execution_flow::exec_redirected)
-                {
-                    newasm::terminate(newasm::exit_codes::nested_csm);
-                    return 1;
-                }*/
-                if(newasm::header::data::repl)
-                {
-                    newasm::unsins(ins);
-                    return 1;
-                }
-                if(suf == static_cast<std::string>("0"))
-                {
-                    if(!newasm::mem::functions::datavalid(opr, newasm::mem::labels))
-                    {
-                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                        return 1;
-                    }
-                    if(newasm::mem::regs::cpr != newasm::cmp_results::greater)
-                    {
-                        return 1;
-                    }
-                    newasm::code_stream::jump = 1;
-                    newasm::code_stream::jumpto = newasm::mem::labels[opr];
-                    return 1;
-                }
-            }
-            //jle
-            case newasm::core::lang_inf::jle:
-            {
-                /*if(newasm::header::execution_flow::exec_redirected)
-                {
-                    newasm::terminate(newasm::exit_codes::nested_csm);
-                    return 1;
-                }*/
-                if(newasm::header::data::repl)
-                {
-                    newasm::unsins(ins);
-                    return 1;
-                }
-                if(suf == static_cast<std::string>("0"))
-                {
-                    if(!newasm::mem::functions::datavalid(opr, newasm::mem::labels))
-                    {
-                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                        return 1;
-                    }
-                    if(newasm::mem::regs::cpr != newasm::cmp_results::less && newasm::mem::regs::cpr != newasm::cmp_results::equal)
-                    {
-                        return 1;
-                    }
-                    newasm::code_stream::jump = 1;
-                    newasm::code_stream::jumpto = newasm::mem::labels[opr];
-                    return 1;
-                }
-            }
-            //jge
-            case newasm::core::lang_inf::jge:
-            {
-                /*if(newasm::header::execution_flow::exec_redirected)
-                {
-                    newasm::terminate(newasm::exit_codes::nested_csm);
-                    return 1;
-                }*/
-                if(newasm::header::data::repl)
-                {
-                    newasm::unsins(ins);
-                    return 1;
-                }
-                if(suf == static_cast<std::string>("0"))
-                {
-                    if(!newasm::mem::functions::datavalid(opr, newasm::mem::labels))
-                    {
-                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                        return 1;
-                    }
-                    if(newasm::mem::regs::cpr != newasm::cmp_results::greater && newasm::mem::regs::cpr != newasm::cmp_results::equal)
-                    {
-                        return 1;
-                    }
-                    newasm::code_stream::jump = 1;
-                    newasm::code_stream::jumpto = newasm::mem::labels[opr];
-                    return 1;
-                }
-            }
+            
             default:
             {
                 newasm::terminate(newasm::exit_codes::invalid_exp);
@@ -2790,6 +2592,156 @@ namespace newasm
         }
         switch(it->second)
         {
+            //je
+            case newasm::core::lang_inf::je:
+            {
+                if(newasm::header::data::repl)
+                {
+                    newasm::unsins(ins);
+                    return 1;
+                }
+
+                if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                {
+                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                    return 1;
+                }
+                if(newasm::mem::regs::cpr != newasm::cmp_results::equal)
+                {
+                    return 1;
+                }
+                newasm::code_stream::jump = 1;
+                newasm::code_stream::jumpto = newasm::mem::labels[suf];
+                return 1;
+            }
+            //jne
+            case newasm::core::lang_inf::jne:
+            {
+                if(newasm::header::data::repl)
+                {
+                    newasm::unsins(ins);
+                    return 1;
+                }
+                if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                {
+                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                    return 1;
+                }
+                if(newasm::mem::regs::cpr == newasm::cmp_results::equal)
+                {
+                    return 1;
+                }
+                newasm::code_stream::jump = 1;
+                newasm::code_stream::jumpto = newasm::mem::labels[suf];
+                return 1;
+            }
+            //jl
+            case newasm::core::lang_inf::jl:
+            {
+                if(newasm::header::data::repl)
+                {
+                    newasm::unsins(ins);
+                    return 1;
+                }
+                if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                {
+                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                    return 1;
+                }
+                if(newasm::mem::regs::cpr != newasm::cmp_results::less)
+                {
+                    return 1;
+                }
+                newasm::code_stream::jump = 1;
+                newasm::code_stream::jumpto = newasm::mem::labels[suf];
+                return 1;
+            }
+            //jg
+            case newasm::core::lang_inf::jg:
+            {
+                if(newasm::header::data::repl)
+                {
+                    newasm::unsins(ins);
+                    return 1;
+                }
+            
+                if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                {
+                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                    return 1;
+                }
+                if(newasm::mem::regs::cpr != newasm::cmp_results::greater)
+                {
+                    return 1;
+                }
+                newasm::code_stream::jump = 1;
+                newasm::code_stream::jumpto = newasm::mem::labels[suf];
+                return 1;
+            }
+            //jle
+            case newasm::core::lang_inf::jle:
+            {
+                if(newasm::header::data::repl)
+                {
+                    newasm::unsins(ins);
+                    return 1;
+                }
+                if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                {
+                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                    return 1;
+                }
+                if(newasm::mem::regs::cpr != newasm::cmp_results::less && newasm::mem::regs::cpr != newasm::cmp_results::equal)
+                {
+                    return 1;
+                }
+                newasm::code_stream::jump = 1;
+                newasm::code_stream::jumpto = newasm::mem::labels[suf];
+                return 1;
+            }
+            //jge
+            case newasm::core::lang_inf::jge:
+            {
+                if(newasm::header::data::repl)
+                {
+                    newasm::unsins(ins);
+                    return 1;
+                }
+
+                if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                {
+                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                    return 1;
+                }
+
+                if(newasm::mem::regs::cpr != newasm::cmp_results::greater && newasm::mem::regs::cpr != newasm::cmp_results::equal)
+                {
+                    return 1;
+                }
+
+                newasm::code_stream::jump = 1;
+                newasm::code_stream::jumpto = newasm::mem::labels[suf];
+                return 1;
+            }
+            //jmp
+            case newasm::core::lang_inf::jmp:
+            {
+                if(newasm::header::data::repl)
+                {
+                    newasm::unsins(ins);
+                    return 1;
+                }
+
+                if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                {
+                    newasm::terminate(newasm::exit_codes::bus_err);
+                    return 1;
+                }
+
+                newasm::code_stream::jump = 1;
+                newasm::code_stream::jumpto = newasm::mem::labels[suf];
+                return 1;
+            }
             //del
             case newasm::core::lang_inf::del:
             {

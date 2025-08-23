@@ -22,6 +22,7 @@ the Initial Developer. All Rights Reserved.
 #define _NEWASM_OS_linux 1
 #define _NEWASM_OS_windows_old 2
 #define _NEWASM_OS_android 3
+#define _NEWASM_OS_macos 4
 
 #ifdef _WIN32_OLD
     #define _NEWASM_OS _NEWASM_OS_windows_old
@@ -31,6 +32,8 @@ the Initial Developer. All Rights Reserved.
     #define _NEWASM_OS _NEWASM_OS_windows
 #elif defined(__linux__)
     #define _NEWASM_OS _NEWASM_OS_linux
+#elif defined(__APPLE__)
+    #define _NEWASM_OS _NEWASM_OS_macos
 #endif
 
 
@@ -44,6 +47,7 @@ namespace newasm
             const int linux = 1;
             const int windows_old = 2;
             const int android = 3;
+            const int macos = 4;
         }
         int getos()
         {
@@ -55,6 +59,8 @@ namespace newasm
                 #elif _NEWASM_OS == _NEWASM_OS_linux
                     newasm::common::os::linux
                 #elif _NEWASM_OS == _NEWASM_OS_android
+                    newasm::common::os::android
+                #elif _NEWASM_OS == _NEWASM_OS_macos
                     newasm::common::os::android
                 #endif
             ;

@@ -17,19 +17,27 @@ the Initial Developer. All Rights Reserved.
 
 */
 
-
 namespace newasm
 {
     namespace header
     {
-        namespace functions
+        namespace col
         {
-            void krnl(std::string text)
-            {
-                std::cout << newasm::header::col::kernel << newasm::header::system_info::name << " KERNEL >> `"
-                << newasm::kernel::syscalls.at({newasm::threads::functions::get_sysenter(),newasm::mem::regs::fdx.get_value()})
-                <<"` | " << newasm::header::col::gray << text << newasm::header::col::reset << std::endl;
-            }
+            const std::string red = "";
+            const std::string green = "";
+            const std::string yellow = "";
+            const std::string blue = "";
+            const std::string magenta = "";
+            const std::string cyan = "";
+            const std::string gray = "";
+            const std::string kernel = "";
+
+            const std::string reset = "";
+        }
+        namespace style
+        {
+            const std::string underline = "";
+            const std::string bold = "";
         }
     }
 }
