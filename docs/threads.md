@@ -5,11 +5,10 @@
 Threads are blocks of code declared within the `data` section. Once you switch to the `start` section, they will start executing simultaneously with the source code.
 Threads are declared like this:
 ```asm
-. data
-    thread test_thread : {
+.start
+    thread test_thread -> {
         ; code
     }
-. start
     ; more code
 
 ; "code" and "more code" will be executed almost at same time.
@@ -23,22 +22,22 @@ To print the thread output in the console, you have to use the thread-system cal
 Exampe:
 ```asm
 .data
-    txt string : "LOL"
+    string string : "LOL"
 
     thread  testthread : {
         mov tlr, "Hello from thread"
         mov stl, 0c1
         mov fdx, 1
-        sysenter %ios
+        sysenter "ios"
         syscall
       
         mov fdx, 1
-        sysenter %chrono
+        sysenter "chrono"
         syscall
 
         mov fdx, 2
         mov stl, 0c1
-        sysenter %ios
+        sysenter "ios"
         syscall
 
         mov tlr, "hi again"
@@ -49,7 +48,7 @@ Exampe:
         stor tlr, string
         retf string
 
-        sysenter %ios
+        sysenter "ios"
         mov tlr, "YOU SHOULD NOT SEE THIS"
         mov stl, 0c1
         mov fdx, 1
@@ -66,7 +65,7 @@ Exampe:
     syscall ; display the thread output
     mov fdx, 2
     syscall ; fetch returned value
-    sysenter %ios
+    sysenter "ios"
     mov stl, 0c1
     mov fdx, 1
     syscall ; print the returned val

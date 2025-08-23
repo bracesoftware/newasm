@@ -6,8 +6,8 @@ Example:
 
 ```asm
 .data
-    num switchInteger : 3234
-    txt switchText : "hi"
+    intg switchInteger : 3234
+    string switchText : "hi"
 .start
 
     switch switchInteger
@@ -19,17 +19,17 @@ Example:
 
     mov stl, 0c1
     mov fdx, 1
-    sysenter %ios
+    sysenter "ios"
     syscall
 
     switch switchText
-    case num -> mov tlr, "it is a number"
-    case txt -> mov tlr, "it is text"
+    case intg -> mov tlr, "it is a number"
+    case string -> mov tlr, "it is text"
     default -> mov tlr, "bleh"
 
     mov stl, 0c1
     mov fdx, 1
-    sysenter %ios
+    sysenter "ios"
     syscall
 ```
 Output:

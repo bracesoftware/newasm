@@ -29,38 +29,38 @@ In this quite frankly low-level language, there are also objects! General syntax
     mov tlr , myobj{text}
     mov stl , 0c1
     mov fdx , 1
-    sysenter %ios
+    sysenter "ios"
     syscall
 
     mov tlr , myobj{decimal}
     mov fdx , 2
-    sysenter %ios
+    sysenter "ios"
     syscall
 
     mov tlr , myobj{lol}
     mov fdx , 2
-    sysenter %ios
+    sysenter "ios"
     syscall
 
     mov tlr , myobj2{text}
     mov stl , 0c1
     mov fdx , 1
-    sysenter %ios
+    sysenter "ios"
     syscall
 
     mov tlr , myobj2{decimal}
     mov fdx , 2
-    sysenter %ios
+    sysenter "ios"
     syscall
 
     mov tlr , myobj2{lol}
     mov fdx , 2
-    sysenter %ios
+    sysenter "ios"
     syscall
 
     mov tlr , myobj2{reference}
     mov fdx , 6
-    sysenter %ios
+    sysenter "ios"
     syscall
 
     mov stl , 45657
@@ -69,7 +69,7 @@ In this quite frankly low-level language, there are also objects! General syntax
     mov tlr , myobj2{lol}
     mov fdx , 2
     mov stl , 0c1
-    sysenter %ios
+    sysenter "ios"
     syscall
 
     mov psx , "HIII243"
@@ -78,7 +78,7 @@ In this quite frankly low-level language, there are also objects! General syntax
     mov tlr , myobj{text}
     mov fdx , 1
     mov stl , 0c1
-    sysenter %ios
+    sysenter "ios"
     syscall
 ```
 
@@ -110,7 +110,7 @@ obj  name : { ; brace must be HERE
 ## Tuples (dynamic objects)
 Tuples, also known as dynamic objects, can dynamically change sizes and types of its members. Basically an array that can hold any data.
 ```asm
-.$using %ios
+.$using "ios"
 .data
     tuple mytuple: (87, "hi", 64.3, 'p')
     tuple empty_tuple: () ; empty tuple
@@ -124,10 +124,10 @@ In order to update the specific index inside a tuple, you have to use the new `l
 ```asm
 lea &tuple_name, 0 ; numeric index
 mov tlr, some_value
-stor tlr, &tuple_name ; just update the value at index 0
+mov &tuple_name, *tlr ; just update the value at index 0
 ```
 In order to completely change the tuple, just set the specific register to a tuple:
 ```asm
 mov tlr, (“ey”, 67, 1.2, ‘aʼ)
-stor tlr, &tuple_name ; change the whole tuple
+mov &tuple_name, *tlr ; change the whole tuple
 ```

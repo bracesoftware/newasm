@@ -11,7 +11,7 @@ Super fun!
 .start
     mov tlr, toBeDeleted
     mov stl, 0c1
-    sysenter %ios
+    sysenter "ios"
     mov fdx, 1
     syscall
 
@@ -24,7 +24,7 @@ Super fun!
         movaddr &toBeDeleted, *hea ; correct
         mov tlr, toBeDeleted
         mov stl, 0c1
-        sysenter %ios
+        sysenter "ios"
         mov fdx, 1
         syscall
 
@@ -42,7 +42,7 @@ Super fun!
 
         mov tlr, toBeDeleted
         mov stl, 0c1
-        sysenter %ios
+        sysenter "ios"
         mov fdx, 1
         syscall
     free

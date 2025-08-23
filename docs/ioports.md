@@ -12,7 +12,7 @@ I/O ports allow you to communicate with hardware directly for tasks that cannot 
 	mov tlr, "Hello World"
 	mov stl, 0c1 ; endline
 	mov fdx, 1
-	sysenter %ios
+	sysenter "ios"
 	syscall
 	ret 0
 ```

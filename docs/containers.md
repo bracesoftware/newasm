@@ -13,7 +13,7 @@
 .data
     cont testbitarr : ?bit_arr
 .start
-    sysenter %cmanip
+    sysenter "cmanip"
     mov cpt , &testbitarr
     mov tlr , 2
     mov stl , 1
@@ -24,14 +24,14 @@
     syscall 
     mov fdx , 2
     mov stl , 0c1
-    sysenter %ios
+    sysenter "ios"
     syscall
     mov tlr , 2
     mov fdx , 5
-    sysenter %cmanip
+    sysenter "cmanip"
     syscall 
     mov fdx , 2
-    sysenter %ios
+    sysenter "ios"
     syscall
 ```
 Output:
@@ -52,7 +52,7 @@ Output:
     cont testbintree : ?bin_tree
 .start
     mov cpt , &testbintree
-    sysenter %cmanip
+    sysenter "cmanip"
     mov tlr , 0
     mov stl , 33
     mov fdx , 7
@@ -64,9 +64,9 @@ Output:
 
     mov stl , 0c1
     mov fdx , 2
-    sysenter %ios
+    sysenter "ios"
     syscall
-    sysenter %cmanip
+    sysenter "cmanip"
     
     mov tlr , 1
     mov fdx , 9
@@ -74,10 +74,10 @@ Output:
 
     mov stl , 0c1
     mov fdx , 2
-    sysenter %ios
+    sysenter "ios"
     syscall
 
-    sysenter %cmanip
+    sysenter "cmanip"
     
     mov tlr , 2
     mov fdx , 9
@@ -85,16 +85,16 @@ Output:
 
     mov stl , 0c1
     mov fdx , 2
-    sysenter %ios
+    sysenter "ios"
     syscall
-    sysenter %cmanip
+    sysenter "cmanip"
     mov tlr , 3
     mov fdx , 9
     syscall
 
     mov stl , 0c1
     mov fdx , 2
-    sysenter %ios
+    sysenter "ios"
     syscall
 
 ```

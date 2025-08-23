@@ -8,6 +8,6 @@ Comments are also available:
     ; comment
     mov fdx , 1
     mov tlr , "hello" ; comment
-    sysenter %ios
-syscall ; comment again
+    sysenter "ios"
+    syscall ; comment again
 ```

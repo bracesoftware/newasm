@@ -4,16 +4,17 @@
 
 `sayhi.newasm_dl`:
 ```asm
-mov tlr , "hi from my dynamic library"
-mov fdx , 1
-sysenter %ios
+.start
+mov tlr, "hi from my dynamic library"
+mov fdx, 1
+sysenter "ios"
 syscall
 ```
 
 In your entry file - `index.asm`, you can do this:
 ```asm
 .start
-    mov tlr , "some stuff"
+    mov tlr, "some stuff"
     inc prp ; bunch of operations
     ; more stuff...
 

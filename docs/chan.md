@@ -17,13 +17,13 @@ Here is an example on how to use them:
         recv &myChannel
         mov stl, 0c1
         mov fdx, 1
-        sysenter %ios
+        sysenter "ios"
         syscall
     }
 
     send &myChannel, "Data from the channel"
     await &testChannel
-    sysenter %thread
+    sysenter "thread"
     mov tlr, &testChannel
     mov fdx, 1
     syscall

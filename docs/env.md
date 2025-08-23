@@ -13,7 +13,7 @@ testenv = "hello from env var"
 .start
     mov tlr , * / testenv
     mov fdx , 1
-    sysenter %ios
+    sysenter "ios"
     syscall
 ```
 
@@ -23,7 +23,7 @@ testenv = "hello from env var"
 .start
     mov tlr , testenv
     mov fdx , 1
-    sysenter %ios
+    sysenter "ios"
     syscall
 ```
 

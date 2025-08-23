@@ -6,7 +6,7 @@
 .data
 	./locals
 		[lock]
-		txt variable: "hi"
+			txt variable: "hi"
 		[!lock]
 	./!locals
 .start
@@ -18,3 +18,5 @@
 	syscall
 	ret 0
 ```
+
+Namespaces give you an intuitive way of moduling code.
