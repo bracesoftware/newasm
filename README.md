@@ -275,17 +275,21 @@ hi from macro
 This language brings some built-in references, or rather operands, with itself - list:
 
 - `"ios"` - used as an operand in `syscall`, represents a module of system calls responsible for input and output streaming;
-- `%fs` - used as an operand in `syscall`, represents a module of system calls responsible for input and output streaming;
-- `%exf` - used as an operand in `syscall`, represents a module of system calls responsible for execution flow (starting child processes);
-- `%cmanip` - used as an operand in `syscall`, represents a module of system calls responsible for container and data structure manipulation;
-- `%net` - used as an operand in `syscall`, represents a module of system calls responsible for network features;
-- `%mem` - used as an operand in `syscall`, represents a module of system calls responsible for memory/data management;
-- `%txtop` - used as an operand in `syscall`, represents a module of system calls responsible for textual operations;
-- `%chrono` - used as an operand in `syscall`, represents a module of system calls responsible for time;
+- `"fs"` - used as an operand in `syscall`, represents a module of system calls responsible for input and output streaming;
+- `"ext"` - used as an operand in `syscall`, represents a module of system calls responsible for execution flow (starting child processes);
+- `"cmanip"` - used as an operand in `syscall`, represents a module of system calls responsible for container and data structure manipulation;
+- `"net"` - used as an operand in `syscall`, represents a module of system calls responsible for network features;
+- `"mem"` - used as an operand in `syscall`, represents a module of system calls responsible for memory/data management;
+- `"txtop"` - used as an operand in `syscall`, represents a module of system calls responsible for textual operations;
+- `"chrono"` - used as an operand in `syscall`, represents a module of system calls responsible for time;
+- `"thread"` - used as an operand in `syscall`, represents a module of system calls responsible for threads;
+- `"tuple"` - used as an operand in `syscall`, represents a module of system calls responsible for tuples;
+- `"tcp"` - used as an operand in `syscall`, represents a module of system calls responsible for TCP protocol;
+- `"http"` - used as an operand in `syscall`, represents a module of system calls responsible for HTTP protocol;
 - `&%null` - used to leave references/pointers unassigned/uninitialized.
 - `%nl` - used as a null operand in some instructions.
 
-> **WARNING**: Syntax such as `% ios` is invalid.
+> **WARNING**: Syntax such as `" ios"` is invalid.
 
 ## Instructions
 Below is a list of available instructions. General syntax is:
@@ -1091,7 +1095,7 @@ Below is a list of interesting examples of using the language.
 
 ```asm
 . start
-    sysenter %fs
+    sysenter "fs"
     mov fdx, 3
     mov tlr, "filename.txt"
     syscall
