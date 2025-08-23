@@ -1592,7 +1592,6 @@ sysenter "ios"
     sysenter "ios"
     syscall ; print what we got
 
-
 	;mov tlr, ui::29042384_w
 
     mov tlr, 223
