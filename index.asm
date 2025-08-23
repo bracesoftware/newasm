@@ -1,3 +1,4 @@
+;ok
 .start
     cls
 :startofprog

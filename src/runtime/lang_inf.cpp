@@ -210,6 +210,9 @@ namespace newasm
                 {del, "del"},
                 {movaddr, "movaddr"},
 
+                {jz, "jz"},
+                {jnz, "jnz"},
+
                 {__say, "__say"}
             };
 
