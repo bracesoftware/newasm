@@ -150,7 +150,7 @@ The install-command allows you to download and install New-ASM dynamic libraries
 mov fdx , 1
 mov tlr , "Hi"
 mov stl , 0c1
-sysenter %ios
+sysenter "ios"
 syscall
 zero stl
 zero tlr
@@ -181,7 +181,7 @@ Now, if we want to download a package (or a setup), we use the same command, but
 	mov tlr , "INTERNET WORKS!"
 	mov fdx , 1
 	mov stl , 0c1
-    sysenter %ios
+    sysenter "ios"
 	syscall 
 	zero stl
 ```
@@ -241,9 +241,9 @@ data_type  variable_name : variable_value
 You can use `variable_name` as an operand in instructions documented below.
 
 There are 3 data types:
-- `num` for integers;
-- `decm` for floats;
-- `txt` for strings;
+- `intg` for integers;
+- `float` for floats;
+- `string` for strings;
 - `ref` for references to data symbols (basically a kind of a pointer);
 - `char` for characters.
 
@@ -259,7 +259,7 @@ You can define macros here:
         mov stl, 0c1
         mov tlr, "hi from macro"
         mov fdx, 1
-        sysenter %ios
+        sysenter "ios"
         syscall
     #
 .start
@@ -274,7 +274,7 @@ hi from macro
 ## Built-in operands
 This language brings some built-in references, or rather operands, with itself - list:
 
-- `%ios` - used as an operand in `syscall`, represents a module of system calls responsible for input and output streaming;
+- `"ios"` - used as an operand in `syscall`, represents a module of system calls responsible for input and output streaming;
 - `%fs` - used as an operand in `syscall`, represents a module of system calls responsible for input and output streaming;
 - `%exf` - used as an operand in `syscall`, represents a module of system calls responsible for execution flow (starting child processes);
 - `%cmanip` - used as an operand in `syscall`, represents a module of system calls responsible for container and data structure manipulation;
@@ -352,7 +352,7 @@ In this example, we basically do `fdx=1`:
 In this example, we basically do `fdx=1`, `myvar=fdx`, `return 1`:
 ```asm
 . data
-    num  myvar : 0
+    intg  myvar : 0
 . start
     mov fdx , 1
     stor fdx , myvar
@@ -367,7 +367,7 @@ In this example, we basically do `fdx=1`, `myvar=fdx`, `return 1`:
 | `fdx` | function index | Holds an index of a function `syscall` will call. |
 | `tlr` | typeless register | Typeless register (can hold any value, even code literals). Used as an output argument in some `syscall`s. |
 | `stl` | secondary typeless register | Typeless register; however used to hold built-in operands for `syscall`s. |
-| `bos` | byte output size | Specify the number of bytes you want to print out. Works only on `syscall` 1 in `%ios`. |
+| `bos` | byte output size | Specify the number of bytes you want to print out. Works only on `syscall` 1 in `"ios"`. |
 | `stk` | stack pointer | Points at the top of the stack. |
 | `hea` | heap pointer | Points at an address in the heap. |
 | `psx` | procedure scope exit value | Holds value returned inside a procedure using `halt`. |
@@ -399,7 +399,7 @@ Perform a specific system call within a system module.
 .start
     mov fdx , 1
     mov tlr , "Hello World"
-    sysenter %ios ; enter the IO stream
+    sysenter "ios" ; enter the IO stream
     syscall ; do the call
     retn 23
 ```
@@ -407,44 +407,50 @@ Perform a specific system call within a system module.
 #### `syscall` list
 | Module | ID    | Arguments | Description |
 | ----- | ---------------- | --------- | ----------- |
-| `%ios` | `1` | `tlr`, `stl`, `bos` | Prints exclusively text with the size of `bos` (byte output size). Uses `stl` as a help argument. |
-| `%ios` | `2` | `tlr`, `stl` | Prints integers and floating point numbers. Uses `stl` as a help argument. |
-| `%ios` | `3` | - | Requests textual user input and stores the value in `tlr`. |
-| `%ios` | `4` | - | Requests numeric (including floats) user input and stores the value in `tlr`. |
-| `%ios` | `5` | `tlr` | Prints the textual value of a built-in operand. |
-| `%ios` | `6` | `tlr`, `stl` | Prints the name of a symbol a reference is pointing to. |
-| `%ios` | `7` | `tlr`, `stl` | Prints a single character. |
-| `%ios` | `8` | - | Requests a single character input from the user and stores the value in `tlr`. |
-| `%fs` | `1` | `tlr` | Create a directory; with `tlr` being a string containing the directory name. |
-| `%fs` | `2` | `tlr` | Remove a directory; with `tlr` being a string containing the directory name. |
-| `%fs` | `3` | `tlr` | Create a file; with `tlr` being a string containing the file name. |
-| `%fs` | `4` | `tlr` | Remove a file; with `tlr` being a string containing the file name. |
-| `%fs` | `5` | `tlr`, `stl` | Overwrite file content; with `tlr` being a string containing the file name, and `stl` being a string containing the new content. |
-| `%fs` | `6` | `tlr`, `stl` | Append content to file; with `tlr` being a string containing the file name, and `stl` being a string containing the content to append. |
-| `%fs` | `7` | `tlr` | Remove all file content; with `tlr` being a string containing the file name. |
-| `%fs` | `8` | `tlr`, `stl` | Read a file line; with `tlr` being a string containing the file name, and `stl` being the line number. Read content is subsequently stored in `tlr`. |
-| `%cmanip` | `1` | `cpt` | Clear the bit array, with `cpt` being a pointer holding the address of your bit array. |
-| `%cmanip` | `2` | `cpt` | Flip the bit array, with `cpt` being a pointer holding the address of your bit array. |
-| `%cmanip` | `3` | `cpt` | Reverse the bit array, with `cpt` being a pointer holding the address of your bit array. |
-| `%cmanip` | `4` | `cpt`, `tlr`, `stl` | Set a value at a specific index, with `cpt` being a pointer holding the address of your bit array, `tlr` an index and `stl` either 0 or 1 as a value. |
-| `%cmanip` | `5` | `cpt`, `tlr` | Get value stored at the bit array, with `cpt` being a pointer holding the address of your bit array and `tlr` being the index. After the `syscall`, the function will store the value in `tlr`. |
-| `%cmanip` | `6` | `cpt`, `tlr`, `stl` | Set-at-parent-of function, with `cpt` being a pointer holding the address of your binary tree, `tlr` being the index and `stl` the value. |
-| `%cmanip` | `7` | `cpt`, `tlr`, `stl` | Set-at-right child-of function, with `cpt` being a pointer holding the address of your binary tree, `tlr` being the index and `stl` the value. |
-| `%cmanip` | `8` | `cpt`, `tlr`, `stl` | Set-at-left child-of function, with `cpt` being a pointer holding the address of your binary tree, `tlr` being the index and `stl` the value. |
-| `%cmanip` | `9` | `cpt`, `tlr`, `stl` | Get-at function, with `cpt` being a pointer holding the address of your binary tree and `tlr` being the index. After the `syscall`, the function will store the value in `tlr`.|
-| `%net` | `1` | `tlr`, `stl` | Download a file, with `tlr` being a link to the file and `stl` being the output destination. |
-| `%mem` | `1` | `tlr` | Marks a variable as a constant, with `tlr` being a pointer to the specific variable. Trying to modify a variable using `stor` afterwards will cause errors. |
-| `%txtop` | `1` | `tlr`, `stl` | Concatenate 2 textual values, with these registers holding the two values. |
-| `%txtop` | `2` | `tlr` | Remove whitespaces from string ends. |
-| `%chrono` | `1` | `/` | Gets the current year and stores it in `tlr`. |
-| `%chrono` | `2` | `/` | Gets the current month and stores it in `tlr`. |
-| `%chrono` | `3` | `/` | Gets the current day in a month and stores it in `tlr`. |
-| `%chrono` | `4` | `/` | Gets the current hour and stores it in `tlr`. |
-| `%chrono` | `5` | `/` | Gets the current minute and stores it in `tlr`. |
-| `%chrono` | `6` | `/` | Gets the current second and stores it in `tlr`. |
-| `%thread` | `1` | `tlr` | Prints the thread output, with `tlr` being a thread pointer. |
-| `%thread` | `2` | `tlr` | Gets the thread return and stores it in `tlr`, with `tlr` firstly being a thread pointer as well. |
-| `%ext` | `/` | `/` | Call a system call from a specific extension (dynamic library). |
+| `ios` | `1` | `tlr`, `stl`, `bos` | Prints exclusively text with the size of `bos` (byte output size). Uses `stl` as a help argument. |
+| `ios` | `2` | `tlr`, `stl` | Prints integers and floating point numbers. Uses `stl` as a help argument. |
+| `ios` | `3` | - | Requests textual user input and stores the value in `tlr`. |
+| `ios` | `4` | - | Requests numeric (including floats) user input and stores the value in `tlr`. |
+| `ios` | `5` | `tlr` | Prints the textual value of a built-in operand. |
+| `ios` | `6` | `tlr`, `stl` | Prints the name of a symbol a reference is pointing to. |
+| `ios` | `7` | `tlr`, `stl` | Prints a single character. |
+| `ios` | `8` | - | Requests a single character input from the user and stores the value in `tlr`. |
+| `fs` | `1` | `tlr` | Create a directory; with `tlr` being a string containing the directory name. |
+| `fs` | `2` | `tlr` | Remove a directory; with `tlr` being a string containing the directory name. |
+| `fs` | `3` | `tlr` | Create a file; with `tlr` being a string containing the file name. |
+| `fs` | `4` | `tlr` | Remove a file; with `tlr` being a string containing the file name. |
+| `fs` | `5` | `tlr`, `stl` | Overwrite file content; with `tlr` being a string containing the file name, and `stl` being a string containing the new content. |
+| `fs` | `6` | `tlr`, `stl` | Append content to file; with `tlr` being a string containing the file name, and `stl` being a string containing the content to append. |
+| `fs` | `7` | `tlr` | Remove all file content; with `tlr` being a string containing the file name. |
+| `fs` | `8` | `tlr`, `stl` | Read a file line; with `tlr` being a string containing the file name, and `stl` being the line number. Read content is subsequently stored in `tlr`. |
+| `cmanip` | `1` | `cpt` | Clear the bit array, with `cpt` being a pointer holding the address of your bit array. |
+| `cmanip` | `2` | `cpt` | Flip the bit array, with `cpt` being a pointer holding the address of your bit array. |
+| `cmanip` | `3` | `cpt` | Reverse the bit array, with `cpt` being a pointer holding the address of your bit array. |
+| `cmanip` | `4` | `cpt`, `tlr`, `stl` | Set a value at a specific index, with `cpt` being a pointer holding the address of your bit array, `tlr` an index and `stl` either 0 or 1 as a value. |
+| `cmanip` | `5` | `cpt`, `tlr` | Get value stored at the bit array, with `cpt` being a pointer holding the address of your bit array and `tlr` being the index. After the `syscall`, the function will store the value in `tlr`. |
+| `cmanip` | `6` | `cpt`, `tlr`, `stl` | Set-at-parent-of function, with `cpt` being a pointer holding the address of your binary tree, `tlr` being the index and `stl` the value. |
+| `cmanip` | `7` | `cpt`, `tlr`, `stl` | Set-at-right child-of function, with `cpt` being a pointer holding the address of your binary tree, `tlr` being the index and `stl` the value. |
+| `cmanip` | `8` | `cpt`, `tlr`, `stl` | Set-at-left child-of function, with `cpt` being a pointer holding the address of your binary tree, `tlr` being the index and `stl` the value. |
+| `cmanip` | `9` | `cpt`, `tlr`, `stl` | Get-at function, with `cpt` being a pointer holding the address of your binary tree and `tlr` being the index. After the `syscall`, the function will store the value in `tlr`.|
+| `net` | `1` | `tlr`, `stl` | Download a file, with `tlr` being a link to the file and `stl` being the output destination. |
+| `mem` | `1` | `tlr` | Marks a variable as a constant, with `tlr` being a pointer to the specific variable. Trying to modify a variable using `stor` afterwards will cause errors. |
+| `txtop` | `1` | `tlr`, `stl` | Concatenate 2 textual values, with these registers holding the two values. |
+| `txtop` | `2` | `tlr` | Remove whitespaces from string ends. |
+| `chrono` | `1` | `/` | Gets the current year and stores it in `tlr`. |
+| `chrono` | `2` | `/` | Gets the current month and stores it in `tlr`. |
+| `chrono` | `3` | `/` | Gets the current day in a month and stores it in `tlr`. |
+| `chrono` | `4` | `/` | Gets the current hour and stores it in `tlr`. |
+| `chrono` | `5` | `/` | Gets the current minute and stores it in `tlr`. |
+| `chrono` | `6` | `/` | Gets the current second and stores it in `tlr`. |
+| `thread` | `1` | `tlr` | Prints the thread output, with `tlr` being a thread pointer. |
+| `thread` | `2` | `tlr` | Gets the thread return and stores it in `tlr`, with `tlr` firstly being a thread pointer as well. |
+| `ext` | `/` | `/` | Call a system call from a specific extension (dynamic library). |
+| `tcp` | `1` | `tlr`, `stl` | `tlr` is the IP, and `stl` the data we are sending. |
+| `tcp` | `2` | `tlr` | Receive data from the IP address stored inside `tlr`. |
+| `http` | `1` | `tlr` | `tlr` is the address. Used to get HTTP data. |
+| `http` | `2` | `tlr`, `stl` | Send data, with `tlr` being the URL and `stl` the data. |
+
+
 
 ### `int` instruction
 Send system interrupts, basically manipulate with the interpreter.
@@ -526,7 +532,7 @@ Return a value inside a function.
 
 ```asm
 . data
-    num  variable : 0
+    intg  variable : 0
 . start
     proc 0 , testprocedure
         halt proc , 364
@@ -535,7 +541,7 @@ Return a value inside a function.
     stor psx , variable
     mov tlr , variable
     mov fdx , 1
-    sysenter %ios
+    sysenter "ios"
     syscall
     retn 1
 ```
@@ -557,7 +563,7 @@ Return a value inside a function.
 
 ```asm
 . data
-    num  myvar2 : 0
+    intg  myvar2 : 0
 . start
     push 0 , 273
 
@@ -570,7 +576,7 @@ Return a value inside a function.
 
     mov tlr , myvar2
     mov fdx , 1
-    sysenter %ios
+    sysenter "ios"
     syscall
 
     retn 0
@@ -611,13 +617,13 @@ Move down and up the heap.
 
 ```asm
 . data
-    num  mynum : 0
+    intg  mynum : 0
 . start
     heap 0 , 3
     stor hea , mynum
     mov tlr , mynum
     mov fdx , 2
-    sysenter %ios
+    sysenter "ios"
 syscall
 ```
 
@@ -628,7 +634,7 @@ syscall
 #### Example
 ```asm
 . data
-    decm  testdecimal : 0.0
+    float  testdecimal : 0.0
 . start
     ; If the suffix of the LOAD instruction is `adr`,
     ; then we will update the value in the address heap pointer
@@ -641,7 +647,7 @@ syscall
     mov tlr , testdecimal
     mov stl , 0c1
     mov fdx , 2
-    sysenter %ios
+    sysenter "ios"
     syscall
 
     retn 0
@@ -658,8 +664,8 @@ Output:
 
 ```asm
 . data
-    decm  testdecimal : 0.0
-    decm  testdecm2 : 0.0
+    float  testdecimal : 0.0
+    float  testfloat2 : 0.0
 . start
     load adr , 736.38 ; hea : something
     load ref , testdecimal ; myvar : hea
@@ -667,33 +673,33 @@ Output:
     mov tlr , testdecimal
     mov stl , 0c1
     mov fdx , 2
-    sysenter %ios
+    sysenter "ios"
     syscall
 
     ; Allocate more space:
     heap 1
     load adr , 9821.38 ; hea : smth
-    load ref , testdecm2 ; myvar : hea
-    mov tlr , testdecm2
+    load ref , testfloat2 ; myvar : hea
+    mov tlr , testfloat2
     mov stl , 0c1
     mov fdx , 2
-    sysenter %ios
+    sysenter "ios"
     syscall
     
     mov hea , 0 ; manually access the first address
-    load ref , testdecm2 ; myvar : hea
-    mov tlr , testdecm2
+    load ref , testfloat2 ; myvar : hea
+    mov tlr , testfloat2
     mov stl , 0c1
     mov fdx , 2
-    sysenter %ios
+    sysenter "ios"
     syscall
 
     mov hea , 1 ; manually access the second address
-    load ref , testdecm2 ; myvar : hea
-    mov tlr , testdecm2
+    load ref , testfloat2 ; myvar : hea
+    mov tlr , testfloat2
     mov stl , 0c1
     mov fdx , 2
-    sysenter %ios
+    sysenter "ios"
     syscall
 
     heap -1 ; let all the memory go to avoid getting the memory leak
@@ -727,7 +733,7 @@ Output:
 . start
     : labelname
         mov . fdx , 4
-        sysenter %ios
+        sysenter "ios"
         syscall
     jmp 0 , labelname
 ```
@@ -740,7 +746,7 @@ A little too complex example.
     : label
         mov tlr , "label called"
         mov fdx , 1
-        sysenter %ios
+        sysenter "ios"
     syscall
         mov fdx , 72
         jmp 0 , label3
@@ -748,13 +754,13 @@ A little too complex example.
     : label2
         mov tlr , "label2 called"
         mov fdx , 1
-        sysenter %ios
+        sysenter "ios"
         syscall
         jmp 0 , label
     : label3
         mov tlr , "label3 called"
         mov fdx , 1
-        sysenter %ios
+        sysenter "ios"
         syscall
 
     ret 3873
@@ -806,7 +812,7 @@ According to the result `cmp` stores in its own "hidden" register, you can use t
         mov tlr , "EQUAL"
         mov fdx , 1
         mov stl , 0c1
-        sysenter %ios
+        sysenter "ios"
         syscall
         jmp 0 , endtheprogram
 
@@ -814,7 +820,7 @@ According to the result `cmp` stores in its own "hidden" register, you can use t
         mov tlr , "NOT EQUAL"
         mov fdx , 1
         mov stl , 0c1
-        sysenter %ios
+        sysenter "ios"
         syscall
         jmp 0 , endtheprogram
 
@@ -822,7 +828,7 @@ According to the result `cmp` stores in its own "hidden" register, you can use t
         mov tlr , "LESS"
         mov fdx , 1
         mov stl , 0c1
-        sysenter %ios
+        sysenter "ios"
         syscall
         jmp 0 , endtheprogram
 
@@ -830,7 +836,7 @@ According to the result `cmp` stores in its own "hidden" register, you can use t
         mov tlr , "GREATER"
         mov fdx , 1
         mov stl , 0c1
-        sysenter %ios
+        sysenter "ios"
         syscall
         jmp 0 , endtheprogram
 
@@ -838,7 +844,7 @@ According to the result `cmp` stores in its own "hidden" register, you can use t
         mov tlr , "LESS OR EQUAL"
         mov fdx , 1
         mov stl , 0c1
-        sysenter %ios
+        sysenter "ios"
         syscall
         jmp 0 , endtheprogram
 
@@ -846,7 +852,7 @@ According to the result `cmp` stores in its own "hidden" register, you can use t
         mov tlr , "GREATER OR EQUAL"
         mov fdx , 1
         mov stl , 0c1
-        sysenter %ios
+        sysenter "ios"
         syscall
         jmp 0 , endtheprogram
 
@@ -952,7 +958,7 @@ Demonstration:
     mov tlr , temporary
     mov stl , 0c1
     mov fdx , 6
-    sysenter %ios
+    sysenter "ios"
     syscall
 
     mov prp , &procedure_3
@@ -962,7 +968,7 @@ Demonstration:
     mov tlr , temporary
     mov stl , 0c1
     mov fdx , 6
-    sysenter %ios
+    sysenter "ios"
     syscall
 ```
 
@@ -1036,17 +1042,17 @@ Clear up the call stack.
         mov tlr, <0> ;get the first argument
         mov stl, <1> ;get the second argument
         mov fdx, <2>
-        sysenter %ios
+        sysenter "ios"
         syscall
         halt proc, 0
     end
     db stk
-    push 0, 1 ; push the third arg
+    push 1 ; push the third arg
     push 0, 0c1 ; push the second arg
     push 0, "call stack works" ; push the first arg
     push 0, 0x827 ; call the procedure
     stack ;clear up the stack after the procedure call
-    retn 0
+    ret 0
 ```
 Output:
 ```
@@ -1097,7 +1103,7 @@ Below is a list of interesting examples of using the language.
     syscall
     mov stl, 0c1
     mov fdx, 1
-    sysenter %ios
+    sysenter "ios"
     syscall
     retn 0
 ```
