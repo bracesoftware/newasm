@@ -545,9 +545,13 @@ namespace newasm
                 {
                     return;
                 }
-                auto it = newasm::variables::ids.find(s.substr(1));
+
+                auto suf = "&" + s.substr(1);
+                newasm::runtime::functions::parse(suf);
+                auto it = newasm::variables::ids.find(suf.substr(1));
                 if(it == newasm::variables::ids.end())
                 {
+                    newasm::terminate(newasm::exit_codes::invalid_memacc);
                     return;
                 }
                 
