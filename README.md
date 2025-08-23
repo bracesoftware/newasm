@@ -1048,9 +1048,9 @@ Clear up the call stack.
     end
     db stk
     push 1 ; push the third arg
-    push 0, 0c1 ; push the second arg
-    push 0, "call stack works" ; push the first arg
-    push 0, 0x827 ; call the procedure
+    push  0c1 ; push the second arg
+    push  "call stack works" ; push the first arg
+    push  0x827 ; call the procedure
     stack ;clear up the stack after the procedure call
     ret 0
 ```
