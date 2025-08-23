@@ -269,9 +269,9 @@ namespace newasm
                 const int chan = 11;
 
                 const std::unordered_map<int, std::string> identifiers__ = {
-                    {num, "num"},
-                    {decm, "decm"},
-                    {txt, "txt"},
+                    {num, "intg"},
+                    {decm, "float"},
+                    {txt, "string"},
                     {char__, "char"},
                     {ref, "ref"},
                     {obj, "obj"},

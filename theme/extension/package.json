@@ -124,6 +124,12 @@
 						"settings": {
 							"foreground": "#87CEEB"
 						}
+					},
+					{
+						"scope": "env.var.newasm",
+						"settings": {
+							"foreground": "#ce5656"
+						}
 					}
 				]
 			}

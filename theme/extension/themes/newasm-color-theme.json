@@ -172,6 +172,13 @@
         "foreground": "#87CEEB",
         "fontStyle": "bold"
       }
+    },
+    {
+      "scope": "env.var.newasm",
+      "settings": {
+        "foreground": "#ce5656",
+        "fontStyle": "bold"
+      }
     }
   ]
 }

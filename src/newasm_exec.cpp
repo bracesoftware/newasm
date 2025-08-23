@@ -284,6 +284,7 @@ namespace newasm
 	#endif
     int process_d(std::string wholeline, std::string dtyp, std::string _name, std::string value)
     {
+        newasm::runtime::functions::parse(value);
         if(newasm::header::functions::issizeof(value).first)
         {
             value = std::to_string(newasm::header::functions::issizeof(value).second);

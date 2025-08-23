@@ -30,7 +30,7 @@
     },
     {
       "name": "register.control.newasm",
-      "match":  "\\b(num|decm|txt|char|ref|obj|cont|tuple|bit_arr|bin_tree|chan)\\b"
+      "match":  "\\b(intg|float|string|char|ref|obj|cont|tuple|bit_arr|bin_tree|chan)\\b"
     },
     {
       "name": "keyword.control.newasm",
@@ -89,6 +89,10 @@
     {
       "name": "constant.hex.newasm",
       "match": "\\b0x[0-9a-fA-F]+\\b"
+    },
+    {
+      "name": "env.var.newasm",
+      "match": "\\*\\s*/\\s*([A-Za-z_][A-Za-z0-9_]*)"
     }
   ],
   "repository": {},

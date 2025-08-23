@@ -15,13 +15,13 @@
 .$using "tuple"
 
 .data
-    num mynumber: 736
-    decm mydecimal: 243.3
-    txt mytext: "Hello World"
-    txt shit: "LOL"
-    txt return_vals: "null"
+    intg myintgber: 736
+    float mydecimal: 243.3
+    string mytext: "Hello World"
+    string shit: "LOL"
+    string return_vals: "null"
     ref testreference: &return_vals ; we must provide a valid value
-    txt  threadarg : "hello from thread"
+    string  threadarg : "hello from thread"
 
 .start
     thread  testthread -> {
@@ -128,7 +128,7 @@
     mov  fdx , 5
     syscall 
 
-    mov  tlr , mynumber ; lol
+    mov  tlr , myintgber ; lol
     mov  fdx , 2
     syscall 
 
@@ -189,7 +189,7 @@
 
     push  "TEST"
 .data
-    txt  testret : "0"
+    string  testret : "0"
 .start 
     pop &testret
     mov  tlr , testret
@@ -201,7 +201,7 @@ __say 0,"debug1"
     syscall 
 __say 0,"debug2"
     mov  fdx , 873
-    mov &mynumber, *fdx
+    mov &myintgber, *fdx
 __say 0,"debug3"
     mov  fdx , 3
     syscall 
@@ -277,7 +277,7 @@ __say 0,"debug5"
 
 .data
 
-    num  register_test : 0
+    intg  register_test : 0
 
 .start
 
@@ -345,9 +345,9 @@ __say 0,"debug5"
     end
 .hndl
 .data
-    txt  teststring : "83"
-    decm  testdecimal : 0.0
-    decm  testdecm2 : 3.0
+    string  teststring : "83"
+    float  testdecimal : 0.0
+    float  testfloat2 : 3.0
 .start
 
     call  resetstuff
@@ -376,7 +376,7 @@ __say 0,"debug5"
         mov  tlr , "Bye !"
         mov  fdx , 1
         syscall  
-    ;retn   0 , mynumber
+    ;retn   0 , myintgber
 
     mov  tlr , "heapalloc test"
     mov  fdx , 1
@@ -413,9 +413,9 @@ __say 0,"debug5"
     malloc 4
     mov hea, [0]
     load *, 9821.38 ; hea : 63
-    load &, &testdecm2 ; myvar : hea
+    load &, &testfloat2 ; myvar : hea
     
-    mov  tlr , testdecm2
+    mov  tlr , testfloat2
     mov stl , 0c1
     mov  fdx , 2
     syscall  
@@ -426,10 +426,10 @@ __say 0,"debug5"
     mov hea, [0]
     heap 4
     heap -4 ; for testing
-    load  & , &testdecm2 ; myvar : hea
+    load  & , &testfloat2 ; myvar : hea
     free
     
-    mov  tlr , testdecm2
+    mov  tlr , testfloat2
     mov  stl , 0c1
     mov  fdx , 2
     syscall  
@@ -437,8 +437,8 @@ __say 0,"debug5"
     ; ANOTHER BAD IDEA mov  hea , 1 ; manually access the second address
     malloc 4
     mov hea, [0]
-    load &, &testdecm2 ; myvar : hea
-    mov  tlr , testdecm2
+    load &, &testfloat2 ; myvar : hea
+    mov  tlr , testfloat2
     mov  stl , 0c1
     mov  fdx , 2
     syscall
@@ -526,7 +526,7 @@ __say 0,"debug5"
     : endprogliol
 
 .data
-    num  cmp_result : 0
+    intg  cmp_result : 0
 .start
     mov &cmp_result, *cpr
     mov tlr , cmp_result
@@ -558,7 +558,7 @@ __say 0,"debug5"
     nop
 
 .data
-    decm exptest: 0.0
+    float exptest: 0.0
 .start
 
     mov &exptest, *cr0
@@ -613,7 +613,7 @@ __say 0,"debug5"
 .data
     ref  prptest : &PROCEDURETEST
     ref  uninref : &%null
-    decm  logtest : 0.0
+    float  logtest : 0.0
 .start
     stor   prp , &prptest
     mov  tlr , prptest
@@ -635,14 +635,14 @@ __say 0,"debug5"
 
 .data
     obj  mystruct : { ;comment
-        num  lol : 98
-        decm  decimal : 2.3
-        txt  text : "hi from struct"
+        intg  lol : 98
+        float  decimal : 2.3
+        string  text : "hi from struct"
     }
     obj  mystruct2 : { ;comment
-        num  lol : 45
-        decm  decimal : 833.4
-        txt  text : "hi from struct again"
+        intg  lol : 45
+        float  decimal : 833.4
+        string  text : "hi from struct again"
         ref  reference : &prptest
     }
 
@@ -698,7 +698,7 @@ __say 0,"debug5"
     mov   fdx , 1
     syscall 
 
-    mov   tlr , "unique_ptrtest/file.txt"
+    mov   tlr , "unique_ptrtest/file.string"
     mov   stl , "text append"
     mov   fdx , 6
     syscall 
@@ -909,7 +909,7 @@ sysenter "ios"
 
     sysenter "net"
     mov   tlr , "hi com"
-    mov   stl , "hi txt"
+    mov   stl , "hi string"
     mov   fdx , 1
     syscall  
 
@@ -920,7 +920,7 @@ sysenter "ios"
     0x7
     jmp crazy
 .data
-    num  nonexistantvar : 1
+    intg  nonexistantvar : 1
 .start
     mov   tlr , &nonexistantvar
     mov   fdx , 1
@@ -942,7 +942,7 @@ sysenter "ios"
     ;mov   tlr , uninref
 :crazy
 .data
-    txt testText: ""
+    string testText: ""
 .start
     malloc 12
     mov hea, [0]
@@ -1130,8 +1130,8 @@ sysenter "ios"
     (end)
     syscall
 .data
-    num switchInteger : 3234
-    txt switchText : "hi"
+    intg switchInteger : 3234
+    string switchText : "hi"
 .start
     mov tlr, "lol->hi"
     mov stl, 0c1
@@ -1143,7 +1143,7 @@ sysenter "ios"
     case 23->mov tlr, "It is 23"
     case 324->mov tlr, "It is 324"
     case 1->mov tlr, "it is 1"
-    case num -> mov tlr, "it is a number"
+    case intg -> mov tlr, "it is a intgber"
     case 347 .. 9838 -> mov tlr, "it is in range"
     default->mov tlr, "it is default"
 
@@ -1153,8 +1153,8 @@ sysenter "ios"
     syscall
 
     switch switchText
-    case num -> mov tlr, "it is a number"
-    case txt -> mov tlr, "it is text"
+    case intg -> mov tlr, "it is a intgber"
+    case string -> mov tlr, "it is text"
     default -> mov tlr, "bleh"
 
     mov stl, 0c1
@@ -1199,7 +1199,7 @@ sysenter "ios"
     __say 0, "Dbg 2"
     vmov {100}, "Hello World from virtual memory"
     __say 0, "Dbg 3"
-    cast txt
+    cast string
     __say 0, "Dbg 4"
     mov tlr, {100}
     __say 0, "Dbg 5"
@@ -1220,8 +1220,8 @@ sysenter "ios"
     syscall ; display the thread output
 
 .data
-    txt textStringBro : "Allahu Akbar! As-salamu Alaykum Dunya!"
-    num len : $- textStringBro ; calculate
+    string textStringBro : "Allahu Akbar! As-salamu Alaykum Dunya!"
+    intg len : $- textStringBro ; calculate
 .start
     mov tlr, textStringBro
     mov stl, 0c1
@@ -1231,8 +1231,8 @@ sysenter "ios"
     syscall
 
 .data
-    txt looptest : "hello"
-    num msglen : $- looptest
+    string looptest : "hello"
+    intg msglen : $- looptest
 .start
     mov tlr, msglen
     inc tlr
@@ -1288,12 +1288,12 @@ sysenter "ios"
 .$using "ios"
 .data
     [lock]
-    txt myLockedstr : "Locked"
+    string myLockedstr : "Locked"
     obj lockedObj : {
-        txt lockedMember : "LockedMember"
+        string lockedMember : "LockedMember"
     }
     [!lock]
-    txt unlockedstr : "Unlocked"
+    string unlockedstr : "Unlocked"
 .start
     thread mythread -> {
         mov tlr, myLockedstr
@@ -1324,15 +1324,15 @@ sysenter "ios"
 .data
 	./std
     	./disk
-            txt diskdata : "Hello from disk" ; 15 len
-            num len : $-std::disk::diskdata ; not really needed
+            string diskdata : "Hello from disk" ; 15 len
+            intg len : $-std::disk::diskdata ; not really needed
     	./!disk
     	./disk2
-    	    num len : 1
+    	    intg len : 1
         ./!disk2
 
         obj testObj : {
-            txt hi : "Hello from std::testObj"
+            string hi : "Hello from std::testObj"
         }
 	./!std
 .start
@@ -1364,12 +1364,12 @@ sysenter "ios"
 .data
     ./tests
         tuple mytuple: ("hi from tuple", 9876, 12.4)
-        num index: 2
+        intg index: 2
         tuple tuple2: (0, 0, 0, 0, 0, 0) ; empty tuple
 
         obj staticObj: {
-           num nine: 9
-           txt hello: "Hello from static obj"
+           intg nine: 9
+           string hello: "Hello from static obj"
         }
     ./!tests
 
@@ -1453,7 +1453,7 @@ sysenter "ios"
 .data
     ./threads
         ./lol
-            cont myChannel : ? chan
+            cont myChannel: ? chan
         ./!lol
     ./!threads
 .start
@@ -1477,7 +1477,7 @@ sysenter "ios"
 :label_again
 .data
     ./std
-        txt fuckingshiitttt : "hello+world!"
+        string fuckingshiitttt : "hello+world!"
 .start
     mov tlr, std::fuckingshiitttt
     mov stl, 0c1
@@ -1485,7 +1485,7 @@ sysenter "ios"
     sysenter "ios"
     syscall
 .data
-        num LMFAO: $-std::fuckingshiitttt
+        intg LMFAO: $-std::fuckingshiitttt
     ./!std
 .start
     
@@ -1512,9 +1512,9 @@ sysenter "ios"
     syscall
 
 .data
-    txt toBeDeleted : "hello"
+    string toBeDeleted : "hello"
     ./funny
-        num deletedNumber : 89
+        intg deletedintgber : 89
     ./!funny
 .start
     mov tlr, toBeDeleted
@@ -1524,7 +1524,7 @@ sysenter "ios"
     syscall
     
     del &toBeDeleted ; delete the mem block it is pointin' to
-    del &funny::deletedNumber
+    del &funny::deletedintgber
     malloc 64
         mov hea, [0]
         load *, "Hello from crazy var!"
@@ -1542,8 +1542,8 @@ sysenter "ios"
         ; but we would not get any error
         ; since it is valid code
         load *, 72345
-        movaddr &funny::deletedNumber, *hea
-        mov tlr, funny::deletedNumber
+        movaddr &funny::deletedintgber, *hea
+        mov tlr, funny::deletedintgber
         mov stl, 0c1
         mov fdx, 2
         syscall
@@ -1578,15 +1578,24 @@ sysenter "ios"
     sysenter "ios"
     syscall ; print what we got
 
-    mov tlr, #funny::deletedNumber      ; # operator returns the address 
+    mov tlr, #funny::deletedintgber      ; # operator returns the address 
                                         ; object is pointing to
     mov stl, 0c1
     mov fdx, 2
     sysenter "ios"
     syscall
 
-	;mov tlr, ui::29042384_w
+.data
+    ./std
+        string myTextFromEnv: */helloworld
+    ./!std
+.start
+    mov tlr, std::myTextFromEnv
+    mov stl, 0c1
+    mov fdx, 1
+    syscall
 
+	;mov tlr, ui::29042384_w
     mov tlr, 223
     
     ret *tlr
@@ -1594,9 +1603,10 @@ sysenter "ios"
 .$using "ios"
 .data
     ./std
-        txt myText2 : "hi"
+        string myText2: "hi"
     ./!std
 .start
+    mov dlx, */helloworld ; are super hidden
     mov tlr, std::myText2
     mov stl, 0c1
     mov fdx, 1
