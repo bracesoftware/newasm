@@ -1,11 +1,6 @@
-;.$-fast as fuck boy
-
-
 .start
-cls
-;OH MY GOD
+    cls
 :startofprog
- ; Example
 .$using "ios"
 .$using "fs"
 .$using "chrono"
@@ -15,23 +10,20 @@ cls
 .$using "thread"
 .$using "txtop"
 .$using "ext"
-
+.$using "tcp"
+.$using "tuple"
 
 .data
-    num  mynumber : 736
-    decm  mydecimal : 243.3
-    txt  mytext : "Hello World"
-    txt shit : "LOL"
-    txt  return_vals : "null"
-    ref  testreference : &return_vals ; we must provide a valid value
-
-    ;char test2
-
+    num mynumber: 736
+    decm mydecimal: 243.3
+    txt mytext: "Hello World"
+    txt shit: "LOL"
+    txt return_vals: "null"
+    ref testreference: &return_vals ; we must provide a valid value
     txt  threadarg : "hello from thread"
 
 .start
     thread  testthread -> {
-        ;num test24234 : 3424
         __say 0,"thread debug 1"
         __say 0,"thread debug 3"
         __say 0,"thread debug 5"
@@ -40,6 +32,7 @@ cls
         __say 0,"thread debug 8"
         __say 0,"thread debug 9"
         __say 0,"thread debug 10"
+        
         mov tlr, "Hello from thread"
         mov stl, 0c1
         mov fdx, 1
@@ -65,14 +58,9 @@ cls
         mov tlr, "this was returned"
         mov &shit, *tlr
 
-        ;mov tlr, (proc)
-        ;    halt proc, "hi from lambda in thread"
-        ;(end)
-        ;syscall
-
-
         retf shit
 
+        ; this doesn't get executed !
         sysenter "ios"
         mov tlr, "YOU SHOULD NOT SEE THIS"
         mov stl, 0c1
@@ -182,9 +170,9 @@ cls
 
         halt  proc , "this was returned"
     end
-
     nop
-
+    nop
+    nop
     call  PROCEDURETEST
 
     sysreq  data , &return_vals
@@ -1437,7 +1425,6 @@ sysenter "ios"
     syscall
 
     mov tlr, &tests::tuple2
-    .$using "tuple"
     sysenter "tuple"
     mov fdx, 1
     syscall ; tuple size
@@ -1574,8 +1561,6 @@ sysenter "ios"
     sysenter "ios"
     syscall
 
-    .$using "tcp"
-
     def tcpaddr, "127.0.0.1:5550"
     mov tlr, tcpaddr
     mov stl, "Hello in tcp"
@@ -1610,3 +1595,5 @@ sysenter "ios"
     sysenter "ios"
     syscall
     ret 0
+
+    
