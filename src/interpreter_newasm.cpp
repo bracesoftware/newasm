@@ -162,7 +162,6 @@ is in the runtime
 
 #include "compiler/comptins.cpp"
 #include "compiler/asmc.cpp"
-#include "compiler/core.cpp"
 
 #include "vm/hardware/absolut.cpp"
 #include "runtime/memory_impl.cpp"
