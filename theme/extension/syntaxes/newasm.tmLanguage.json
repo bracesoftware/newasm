@@ -80,7 +80,7 @@
     },
     {
     "name": "operator.newasm",
-    "match": "(#|?|\\$)"
+    "match": "#"
     },
     {
       "name": "constant.numeric.newasm",

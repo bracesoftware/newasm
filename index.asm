@@ -1578,8 +1578,8 @@ sysenter "ios"
     sysenter "ios"
     syscall ; print what we got
 
-    mov tlr, # funny::deletedNumber ; # operator returns the address 
-                                    ; object is pointing to
+    mov tlr, #funny::deletedNumber      ; # operator returns the address 
+                                        ; object is pointing to
     mov stl, 0c1
     mov fdx, 2
     sysenter "ios"

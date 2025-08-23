@@ -534,6 +534,26 @@ namespace newasm
                 }
                 return;
             }
+
+            void parseAddressOf(std::string& s)
+            {
+                if(s.empty())
+                {
+                    return;
+                }
+                if(s.at(0) != '#')
+                {
+                    return;
+                }
+                auto it = newasm::variables::ids.find(s.substr(1));
+                if(it == newasm::variables::ids.end())
+                {
+                    return;
+                }
+                
+                s = std::to_string(it->second.addr);
+                return;
+            }
             
         }
     }

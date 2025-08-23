@@ -169,7 +169,7 @@
     {
       "scope": "operator.newasm",
       "settings": {
-        "foreground": "#B39EB5",
+        "foreground": "#87CEEB",
         "fontStyle": "bold"
       }
     }

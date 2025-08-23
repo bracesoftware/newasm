@@ -2,7 +2,7 @@
     <img height="300" src="readme_resources/newasm_logo.png">
 </div>
 
-<h1 align = "center">Welcome to the <i><b>New-ASM</b></i> Wiki</h1>
+<h1 align = "center">Welcome to the <i><b>NewASM</b></i> Wiki</h1>
 
 <div align="center" style="border-radius: 5px;">
     <img height="30" align="center" src="readme_resources/brace_product.png">
@@ -18,7 +18,7 @@
 Below is the simple `Hello World` program written in New-Assembly.
 
 ```asm
-.$using %ios
+.$using "ios"
 .data
     txt string : "Hello world"
     num len : $-string
@@ -28,7 +28,7 @@ Below is the simple `Hello World` program written in New-Assembly.
     mov fdx, 1
     mov bos, len
 
-    sysenter %ios
+    sysenter "ios"
     
     syscall
 
