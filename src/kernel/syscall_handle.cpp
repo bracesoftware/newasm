@@ -39,7 +39,21 @@ namespace newasm
                     std::string result = newasm::syscalls::http::get(
                         newasm::header::functions::remq(newasm::mem::regs::tlr.get_value())
                     );
-                    newasm::mem::regs::tlr.set_value("\"" + result + "\"");
+                    
+                    auto removeexc = [](std::string& input) -> std::string {
+                            for(int i = 0; i < input.size(); ++i)
+                            {
+                                if(input[i] == '"')
+                                {
+                                    input[i] = ' ';
+                                }
+                            }
+
+                            input = '"' + input + '"';
+                            return input;
+                    };
+
+                    newasm::mem::regs::tlr.set_value(removeexc(result));
                     return 1;
                 }
                 if(newasm::mem::regs::fdx == 2) // post http
@@ -58,7 +72,21 @@ namespace newasm
                         newasm::header::functions::remq(newasm::mem::regs::tlr.get_value()),
                         newasm::header::functions::remq(newasm::mem::regs::stl.get_value())
                     );
-                    newasm::mem::regs::tlr.set_value("\"" + result + "\"");
+
+                    auto removeexc = [](std::string& input) -> std::string {
+                            for(int i = 0; i < input.size(); ++i)
+                            {
+                                if(input[i] == '"')
+                                {
+                                    input[i] = ' ';
+                                }
+                            }
+
+                            input = '"' + input + '"';
+                            return input;
+                    };
+
+                    newasm::mem::regs::tlr.set_value(removeexc(result));
                     return 1;
                 }
 

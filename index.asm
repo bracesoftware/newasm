@@ -1596,7 +1596,7 @@ sysenter "ios"
     mov fdx, 1
     syscall
 
-    mov tlr, "google.com"
+    mov tlr, "https://google.com"
     mov fdx, 1
     sysenter "http"
     syscall

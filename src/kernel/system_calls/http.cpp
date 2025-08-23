@@ -37,7 +37,7 @@ namespace newasm
                 char* res = http_get(const_cast<char*>(url.c_str()));
                 std::string result(res);
                 free_string(res);
-                result = newasm::header::functions::remq(result);
+                //result = newasm::header::functions::remq(result);
                 return result;
             }
 
@@ -46,7 +46,7 @@ namespace newasm
                 char* res = http_post(const_cast<char*>(url.c_str()), const_cast<char*>(data.c_str()));
                 std::string result(res);
                 free_string(res);
-                result = newasm::header::functions::remq(result);
+                //result = newasm::header::functions::remq(result);
                 return result;
             }
         }
