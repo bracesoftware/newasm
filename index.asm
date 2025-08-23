@@ -208,14 +208,14 @@ __say 0,"debug3"
 __say 0,"debug4"
 db tlr
     mov fdx , 1
-db tlr
-db fdx
+    db tlr
+    db fdx
     syscall 
 __say 0,"debug5"
     mov  tlr , 0c1
     mov fdx , 5
     syscall  
-__say 0,"debug6"
+    __say 0,"debug6"
     mov  fdx , 4
     syscall  
 
@@ -1562,8 +1562,8 @@ sysenter "ios"
     sysenter "ios"
     syscall
 
-    def tcpaddr, "127.0.0.1:5550"
-    mov tlr, tcpaddr
+    def tcpaddr, "127.0.0.1:5550" ; compile time evaluation
+    mov tlr, tcpaddr ; <- tcpaddr is replaced at compile time
     mov stl, "Hello in tcp"
     mov fdx, 1
     sysenter "tcp"
@@ -1577,6 +1577,13 @@ sysenter "ios"
     mov stl, 0c1
     sysenter "ios"
     syscall ; print what we got
+
+    mov tlr, # funny::deletedNumber ; # operator returns the address 
+                                    ; object is pointing to
+    mov stl, 0c1
+    mov fdx, 2
+    sysenter "ios"
+    syscall
 
 	;mov tlr, ui::29042384_w
 

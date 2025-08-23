@@ -165,6 +165,13 @@
       "settings": {
         "foreground": "#26C6DA"
       }
+    },
+    {
+      "scope": "operator.newasm",
+      "settings": {
+        "foreground": "#B39EB5",
+        "fontStyle": "bold"
+      }
     }
   ]
 }

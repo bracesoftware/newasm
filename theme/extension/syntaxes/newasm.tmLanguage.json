@@ -79,8 +79,8 @@
       "match": ";.*$"
     },
     {
-      "name": "comment.line.semicolon.newasm",
-      "match": "#.*$"
+    "name": "operator.newasm",
+    "match": "(#|?|\\$)"
     },
     {
       "name": "constant.numeric.newasm",
