@@ -80,8 +80,11 @@ namespace newasm
 
             {{newasm::core::lang_inf::refs::tuple, 1}, "sys_tuple_size"},
 
-            {{newasm::core::lang_inf::refs::tcp, 1}, "sys_tuple_size"},
-            {{newasm::core::lang_inf::refs::tuple, 1}, "sys_tuple_size"}
+            {{newasm::core::lang_inf::refs::tcp, 1}, "sys_tcp_send"},
+            {{newasm::core::lang_inf::refs::tcp, 2}, "sys_tcp_recv"},
+
+            {{newasm::core::lang_inf::refs::http, 1}, "sys_http_get"},
+            {{newasm::core::lang_inf::refs::http, 2}, "sys_http_post"},
         };
     }
 }
