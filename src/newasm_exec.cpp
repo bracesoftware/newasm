@@ -2614,8 +2614,51 @@ namespace newasm
                 newasm::code_stream::jumpto = newasm::mem::labels[suf];
                 return 1;
             }
+            //jz
+            case newasm::core::lang_inf::jz:
+            {
+                if(newasm::header::data::repl)
+                {
+                    newasm::unsins(ins);
+                    return 1;
+                }
+
+                if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                {
+                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                    return 1;
+                }
+                if(newasm::mem::regs::cpr != newasm::cmp_results::equal)
+                {
+                    return 1;
+                }
+                newasm::code_stream::jump = 1;
+                newasm::code_stream::jumpto = newasm::mem::labels[suf];
+                return 1;
+            }
             //jne
             case newasm::core::lang_inf::jne:
+            {
+                if(newasm::header::data::repl)
+                {
+                    newasm::unsins(ins);
+                    return 1;
+                }
+                if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                {
+                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                    return 1;
+                }
+                if(newasm::mem::regs::cpr == newasm::cmp_results::equal)
+                {
+                    return 1;
+                }
+                newasm::code_stream::jump = 1;
+                newasm::code_stream::jumpto = newasm::mem::labels[suf];
+                return 1;
+            }
+            //jnz
+            case newasm::core::lang_inf::jnz:
             {
                 if(newasm::header::data::repl)
                 {

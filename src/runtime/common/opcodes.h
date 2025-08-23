@@ -85,6 +85,8 @@ namespace newasm
             {60, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::recv)},
             {61, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::del)},
             {62, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::movaddr)},
+            {63, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::jz)},
+            {64, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::jnz)},
 
             {100, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::__say)}
         };

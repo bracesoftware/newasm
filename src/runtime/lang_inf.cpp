@@ -129,6 +129,9 @@ namespace newasm
             const int del = 64;
             const int movaddr = 65;
 
+            const int jz = 66;
+            const int jnz = 67;
+
             const int __say = 100;
 
             const std::unordered_map<int, std::string> instruction_set = {
