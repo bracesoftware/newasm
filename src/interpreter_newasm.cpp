@@ -267,7 +267,7 @@ namespace newasm
 }
 namespace newasm
 {
-    int entry(int argc, char *argv[])
+    int entry(int argc, const char *argv[])
     {
         for(auto i = newasm::core::lang_inf::instruction_set.begin(); i != newasm::core::lang_inf::instruction_set.end(); ++i)
         {
