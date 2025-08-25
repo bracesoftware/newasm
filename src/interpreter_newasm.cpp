@@ -331,7 +331,7 @@ namespace newasm
             newasm::header::functions::vers_info();
             return 0;
         }
-
+        
         std::cout << std::endl; newasm::header::functions::vers_info();
         std::cout << "\a";
         //mode stuff
