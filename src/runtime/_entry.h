@@ -72,13 +72,32 @@ namespace newasm
 
 				return true;
 			}
+
+			std::string lenofop(const std::string& s)
+			{
+				if (s.empty() || s[0] != '$')
+					return s;
+
+				size_t i = 1;
+				while (i < s.size() && std::isspace((unsigned char)s[i])) i++; // preskoči space
+				if (i >= s.size() || s[i] != '-') return s;
+				i++;
+				while (i < s.size() && std::isspace((unsigned char)s[i])) i++; // preskoči space
+
+				// ostatak je TEXT
+				std::string text = s.substr(i);
+				return "$-" + text;
+			}
+
             void parse(std::string& suf)
             {
 				fixref(suf);
 				fixaddrof(suf);
+				suf = lenofop(suf);
 				newasm::header::functions::parseRegDeref(suf);
 				newasm::header::functions::parseAddressOf(suf);
 				bool mangled = false;
+				
 				if(newasm::header::functions::parseNamespaceSegments(suf).first)
 				{
 					newasm::progwin::api::cout("Yes NMS -> " + suf);
@@ -93,7 +112,7 @@ namespace newasm
 					/*
 						this is abnormal
 					*/
-					#ifdef eyy__slay
+					#if 0
 					if(vec.size() != newasm::mem::data_attrib[symbol_name].namespaces.size())
 					{
 						newasm::terminate(newasm::exit_codes::invalid_memacc);

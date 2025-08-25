@@ -44,17 +44,8 @@ namespace newasm
         
         public:
         _register(std::string regname, T val)
-            : name(regname), value(val), initial_value(val)
-        {
-            /*for(size_t i = 0; i < cexpr_size; ++i)
-            {
-                name_cexpr[i] = this->name[i];
-            }*/
-        }
-        /*constexpr const char* identifier_cexpr() const
-        {
-            return this->name_cexpr;
-        }*/
+            : name(regname), value(val), initial_value(val){}
+
         std::string identifier() const
         {
             return name;

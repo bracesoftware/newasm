@@ -473,7 +473,6 @@ namespace newasm
         newasm::progwin::api::flush();
 
         newasm::header::functions::pause();
-        //newasm::header::functions::wait(4000);
 
         newasm::header::functions::info("Cleaning up...");
 
@@ -481,6 +480,7 @@ namespace newasm
 
         newasm::progwin::api::exit();
 
+        
         return 0;
     }
 }

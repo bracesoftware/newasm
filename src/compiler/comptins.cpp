@@ -127,6 +127,11 @@ namespace newasm
                         newasm::kernel::cfg::HTTP = true;
                         return;
                     }
+                    if(arg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::math))
+                    {
+                        newasm::kernel::cfg::Math = true;
+                        return;
+                    }
                     //newasm::terminate(newasm::exit_codes::invalid_config);
                     return;
                 }

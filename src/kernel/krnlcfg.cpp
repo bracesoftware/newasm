@@ -35,6 +35,7 @@ namespace newasm
             bool Tuple = false;
             bool TCProtocol = false;
             bool HTTP = false;
+            bool Math = false;
         }
     }
 }

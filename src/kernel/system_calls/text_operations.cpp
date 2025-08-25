@@ -45,6 +45,48 @@ namespace newasm
                     newasm::mem::regs::tlr = quotes + newasm::header::functions::trim(newasm::header::functions::remq(newasm::mem::regs::tlr)) + quotes;
                     return 1;
                 }
+
+                void tokenize()
+                {
+                    auto addq = [](std::string& str) -> std::string {
+                        str = quotes + str + quotes;
+                        return str;
+                    };
+
+                    std::string string__ = newasm::header::functions::trim(newasm::header::functions::remq(newasm::mem::regs::tlr));
+                    std::string tuple__, token_temp__;
+
+                    std::vector<std::string> tokens;
+                    std::istringstream iss(string__);
+                    std::string token;
+
+                    while(iss >> token)
+                    {
+                        tokens.push_back(token);
+                    }
+
+                    tuple__ = "(";
+
+                    for(int i = 0; i < tokens.size(); ++i)
+                    {
+                        token_temp__ = addq(tokens[i]);
+                        tuple__.append(token_temp__);
+                        if(i + 1 == tokens.size())
+                        {
+                            tuple__.append(")");
+                            continue;
+                        }
+                        if(i + 1 != tokens.size())
+                        {
+                            tuple__.append(",");
+                            continue;
+                        }
+                    }
+
+                    newasm::mem::regs::tlr.set_value(tuple__);
+
+                    return;
+                }
             }
         }
     }
