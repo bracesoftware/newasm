@@ -1591,6 +1591,7 @@ using "ios"
     ./std
         string myTextFromEnv: */helloworld
     ./!std
+    tuple testTuple: ()
 .start
     mov tlr, std::myTextFromEnv
     mov stl, 0c1
@@ -1604,6 +1605,27 @@ using "ios"
 
     sysenter "ios"
     syscall
+
+    mov tlr, "     hi    nigg       "
+    mov fdx, 3
+    sysenter "txtop"
+    syscall
+
+    mov &testTuple, *tlr
+
+    proc printText
+        mov fdx, 1
+        mov stl, 0c1
+        sysenter "ios"
+        syscall
+        halt proc, 0
+    end
+
+    mov tlr, testTuple(0)
+    call printText
+
+    mov tlr, testTuple(1)
+    call printText
 
 	;mov tlr, ui::29042384_w
     mov tlr, 223
