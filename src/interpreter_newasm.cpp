@@ -469,7 +469,7 @@ namespace newasm
         }
 
         // Print the debug buffer
-        newasm::progwin::api::cout("Cleaning up the buffer...............\n--logout--\n");
+        newasm::progwin::api::cout("Cleaning up the buffer...............\n\tsys -> ..\n--logout--\n");
         newasm::progwin::api::flush();
 
         newasm::header::functions::pause();
