@@ -161,8 +161,8 @@ is in the runtime
 #include "runtime/namespaces.cpp"
 #include "pp/directives.cpp"
 
-#include "compiler/comptins.cpp"
 #include "compiler/asmc.cpp"
+#include "compiler/comptins.cpp"
 
 #include "vm/hardware/absolut.cpp"
 #include "runtime/memory_impl.cpp"

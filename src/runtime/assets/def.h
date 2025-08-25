@@ -68,6 +68,11 @@ namespace newasm
             std::vector<std::string> tokens;
             std::string other;
         };
+
+        std::string parse_def(std::string suf);
+        void process_comptis(std::string ins, std::string arg1);
+        void process_comptiso(std::string ins, std::string arg1, std::string arg2);
+        bool iscomptins(std::string ins);
     }
     int procline(newasm::compiler::lineData& line);
     int procline(std::string& text);

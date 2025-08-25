@@ -32,9 +32,13 @@ namespace newasm
         namespace fail
         {
             const int unmatched_syntax = 1;
+            const int constant_redef = 2;
+            const int invalid_krnlmod = 3;
 
             const std::unordered_map<int, std::string> id = {
-                {unmatched_syntax, "UnmatchedSyntax"}
+                {unmatched_syntax, "UnmatchedSyntax"},
+                {constant_redef, "ConstValRedefinition"},
+                {invalid_krnlmod, "UnknownKernelModule"}
             };
         }
 
@@ -291,7 +295,7 @@ namespace newasm
             {
                 instruction = linetokens.at(0);
             }
-            if(newasm::compiler::instructions.find(instruction) != newasm::compiler::instructions.end())
+            if(newasm::compiler::iscomptins(instruction))
             {
                 if(linetokens.size() == 3)
                 {

@@ -1558,6 +1558,7 @@ using "ios"
     free
 
     def crazyshit, "Hello again from define"
+    def crazyshit, 387
     mov tlr, crazyshit
     mov stl, 0c1
     mov fdx, 1
@@ -1631,6 +1632,8 @@ using "ios"
     mov tlr, 223
     
     ret *tlr
+
+    using "kuku"
 
 using "ios"
 .data

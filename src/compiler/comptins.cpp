@@ -36,6 +36,16 @@ namespace newasm
             std::unordered_map<std::string, std::string> defines;
         }
 
+        bool iscomptins(std::string ins)
+        {
+            auto it = newasm::compiler::instructions.find(ins);
+            if(it != newasm::compiler::instructions.end())
+            {
+                return true;
+            }
+            return false;
+        }
+
         std::string parse_def(std::string suf)
         {
             std::string tobeparsed = newasm::header::functions::trim(suf);
@@ -132,7 +142,7 @@ namespace newasm
                         newasm::kernel::cfg::Math = true;
                         return;
                     }
-                    //newasm::terminate(newasm::exit_codes::invalid_config);
+                    newasm::compiler::abort(newasm::compiler::fail::invalid_krnlmod);
                     return;
                 }
             }
@@ -152,6 +162,13 @@ namespace newasm
             {
                 case newasm::compiler::def:
                 {
+                    auto it = newasm::compiler::meta::defines.find(arg1);
+                    if(it != newasm::compiler::meta::defines.end())
+                    {
+                        newasm::compiler::abort(newasm::compiler::fail::constant_redef);
+                        return;
+                    }
+
                     newasm::compiler::meta::defines[arg1] = arg2;
                     return;
                 }
