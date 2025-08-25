@@ -2,18 +2,18 @@
 .start
     cls
 :startofprog
-.$using "ios"
-.$using "fs"
-.$using "chrono"
-.$using "cmanip"
-.$using "mem"
-.$using "net"
-.$using "thread"
-.$using "txtop"
-.$using "ext"
-.$using "tcp"
-.$using "tuple"
-.$using "http"
+using "ios"
+using "fs"
+using "chrono"
+using "cmanip"
+using "mem"
+using "net"
+using "thread"
+using "txtop"
+using "ext"
+using "tcp"
+using "tuple"
+using "http"
 
 .data
     intg myintgber: 736
@@ -1286,7 +1286,7 @@ sysenter "ios"
     mov fdx, 1
     sysenter "ext"
     syscall
-.$using "ios"
+using "ios"
 .data
     [lock]
     string myLockedstr : "Locked"
@@ -1609,7 +1609,7 @@ sysenter "ios"
     
     ret *tlr
 
-.$using "ios"
+using "ios"
 .data
     ./std
         string myText2: "hi"

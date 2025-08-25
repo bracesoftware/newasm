@@ -291,11 +291,20 @@ namespace newasm
             {
                 instruction = linetokens.at(0);
             }
-            if(newasm::compiler::instructions.find(instruction) != newasm::compiler::instructions.end() && linetokens.size() == 3)
+            if(newasm::compiler::instructions.find(instruction) != newasm::compiler::instructions.end())
             {
-                lineCompiled.type = newasm::compiler::empty;
-                newasm::compiler::process_comptiso(instruction, linetokens.at(1), linetokens.at(2));
-                return lineCompiled;
+                if(linetokens.size() == 3)
+                {
+                    lineCompiled.type = newasm::compiler::empty;
+                    newasm::compiler::process_comptiso(instruction, linetokens.at(1), linetokens.at(2));
+                    return lineCompiled;
+                }
+                if(linetokens.size() == 2)
+                {
+                    lineCompiled.type = newasm::compiler::empty;
+                    newasm::compiler::process_comptis(instruction, linetokens.at(1));
+                    return lineCompiled;
+                }
             }
             if(newasm::header::functions::ishex(instruction))
             {

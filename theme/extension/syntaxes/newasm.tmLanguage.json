@@ -26,7 +26,7 @@
     },
     {
       "name": "comptins.newasm",
-      "match":  "\\b(def)\\b"
+      "match":  "\\b(using|def)\\b"
     },
     {
       "name": "register.control.newasm",
@@ -38,7 +38,7 @@
     },
     {
       "name": "keyword.control.newasm",
-      "match":  "\\b(using)\\b"
+      "match":  "\\b(__lol__)\\b"
     },
     {
       "name": "register.control.newasm",
