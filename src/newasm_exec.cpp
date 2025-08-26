@@ -445,7 +445,7 @@ namespace newasm
                     */
                     return 1;
                 }
-                // pointers->max bs
+                // references
                 case newasm::core::lang_inf::typenames::ref:
                 {
                     if(!newasm::header::functions::isref(value) && value != static_cast<std::string>("&\%null"))
@@ -806,7 +806,7 @@ namespace newasm
 
         return 1;
     }
-    int process_iso(std::string wholeline, std::string ins, std::string suf, std::string opr)
+    int process_iso(std::string wholeline, std::string ins, std::string suf, std::string opr, newasm::compiler::lineData& lineInfo)
     {
         /*if(newasm::header::flags::compexpr)
         {
@@ -2575,7 +2575,7 @@ namespace newasm
             
         return 1;
     }
-    int process_is(std::string line, std::string ins, std::string suf)
+    int process_is(std::string line, std::string ins, std::string suf, newasm::compiler::lineData& lineInfo)
     {
         if(newasm::system::stop == 1)
         {
@@ -4567,6 +4567,7 @@ namespace newasm
         return 1;
     }
     void handle_threads(int method);
+    #if 0
     int proclineUncompiled(std::string &line)
     {
         line = newasm::header::functions::remc(line);
@@ -4976,6 +4977,7 @@ namespace newasm
         newasm::terminate(newasm::exit_codes::invalid_syntax);
         return 0;
     }
+    #endif
     int procline(newasm::compiler::lineData& line)
     {
         //std::cout << "WHAT THE FUCK :: PROCESSING -> " << line.raw << std::endl;
@@ -5255,7 +5257,7 @@ namespace newasm
                     if(line.tokens.size() == 2)
                     {
                         newasm::header::data::case_line = line.other;
-                        newasm::process_is(line.raw, line.tokens.at(0), line.tokens.at(1));
+                        newasm::process_is(line.raw, line.tokens.at(0), line.tokens.at(1), line);
                         return 1;
                     }
                     newasm::terminate(newasm::exit_codes::os_error);
@@ -5270,7 +5272,7 @@ namespace newasm
                     }
                     if(line.tokens.size() == 2)
                     {
-                        newasm::process_is(line.raw, line.tokens.at(0), line.tokens.at(1));
+                        newasm::process_is(line.raw, line.tokens.at(0), line.tokens.at(1), line);
                         return 1;
                     }
                     if(line.tokens.size() == 3)
@@ -5315,7 +5317,7 @@ namespace newasm
                                 //std::cout << "stk is " << newasm::mem::regs::stk.get_value() << std::endl;
                             }
                         }
-                        newasm::process_iso(line.raw, line.tokens.at(0), line.tokens.at(1), operand);
+                        newasm::process_iso(line.raw, line.tokens.at(0), line.tokens.at(1), operand, line);
                         return 1;
                     }
                     newasm::terminate(newasm::exit_codes::os_error);

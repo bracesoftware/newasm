@@ -426,7 +426,7 @@ namespace newasm
                 
                 return tokens;
             }
-            std::string trim(const std::string &str)
+            inline std::string trim(const std::string &str)
             {
                 auto start = str.begin();
                 auto end = str.end();
@@ -449,7 +449,7 @@ namespace newasm
 
                 return std::string(start, it + 1);
             }
-            bool isnumeric(const std::string &str)
+            inline bool isnumeric_(const std::string &str)
             {
                 std::string copy;
                 for(char i : str)
@@ -463,6 +463,28 @@ namespace newasm
                 if (copy[0] != '-' && !std::isdigit(copy[0])) return false;
                 return std::all_of(copy.begin() + 1, copy.end(), ::isdigit);
             }
+            inline bool isnumeric(const std::string& str)
+            {
+                bool first = true;
+                for (char c : str)
+                {
+                    if (std::isspace(static_cast<unsigned char>(c))) continue;
+                    if (first)
+                    {
+                        if (c != '-' && !std::isdigit(static_cast<unsigned char>(c)))
+                        {
+                            return false;
+                        }
+                        first = false;
+                    }
+                    else if (!std::isdigit(static_cast<unsigned char>(c)))
+                    {
+                        return false;
+                    }
+                }
+                return !first; // barem jedan validan char
+            }
+
             bool strfind(const std::string& str, const char c)
             {
                 return str.find(c) != std::string::npos;
@@ -477,7 +499,7 @@ namespace newasm
                     }
                 );
             }
-            void parseopr(std::string &opr,std::unordered_map<std::string, std::string> &data)
+            inline void parseopr(std::string &opr,std::unordered_map<std::string, std::string> &data)
             {
                 for(auto it = data.begin(); it != data.end(); ++it)
                 {
@@ -503,13 +525,13 @@ namespace newasm
                 }
             }
 
-            bool isfloat(const std::string& s)
+            inline bool isfloat(const std::string& s)
             {
                 int dotCount = 0;
 
-                if (s.empty()) return false;
+                if(s.empty()) return false;
 
-                for (size_t i = 0; i < s.size(); ++i)
+                for(size_t i = 0; i < s.size(); ++i)
                 {
                     char c = s[i];
                     if(std::isdigit(c))
@@ -519,8 +541,14 @@ namespace newasm
                     else if(c == '.')
                     {
                         dotCount++;
-                        if (dotCount > 1) return false;
-                        if (i == 0 || i == s.size() - 1) return false;
+                        if(dotCount > 1)
+                        {
+                            return false;
+                        }
+                        if(i == 0 || i == s.size() - 1)
+                        {
+                            return false;
+                        }
                     } 
                     else 
                     {
@@ -531,7 +559,7 @@ namespace newasm
                 return dotCount == 1; // mora biti točno jedna točka
             }
 
-            bool istext(const std::string& str)
+            inline bool istext_(const std::string& str)
             {
                 int quocount = 0;
                 for(int i = 0; i < str.size(); ++i)
@@ -543,7 +571,13 @@ namespace newasm
                 }
                 return !str.empty() && str.front() == '"' && str.back() == '"' && quocount == 2;
             }
-            bool isref(const std::string& str)
+            inline bool istext(const std::string& s)
+            {
+                return s.size() >= 2 && s.front() == '"' && s.back() == '"' &&
+                    std::count(s.begin(), s.end(), '"') == 2;
+            }
+
+            inline bool isref_(const std::string& str)
             {
                 int amp_count = 0;
                 for(int i = 0; i < str.size(); ++i)
@@ -567,7 +601,17 @@ namespace newasm
                 }*/
                 return true;
             }
-            bool ischar(const std::string &str)
+            inline bool isref(const std::string& s)
+            {
+                return s.size() > 1 && s.front() == '&' && std::count(s.begin(), s.end(), '&') == 1;
+            }
+
+            inline bool ischar(const std::string& s)
+            {
+                return s.size() == 3 && s.front() == '\'' && s.back() == '\'';
+            }
+
+            inline bool ischar_(const std::string &str)
             {
                 int singlequo_count = 0;
                 for(int i = 0; i < str.size(); ++i)
@@ -583,7 +627,7 @@ namespace newasm
             {
                 return (data.find("@") != std::string::npos);
             }
-            std::string remq(const std::string& str)
+            inline std::string remq(const std::string& str)
             {
                 if(str.length() >= 2 && str.front() == '"' && str.back() == '"')
                 {
@@ -591,7 +635,7 @@ namespace newasm
                 }
                 return str;
             }
-            std::string remsq(const std::string& str)
+            inline std::string remsq(const std::string& str)
             {
                 if(str.length() >= 2 && str.front() == '\'' && str.back() == '\'')
                 {
@@ -599,7 +643,7 @@ namespace newasm
                 }
                 return str;
             }
-            std::string remc(const std::string &line)
+            inline std::string remc(const std::string &line)
             {
                 std::size_t pos = line.find(';');
                 if(pos != std::string::npos)
@@ -608,7 +652,7 @@ namespace newasm
                 }
                 return line;
             }
-            std::string remamp(const std::string &line)
+            inline std::string remamp(const std::string &line)
             {
                 std::size_t pos = line.find('&');
                 if(pos != std::string::npos)
@@ -760,7 +804,7 @@ namespace newasm
                 //newasm::header::functions::info("IDIOT");
                 return 1;
             }
-            std::pair<bool, int> isallocref(std::string text)
+            inline std::pair<bool, int> isallocref(std::string text)
             {
                 std::string newstr = newasm::header::functions::trim(text);
 
@@ -779,7 +823,7 @@ namespace newasm
                 return {false, 0};
             }
 
-            std::pair<bool, int> isargref(std::string text)
+            inline std::pair<bool, int> isargref(std::string text)
             {
                 std::string newstr = newasm::header::functions::trim(text);
 
@@ -794,7 +838,7 @@ namespace newasm
 
                 return {false, 0};
             }
-            std::pair<bool, int> isvmemsize(std::string& text)
+            inline std::pair<bool, int> isvmemsize(std::string& text)
             {
                 std::string newstr = newasm::header::functions::trim(text);
 
@@ -812,7 +856,7 @@ namespace newasm
                 }
                 return {false, 0};
             }
-            std::pair<bool, int> isvmemref(std::string text)
+            inline std::pair<bool, int> isvmemref(std::string text)
             {
                 std::string newstr = newasm::header::functions::trim(text);
 
@@ -830,7 +874,7 @@ namespace newasm
                 }
                 return {false, 0};
             }
-            std::pair<bool, std::pair<int, int>> isrange(const std::string& input)
+            inline std::pair<bool, std::pair<int, int>> isrange(const std::string& input)
             {
                 size_t dots = input.find("..");
                 if (dots == std::string::npos) return {false, {0, 0}};
@@ -866,7 +910,7 @@ namespace newasm
                 return {true, {start, end}};
             }
 
-            bool case_typename(std::string& switched_val, std::string& suf)
+            inline bool case_typename(std::string& switched_val, std::string& suf)
             {
                 if(newasm::header::functions::isnumeric(switched_val))
                 if(suf == newasm::core::lang_inf::typenames::identifiers__.at(
@@ -895,7 +939,7 @@ namespace newasm
                 return false;
             }
 
-            std::pair<bool, std::string> isdeco(std::string text)
+            inline std::pair<bool, std::string> isdeco(std::string text)
             {
                 std::string _text_ = newasm::header::functions::trim(text);
                 std::string deco;

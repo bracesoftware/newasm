@@ -158,6 +158,7 @@ namespace newasm
     }
     namespace datatypes
     {
+        const int symbol_name = 0;
         const int number = 1;
         const int decimal = 2;
         const int text = 3;

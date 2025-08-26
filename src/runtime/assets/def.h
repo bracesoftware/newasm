@@ -67,6 +67,9 @@ namespace newasm
             int type;
             std::vector<std::string> tokens;
             std::string other;
+
+            int priArgType = 0;
+            int altArgType = 0;
         };
 
         std::string parse_def(std::string suf);

@@ -325,11 +325,55 @@ namespace newasm
                 lineCompiled.type = newasm::compiler::instruction;
                 lineCompiled.tokens = linetokens;
                 lineCompiled.tokens.at(0) = instruction;
+
+                lineCompiled.priArgType = newasm::datatypes::symbol_name;
+                lineCompiled.altArgType = newasm::datatypes::symbol_name;
+
                 for(int i = 0; i < lineCompiled.tokens.size(); i++)
                 {
                     lineCompiled.tokens.at(i) = newasm::header::functions::trim(lineCompiled.tokens.at(i));
                     lineCompiled.tokens.at(i) = newasm::compiler::parse_def(lineCompiled.tokens.at(i));
+                    // optimisation
+                    if(i == 1)
+                    {
+                        if(newasm::header::functions::isnumeric(lineCompiled.tokens.at(i)))
+                        {
+                            lineCompiled.priArgType = newasm::datatypes::number;
+                        }
+                        if(newasm::header::functions::isfloat(lineCompiled.tokens.at(i)))
+                        {
+                            lineCompiled.priArgType = newasm::datatypes::decimal;
+                        }
+                        if(newasm::header::functions::istext(lineCompiled.tokens.at(i)))
+                        {
+                            lineCompiled.priArgType = newasm::datatypes::text;
+                        }
+                        if(newasm::header::functions::ischar(lineCompiled.tokens.at(i)))
+                        {
+                            lineCompiled.priArgType = newasm::datatypes::character;
+                        }
+                    }
+                    if(i == 2)
+                    {
+                        if(newasm::header::functions::isnumeric(lineCompiled.tokens.at(i)))
+                        {
+                            lineCompiled.altArgType = newasm::datatypes::number;
+                        }
+                        if(newasm::header::functions::isfloat(lineCompiled.tokens.at(i)))
+                        {
+                            lineCompiled.altArgType = newasm::datatypes::decimal;
+                        }
+                        if(newasm::header::functions::istext(lineCompiled.tokens.at(i)))
+                        {
+                            lineCompiled.altArgType = newasm::datatypes::text;
+                        }
+                        if(newasm::header::functions::ischar(lineCompiled.tokens.at(i)))
+                        {
+                            lineCompiled.altArgType = newasm::datatypes::character;
+                        }
+                    }
                 }
+
                 return lineCompiled;
             }
 
