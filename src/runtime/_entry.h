@@ -32,7 +32,7 @@ namespace newasm
         }
         namespace functions
         {
-			bool fixref(std::string& s)
+			inline bool fixref(std::string& s)
 			{
 				if(s.empty() || s[0] != '&')
 				{
@@ -52,7 +52,7 @@ namespace newasm
 
 				return true;
 			}
-			bool fixaddrof(std::string& s)
+			inline bool fixaddrof(std::string& s)
 			{
 				if(s.empty() || s[0] != '#')
 				{
@@ -73,7 +73,7 @@ namespace newasm
 				return true;
 			}
 
-			std::string lenofop(const std::string& s)
+			inline std::string lenofop(const std::string& s)
 			{
 				if (s.empty() || s[0] != '$')
 					return s;
@@ -89,7 +89,7 @@ namespace newasm
 				return "$-" + text;
 			}
 
-            void parse(std::string& suf)
+            inline void parse(std::string& suf)
             {
 				fixref(suf);
 				fixaddrof(suf);

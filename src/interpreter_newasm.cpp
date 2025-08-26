@@ -22,6 +22,7 @@ the Initial Developer. All Rights Reserved.
 */
 
 #pragma GCC diagnostic ignored "-Wunused-result"
+#pragma unroll
 
 #include "runtime/common/os.h"
 
