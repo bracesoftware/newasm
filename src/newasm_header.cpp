@@ -205,6 +205,7 @@ namespace newasm
                 newasm::header::functions::info("Init finished.");
             }*/
             //std::string trim(const std::string &str);
+            //absolute bs
             bool check_args(std::string forarg, int argc, char *argv[], int &argid)
             {
                 if(argc > 1) for(int i = 1; i < argc; ++i)
