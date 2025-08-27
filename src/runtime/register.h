@@ -46,11 +46,11 @@ namespace newasm
         _register(std::string regname, T val)
             : name(regname), value(val), initial_value(val){}
 
-        inline std::string identifier() const noexcept
+        inline std::string identifier() const
         {
             return name;
         }
-        inline void reset() noexcept
+        inline void reset()
         {
             this->value = this->initial_value;
             for(auto i = this->thread_values.begin(); i != this->thread_values.end(); ++i)
