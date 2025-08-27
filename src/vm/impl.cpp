@@ -39,3 +39,7 @@ the Initial Developer. All Rights Reserved.
 // other bs
 #define STR(x) #x
 #define CONCAT(a, b) a##b
+
+static_assert(sizeof(int) == 4);
+static_assert(sizeof(float) == 4);
+static_assert(sizeof(char) == 1);
