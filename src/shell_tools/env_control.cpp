@@ -93,7 +93,7 @@ namespace newasm
                 {
                     auto& p = vec[i + j];
                     std::cout << newasm::header::col::kernel
-                        << std::setw(col1_width) << std::left << (p.first + "\32=")
+                        << std::setw(col1_width) << std::left << p.first
                         << newasm::header::col::gray
                         << std::setw(col2_width) << std::left << p.second
                         << newasm::header::col::reset;
