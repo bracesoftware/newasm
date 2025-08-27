@@ -41,16 +41,18 @@ using "ios" ; or any other
 --------------------------------------------------------------------------------
 
 ### Building from source
-- Use the following command to compile your own build of `NewASM`; make sure that you have G++ installed:
+- Use the following command to compile your own build of `NewASM`; make sure that you have `g++` and `go` installed:
 
 ```bash
-C:\path_to_your_compiler\g++ -static -std=c++20 index.cpp -o index.exe
+go build networking.go -buildmode=c-archive -o networking.a
+C:\path_to_your_compiler\g++ -static -std=c++20 index.cpp -o index.exe networking.a
 ```
 
 - If you are using Windows Subsystem for Linux, use the following command:
 
 ```bash
-wsl g++ -m32 -static -std=c++20 index.cpp -o index.out
+wsl go build networking.go -buildmode=c-archive -o networking.a
+wsl g++ -m64 -static -std=c++20 index.cpp -o index.out networking.a
 ```
 
 ### Downloading
