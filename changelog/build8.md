@@ -14,7 +14,14 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 using "math"
 ```
 Provides the following functions:
-
+| Module | ID    | Arguments | Description |
+| ----- | ---------------- | --------- | ----------- |
+| `math` | `1` | `tlr` | Finds `sin()` of the number inside `tlr`. Stores the result inside `tlr`. |
+| `math` | `2` | `tlr` | Finds `cos()` of the number inside `tlr`. Stores the result inside `tlr`. |
+| `math` | `3` | `tlr` | Finds `tan()` of the number inside `tlr`. Stores the result inside `tlr`. |
+| `math` | `4` | `tlr` | Finds `sqrt()` of the number inside `tlr`. Stores the result inside `tlr`. |
+| `math` | `5` | `tlr` | Finds `abs()` of the number inside `tlr`. Stores the result inside `tlr`. |
+| `math` | `6` | `tlr` | Finds `cbrt()` of the number inside `tlr`. Stores the result inside `tlr`. |
 
 ## What's changed
 * Optimizations.
