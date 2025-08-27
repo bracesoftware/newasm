@@ -40,7 +40,8 @@ namespace newasm
             {"logout",    {"/",             "Log out of your local account."}},
             {"addenv",    {"/",             "Add an environment variable."}},
             {"remenv",    {"/",             "Remove an environment variable."}},
-            {"modenv",    {"/",             "Modify an environment variable."}}
+            {"modenv",    {"/",             "Modify an environment variable."}},
+            {"printenv",  {"/",             "View all environment variables."}}
         };
         void help_info()
         {
@@ -173,15 +174,14 @@ namespace newasm
                         newasm::user::main();
                         return 1;
                     }
-                    /*
-                        NEED LOGIN
-                    */
                     if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::help__))
                     {
-                        _newasm_CHECKLOGIN;
                         newasm::ctl::help_info();
                         return 1;
                     }
+                    /*
+                        NEED LOGIN
+                    */
                     if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::repl__))
                     {
                         _newasm_CHECKLOGIN;
@@ -204,6 +204,12 @@ namespace newasm
                     {
                         _newasm_CHECKLOGIN;
                         newasm::env_control::remenv();
+                        return 1;
+                    }
+                    if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::printenv__))
+                    {
+                        _newasm_CHECKLOGIN;
+                        newasm::env_control::printenv();
                         return 1;
                     }
                 }

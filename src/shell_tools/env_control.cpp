@@ -77,5 +77,78 @@ namespace newasm
             newasm::core::env_vars::functions::mod_env(key, value);
             return 1;
         }
+
+        inline int printenv()
+        {
+            std::cout << std::endl;
+            auto& vec = newasm::core::env_vars::priv_env_var;
+
+            const int row_el = 2;            // broj elemenata po redu
+            const int col1_width = 20;       // širina kolone za ime
+            const int col2_width = 30;       // širina kolone za vrijednost
+
+            for (size_t i = 0; i < vec.size(); i += row_el)
+            {
+                for (size_t j = 0; j < row_el && (i + j) < vec.size(); ++j)
+                {
+                    auto& p = vec[i + j];
+                    std::cout 
+                        << newasm::header::col::red 
+                        << std::setw(col1_width) << std::left << (p.first + ":") 
+                        << newasm::header::col::gray 
+                        << std::setw(col2_width) << std::left << p.second
+                        << newasm::header::col::reset;
+                }
+                std::cout << std::endl;
+            }
+
+            std::cout << std::endl;
+
+            return 1;
+        }
+
+        inline int printenv_()
+        {
+            std::cout << std::endl;
+            auto& vec = newasm::core::env_vars::priv_env_var;
+
+            int remaining = vec.size();
+            int idx = 0;
+            const int row_el = 3;
+
+            const int column_size = 15;
+
+            for(int i = 0; i < vec.size(); i += row_el)
+            {
+                if(remaining < 5)
+                {
+                    for(int j = 0; j < remaining; ++j)
+                    {
+                        idx = i + j;
+                        std::cout << newasm::header::col::red << vec[idx].first << ": " << newasm::header::col::gray << vec[idx].second;
+
+                        std::cout << "\t\t";
+                        
+                        std::cout << newasm::header::col::reset;
+                    }
+                    std::cout << std::endl;
+                    break;
+                }
+                remaining -= row_el;
+                for(int j = 0; j < row_el; ++j)
+                {
+                    idx = i + j;
+                    std::cout << newasm::header::col::red << vec[idx].first << ": " << newasm::header::col::gray << vec[idx].second;
+
+                    std::cout << "\t\t";
+
+                    std::cout << newasm::header::col::reset;
+                }
+                std::cout << std::endl;
+            }
+            std::cout << newasm::header::col::reset;
+            std::cout << std::endl;
+            return 1;
+        }
     }
 }

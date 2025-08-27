@@ -300,6 +300,7 @@ namespace newasm
                 const int addenv__ = 7;
                 const int remenv__ = 8;
                 const int modenv__ = 9;
+                const int printenv__ = 10;
 
                 const std::unordered_map<int, std::string> identifiers__ = {
                     {exit__, "exit"},
@@ -310,7 +311,8 @@ namespace newasm
                     {logout__, "logout"},
                     {addenv__, "addenv"},
                     {remenv__, "remenv"},
-                    {modenv__, "modenv"}
+                    {modenv__, "modenv"},
+                    {printenv__, "printenv"}
                 };
             }
 

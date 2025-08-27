@@ -1558,9 +1558,6 @@ using "ios"
     free
 
     def crazyshit, "Hello again from define"
-    def crazyshit, 387
-    / *l ol
-    using "ehe"
 
     mov tlr, crazyshit
     mov stl, 0c1
@@ -1643,6 +1640,9 @@ using "ios"
     mov fdx, 1
     mov tlr, &testThreadAgain
     syscall
+
+    jmp hellafun
+    :hellafun
 
 	;mov tlr, ui::29042384_w
     mov tlr, 223
