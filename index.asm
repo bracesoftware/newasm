@@ -1594,6 +1594,7 @@ using "ios"
     ./!std
     
     tuple testTuple: ()
+    tuple tobemodified: (73)
 .start
     mov tlr, std::myTextFromEnv
     mov stl, 0c1
@@ -1643,6 +1644,24 @@ using "ios"
 
     jmp hellafun
     :hellafun
+
+    malloc 38
+    
+    mov hea, [0]
+    load *, 738
+    lea &tobemodified, 0
+    del &tobemodified ; get rid of memory at index 0
+    
+    lea &tobemodified, 0
+    movasx &tobemodified, *hea ; write new memory MOVAtSpecificindeX
+
+    mov tlr, tobemodified(0)
+    mov stl, 0c1
+    mov fdx, 2 ; print numbers
+    sysenter "ios"
+    syscall
+
+    free
 
 	;mov tlr, ui::29042384_w
     mov tlr, 223

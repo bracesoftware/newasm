@@ -132,6 +132,8 @@ namespace newasm
             const int jz = 66;
             const int jnz = 67;
 
+            const int movasx = 68;
+
             const int __say = 100;
 
             const std::unordered_map<int, std::string> instruction_set = {
@@ -212,6 +214,8 @@ namespace newasm
 
                 {jz, "jz"},
                 {jnz, "jnz"},
+
+                {movasx, "movasx"}, //movaddr for tuples
 
                 {__say, "__say"}
             };
