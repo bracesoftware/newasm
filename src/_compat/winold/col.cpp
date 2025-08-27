@@ -32,6 +32,9 @@ namespace newasm
             const std::string gray = "";
             const std::string kernel = "";
 
+            const std::string light_red = "";
+            const std::string light_blue = "";
+
             const std::string reset = "";
         }
         namespace style

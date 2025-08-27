@@ -33,6 +33,9 @@ namespace newasm
             const std::string gray = "\033[90m";
             const std::string kernel = "\033[38;2;85;107;47m";
 
+            const std::string light_red = "\x1b[38;5;210m";
+            const std::string light_blue = "\x1b[38;5;117m";
+
             const std::string reset = "\033[0m";
         }
         namespace style
