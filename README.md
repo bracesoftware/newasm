@@ -453,6 +453,12 @@ Perform a specific system call within a system module.
 | `tcp` | `2` | `tlr` | Receive data from the IP address stored inside `tlr`. |
 | `http` | `1` | `tlr` | `tlr` is the address. Used to get HTTP data. |
 | `http` | `2` | `tlr`, `stl` | Send data, with `tlr` being the URL and `stl` the data. |
+| `math` | `1` | `tlr` | Finds `sin()` of the number inside `tlr`. Stores the result inside `tlr`. |
+| `math` | `2` | `tlr` | Finds `cos()` of the number inside `tlr`. Stores the result inside `tlr`. |
+| `math` | `3` | `tlr` | Finds `tan()` of the number inside `tlr`. Stores the result inside `tlr`. |
+| `math` | `4` | `tlr` | Finds `sqrt()` of the number inside `tlr`. Stores the result inside `tlr`. |
+| `math` | `5` | `tlr` | Finds `abs()` of the number inside `tlr`. Stores the result inside `tlr`. |
+| `math` | `6` | `tlr` | Finds `cbrt()` of the number inside `tlr`. Stores the result inside `tlr`. |
 
 
 
