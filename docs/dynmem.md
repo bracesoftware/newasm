@@ -53,3 +53,15 @@ Hello from crazy var!
 72345
 Hello from crazy var!
 ```
+
+### `movasx` for tuples
+
+You can also change the pointer a member of a tuple is holding, with `lea` and `movasx`:
+
+```asm
+lea &tuple, index
+del &tuple
+
+lea &tuple, index
+movasx &tuple, *hea ; specific addr
+```
