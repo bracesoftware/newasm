@@ -83,19 +83,18 @@ namespace newasm
             std::cout << std::endl;
             auto& vec = newasm::core::env_vars::priv_env_var;
 
-            const int row_el = 2;            // broj elemenata po redu
-            const int col1_width = 20;       // širina kolone za ime
-            const int col2_width = 30;       // širina kolone za vrijednost
+            const int row_el = 2;
+            const int col1_width = 20;
+            const int col2_width = 30;
 
-            for (size_t i = 0; i < vec.size(); i += row_el)
+            for(size_t i = 0; i < vec.size(); i += row_el)
             {
-                for (size_t j = 0; j < row_el && (i + j) < vec.size(); ++j)
+                for(size_t j = 0; j < row_el && (i + j) < vec.size(); ++j)
                 {
                     auto& p = vec[i + j];
-                    std::cout 
-                        << newasm::header::col::red 
-                        << std::setw(col1_width) << std::left << (p.first + ":") 
-                        << newasm::header::col::gray 
+                    std::cout << newasm::header::col::kernel
+                        << std::setw(col1_width) << std::left << (p.first + "\32=")
+                        << newasm::header::col::gray
                         << std::setw(col2_width) << std::left << p.second
                         << newasm::header::col::reset;
                 }
