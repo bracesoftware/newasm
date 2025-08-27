@@ -20,6 +20,7 @@ the Initial Developer. All Rights Reserved.
 
 #define __newasm_MEMORY_SIZE 10 // mb
 #define __newasm_DISK_SIZE 20 // mb
+
 // funcs
 #define __newasm_B_TO_KB(val)   ((val) / 1024.0)
 #define __newasm_B_TO_MB(val)   ((val) / (1024.0 * 1024.0))
@@ -34,3 +35,7 @@ the Initial Developer. All Rights Reserved.
 
 #define __newasm_MB_TO_GB(val)  ((val) / 1024.0)
 #define __newasm_GB_TO_MB(val)  ((val) * 1024)
+
+// other bs
+#define STR(x) #x
+#define CONCAT(a, b) a##b

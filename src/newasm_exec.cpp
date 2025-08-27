@@ -5531,7 +5531,7 @@ namespace newasm
             lineidx = 1;
             _file.close();
 
-            std::cout << "  " << newasm::header::col::gray << "[JIT] -> Compiling...\n";
+            std::cout << "  " << newasm::header::col::gray << "[Info] -> Compiling...\n";
             newasm::compiler::data::lnidx = 1;
             for(auto i = newasm::mem::COD.begin(); i != newasm::mem::COD.end(); ++i)
             {
@@ -5540,7 +5540,11 @@ namespace newasm
             }
             if(!newasm::compiler::data::aborted)
             {
-                std::cout << "  " << newasm::header::col::gray << "[JIT] -> Compiled. Running...\n\n";
+                std::cout << "  " << newasm::header::col::gray << "[Info] -> Compiled. Running...\n\n";
+            }
+            if(newasm::compiler::data::aborted)
+            {
+                std::cout << "  " << newasm::header::col::red << "\tCompilation aborted.\n\n";
             }
             std::cout << newasm::header::col::reset;
             if(newasm::compiler::data::aborted)

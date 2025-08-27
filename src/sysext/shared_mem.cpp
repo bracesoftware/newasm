@@ -8,7 +8,7 @@ namespace newasm
     {
         class shared_memory
         {
-            void* ptr_;
+            void* ptr_ = nullptr;
         };
     }
 }

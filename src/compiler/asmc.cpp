@@ -44,8 +44,8 @@ namespace newasm
 
         void abort_(int exc)
         {
-            std::cout << newasm::header::col::red << "\t";
-            std::cout << "Compilation aborted.\n";
+            std::cout << newasm::header::col::red; // << "\t";
+            //std::cout << "Compilation aborted.\n";
             std::cout << "\tEncountered \"" << newasm::header::col::gray << newasm::header::style::underline;
             std::cout << newasm::compiler::fail::id.at(exc) << newasm::header::col::reset << newasm::header::col::red;
             std::cout << "\" on line:\n";

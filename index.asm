@@ -1558,7 +1558,10 @@ using "ios"
     free
 
     def crazyshit, "Hello again from define"
-    ;def crazyshit, 387
+    def crazyshit, 387
+    / *l ol
+    using "ehe"
+
     mov tlr, crazyshit
     mov stl, 0c1
     mov fdx, 1
@@ -1628,6 +1631,18 @@ using "ios"
 
     mov tlr, testTuple(1)
     call printText
+    
+    thread testThreadAgain -> {
+        mov tlr, "hello from thread hihi"
+        call printText
+        retf 0
+    }
+
+    await &testThreadAgain
+    sysenter "thread"
+    mov fdx, 1
+    mov tlr, &testThreadAgain
+    syscall
 
 	;mov tlr, ui::29042384_w
     mov tlr, 223
