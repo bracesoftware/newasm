@@ -112,7 +112,7 @@ namespace newasm
 
             void print(std::string text)
             {
-                std::cout << newasm::header::col::blue << newasm::header::system_info::name << "  PROGWIN API @ Info | " << newasm::header::col::gray << text << newasm::header::col::reset << std::endl;
+                std::cout << newasm::header::col::magenta << "debug: sys -> " << newasm::header::col::gray << text << newasm::header::col::reset << std::endl;
             }
 
             void pause()
@@ -133,6 +133,7 @@ namespace newasm
 
 int main()
 {
+    newasm::ipc::impl::print("Booting...");
     std::string path_ = newasm::ipc::fileloc + newasm::ipc::ipc_file;
     while(true)
     {
@@ -153,7 +154,7 @@ int main()
             std::vector<std::string> cmd = newasm::ipc::impl::split_fixed(request, ':');
             if(cmd[0] == newasm::ipc::cmd::cout)
             {
-                std::cout << newasm::header::col::magenta << newasm::header::system_info::name << " DEBUG | System output -> " << newasm::header::col::gray << cmd[1];
+                std::cout << newasm::header::col::magenta << "debug: vm -> " << newasm::header::col::gray << cmd[1];
                 std::cout << newasm::header::col::reset;
             }
             if(cmd[0] == newasm::ipc::cmd::exit)

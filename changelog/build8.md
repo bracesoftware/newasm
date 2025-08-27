@@ -6,14 +6,22 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 *NOTE*: This is a pre-release which means that this product version doesn't represent the final quality of the product - it may contain bugs and problems that aren't yet discovered.
 
 ## What's new
-- No news.
+
+* Added the new `printenv` shell command.
+
+* Added the new `"math"` kernel module:
+```asm
+using "math"
+```
+Provides the following functions:
+
 
 ## What's changed
+* Optimizations.
 * Now the `.$using` is a compile-time instruction, so instead of typing `.$using "ios"` you just do:
 ```asm
 using "ios" ; or any other
 ```
-
 
 ## Fixed issues
 
