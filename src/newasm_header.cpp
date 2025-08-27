@@ -219,7 +219,7 @@ namespace newasm
                 }
                 return false;
             }
-            void vers_info()
+            void vers_info() noexcept
             {
                 std::string arch;
                 std::string os;
@@ -971,7 +971,6 @@ namespace newasm
                     std::this_thread::sleep_for(std::chrono::milliseconds(100));
                 }
             }
-
 
             void pause()
             {
