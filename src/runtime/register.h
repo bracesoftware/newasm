@@ -33,7 +33,7 @@ namespace newasm
         template<typename T>
         concept number = std::is_arithmetic_v<T>;
     }
-    template<typename T> class _register
+    template<typename T> class _register final
     {
         private:
         std::string name;
@@ -46,11 +46,11 @@ namespace newasm
         _register(std::string regname, T val)
             : name(regname), value(val), initial_value(val){}
 
-        inline std::string identifier() const
+        inline std::string identifier() const noexcept
         {
             return name;
         }
-        inline void reset()
+        inline void reset() noexcept
         {
             this->value = this->initial_value;
             for(auto i = this->thread_values.begin(); i != this->thread_values.end(); ++i)

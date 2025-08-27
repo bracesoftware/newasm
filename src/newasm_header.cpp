@@ -396,7 +396,7 @@ namespace newasm
                 return result.str();
             }
 
-            std::vector<std::string> split(const std::string &str, char delimiter)
+            inline std::vector<std::string> split(const std::string &str, char delimiter)
             {
                 std::vector<std::string> tokens;
                 std::string token;
@@ -410,7 +410,7 @@ namespace newasm
 
                 return tokens;
             }
-            std::vector<std::string> split_fixed(const std::string &str, char delimiter)
+            inline std::vector<std::string> split_fixed(const std::string &str, char delimiter)
             {
                 size_t pos = str.find(delimiter);
                 std::vector<std::string> tokens;
