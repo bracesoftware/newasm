@@ -184,20 +184,20 @@ namespace newasm
             }
             void err(std::string text)
             {
-                std::cout << newasm::header::col::red << newasm::header::system_info::name << " PROGRAM THREAD @ System error | " << newasm::header::col::reset << text << std::endl;
+                std::cout << newasm::header::col::red << "error: " << newasm::header::col::reset << text << std::endl;
             }
             void wrn(std::string text)
             {
-                std::cout << newasm::header::col::yellow << newasm::header::system_info::name << "  PROGRAM THREAD @ System warning | " << newasm::header::col::reset << text << std::endl;
+                std::cout << newasm::header::col::yellow << "warning: " << newasm::header::col::reset << text << std::endl;
             }
             void info(std::string text)
             {
-                std::cout << newasm::header::col::blue << newasm::header::system_info::name << "  PROGRAM THREAD @ System info | " << newasm::header::col::gray << text << newasm::header::col::reset << std::endl;
+                std::cout << newasm::header::col::blue << "info: " << newasm::header::col::gray << text << newasm::header::col::reset << std::endl;
             }
             void dbg(std::string text)
             {
                 if(newasm::header::settings::debug == 1)
-                    std::cout << newasm::header::col::gray << newasm::header::system_info::name << "   PROGRAM THREAD @ Debug | " << newasm::header::col::reset << text << std::endl;
+                    std::cout << newasm::header::col::gray << "debug: " << newasm::header::col::reset << text << std::endl;
             }
             
             /*void init()
