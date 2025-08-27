@@ -62,7 +62,8 @@
 					{
 						"scope": "register.control.newasm",
 						"settings": {
-							"foreground": "#A1C4E8"
+							"foreground": "#A1C4E8",
+							"fontStyle": "italic"
 						}
 					},
 					{

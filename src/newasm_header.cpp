@@ -485,11 +485,11 @@ namespace newasm
                 return !first; // barem jedan validan char
             }
 
-            bool strfind(const std::string& str, const char c)
+            inline bool strfind(const std::string& str, const char c)
             {
                 return str.find(c) != std::string::npos;
             }
-            bool isalphanum(const std::string& str)
+            inline bool isalphanum(const std::string& str)
             {
                 return !str.empty() && std::all_of
                 (

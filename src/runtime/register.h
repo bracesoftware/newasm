@@ -46,11 +46,11 @@ namespace newasm
         _register(std::string regname, T val)
             : name(regname), value(val), initial_value(val){}
 
-        std::string identifier() const
+        inline std::string identifier() const
         {
             return name;
         }
-        void reset()
+        inline void reset()
         {
             this->value = this->initial_value;
             for(auto i = this->thread_values.begin(); i != this->thread_values.end(); ++i)
@@ -58,7 +58,7 @@ namespace newasm
                 i->second = this->initial_value;
             }
         }
-        void reset(std::string thread_name)
+        inline void reset(std::string thread_name)
         {
             thread_values[thread_name] = initial_value;
         }
@@ -124,7 +124,7 @@ namespace newasm
             }
             return value;
         }
-        friend std::ostream& operator<<(std::ostream& os, const _register<T>& r)
+        inline friend std::ostream& operator<<(std::ostream& os, const _register<T>& r)
         {
             if(newasm::thread_line)
             {
@@ -134,7 +134,7 @@ namespace newasm
             os << r.value;
             return os;
         }
-        friend std::istream& operator>>(std::istream& is, _register<T>& r)
+        inline friend std::istream& operator>>(std::istream& is, _register<T>& r)
         {
             if(newasm::thread_line)
             {

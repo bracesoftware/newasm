@@ -1592,6 +1592,7 @@ using "ios"
     ./std
         string myTextFromEnv: */helloworld
     ./!std
+    
     tuple testTuple: ()
 .start
     mov tlr, std::myTextFromEnv
@@ -1638,6 +1639,9 @@ using "ios"
 .data
     ./std
         string myText2: "hi"
+        intg sus: 1
+        float lol: 3
+        char xd: 3
     ./!std
 .start
     mov dlx, */helloworld ; are super hidden

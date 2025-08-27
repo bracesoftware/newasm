@@ -104,6 +104,8 @@ namespace newasm
         auto start = std::chrono::high_resolution_clock::now();
         auto end = std::chrono::high_resolution_clock::now();
     }
+
+    void* test = nullptr;
 }
 
 /*
