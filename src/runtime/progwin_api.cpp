@@ -17,7 +17,7 @@ the Initial Developer. All Rights Reserved.
 
 */
 
-static void send_req(const std::string& msg)
+inline static void send_req(const std::string& msg)
 {
     std::string path = newasm::core::constants::data_folder+
         newasm::core::constants::separator+
@@ -42,17 +42,17 @@ namespace newasm
         std::string buffer;
         namespace api
         {
-            void cout(std::string text)
+            inline void cout(std::string text)
             {
                 //send_req("cout:"+text+"\n");
                 newasm::progwin::buffer = newasm::progwin::buffer + text + "\n";
             }
-            void flush()
+            inline void flush()
             {
                 send_req("cout:" + newasm::progwin::buffer);
                 newasm::progwin::buffer = "";
             }
-            void exit()
+            inline void exit()
             {
                 send_req("exit:0");
             }
