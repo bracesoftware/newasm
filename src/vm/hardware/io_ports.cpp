@@ -27,7 +27,7 @@ namespace newasm
             private:
             mutable int address;
             mutable T value;
-            
+
             public:
             IOPort(int addr, T val)
             : address(addr), value(val){}
@@ -55,7 +55,7 @@ namespace newasm
             newasm::hardware::IOPort<int> dskr(12, 0);
         }
 
-        void outIOPOrt(int id) // write to port
+        inline void outIOPOrt(int id) // write to port
         {
             if(id == newasm::hardware::IO_ports::txtcol.get_addr()) // text color on screen
             {
@@ -128,7 +128,7 @@ namespace newasm
             }
             return;
         }
-        std::string inIOPort(int id) // read from port
+        inline std::string inIOPort(int id) // read from port
         {
             std::string output;
             if(id == newasm::hardware::IO_ports::txtcol.get_addr())

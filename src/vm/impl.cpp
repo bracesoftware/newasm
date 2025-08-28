@@ -43,4 +43,15 @@ the Initial Developer. All Rights Reserved.
 static_assert(sizeof(int) == 4);
 static_assert(sizeof(float) == 4);
 static_assert(sizeof(char) == 1);
-static_assert(sizeof(double) == 2 * sizeof(float));
+
+namespace newasm
+{
+    inline namespace foo
+    {
+        //inlinegg
+    }
+    namespace foo
+    {
+        //gg
+    }
+}
