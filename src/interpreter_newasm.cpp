@@ -167,6 +167,7 @@ is in the runtime
 #include "compiler/asmc.cpp"
 #include "compiler/comptins.cpp"
 
+#include "vm/hardware/cpu_cache.cpp"
 #include "vm/hardware/absolut.cpp"
 #include "runtime/memory_impl.cpp"
 #include "newasm_exec.cpp"

@@ -33,6 +33,9 @@ namespace newasm
                 return MEM_SIZE;
             }
 
+            // free = 0
+            // occupied = 1
+
             inline int get_free_alloc(int bytes) noexcept
             {
                 for(int i = 0; i <= MEM_SIZE - bytes; ++i)
