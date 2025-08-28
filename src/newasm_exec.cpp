@@ -573,7 +573,7 @@ namespace newasm
                                 return 1;
                             }
                     
-                            newasm::containers::bit_arrays[name] = new newasm::containers::bit_array<512>();
+                            newasm::containers::bit_arrays[name] = new newasm::containers::bit_array<newasm::containers::default_size>();
                             newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
                             return 1;
                         }
@@ -586,7 +586,7 @@ namespace newasm
                                 return 1;
                             }
 
-                            newasm::containers::binary_trees[name] = new newasm::containers::binary_tree<512>();
+                            newasm::containers::binary_trees[name] = new newasm::containers::binary_tree<newasm::containers::default_size>();
                             newasm::containers::binary_trees.at(name)->set_at__(0,0);
                             newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
                             return 1;

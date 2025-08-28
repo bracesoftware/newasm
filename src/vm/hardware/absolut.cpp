@@ -171,7 +171,7 @@ namespace newasm
             template<typename T>
             inline int overwrite(int addr, T value)
             {
-                newasm::progwin::api::cout("Overwriting address: " + std::to_string(addr));
+                //newasm::progwin::api::cout("Overwriting address: " + std::to_string(addr));
                 if(__memory_free__.get_at(addr) == 0)
                 {
                     newasm::terminate(newasm::exit_codes::seg_fault);

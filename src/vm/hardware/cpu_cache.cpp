@@ -34,9 +34,15 @@ namespace newasm
             // free = 0
             // occupied = 1
             public:
+            inline void init() noexcept
+            {
+                //eh
+                return;
+            }
+
             inline bool find(int addr, char data[])
             {
-                register int temp;
+                int temp;
                 for(int i = 0; i <= CACHE_SIZE - t_linesize; i = i + t_linesize)
                 {
                     if(free_cache__.get_at(i) == 0)
@@ -69,7 +75,7 @@ namespace newasm
 
             inline void remove(int addr)
             {
-                register int temp;
+                int temp;
                 for(int i = 0; i <= CACHE_SIZE - t_linesize; i = i + t_linesize)
                 {
                     if(free_cache__.get_at(i) == 1)
