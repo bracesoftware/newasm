@@ -23,7 +23,7 @@ namespace newasm
     {
         const std::string disk_file = newasm::core::constants::data_folder + 
         newasm::core::constants::separator + newasm::core::constants::disk_file;
-        class DISK_
+        class DISK_ final
         {
             private:
             std::string path;
@@ -48,7 +48,7 @@ namespace newasm
                 return this->volume_label;
             }
 
-            void format(int size_)
+            inline void format(int size_)
             {
                 std::ofstream file(path, std::ios::binary);
                 for(int i = 0; i < size_*1024*1024; ++i) file.put(0);
@@ -56,12 +56,12 @@ namespace newasm
                 this->size = size_;
             }
 
-            void format()
+            inline void format()
             {
                 this->format(this->size);
             }
 
-            std::string readDisk_(std::streampos start, std::streampos end)
+            inline std::string readDisk_(std::streampos start, std::streampos end)
             {
                 std::ifstream file(this->path, std::ios::binary);
                 if (!file) return std::string("");
@@ -77,12 +77,12 @@ namespace newasm
                 return buffer;
             }
 
-            void readDisk(int start, int end)
+            inline void readDisk(int start, int end)
             {
                 this->data = this->readDisk_(start,end);
             }
 
-            void writeToDisk(std::streampos start, std::streampos end, const std::string& content)
+            inline void writeToDisk(std::streampos start, std::streampos end, const std::string& content)
             {
                 std::fstream file(this->path, std::ios::in | std::ios::out | std::ios::binary);
 

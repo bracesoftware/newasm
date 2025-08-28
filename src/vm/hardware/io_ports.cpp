@@ -21,24 +21,26 @@ namespace newasm
 {
     namespace hardware
     {
-        template<typename T> class IOPort
+        template<typename T>
+        class IOPort final
         {
             private:
-                int address;
-                T value;
+            mutable int address;
+            mutable T value;
+            
             public:
             IOPort(int addr, T val)
             : address(addr), value(val){}
 
-            int get_addr() const
+            inline int get_addr() const
             {
                 return this->address;
             }
-            T get_value() const
+            inline T get_value() const
             {
                 return this->value;
             }
-            void set_value(T val)
+            inline void set_value(T val)
             {
                 this->value = val;
             }

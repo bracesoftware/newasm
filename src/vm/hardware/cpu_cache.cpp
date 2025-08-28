@@ -27,8 +27,8 @@ namespace newasm
         {
             private:
             //constexpr int cache_size__ = t_cachesize * 1024;
-            unsigned char __cache__[CACHE_SIZE]; // KILOBYTES
-            unsigned char __temp__[t_linesize];
+            mutable unsigned char __cache__[CACHE_SIZE]; // KILOBYTES
+            mutable unsigned char __temp__[t_linesize];
 
             newasm::containers::bit_array<CACHE_SIZE> free_cache__;
             // free = 0
