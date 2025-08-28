@@ -360,11 +360,11 @@ namespace newasm
 
                 return tokens;
             }
-            int wait(int milliseconds)
+            inline int wait(int milliseconds) noexcept
             {
-                if (milliseconds < 0) return -1; // negativno vrijeme nema smisla
+                if (milliseconds < 0) return -1;
                 std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
-                return 0; // sve ok
+                return 0;
             }
             const std::vector<std::string> lambda_ = {
                 "proc", "end"
