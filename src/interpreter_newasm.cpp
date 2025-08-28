@@ -162,7 +162,7 @@ is in the runtime
 #include "kernel/syscall_handle.cpp"
 
 #include "runtime/namespaces.cpp"
-#include "pp/directives.cpp"
+#include "runtime/pp/directives.cpp"
 
 #include "compiler/asmc.cpp"
 #include "compiler/comptins.cpp"
