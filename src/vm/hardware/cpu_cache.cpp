@@ -21,6 +21,13 @@ namespace newasm
 {
     namespace hardware
     {
+        template<typename _Type>
+        concept _CachableType = (
+            std::is_same_v<_Type, int> or
+            std::is_same_v<_Type, char> or
+            std::is_same_v<_Type, float>
+        );
+
         #define CACHE_SIZE (t_cachesize * 1024)
         template<int t_cachesize, int t_linesize>
         class CPU_CACHE__ final
@@ -40,7 +47,8 @@ namespace newasm
                 return;
             }
 
-            inline bool find(int addr, char data[])
+            template<newasm::hardware::_CachableType T>
+            inline bool find(int addr, T& data)
             {
                 //linear cache search
                 int temp;
@@ -53,14 +61,15 @@ namespace newasm
                     std::memcpy(&temp, &__cache__[i], sizeof(int));
                     if(temp == addr)
                     {
-                        std::memcpy(data, &__cache__[i], t_linesize);
+                        std::memcpy(&data, &__cache__[i + sizeof(int)], sizeof(T));
                         return true;
                     }
                 }
                 return false;
             }
 
-            inline void add(int addr, int data)
+            template<newasm::hardware::_CachableType T>
+            inline void add(int addr, T data)
             {
                 // add addr to cache
                 for(int i = 0; i <= CACHE_SIZE - t_linesize; i = i + t_linesize)
@@ -70,7 +79,7 @@ namespace newasm
                     {
                         //store the address for lookup and value
                         std::memcpy(&__cache__[i], &addr, sizeof(int));
-                        std::memcpy(&__cache__[i + sizeof(int)], &data, sizeof(int));
+                        std::memcpy(&__cache__[i + sizeof(int)], &data, sizeof(T));
                         free_cache__.set_at(i, 1);
                         return;
                     }
