@@ -42,6 +42,7 @@ namespace newasm
 
             inline bool find(int addr, char data[])
             {
+                //linear cache search
                 int temp;
                 for(int i = 0; i <= CACHE_SIZE - t_linesize; i = i + t_linesize)
                 {
@@ -61,10 +62,13 @@ namespace newasm
 
             inline void add(int addr, int data)
             {
+                // add addr to cache
                 for(int i = 0; i <= CACHE_SIZE - t_linesize; i = i + t_linesize)
                 {
+                    // if block empty
                     if(free_cache__.get_at(i) == 0)
                     {
+                        //store the address for lookup and value
                         std::memcpy(&__cache__[i], &addr, sizeof(int));
                         std::memcpy(&__cache__[i + sizeof(int)], &data, sizeof(int));
                         free_cache__.set_at(i, 1);
@@ -83,6 +87,8 @@ namespace newasm
                         std::memcpy(&temp, &__cache__[i], sizeof(int));
                         if(temp == addr)
                         {
+                            // we don't waste time on deleting the data
+                            // it'll be eventually overwritten
                             free_cache__.set_at(i, 0);
                             return;
                         }
