@@ -42,16 +42,6 @@ namespace newasm
 
             mutable __line__ __cache__[t_cachesize];
 
-            public:
-            inline void init() noexcept
-            {
-                for(int i = 0; i < t_cachesize; ++i)
-                {
-                    __cache__[i].addr = invalid_address;
-                }
-                return;
-            }
-
             // A block of RAM memory links to a specific cache line index
             // Doesn't require linear search, and thus cache is way faster than RAM,
             // cuz we have a direct memory access
@@ -65,6 +55,16 @@ namespace newasm
                     (address + 1) + (__newasm_LINEBYTES - (((address + 1) + __newasm_LINEBYTES) % __newasm_LINEBYTES)))
                     / __newasm_LINEBYTES) - 1
                 );
+            }
+
+            public:
+            inline void init() noexcept
+            {
+                for(int i = 0; i < t_cachesize; ++i)
+                {
+                    __cache__[i].addr = invalid_address;
+                }
+                return;
             }
 
             template<newasm::hardware::_CachableType T>
