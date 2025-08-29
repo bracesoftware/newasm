@@ -420,6 +420,26 @@ namespace newasm
 				}
                 return;
             }
+
+			template<bool _procNameParse>
+			inline void parse(std::string& suf)
+			{
+				if constexpr(_procNameParse == true)
+				{
+					if(newasm::header::functions::parseNamespaceSegments(suf).first)
+					{
+						newasm::progwin::api::cout("Yes proc NMS -> " + suf);
+						auto i = newasm::header::functions::parseNamespaceSegments(suf);
+						std::string symbol_name = i.second.back();
+						auto vec = i.second;
+						vec.pop_back(); // namespace list
+						
+						suf = newasm::header::functions::mangleName(vec, symbol_name);
+					}
+					return;
+				}
+				return;
+			}
         }
     }
 }

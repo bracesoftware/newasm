@@ -57,6 +57,9 @@ namespace newasm
         namespace functions
         {
             void parse(std::string& suf);
+
+            template<bool _procNameParse>
+            void parse(std::string& suf);
         }
     }
     namespace compiler

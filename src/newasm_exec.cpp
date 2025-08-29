@@ -3614,6 +3614,9 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::inline_proc);
                     return 1;
                 }
+
+                newasm::runtime::functions::parse<true>(suf);
+
                 if(newasm::header::functions::isalphanum(suf))
                 {
                     if(!newasm::mem::functions::datavalid(suf,newasm::mem::funcs))
@@ -3621,6 +3624,7 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::invalid_proc);
                         return 1;
                     }
+
                     newasm::callproc(suf);
                     return 1;
                 }
@@ -3638,6 +3642,12 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::invalid_syntax);
                     return 1;
                 }
+
+                if(newasm::nms::count != 0)
+                {
+                    suf = newasm::header::functions::mangleName(newasm::nms::stack, suf);
+                }
+
                 if(newasm::header::functions::isalphanum(suf))
                 {
                     if(newasm::mem::functions::datavalid(suf,newasm::mem::funcs))
@@ -5105,7 +5115,10 @@ namespace newasm
             // NAMESPACE
             case newasm::compiler::namespace__:
             {
-                if(newasm::system::section != newasm::code_stream::sections::data)
+                if(
+                    newasm::system::section != newasm::code_stream::sections::data and
+                    newasm::system::section != newasm::code_stream::sections::start
+                )
                 {
                     newasm::terminate(newasm::exit_codes::invalid_syntax);
                     return 1;

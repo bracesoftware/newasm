@@ -1676,6 +1676,27 @@ using "ios"
 
     [volatile] ; just a test
 
+    ./std
+        ./io
+            proc print
+                mov stl, 0c0
+                mov fdx, 1
+                sysenter "ios"
+                syscall
+                halt proc, 0
+            end
+        ./!io
+    ./!std
+
+    mov tlr, "hello from namespace func"
+    call std::io::print
+
+    mov tlr, std::version
+    mov fdx, 2
+    mov stl, 0c1
+    sysenter "ios"
+    syscall
+
 	;mov tlr, ui::29042384_w
     mov tlr, 223
     

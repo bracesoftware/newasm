@@ -103,6 +103,8 @@ namespace newasm
             const std::string inv_reg_val = "[newasm] __ptr -> Segmentation fault.";
             const int inv_ireg_val = -999999;
             const float inv_freg_val = static_cast<float>(-999999);
+
+            const std::string std_library = "std.newasm";
         }
         namespace settings
         {

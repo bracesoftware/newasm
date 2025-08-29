@@ -23,8 +23,32 @@ namespace newasm
     {
         namespace impl
         {
+            const std::string cfg_manip = "__newasm_cfg_manip";
             void processDirectives(std::string directive, std::string arg)
             {
+                directive = newasm::header::functions::trim(directive);
+                arg = newasm::header::functions::trim(arg);
+                if(directive == cfg_manip)
+                {
+                    auto it = newasm::header::functions::split_fixed(arg, '=');
+                    it[0] = newasm::header::functions::trim(it[0]);
+                    it[1] = newasm::header::functions::trim(it[1]);
+
+                    if(it[0] == "__autobos")
+                    {
+                        if(it[1] == "__TRUE")
+                        {
+                            newasm::header::flags::autobos = true;
+                            return;
+                        }
+                        if(it[1] == "__FALSE")
+                        {
+                            newasm::header::flags::autobos = false;
+                            return;
+                        }
+                    }
+                    return;
+                }
                 newasm::terminate(newasm::exit_codes::unknown_directive);
                 return;
             }

@@ -188,6 +188,7 @@ namespace fs = std::filesystem;
 
 namespace newasm
 {
+    bool use_std = false;
     namespace vers
     {
         int main()
@@ -460,6 +461,26 @@ namespace newasm
         /*
             Executing
         */
+
+        #if 0
+        auto use_stdlib = std::getenv("NEWASM_STD");
+        std::string option = use_stdlib ? use_stdlib : "";
+        if(option == "1")
+        {
+            newasm::use_std = true;
+        }
+
+        if(newasm::use_std)
+        {
+            if(!std::filesystem::exists(newasm::header::constants::std_library))
+            {
+                newasm::header::functions::err("Standard library not found.");
+                return 1;
+            }
+            newasm::procfile(newasm::header::constants::std_library); // firstly get the stl goin
+        }
+        #endif
+
         newasm::header::functions::trim(newasm::header::settings::script_file);
         newasm::execute(newasm::header::settings::script_file, -1);
         std::chrono::duration<double, std::milli> elapsed = newasm::perf::end - newasm::perf::start;
