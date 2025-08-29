@@ -1663,6 +1663,17 @@ using "ios"
 
     free
 
+.data
+    [volatile]
+    intg number: 3274
+    [!volatile]
+.start
+    mov tlr, number
+    mov stl, 0c1
+    mov fdx, 2
+    sysenter "ios"
+    syscall
+
 	;mov tlr, ui::29042384_w
     mov tlr, 223
     
