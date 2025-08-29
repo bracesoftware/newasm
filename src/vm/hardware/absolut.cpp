@@ -134,6 +134,8 @@ namespace newasm
                 {
                     __memory_free__.set_at(i, 1); // tell the thing it is occupied
                 }
+
+                newasm::hardware::cpuCache.cache_addr<T>(address, value);
                 //newasm::mem::regs::hea.set_value(get_heap_end());
                 return address;
             }
@@ -165,6 +167,8 @@ namespace newasm
                     __memory_free__.set_at(i, 1); // tell the thing it is occupied
                 }
                 //newasm::mem::regs::hea.set_value(get_heap_end());
+
+                newasm::hardware::cpuCache.cache_addr<T>(address, value);
                 return address;
             }
 
@@ -214,6 +218,7 @@ namespace newasm
                 }
                 // We're modifying an existing memory block, thus we just have to change it
                 std::memcpy(&__memory__[addr], &value, sizeof(T));
+                newasm::hardware::cpuCache.cache_addr<T>(addr, value);
                 return addr;
             }
 
@@ -228,6 +233,15 @@ namespace newasm
                     std::memcpy(buffer.data(), &__memory__[addr + sizeof(int)], buffer_len);
                     return buffer;
                 }
+
+                void* cache = newasm::hardware::cpuCache.find_addr<T>(addr);
+                if(cache != nullptr)
+                {
+                    T value;
+                    std::memcpy(&value, cache, sizeof(T));
+                    return value;
+                }
+
                 T value;
                 std::memcpy(&value, &__memory__[addr], sizeof(T));
                 return value;

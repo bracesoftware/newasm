@@ -25,7 +25,8 @@ namespace newasm
         concept _CachableType = (
             std::is_same_v<_Type, int> or
             std::is_same_v<_Type, char> or
-            std::is_same_v<_Type, float>
+            std::is_same_v<_Type, float> or
+            std::is_same_v<_Type, std::string> // so ram is happy
         );
 
         template<int t_cachesize>
