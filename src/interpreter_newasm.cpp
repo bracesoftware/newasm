@@ -59,7 +59,7 @@ the Initial Developer. All Rights Reserved.
 #include <type_traits>
 #include <concepts>
 
-#include "vm/3rd.cpp"
+#include "vm/external.cpp"
 #include "sysext/maps.cpp"
 #include "vm/impl.cpp"
 #include "sysext/csimple.cpp"
@@ -73,8 +73,8 @@ the Initial Developer. All Rights Reserved.
 #include "kernel/threads/_flags.cpp"
 
 // Resources (assets) used in the program
-#include "runtime/assets/text.h"
-#include "runtime/assets/def.h"
+#include "runtime/assets/text.cpp"
+#include "runtime/assets/def.cpp"
 
 namespace newasm
 {
@@ -274,7 +274,7 @@ namespace newasm
 namespace newasm
 {
     int entry(int argc, char *argv[])
-    {
+    {   
         for(auto i = newasm::core::lang_inf::instruction_set.begin(); i != newasm::core::lang_inf::instruction_set.end(); ++i)
         {
             newasm::inverted_ins[i->second] = i->first;
