@@ -11,6 +11,6 @@ Decorators manipulate how your variables and other features work in the backend.
 ```
 
 | Decorator | Description |
-| ---------------- | --------- | ----------- |
+| ---------------- | ----------- |
 | `[lock]` | This decorator marks variables locked or hidden from threads. |
 | `[volatile]` | This decorator disables the variable caching. |
