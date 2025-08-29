@@ -23,6 +23,10 @@ Provides the following functions:
 | `math` | `5` | `tlr` | Finds `abs()` of the number inside `tlr`. Stores the result inside `tlr`. |
 | `math` | `6` | `tlr` | Finds `cbrt()` of the number inside `tlr`. Stores the result inside `tlr`. |
 
+* Added the new caching system which allows faster memory access.
+
+* Added the `[volatile]` decorator to toggle the CPU caching system.
+
 ## What's changed
 * Optimizations.
 * Now the `.$using` is a compile-time instruction, so instead of typing `.$using "ios"` you just do:
