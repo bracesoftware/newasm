@@ -23,9 +23,6 @@ the Initial Developer. All Rights Reserved.
 
 #define __newasm__integer_bits (sizeof(int)*8)
 
-
-#include <iostream>
-
 namespace newasm
 {
     namespace containers
