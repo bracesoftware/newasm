@@ -271,6 +271,9 @@ namespace newasm
         }
     }
 }
+
+#include "vm/selfhost/procfile.cpp"
+
 namespace newasm
 {
     int entry(int argc, char *argv[])
