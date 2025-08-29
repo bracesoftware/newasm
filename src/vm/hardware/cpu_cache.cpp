@@ -28,85 +28,73 @@ namespace newasm
             std::is_same_v<_Type, float>
         );
 
-        #define CACHE_SIZE (t_cachesize * 1024)
-        template<int t_cachesize, int t_linesize>
+        template<int t_cachesize>
         class CPU_CACHE__ final
         {
             private:
-            //constexpr int cache_size__ = t_cachesize * 1024;
-            mutable unsigned char __cache__[CACHE_SIZE]; // KILOBYTES
-            mutable unsigned char __temp__[t_linesize];
+            const int invalid_address = (-1);
+            struct __line__
+            {
+                int addr;
+                char value[4];
+            }; // 8 bytes per line
 
-            newasm::containers::bit_array<CACHE_SIZE> free_cache__;
-            // free = 0
-            // occupied = 1
+            mutable __line__ __cache__[t_cachesize];
+
             public:
             inline void init() noexcept
             {
-                //eh
+                for(int i = 0; i < t_cachesize; ++i)
+                {
+                    __cache__[i].addr = invalid_address;
+                }
                 return;
             }
 
             template<newasm::hardware::_CachableType T>
-            inline bool find(int addr, T& data)
+            inline void* find(int address)
             {
-                //linear cache search
-                int temp;
-                for(int i = 0; i <= CACHE_SIZE - t_linesize; i = i + t_linesize)
+                for(int i = 0; i < t_cachesize; ++i)
                 {
-                    if(free_cache__.get_at(i) == 0)
+                    if(__cache__[i].addr == address)
                     {
-                        continue;
-                    }
-                    std::memcpy(&temp, &__cache__[i], sizeof(int));
-                    if(temp == addr)
-                    {
-                        std::memcpy(&data, &__cache__[i + sizeof(int)], sizeof(T));
-                        return true;
+                        return (void*)__cache__[i].value;
                     }
                 }
-                return false;
+                return nullptr;
             }
 
             template<newasm::hardware::_CachableType T>
-            inline void add(int addr, T data)
+            inline void add(int address, T value)
             {
-                // add addr to cache
-                for(int i = 0; i <= CACHE_SIZE - t_linesize; i = i + t_linesize)
+                T temp;
+                for(int i = 0; i < t_cachesize; ++i)
                 {
-                    // if block empty
-                    if(free_cache__.get_at(i) == 0)
+                    if(__cache__[i].addr != invalid_address)
                     {
-                        //store the address for lookup and value
-                        std::memcpy(&__cache__[i], &addr, sizeof(int));
-                        std::memcpy(&__cache__[i + sizeof(int)], &data, sizeof(T));
-                        free_cache__.set_at(i, 1);
+                        __cache__[i].addr = address;
+                        temp = value;
+                        std::memcpy(&__cache__[i].value, &temp, sizeof(T));
                         return;
                     }
                 }
+                return;
             }
 
-            inline void remove(int addr)
+            inline void remove(int address)
             {
-                int temp;
-                for(int i = 0; i <= CACHE_SIZE - t_linesize; i = i + t_linesize)
+                for(int i = 0; i < t_cachesize; ++i)
                 {
-                    if(free_cache__.get_at(i) == 1)
+                    if(__cache__[i].addr == address)
                     {
-                        std::memcpy(&temp, &__cache__[i], sizeof(int));
-                        if(temp == addr)
-                        {
-                            // we don't waste time on deleting the data
-                            // it'll be eventually overwritten
-                            free_cache__.set_at(i, 0);
-                            return;
-                        }
+                        __cache__[i].addr = invalid_address;
+                        return;
                     }
                 }
                 return;
             }
         };
 
-        newasm::hardware::CPU_CACHE__<2, 8> cpu_cache;
+        newasm::hardware::CPU_CACHE__<1024> cpu_cache;
     }
 }
