@@ -69,10 +69,9 @@ namespace newasm
             template<newasm::hardware::_CachableType T>
             inline void* find_addr(int address)
             {
-                int cache_line_index = __minusIPlus(address);
-                if(__cache__[cache_line_index].addr == address)
+                if(__cache__[__minusIPlus(address)].addr == address)
                 {
-                    return (void*)__cache__[cache_line_index].value;
+                    return (void*)__cache__[__minusIPlus(address)].value;
                 }
                 return nullptr;
             }
@@ -81,14 +80,11 @@ namespace newasm
             inline void cache_addr(int address, T value)
             {
                 T temp;
-                int cache_line_index = __minusIPlus(address);
-                if(__cache__[cache_line_index].addr != invalid_address)
-                {
-                    __cache__[cache_line_index].addr = address;
-                    temp = value;
-                    std::memcpy(&__cache__[cache_line_index].value, &temp, sizeof(T));
-                    return;
-                }
+
+                __cache__[__minusIPlus(address)].addr = address;
+                
+                temp = value;
+                std::memcpy(&__cache__[__minusIPlus(address)].value, &temp, sizeof(T));
                 return;
             }
         };
