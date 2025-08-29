@@ -34,7 +34,7 @@
     },
     {
       "name": "keyword.control.newasm",
-      "match":  "\\b(lock)\\b"
+      "match":  "\\b(lock|volatile)\\b"
     },
     {
       "name": "keyword.control.newasm",
