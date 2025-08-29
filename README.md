@@ -99,6 +99,7 @@ Documentation about `newasm` which includes following topics:
 - [Opcodes](docs/opcodes.md)
 - [Lambda procedures](docs/lambda.md)
 - [Namespaces](docs/namespaces.md)
+- [Decorators](docs/deco.md)
 
 - [Interesting examples](#interesting-examples)
     - [Writing to a file, and then reading it](#writing-to-a-file-and-printing-its-content)
