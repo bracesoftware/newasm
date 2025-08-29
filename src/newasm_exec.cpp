@@ -5094,11 +5094,11 @@ namespace newasm
             // DECORATORS
             case newasm::compiler::decorator:
             {
-                if(newasm::system::section != newasm::code_stream::sections::data)
+                /*if(newasm::system::section != newasm::code_stream::sections::data)
                 {
                     newasm::terminate(newasm::exit_codes::invalid_syntax);
                     return 1;
-                }
+                }*/
                 newasm::expcfg::process_dec(line.tokens.at(0));
                 return 1;
             }

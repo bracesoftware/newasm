@@ -1674,6 +1674,8 @@ using "ios"
     sysenter "ios"
     syscall
 
+    [volatile] ; just a test
+
 	;mov tlr, ui::29042384_w
     mov tlr, 223
     
