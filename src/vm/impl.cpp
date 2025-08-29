@@ -20,6 +20,7 @@ the Initial Developer. All Rights Reserved.
 
 #define __newasm_MEMORY_SIZE 10 // mb
 #define __newasm_DISK_SIZE 20 // mb
+#define __newasm_CACHE_LINES 1024 //8KB since line is 8bytes
 
 // funcs
 #define __newasm_B_TO_KB(val)   ((val) / 1024.0)
@@ -44,6 +45,10 @@ static_assert(sizeof(int) == 4);
 static_assert(sizeof(float) == 4);
 static_assert(sizeof(char) == 1);
 
+static_assert(__newasm_MB_TO_B(__newasm_MEMORY_SIZE) % __newasm_CACHE_LINES == 0);
+#define __newasm_LINEBYTES (__newasm_MB_TO_B(__newasm_MEMORY_SIZE) / __newasm_CACHE_LINES)
+
+// real bs
 namespace newasm
 {
     inline namespace foo

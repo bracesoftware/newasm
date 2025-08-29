@@ -290,12 +290,14 @@ namespace newasm
         newasm::_virtual::virtualMemory.init(512); //512 bytes of virtual memory that can be reallocated using "malloc <number>_"
         newasm::runtime::main();
         std::string cmd;
+        newasm::hardware::cpuCache.init();
 
         fs::path data_folder = fs::path(newasm::core::constants::data_folder);
         fs::path cache_folder = fs::path(newasm::core::constants::data_folder+
             newasm::core::constants::separator+
             newasm::core::constants::cache_folder
         );
+
         fs::path user_folder = fs::path(newasm::core::constants::data_folder+
             newasm::core::constants::separator+
             newasm::core::constants::user_folder

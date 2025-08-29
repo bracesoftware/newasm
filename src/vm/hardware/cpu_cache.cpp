@@ -51,50 +51,48 @@ namespace newasm
                 return;
             }
 
-            template<newasm::hardware::_CachableType T>
-            inline void* find(int address)
+            // A block of RAM memory links to a specific cache line index
+            // Doesn't require linear search, and thus cache is way faster than RAM,
+            // cuz we have a direct memory access
+
+            // Amount of addresses that map to a single cache line is __newasm_LINEBYTES
+            inline int __minusIPlus(int address) noexcept
             {
-                for(int i = 0; i < t_cachesize; ++i)
+                // a simple mathematical algorithm
+                return (
+                    (((((address + 1) + __newasm_LINEBYTES) % __newasm_LINEBYTES) == 0 ? (address + 1) : 
+                    (address + 1) + (__newasm_LINEBYTES - (((address + 1) + __newasm_LINEBYTES) % __newasm_LINEBYTES)))
+                    / __newasm_LINEBYTES) - 1
+                );
+            }
+
+            template<newasm::hardware::_CachableType T>
+            inline void* find_addr(int address)
+            {
+                int cache_line_index = __minusIPlus(address);
+                if(__cache__[cache_line_index].addr == address)
                 {
-                    if(__cache__[i].addr == address)
-                    {
-                        return (void*)__cache__[i].value;
-                    }
+                    return (void*)__cache__[cache_line_index].value;
                 }
                 return nullptr;
             }
 
             template<newasm::hardware::_CachableType T>
-            inline void add(int address, T value)
+            inline void cache_addr(int address, T value)
             {
                 T temp;
-                for(int i = 0; i < t_cachesize; ++i)
+                int cache_line_index = __minusIPlus(address);
+                if(__cache__[cache_line_index].addr != invalid_address)
                 {
-                    if(__cache__[i].addr != invalid_address)
-                    {
-                        __cache__[i].addr = address;
-                        temp = value;
-                        std::memcpy(&__cache__[i].value, &temp, sizeof(T));
-                        return;
-                    }
-                }
-                return;
-            }
-
-            inline void remove(int address)
-            {
-                for(int i = 0; i < t_cachesize; ++i)
-                {
-                    if(__cache__[i].addr == address)
-                    {
-                        __cache__[i].addr = invalid_address;
-                        return;
-                    }
+                    __cache__[cache_line_index].addr = address;
+                    temp = value;
+                    std::memcpy(&__cache__[cache_line_index].value, &temp, sizeof(T));
+                    return;
                 }
                 return;
             }
         };
 
-        newasm::hardware::CPU_CACHE__<1024> cpu_cache;
+        newasm::hardware::CPU_CACHE__<__newasm_CACHE_LINES> cpuCache;
     }
 }
