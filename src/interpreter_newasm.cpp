@@ -59,6 +59,7 @@ the Initial Developer. All Rights Reserved.
 #include <type_traits>
 #include <concepts>
 
+#include "vm/3rd.cpp"
 #include "sysext/maps.cpp"
 #include "vm/impl.cpp"
 #include "sysext/csimple.cpp"

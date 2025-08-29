@@ -33,6 +33,7 @@ Provides the following functions:
 ```asm
 using "ios" ; or any other
 ```
+* The new C++ standard used in the project is C++23.
 
 ## Fixed issues
 
@@ -49,14 +50,14 @@ using "ios" ; or any other
 
 ```bash
 go build networking.go -buildmode=c-archive -o networking.a
-C:\path_to_your_compiler\g++ -static -std=c++20 index.cpp -o index.exe networking.a
+C:\path_to_your_compiler\g++ -static -std=c++23 index.cpp -o index.exe networking.a
 ```
 
 - If you are using Windows Subsystem for Linux, use the following command:
 
 ```bash
 wsl go build networking.go -buildmode=c-archive -o networking.a
-wsl g++ -m64 -static -std=c++20 index.cpp -o index.out networking.a
+wsl g++ -m64 -static -std=c++23 index.cpp -o index.out networking.a
 ```
 
 ### Downloading
