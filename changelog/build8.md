@@ -27,6 +27,18 @@ Provides the following functions:
 
 * Added the `[volatile]` decorator to toggle the CPU caching system.
 
+* Now you can create procedures inside namespaces:
+```asm
+.start
+    ./namespace
+        proc test
+            halt proc, 0
+        end
+    ./!namespace
+
+    call namespace::test
+```
+
 ## What's changed
 * Optimizations.
 * Now the `.$using` is a compile-time instruction, so instead of typing `.$using "ios"` you just do:
