@@ -51,6 +51,28 @@ static_assert(__newasm_MB_TO_B(__newasm_MEMORY_SIZE) % __newasm_CACHE_LINES == 0
 // real bs
 namespace newasm
 {
+    inline void __test__() noexcept
+    {
+        struct test
+        {
+            std::string buf;
+            std::vector<int> gg;
+
+            inline test() {}
+
+            inline ~test() noexcept {}
+        };
+
+        void* raw = std::malloc(sizeof(test));
+        test* myobj = new(raw) test();
+
+        std::cout << "giga chad C daddy" << std::endl;
+
+        myobj->~test();
+        std::free(raw);
+        return;
+    }
+    
     inline namespace foo
     {
         //inlinegg

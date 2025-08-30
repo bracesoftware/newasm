@@ -52,6 +52,7 @@ the Initial Developer. All Rights Reserved.
 #include <stdio.h>
 #include <stdlib.h> // for go
 #include <deque>
+#include <new>
 //For idk
 #include <functional>
 #include <utility>

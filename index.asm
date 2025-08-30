@@ -17,6 +17,7 @@ using "http"
 using "math"
 
 .start
+    jmp skiplol
     ./std
         ./lol
             proc testproc
@@ -30,6 +31,7 @@ using "math"
     ./!std
 
     call std::lol::testproc
+    :skiplol
 
 .data
     intg myintgber: 736
