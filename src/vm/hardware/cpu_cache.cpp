@@ -34,7 +34,7 @@ namespace newasm
         {
             private:
             const int invalid_address = (-1);
-            struct __line__
+            private : struct __line__
             {
                 int addr;
                 char value[4];
