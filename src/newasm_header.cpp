@@ -1103,6 +1103,17 @@ namespace newasm
 				return {true, segments};
 			}
 
+            std::string demangleName(const std::vector<std::string>& namespaces, const std::string& symbol_name)
+            {
+                std::stringstream ss;
+                for(int i = 0; i < namespaces.size(); ++i)
+                {
+                    ss << namespaces[i] << "::";
+                }
+                ss << symbol_name;
+                return ss.str();
+            }
+
 			std::string mangleName(const std::vector<std::string>& namespaces, const std::string& symbol_name)
 			{
 				std::string fullpath;
