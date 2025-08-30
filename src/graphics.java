@@ -17,7 +17,7 @@ the Initial Developer. All Rights Reserved.
 
 */
 
-public class newasm_graphics
+public class graphics
 {
     public static void main(String[] args)
     {
