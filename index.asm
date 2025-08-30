@@ -1666,6 +1666,9 @@ using "ios"
 .data
     [volatile]
     intg number: 3274
+    ./std
+        intg version: 8
+    ./!std
     [!volatile]
 .start
     mov tlr, number
@@ -1691,11 +1694,39 @@ using "ios"
     mov tlr, "hello from namespace func"
     call std::io::print
 
+    ./std
+        proc testproc
+            mov tlr, <0>
+            mov stl, 0c1
+            mov fdx, 1
+            sysenter "ios"
+            syscall
+            halt proc, 0
+        end
+    ./!std
+
     mov tlr, std::version
     mov fdx, 2
     mov stl, 0c1
     sysenter "ios"
     syscall
+
+    proc testproc
+        mov tlr, <0>
+        mov stl, 0c1
+        mov fdx, 1
+        sysenter "ios"
+        syscall
+        halt proc, 0
+    end
+
+.hndl
+    0xff = std::testproc
+.start
+    ;push 0
+    push "Hello from testproc"
+    push 0xff
+    stack
 
 	;mov tlr, ui::29042384_w
     mov tlr, 223

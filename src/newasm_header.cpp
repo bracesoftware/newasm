@@ -80,7 +80,10 @@ namespace newasm
             bool case_matched = false;
             std::string case_line;
             //tuples
-            int tupleIndex = -1; 
+            int tupleIndex = -1;
+
+            //for calling funcs
+            std::string temp_;
         }
         namespace constants
         {

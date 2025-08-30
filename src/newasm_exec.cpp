@@ -3054,7 +3054,9 @@ namespace newasm
                     newasm::header::data::callstkidx = newasm::mem::regs::stk;
                     if(newasm::stack::events.find(suf) != newasm::stack::events.end())
                     {
-                        newasm::callproc(newasm::stack::events.at(suf));
+                        newasm::header::data::temp_ = newasm::stack::events.at(suf);
+                        newasm::runtime::functions::parse<true>(newasm::header::data::temp_);
+                        newasm::callproc(newasm::header::data::temp_);
                         return 1;
                     }
                 }
