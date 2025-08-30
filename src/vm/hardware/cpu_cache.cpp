@@ -88,6 +88,12 @@ namespace newasm
                 std::memcpy(&__cache__[__minusIPlus(address)].value, &temp, sizeof(T));
                 return;
             }
+
+            inline CPU_CACHE__()
+            {
+                this->init();
+            }
+            inline ~CPU_CACHE__() noexcept {}
         };
 
         newasm::hardware::CPU_CACHE__<__newasm_CACHE_LINES> cpuCache;
