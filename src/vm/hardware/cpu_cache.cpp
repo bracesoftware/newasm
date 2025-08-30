@@ -68,7 +68,7 @@ namespace newasm
             }
 
             template<newasm::hardware::_CachableType T>
-            inline void* find_addr(int address)
+            inline void* find_addr(int address) noexcept
             {
                 if(__cache__[__minusIPlus(address)].addr == address)
                 {
