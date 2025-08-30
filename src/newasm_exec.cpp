@@ -134,9 +134,9 @@ namespace newasm
                 if(newasm::mem::funcs_data[newasm::system::processing_proc].mangled)
                 {
                     std::cout << "\t\t\t" << newasm::header::col::reset << newasm::header::col::light_blue;
-                    std::cout << "  ^ original procedure: `" << newasm::header::col::gray << newasm::header::style::underline;
+                    std::cout << "  ^ original procedure: \"" << newasm::header::col::gray << newasm::header::style::underline;
                     std::cout << newasm::mem::funcs_data[newasm::system::processing_proc].original_name;
-                    std::cout << newasm::header::col::reset << newasm::header::col::light_blue << "`";
+                    std::cout << newasm::header::col::reset << newasm::header::col::light_blue << "\"";
                     std::cout << std::endl;
                     std::cout << newasm::header::col::reset;
                 }
