@@ -16,6 +16,21 @@ using "tuple"
 using "http"
 using "math"
 
+.start
+    ./std
+        ./lol
+            proc testproc
+                mov tlr, 1
+                mov fdx, 1
+                sysenter "ios"
+                syscall
+                halt proc, 0
+            end
+        ./!lol
+    ./!std
+
+    call std::lol::testproc
+
 .data
     intg myintgber: 736
     float mydecimal: 243.3

@@ -178,6 +178,9 @@ namespace newasm
         int stoproc = 0;
         std::string cproc;
         int proclines = 0;
+        std::string original_proc;
+        bool mangled_proc;
+        std::string processing_proc;
     }
     namespace mem
     {
@@ -345,6 +348,13 @@ namespace newasm
 		std::unordered_map<std::string, newasm::mem::tuple_data> tuple;
 
         std::map<std::string, std::vector<std::string>> funcs;
+        struct procData
+        {
+            std::string original_name;
+            bool mangled = false;
+        };
+        std::unordered_map<std::string, newasm::mem::procData> funcs_data;
+
         std::unordered_map<std::string, std::vector<std::string>> instructions;
 
         std::unordered_map<std::string, int> labels;

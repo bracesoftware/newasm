@@ -44,6 +44,7 @@ namespace newasm
     //int redirect_exec(std::string filename);
     int terminate(int exit_code)//, std::string line)
     {
+        bool temp_proc = false;
         //std::cout << "TERMINATEEE" << std::endl;
         if(newasm::header::data::repl)
         {
@@ -106,6 +107,7 @@ namespace newasm
                 newasm::header::style::bold <<
                 newasm::header::style::underline <<
                 newasm::mem::regs::prp;
+                temp_proc = true;
             }
             if(newasm::header::execution_flow::exec_redirected) if(newasm::header::data::proc_now == false)
             {
@@ -127,6 +129,18 @@ namespace newasm
             std::endl;
 
             std::cout << newasm::header::col::reset;
+            if(temp_proc)
+            {
+                if(newasm::mem::funcs_data[newasm::system::processing_proc].mangled)
+                {
+                    std::cout << "\t\t\t" << newasm::header::col::reset << newasm::header::col::blue;
+                    std::cout << "    ^ original procedure: '" << newasm::header::col::gray << newasm::header::style::underline;
+                    std::cout << newasm::mem::funcs_data[newasm::system::processing_proc].original_name;
+                    std::cout << newasm::header::col::reset << newasm::header::col::blue << "'";
+                    std::cout << std::endl;
+                    std::cout << newasm::header::col::reset;
+                }
+            }
         }
         return 1;
     }
@@ -3645,9 +3659,13 @@ namespace newasm
                     return 1;
                 }
 
+                newasm::system::mangled_proc = false;
+
                 if(newasm::nms::count != 0)
                 {
+                    newasm::system::original_proc = suf;
                     suf = newasm::header::functions::mangleName(newasm::nms::stack, suf);
+                    newasm::system::mangled_proc = true;
                 }
 
                 if(newasm::header::functions::isalphanum(suf))
@@ -4364,6 +4382,10 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::empty_proc);
                     return 1;
                 }
+
+                newasm::mem::funcs_data[newasm::system::cproc].mangled = newasm::system::mangled_proc;
+                newasm::mem::funcs_data[newasm::system::cproc].original_name = newasm::system::original_proc;
+
                 newasm::system::stop = 0;
                 //std::cout << "Finished proc: " << newasm::system::cproc << std::endl;
                 return 1;
@@ -5467,6 +5489,7 @@ namespace newasm
         auto it = newasm::mem::funcs.find(name);
         if(it != newasm::mem::funcs.end())
         {
+            newasm::system::processing_proc = name;
             for(std::string &line : it->second)
             {
                 if(newasm::system::stoproc == 1)
@@ -5480,8 +5503,9 @@ namespace newasm
                 newasm::procline(JIT_COMPILED);
                 //std::cout << "Executed : " << line << std::endl;
             }
-            newasm::header::data::proc_now = false;
+            //newasm::header::data::proc_now = false;
         }
+        newasm::header::data::proc_now = false;
     }
     void async(std::string name)
     {

@@ -6,7 +6,7 @@
 .data
 	./locals
 		[lock]
-			txt variable: "hi"
+			string variable: "hi"
 		[!lock]
 	./!locals
 .start
