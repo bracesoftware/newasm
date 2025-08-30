@@ -1724,9 +1724,14 @@ using "ios"
     0xff = std::testproc
 .start
     ;push 0
+    def testreallycool, &gg
     push "Hello from testproc"
     push 0xff
     stack
+
+    mov tlr, (proc)
+        halt proc, "I am super cool"
+    (end)
 
 	;mov tlr, ui::29042384_w
     mov tlr, 223
