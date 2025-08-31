@@ -28,7 +28,7 @@ Provides the following functions:
 * Added the `[volatile]` decorator to toggle the CPU caching system.
 
 * Now you can create procedures inside namespaces:
-```asm
+```
 .start
     ./namespace
         proc test
@@ -37,6 +37,21 @@ Provides the following functions:
     ./!namespace
 
     call namespace::test
+```
+
+* Added classes and instanced objects:
+
+```
+.data
+    class student: { ; create an object blueprint
+        intg age: 0
+        string name: ""
+        float gpa: 0.0
+    }
+
+    ; create 2 instances of the class
+    obj Me: instance &student
+    obj Him: instance &student
 ```
 
 ## What's changed
