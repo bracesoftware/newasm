@@ -369,11 +369,13 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::nested_object);
                         return 1;
                     }
+                    
                     if(value != static_cast<std::string>("{"))
                     {
                         newasm::terminate(newasm::exit_codes::invalid_syntax);
                         return 1;
                     }
+
                     newasm::header::data::struct_now = true;
                     newasm::header::data::struct_decl = name;
                     newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
@@ -565,6 +567,28 @@ namespace newasm
                         return 1;
                     }
                     //newasm::mem::tuple[name].contents = newasm::header::functions::parseTuple(value);
+                    return 1;
+                }
+                // class
+                case newasm::core::lang_inf::typenames::class__:
+                {
+                    if(newasm::header::data::struct_now)
+                    {
+                        newasm::terminate(newasm::exit_codes::nested_object);
+                        return 1;
+                    }
+                    
+                    if(value != static_cast<std::string>("{"))
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_syntax);
+                        return 1;
+                    }
+
+                    newasm::variables::ids[name].type = newasm::datatypes::blueprint;
+                    newasm::variables::ids.at(name).blueprint = new newasm::variables::classData;
+
+                    newasm::header::data::blueprint_now = true;
+                    newasm::header::data::blueprint_decl = name;
                     return 1;
                 }
                 // containers
@@ -5094,6 +5118,44 @@ namespace newasm
         return 0;
     }
     #endif
+
+    inline void process_cli(std::string name, std::string classname)
+    {
+        newasm::runtime::functions::parse(classname);
+        classname = newasm::header::functions::remamp(classname);
+        auto it = newasm::variables::ids.find(classname);
+        if(it == newasm::variables::ids.end())
+        {
+            newasm::terminate(newasm::exit_codes::invalid_memacc);
+            return;
+        }
+
+        if(it->second.type != newasm::datatypes::blueprint)
+        {
+            newasm::terminate(newasm::exit_codes::invalid_memacc);
+            return;
+        }
+
+        if(newasm::nms::count != 0)
+		{
+			name = newasm::header::functions::mangleName(newasm::nms::stack, name);
+		}
+
+        newasm::header::data::struct_now = true;
+        newasm::header::data::struct_decl = name;
+        newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
+
+        std::string temp;
+
+        for(int i = 0; i < it->second.blueprint->addr.size(); ++i)
+        {
+            temp = newasm::hardware::randAccessMem.peek<std::string>(it->second.blueprint->addr[i]);
+            newasm::procline(temp);
+        }
+
+        newasm::header::data::struct_now = true;
+        return;
+    }
     int procline(newasm::compiler::lineData& line)
     {
         //std::cout << "WHAT THE FUCK :: PROCESSING -> " << line.raw << std::endl;
@@ -5163,6 +5225,11 @@ namespace newasm
                     newasm::threads::thread_now = false;
                     return 1;
                 }
+                if(newasm::header::data::blueprint_now)
+                {
+                    newasm::header::data::blueprint_now = false;
+                    return 1;
+                }
                 newasm::terminate(newasm::exit_codes::unexpected_cbrace);
                 return 1;
             }
@@ -5225,6 +5292,27 @@ namespace newasm
                 
                 return 1;
             }
+            //class instance
+            case newasm::compiler::classInstance:
+            {
+                if(newasm::system::section != newasm::code_stream::sections::data)
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_syntax);
+                    return 1;
+                }
+
+                newasm::process_cli(line.tokens.at(1), line.tokens.at(2));
+                return 1;
+            }
+        }
+
+        if(newasm::header::data::blueprint_now)
+        {
+            auto it = newasm::variables::ids.at(newasm::header::data::blueprint_decl);
+
+            int address = newasm::hardware::randAccessMem.write<std::string>(line.raw);
+            it.blueprint->addr.push_back(address);
+            return 1;
         }
 
         if(newasm::lambda::lambda_now)

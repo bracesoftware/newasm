@@ -273,9 +273,11 @@ namespace newasm
                 const int cont = 7;
 				const int tuple = 8;
 				
-                const int bit_arr = 9;
-                const int bin_tree = 10;
-                const int chan = 11;
+                const int class__ = 9;
+
+                const int bit_arr = 10;
+                const int bin_tree = 11;
+                const int chan = 12;
 
                 const std::unordered_map<int, std::string> identifiers__ = {
                     {num, "intg"},
@@ -286,6 +288,8 @@ namespace newasm
                     {obj, "obj"},
                     {cont, "cont"},
 					{tuple, "tuple"},
+
+                    {class__, "class"},
 					
                     {bit_arr, "bit_arr"},
                     {bin_tree, "bin_tree"},
@@ -336,6 +340,20 @@ namespace newasm
                     for(auto i = newasm::core::lang_inf::instruction_set.begin(); i != newasm::core::lang_inf::instruction_set.end(); ++i)
                     {
                         if(i->second == str)
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+
+                const int instance = 0;
+
+                bool iskeyword(const std::string& str, int what)
+                {
+                    if(what == instance)
+                    {
+                        if(str == "instance")
                         {
                             return true;
                         }

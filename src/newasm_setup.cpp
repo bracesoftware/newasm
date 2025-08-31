@@ -165,6 +165,7 @@ namespace newasm
         const int reference = 4;
         const int character = 5;
         const int tuple = 6;
+        const int blueprint = 7;
     }
     namespace constv
     {
@@ -419,11 +420,16 @@ namespace newasm
             std::vector<int> addr;
             std::vector<int> type;
         };
+        struct classData
+        {
+            std::vector<int> addr; // i love C++
+        };
         struct varData
         {
             int addr; // address where it is stored
             int type; // type
             tupleData* tuple = nullptr; // if it is a tuple, we use this instead of addr
+            classData* blueprint = nullptr; // if it is a class, we use this
 
             //decorator data
             bool locked = false;

@@ -1686,6 +1686,15 @@ using "ios"
     ./std
         intg version: 8
     ./!std
+
+    class student: { ; create an object that can be instanced
+        intg age: 0
+        string name: ""
+        float gpa: 0.0
+    }
+
+    obj Me: instance &student
+    obj Him: instance &student
     [!volatile]
 .start
     mov tlr, number
@@ -1695,6 +1704,12 @@ using "ios"
     syscall
 
     [volatile] ; just a test
+
+    mov tlr, "EL TARIK"
+    stor tlr, &Me{name}
+
+    mov tlr, "RIJAD"
+    stor tlr, &Him{name}
 
     ./std
         ./io
@@ -1709,6 +1724,11 @@ using "ios"
     ./!std
 
     mov tlr, "hello from namespace func"
+    call std::io::print
+
+    mov tlr, Me{name}
+    call std::io::print
+    mov tlr, Him{name}
     call std::io::print
 
     ./std
@@ -1773,4 +1793,14 @@ using "ios"
     syscall
     ret 0
 
-    
+    thread myAsyncCode -> {
+
+    }
+
+    class myClass -> { ; potential idea
+
+    }
+
+    proc myFunction -> {
+
+    }

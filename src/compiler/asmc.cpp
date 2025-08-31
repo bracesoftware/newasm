@@ -90,6 +90,7 @@ namespace newasm
         const int macroCall = 11;
         const int conditional = 12;
         const int instruction = 13;
+        const int classInstance = 14;
 
         std::vector<newasm::compiler::lineData> compiledCode;
 
@@ -210,9 +211,31 @@ namespace newasm
                 lineCompiled.tokens.push_back(typ);
                 lineCompiled.tokens.push_back(name);
                 lineCompiled.tokens.push_back(value);
+
+                if(typ == "obj")
+                {
+                    auto t = newasm::header::functions::tokenize__2(value);
+                    if(t.size() == 2)
+                    {
+                        if(newasm::core::lang_inf::utils::iskeyword(t.at(0), newasm::core::lang_inf::utils::instance))
+                        {
+                            lineCompiled.type = newasm::compiler::classInstance;
+                            lineCompiled.tokens.pop_back();
+                            lineCompiled.tokens.push_back(t.at(1));
+                            
+                            if(!newasm::header::functions::isref(t.at(1)))
+                            {
+                                newasm::compiler::abort(newasm::compiler::fail::unmatched_syntax);
+                            }
+                            
+                            return lineCompiled;
+                        }
+                    }
+                }
                 
-                return lineCompiled; 
+                return lineCompiled;
             }
+            // class instance
             // MACRO CALL
             if(line.at(0) == '$')
             {

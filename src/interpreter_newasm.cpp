@@ -72,6 +72,7 @@ the Initial Developer. All Rights Reserved.
 
 // thread init
 #include "kernel/threads/_flags.cpp"
+#include "vm/blueprint/class.cpp"
 
 // Resources (assets) used in the program
 #include "runtime/assets/text.cpp"

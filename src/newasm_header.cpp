@@ -66,6 +66,9 @@ namespace newasm
             bool struct_now = false;
             std::string struct_decl = "";
 
+            bool blueprint_now = false;
+            std::string blueprint_decl = "";
+
             int argc = 0;
             int callstkidx = 0;
 
@@ -1523,6 +1526,20 @@ namespace newasm
                     return {true, newasm::header::functions::trim(s.substr(1))};
                 }
                 return {false, ""};
+            }
+
+            inline std::vector<std::string> tokenize__2(std::string s)
+            {
+                std::vector<std::string> tokens;
+                std::istringstream iss(s);
+                std::string token;
+
+                while(iss >> token)
+                {
+                    tokens.push_back(token);
+                }
+
+                return tokens;
             }
         }
     }
