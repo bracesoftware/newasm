@@ -577,6 +577,11 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::nested_object);
                         return 1;
                     }
+                    if(newasm::header::data::blueprint_now)
+                    {
+                        newasm::terminate(newasm::exit_codes::nested_object);
+                        return 1;
+                    }
                     
                     if(value != static_cast<std::string>("{"))
                     {
@@ -5153,7 +5158,7 @@ namespace newasm
             newasm::procline(temp);
         }
 
-        newasm::header::data::struct_now = true;
+        newasm::header::data::struct_now = false;
         return;
     }
     int procline(newasm::compiler::lineData& line)
@@ -5227,6 +5232,7 @@ namespace newasm
                 }
                 if(newasm::header::data::blueprint_now)
                 {
+                    //std::cout << "Terminated class -> " << newasm::header::data::blueprint_decl << std::endl;
                     newasm::header::data::blueprint_now = false;
                     return 1;
                 }
@@ -5413,6 +5419,12 @@ namespace newasm
         }
 
         if(newasm::header::data::struct_now)
+        {
+            newasm::terminate(newasm::exit_codes::expected_cbrace);
+            return 1;
+        }
+
+        if(newasm::header::data::blueprint_now)
         {
             newasm::terminate(newasm::exit_codes::expected_cbrace);
             return 1;
