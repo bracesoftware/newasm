@@ -34,9 +34,9 @@ namespace newasm
             const std::string setup_ex = ".newasm_set";
             const std::string progwin = 
             #if _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
-                "progwin_newasm.exe"
+                "nprogwin.exe"
             #elif _NEWASM_OS == _NEWASM_OS_linux || _NEWASM_OS == _NEWASM_OS_android
-                "progwin_newasm.a"
+                "nprogwin.a"
             #endif
             ;
             const std::string cache_folder = "_cache";
