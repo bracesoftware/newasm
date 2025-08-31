@@ -1696,6 +1696,15 @@ using "ios"
     obj Me: instance &student
     obj Him: instance &student
     [!volatile]
+
+    ./namespace
+        class testClass: {
+            intg lol: 3
+        }
+
+        obj testagain:  instance    & namespace::testClass
+        obj testagain2:     instance              & namespace::testClass
+    ./!namespace
 .start
     mov tlr, number
     mov stl, 0c1
@@ -1704,6 +1713,21 @@ using "ios"
     syscall
 
     [volatile] ; just a test
+
+    mov tlr, 4
+    stor tlr, & namespace::testagain{lol}
+
+    mov tlr, namespace::testagain{lol}
+    mov stl, 0c1
+    mov fdx, 2
+    sysenter "ios"
+    syscall
+
+    mov tlr, namespace::testagain2{lol}
+    mov stl, 0c1
+    mov fdx, 2
+    sysenter "ios"
+    syscall
 
     mov tlr, "EL TARIK"
     stor tlr, &Me{name}

@@ -1539,6 +1539,31 @@ namespace newasm
                     tokens.push_back(token);
                 }
 
+                std::string first = tokens.at(0);
+                std::string second = "null";
+
+                if(tokens.size() == 1)
+                {
+                    tokens.clear();
+                    tokens.push_back(first);
+                    tokens.push_back(second);
+                    return tokens;
+                }
+
+                second.clear();
+
+                for(int i = 1; i < tokens.size(); ++i)
+                {
+                    second = second + tokens.at(i);
+                }
+
+                if(tokens.size() != 2)
+                {
+                    tokens.clear();
+                    tokens.push_back(first);
+                    tokens.push_back(second);
+                }
+
                 return tokens;
             }
         }
