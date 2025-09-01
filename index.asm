@@ -1794,6 +1794,9 @@ using "ios"
         halt proc, "I am super cool"
     (end)
 
+    push "Hello"
+    pop nil
+
 	;mov tlr, ui::29042384_w
     mov tlr, 223
     
