@@ -270,6 +270,18 @@ namespace newasm
                     }
                 }
             }
+            printf("\t\tCleaning up class data...\n");
+            for(auto i = newasm::variables::ids.begin(); i != newasm::variables::ids.end(); ++i)
+            {
+                if(i->second.type == newasm::datatypes::blueprint)
+                {
+                    if(i->second.blueprint != nullptr)
+                    {
+                        delete i->second.blueprint;
+                    }
+                }
+            }
+            printf("Closing...");
             std::cout << newasm::header::col::reset;
             std::cout << std::endl;
             return;
