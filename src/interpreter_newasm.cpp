@@ -73,6 +73,8 @@ the Initial Developer. All Rights Reserved.
 // thread init
 #include "kernel/threads/_flags.cpp"
 #include "vm/blueprint/class.cpp"
+// hardware changes
+#include "vm/hardware/cpu_long.cpp"
 
 // Resources (assets) used in the program
 #include "runtime/assets/text.cpp"
@@ -275,7 +277,7 @@ namespace newasm
     }
 }
 
-#include "vm/selfhost/procfile.cpp"
+#include "vm/utilities/procfile.cpp"
 
 namespace newasm
 {
