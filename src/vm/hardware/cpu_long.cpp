@@ -23,7 +23,7 @@ namespace newasm
     {
         class big_number final
         {
-
+            // later implementation
         };
     }
 }
