@@ -87,6 +87,9 @@ namespace newasm
 
             //for calling funcs
             std::string temp_;
+
+            //lol
+            bool std_now__ = false;
         }
         namespace constants
         {

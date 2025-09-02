@@ -15,30 +15,32 @@
 ;
 ;============================================================================================
 .start
+    .$__newasm_sys_interrupt __std_now__
     using "ios" ; using iostream for printing
     ./std
         ./ios
             proc write
-                .$__newasm_cfg_manip __autobos,__TRUE
+                .$__newasm_cfg_manip __autobos=__TRUE
                 mov stl, 0c0 ; null terminator
                 mov fdx, 1
                 sysenter "ios"
                 syscall
-                .$__newasm_cfg_manip __autobos,__FALSE
+                .$__newasm_cfg_manip __autobos=__FALSE
                 halt proc, 0
             end
 
             proc writeln
-                .$__newasm_cfg_manip __autobos,__TRUE
+                .$__newasm_cfg_manip __autobos=__TRUE
                 mov stl, 0c1 ; newline character
                 mov fdx, 1
                 sysenter "ios"
                 syscall
-                .$__newasm_cfg_manip __autobos,__FALSE
+                .$__newasm_cfg_manip __autobos=__FALSE
                 halt proc, 0
             end
         ./!ios
     ./!std
+    .$__newasm_sys_interrupt __std_now__
 ;============================================================================================
 ;
 ; EOF

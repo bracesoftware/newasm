@@ -24,13 +24,37 @@ namespace newasm
         namespace impl
         {
             const std::string cfg_manip = "__newasm_cfg_manip";
+            const std::string sys_int = "__newasm_sys_interrupt";
             void processDirectives(std::string directive, std::string arg)
             {
                 directive = newasm::header::functions::trim(directive);
                 arg = newasm::header::functions::trim(arg);
+
+                if(directive == sys_int)
+                {
+                    if(arg == "__std_now__")
+                    {
+                        if(newasm::header::data::std_now__)
+                        {
+                            newasm::header::data::std_now__ = false;
+                            return;
+                        }
+                        if(!newasm::header::data::std_now__)
+                        {
+                            newasm::header::data::std_now__ = true;
+                            return;
+                        }
+                    }
+                    return;
+                }
                 if(directive == cfg_manip)
                 {
                     auto it = newasm::header::functions::split_fixed(arg, '=');
+                    if(it.size() != 2)
+                    {
+                        newasm::header::functions::err("Invalid directive arguments.");
+                        return;
+                    }
                     it[0] = newasm::header::functions::trim(it[0]);
                     it[1] = newasm::header::functions::trim(it[1]);
 

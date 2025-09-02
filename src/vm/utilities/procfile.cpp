@@ -29,9 +29,18 @@ namespace newasm
         }
 
         std::string line;
+        int idx = 0;
         while(std::getline(file, line))
         {
-            newasm::procline(line);
+            //std::cout << "Processing line " << idx << " -> " << line << std::endl;
+            try {
+                newasm::procline(line);
+            }
+            catch(std::exception& e)
+            {
+                std::cerr << "stdlib te zajebucnuo stdlib:" << idx << " -> " << e.what() << std::endl;
+            }
+            idx ++;
         }
 
         file.close();

@@ -5189,6 +5189,14 @@ namespace newasm
             // DIRECTIVES
             case newasm::compiler::directive:
             {
+                if(newasm::header::data::std_now__)
+                {
+                    if(newasm::system::stop == 1)
+                    {
+                        newasm::mem::funcs[newasm::system::cproc].push_back(line.raw);
+                        return 1;
+                    }
+                }
                 newasm::pp::impl::processDirectives(line.tokens.at(0), line.tokens.at(1));
                 return 1;
             }
