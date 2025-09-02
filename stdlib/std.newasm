@@ -1,0 +1,45 @@
+;
+; NewASM Standard Library
+; 2025 (c) Brace Software Co.
+;
+.data
+    ./std
+        intg version: 9
+
+        ./math
+            float pi: 3.141
+        ./!math
+    ./!std
+;
+; Start of the STD
+;
+;============================================================================================
+.start
+    using "ios" ; using iostream for printing
+    ./std
+        ./ios
+            proc print
+                .$__newasm_cfg_manip __autobos,__TRUE
+                mov stl, 0c0 ; null terminator
+                mov fdx, 1
+                sysenter "ios"
+                syscall
+                .$__newasm_cfg_manip __autobos,__FALSE
+                halt proc, 0
+            end
+
+            proc println
+                .$__newasm_cfg_manip __autobos,__TRUE
+                mov stl, 0c1 ; newline character
+                mov fdx, 1
+                sysenter "ios"
+                syscall
+                .$__newasm_cfg_manip __autobos,__FALSE
+                halt proc, 0
+            end
+        ./!ios
+    ./!std
+;============================================================================================
+;
+; EOF
+;

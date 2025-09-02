@@ -83,7 +83,7 @@ the Initial Developer. All Rights Reserved.
 namespace newasm
 {
     //newasm::_std::shared_memory sharedMem;
-    const int BUILD_NUMBER = 8;
+    const int BUILD_NUMBER = 9;
     bool vercheck = true;
     bool dwin = false;
     const std::string tab = "\t\t\t";
@@ -340,99 +340,86 @@ namespace newasm
         newasm::dyn_ins_set = &newasm::mem::instructions;
         //std::cout << "IDIOTISM" << std::endl;
         newasm::env_vars = &newasm::core::env_vars::priv_env_var;
-        if(argc == 1)
+
+        /*
+        ARGS PROCESSOR
+        */
+        newasm::header::functions::vers_info(); // main output
+        newasm::header::settings::create_new_projfile = true;
+        newasm::dwin = true;
+        
+        char* args__ = std::getenv("newasm_args");
+        if(args__ == nullptr)
         {
-            newasm::header::functions::vers_info();
-            std::cout << "Use `" << newasm::header::style::underline <<
-            newasm::setup::args::arg_map.at(newasm::setup::args::help)
-            << newasm::header::col::reset << "` for more information." << std::endl;
-            std::cout << "\n";
-            std::cout << "\n";
+            EMPTYLINE;
+            newasm::header::functions::err("Arguments not provided.\n\tUse the `"+newasm::header::style::underline+
+            "newasm_args"+newasm::header::col::reset+"` environment variable.");
+            EMPTYLINE;
+            EMPTYLINE;
             return 1;
         }
-
-        int argid = 0;
-
-        if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::ver),argc,argv,argid))
+        std::string args(args__);
+        newasm::header::functions::trim(args);
+        auto arguments = newasm::header::functions::split(args, ',');
+        for(int i = 0; i < arguments.size(); ++i)
         {
-            newasm::header::functions::vers_info();
-            return 0;
+            newasm::header::functions::trim(arguments[i]);
+            if(arguments[i] == "h") // help argument
+            {
+                newasm::header::functions::help_info();
+                continue;
+            }
+            if(arguments[i] == "l") //logging
+            {
+                newasm::header::settings::logging = true;
+                continue;
+            }
+            if(arguments[i] == "nv") // nover check
+            {
+                newasm::vercheck = false;
+                continue;
+            }
+            if(arguments[i] == "std") // use standard lib
+            {
+                newasm::header::settings::use_std = true;
+                continue;
+            }
+
+            newasm::header::functions::err("Invalid environment argument or format: " + newasm::header::col::gray + arguments[i]);
+            std::cout << newasm::header::col::reset;
+            EMPTYLINE;
+            return 1;
         }
         
-        std::cout << std::endl; newasm::header::functions::vers_info();
-        std::cout << "\a";
-        //mode stuff
-        if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::mode),argc,argv,argid))
-        {
-            if(argid < argc - 1)
-            {
-                newasm::global::mode = std::stoi(newasm::header::functions::trim(static_cast<std::string>(argv[argid+1])));
-                /*else
-                {
-                    newasm::header::functions::wrn("Invalid mode, resetting to default.");
-                    newasm::global::mode = newasm::global::MODE_INT;
-                }*/
-            }
-            else
-            {
-                newasm::header::functions::err("Wrong application usage!\n\t\t\t\t\t" + newasm::header::col::gray + " newasm -mode <mode ID> -other_options");
-            }
-        }
         //shell mode
-        if(newasm::global::mode == newasm::global::MODE_SHELL)
+        if(argc == 1)//(newasm::global::mode == newasm::global::MODE_SHELL)
         {
-            EMPTYLINE;EMPTYLINE;
-            newasm::header::functions::info("Loading the shell mode...");
             EMPTYLINE;
+            newasm::header::functions::info("Loading the shell mode...");
             newasm::core::env_vars::functions::setup_env();
+            EMPTYLINE;
 
             newasm::ctl::main();
 
             newasm::GLOBAL::cleanup();
             return 1;
         }
-
-        
-        if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::input),argc,argv,argid))
+        //if excess stuff is provided, fuck it up
+        if(argc != 2)
         {
-            if(argid < argc - 1)
-            {
-                newasm::header::settings::script_file = newasm::header::functions::trim(static_cast<std::string>(argv[argid+1]));
-            }
-            else
-            {
-                newasm::header::functions::err("Wrong application usage!\n\t\t\t\t\t" + newasm::header::col::gray + " newasm -input <filename> -other_options");
-                newasm::header::functions::wrn("Input file is set to `"+newasm::header::constants::default_input+"`.");
-                newasm::header::settings::script_file = newasm::header::constants::default_input;
-            }
+            newasm::header::functions::err("Application usage: " + newasm::header::col::gray + "newasm <filename>");
+            std::cout << newasm::header::col::reset;
+            EMPTYLINE;
+            return 1;
         }
-        
-        //other funny options
-        if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::help),argc,argv,argid))
+        newasm::header::settings::script_file = argv[1];
+        newasm::header::functions::trim(newasm::header::settings::script_file);
+        if(!std::filesystem::exists(newasm::header::settings::script_file))
         {
-            newasm::header::functions::help_info();
+            newasm::header::functions::err("Cannot open the file: `" + newasm::header::settings::script_file + "`");
+            return 1;
         }
-        if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::extra),argc,argv,argid))
-        {
-            newasm::header::settings::extra = true;
-        }
-        if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::cnpf),argc,argv,argid))
-        {
-            newasm::header::settings::create_new_projfile = true;
-        }
-        if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::tests),argc,argv,argid))
-        {
-            newasm::tests::main();
-        }
-        if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::nover),argc,argv,argid))
-        {
-            newasm::vercheck = false;
-        }
-        if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::log),argc,argv,argid))
-        {
-            newasm::header::settings::logging = true;
-            //newasm::header::functions::log("yo");
-        }
+        //if the file is provided, do this
         newasm::header::functions::log("System loading...");
 
         if(newasm::vercheck)
@@ -459,7 +446,6 @@ namespace newasm
         /*
             Before executing the file we need to open the program window.
         */
-        newasm::dwin = true;
         if(newasm::dwin)
         {
             if(!std::filesystem::exists(newasm::core::constants::progwin))
@@ -478,24 +464,15 @@ namespace newasm
             Executing
         */
 
-        #if 0
-        auto use_stdlib = std::getenv("NEWASM_STD");
-        std::string option = use_stdlib ? use_stdlib : "";
-        if(option == "1")
-        {
-            newasm::use_std = true;
-        }
-
-        if(newasm::use_std)
+        if(newasm::header::settings::use_std)
         {
             if(!std::filesystem::exists(newasm::header::constants::std_library))
             {
-                newasm::header::functions::err("Standard library not found.");
+                newasm::header::functions::err("Standard library not found.\n\t`" + newasm::header::constants::std_library + "` is missing.");
                 return 1;
             }
             newasm::procfile(newasm::header::constants::std_library); // firstly get the stl goin
         }
-        #endif
 
         newasm::header::functions::trim(newasm::header::settings::script_file);
         newasm::execute(newasm::header::settings::script_file, -1);
@@ -531,6 +508,46 @@ namespace newasm
         return 0;
     }
 }
+
+ #if 0
+        if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::input),argc,argv,argid))
+        {
+            if(argid < argc - 1)
+            {
+                newasm::header::settings::script_file = newasm::header::functions::trim(static_cast<std::string>(argv[argid+1]));
+            }
+            else
+            {
+                newasm::header::functions::err("Wrong application usage!\n\t\t\t\t\t" + newasm::header::col::gray + " newasm -input <filename> -other_options");
+                newasm::header::functions::wrn("Input file is set to `"+newasm::header::constants::default_input+"`.");
+                newasm::header::settings::script_file = newasm::header::constants::default_input;
+            }
+        }
+        
+        //other funny options
+        if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::help),argc,argv,argid))
+        {
+            newasm::header::functions::help_info();
+        }
+        if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::extra),argc,argv,argid))
+        {
+            newasm::header::settings::extra = true;
+        }
+      
+        if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::tests),argc,argv,argid))
+        {
+            newasm::tests::main();
+        }
+        if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::nover),argc,argv,argid))
+        {
+            newasm::vercheck = false;
+        }
+        if(newasm::header::functions::check_args(newasm::setup::args::arg_map.at(newasm::setup::args::log),argc,argv,argid))
+        {
+            newasm::header::settings::logging = true;
+            //newasm::header::functions::log("yo");
+        }
+        #endif
 
 #include "_entry.cpp"
 

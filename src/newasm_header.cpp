@@ -120,6 +120,7 @@ namespace newasm
             bool create_new_projfile = false;
             bool logging = false;
             bool lazy_evhndlr = false;
+            bool use_std = false;
         }
         namespace functions
         {
@@ -227,7 +228,7 @@ namespace newasm
                 }
                 return false;
             }
-            void vers_info() noexcept
+            inline void vers_info() noexcept
             {
                 std::string arch;
                 std::string os;
@@ -236,6 +237,8 @@ namespace newasm
                 newasm::header::functions::getarch(arch);
                 newasm::header::functions::getos(os);
                 newasm::header::functions::getversion(version);
+
+                std::cout << std::endl;
 
                 std::cout << newasm::header::col::light_blue << newasm::header::style::bold << newasm::header::style::underline;
                 newasm::utils::glitch_text(newasm::header::system_info::fullname);
@@ -248,48 +251,48 @@ namespace newasm
                 std::cout << "\n  " << newasm::header::system_info::copyright_claim <<
                 newasm::header::col::reset << std::endl;
                 
+                std::cout << "\a";
+                return;
             }
             const int first_column = 20;
             const int second_column = 20;
             const int third_column = 20;
             const std::string tabs = "\t";
             const std::vector<std::pair<std::string, std::pair<std::string,std::string>>> help_table_data = {
-                {"-help",      {"/",           "Displays the help panel."}},
-                {"-ver",       {"/",           "Displays the version information."}},
-                {"-input",     {"<file>",      "Sets the input file."}},
-                {"-repl",      {"/",           "Enter the read-evaluate-print mode."}},
-                {"-newproj",   {"/",           "Create a new project file if one doesn't already exist."}},
-                {"-tests",     {"/",           "Loads the test function."}},
-                {"-log",       {"/",           "Enables the logging system."}},
-                {"-mode",      {"<mode ID>",   "Changes the app launch mode."}},
-                {"-nover",     {"/",           "Disables the version check feature."}}
+                {"h",           {"/",               "Displays the help panel."}},
+                {"l",           {"/",               "Enables the logging system."}},
+                {"nv",          {"/",               "Disables the version check feature."}}
             };
-            void help_info()
+
+            inline void help_info() noexcept
             {
-                std::cout << "\n" << newasm::header::col::reset;
-                std::cout
-                        << std::setw(first_column) << std::left<<newasm::header::style::underline + newasm::header::style::bold+tabs+"Argument"
-                        << std::setw(second_column) << std::left<<"Parameters" 
-                        << std::setw(third_column) << std::left<<"Description"
-                << "\n" << newasm::header::col::reset;
+                std::cout << "\n";
 
-                std::string argument, params, description;
+                std::cout << newasm::header::col::light_blue << newasm::header::style::underline;
 
-                for(auto i = help_table_data.begin(); i != help_table_data.end(); ++i)
-                {
-                    argument = i->first;
-                    params = i->second.first;
-                    description = i->second.second;
-                    std::cout 
-                            << std::setw(first_column) << std::left<<tabs+newasm::header::col::reset + argument
-                            << std::setw(second_column) << std::left<<params
-                            << std::setw(third_column) << std::left<<newasm::header::col::gray + description
+                std::cout << '\t' << std::setw(first_column) << std::left << "Argument"
+                    << std::setw(second_column) << std::left << "Params"
+                    << std::setw(third_column)  << std::left << "Description"
                     << "\n";
+
+                std::cout << newasm::header::col::reset;
+
+                for(const auto& row : help_table_data)
+                {
+                    std::cout << newasm::header::col::gray;
+                    std::cout << '\t'
+                        << std::setw(first_column)  << std::left << row.first
+                        << std::setw(second_column) << std::left << row.second.first
+                        << std::setw(third_column)  << std::left << row.second.second
+                        << "\n";
                 }
+
+                std::cout << newasm::header::col::reset;
 
                 std::cout << "\n";
                 return;
             }
+
             
        
             
