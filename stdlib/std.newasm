@@ -10,12 +10,13 @@
             float pi: 3.141
         ./!math
     ./!std
+.start
+.$__newasm_sys_interrupt __std_now__
 ;
 ; Start of the STD
 ;
 ;============================================================================================
 .start
-    .$__newasm_sys_interrupt __std_now__
     using "ios" ; using iostream for printing
     ./std
         ./ios
@@ -40,8 +41,8 @@
             end
         ./!ios
     ./!std
-    .$__newasm_sys_interrupt __std_now__
 ;============================================================================================
 ;
 ; EOF
 ;
+.$__newasm_sys_interrupt __std_now__
