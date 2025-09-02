@@ -18,7 +18,7 @@
     using "ios" ; using iostream for printing
     ./std
         ./ios
-            proc print
+            proc write
                 .$__newasm_cfg_manip __autobos,__TRUE
                 mov stl, 0c0 ; null terminator
                 mov fdx, 1
@@ -28,7 +28,7 @@
                 halt proc, 0
             end
 
-            proc println
+            proc writeln
                 .$__newasm_cfg_manip __autobos,__TRUE
                 mov stl, 0c1 ; newline character
                 mov fdx, 1
