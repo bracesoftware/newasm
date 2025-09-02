@@ -1684,7 +1684,6 @@ using "ios"
     [volatile]
     intg number: 3274
     ./std
-        intg version: 8
     ./!std
 
     class student: { ; create an object that can be instanced
@@ -1793,6 +1792,9 @@ using "ios"
     mov tlr, (proc)
         halt proc, "I am super cool"
     (end)
+
+    mov tlr, "Hello from stdlib"
+    call std::ios::writeln
 
     push "Hello"
     pop nil
