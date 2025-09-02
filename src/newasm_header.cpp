@@ -261,7 +261,8 @@ namespace newasm
             const std::vector<std::pair<std::string, std::pair<std::string,std::string>>> help_table_data = {
                 {"h",           {"/",               "Displays the help panel."}},
                 {"l",           {"/",               "Enables the logging system."}},
-                {"nv",          {"/",               "Disables the version check feature."}}
+                {"nv",          {"/",               "Disables the version check feature."}},
+                {"std",          {"/",               "Load the standard library before staring the application."}}
             };
 
             inline void help_info() noexcept
