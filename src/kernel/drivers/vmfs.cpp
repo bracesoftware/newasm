@@ -23,7 +23,20 @@ namespace newasm
     {
         namespace vmfs
         {
-            void init()
+            struct file
+            {
+                std::string name;
+                std::string content;
+            };
+            inline void write(newasm::hardware::DISK_& disk, std::string name, std::string content)
+            {
+                return;
+            }
+            inline void erase(newasm::hardware::DISK_& disk, std::string name, std::string content)
+            {
+                return;
+            }
+            inline void read(newasm::hardware::DISK_& disk, std::string name, std::string content)
             {
                 return;
             }

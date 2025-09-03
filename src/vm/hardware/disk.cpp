@@ -95,7 +95,7 @@ namespace newasm
 
             inline void readDisk(int start, int end)
             {
-                this->data = this->readDisk_(start,end);
+                this->data = this->readDisk_(start, end);
             }
 
             inline void writeToDisk(std::streampos start, std::streampos end, const std::string& content)

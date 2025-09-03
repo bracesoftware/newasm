@@ -75,6 +75,8 @@ namespace newasm
             std::string cmd;
             bool finish = false;
             bool progwin = false;
+
+            std::vector<std::string> path;
         }
 
         namespace install
@@ -436,6 +438,20 @@ namespace newasm
         }
         void main()
         {
+            newasm::ctl::data::path.push_back("/");
+            auto format_path = []() -> std::string {
+                std::stringstream path;
+                for(int i = 0; i < newasm::ctl::data::path.size(); ++i)
+                {
+                    path << newasm::ctl::data::path[i];
+                    if(i + 1 == newasm::ctl::data::path.size())
+                    {
+                        continue;
+                    }
+                    path << '/';
+                }
+                return path.str();
+            };
             while(true)
             {
                 if(newasm::ctl::data::finish)
@@ -446,7 +462,7 @@ namespace newasm
                 std::string username = newasm::user::global::username;
                 std::cout << newasm::header::col::green << "shell@" << 
                 newasm::header::col::yellow<<username<<newasm::header::col::green
-                <<"-$ "
+                <<"~" <<newasm::header::col::blue << format_path() << newasm::header::col::green <<"$ "
                 << newasm::header::col::reset;
                 
                 std::getline(std::cin, command);
