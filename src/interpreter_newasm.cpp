@@ -391,12 +391,31 @@ namespace newasm
             return 1;
         }
         
+        auto load_std = []() -> bool {
+            if(newasm::header::settings::use_std)
+            {
+                if(!std::filesystem::exists(newasm::header::constants::std_library))
+                {
+                    newasm::header::functions::err("Standard library not found.\n\t`" + newasm::header::constants::std_library + "` is missing.");
+                    return false;
+                }
+                newasm::procfile(newasm::header::constants::std_library); // firstly get the stl goin
+            }
+            return true;
+        };
+
         //shell mode
         if(argc == 1)//(newasm::global::mode == newasm::global::MODE_SHELL)
         {
             EMPTYLINE;
             newasm::header::functions::info("Loading the shell mode...");
             newasm::core::env_vars::functions::setup_env();
+
+            bool result = load_std();
+            if(!result)
+            {
+                return 1;
+            }
             EMPTYLINE;
 
             newasm::ctl::main();
@@ -464,14 +483,10 @@ namespace newasm
             Executing
         */
 
-        if(newasm::header::settings::use_std)
+        bool result = load_std();
+        if(!result)
         {
-            if(!std::filesystem::exists(newasm::header::constants::std_library))
-            {
-                newasm::header::functions::err("Standard library not found.\n\t`" + newasm::header::constants::std_library + "` is missing.");
-                return 1;
-            }
-            newasm::procfile(newasm::header::constants::std_library); // firstly get the stl goin
+            return 1;
         }
 
         newasm::header::functions::trim(newasm::header::settings::script_file);

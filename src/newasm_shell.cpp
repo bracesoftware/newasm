@@ -119,7 +119,7 @@ namespace newasm
                 };
                 auto repl = []() -> void {
                     newasm::header::data::repl_end = false;
-                    newasm::header::functions::nullprint_wnm(
+                    newasm::header::functions::info(
                         static_cast<std::string>("Read-Eval-Print Loop mode loaded; to leave, use the `")+
                         newasm::header::style::underline+static_cast<std::string>("exit")+newasm::header::col::reset+
                         static_cast<std::string>("` instruction."));
@@ -446,7 +446,7 @@ namespace newasm
                 std::string username = newasm::user::global::username;
                 std::cout << newasm::header::col::green << "shell@" << 
                 newasm::header::col::yellow<<username<<newasm::header::col::green
-                <<"-$"
+                <<"-$ "
                 << newasm::header::col::reset;
                 
                 std::getline(std::cin, command);

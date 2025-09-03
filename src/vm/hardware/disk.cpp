@@ -29,6 +29,7 @@ namespace newasm
             std::string path;
             int size;
             std::string volume_label;
+            int sectors;
 
             public:
             std::string data;
@@ -38,7 +39,10 @@ namespace newasm
                 if(!std::filesystem::exists(path))
                 {
                     std::ofstream file(path, std::ios::binary | std::ios::trunc);
-                    for(int i = 0; i < size*1024*1024; ++i) file.put(0);
+                    for(int i = 0; i < size*1024*1024; ++i)
+                    {
+                        file.put(0);
+                    }
                     file.close();
                 }
             }
@@ -51,7 +55,19 @@ namespace newasm
             inline void format(int size_)
             {
                 std::ofstream file(path, std::ios::binary);
-                for(int i = 0; i < size_*1024*1024; ++i) file.put(0);
+                newasm::header::functions::info("Formatting the disk...");
+                
+                auto size__ = size_ * 1024 * 1024;
+                float percent;
+
+                for(int i = 0; i < size__; ++i)
+                {
+                    percent = (i / size__) * 100;
+                    std::cout << "\r\tFormatting: " << static_cast<int>(percent) << std::flush;
+                    file.put(0);
+                }
+                std::cout << "\tDisk formatted successfully." << std::endl;
+
                 file.close();
                 this->size = size_;
             }
