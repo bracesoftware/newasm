@@ -107,6 +107,25 @@ namespace newasm
                 file.write(content.data(), size);
                 file.close();
             }
+
+            inline char read_raw(int pos)
+            {
+                std::ifstream file(this->path, std::ios::binary);
+                if(!file) return 0;
+
+                int start = pos;
+                int end = pos;
+                char ret;
+
+                std::streamsize size = end - start;
+                file.seekg(start);
+
+                file.read(&ret, size);
+                
+                file.close();
+
+                return ret;
+            }
         };
         
         newasm::hardware::DISK_ Disk(newasm::hardware::disk_file, __newasm_DISK_SIZE, "main_disk");

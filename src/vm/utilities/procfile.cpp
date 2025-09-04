@@ -33,7 +33,8 @@ namespace newasm
         while(std::getline(file, line))
         {
             //std::cout << "Processing line " << idx << " -> " << line << std::endl;
-            try {
+            try
+            {
                 newasm::procline(line);
             }
             catch(std::exception& e)
