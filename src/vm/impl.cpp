@@ -40,6 +40,7 @@ the Initial Developer. All Rights Reserved.
 // other bs
 #define STR(x) #x
 #define CONCAT(a, b) a##b
+#define NIL_STR "nil"
 
 static_assert(sizeof(int) == 4);
 static_assert(sizeof(float) == 4);

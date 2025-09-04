@@ -245,7 +245,7 @@ __say 0,"debug5"
     zero  stl 
 
     push  some#randomcrap
-    pop
+    pop nil
 
     mov  tlr , "LABEL TEST"
     mov  fdx , 1
@@ -257,7 +257,7 @@ __say 0,"debug5"
 
     jmp label2
 
-    : label
+    :label
 
         mov  tlr , "label called"
         mov  fdx , 1
@@ -269,7 +269,7 @@ __say 0,"debug5"
         jmp label3
         ret  fdx 
 
-    : label2
+    :label2
 
         mov  tlr , "label2 called"
         mov  fdx , 1
@@ -279,7 +279,7 @@ __say 0,"debug5"
         syscall  
         jmp label
 
-    : label3
+    :label3
 
         mov tlr , "label3 called"
         mov  fdx , 1
@@ -631,11 +631,12 @@ __say 0,"debug5"
     dec  prp
 .data
     ref  prptest : &PROCEDURETEST
-    ref  uninref : &%null
+    ref  uninref: nil
+    ref reference74298374: nil
     float  logtest : 0.0
 .start
     stor   prp , &prptest
-    mov  tlr , prptest
+    mov tlr, prptest
     sysenter "ios"
     syscall 
 

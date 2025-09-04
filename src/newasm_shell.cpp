@@ -123,8 +123,8 @@ namespace newasm
                     newasm::header::data::repl_end = false;
                     newasm::header::functions::info(
                         static_cast<std::string>("Read-Eval-Print Loop mode loaded; to leave, use the `")+
-                        newasm::header::style::underline+static_cast<std::string>("exit")+newasm::header::col::reset+
-                        static_cast<std::string>("` instruction."));
+                        newasm::header::style::underline+static_cast<std::string>("exit") + newasm::header::col::reset + newasm::header::col::gray+
+                        static_cast<std::string>("` instruction.") + newasm::header::col::reset);
                     newasm::header::data::lastlndx = 0;
                     newasm::header::data::repl = true;
                     

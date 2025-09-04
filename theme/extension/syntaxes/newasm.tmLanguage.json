@@ -84,7 +84,7 @@
     },
     {
       "name": "constant.numeric.newasm",
-      "match": "\\b\\d+(\\.\\d+)?\\b"
+      "match": "\\b\\d+(?:\\.\\d+)?\\b|\\b(?:nil|true|false|none)\\b"
     },
     {
       "name": "constant.hex.newasm",

@@ -464,7 +464,7 @@ namespace newasm
                 // references
                 case newasm::core::lang_inf::typenames::ref:
                 {
-                    if(!newasm::header::functions::isref(value) && value != static_cast<std::string>("&\%null"))
+                    if(!newasm::header::functions::isref(value) && value != static_cast<std::string>(NIL_STR))
                     {
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                         return 1;
@@ -475,7 +475,7 @@ namespace newasm
                     newasm::header::functions::remamp(value), newasm::mem::funcs)
                     && !newasm::mem::functions::datavalid(
                     newasm::header::functions::remamp(value), newasm::variables::ids)
-                    && value != static_cast<std::string>("&\%null"))
+                    && value != static_cast<std::string>(NIL_STR))
                     {
                         newasm::terminate(newasm::exit_codes::invalid_memacc);
                         return 1;
@@ -2919,6 +2919,39 @@ namespace newasm
             //pop
             case newasm::core::lang_inf::pop:
             {
+                if(suf == NIL_STR)
+                {
+                    int address = newasm::mem::regs::stk;
+                    if(newasm::malloc::types[address] == newasm::datatypes::number)
+                    {
+                        int value;
+                        newasm::hardware::randAccessMem.pop__STACK<int>(value);
+                        newasm::malloc::types.erase(address);
+                        return 1;
+                    }
+                    if(newasm::malloc::types[address] == newasm::datatypes::decimal)
+                    {
+                        float value;
+                        newasm::hardware::randAccessMem.pop__STACK<float>(value);
+                        newasm::malloc::types.erase(address);
+                        return 1;
+                    }
+                    if(newasm::malloc::types[address] == newasm::datatypes::character)
+                    {
+                        char value;
+                        newasm::hardware::randAccessMem.pop__STACK<char>(value);
+                        newasm::malloc::types.erase(address);
+                        return 1;
+                    }
+                    if(newasm::malloc::types[address] == newasm::datatypes::text)
+                    {
+                        std::string value;
+                        newasm::hardware::randAccessMem.pop__STACK<std::string>(value);
+                        newasm::malloc::types.erase(address);
+                        return 1;
+                    }
+                    return 1;
+                }
                 if(!newasm::header::functions::isref(suf))
                 {
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);
@@ -4477,40 +4510,7 @@ namespace newasm
                 newasm::kernel::handleSysCall(); //call the kernel to do the handling
                 return 1;
             }
-            //overloaded pop
-            case newasm::core::lang_inf::pop:
-            {
-                int address = newasm::mem::regs::stk;
-                if(newasm::malloc::types[address] == newasm::datatypes::number)
-                {
-                    int value;
-                    newasm::hardware::randAccessMem.pop__STACK<int>(value);
-                    newasm::malloc::types.erase(address);
-                    return 1;
-                }
-                if(newasm::malloc::types[address] == newasm::datatypes::decimal)
-                {
-                    float value;
-                    newasm::hardware::randAccessMem.pop__STACK<float>(value);
-                    newasm::malloc::types.erase(address);
-                    return 1;
-                }
-                if(newasm::malloc::types[address] == newasm::datatypes::character)
-                {
-                    char value;
-                    newasm::hardware::randAccessMem.pop__STACK<char>(value);
-                    newasm::malloc::types.erase(address);
-                    return 1;
-                }
-                if(newasm::malloc::types[address] == newasm::datatypes::text)
-                {
-                    std::string value;
-                    newasm::hardware::randAccessMem.pop__STACK<std::string>(value);
-                    newasm::malloc::types.erase(address);
-                    return 1;
-                }
-                return 1;
-            }
+      
             //stack
             case newasm::core::lang_inf::stack:
             {

@@ -55,18 +55,18 @@ namespace newasm
             inline void format(int size_)
             {
                 std::ofstream file(path, std::ios::binary);
-                newasm::header::functions::info("Formatting the disk...");
+                //newasm::header::functions::info("Formatting the disk...");
                 
                 auto size__ = size_ * 1024 * 1024;
-                float percent;
+                //float percent;
 
                 for(int i = 0; i < size__; ++i)
                 {
-                    percent = (i / size__) * 100;
-                    std::cout << "\r\tFormatting: " << static_cast<int>(percent) << std::flush;
+                    //percent = (i / size__) * 100;
+                    //std::cout << "\r\tFormatting: " << static_cast<int>(percent) << std::flush;
                     file.put(0);
                 }
-                std::cout << "\tDisk formatted successfully." << std::endl;
+                //std::cout << "\tDisk formatted successfully." << std::endl;
 
                 file.close();
                 this->size = size_;
