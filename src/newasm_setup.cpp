@@ -387,7 +387,8 @@ namespace newasm
             {
                 return (!(newasm::mem::regs::hea < newasm::mem::regs::stk));
             }
-            template<typename T> bool datavalid(std::string dataname, T &dat)
+            template<typename T>
+            bool datavalid(const std::string& dataname, T &dat)
             {
                 return dat.find(dataname) != dat.end();
                 /*for(auto it = dat.begin(); it != dat.end(); ++it)

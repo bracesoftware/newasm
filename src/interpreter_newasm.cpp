@@ -60,6 +60,7 @@ the Initial Developer. All Rights Reserved.
 #include <type_traits>
 #include <concepts>
 
+#include "sysext/out.cpp"
 #include "vm/external.cpp"
 #include "sysext/maps.cpp"
 #include "vm/impl.cpp"
