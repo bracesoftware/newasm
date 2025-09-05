@@ -44,7 +44,7 @@ namespace newasm
         template<_WriteableType T>
         void write(T& text)
         {
-            print(text);
+            printf(text);
             return;
         }
     }
