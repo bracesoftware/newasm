@@ -32,16 +32,19 @@ namespace newasm
         const int third_column = 20;
         const std::string tabs = "\t";
         const std::vector<std::pair<std::string, std::pair<std::string,std::string>>> help_table_data = {
-            {"help",      {"/",             "Displays the help panel."}},
-            {"exit",      {"/",             "Exits the application."}},
-            {"repl",      {"/",             "Load the read-eval-print console."}},
-            {"install",   {"<lib>",         "Installs a dynamic library."}},
-            {"login",     {"/",             "Login into your local account."}},
-            {"logout",    {"/",             "Log out of your local account."}},
-            {"addenv",    {"/",             "Add an environment variable."}},
-            {"remenv",    {"/",             "Remove an environment variable."}},
-            {"modenv",    {"/",             "Modify an environment variable."}},
-            {"printenv",  {"/",             "View all environment variables."}}
+            {"help",        {"/",               "Displays the help panel."}},
+            {"exit",        {"/",               "Exits the application."}},
+            {"repl",        {"/",               "Load the read-eval-print console."}},
+            {"install",     {"<lib>",           "Installs a dynamic library."}},
+            {"login",       {"/",               "Login into your local account."}},
+            {"logout",      {"/",               "Log out of your local account."}},
+            {"addenv",      {"/",               "Add an environment variable."}},
+            {"remenv",      {"/",               "Remove an environment variable."}},
+            {"modenv",      {"/",               "Modify an environment variable."}},
+            {"renenv",      {"/",               "Rename an environment variable."}},
+            {"printenv",    {"/",               "View all environment variables."}},
+            {"passwd",      {"/",               "Change the password."}},
+            {"usernm",      {"/",               "Change the username."}}
         };
         void help_info()
         {
@@ -208,10 +211,28 @@ namespace newasm
                         newasm::env_control::remenv();
                         return 1;
                     }
+                    if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::renenv__))
+                    {
+                        _newasm_CHECKLOGIN;
+                        newasm::env_control::renenv();
+                        return 1;
+                    }
                     if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::printenv__))
                     {
                         _newasm_CHECKLOGIN;
                         newasm::env_control::printenv();
+                        return 1;
+                    }
+                    if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::passwd__))
+                    {
+                        _newasm_CHECKLOGIN;
+                        newasm::user::impl::changePasswd();
+                        return 1;
+                    }
+                    if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::usernm__))
+                    {
+                        _newasm_CHECKLOGIN;
+                        newasm::user::impl::changeUsername();
                         return 1;
                     }
                 }

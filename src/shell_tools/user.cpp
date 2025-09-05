@@ -81,7 +81,7 @@ namespace newasm
 
         namespace impl
         {
-            static int getPasswdHash()
+            inline static int getPasswdHash()
             {
                 std::string content;
 
@@ -91,7 +91,7 @@ namespace newasm
                 
                 return std::stoi(content);
             }
-            static std::string getUsername()
+            inline static std::string getUsername()
             {
                 std::string content;
 
@@ -101,10 +101,45 @@ namespace newasm
                 
                 return (content);
             }
-            static void setPasswdHash(std::string text)
+            inline static void setPasswdHash(std::string text)
             {
                 std::string hash = std::to_string(int(newasm::user::udb_hash(text)));
                 newasm::user::overwriteFile(newasm::user::passwd_file, hash);
+                return;
+            }
+            void changePasswd()
+            {
+                std::cout << newasm::header::col::gray << "\tCurrent password: " << newasm::header::col::reset;
+                std::string passwd;
+                std::getline(std::cin, passwd);
+                passwd = newasm::header::functions::trim(passwd);
+
+                if(newasm::user::udb_hash(passwd) != newasm::user::impl::getPasswdHash())
+                {
+                    newasm::header::functions::err("Incorrect password!");
+                    return;
+                }
+
+                std::cout << newasm::header::col::gray << "\tNew password: " << newasm::header::col::reset;
+                std::string passwd2;
+                std::getline(std::cin, passwd2);
+                passwd2 = newasm::header::functions::trim(passwd2);
+
+                newasm::user::impl::setPasswdHash(passwd2);
+                newasm::user::main();
+                newasm::header::functions::info("Log in again!");
+                return;
+            }
+            void changeUsername()
+            {
+                std::cout << newasm::header::col::gray << "\tNew username: " << newasm::header::col::reset;
+                std::string username;
+                std::getline(std::cin, username);
+                username = newasm::header::functions::trim(username);
+                newasm::user::overwriteFile(newasm::user::username_file, username);
+
+                newasm::user::global::username = username;
+                return;
             }
             /*usable*/
             void login()

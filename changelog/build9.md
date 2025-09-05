@@ -23,6 +23,11 @@ malloc bytes
 free nil ; instead of old "free"
 ```
 
+* Added the following shell commands:
+1. `passwd` - change your password;
+2. `usernm` - change your username;
+3. `renenv` - rename an environment variable.
+
 ## What's changed
 * Now you can control what `malloc` you want to free:
 ```asm

@@ -77,6 +77,24 @@ namespace newasm
             newasm::core::env_vars::functions::mod_env(key, value);
             return 1;
         }
+        int renenv()
+        {
+            std::string oldname, newname;
+            std::cout << newasm::header::col::gray << "\tInput environment variable name: " << newasm::header::col::reset;
+            std::getline(std::cin, oldname);
+            oldname = newasm::header::functions::trim(oldname);
+            if(!newasm::core::env_vars::functions::env_exists(oldname))
+            {
+                newasm::header::functions::err("Environment variable doesn't exist.");
+                return 1;
+            }
+            std::cout << newasm::header::col::gray << "\tInput new environment variable name: " << newasm::header::col::reset;
+            std::getline(std::cin, newname);
+            newname = newasm::header::functions::trim(newname);
+            
+            newasm::core::env_vars::functions::rename_env(oldname, newname);
+            return 1;
+        }
 
         inline int printenv()
         {

@@ -110,7 +110,7 @@ namespace newasm
                 }
 
                 //shell cmds
-                void rem_env(std::string key)
+                inline void rem_env(std::string key)
                 {
                     auto& vec = newasm::core::env_vars::priv_env_var;
                     vec.erase(
@@ -122,13 +122,13 @@ namespace newasm
                     return;
                 }
 
-                void add_env(std::string key, std::string value)
+                inline void add_env(std::string key, std::string value)
                 {
                     auto& vec = newasm::core::env_vars::priv_env_var;
                     vec.push_back({newasm::header::functions::trim(key), newasm::header::functions::trim(value)});
                 }
 
-                void mod_env(std::string key, std::string value)
+                inline void mod_env(std::string key, std::string value)
                 {
                     for(auto i = newasm::core::env_vars::priv_env_var.begin(); i < newasm::core::env_vars::priv_env_var.end(); ++i)
                     {
@@ -138,6 +138,22 @@ namespace newasm
                             break;
                         }
                     }
+                    return;
+                }
+                inline void rename_env(std::string oldname, std::string newname)
+                {
+                    std::string value;
+                    for(auto i = newasm::core::env_vars::priv_env_var.begin(); i < newasm::core::env_vars::priv_env_var.end(); ++i)
+                    {
+                        if(i->first == oldname)
+                        {
+                            value = i->second;
+                            break;
+                        }
+                    }
+                    add_env(newname, value);
+                    rem_env(oldname);
+                    return;
                 }
             }
         }
