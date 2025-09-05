@@ -101,6 +101,13 @@ namespace newasm
             std::cout << std::endl;
             auto& vec = newasm::core::env_vars::priv_env_var;
 
+            if(vec.size() == 0)
+            {
+                newasm::header::functions::info("No environment variables found.");
+                std::cout << std::endl;
+                return 1;
+            }
+
             const int row_el = 2;
             const int col1_width = 20;
             const int col2_width = 30;
