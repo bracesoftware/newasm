@@ -3733,6 +3733,8 @@ namespace newasm
                 newasm::allocation_data = nullptr;
                 #endif
 
+                newasm::runtime::functions::parse(suf);
+
                 if(!newasm::header::functions::isnumeric(suf) && suf != NIL_STR)
                 {
                     newasm::terminate(newasm::exit_codes::invalid_alloc);
