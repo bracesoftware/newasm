@@ -3663,6 +3663,7 @@ namespace newasm
                     return 1;
                 }
                 newasm::malloc::meta.push_back(i);
+                newasm::mem::regs::tlr.set_value(std::to_string(i));
                 
                 #if 0
                 if(newasm::allocation_data != nullptr) // malloc je vec upotrebljen //NoAlloc
@@ -3706,6 +3707,62 @@ namespace newasm
                     newasm::callproc(suf);
                     return 1;
                 }
+            }
+            //free
+            case newasm::core::lang_inf::free__:
+            {
+                #if 0
+                if(newasm::allocation_data == nullptr) // malloc nije upotrebljen // NoAlloc
+                {
+                    newasm::terminate(newasm::exit_codes::malloc_err);
+                    return 1;
+                }
+                newasm::mem::regs::hea -= newasm::allocation_data->size;
+                if(newasm::mem::regs::hea != newasm::allocation_data->heapsize_new - newasm::allocation_data->size) //neko je manualno dirao heap prije free
+                {
+                    newasm::terminate(newasm::exit_codes::manual_heap);
+                    return 1;
+                }
+                newasm::mem::regs::hea = newasm::mem::regs::hea;
+                delete newasm::allocation_data;
+                newasm::allocation_data = nullptr;
+                #endif
+
+                if(!newasm::header::functions::isnumeric(suf) && suf != NIL_STR)
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_alloc);
+                    return 1;
+                }
+
+                if(suf == NIL_STR)
+                {
+                    if(newasm::malloc::meta.size() == 0)
+                    {
+                        newasm::terminate(newasm::exit_codes::seg_fault);
+                        return 1;
+                    }
+
+                    int addr = newasm::malloc::meta.back();
+                    newasm::malloc::meta.pop_back();
+
+                    newasm::hardware::randAccessMem.free(addr);
+                    return 1;
+                }
+
+                int addr = std::stoi(suf);
+
+                auto& v = newasm::malloc::meta;
+                auto element = std::find(v.begin(), v.end(), addr);
+                if(element == v.end())
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_alloc);
+                    return 1;
+                }
+
+                newasm::hardware::randAccessMem.free(*element);
+
+                v.erase(element);
+                return 1;
             }
             //proc
             case newasm::core::lang_inf::proc:
@@ -4559,38 +4616,6 @@ namespace newasm
 
                 newasm::header::data::argc = 0;
                 newasm::header::data::callstkidx = 0;
-                return 1;
-            }
-            //free
-            case newasm::core::lang_inf::free__:
-            {
-                #if 0
-                if(newasm::allocation_data == nullptr) // malloc nije upotrebljen // NoAlloc
-                {
-                    newasm::terminate(newasm::exit_codes::malloc_err);
-                    return 1;
-                }
-                newasm::mem::regs::hea -= newasm::allocation_data->size;
-                if(newasm::mem::regs::hea != newasm::allocation_data->heapsize_new - newasm::allocation_data->size) //neko je manualno dirao heap prije free
-                {
-                    newasm::terminate(newasm::exit_codes::manual_heap);
-                    return 1;
-                }
-                newasm::mem::regs::hea = newasm::mem::regs::hea;
-                delete newasm::allocation_data;
-                newasm::allocation_data = nullptr;
-                #endif
-
-                if(newasm::malloc::meta.size() == 0)
-                {
-                    newasm::terminate(newasm::exit_codes::seg_fault);
-                    return 1;
-                }
-
-                int addr = newasm::malloc::meta.back();
-                newasm::malloc::meta.pop_back();
-
-                newasm::hardware::randAccessMem.free(addr);
                 return 1;
             }
             //MATH OPERATIONS

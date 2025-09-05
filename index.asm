@@ -421,7 +421,7 @@ __say 0,"debug5"
     load *, 736.38 ; hea = something
     load &, &testdecimal ; myvar = hea
 
-    free ; be responsible
+    free nil ; be responsible
 
     mov  tlr , testdecimal
     mov  stl , 0c1
@@ -446,7 +446,7 @@ __say 0,"debug5"
     heap 4
     heap -4 ; for testing
     load  & , &testfloat2 ; myvar : hea
-    free
+    free nil
     
     mov  tlr , testfloat2
     mov  stl , 0c1
@@ -461,7 +461,7 @@ __say 0,"debug5"
     mov  stl , 0c1
     mov  fdx , 2
     syscall
-    free
+    free nil
 
     ;heap -1 ; let all the memory go VERY UNACCURATE
 
@@ -783,7 +783,7 @@ __say 0,"debug5"
     mov hea, [0]
     load *, 'p'
     load &, &character
-    free
+    free nil
 
     mov   tlr , character
     mov   stl , 0c1
@@ -968,7 +968,7 @@ sysenter "ios"
     mov hea, [0]
     load *, "OhMy"
     load &, &testText
-    free
+    free nil
     mov tlr, testText
     db tlr
     mov stl, 0c1
@@ -1573,7 +1573,7 @@ using "ios"
         sysenter "ios"
         mov fdx, 1
         syscall
-    free
+    free nil
 
     def crazyshit, "Hello again from define"
 
@@ -1679,7 +1679,7 @@ using "ios"
     sysenter "ios"
     syscall
 
-    free
+    free nil
 
 .data
     [volatile]
@@ -1799,6 +1799,25 @@ using "ios"
 
     push "Hello"
     pop nil
+
+.data
+    ./test
+        intg alloc: 0
+        intg var: 0
+    ./!test
+.start
+    malloc 12
+        mov &test::alloc, *tlr ; assign a pointer to a variable, so we can free it later
+        mov hea, [0]
+        load *, 73837
+        del &test::var
+        movaddr &test::var, *hea
+
+        mov tlr, test::var
+        call std::ios::writeln
+    free test::alloc
+
+    ; free 4 ; error
 
 	;mov tlr, ui::29042384_w
     mov tlr, 223

@@ -92,6 +92,7 @@ namespace newasm
 		const int tuple_redef = 51;
 		const int invalid_tuple = 52;
         const int channel_deadlock = 53;
+        const int invalid_alloc = 54;
 
         const std::unordered_map<int, std::string> identifier = {
             {noterm_point, "NoTerminationPoint"},
@@ -147,7 +148,8 @@ namespace newasm
 			{namespace_err, "NamespaceError"},
 			{tuple_redef, "TupleRedefinition"},
 			{invalid_tuple, "InvalidTuple"},
-            {channel_deadlock, "ThreadChannelDeadlock"}
+            {channel_deadlock, "ThreadChannelDeadlock"},
+            {invalid_alloc, "InvalidAlloc"}
         };
     }
     namespace cmp_results

@@ -419,6 +419,8 @@ namespace newasm
             }
             EMPTYLINE;
 
+            newasm::header::functions::wait(1500);
+
             newasm::ctl::main();
 
             newasm::GLOBAL::cleanup();
