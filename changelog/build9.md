@@ -1,11 +1,21 @@
 # `NewASM` Release Notes
 Welcome to **`NewASM`**: an interpreted low-level programming language which combines explicit memory and register control, giving it a breeze of assembly-like feel, with high-level functionalities such as objects, threads and more.
 
-- Version: `build 8`
+- Version: `build 9`
 
 *NOTE*: This is a pre-release which means that this product version doesn't represent the final quality of the product - it may contain bugs and problems that aren't yet discovered.
 
 ## What's new
+
+* Now in order to provide arguments to the NewASM virtual machine, you use the `newasm_args` environment variable:
+```
+newasm_args=arg1,arg2
+```
+
+* To provide the app the VM is going to execute just use the normal arguments:
+```
+newasm.exe app.asm
+```
 
 * The new `nil` keyword is used for:
 1. when you do not want to use the value you pop off the stack;
@@ -72,13 +82,13 @@ wsl g++ -m64 -static -std=c++23 index.cpp -o index.out networking.a
 - Use the following command to execute your `NewASM` programs on Windows:
 
 ```bash
-newasm -input yourfile.asm
+newasm yourfile.asm
 ```
 
 - If you are on Linux, just add the `.out` extension:
 
 ```bash
-./newasm.out -input yourfile.asm
+./newasm yourfile.asm
 ```
 
 ### Writing your first `NewASM` app

@@ -414,6 +414,8 @@ namespace newasm
             const std::vector<std::string> lambda_ = {
                 "proc", "end"
             };
+
+            [[nodiscard]]
             std::pair<bool, std::string> is_lambda(std::string text)
             {
                 std::string newstr = newasm::header::functions::trim(text);
@@ -441,6 +443,7 @@ namespace newasm
                 return result.str();
             }
 
+            [[nodiscard]]
             inline std::vector<std::string> split(const std::string &str, char delimiter)
             {
                 std::vector<std::string> tokens;
@@ -455,6 +458,8 @@ namespace newasm
 
                 return tokens;
             }
+
+            [[nodiscard]]
             inline std::vector<std::string> split_fixed(const std::string &str, char delimiter)
             {
                 size_t pos = str.find(delimiter);
@@ -472,6 +477,8 @@ namespace newasm
                 
                 return tokens;
             }
+
+            [[nodiscard]]
             inline std::string trim(const std::string &str)
             {
                 auto start = str.begin();
