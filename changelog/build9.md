@@ -12,18 +12,32 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 ```
 pop nil ; pops into nothin'
 ```
-2. when you declare uninitialized references (lvalues).
+2. when you declare uninitialized references (lvalues);
 ```
 .data
     ref lvalue: nil
 ```
+3. when you want to free the last memory allocation.
+```
+malloc bytes
+free nil ; instead of old "free"
+```
 
 ## What's changed
-- No important changes.
+* Now you can control what `malloc` you want to free:
+```asm
+.data
+    intg alloc: 0
+.start
+    malloc 4
+    mov &alloc, *tlr ; tlr register holds the address of the allocated memory
+    ; some code
+    free alloc ; free the memory you allocated
+```
 
 ## Fixed issues
 
-- We've been focused on code optimisation.
+* Now you can use `switch` and `case` statements within procedure blocks.
 
 ## Important notes
 
