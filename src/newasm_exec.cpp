@@ -144,7 +144,8 @@ namespace newasm
         }
         return 1;
     }
-    int parseopr_struct(std::string& opr)
+
+    inline int parseopr_struct(std::string& opr)
     {
         auto objectData = newasm::header::functions::parseObject(opr);
         if(objectData.first)
@@ -197,7 +198,7 @@ namespace newasm
         }
         return 1;
     }
-    void callproc(std::string name);
+    
     int process_s(std::string& section)
     {
         if(section == static_cast<std::string>("data"))
@@ -883,8 +884,9 @@ namespace newasm
         {
             newasm::system::proclines ++;
             std::string newline = ins + static_cast<std::string>(" ") + suf + static_cast<std::string>(",") + opr;
-            newasm::mem::funcs[newasm::system::cproc].push_back(newline);
+            // OLD -> newasm::mem::funcs[newasm::system::cproc].push_back(newline);
             //std::cout << newasm::system::cproc << " : " << newline << std::endl;
+            newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo.raw);
             return 1;
         }
         //parse the operand
@@ -2667,8 +2669,9 @@ namespace newasm
         {
             newasm::system::proclines ++;
             std::string newline = ins + static_cast<std::string>(" ") + suf;
-            newasm::mem::funcs[newasm::system::cproc].push_back(newline);
+            // OLD -> newasm::mem::funcs[newasm::system::cproc].push_back(newline);
             //std::cout << newasm::system::cproc << " : " << newline << std::endl;
+            newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo.raw);
             return 1;
         }
         auto it = newasm::inverted_ins.find(ins);
@@ -4462,7 +4465,7 @@ namespace newasm
         }
         return 1;
     }
-    int process_i(std::string line, std::string ins)
+    int process_i(std::string line, std::string ins, newasm::compiler::lineData& lineInfo)
     {
         auto it = newasm::inverted_ins.find(ins);
         if(it == newasm::inverted_ins.end())
@@ -4516,7 +4519,7 @@ namespace newasm
         {
             newasm::system::proclines ++;
             std::string newline = ins;
-            newasm::mem::funcs[newasm::system::cproc].push_back(newline);
+            newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo.raw);
             //std::cout << newasm::system::cproc << " : " << newline << std::endl;
             return 1;
         }
@@ -5505,7 +5508,7 @@ namespace newasm
                     if(line.tokens.size() == 1)
                     {
                         newasm::header::data::case_line = line.other;
-                        newasm::process_i(line.raw, line.tokens.at(0));
+                        newasm::process_i(line.raw, line.tokens.at(0), line);
                         return 1;
                     }
                     if(line.tokens.size() == 2)
@@ -5521,7 +5524,7 @@ namespace newasm
                 {
                     if(line.tokens.size() == 1)
                     {
-                        newasm::process_i(line.raw, line.tokens.at(0));
+                        newasm::process_i(line.raw, line.tokens.at(0), line);
                         return 1;
                     }
                     if(line.tokens.size() == 2)
@@ -5616,7 +5619,7 @@ namespace newasm
             std::cout << "LABEL SEC :: " << err.what() << std::endl;
         }
     }
-    void callproc(std::string name)
+    void callproc(std::string& name)
     {
         newasm::system::stoproc = 0;
         newasm::header::data::proc_now = true;
@@ -5625,7 +5628,7 @@ namespace newasm
         if(it != newasm::mem::funcs.end())
         {
             newasm::system::processing_proc = name;
-            for(std::string &line : it->second)
+            for(std::string& line : it->second)
             {
                 if(newasm::system::stoproc == 1)
                 {

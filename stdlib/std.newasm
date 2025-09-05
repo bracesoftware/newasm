@@ -24,13 +24,15 @@
                 .$__newasm_cfg_manip __autobos=__TRUE
                 mov stl, 0c0 ; null terminator
                 
+                mov fdx, 0
+
                 switch *tlr
                 case intg -> mov fdx, 2
                 case float -> mov fdx, 2
                 case string -> mov fdx, 1
                 case char -> mov fdx, 7
                 case ref -> mov fdx, 6
-                default -> mov fdx, 1
+                default -> nop ;mov fdx, 1
 
                 sysenter "ios"
                 syscall
@@ -41,14 +43,17 @@
             proc writeln
                 .$__newasm_cfg_manip __autobos=__TRUE
                 mov stl, 0c1 ; newline character
+
+                mov fdx, 0
                 
                 switch *tlr
+                case 1 -> mov fdx, 2
                 case intg -> mov fdx, 2
                 case float -> mov fdx, 2
                 case string -> mov fdx, 1
                 case char -> mov fdx, 7
                 case ref -> mov fdx, 6
-                default -> mov fdx, 1
+                default -> nop ;mov fdx, 1
                 
                 sysenter "ios"
                 syscall

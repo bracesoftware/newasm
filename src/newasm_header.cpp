@@ -148,15 +148,45 @@ namespace newasm
             }
             void getversion(std::string &dest)
             {
+
+                auto hash = [](const std::string& input) -> std::string {
+                    std::hash<std::string> hasher;
+                    size_t h = hasher(input);
+
+                    // konvertuj hash u "alfanumerički" string
+                    static const char charset[] =
+                        "0123456789"
+                        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                        "abcdefghijklmnopqrstuvwxyz";
+
+                    const size_t base = sizeof(charset) - 1; // 62 znakova
+
+                    std::string result;
+                    while (h > 0) {
+                        result.push_back(charset[h % base]);
+                        h /= base;
+                    }
+
+                    if (result.empty()) {
+                        result = "0"; // fallback ako je hash = 0
+                    }
+
+                    return result;
+                };
+
                 std::string release__type;
                 std::string date = __DATE__;
                 std::string time = __TIME__;
                 newasm::header::functions::getreleasetype(release__type);
+
+                date = hash(date);
+                time = hash(time);
+
                 dest.clear();
                 dest =  static_cast<std::string>("b") +
                         std::to_string(newasm::BUILD_NUMBER)+static_cast<std::string>(".") +
-                        std::to_string(newasm::user::udb_hash(date)) +static_cast<std::string>(".") +
-                        std::to_string(newasm::user::udb_hash(time))  +
+                        date +static_cast<std::string>(".") +
+                        time  +
                         static_cast<std::string>("-") + release__type;
             }
             void getos(std::string &dest)

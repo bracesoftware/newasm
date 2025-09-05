@@ -30,6 +30,7 @@ the Initial Developer. All Rights Reserved.
 
 namespace newasm
 {
+    void callproc(std::string& name);
     int process_s_(bool &valid, std::string wholeline, std::string stat, std::string arg);
     int process_s(std::string& section);
     namespace user

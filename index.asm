@@ -1840,6 +1840,9 @@ using "ios"
     push 0xff3
     stack
 :lol24332243
+    mov tlr, 1
+    call std::ios::writeln
+
     mov tlr, "Hello from stdlib"
     call std::ios::writeln
 
