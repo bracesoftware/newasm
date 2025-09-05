@@ -1783,6 +1783,17 @@ using "ios"
 
 .hndl
     0xff = std::testproc
+    0xff3 = lol::writexd
+.text
+    testmacro : #
+        switch *tlr
+        case intg -> __say 0, "tlr is an integer"
+        case float -> __say 0, "tlr is a float"
+        case char -> __say 0, "tlr is a char"
+        case string -> __say 0, "tlr is a string"
+        case ref -> __say 0, "tlr is a lvalue"
+        default -> __say 0, "this guy aint nothin"
+    #
 .start
     ;push 0
     def testreallycool, &gg
@@ -1794,6 +1805,41 @@ using "ios"
         halt proc, "I am super cool"
     (end)
 
+    mov stl, 0c1
+    mov fdx, 1
+    sysenter "ios"
+    syscall
+
+    mov tlr, 'd'
+    $testmacro
+
+    jmp lol24332243
+
+    ./lol
+        proc writexd
+            mov tlr, <0>
+            switch *tlr
+            case intg -> mov fdx, 2
+            case float -> mov fdx, 2
+            case string -> mov fdx, 1
+            default -> mov fdx, 1
+
+            mov stl, 0c1
+
+            sysenter "ios"
+            syscall
+            halt proc, 0
+        end
+    ./!lol
+
+    push 3
+    push 0xff3
+    stack
+
+    push "hello"
+    push 0xff3
+    stack
+:lol24332243
     mov tlr, "Hello from stdlib"
     call std::ios::writeln
 

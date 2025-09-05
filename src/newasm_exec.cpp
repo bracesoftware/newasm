@@ -3228,6 +3228,8 @@ namespace newasm
 
                 newasm::header::data::switched_value = suf;
                 newasm::header::data::case_matched = false;
+
+                newasm::header::data::case_line = newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::nop);
                 return 1;
             }
             //case
@@ -5837,7 +5839,10 @@ namespace newasm
                 }
                 catch(const std::exception& e)
                 {
-                    std::cerr << "Kompajler te zajebucnuo" << e.what() << '\n';
+                    std::cerr << "Kompajler te zajebucnuo -> " << e.what() << '\n';
+                    //std::cout << "LCX value -> " << newasm::mem::regs::lcx.get_value() << std::endl;
+                    //std::cout << "CC size -> " << newasm::compiler::compiledCode.size() << std::endl;
+                    //std::cout << "Line data -> " << newasm::compiler::compiledCode.at(newasm::mem::regs::lcx.get_value()).raw << std::endl;
                 }
                 
 
