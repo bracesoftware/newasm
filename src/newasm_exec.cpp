@@ -5858,13 +5858,14 @@ namespace newasm
                 }
             }
             
+            if(newasm::malloc::meta.size() != 0)
+            {
+                newasm::terminate(newasm::exit_codes::memory_leak); // Learn to clean after yourself.
+                return 1;
+            }
+
             if(!newasm::system::terminated)
             {
-                if(newasm::malloc::meta.size() != 0)
-                {
-                    newasm::terminate(newasm::exit_codes::memory_leak); // Learn to clean after yourself.
-                    return 1;
-                }
                 newasm::terminate(newasm::exit_codes::noterm_point); // You got to end your programs.
             }
             newasm::perf::end = std::chrono::high_resolution_clock::now();
@@ -5873,12 +5874,12 @@ namespace newasm
         else
         {
             newasm::header::functions::err(
-                static_cast<std::string>("Unable to open the file: ") + static_cast<std::string>("'") + 
-                /*newasm::header::constants::scripts_folder +*/ file + static_cast<std::string>("'"));
+                static_cast<std::string>("Unable to open the file: ") + static_cast<std::string>("`") + 
+                /*newasm::header::constants::scripts_folder +*/ file + static_cast<std::string>("`"));
         }
         return 0;
     }
-    void handle_threads(int method)
+    inline void handle_threads(int method)
     {
         if(method == 0)
         for(auto i = newasm::threads::valid_threads.begin(); i != newasm::threads::valid_threads.end(); ++i)
@@ -5900,5 +5901,6 @@ namespace newasm
             newasm::threads::memory.at(*i)->contents.pop_front();
             //continue;
         }
+        return;
     }
 }
