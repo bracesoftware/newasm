@@ -3940,6 +3940,11 @@ namespace newasm
                     newasm::unsins(ins);
                     return 1;
                 }
+                if(newasm::malloc::meta.size() != 0)
+                {
+                    newasm::terminate(newasm::exit_codes::memory_leak); // Learn to clean after yourself.
+                    return 1;
+                }
                 newasm::runtime::functions::parse(suf);
                 if(newasm::header::functions::isnumeric(suf))
                 {
@@ -3958,6 +3963,11 @@ namespace newasm
                 if(newasm::header::data::repl)
                 {
                     newasm::unsins(ins);
+                    return 1;
+                }
+                if(newasm::malloc::meta.size() != 0)
+                {
+                    newasm::terminate(newasm::exit_codes::memory_leak); // Learn to clean after yourself.
                     return 1;
                 }
                 if(suf == newasm::mem::regs::fdx.identifier())
@@ -5856,12 +5866,6 @@ namespace newasm
                     newasm::code_stream::jump = 0;
                     newasm::mem::regs::lcx.set_value(newasm::code_stream::jumpto - 1);
                 }
-            }
-            
-            if(newasm::malloc::meta.size() != 0)
-            {
-                newasm::terminate(newasm::exit_codes::memory_leak); // Learn to clean after yourself.
-                return 1;
             }
 
             if(!newasm::system::terminated)
