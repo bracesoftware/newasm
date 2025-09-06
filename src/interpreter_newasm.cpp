@@ -349,7 +349,12 @@ namespace newasm
         newasm::header::settings::create_new_projfile = true;
         newasm::dwin = true;
         
-        char* args__ = std::getenv("newasm_args");
+        char* args__ = nullptr;
+        args__ = std::getenv("newasm_args");
+        if(args__ == nullptr) // on Windows
+        {
+            args__ = std::getenv("newasm_args "); // Allow spaces
+        }
         if(args__ == nullptr)
         {
             EMPTYLINE;
@@ -521,8 +526,6 @@ namespace newasm
         newasm::GLOBAL::cleanup();
 
         newasm::progwin::api::exit();
-
-        
         return 0;
     }
 }

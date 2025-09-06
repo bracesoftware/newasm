@@ -8,8 +8,16 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 ## What's new
 
 * Now in order to provide arguments to the NewASM virtual machine, you use the `newasm_args` environment variable:
+1. on Windows:
+```bat
+set newasm_args = arg1, arg2
+rem or
+set newasm_args=arg1,arg2
+rem syntax doesn't matter
 ```
-newasm_args=arg1,arg2
+2. on Linux:
+```bash
+export newasm_args=arg1,arg2
 ```
 
 * To provide the app the VM is going to execute just use the normal arguments:
