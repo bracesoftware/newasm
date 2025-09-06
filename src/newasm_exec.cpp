@@ -5860,7 +5860,7 @@ namespace newasm
             
             if(!newasm::system::terminated)
             {
-                if(newasm::mem::regs::hea != 0)
+                if(newasm::malloc::meta.size() != 0)
                 {
                     newasm::terminate(newasm::exit_codes::memory_leak); // Learn to clean after yourself.
                     return 1;
