@@ -1869,6 +1869,9 @@ using "ios"
     ; free 4 ; error
 
     malloc 1
+    free nil
+
+    
 
 	;mov tlr, ui::29042384_w
     mov tlr, 223
