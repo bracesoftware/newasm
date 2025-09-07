@@ -25,7 +25,7 @@ using "math"
                 mov fdx, 1
                 sysenter "ios"
                 syscall
-                halt proc, 0
+                halt 0
             end
         ./!lol
     ./!std
@@ -188,7 +188,7 @@ using "math"
         mov  fdx , 5
         syscall 
 
-        halt  proc , "this was returned"
+        halt "this was, in fact, returned"
     end
     nop
     nop
@@ -338,7 +338,7 @@ __say 0,"debug5"
         mov  stl , 0c1
         mov  fdx , 1
         syscall   ; hi
-        halt  proc , "halt works"
+        halt "halt works"
     end 
 
     zero  stl 
@@ -360,7 +360,7 @@ __say 0,"debug5"
 
     proc  resetstuff
         mov  stl , "loloool"
-        halt  proc , 1
+        halt 1
     end
 .hndl
 .data
@@ -479,7 +479,7 @@ __say 0,"debug5"
     syscall   ; test2342343
 
     proc  reftestproc
-        halt proc, &register_test
+        halt &register_test
     end
 
     call  reftestproc
@@ -611,7 +611,7 @@ __say 0,"debug5"
         syscall
         mov fdx, "HI"
         call   PROCEDURETEST
-        halt proc, 1
+        halt 1
     end
 
  
@@ -791,7 +791,7 @@ __say 0,"debug5"
     syscall   
 
     proc   charreturn
-        halt   proc , '>'
+        halt '>'
     end
 
     call   charreturn
@@ -802,7 +802,7 @@ __say 0,"debug5"
     syscall   
 
     proc  emptyproc
-        halt   proc , 0
+        halt 0
     end
 .data
     cont  testbitarr : ?bit_arr
@@ -900,7 +900,7 @@ sysenter "ios"
         mov   fdx , 1
         sysenter "ios"
         syscall   
-        halt   proc , 0
+        halt 0
     end
 
     db   cpt
@@ -988,7 +988,7 @@ sysenter "ios"
         mov fdx, <1> ;get the second argument
         sysenter "ios"
         syscall
-        halt proc, 0
+        halt 0
     end
     db stk
 
@@ -1010,7 +1010,7 @@ sysenter "ios"
     db stk
     proc thisisanerror
         __say 0,"works"
-        halt proc, 0
+        halt 0
     end
     push  0x00
     stack
@@ -1137,16 +1137,16 @@ sysenter "ios"
         sysenter "ios"
         mov fdx, 1
         mov stl, 0c1
-        halt proc, "hello from lambda"
+        halt "hello from lambda"
     (end)
 
     syscall
 
     mov fdx, (proc)
-        halt proc, 1
+        halt 1
     (end)
     mov tlr, (proc)
-        halt proc, "hi again 2x"
+        halt "hi again 2x"
     (end)
     syscall
 .data
@@ -1639,7 +1639,7 @@ using "ios"
         mov stl, 0c1
         sysenter "ios"
         syscall
-        halt proc, 0
+        halt 0
     end
 
     mov tlr, testTuple(0)
@@ -1742,7 +1742,7 @@ using "ios"
                 mov fdx, 1
                 sysenter "ios"
                 syscall
-                halt proc, 0
+                halt 0
             end
         ./!io
     ./!std
@@ -1762,7 +1762,7 @@ using "ios"
             mov fdx, 1
             sysenter "ios"
             syscall
-            halt proc, 0
+            halt 0
         end
     ./!std
 
@@ -1778,7 +1778,7 @@ using "ios"
         mov fdx, 1
         sysenter "ios"
         syscall
-        halt proc, 0
+        halt 0
     end
 
 .hndl
@@ -1802,7 +1802,7 @@ using "ios"
     stack
 
     mov tlr, (proc)
-        halt proc, "I am super cool"
+        halt "I am super cool"
     (end)
 
     mov stl, 0c1
@@ -1828,7 +1828,7 @@ using "ios"
 
             sysenter "ios"
             syscall
-            halt proc, 0
+            halt 0
         end
     ./!lol
 

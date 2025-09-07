@@ -2357,24 +2357,6 @@ namespace newasm
                 //idk
                 return 1;
             }
-            //halt
-            case newasm::core::lang_inf::halt:
-            {
-                if(suf == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::proc))
-                {
-                    if(newasm::lambda::process)
-                    {
-                        newasm::lambda::GLOBAL.result = opr;
-                        newasm::lambda::GLOBAL.ret = true;
-                        return 1;
-                    }
-                    newasm::system::stoproc = 1;
-                    newasm::mem::regs::psx = (opr);
-                    return 1;
-                }
-                newasm::terminate(newasm::exit_codes::invalid_syntax);
-                return 1;
-            }
 
             //cmp
             case newasm::core::lang_inf::cmp:
@@ -2682,6 +2664,19 @@ namespace newasm
         }
         switch(it->second)
         {
+            //halt
+            case newasm::core::lang_inf::halt:
+            {
+                if(newasm::lambda::process)
+                {
+                    newasm::lambda::GLOBAL.result = suf;
+                    newasm::lambda::GLOBAL.ret = true;
+                    return 1;
+                }
+                newasm::system::stoproc = 1;
+                newasm::mem::regs::psx = (suf);
+                return 1;
+            }
             //je //jz
             case newasm::core::lang_inf::jz:
             case newasm::core::lang_inf::je:

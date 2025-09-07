@@ -37,7 +37,7 @@
                 sysenter "ios"
                 syscall
                 .$__newasm_cfg_manip __autobos=__FALSE
-                halt proc, 0
+                halt 0
             end
 
             proc writeln
@@ -58,7 +58,7 @@
                 sysenter "ios"
                 syscall
                 .$__newasm_cfg_manip __autobos=__FALSE
-                halt proc, 0
+                halt 0
             end
         ./!ios
     ./!std
