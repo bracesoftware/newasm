@@ -58,6 +58,15 @@ free nil ; instead of old "free"
     free alloc ; free the memory you allocated
 ```
 
+* Instead of:
+```asm
+halt proc, value
+```
+you just do:
+```asm
+halt value
+```
+
 ## Fixed issues
 
 * Now you can use `switch` and `case` statements within procedure blocks.
