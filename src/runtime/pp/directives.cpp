@@ -24,6 +24,8 @@ namespace newasm
         namespace config
         {
             bool autobos_old = false;
+
+            bool krnl_iostream_old = false;
         }
         namespace impl
         {
@@ -64,12 +66,17 @@ namespace newasm
                     {
                         if(vec[1] == "YES__")
                         {
+                            __newasm_rem(newasm::header::functions::krnl("IOS enabled."););
+
+                            newasm::pp::config::krnl_iostream_old = newasm::kernel::cfg::IOStream;
                             newasm::kernel::cfg::IOStream = true;
                             return;
                         }
                         if(vec[1] == "NO__")
                         {
-                            newasm::kernel::cfg::IOStream = false;
+                            __newasm_rem(newasm::header::functions::krnl("IOS disabled."););
+                            
+                            newasm::kernel::cfg::IOStream = newasm::pp::config::krnl_iostream_old;
                             return;
                         }
                     }

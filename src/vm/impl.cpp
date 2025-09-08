@@ -37,6 +37,13 @@ the Initial Developer. All Rights Reserved.
 #define __newasm_MB_TO_GB(val)  ((val) / 1024.0)
 #define __newasm_GB_TO_MB(val)  ((val) * 1024)
 
+// other funcs
+inline void _newasm_rem__24234() noexcept
+{
+    return;
+}
+#define __newasm_rem(comment)   _newasm_rem__24234()
+
 // other bs
 #define STR(x) #x
 #define CONCAT(a, b) a##b
