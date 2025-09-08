@@ -43,6 +43,12 @@ using "math"
     string  threadarg : "hello from thread"
 
 .start
+    jmp LMAOOOOOOOOOO
+    mov tlr, 24.234234.243
+    sysenter "math"
+    mov fdx, 1
+    syscall ; -> error
+:LMAOOOOOOOOOO
     thread  testthread -> {
         __say 0,"thread debug 1"
         __say 0,"thread debug 3"

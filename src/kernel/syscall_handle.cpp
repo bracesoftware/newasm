@@ -33,6 +33,7 @@ namespace newasm
                     if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr.get_value()) &&
                     !newasm::header::functions::isfloat(newasm::mem::regs::tlr.get_value()))
                     {
+                        newasm::header::functions::krnl("`tlr` (" + newasm::mem::regs::tlr.get_value() + ") has to be a numeric value.");
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                         return 1;
                     }
@@ -46,6 +47,7 @@ namespace newasm
                     if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr.get_value()) &&
                     !newasm::header::functions::isfloat(newasm::mem::regs::tlr.get_value()))
                     {
+                        newasm::header::functions::krnl("`tlr` (" + newasm::mem::regs::tlr.get_value() + ") has to be a numeric value.");
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                         return 1;
                     }
@@ -59,6 +61,7 @@ namespace newasm
                     if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr.get_value()) &&
                     !newasm::header::functions::isfloat(newasm::mem::regs::tlr.get_value()))
                     {
+                        newasm::header::functions::krnl("`tlr` (" + newasm::mem::regs::tlr.get_value() + ") has to be a numeric value.");
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                         return 1;
                     }
@@ -72,6 +75,7 @@ namespace newasm
                     if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr.get_value()) &&
                     !newasm::header::functions::isfloat(newasm::mem::regs::tlr.get_value()))
                     {
+                        newasm::header::functions::krnl("`tlr` (" + newasm::mem::regs::tlr.get_value() + ") has to be a numeric value.");
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                         return 1;
                     }
@@ -79,6 +83,7 @@ namespace newasm
 
                     if(value < 0)
                     {
+                        newasm::header::functions::krnl("`tlr` (" + newasm::mem::regs::tlr.get_value() + ") was negative, so it was converted with `::abs`.");
                         value = -value;
                     }
 
@@ -90,6 +95,7 @@ namespace newasm
                     if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr.get_value()) &&
                     !newasm::header::functions::isfloat(newasm::mem::regs::tlr.get_value()))
                     {
+                        newasm::header::functions::krnl("`tlr` (" + newasm::mem::regs::tlr.get_value() + ") has to be a numeric value.");
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                         return 1;
                     }
@@ -103,15 +109,11 @@ namespace newasm
                     if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr.get_value()) &&
                     !newasm::header::functions::isfloat(newasm::mem::regs::tlr.get_value()))
                     {
+                        newasm::header::functions::krnl("`tlr` (" + newasm::mem::regs::tlr.get_value() + ") has to be a numeric value.");
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                         return 1;
                     }
                     float value = std::stof(newasm::mem::regs::tlr.get_value());
-
-                    if(value < 0)
-                    {
-                        value = -value;
-                    }
 
                     newasm::mem::regs::tlr.set_value(std::to_string(std::cbrt(value)));
                     return 1;

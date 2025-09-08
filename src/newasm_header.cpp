@@ -714,7 +714,18 @@ namespace newasm
                 }
                 return line;
             }
-            int strdist(const std::string &a, const std::string &b)
+
+            template<typename _Arg>
+            [[nodiscard]]
+            inline std::string tohex(const _Arg& value)
+            {
+                std::stringstream ss;
+                ss << std::hex << value;
+                return ss.str();
+            }
+
+            [[nodiscard]]
+            inline int strdist(const std::string& a, const std::string& b)
             {
                 if(a == b)
                 {

@@ -85,6 +85,13 @@ namespace newasm
 
             {{newasm::core::lang_inf::refs::http, 1}, "sys_http_get"},
             {{newasm::core::lang_inf::refs::http, 2}, "sys_http_post"},
+
+            {{newasm::core::lang_inf::refs::math, 1}, "sys_math_sin"},
+            {{newasm::core::lang_inf::refs::math, 2}, "sys_math_cos"},
+            {{newasm::core::lang_inf::refs::math, 3}, "sys_math_tan"},
+            {{newasm::core::lang_inf::refs::math, 4}, "sys_math_sqrt"},
+            {{newasm::core::lang_inf::refs::math, 1}, "sys_math_abs"},
+            {{newasm::core::lang_inf::refs::math, 1}, "sys_math_cbrt"}
         };
     }
 }
