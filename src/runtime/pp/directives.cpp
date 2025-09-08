@@ -29,6 +29,8 @@ namespace newasm
         {
             const std::string cfg_manip = "__newasm_cfg_manip";
             const std::string sys_int = "__newasm_sys_interrupt";
+            const std::string kernel_config = "__newasm_krnl_config";
+
             void processDirectives(std::string directive, std::string arg)
             {
                 directive = newasm::header::functions::trim(directive);
@@ -46,6 +48,28 @@ namespace newasm
                         if(!newasm::header::data::std_now__)
                         {
                             newasm::header::data::std_now__ = true;
+                            return;
+                        }
+                    }
+                    return;
+                }
+                if(directive == kernel_config)
+                {
+                    auto vec = newasm::header::functions::split_fixed(arg, '/');
+
+                    vec[0] = newasm::header::functions::trim(vec[0]);
+                    vec[1] = newasm::header::functions::trim(vec[1]);
+
+                    if(vec[0] == "IOS")
+                    {
+                        if(vec[1] == "YES__")
+                        {
+                            newasm::kernel::cfg::IOStream = true;
+                            return;
+                        }
+                        if(vec[1] == "NO__")
+                        {
+                            newasm::kernel::cfg::IOStream = false;
                             return;
                         }
                     }

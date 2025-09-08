@@ -17,11 +17,12 @@
 ;
 ;============================================================================================
 .start
-    using "ios" ; using iostream for printing
+    ; using "ios" ; using iostream for printing
     ./std
         ./ios
             proc write
                 .$__newasm_cfg_manip __autobos=__TRUE
+                .$__newasm_krnl_config IOS/YES__
                 mov stl, 0c0 ; null terminator
                 
                 mov fdx, 0
@@ -36,12 +37,14 @@
 
                 sysenter "ios"
                 syscall
+                .$__newasm_krnl_config IOS/NO__
                 .$__newasm_cfg_manip __autobos=__FALSE
                 halt 0
             end
 
             proc writeln
                 .$__newasm_cfg_manip __autobos=__TRUE
+                .$__newasm_krnl_config IOS/YES__
                 mov stl, 0c1 ; newline character
 
                 mov fdx, 0
@@ -58,6 +61,7 @@
                 sysenter "ios"
                 syscall
                 .$__newasm_cfg_manip __autobos=__FALSE
+                .$__newasm_krnl_config IOS/NO__
                 halt 0
             end
         ./!ios
