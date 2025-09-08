@@ -26,9 +26,9 @@ namespace newasm
         {
             void krnl(std::string text)
             {
-                std::cout << newasm::header::col::kernel << "krnl notice -> `"
+                std::cout << newasm::header::col::kernel << "kernel note: `" << newasm::header::col::light_red
                 << newasm::kernel::syscalls.at({newasm::threads::functions::get_sysenter(),newasm::mem::regs::fdx.get_value()})
-                <<"` | " << newasm::header::col::gray << text << newasm::header::col::reset << std::endl;
+                << newasm::header::col::kernel << "`: " << newasm::header::col::gray << text << newasm::header::col::reset << std::endl;
             }
         }
     }

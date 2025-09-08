@@ -21,6 +21,10 @@ namespace newasm
 {
     namespace pp
     {
+        namespace config
+        {
+            bool autobos_old = false;
+        }
         namespace impl
         {
             const std::string cfg_manip = "__newasm_cfg_manip";
@@ -62,12 +66,13 @@ namespace newasm
                     {
                         if(it[1] == "__TRUE")
                         {
+                            newasm::pp::config::autobos_old = newasm::header::flags::autobos; // to keep the int 0x3 status
                             newasm::header::flags::autobos = true;
                             return;
                         }
                         if(it[1] == "__FALSE")
                         {
-                            newasm::header::flags::autobos = false;
+                            newasm::header::flags::autobos = newasm::pp::config::autobos_old;
                             return;
                         }
                     }

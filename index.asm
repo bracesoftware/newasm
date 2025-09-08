@@ -1877,7 +1877,17 @@ using "ios"
     malloc 1
     free nil
 
-    
+    mov tlr, "omg"
+    ; mov bos, 3
+    mov stl, 0c1
+    mov fdx, 1
+    sysenter "ios"
+    syscall
+
+    int 0x3
+    mov tlr, "Hello from std again and again"
+    call std::ios::writeln
+    int 0x3
 
 	;mov tlr, ui::29042384_w
     mov tlr, 223
