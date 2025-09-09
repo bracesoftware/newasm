@@ -34,6 +34,7 @@ namespace newasm
         {
             private:
             const int invalid_address = (-1);
+            constexpr static int __newasm_LINEBYTES_ = __newasm_LINEBYTES;
             private : struct __line__
             {
                 int addr;
@@ -51,9 +52,9 @@ namespace newasm
             {
                 // a simple mathematical algorithm
                 return (
-                    (((((address + 1) + __newasm_LINEBYTES) % __newasm_LINEBYTES) == 0 ? (address + 1) : 
-                    (address + 1) + (__newasm_LINEBYTES - (((address + 1) + __newasm_LINEBYTES) % __newasm_LINEBYTES)))
-                    / __newasm_LINEBYTES) - 1
+                    (((((address + 1) + __newasm_LINEBYTES_) % __newasm_LINEBYTES_) == 0 ? (address + 1) : 
+                    (address + 1) + (__newasm_LINEBYTES_ - (((address + 1) + __newasm_LINEBYTES_) % __newasm_LINEBYTES_)))
+                    / __newasm_LINEBYTES_) - 1
                 );
             }
 
