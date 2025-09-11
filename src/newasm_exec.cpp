@@ -5882,7 +5882,9 @@ namespace newasm
                 }
             }
 
-            exec_exit_handle();
+            if constexpr(0) exec_exit_handle();
+            newasm::runtime::functions::parse<true>(newasm::handlers::exit_handler);
+            newasm::callproc(newasm::handlers::exit_handler);
 
             if(!newasm::system::terminated)
             {
