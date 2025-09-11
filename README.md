@@ -111,22 +111,34 @@ This project is written purely in C++ using its standard libraries, so compiling
 [Click me...](https://code.visualstudio.com/docs/languages/cpp)
 
 ## Arguments
-- There are some arguments you can use when executing the interpreter.
+- There are some arguments you can use when executing the interpreter. Arguments are provided using the `newasm_args` variable you create before running the executeable, ergo:
+1. Windows
+```bat
+set newasm_args=arg1,arg2
+```
+2. Linux
+```bash
+export newasm_args=arg1,arg2
+```
 
 | Argument | Parameters | Description |
 | ---------------- | --------- | ----------- |
-| `-ver` | - | Displays version information only, and doesn't start the interpreter at all. |
-| `-help` | - | Displays help information. |
-| `-input` | `<filename>` | Sets the input file; if `-input` was not provided, interpreter sets it to `input.asm`. |
-| `-newproj` | - | Create a new project file if one doesn't already exist. |
-| `-log` | - | Toggle the logging system. |
-| `-nover` | - | Turn off version checking. |
-| `-mode` | `<id>` | Change the launch mode. |
+| `h` | - | Displays help about these commands. |
+| `l` | - | Turn on the logging system. |
+| `nv` | - | Disable version checking. |
+| `std` | - | Use the standard library. |
+
+Example:
+```bat
+set newasm_args=l,h,std
+```
 
 ## Launch modes
-When running the `newasm` executeable, you can optionally use the `-mode` argument to open the application in different modes:
-* mode 0: this is the default interpreter mode, it just does the primary idea of what it is supposed to do - run the assembly code;
-* mode 1: this is the shell, or control console, mode - application will run as the command prompt with its own commands, you can install packages and maintain your project.
+When running the `newasm` executeable, you can run it in 2 different modes:
+* **interpreter**: this is the default interpreter mode, it just does the primary idea of what it is supposed to do - run the assembly code;
+* **shell**: this is the shell, or control console, mode - application will run as the command prompt with its own commands, you can install packages and maintain your project.
+
+To run the interpreter, use `newasm <filename>.asm`, but to run the shell, just run the `newasm` app.
 
 ### Shell mode
 Shell mode brings new different commands with it. Below is a list of available commands:
@@ -141,6 +153,10 @@ Shell mode brings new different commands with it. Below is a list of available c
 | `addenv` | - | Adds an environment variable. |
 | `remenv` | - | Deletes an environment variable. |
 | `modenv` | - | Modifies the environment variable. |
+| `renenv` | - | Changes the variable name. |
+| `printenv` | - | Prints all the environment variables. |
+| `passwd` | - | Change your password. |
+| `usernm` | - | Change your username. |
 
 
 #### `install` command
@@ -167,7 +183,7 @@ Notice how we just provided the library name, and not the extension. This will d
 ```
 >>> install internettest
 [NewASM]  PROGRAM THREAD @ System info | Attempting to install the "internettest" package.
-        * Progress:        [::::::::::::::::::::::::::::::::::::::::] 100 %
+        * Progress:        [==================================] 100 %
                         Accessed the download server...
                         Successfully downloaded the library!
 ```
@@ -195,7 +211,7 @@ we will receive the following output:
 ```
 >>> install net-conf
 [NewASM]  PROGRAM THREAD @ System info | Attempting to install the "net-conf" package.
-        * Progress:        [::::::::::::::::::::::::::::::::::::::::] 100 %
+        * Progress:        [==================================] 100 %
                         Accessed the download server...
                         Successfully downloaded the setup.
                         Preparing to run the setup...

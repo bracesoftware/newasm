@@ -226,20 +226,20 @@ namespace newasm
             }
             void err(std::string text)
             {
-                std::cout << newasm::header::col::light_red << "error: " << newasm::header::col::reset << text << std::endl;
+                std::cout << newasm::header::col::light_red << " error: " << newasm::header::col::reset << text << std::endl;
             }
             void wrn(std::string text)
             {
-                std::cout << newasm::header::col::yellow << "warning: " << newasm::header::col::reset << text << std::endl;
+                std::cout << newasm::header::col::yellow << " warning: " << newasm::header::col::reset << text << std::endl;
             }
             void info(std::string text)
             {
-                std::cout << newasm::header::col::light_blue << "info: " << newasm::header::col::gray << text << newasm::header::col::reset << std::endl;
+                std::cout << newasm::header::col::light_blue << " info: " << newasm::header::col::gray << text << newasm::header::col::reset << std::endl;
             }
             void dbg(std::string text)
             {
                 if(newasm::header::settings::debug == 1)
-                    std::cout << newasm::header::col::gray << "debug: " << newasm::header::col::reset << text << std::endl;
+                    std::cout << newasm::header::col::gray << " debug: " << newasm::header::col::reset << text << std::endl;
             }
             
             /*void init()
