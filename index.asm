@@ -902,7 +902,7 @@ sysenter "ios"
     proc  __exit_proc
         mov   tlr , "exit proc called"
         mov   stl , 0c1
-        mov bos, 100
+        ;mov bos, 100
         mov   fdx , 1
         sysenter "ios"
         syscall   

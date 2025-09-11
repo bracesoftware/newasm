@@ -32,29 +32,10 @@ namespace newasm
         }
         namespace functions
         {
-			inline bool fixref(std::string& s)
+			template<char delim>
+			inline bool fix_spaces(std::string& s)
 			{
-				if(s.empty() || s[0] != '&')
-				{
-					return false;
-				}
-
-				size_t i = 1;
-				while(i < s.size() && std::isspace(static_cast<unsigned char>(s[i])))
-				{
-					++i;
-				}
-
-				if(i > 1)
-				{
-					s.erase(1, i - 1);
-				}
-
-				return true;
-			}
-			inline bool fixaddrof(std::string& s)
-			{
-				if(s.empty() || s[0] != '#')
+				if(s.empty() || s[0] != delim)
 				{
 					return false;
 				}
@@ -91,8 +72,9 @@ namespace newasm
 
             inline void parse(std::string& suf)
             {
-				fixref(suf);
-				fixaddrof(suf);
+				fix_spaces<'&'>(suf);
+				fix_spaces<'#'>(suf);
+				fix_spaces<'~'>(suf);
 				suf = lenofop(suf);
 				newasm::header::functions::parseRegDeref(suf);
 				newasm::header::functions::parseAddressOf(suf);

@@ -94,7 +94,7 @@ namespace newasm
 
         std::vector<newasm::compiler::lineData> compiledCode;
 
-        newasm::compiler::lineData DO(std::string& line)
+        inline newasm::compiler::lineData DO(std::string& line)
         {
             newasm::compiler::data::line = line;
             newasm::compiler::lineData lineCompiled;

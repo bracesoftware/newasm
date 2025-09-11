@@ -295,7 +295,7 @@ namespace newasm
 
 namespace newasm
 {
-    int entry(int argc, char *argv[])
+    int entry(int argc, char* argv[])
     {   
         for(auto i = newasm::core::lang_inf::instruction_set.begin(); i != newasm::core::lang_inf::instruction_set.end(); ++i)
         {
@@ -505,13 +505,32 @@ namespace newasm
         std::cout << newasm::header::col::gray << "\t\tTime elapsed: " << elapsed.count() << " ms\n";
         std::cout << newasm::header::col::reset;
 
-        if(newasm::mem::functions::datavalid(newasm::handlers::exit_handler, newasm::mem::funcs))
+        #if 0
+        std::cout << "Exit handler -> `" << newasm::handlers::exit_handler << "`" << std::endl;
+
+        std::stringstream ss;
+        ss << "---------- func start ----------\n";
+        for(auto i = newasm::mem::funcs.begin(); i != newasm::mem::funcs.end(); ++i)
+        {
+            ss << i->first << '\n';
+        }
+        ss << "---------- func end ----------\n";
+        newasm::progwin::api::cout(ss.str());
+        #endif
+
+        newasm::runtime::functions::parse<true>(newasm::handlers::exit_handler);
+        auto it = newasm::mem::funcs.find(newasm::handlers::exit_handler);
+        //std::cout << it->first << " | " << bool(it != newasm::mem::funcs.end()) << std::endl;
+        if(it != newasm::mem::funcs.end())
         {
             newasm::global::event_now = true;
             newasm::copyproc(newasm::handlers::exit_handler);
+            //std::cout << "Size -> " << newasm::global::event_codeblock.size() << std::endl;
             for(auto i = newasm::global::event_codeblock.begin(); i != newasm::global::event_codeblock.end(); ++i)
             {
-                newasm::procline(*i);
+                //std::cout << "Processing -> `" << *i << "`" << std::endl;
+                auto COMPILED = newasm::compiler::DO(*i);
+                newasm::procline(COMPILED);
             }
             newasm::global::event_now = false;
         }
