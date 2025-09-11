@@ -1889,6 +1889,9 @@ using "ios"
     call std::ios::writeln
     int 0x3
 
+    mov tlr, * hea
+    call std::ios::writeln
+
 	;mov tlr, ui::29042384_w
     mov tlr, 223
     

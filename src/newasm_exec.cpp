@@ -5741,6 +5741,25 @@ namespace newasm
     }
     int execute(std::string file, int lineidx_____)
     {
+        auto exec_exit_handle = []() -> void {
+            newasm::runtime::functions::parse<true>(newasm::handlers::exit_handler);
+            auto it = newasm::mem::funcs.find(newasm::handlers::exit_handler);
+            //std::cout << it->first << " | " << bool(it != newasm::mem::funcs.end()) << std::endl;
+            if(it != newasm::mem::funcs.end())
+            {
+                newasm::global::event_now = true;
+                newasm::copyproc(newasm::handlers::exit_handler);
+                //std::cout << "Size -> " << newasm::global::event_codeblock.size() << std::endl;
+                for(auto i = newasm::global::event_codeblock.begin(); i != newasm::global::event_codeblock.end(); ++i)
+                {
+                    //std::cout << "Processing -> `" << *i << "`" << std::endl;
+                    auto COMPILED = newasm::compiler::DO(*i);
+                    newasm::procline(COMPILED);
+                }
+                newasm::global::event_now = false;
+            }
+            return;
+        };
         if(lineidx_____ == -1)
         {
             newasm::mem::regs::resetRegisters();
@@ -5862,6 +5881,8 @@ namespace newasm
                     newasm::mem::regs::lcx.set_value(newasm::code_stream::jumpto - 1);
                 }
             }
+
+            exec_exit_handle();
 
             if(!newasm::system::terminated)
             {
