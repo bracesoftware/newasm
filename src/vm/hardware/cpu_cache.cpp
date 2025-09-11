@@ -35,7 +35,8 @@ namespace newasm
             private:
             const int invalid_address = (-1);
             constexpr static int __newasm_LINEBYTES_ = __newasm_LINEBYTES;
-            private : struct __line__
+            
+            struct __line__
             {
                 int addr;
                 char value[4];
