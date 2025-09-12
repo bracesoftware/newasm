@@ -42,9 +42,29 @@ namespace newasm
         );
 
         template<_WriteableType T>
-        inline void write(T& text) noexcept
+        inline void write(const T& what) noexcept
         {
-            std::cout << text << std::flush;
+            if constexpr(std::is_integral_v<T>)
+            {
+                std::printf("%d", what);
+            }
+            else if constexpr(std::is_floating_point_v<T>)
+            {
+                std::printf("%f", what);
+            }
+            else if constexpr(std::is_same_v<T, const char*> or
+            std::is_same_v<T, char*>)
+            {
+                std::printf("%s", what);
+            }
+            else if constexpr(std::is_same_v<T, std::string>)
+            {
+                std::printf("%s", what.c_str());
+            }
+            else
+            {
+                static_assert(!sizeof(T*), "UNSUPPORTED");
+            }
             return;
         }
     }

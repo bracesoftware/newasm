@@ -2,7 +2,7 @@
 
 int main(int argc, char* argv[])
 {
-    std::ios::sync_with_stdio(false);
+    if constexpr(0) std::ios::sync_with_stdio(false);
 
     try
     {

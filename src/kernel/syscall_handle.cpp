@@ -653,11 +653,11 @@ namespace newasm
                             newasm::mem::regs::bos.set_value(_chars_.size());
                             newasm::terminate(newasm::exit_codes::seg_fault);
                         }
-                        std::cout << _chars_.substr(0, newasm::mem::regs::bos);
+                        newasm::_std::write(_chars_.substr(0, newasm::mem::regs::bos));
                     }
                     else
                     {
-                        std::cout << _chars_;
+                        newasm::_std::write(_chars_);
                     }
                     
                     newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);

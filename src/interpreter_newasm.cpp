@@ -50,6 +50,7 @@ the Initial Developer. All Rights Reserved.
 #include <limits>
 #include <cstdlib>
 #include <iomanip>
+#include <cstdio>
 #include <stdio.h>
 #include <stdlib.h> // for go
 #include <deque>
@@ -245,23 +246,27 @@ namespace newasm
     {
         void cleanup()
         {
+            auto printf___ = [](const char* msg) -> void {
+                std::cout << msg << std::flush;
+                return;
+            };
             //std::cout << "\n";
             newasm::header::functions::log("System cleaning up...");
             std::cout << newasm::header::col::gray;
             newasm::containers::functions::free_dyn_mem();
-            printf("\t\tCleaning up containers...\n");
+            printf___("\t\tCleaning up containers...\n");
             newasm::stack::free_macro_mem();
-            printf("\t\tCleaning up macro data...\n");
+            printf___("\t\tCleaning up macro data...\n");
 
-            printf("\t\tCleaning up DL data...\n");
-            printf("\t\tCleaning up environment variable memory...\n");
+            printf___("\t\tCleaning up DL data...\n");
+            printf___("\t\tCleaning up environment variable memory...\n");
             
             newasm::threads::functions::free_mem();
-            printf("\t\tCleaning up thread data...\n");
+            printf___("\t\tCleaning up thread data...\n");
             newasm::core::env_vars::functions::save_env();
-            printf("\t\tSaving environment variables...\n");
+            printf___("\t\tSaving environment variables...\n");
             
-            printf("\t\tCleaning up dynamic tuple data...\n");
+            printf___("\t\tCleaning up dynamic tuple data...\n");
             for(auto i = newasm::variables::ids.begin(); i != newasm::variables::ids.end(); ++i)
             {
                 if(i->second.type == newasm::datatypes::tuple)
@@ -272,7 +277,7 @@ namespace newasm
                     }
                 }
             }
-            printf("\t\tCleaning up class data...\n");
+            printf___("\t\tCleaning up class data...\n");
             for(auto i = newasm::variables::ids.begin(); i != newasm::variables::ids.end(); ++i)
             {
                 if(i->second.type == newasm::datatypes::blueprint)
@@ -283,7 +288,7 @@ namespace newasm
                     }
                 }
             }
-            printf("Closing...");
+            printf___("Closing...");
             std::cout << newasm::header::col::reset;
             std::cout << std::endl;
             return;
