@@ -70,6 +70,7 @@ halt value
 ## Fixed issues
 
 * Now you can use `switch` and `case` statements within procedure blocks.
+* The `~exit` handle was fixed.
 
 ## Important notes
 
