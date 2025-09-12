@@ -38,7 +38,7 @@ namespace newasm
         int udb_hash(const std::string& input);
     }
     int terminate(int exit_code);
-    void async(std::string name);
+    void async(const std::string& name);
     namespace header
     {
         namespace functions
@@ -81,8 +81,11 @@ namespace newasm
         void process_comptiso(std::string ins, std::string arg1, std::string arg2);
         bool iscomptins(std::string ins);
     }
+    
     int procline(newasm::compiler::lineData& line);
     int procline(std::string& text);
+    int procline(const char* line);
+
     void tokenize(std::string str);
     namespace impl
     {

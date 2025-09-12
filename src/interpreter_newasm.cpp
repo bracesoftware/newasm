@@ -500,6 +500,14 @@ namespace newasm
 
         newasm::header::functions::trim(newasm::header::settings::script_file);
         newasm::execute(newasm::header::settings::script_file, -1);
+
+        /*newasm::procline(".start");
+        newasm::procline("mov tlr, \"hello from built-in\"");
+        newasm::procline("mov stl, 0c1");
+        newasm::procline("mov fdx, 1");
+        newasm::procline("sysenter \"ios\"");
+        newasm::procline("syscall");*/
+
         std::chrono::duration<double, std::milli> elapsed = newasm::perf::end - newasm::perf::start;
 
         std::cout << newasm::header::col::gray << "\t\tTime elapsed: " << elapsed.count() << " ms\n";

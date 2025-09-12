@@ -5198,7 +5198,7 @@ namespace newasm
         newasm::header::data::struct_now = false;
         return;
     }
-    int procline(newasm::compiler::lineData& line)
+    inline int procline(newasm::compiler::lineData& line)
     {
         //std::cout << "WHAT THE FUCK :: PROCESSING -> " << line.raw << std::endl;
         //std::cout << "\t\t\t LINE TYPE -> " << line.type << std::endl;
@@ -5211,6 +5211,7 @@ namespace newasm
         std::cout << std::endl;
         std::cout << "\t\t\t" << line.other << std::endl;
         #endif
+        if(!newasm::global::event_now)
         if(newasm::system::terminated)
         {
             return 1;
@@ -5595,10 +5596,16 @@ namespace newasm
         newasm::terminate(newasm::exit_codes::invalid_syntax);
         return 0;
     }
-    int procline(std::string& line)
+    inline int procline(std::string& line)
     {
         auto JIT_COMPILED = newasm::compiler::DO(line);
         newasm::procline(JIT_COMPILED);
+        return 1;
+    }
+    inline int procline(const char* line)
+    {
+        std::string buf(line);
+        newasm::procline(buf);
         return 1;
     }
     void analyzeline(std::string &line, int lineidx)
@@ -5625,8 +5632,9 @@ namespace newasm
         {
             std::cout << "LABEL SEC :: " << err.what() << std::endl;
         }
+        return;
     }
-    void callproc(std::string& name)
+    inline void callproc(std::string& name)
     {
         newasm::system::stoproc = 0;
         newasm::header::data::proc_now = true;
@@ -5651,8 +5659,10 @@ namespace newasm
             //newasm::header::data::proc_now = false;
         }
         newasm::header::data::proc_now = false;
+        return;
     }
-    void async(std::string name)
+
+    inline void async(const std::string& name)
     {
         auto it = newasm::mem::funcs.find(name);
         if(it != newasm::mem::funcs.end())
@@ -5666,7 +5676,9 @@ namespace newasm
         }
         return;
     }
-    void copyproc(std::string name)
+
+    [[maybe_unused]]
+    inline void copyproc(std::string& name)
     {
         newasm::global::event_codeblock.clear();
         auto it = newasm::mem::funcs.find(name);
@@ -5852,7 +5864,7 @@ namespace newasm
 
                 if(newasm::mem::regs::lcx.get_value() == newasm::mem::COD.size())
                 {
-                    // prevent crash
+                    // prevent crash.
                     break;
                 }
 
@@ -5882,9 +5894,7 @@ namespace newasm
                 }
             }
 
-            if constexpr(0) exec_exit_handle();
-            newasm::runtime::functions::parse<true>(newasm::handlers::exit_handler);
-            newasm::callproc(newasm::handlers::exit_handler);
+            exec_exit_handle();
 
             if(!newasm::system::terminated)
             {
