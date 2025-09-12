@@ -47,6 +47,7 @@ namespace newasm
             std::cout << std::endl;
             return 0;
         }
+
         constinit const float load_speed = 0.009f;
         inline void loading(std::string text, float speed)
         {
@@ -89,6 +90,7 @@ namespace newasm
                 std::cout << c << std::flush;
                 std::this_thread::sleep_for(std::chrono::milliseconds(delay_ms));
             }
+            return;
         }
 
         void type_and_erase(const std::string& text)
@@ -106,6 +108,7 @@ namespace newasm
                 std::cout << "\b \b" << std::flush;
                 std::this_thread::sleep_for(std::chrono::milliseconds(50));
             }
+            return;
         }
 
         void glitch_text(const std::string& text)
@@ -121,7 +124,7 @@ namespace newasm
                 std::this_thread::sleep_for(std::chrono::milliseconds(5));
             }
             std::cout << "\r" << text;
+            return;
         }
-
     }
 }
