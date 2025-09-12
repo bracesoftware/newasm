@@ -42,9 +42,9 @@ namespace newasm
         );
 
         template<_WriteableType T>
-        void write(T& text)
+        inline void write(T& text) noexcept
         {
-            printf(text);
+            std::cout << text << std::flush;
             return;
         }
     }

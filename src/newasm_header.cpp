@@ -36,9 +36,9 @@ namespace newasm
         }
         namespace system_info
         {
-            constinit const std::string name = "[NewASM]";
-            constinit const std::string copyright_claim = "(c) 2025 Brace Software Co.";
-            constinit const std::string fullname = "NewASM Virtual Machine";
+            constinit const char* name = "[NewASM]";
+            constinit const char* copyright_claim = "(c) 2025 Brace Software Co.";
+            constinit const char* fullname = "NewASM Virtual Machine";
         }
         namespace version
         {
