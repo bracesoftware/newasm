@@ -21,7 +21,7 @@ namespace newasm
 {
     namespace utils
     {
-        void displaybar(const std::string &text, float progress)
+        inline void displaybar(const std::string &text, float progress)
         {
             int bar_width = 40;
             std::cout << newasm::header::col::reset /*<< newasm::header::col::green*/ << text << newasm::header::col::gray << "[";
@@ -34,6 +34,7 @@ namespace newasm
             }
             std::cout << "] " << newasm::header::col::reset << int(progress * 100.0) << " %\r";
             std::cout.flush();
+            return;
         }
 
         int loadingbar(const std::string &text)
@@ -46,8 +47,8 @@ namespace newasm
             std::cout << std::endl;
             return 0;
         }
-        const float load_speed = 0.009f;
-        void loading(std::string text, float speed)
+        constinit const float load_speed = 0.009f;
+        inline void loading(std::string text, float speed)
         {
             const char animation[] = {'\\', '|', '/', '-'};
             const int anim_len = 4;
