@@ -63,7 +63,7 @@ namespace newasm
             }
             else
             {
-                static_assert(!sizeof(T*), "UNSUPPORTED");
+                static_assert(!sizeof(T*), "unsupported_argument_in_write()");
             }
             return;
         }
