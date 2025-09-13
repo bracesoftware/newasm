@@ -664,7 +664,7 @@ Move down and up the heap.
 #### Example
 ```asm
 . data
-    float  testdecimal : 0.0
+    float testdecimal: 0.0
 . start
     ; If the suffix of the LOAD instruction is `adr`,
     ; then we will update the value in the address heap pointer
