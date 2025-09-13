@@ -595,14 +595,14 @@ Return a value inside a function.
 . data
     intg  myvar2 : 0
 . start
-    push 0 , 273
+    push 273
 
 
     ; change myvar2 to something dumb:
-    stor fdx , myvar2
+    mov &myvar2, *fdx
 
 
-    pop 0 , myvar2
+    pop &myvar2
 
     mov tlr , myvar2
     mov fdx , 1
@@ -616,7 +616,7 @@ Return a value inside a function.
 
 ```asm
 . start
-    pop 0 , %nl
+    pop nil
 ```
 
 ### `zero` instruction
