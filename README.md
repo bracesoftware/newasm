@@ -646,15 +646,15 @@ Move down and up the heap.
 #### Example
 
 ```asm
-. data
+.data
     intg  mynum : 0
-. start
-    heap 0 , 3
-    stor hea , mynum
-    mov tlr , mynum
-    mov fdx , 2
+.start
+    heap 3
+    mov &mynum, *hea
+    mov tlr, mynum
+    mov fdx, 2
     sysenter "ios"
-syscall
+    syscall
 ```
 
 ### `load` instruction
