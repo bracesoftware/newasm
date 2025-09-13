@@ -458,6 +458,7 @@ Perform a specific system call within a system module.
 | `mem` | `1` | `tlr` | Marks a variable as a constant, with `tlr` being a pointer to the specific variable. Trying to modify a variable using `stor` afterwards will cause errors. |
 | `txtop` | `1` | `tlr`, `stl` | Concatenate 2 textual values, with these registers holding the two values. |
 | `txtop` | `2` | `tlr` | Remove whitespaces from string ends. |
+| `txtop` | `3` | `tlr` | Tokenizes the string stored inside the `tlr` register. |
 | `chrono` | `1` | `/` | Gets the current year and stores it in `tlr`. |
 | `chrono` | `2` | `/` | Gets the current month and stores it in `tlr`. |
 | `chrono` | `3` | `/` | Gets the current day in a month and stores it in `tlr`. |
