@@ -671,8 +671,8 @@ Move down and up the heap.
     ; is pointing to - HOWEVER, if the suffix is `ref`, then we will 
     ; store the value in the address heap pointer is pointing to
     ; into some variable in `.data`. 
-    load adr , 736.38 ; hea : something
-    load ref , testdecimal ; myvar : hea
+    load *, 736.38 ; hea : something
+    load &, testdecimal ; myvar : hea
 
     mov tlr , testdecimal
     mov stl , 0c1
@@ -680,7 +680,7 @@ Move down and up the heap.
     sysenter "ios"
     syscall
 
-    retn 0
+    ret 0
 ```
 
 Output:
