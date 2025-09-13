@@ -697,8 +697,8 @@ Output:
     float  testdecimal : 0.0
     float  testfloat2 : 0.0
 . start
-    load adr , 736.38 ; hea : something
-    load ref , testdecimal ; myvar : hea
+    load * , 736.38 ; hea = something
+    load & , testdecimal ; myvar = hea
 
     mov tlr , testdecimal
     mov stl , 0c1
@@ -708,8 +708,8 @@ Output:
 
     ; Allocate more space:
     heap 1
-    load adr , 9821.38 ; hea : smth
-    load ref , testfloat2 ; myvar : hea
+    load * , 9821.38 ; hea = smth
+    load & , testfloat2 ; myvar = hea
     mov tlr , testfloat2
     mov stl , 0c1
     mov fdx , 2
@@ -717,7 +717,7 @@ Output:
     syscall
     
     mov hea , 0 ; manually access the first address
-    load ref , testfloat2 ; myvar : hea
+    load & , testfloat2 ; myvar = hea
     mov tlr , testfloat2
     mov stl , 0c1
     mov fdx , 2
@@ -725,7 +725,7 @@ Output:
     syscall
 
     mov hea , 1 ; manually access the second address
-    load ref , testfloat2 ; myvar : hea
+    load & , testfloat2 ; myvar = hea
     mov tlr , testfloat2
     mov stl , 0c1
     mov fdx , 2
