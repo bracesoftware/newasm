@@ -407,6 +407,7 @@ In this example, we basically do `fdx=1`, `myvar=fdx`, `return 1`:
 Special characters supported by the virtual machine are listed below.
 | Character code | Description |
 | ----- | ---------------- |
+| `0c0` | empty character |
 | `0c1` | new line |
 | `0c2` | carriage return |
 | `0c3` | tabulator |
