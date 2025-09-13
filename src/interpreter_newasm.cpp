@@ -68,6 +68,7 @@ the Initial Developer. All Rights Reserved.
 #include "vm/impl.cpp"
 #include "sysext/csimple.cpp"
 #define __newasm_included
+#include "runtime/alpha.cpp"
 #include "newasm_stdex.cpp"
 #include "col._compat.cpp"
 
@@ -376,22 +377,22 @@ namespace newasm
         for(int i = 0; i < arguments.size(); ++i)
         {
             newasm::header::functions::trim(arguments[i]);
-            if(arguments[i] == "h") // help argument
+            if(arguments[i] == newasm::args::help) // help argument
             {
                 newasm::header::functions::help_info();
                 continue;
             }
-            if(arguments[i] == "l") //logging
+            if(arguments[i] == newasm::args::logging) //logging
             {
                 newasm::header::settings::logging = true;
                 continue;
             }
-            if(arguments[i] == "nv") // nover check
+            if(arguments[i] == newasm::args::nover_check) // nover check
             {
                 newasm::vercheck = false;
                 continue;
             }
-            if(arguments[i] == "std") // use standard lib
+            if(arguments[i] == newasm::args::use_std) // use standard lib
             {
                 newasm::header::settings::use_std = true;
                 continue;
