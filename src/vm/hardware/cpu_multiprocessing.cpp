@@ -21,9 +21,21 @@ namespace newasm
 {
     namespace hardware
     {
-        class big_number final
+        class process final
         {
-            // later implementation
+            private:
+            std::string source;
+            std::vector<std::pair<std::string, int>> 
+
+            public:
+            inline process(const std::string& filename)
+            : source(filename)
+            {
+                // do smth
+            }
+
+            inline ~process() noexcept {}
         };
+        // we use the `process` class to spawn new processes
     }
 }

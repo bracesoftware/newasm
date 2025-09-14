@@ -4,4 +4,10 @@
 namespace newasm
 {
     //
+
+    inline void main(int argc, char** argv) noexcept
+    {
+        // to setup
+        return;
+    }
 }
