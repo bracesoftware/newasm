@@ -78,7 +78,7 @@ the Initial Developer. All Rights Reserved.
 #include "kernel/threads/_flags.cpp"
 #include "vm/blueprint/class.cpp"
 // hardware changes
-#include "vm/hardware/cpu_long.cpp"
+#include "vm/hardware/multiproc.cpp"
 
 // Resources (assets) used in the program
 #include "runtime/assets/text.cpp"

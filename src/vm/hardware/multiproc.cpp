@@ -25,7 +25,7 @@ namespace newasm
         {
             private:
             std::string source;
-            std::vector<std::pair<std::string, int>> 
+            std::vector<std::pair<std::string, int>> jump_table;
 
             public:
             inline process(const std::string& filename)
