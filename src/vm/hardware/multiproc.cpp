@@ -26,6 +26,7 @@ namespace newasm
             private:
             std::string source;
             std::vector<std::pair<std::string, int>> jump_table;
+            //std::vector<newasm::compiler::lineData> contents;
 
             public:
             inline process(const std::string& filename)
