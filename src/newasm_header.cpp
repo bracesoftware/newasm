@@ -90,6 +90,9 @@ namespace newasm
 
             //lol
             bool std_now__ = false;
+
+            //
+            int movas_type = newasm::datatypes::num;
         }
         namespace constants
         {

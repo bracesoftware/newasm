@@ -133,6 +133,7 @@ namespace newasm
             const int jnz = 67;
 
             const int movasx = 68;
+            const int movas = 69;
 
             const int __say = 100;
 
@@ -216,6 +217,7 @@ namespace newasm
                 {jnz, "jnz"},
 
                 {movasx, "movasx"}, //movaddr for tuples
+                {movas, "movas"}, // movas for unions
 
                 {__say, "__say"}
             };
@@ -279,6 +281,8 @@ namespace newasm
                 const int bin_tree = 11;
                 const int chan = 12;
 
+                const int union__ = 13;
+
                 const std::unordered_map<int, std::string> identifiers__ = {
                     {num, "intg"},
                     {decm, "float"},
@@ -288,6 +292,7 @@ namespace newasm
                     {obj, "obj"},
                     {cont, "cont"},
 					{tuple, "tuple"},
+                    {union__, "union"},
 
                     {class__, "class"},
 					

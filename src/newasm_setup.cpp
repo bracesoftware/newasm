@@ -168,6 +168,7 @@ namespace newasm
         const int character = 5;
         const int tuple = 6;
         const int blueprint = 7;
+        const int yunion = 8;
     }
     namespace constv
     {
@@ -418,6 +419,10 @@ namespace newasm
     // absolutely normal structure
     namespace variables
     {
+        struct unionData
+        {
+            int addr;
+        };
         struct tupleData
         {
             std::vector<int> addr;
@@ -433,6 +438,7 @@ namespace newasm
             int type; // type
             tupleData* tuple = nullptr; // if it is a tuple, we use this instead of addr
             classData* blueprint = nullptr; // if it is a class, we use this
+            unionData* yunion = nullptr; // if it is an union, we use this
 
             //decorator data
             bool locked = false;

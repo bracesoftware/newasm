@@ -597,6 +597,57 @@ namespace newasm
                     newasm::header::data::blueprint_decl = name;
                     return 1;
                 }
+                case newasm::core::lang_inf::typenames::union__:
+                {
+                    if(newasm::header::data::struct_now)
+                    {
+                        newasm::terminate(newasm::exit_codes::nested_object);
+                        return 1;
+                    }
+                    if(newasm::header::data::blueprint_now)
+                    {
+                        newasm::terminate(newasm::exit_codes::nested_object);
+                        return 1;
+                    }
+
+                    if(value == NIL_STR)
+                    {
+                        newasm::variables::ids[name].type = newasm::datatypes::yunion;
+                        newasm::variables::ids.at(name).yunion = new newasm::variables::unionData;
+                        newasm::variables::ids.at(name).yunion->addr = newasm::hardware::randAccessMem.write<int>(0);
+                        return 1;
+                    }
+
+                    if(newasm::header::functions::isnumeric(value))
+                    {
+                        newasm::variables::ids.at(name).yunion->addr = newasm::hardware::randAccessMem.write<int>(std::stoi(value));
+                        return 1;
+                    }
+                    if(newasm::header::functions::isfloat(value))
+                    {
+                        newasm::variables::ids.at(name).yunion->addr = newasm::hardware::randAccessMem.write<float>(std::stoi(value));
+                        return 1;
+                    }
+                    if(newasm::header::functions::ischar(value))
+                    {
+                        char val = newasm::header::functions::remsq(value).at(0);
+                        newasm::variables::ids.at(name).yunion->addr = newasm::hardware::randAccessMem.write<char>(val);
+                        return 1;
+                    }
+                    if(newasm::header::functions::istext(value))
+                    {
+                        std::string val = newasm::header::functions::remq(value);
+                        newasm::variables::ids.at(name).yunion->addr = newasm::hardware::randAccessMem.write<std::string>(val);
+                        return 1;
+                    }
+                    if(newasm::header::functions::isref(value))
+                    {
+                        newasm::variables::ids.at(name).yunion->addr = newasm::hardware::randAccessMem.write<int>(0);
+                        return 1;
+                    }
+                    newasm::terminate(newasm::exit_codes::invalid_syntax);
+                    return 1;
+                }
                 // containers
                 case newasm::core::lang_inf::typenames::cont:
                 {
@@ -2664,6 +2715,12 @@ namespace newasm
         }
         switch(it->second)
         {
+            //movas
+            case newasm::core::lang_inf::movas:
+            {
+                
+                return 1;
+            }
             //halt
             case newasm::core::lang_inf::halt:
             {
