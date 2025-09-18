@@ -92,7 +92,7 @@ namespace newasm
             bool std_now__ = false;
 
             //
-            int movas_type = newasm::datatypes::num;
+            int movas_type = newasm::core::lang_inf::typenames::num;
         }
         namespace constants
         {

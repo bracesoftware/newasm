@@ -1893,8 +1893,44 @@ using "ios"
     call std::ios::writeln
 
 	;mov tlr, ui::29042384_w
+
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+
+.data
+    union myUnion: nil
+    union myUnion2: "Hello"
+.start
+    movas string
+
+    mov tlr, myUnion
+    mov stl, 0c1
+    mov fdx, 1
+    sysenter "ios"
+    syscall
+
+    mov tlr, myUnion2
+    syscall
+
     mov tlr, 223
-    
     ret *tlr
 
     ;using "kuku"

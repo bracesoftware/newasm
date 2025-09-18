@@ -236,6 +236,56 @@ namespace newasm
 							suf = '"' + newasm::hardware::randAccessMem.peek<std::string>(i.addr) + '"';
 							return;
 						}
+						if(i.type == newasm::datatypes::yunion)
+						{
+							if(i.locked)
+							{
+								if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::num)
+								{
+									suf = std::to_string(0);
+									return;
+								}
+								if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::decm)
+								{
+									suf = std::to_string(0.0);
+									return;
+								}
+								if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::char__)
+								{
+									suf = "'?'";
+									return;
+								}
+								if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::txt)
+								{
+									suf = "\"unknown??\"";
+									return;
+								}
+								return;
+							}
+
+							if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::num)
+							{
+								suf = std::to_string(newasm::hardware::randAccessMem.peek<int>(i.yunion->addr));
+								return;
+							}
+							if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::decm)
+							{
+								suf = std::to_string(newasm::hardware::randAccessMem.peek<float>(i.yunion->addr));
+								return;
+							}
+							if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::char__)
+							{
+								std::string buf(1, newasm::hardware::randAccessMem.peek<char>(i.yunion->addr));
+								suf = "'" + buf + "'";
+								return;
+							}
+							if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::txt)
+							{
+								suf = '"' + newasm::hardware::randAccessMem.peek<std::string>(i.yunion->addr) + '"';
+								return;
+							}
+							return;
+						}
 					}
 					return;
 				};

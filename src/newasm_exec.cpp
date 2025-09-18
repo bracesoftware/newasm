@@ -610,10 +610,11 @@ namespace newasm
                         return 1;
                     }
 
+                    newasm::variables::ids[name].type = newasm::datatypes::yunion;
+                    newasm::variables::ids.at(name).yunion = new newasm::variables::unionData;
+
                     if(value == NIL_STR)
                     {
-                        newasm::variables::ids[name].type = newasm::datatypes::yunion;
-                        newasm::variables::ids.at(name).yunion = new newasm::variables::unionData;
                         newasm::variables::ids.at(name).yunion->addr = newasm::hardware::randAccessMem.write<int>(0);
                         return 1;
                     }
@@ -2718,7 +2719,37 @@ namespace newasm
             //movas
             case newasm::core::lang_inf::movas:
             {
-                
+                auto it = newasm::inverted_types.find(suf);
+                if(it == newasm::inverted_types.end())
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_syntax);
+                    return 1;
+                }
+
+                switch(it->second)
+                {
+                    case newasm::core::lang_inf::typenames::num:
+                    {
+                        newasm::header::data::movas_type = newasm::core::lang_inf::typenames::num;
+                        return 1;
+                    }
+                    case newasm::core::lang_inf::typenames::decm:
+                    {
+                        newasm::header::data::movas_type = newasm::core::lang_inf::typenames::decm;
+                        return 1;
+                    }
+                    case newasm::core::lang_inf::typenames::char__:
+                    {
+                        newasm::header::data::movas_type = newasm::core::lang_inf::typenames::char__;
+                        return 1;
+                    }
+                    case newasm::core::lang_inf::typenames::txt:
+                    {
+                        newasm::header::data::movas_type = newasm::core::lang_inf::typenames::txt;
+                        return 1;
+                    }
+                }
+                newasm::terminate(newasm::exit_codes::invalid_syntax);
                 return 1;
             }
             //halt
@@ -5938,9 +5969,9 @@ namespace newasm
                 catch(const std::exception& e)
                 {
                     std::cerr << "Kompajler te zajebucnuo -> " << e.what() << '\n';
-                    //std::cout << "LCX value -> " << newasm::mem::regs::lcx.get_value() << std::endl;
-                    //std::cout << "CC size -> " << newasm::compiler::compiledCode.size() << std::endl;
-                    //std::cout << "Line data -> " << newasm::compiler::compiledCode.at(newasm::mem::regs::lcx.get_value()).raw << std::endl;
+                    std::cout << "LCX value -> " << newasm::mem::regs::lcx.get_value() << std::endl;
+                    std::cout << "CC size -> " << newasm::compiler::compiledCode.size() << std::endl;
+                    std::cout << "Line data -> " << newasm::compiler::compiledCode.at(newasm::mem::regs::lcx.get_value()).raw << std::endl;
                 }
                 
 
