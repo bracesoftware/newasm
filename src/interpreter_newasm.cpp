@@ -289,6 +289,17 @@ namespace newasm
                     }
                 }
             }
+            printf___("\t\tCleaning up union data...\n");
+            for(auto i = newasm::variables::ids.begin(); i != newasm::variables::ids.end(); ++i)
+            {
+                if(i->second.type == newasm::datatypes::yunion)
+                {
+                    if(i->second.yunion != nullptr)
+                    {
+                        delete i->second.yunion;
+                    }
+                }
+            }
             printf___("Closing...");
             std::cout << newasm::header::col::reset;
             std::cout << std::endl;
