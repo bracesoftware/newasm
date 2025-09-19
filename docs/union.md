@@ -1,5 +1,7 @@
 - [Go back...](../README.md)
 
+> Added in build 10.
+
 # Unions
 
 + Added the new `union`s! To declare a new union do this:
