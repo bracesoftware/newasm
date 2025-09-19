@@ -81,6 +81,7 @@ Documentation about `newasm` which includes following topics:
     - [`async`](docs/async.md)
     - [`vmov`](docs/virtual.md)
     - [`movaddr`/`movasx`](docs/dynmem.md)
+    - [`movas` and `union`](docs/union.md)
 - [Procedures](docs/proc.md)
 - [Exit codes](docs/exc.md)
 - [Comments](docs/commends.md)
