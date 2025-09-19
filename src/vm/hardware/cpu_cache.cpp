@@ -49,7 +49,7 @@ namespace newasm
             // cuz we have a direct memory access
 
             // Amount of addresses that map to a single cache line is __newasm_LINEBYTES
-            inline int __minusIPlus(int address) noexcept
+            constexpr inline int __minusIPlus(int address) noexcept
             {
                 // a simple mathematical algorithm
                 return (
