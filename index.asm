@@ -1894,27 +1894,6 @@ using "ios"
 
 	;mov tlr, ui::29042384_w
 
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-
 .data
     union myUnion: nil
     union myUnion2: "Hello"
@@ -1927,6 +1906,11 @@ using "ios"
     sysenter "ios"
     syscall
 
+    mov tlr, myUnion2
+    syscall
+
+    del &myUnion2
+    mov &myUnion2, "Npr ja sam super cool lik haha"
     mov tlr, myUnion2
     syscall
 
