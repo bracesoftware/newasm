@@ -22,7 +22,7 @@ namespace newasm
 {
     namespace opcodes
     {
-        const std::unordered_map<int, std::string> mem = {
+        std::unordered_map<int, std::string> mem = {
             {1, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::load)}, //0x1
             {2, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::stor)}, //0x2
             {3, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::sysreq)}, //0x3
