@@ -1954,6 +1954,46 @@ namespace newasm
                         newasm::variables::ids.at(suf).addr = newasm::hardware::randAccessMem.overwrite<std::string>(i.addr, newasm::header::functions::remq(opr));;
                         return 1;
                     }
+                    if(i.type == newasm::datatypes::yunion)
+                    {
+                        if(
+                            (newasm::header::data::movas_type == newasm::core::lang_inf::typenames::num) and
+                            (newasm::header::functions::isnumeric(opr))
+                        )
+                        {
+                            i.yunion->addr = newasm::hardware::randAccessMem.write<int>(std::stoi(opr));
+                            return 1;
+                        }
+                        if(
+                            (newasm::header::data::movas_type == newasm::core::lang_inf::typenames::decm) and
+                            (newasm::header::functions::isfloat(opr))
+                        )
+                        {
+                            i.yunion->addr = newasm::hardware::randAccessMem.write<float>(std::stof(opr));
+                            return 1;
+                        }
+                        if(
+                            (newasm::header::data::movas_type == newasm::core::lang_inf::typenames::char__) and
+                            (newasm::header::functions::ischar(opr))
+                        )
+                        {
+                            char value = newasm::header::functions::remsq(opr).at(0);
+                            i.yunion->addr = newasm::hardware::randAccessMem.write<char>(value);
+                            return 1;
+                        }
+                        if(
+                            (newasm::header::data::movas_type == newasm::core::lang_inf::typenames::txt) and
+                            (newasm::header::functions::istext(opr))
+                        )
+                        {
+                            std::string value = newasm::header::functions::remq(opr);
+                            i.yunion->addr = newasm::hardware::randAccessMem.write<std::string>(value);
+                            return 1;
+                        }
+
+                        newasm::terminate(newasm::exit_codes::seg_fault);
+                        return 1;
+                    }
                     if(i.type == newasm::datatypes::tuple)
                     {
                         if(newasm::header::data::tupleIndex != -1)
@@ -2957,6 +2997,33 @@ namespace newasm
                 {
                     int buffer_len = newasm::hardware::randAccessMem.peek<int>(it->second.addr);
                     newasm::hardware::randAccessMem.delete__HEAP(it->second.addr, it->second.addr + sizeof(int) + buffer_len);
+                    return 1;
+                }
+                if(it->second.type == newasm::datatypes::yunion)
+                {
+                    int yunion_addr = it->second.yunion->addr;
+                    if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::num)
+                    {
+                        newasm::hardware::randAccessMem.delete__HEAP(yunion_addr, yunion_addr + sizeof(int));
+                        return 1;
+                    }
+                    if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::decm)
+                    {
+                        newasm::hardware::randAccessMem.delete__HEAP(yunion_addr, yunion_addr + sizeof(float));
+                        return 1;
+                    }
+                    if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::char__)
+                    {
+                        newasm::hardware::randAccessMem.delete__HEAP(yunion_addr, yunion_addr + sizeof(char));
+                        return 1;
+                    }
+                    if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::txt)
+                    {
+                        int buffer_len = newasm::hardware::randAccessMem.peek<int>(yunion_addr);
+                        newasm::hardware::randAccessMem.delete__HEAP(yunion_addr, yunion_addr + sizeof(int) + buffer_len);
+                        return 1;
+                    }
+                    newasm::terminate(newasm::exit_codes::seg_fault);
                     return 1;
                 }
                 if(it->second.type == newasm::datatypes::tuple)
