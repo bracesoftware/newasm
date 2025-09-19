@@ -1909,10 +1909,13 @@ using "ios"
     mov tlr, myUnion2
     syscall
 
-    del &myUnion2
+    del &myUnion2 ; note that del also follows the `movas`
     mov &myUnion2, "Npr ja sam super cool lik haha"
     mov tlr, myUnion2
     syscall
+
+    movas intg
+    mov &myUnion, 39 ; memory leak !
 
     mov tlr, 223
     ret *tlr

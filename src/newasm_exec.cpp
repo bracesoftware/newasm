@@ -1956,6 +1956,11 @@ namespace newasm
                     }
                     if(i.type == newasm::datatypes::yunion)
                     {
+                        if(!newasm::hardware::randAccessMem.is_free(i.yunion->addr))
+                        {
+                            newasm::terminate(newasm::exit_codes::memory_leak);
+                            return 1;
+                        }
                         if(
                             (newasm::header::data::movas_type == newasm::core::lang_inf::typenames::num) and
                             (newasm::header::functions::isnumeric(opr))

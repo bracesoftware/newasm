@@ -36,6 +36,12 @@ namespace newasm
             // free = 0
             // occupied = 1
 
+            [[nodiscard]]
+            inline bool is_free(int addr) noexcept
+            {
+                return !(__memory_free__.get_at(addr));
+            }
+
             inline int get_free_alloc(int bytes) noexcept
             {
                 for(int i = 0; i <= MEM_SIZE - bytes; ++i)
