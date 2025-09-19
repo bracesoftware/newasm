@@ -50,7 +50,7 @@ namespace newasm
             const int log = 8;
             const int nover = 9;
 
-            constinit const std::unordered_map<int, std::string> arg_map = {
+            const std::unordered_map<int, std::string> arg_map = {
                 {mode, "-mode"},
                 {ver, "-ver"},
                 {input, "-input"},
