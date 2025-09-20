@@ -60,7 +60,7 @@ namespace newasm
             }
 
             public:
-            inline void init() noexcept
+            constexpr inline void init() noexcept
             {
                 for(int i = 0; i < t_cachesize; ++i)
                 {
