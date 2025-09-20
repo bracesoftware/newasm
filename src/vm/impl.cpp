@@ -17,6 +17,7 @@ the Initial Developer. All Rights Reserved.
 
 */
 
+#define __newasm_REG (*(volatile int*)0x0ACD64) // for modding
 
 #define __newasm_MEMORY_SIZE 10 // mb
 #define __newasm_DISK_SIZE 20 // mb

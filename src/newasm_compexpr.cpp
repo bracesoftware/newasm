@@ -270,7 +270,10 @@ namespace newasm
                 }
             }
             result = newasm::tokens.at(0)->symbol;
-            for(auto* t : newasm::tokens) delete t;
+            for(auto* t : newasm::tokens)
+            {
+                delete t;
+            }
             return result;
         }
     }
