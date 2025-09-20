@@ -95,6 +95,7 @@ namespace newasm
             {
                 this->init();
             }
+            
             inline ~CPU_CACHE__() noexcept {}
         };
 
