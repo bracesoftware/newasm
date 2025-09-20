@@ -4,11 +4,6 @@ int main(int argc, char* argv[])
 {
     if constexpr(0) std::ios::sync_with_stdio(false);
 
-    if(__newasm_REG == 0)
-    {
-        return 0;
-    }
-
     try
     {
         newasm::entry(argc, argv);
