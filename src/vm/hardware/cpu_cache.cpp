@@ -69,7 +69,6 @@ namespace newasm
                 return;
             }
 
-            template<newasm::hardware::_CachableType T>
             inline void* find_addr(int address) noexcept
             {
                 if(__cache__[__minusIPlus(address)].addr == address)
@@ -80,7 +79,7 @@ namespace newasm
             }
 
             template<newasm::hardware::_CachableType T>
-            inline void cache_addr(int address, T value)
+            inline void cache_addr(int address, T value) noexcept
             {
                 T temp;
 
@@ -91,7 +90,7 @@ namespace newasm
                 return;
             }
 
-            inline CPU_CACHE__()
+            inline CPU_CACHE__() noexcept
             {
                 this->init();
             }

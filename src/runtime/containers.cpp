@@ -120,7 +120,7 @@ namespace newasm
                 return;
             }
 
-            inline int get_at(int index) noexcept
+            inline int get_at(int index)
             {
                 if(index >= this->bitarraysize)
                 {
@@ -130,7 +130,7 @@ namespace newasm
                 return (bitarrayvalue[index/(__newasm__integer_bits)]) & (1 << (index % (__newasm__integer_bits))) ? 1 : 0;
             }
 
-            inline int set_at(int index, int value) noexcept
+            inline int set_at(int index, int value)
             {
                 if(value != 0 && value != 1)
                 {

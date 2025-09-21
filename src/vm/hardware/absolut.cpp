@@ -251,7 +251,7 @@ namespace newasm
 
                 if(!newasm::expcfg::volatilebool)
                 {
-                    void* cache = newasm::hardware::cpuCache.find_addr<T>(addr);
+                    void* cache = newasm::hardware::cpuCache.find_addr(addr);
                     if(cache != nullptr)
                     {
                         T value;
