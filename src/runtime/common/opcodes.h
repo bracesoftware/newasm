@@ -89,6 +89,7 @@ namespace newasm
             {64, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::jnz)},
             {65, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::movasx)},
             {66, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::movas)},
+            {67, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::sel)},
 
             {100, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::__say)}
         };

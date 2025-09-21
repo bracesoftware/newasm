@@ -2322,7 +2322,7 @@ namespace newasm
                         if(i.first)
                         {
                             auto byte = i.second;
-                            auto addr = newasm::malloc::meta.back();
+                            auto addr = newasm::header::data::malloc_block_used; //newasm::malloc::meta.back();
 
                             int malloc_size = 0;
                             std::memcpy(&malloc_size, newasm::RAM->get__A(addr), sizeof(int));
@@ -3812,6 +3812,25 @@ namespace newasm
 
                 return 1;
             }
+            //sel
+            case newasm::core::lang_inf::sel:
+            {
+                newasm::runtime::functions::parse(suf);
+                if(!newasm::header::functions::isnumeric(suf))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    return 1;
+                }
+
+                if(std::find(newasm::malloc::meta.begin(), newasm::malloc::meta.end(), std::stoi(suf)) == newasm::malloc::meta.end())
+                {
+                    newasm::terminate(newasm::exit_codes::seg_fault);
+                    return 1;
+                }
+
+                newasm::header::data::malloc_block_used = std::stoi(suf);
+                return 1;
+            }
             //malloc
             case newasm::core::lang_inf::malloc__:
             {
@@ -3834,6 +3853,8 @@ namespace newasm
                 }
                 newasm::malloc::meta.push_back(i);
                 newasm::mem::regs::tlr.set_value(std::to_string(i));
+
+                newasm::header::data::malloc_block_used = newasm::malloc::meta.back();
                 
                 #if 0
                 if(newasm::allocation_data != nullptr) // malloc je vec upotrebljen //NoAlloc

@@ -135,6 +135,8 @@ namespace newasm
             const int movasx = 68;
             const int movas = 69;
 
+            const int sel = 70;
+
             const int __say = 100;
 
             const std::unordered_map<int, std::string> instruction_set = {
@@ -218,6 +220,8 @@ namespace newasm
 
                 {movasx, "movasx"}, //movaddr for tuples
                 {movas, "movas"}, // movas for unions
+
+                {sel, "sel"},
 
                 {__say, "__say"}
             };

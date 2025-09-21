@@ -1963,11 +1963,13 @@ using "ios"
 
     malloc 55
     mov &alloc2, *tlr
+    mov hea, [0]
+    load *, 92873
+    sel alloc2 ; select the shi
     call std::ios::writeln
     mov hea, [0]
     mov tlr, *hea
     call std::ios::writeln
-    load *, 92873
     load &, &myInt2
     mov tlr, myInt2
     call std::ios::writeln
