@@ -23,9 +23,16 @@ namespace newasm
     {
         namespace misc
         {
-            inline int rand(int min, int max) noexcept
+            inline int rand_old(int min, int max) noexcept
             {
                 return min + (std::rand() % (max - min + 1));
+            }
+
+            inline int rand(int min, int max) noexcept
+            {
+                static std::mt19937 rng(std::random_device{}());
+                std::uniform_int_distribution<int> dist(min, max);
+                return dist(rng);
             }
         }
     }
