@@ -24,6 +24,13 @@ movas string ; new type
 mov &myUnion, "Some text" ; now myUnion is a string "Some text", while it was just a number 0
 ```
 
++ Added the new `misc` kernel module with a new function:
+
+| Module | ID    | Arguments | Description |
+| ----- | ---------------- | --------- | ----------- |
+| `misc` | `1` | `tlr`, `stl` | Returns a random number, with `tlr` being the minimum, and `stl` being the maximum. |
+
+
 ## What's changed
 
 - No important changes.
