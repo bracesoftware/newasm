@@ -48,7 +48,7 @@ the Initial Developer. All Rights Reserved.
 #include <cstring>
 //LOl
 #include <limits>
-#include <cstdlib>
+#include <cstdlib> //memcpy, rand
 #include <iomanip>
 #include <cstdio>
 #include <stdio.h>
@@ -154,6 +154,7 @@ is in the runtime
 #include "kernel/system_calls/tuple.cpp"
 #include "kernel/system_calls/tcp.cpp"
 #include "kernel/system_calls/http.cpp"
+#include "kernel/system_calls/misc.cpp"
 
 #include "runtime/containers.cpp"
 #include "runtime/env_vars.cpp"

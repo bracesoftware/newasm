@@ -1897,6 +1897,7 @@ using "ios"
 .data
     union myUnion: nil
     union myUnion2: "Hello"
+    intg random: 0
 .start
     movas string
 
@@ -1913,6 +1914,16 @@ using "ios"
     mov &myUnion2, "Npr ja sam super cool lik haha"
     mov tlr, myUnion2
     syscall
+
+    using "misc"
+    sysenter "misc"
+    mov fdx, 1 ; rand()
+    mov tlr, 5 ; min
+    mov stl, 10000 ; max
+    
+    syscall
+    mov &random, *tlr
+    call std::ios::writeln
 
     movas intg
     mov &myUnion, 39 ; memory leak !

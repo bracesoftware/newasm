@@ -142,6 +142,11 @@ namespace newasm
                         newasm::kernel::cfg::Math = true;
                         return;
                     }
+                    if(arg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::misc))
+                    {
+                        newasm::kernel::cfg::Misc = true;
+                        return;
+                    }
                     newasm::compiler::abort(newasm::compiler::fail::invalid_krnlmod);
                     return;
                 }

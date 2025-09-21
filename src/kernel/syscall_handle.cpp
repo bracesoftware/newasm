@@ -24,6 +24,32 @@ namespace newasm
     {
         int handleSysCall()
         {
+            //misc
+            if(newasm::kernel::cfg::Misc)
+            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::misc)
+            {
+                if(newasm::mem::regs::fdx == 1) //rand
+                {
+                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr.get_value()))
+                    {
+                        newasm::header::functions::krnl("`tlr` (" + newasm::mem::regs::tlr.get_value() + ") has to be a numeric value.");
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::stl.get_value()))
+                    {
+                        newasm::header::functions::krnl("`stl` (" + newasm::mem::regs::stl.get_value() + ") has to be a numeric value.");
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+
+                    int result = newasm::syscalls::misc::rand(std::stoi(newasm::mem::regs::tlr.get_value()), std::stoi(newasm::mem::regs::stl.get_value()));
+                    newasm::mem::regs::tlr.set_value(std::to_string(result));
+                    return 1;
+                }
+                newasm::terminate(newasm::exit_codes::unknown_fdx);
+                return 1;
+            }
             //math
             if(newasm::kernel::cfg::Math)
             if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::math)
@@ -118,6 +144,8 @@ namespace newasm
                     newasm::mem::regs::tlr.set_value(std::to_string(std::cbrt(value)));
                     return 1;
                 }
+                newasm::terminate(newasm::exit_codes::unknown_fdx);
+                return 1;
             }
             //http
             if(newasm::kernel::cfg::HTTP)

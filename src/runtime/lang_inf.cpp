@@ -224,20 +224,20 @@ namespace newasm
 
             namespace refs
             {
-                const int ios = 1;
-                const int ext = 2;
-                const int cmanip = 3;
-                const int fs = 4;
-                const int txtop = 5;
-                const int net = 6;
-                const int mem = 7;
-                const int chrono = 8;
-                const int thread = 9;
-                const int tuple = 10;
-                const int tcp = 11;
-                const int http = 12;
-
-                const int math = 13;
+                constinit const int ios = 1;
+                constinit const int ext = 2;
+                constinit const int cmanip = 3;
+                constinit const int fs = 4;
+                constinit const int txtop = 5;
+                constinit const int net = 6;
+                constinit const int mem = 7;
+                constinit const int chrono = 8;
+                constinit const int thread = 9;
+                constinit const int tuple = 10;
+                constinit const int tcp = 11;
+                constinit const int http = 12;
+                constinit const int math = 13;
+                constinit const int misc = 14;
 
                 const std::unordered_map<int, std::string> identifiers__ = {
                     {ios, "ios"},
@@ -252,7 +252,8 @@ namespace newasm
                     {tuple, "tuple"},
                     {tcp, "tcp"},
                     {http, "http"},
-                    {math, "math"}
+                    {math, "math"},
+                    {misc, "misc"}
                 };
             }
             namespace directives

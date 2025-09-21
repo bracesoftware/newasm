@@ -19,24 +19,14 @@ the Initial Developer. All Rights Reserved.
 
 namespace newasm
 {
-    namespace kernel
+    namespace syscalls
     {
-        namespace cfg
+        namespace misc
         {
-            bool IOStream = false;
-            bool Extensions = false;
-            bool Thread = false;
-            bool Chrono = false;
-            bool Network = false;
-            bool Memory = false;
-            bool TextOperations = false;
-            bool ContainerManipulation = false;
-            bool FileStream = false;
-            bool Tuple = false;
-            bool TCProtocol = false;
-            bool HTTP = false;
-            bool Math = false;
-            bool Misc = false;
+            inline int rand(int min, int max) noexcept
+            {
+                return min + (std::rand() % (max - min + 1));
+            }
         }
     }
 }
