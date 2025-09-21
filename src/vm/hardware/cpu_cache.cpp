@@ -69,6 +69,7 @@ namespace newasm
                 return;
             }
 
+            [[nodiscard]]
             inline void* find_addr(int address) noexcept
             {
                 if(__cache__[__minusIPlus(address)].addr == address)

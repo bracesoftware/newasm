@@ -187,6 +187,16 @@ namespace newasm
     auto* RAM = &newasm::hardware::randAccessMem;
 }
 
+struct __global_newasm final
+{
+    inline __global_newasm() noexcept
+    {
+        //std::ios::sync_with_stdio(false);
+    }
+};
+
+static __global_newasm nG;
+
 #include "newasm_exec.cpp"
 
 #include "runtime/procline_insert.cpp"
