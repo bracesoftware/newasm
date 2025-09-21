@@ -324,7 +324,7 @@ namespace newasm
 namespace newasm
 {
     int entry(int argc, char* argv[])
-    {   
+    {
         for(auto i = newasm::core::lang_inf::instruction_set.begin(); i != newasm::core::lang_inf::instruction_set.end(); ++i)
         {
             newasm::inverted_ins[i->second] = i->first;
