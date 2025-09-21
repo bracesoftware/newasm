@@ -30,6 +30,10 @@ namespace newasm
 
             inline int rand(int min, int max) noexcept
             {
+                if(min > max)
+                {
+                    return min;
+                }
                 static std::mt19937 rng(std::random_device{}());
                 std::uniform_int_distribution<int> dist(min, max);
                 return dist(rng);
