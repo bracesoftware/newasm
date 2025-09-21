@@ -197,7 +197,7 @@ namespace newasm
 
         namespace functions
         {
-            void free_dyn_mem()
+            inline void free_dyn_mem()
             {
                 if(bit_arrays.empty())
                 {
