@@ -56,6 +56,10 @@ namespace newasm
                 newasm::header::functions::err("Environment variable doesn't exist.");
                 return 1;
             }
+
+            bool result = newasm::shell_tools::prompt("Are you sure you want to delete the variable?");
+            if(!result) return 1;
+
             newasm::core::env_vars::functions::rem_env(key);
             return 1;
         }
@@ -73,6 +77,9 @@ namespace newasm
             std::cout << newasm::header::col::gray << "\tInput new environment variable value: " << newasm::header::col::reset;
             std::getline(std::cin, value);
             value = newasm::header::functions::trim(value);
+
+            bool result = newasm::shell_tools::prompt("Are you sure you want to modify the variable?");
+            if(!result) return 1;
             
             newasm::core::env_vars::functions::mod_env(key, value);
             return 1;
@@ -91,6 +98,9 @@ namespace newasm
             std::cout << newasm::header::col::gray << "\tInput new environment variable name: " << newasm::header::col::reset;
             std::getline(std::cin, newname);
             newname = newasm::header::functions::trim(newname);
+
+            bool result = newasm::shell_tools::prompt("Are you sure you want to rename the variable?");
+            if(!result) return 1;
             
             newasm::core::env_vars::functions::rename_env(oldname, newname);
             return 1;

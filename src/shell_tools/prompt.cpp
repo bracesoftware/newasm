@@ -27,7 +27,7 @@ namespace newasm
             std::cout << newasm::header::col::light_blue << ":: " << newasm::header::col::gray << text << newasm::header::col::light_blue << " [y/n] ";
             std::cout << newasm::header::col::reset;
             std::getline(std::cin, input);
-            std::cout << std::endl;
+            //std::cout << std::endl;
 
             if((input == "Y") or (input == "y")) return true;
             newasm::header::functions::err("Operation cancelled.");

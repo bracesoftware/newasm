@@ -187,6 +187,8 @@ is in the runtime
 #include "runtime/repl_mode.cpp"
 
 #include "newasm_compexpr.cpp"
+#include "shell_tools/prompt.cpp"
+
 #include "shell_tools/user.cpp"
 #include "shell_tools/env_control.cpp"
 #include "newasm_shell.cpp"
