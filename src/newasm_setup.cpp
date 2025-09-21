@@ -591,6 +591,10 @@ namespace newasm
                 {
                     s = std::to_string(it->second.blueprint->addr[0]);
                 }
+                if(it->second.type == newasm::datatypes::tuple)
+                {
+                    s = std::to_string(it->second.tuple->addr[0]);
+                }
                 return;
             }
             
