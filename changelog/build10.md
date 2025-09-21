@@ -31,6 +31,25 @@ mov &myUnion, "Some text" ; now myUnion is a string "Some text", while it was ju
 | `misc` | `1` | `tlr`, `stl` | Returns a random number, with `tlr` being the minimum, and `stl` being the maximum. |
 
 
++ Added the new instruction `sel`! To select what `malloc` block we want to manipulate, we use `sel`:
+
+```asm
+.data
+    intg alloc: 0
+.start
+    malloc 4 ; 4 bytes + 4 byte header
+    mov &alloc, *tlr ; tlr has the address of the header
+
+    ; now we use the `alloc` variable to manipulate the allocated memory
+    ; `sel` to select it
+    ; `free` to free it
+
+    sel alloc
+    mov hea, [0]
+    ; do smth
+    free alloc
+```
+
 ## What's changed
 
 - No important changes.
