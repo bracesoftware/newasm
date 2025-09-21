@@ -356,7 +356,7 @@ namespace newasm
                     int address = newasm::mem::regs::stk.get_value();
                     std::memcpy(&buffer_len, &__memory__[address], sizeof(int));
                     std::string buffer(buffer_len, '\0');
-                    std::memcpy(buffer.data(), &__memory__[address + buffer_len], buffer_len);
+                    std::memcpy(buffer.data(), &__memory__[address + sizeof(int)], buffer_len);
                     value = buffer;
 
                     for(int i = newasm::mem::regs::stk; i < newasm::mem::regs::stk + sizeof(int) + buffer_len; ++i)

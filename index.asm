@@ -1941,6 +1941,8 @@ using "ios"
     string testStringBro2: "Hello"
     intg myInt2: 298374537
 
+    string TetsSTR: "/"
+
     intg alloc2: 0
 .start
     mov tlr, "Address test:"
@@ -1979,7 +1981,11 @@ using "ios"
     del &myUnion
     mov &myUnion, 39 ; memory leak !
 
-    sel 3
+    push "I am a sigma, boy"
+    pop &TetsSTR
+
+    mov tlr, TetsSTR
+    call std::ios::writeln
 
     mov tlr, 223
     ret *tlr
