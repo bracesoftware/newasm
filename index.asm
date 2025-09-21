@@ -1898,6 +1898,7 @@ using "ios"
     union myUnion: nil
     union myUnion2: "Hello"
     intg random: 0
+    tuple testTupleOh: (0, 543.534, "oh my God")
 .start
     movas string
 
@@ -1923,6 +1924,36 @@ using "ios"
     
     syscall
     mov &random, *tlr
+    call std::ios::writeln
+
+    mov tlr, #myUnion
+    call std::ios::writeln
+
+    mov tlr, #student
+    call std::ios::writeln
+
+    mov tlr, #testTupleOh
+    call std::ios::writeln
+
+.data
+    string testStringBro: "Hello"
+    intg myInt: 29083
+    string testStringBro2: "Hello"
+    intg myInt2: 298374537
+.start
+    mov tlr, "Address test:"
+    call std::ios::writeln
+
+    mov tlr, #testStringBro
+    call std::ios::writeln
+
+    mov tlr, #myInt
+    call std::ios::writeln
+
+    mov tlr, #testStringBro2
+    call std::ios::writeln
+
+    mov tlr, #myInt2
     call std::ios::writeln
 
     movas intg
