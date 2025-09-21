@@ -583,9 +583,13 @@ namespace newasm
                 
                 s = std::to_string(it->second.addr);
 
-                if(it->second.type == newasm::core::lang_inf::typenames::yunion)
+                if(it->second.type == newasm::datatypes::yunion)
                 {
                     s = std::to_string(it->second.yunion->addr);
+                }
+                if(it->second.type == newasm::datatypes::blueprint)
+                {
+                    s = std::to_string(it->second.blueprint->addr[0]);
                 }
                 return;
             }
