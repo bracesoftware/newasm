@@ -1976,7 +1976,10 @@ using "ios"
     free alloc2
 
     movas intg
+    del &myUnion
     mov &myUnion, 39 ; memory leak !
+
+    sel 3
 
     mov tlr, 223
     ret *tlr

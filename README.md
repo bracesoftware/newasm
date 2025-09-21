@@ -73,6 +73,7 @@ Documentation about `newasm` which includes following topics:
     - [`db` instruction](#db-instruction)
     - [`wait` instruction](#wait-instruction)
     - [`malloc` and `free` instructions](#malloc-and-free)
+        - [`sel` selection](#sel-instruction)
     - [`stack` instruction](#stack-instruction)
     - [`xchg` instruction](#xchg-instruction)
     - [`cls` instruction](#cls-instruction)
@@ -1044,13 +1045,13 @@ Easily manage heap memory. Example:
     malloc 2 ; for test purposes
     mov hea, 2
     db hea
-    free
+    free nil
     db hea
     __say 0,"2nd malloc"
     malloc 2 ; allocate 2 more spaces in the heap
     mov hea, [1] ; using brackets we can access the address id of the malloc-allocated heap
     db hea
-    free ; automatically get rid of that allocated memory
+    free nil ; automatically get rid of that allocated memory
     db hea
     heap -40 ; free up the rest we occupied for some testing
 ```
@@ -1062,6 +1063,26 @@ Output:
                         2nd malloc
 [NewASM]   PROGRAM THREAD @ Debug | hea = `42`
 [NewASM]   PROGRAM THREAD @ Debug | hea = `40`
+```
+
+#### `sel` instruction
+To select what block we want to manipulate, we use `sel`:
+
+```asm
+.data
+    intg alloc: 0
+.start
+    malloc 4 ; 4 bytes + 4 byte header
+    mov &alloc, *tlr ; tlr has the address of the header
+
+    ; now we use the `alloc` variable to manipulate the allocated memory
+    ; `sel` to select it
+    ; `free` to free it
+
+    sel alloc
+    mov hea, [0]
+    ; do smth
+    free alloc
 ```
 
 ### `stack` instruction
