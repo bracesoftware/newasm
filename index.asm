@@ -1940,6 +1940,8 @@ using "ios"
     intg myInt: 29083
     string testStringBro2: "Hello"
     intg myInt2: 298374537
+
+    intg alloc2: 0
 .start
     mov tlr, "Address test:"
     call std::ios::writeln
@@ -1955,6 +1957,21 @@ using "ios"
 
     mov tlr, #myInt2
     call std::ios::writeln
+
+    mov tlr, "Malloc test"
+    call std::ios::writeln
+
+    malloc 55
+    mov &alloc2, *tlr
+    call std::ios::writeln
+    mov hea, [0]
+    mov tlr, *hea
+    call std::ios::writeln
+    load *, 92873
+    load &, &myInt2
+    mov tlr, myInt2
+    call std::ios::writeln
+    free alloc2
 
     movas intg
     mov &myUnion, 39 ; memory leak !

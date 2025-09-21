@@ -388,6 +388,11 @@ namespace newasm
                 return pop__STACK<T>(value);
             }
             //
+
+            inline auto get__A(int addr)
+            {
+                return &this->__memory__[addr];
+            }
         };
 
         newasm::hardware::randAccessMem__<__newasm_MEMORY_SIZE> randAccessMem; // 10 MB OF MEMORY :D

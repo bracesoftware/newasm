@@ -2325,7 +2325,7 @@ namespace newasm
                             auto addr = newasm::malloc::meta.back();
 
                             int malloc_size = 0;
-                            std::memcpy(&malloc_size, &newasm::hardware::randAccessMem.__memory__[addr], sizeof(int));
+                            std::memcpy(&malloc_size, newasm::RAM->get__A(addr), sizeof(int));
                             
                             if(byte >= malloc_size)
                             {

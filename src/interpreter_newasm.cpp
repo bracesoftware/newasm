@@ -181,6 +181,12 @@ is in the runtime
 #include "vm/hardware/cpu_cache.cpp"
 #include "vm/hardware/absolut.cpp"
 #include "runtime/memory_impl.cpp"
+
+namespace newasm
+{
+    auto* RAM = &newasm::hardware::randAccessMem;
+}
+
 #include "newasm_exec.cpp"
 
 #include "runtime/procline_insert.cpp"
@@ -201,6 +207,7 @@ namespace fs = std::filesystem;
 namespace newasm
 {
     bool use_std = false;
+
     namespace vers
     {
         int main()
