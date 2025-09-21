@@ -105,20 +105,22 @@ namespace newasm
                 }
             }
 
-            int get_size()
+            inline int get_size() noexcept
             {
                 return this->bitarraysize;
             }
 
-            void clear()
+            inline void clear() noexcept
             {
                 for(int i = 0; i < sizeof(bitarrayvalue); i++)
                 {
                     bitarrayvalue[i] = 0;
                 }
+
+                return;
             }
 
-            int get_at(int index)
+            inline int get_at(int index) noexcept
             {
                 if(index >= this->bitarraysize)
                 {
@@ -128,7 +130,7 @@ namespace newasm
                 return (bitarrayvalue[index/(__newasm__integer_bits)]) & (1 << (index % (__newasm__integer_bits))) ? 1 : 0;
             }
 
-            int set_at(int index, int value)
+            inline int set_at(int index, int value) noexcept
             {
                 if(value != 0 && value != 1)
                 {
@@ -150,7 +152,7 @@ namespace newasm
                 return 0;
             }
 
-            int flip()
+            inline int flip() noexcept
             {
                 for(int i = 0; i < this->get_size(); ++i)
                 {
@@ -166,7 +168,7 @@ namespace newasm
                 return 0;
             }
 
-            int reverse()
+            inline int reverse() noexcept
             {
                 newasm::containers::bit_array<t_bitarraysize> temporary_bitarray;
                 for(int i = 0; i < this->bitarraysize; i++)
@@ -212,17 +214,26 @@ namespace newasm
                 for(std::unordered_map<std::string, newasm::containers::bit_array<newasm::containers::default_size>*>::iterator i = newasm::containers::bit_arrays.begin();
                 i != newasm::containers::bit_arrays.end(); ++i)
                 {
-                    if(i->second != nullptr) delete i->second;
+                    if(i->second != nullptr)
+                    {
+                        delete i->second;
+                    }
                 }
                 for(std::unordered_map<std::string, newasm::containers::binary_tree<newasm::containers::default_size>*>::iterator i = newasm::containers::binary_trees.begin();
                 i != newasm::containers::binary_trees.end(); ++i)
                 {
-                    if(i->second != nullptr) delete i->second;
+                    if(i->second != nullptr)
+                    {
+                        delete i->second;
+                    }
                 }
                 for(std::unordered_map<std::string, newasm::containers::thread_channel__*>::iterator i = newasm::containers::thread_channels.begin();
                 i != newasm::containers::thread_channels.end(); ++i)
                 {
-                    if(i->second != nullptr) delete i->second;
+                    if(i->second != nullptr)
+                    {
+                        delete i->second;
+                    }
                 }
                 return;
             }

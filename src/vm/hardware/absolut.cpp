@@ -66,7 +66,7 @@ namespace newasm
                 return -1;
             }
 
-            inline void delete__HEAP(int addr, int stopaddr)
+            inline void delete__HEAP(int addr, int stopaddr) noexcept
             {
                 for(int i = addr; i < stopaddr; ++i)
                 {
@@ -75,7 +75,7 @@ namespace newasm
                 return;
             }
 
-            inline int get_heap_end()
+            inline int get_heap_end() noexcept
             {
                 for(int i = MEM_SIZE - 1; i >= 0; i--)
                 {
@@ -91,7 +91,7 @@ namespace newasm
                 return -1;
             }
 
-            inline void init()
+            inline void init() noexcept
             {
                 for(int i = 0; i < MEM_SIZE; ++i)
                 {
@@ -104,7 +104,7 @@ namespace newasm
             }
             // for int, float, char
             template<typename T>
-            inline int write(T value)
+            inline int write(T value) noexcept
             {
                 if constexpr(std::is_same<T, std::string>::value)
                 {
@@ -150,7 +150,7 @@ namespace newasm
             }
 
             template<typename T>
-            inline int write(int address, T value)
+            inline int write(int address, T value) noexcept
             {
                 if constexpr(std::is_same<T, std::string>::value)
                 {
@@ -185,7 +185,7 @@ namespace newasm
             }
 
             template<typename T>
-            inline int overwrite(int addr, T value)
+            inline int overwrite(int addr, T value) noexcept
             {
                 //newasm::progwin::api::cout("Overwriting address: " + std::to_string(addr));
                 if(__memory_free__.get_at(addr) == 0)
@@ -238,7 +238,7 @@ namespace newasm
             }
 
             template<typename T>
-            inline T peek(int addr)
+            inline T peek(int addr) noexcept
             {
                 if constexpr(std::is_same<T, std::string>::value)
                 {
@@ -266,7 +266,7 @@ namespace newasm
             }
 
             //malloc, free, heap, push, pop
-            inline int malloc(int bytes)
+            inline int malloc(int bytes) noexcept
             {
                 int addr = get_free_alloc(sizeof(int) + bytes);
                 if(addr == -1)
@@ -286,7 +286,7 @@ namespace newasm
                 return addr;
             }
 
-            inline void free(int addr)
+            inline void free(int addr) noexcept
             {
                 int bytes = 0;
                 std::memcpy(&bytes, &__memory__[addr], sizeof(int));
@@ -301,7 +301,7 @@ namespace newasm
             }
 
             template<typename T>
-            inline void push__STACK(T value)
+            inline void push__STACK(T value) noexcept
             {
                 if constexpr(std::is_same<T, std::string>::value)
                 {
@@ -348,7 +348,7 @@ namespace newasm
             }
 
             template<typename T>
-            inline int pop__STACK(T& value)
+            inline int pop__STACK(T& value) noexcept
             {
                 if constexpr(std::is_same<T, std::string>::value)
                 {
@@ -382,14 +382,14 @@ namespace newasm
                 return address;
             }
             template<typename T>
-            int pop__STACK()
+            inline int pop__STACK() noexcept
             {
                 T value;
                 return pop__STACK<T>(value);
             }
             //
 
-            inline auto get__A(int addr)
+            inline auto get__A(int addr) noexcept
             {
                 return &this->__memory__[addr];
             }
