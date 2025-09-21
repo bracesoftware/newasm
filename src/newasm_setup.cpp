@@ -582,6 +582,11 @@ namespace newasm
                 }
                 
                 s = std::to_string(it->second.addr);
+
+                if(it->second.type == newasm::core::lang_inf::typenames::yunion)
+                {
+                    s = std::to_string(it->second.yunion->addr);
+                }
                 return;
             }
             
