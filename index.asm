@@ -1920,6 +1920,14 @@ using "ios"
     mov tlr, 223
     ret *tlr
 
+
+
+
+
+
+
+
+
     ;using "kuku"
 using "ios"
 .data
@@ -1949,3 +1957,5 @@ using "ios"
     proc myFunction -> {
 
     }
+
+    movasx movaddr movas mov vmov sigmas

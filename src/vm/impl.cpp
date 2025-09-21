@@ -17,11 +17,6 @@ the Initial Developer. All Rights Reserved.
 
 */
 
-#define __newasm_REG (0)
-#if 0
-(*(volatile int*)malloc(sizeof(int)))
-#endif
-
 #define __newasm_MEMORY_SIZE 10 // mb
 #define __newasm_DISK_SIZE 20 // mb
 #define __newasm_CACHE_LINES 1024 //8KB since line is 8bytes
@@ -42,10 +37,11 @@ the Initial Developer. All Rights Reserved.
 #define __newasm_GB_TO_MB(val)  ((val) * 1024)
 
 // other funcs
-inline void _newasm_rem__24234() noexcept
+constexpr inline void _newasm_rem__24234() noexcept
 {
     return;
 }
+
 #define __newasm_rem(comment)   _newasm_rem__24234()
 
 // other bs
