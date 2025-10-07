@@ -1,5 +1,6 @@
 ;ok
 .start
+    align 3
     cls
 :startofprog
 using "ios"

@@ -3796,7 +3796,24 @@ namespace newasm
                 }
                 return 1;
             }
-            //
+            //align
+            case newasm::core::lang_inf::align:
+            {
+                if(!newasm::header::functions::isnumeric(suf))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    return 1;
+                }
+                int alignment = std::stoi(suf);
+                if(alignment <= 0)
+                {
+                    newasm::terminate(newasm::exit_codes::seg_fault);
+                    return 1;
+                }
+
+                newasm::header::data::alignment = alignment;
+                return 1;
+            }
             //wait
             case newasm::core::lang_inf::wait:
             {

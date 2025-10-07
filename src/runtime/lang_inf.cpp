@@ -136,6 +136,7 @@ namespace newasm
             const int movas = 69;
 
             const int sel = 70;
+            const int align = 71;
 
             const int __say = 100;
 
@@ -222,6 +223,7 @@ namespace newasm
                 {movas, "movas"}, // movas for unions
 
                 {sel, "sel"},
+                {align, "align"},
 
                 {__say, "__say"}
             };
