@@ -95,6 +95,8 @@ namespace newasm
             int movas_type = newasm::core::lang_inf::typenames::num;
             //malloc block
             int malloc_block_used = 0;
+
+            int alignment = 1;
         }
         namespace constants
         {

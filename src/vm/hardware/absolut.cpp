@@ -46,6 +46,10 @@ namespace newasm
             {
                 for(int i = 0; i <= MEM_SIZE - bytes; ++i)
                 {
+                    if(i % newasm::header::data::alignment != 0)
+                    {
+                        continue;
+                    }
                     bool free_block = true;
                     if(__memory_free__.get_at(i) == 0)
                     {
