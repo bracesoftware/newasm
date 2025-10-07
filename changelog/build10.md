@@ -50,6 +50,12 @@ mov &myUnion, "Some text" ; now myUnion is a string "Some text", while it was ju
     free alloc
 ```
 
++ Added the new `align` instruction used to align memory allocations to a specific number:
+```
+.start
+    align 2 ; example
+```
+
 ## What's changed
 
 - No important changes.
