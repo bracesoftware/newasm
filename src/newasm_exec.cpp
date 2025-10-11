@@ -5694,12 +5694,8 @@ namespace newasm
 
         if(newasm::system::section == newasm::code_stream::sections::start)
         {
-            std::string libname;
-            if(line.tokens.size() == 0)
-            {
-                libname = "";
-            }
-            else
+            std::string libname = "";
+            if(line.tokens.size() > 0)
             {
                 libname = line.tokens.at(0);
             }
