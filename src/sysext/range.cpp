@@ -17,6 +17,12 @@ the Initial Developer. All Rights Reserved.
 
 */
 
+#ifdef RANGE_INCLUDED
+    #error ahh
+#endif
+
+#define RANGE_INCLUDED 23
+
 namespace newasm
 {
     namespace _std
