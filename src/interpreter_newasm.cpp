@@ -88,7 +88,7 @@ the Initial Developer. All Rights Reserved.
 namespace newasm
 {
     //newasm::_std::shared_memory sharedMem;
-    const int BUILD_NUMBER = 10;
+    const int BUILD_NUMBER = 11;
     bool vercheck = true;
     bool dwin = false;
     const std::string tab = "\t\t\t";
