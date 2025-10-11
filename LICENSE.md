@@ -1,4 +1,4 @@
-/*
+
 
 The ORIGINAL CODE is the `NewASM Virtual Machine` Source Code.
 The INITIAL DEVELOPER is Brace Software Co., DEntisT.
@@ -19,4 +19,3 @@ License.
 Portions created by the Initial Developer are Copyright (c) The COPYRIGHT YEAR
 the Initial Developer. All Rights Reserved.
 
-*/
