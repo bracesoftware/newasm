@@ -34,11 +34,13 @@ namespace newasm
             const int unmatched_syntax = 1;
             const int constant_redef = 2;
             const int invalid_krnlmod = 3;
+            const int expected_token = 4;
 
             const std::unordered_map<int, std::string> id = {
                 {unmatched_syntax, "UnmatchedSyntax"},
                 {constant_redef, "ConstValRedefinition"},
-                {invalid_krnlmod, "UnknownKernelModule"}
+                {invalid_krnlmod, "UnknownKernelModule"},
+                {expected_token, "ExpectedToken"}
             };
         }
 
@@ -114,6 +116,11 @@ namespace newasm
             if(line.at(0) == ';')
             {
                 lineCompiled.type = newasm::compiler::empty;
+                return lineCompiled;
+            }
+            if(line.back() == ',')
+            {
+                newasm::compiler::abort(newasm::compiler::fail::expected_token);
                 return lineCompiled;
             }
             //directive

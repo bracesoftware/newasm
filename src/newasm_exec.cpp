@@ -5694,7 +5694,15 @@ namespace newasm
 
         if(newasm::system::section == newasm::code_stream::sections::start)
         {
-            auto libname = line.tokens.at(0);
+            std::string libname;
+            if(line.tokens.size() == 0)
+            {
+                libname = "";
+            }
+            else
+            {
+                libname = line.tokens.at(0);
+            }
             if(newasm::mem::functions::datavalid(libname, newasm::mem::instructions))
             {
                 for(int i = 0; i < newasm::dynlib::mem::invalid_dynlibs.size(); ++i)
