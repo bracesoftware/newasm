@@ -1980,7 +1980,7 @@ using "ios"
 
     movas intg
     del &myUnion
-    mov &myUnion, 39 ; memory leak !
+    mov &myUnion, 39 ; memory leak if we don't delete it!
 
     push "I am a sigma, boy"
     pop &TetsSTR
@@ -1990,14 +1990,6 @@ using "ios"
 
     mov tlr, 223
     ret *tlr
-
-
-
-
-
-
-
-
 
     ;using "kuku"
 using "ios"
