@@ -232,8 +232,10 @@ namespace newasm
             bool checkres = newasm::net::download(url, output_path);
             if(checkres)
             {
-                std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + static_cast<std::string>("Accessed the update server..."));
-                std::cout << newasm::header::col::reset;std::ifstream file(output_path);
+                std::cout << newasm::header::col::gray;
+                newasm::header::functions::nullprint(newasm::tab + static_cast<std::string>("Accessed the update server..."));
+                std::cout << newasm::header::col::reset;
+                std::ifstream file(output_path);
                 if(!file)
                 {
                     std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + static_cast<std::string>("Error while checking the version."));
