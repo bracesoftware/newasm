@@ -102,9 +102,28 @@ namespace newasm
             const std::string setup_help = "?"; 
             const std::string stdlib = "stdlib";
 
+            const std::vector<std::pair<std::string, std::string>> help_table_data__ = {
+                {"?",               "Displays the help panel."},
+                {"stdlib",          "Installs the standard library."}
+            };
+
             inline void mount_help()
             {
-                
+                std::cout << std::endl;
+                std::cout << newasm::header::col::light_blue << newasm::header::style::underline;
+                std::cout << "\tSetup" << std::string(15, 32) << "Description" << std::string(10, 32) << "\n";
+
+                std::cout << newasm::header::col::reset;
+                std::cout << newasm::header::col::gray;
+
+
+                for(auto i = help_table_data__.begin(); i != help_table_data__.end(); ++i)
+                {
+                    std::cout << "\t" << i->first << "\t\t" << i->second << "\n";
+                }
+
+                std::cout << std::endl;
+                std::cout << newasm::header::col::reset;
                 return;
             }
 
