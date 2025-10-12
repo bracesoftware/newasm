@@ -207,6 +207,7 @@ static __global_newasm nG;
 
 #include "shell_tools/user.cpp"
 #include "shell_tools/env_control.cpp"
+#include "shell_tools/mount.cpp"
 #include "newasm_shell.cpp"
 
 #include "runtime/common/chars.h"

@@ -44,7 +44,8 @@ namespace newasm
             {"renenv",      {"/",               "Rename an environment variable."}},
             {"printenv",    {"/",               "View all environment variables."}},
             {"passwd",      {"/",               "Change the password."}},
-            {"usernm",      {"/",               "Change the username."}}
+            {"usernm",      {"/",               "Change the username."}},
+            {"mount",       {"<setup>",         "Mount a pre-installed setup. Use `mount ?` to see a list of available setups."}}
         };
         void help_info()
         {
@@ -239,6 +240,21 @@ namespace newasm
                 if(tokens.size() == 2)
                 {
                     _newasm_CHECKLOGIN;
+                    if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::mount__))
+                    {
+                        if(tokens[1] == newasm::shell_tools::mount::setup_help) //?
+                        {
+                            newasm::shell_tools::mount::mount_help();
+                            return 1;
+                        }
+                        if(tokens[1] == newasm::shell_tools::mount::stdlib) // standard lib
+                        {
+                            newasm::shell_tools::mount::mount_stdlib();
+                            return 1;
+                        }
+                        newasm::header::functions::err("Setup `" + tokens.at(1) + "` not found.");
+                        return 1;
+                    }
                     if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::install__))
                     {
                         newasm::header::functions::info(static_cast<std::string>("Attempting to install the \"") + tokens[1] + static_cast<std::string>("\" package."));
