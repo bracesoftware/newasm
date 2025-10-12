@@ -91,7 +91,7 @@ namespace newasm
             //lol
             bool std_now__ = false;
 
-            //
+            //movas instruction
             int movas_type = newasm::core::lang_inf::typenames::num;
             //malloc block
             int malloc_block_used = 0;
