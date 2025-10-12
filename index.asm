@@ -1787,7 +1787,7 @@ using "ios"
         syscall
         halt 0
     end
-
+:dhjfjd
 .hndl
     0xff = std::testproc
     0xff3 = lol::writexd
@@ -1819,7 +1819,7 @@ using "ios"
 
     mov tlr, 'd'
     $testmacro
-
+:ay645465456
     jmp lol24332243
 
     ./lol

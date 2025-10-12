@@ -46,7 +46,11 @@
     },
     {
       "name": "labels.newasm",
-      "match": "^\\s*:[a-zA-Z_][a-zA-Z0-9_]*"
+      "match": ":[\\s]*[A-Za-z_][A-Za-z0-9_]*"
+    },
+    {
+      "name": "macro.call.newasm",
+      "match": "\\$[\\s]*[A-Za-z_][A-Za-z0-9_]*"
     },
     {
       "name": "keyword.section.newasm",

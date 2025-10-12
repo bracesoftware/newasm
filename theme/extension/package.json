@@ -67,6 +67,13 @@
 						}
 					},
 					{
+						"scope": "macro.call.newasm",
+						"settings": {
+							"foreground": "#A1C4E8",
+							"fontStyle": "italic"
+						}
+					},
+					{
 						"scope": "labels.newasm",
 						"settings": {
 							"foreground": "#7186d4"
