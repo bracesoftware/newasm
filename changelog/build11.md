@@ -7,7 +7,11 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 
 ## What's new
 
-- Nothing new.
++ Added the new `mount` command used to mount pre-installed setups. For example, the standard library now can be installed by using:
+
+```bash
+mount stdlib
+```
 
 ## What's changed
 
