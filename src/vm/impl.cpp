@@ -38,14 +38,13 @@ the Initial Developer. All Rights Reserved.
 
 //stock
 
-#if defined(__GNUC__) || defined(__clang__)
-    #define STOCK__ [[maybe_unused]] inline
-#else
-    #define STOCK__ [[maybe_unused]]
+#define STOCK__ [[maybe_unused]]
+#ifndef stock
+    #define stock STOCK__
 #endif
 
 // other funcs
-STOCK__ constexpr inline void _newasm_rem__24234() noexcept
+stock constexpr inline void _newasm_rem__24234() noexcept
 {
     return;
 }
