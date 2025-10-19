@@ -36,8 +36,16 @@ the Initial Developer. All Rights Reserved.
 #define __newasm_MB_TO_GB(val)  ((val) / 1024.0)
 #define __newasm_GB_TO_MB(val)  ((val) * 1024)
 
+//stock
+
+#if defined(__GNUC__) || defined(__clang__)
+    #define STOCK__ [[maybe_unused]] inline
+#else
+    #define STOCK__ [[maybe_unused]]
+#endif
+
 // other funcs
-constexpr inline void _newasm_rem__24234() noexcept
+STOCK__ constexpr inline void _newasm_rem__24234() noexcept
 {
     return;
 }
