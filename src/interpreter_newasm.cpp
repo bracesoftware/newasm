@@ -71,7 +71,7 @@ the Initial Developer. All Rights Reserved.
 #define __newasm_included
 #include "runtime/alpha.cpp"
 #include "newasm_stdex.cpp"
-#include "col._compat.cpp"
+#include "sys._compat.cpp"
 
 #include "getch._compat.cpp"
 
