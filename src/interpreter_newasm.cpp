@@ -338,10 +338,28 @@ namespace newasm
 {
     int entry(int argc, char* argv[])
     {
+        auto get_time = [&]() -> std::string {
+            auto now = std::chrono::system_clock::now();
+            std::time_t t = std::chrono::system_clock::to_time_t(now);
+
+            std::tm tm;
+            #ifdef _WIN32
+                localtime_s(&tm, &t);
+            #else
+                localtime_r(&t, &tm);
+            #endif
+
+            // Formatiraj u string
+            std::ostringstream oss;
+            oss << std::put_time(&tm, "%d/%m/%Y-%H:%M:%S");
+            return oss.str();
+        };
+
         fs::create_directory(newasm::data::getDataFolder() + newasm::core::constants::separator + newasm::core::constants::data_folder);
-        std::ofstream file(newasm::data::getDataFolder() + newasm::core::constants::separator + newasm::core::constants::data_folder + newasm::core::constants::separator + "__newasm.log");
-        file << "TEST123";
-        file.close();
+        #define __LOG_FILE__ (newasm::data::getDataFolder() + newasm::core::constants::separator + newasm::core::constants::data_folder + newasm::core::constants::separator + "__newasm.log")
+        std::ofstream __LOG_FILE(__LOG_FILE__, std::ios::app);
+        __LOG_FILE << "[" << get_time() << "] System opened.\n";
+        __LOG_FILE.close();
 
         for(auto i = newasm::core::lang_inf::instruction_set.begin(); i != newasm::core::lang_inf::instruction_set.end(); ++i)
         {
@@ -570,6 +588,10 @@ namespace newasm
         newasm::GLOBAL::cleanup();
 
         newasm::progwin::api::exit();
+
+        __LOG_FILE.open(__LOG_FILE__, std::ios::app);
+        __LOG_FILE << "[" << get_time() << "] System exited.\n";
+        __LOG_FILE.close();
         return 0;
     }
 }
