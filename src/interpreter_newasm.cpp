@@ -338,7 +338,8 @@ namespace newasm
 {
     int entry(int argc, char* argv[])
     {
-        std::ofstream file(newasm::data::getDataFolder() + newasm::core::constants::separator + "__newasm.log");
+        fs::create_directory(newasm::data::getDataFolder() + newasm::core::constants::separator + newasm::core::constants::data_folder);
+        std::ofstream file(newasm::data::getDataFolder() + newasm::core::constants::separator + newasm::core::constants::data_folder + newasm::core::constants::separator + "__newasm.log");
         file << "TEST123";
         file.close();
 
