@@ -39,7 +39,7 @@ namespace newasm
                 if(!std::filesystem::exists(path))
                 {
                     std::ofstream file(path, std::ios::binary | std::ios::trunc);
-                    for(int i = 0; i < size*1024*1024; ++i)
+                    for(int i = 0; i < size * 1024 * 1024; ++i)
                     {
                         file.put(0);
                     }
