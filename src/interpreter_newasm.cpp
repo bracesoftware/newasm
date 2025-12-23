@@ -55,7 +55,7 @@ the Initial Developer. All Rights Reserved.
 #include <iomanip>
 #include <cstdio>
 #include <stdio.h>
-#include <stdlib.h> // for go
+#include <stdlib.h> // for golang compiler
 #include <deque>
 #include <new>
 //For idk
@@ -193,6 +193,7 @@ struct __global_newasm final
 {
     inline __global_newasm() noexcept
     {
+        // THIS CODE IS CALLED BEFORE EVERYTHING ELSE!!!
         //std::ios::sync_with_stdio(false);
     }
 };
