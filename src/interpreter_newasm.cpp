@@ -19,9 +19,11 @@ License.
 Portions created by the Initial Developer are Copyright (c) The COPYRIGHT YEAR
 the Initial Developer. All Rights Reserved.
 
+<======================== DO NOT DISTRIBUTE! ========================>
+
 */
 
-#pragma GCC diagnostic ignored "-Wunused-result"
+#pragma GCC diagnostic ignored "-Wunused-result" // used gcc for ts
 #pragma unroll
 
 #include "runtime/common/os.h"
