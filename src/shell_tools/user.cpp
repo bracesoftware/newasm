@@ -188,6 +188,7 @@ namespace newasm
                         newasm::header::functions::err("Already logged in.");
                         return;
                     }
+                    
                     std::cout << newasm::header::col::gray << "\tInput password: " << newasm::header::col::reset;
                     std::string passwd;
                     std::getline(std::cin, passwd);
