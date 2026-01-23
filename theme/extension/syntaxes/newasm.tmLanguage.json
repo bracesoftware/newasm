@@ -30,7 +30,7 @@
     },
     {
       "name": "register.control.newasm",
-      "match":  "\\b(intg|float|string|char|ref|obj|cont|tuple|bit_arr|bin_tree|chan|instance|class|union)\\b"
+      "match":  "\\b(intg|float|string|char|ref|obj|cont|tuple|bit_arr|bin_tree|chan|instance|class|union|ctx)\\b"
     },
     {
       "name": "keyword.control.newasm",

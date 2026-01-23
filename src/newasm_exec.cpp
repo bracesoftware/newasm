@@ -575,11 +575,11 @@ namespace newasm
                 {
                     if(!newasm::header::functions::isTupleOrContext(value))
                     {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        newasm::terminate(newasm::exit_codes::invalid_init);
                         return 1;
                     }
 
-                    auto contents = newasm::header::functions::parseTupleOrContext(value);
+                    auto contents = newasm::header::functions::parseContext(value);
 
                     newasm::variables::ids[name].type = newasm::datatypes::mycontext;
 
@@ -605,7 +605,9 @@ namespace newasm
                             newasm::terminate(newasm::exit_codes::invalid_syntax);
                             return 1;
                         }
-                        std::string& key = v.at(0), value__ = v.at(1);
+                        std::string& key = v.at(0), & value__ = v.at(1);
+                        key = newasm::header::functions::trim(key);
+                        value__ = newasm::header::functions::trim(value__);
                         if(!newasm::header::functions::istext(key))
                         {
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);
@@ -644,7 +646,7 @@ namespace newasm
                             newasm::variables::ids.at(name).context->type.push_back(newasm::datatypes::text);
                             continue;
                         }
-                        newasm::terminate(newasm::exit_codes::invalid_syntax);
+                        newasm::terminate(newasm::exit_codes::invalid_init);
                         return 1;
                     }
                     #if 0
@@ -2120,6 +2122,120 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::seg_fault);
                         return 1;
                     }
+                    //////////CONTEXTS
+                    if(i.type == newasm::datatypes::mycontext)
+                    {
+                        if(!newasm::header::functions::isTupleOrContext(opr))
+                        {
+                            newasm::terminate(newasm::exit_codes::invalid_init);
+                            return 1;
+                        }
+
+                        auto oldcontents_ = i.context->keys.size();
+                        int addr = 0;
+                        for(int idx = 0; idx < oldcontents_; ++idx)
+                        {
+                            addr = i.context->addr[idx];
+                            if(i.context->type[idx] == newasm::datatypes::number)
+                            {
+                                newasm::hardware::randAccessMem.delete__HEAP(addr, addr + sizeof(int));
+                                continue;
+                            }
+                            if(i.context->type[idx] == newasm::datatypes::decimal)
+                            {
+                                newasm::hardware::randAccessMem.delete__HEAP(addr, addr + sizeof(float));
+                                continue;
+                            }
+                            if(i.context->type[idx] == newasm::datatypes::character)
+                            {
+                                newasm::hardware::randAccessMem.delete__HEAP(addr, addr + sizeof(char));
+                                continue;
+                            }
+                            if(i.context->type[idx] == newasm::datatypes::text)
+                            {
+                                int buffer_len;
+                                std::memcpy(&buffer_len, &newasm::hardware::randAccessMem.__memory__[addr], sizeof(int));
+                                int bytes = sizeof(int) + buffer_len;
+                                newasm::hardware::randAccessMem.delete__HEAP(addr, addr + bytes);
+                                continue;
+                            }
+                        }
+
+                        auto contents = newasm::header::functions::parseContext(opr);
+
+                        i.context->addr.clear();
+                        i.context->keys.clear();
+                        i.context->type.clear();
+
+                        std::vector<std::string> v;
+                        int addr_temp = 0;
+                        for(int idx = 0; idx < contents.size(); ++idx)
+                        {
+                            if(!contents.at(idx).find(':'))
+                            {
+                                //newasm::header::functions::err("EVO GA OVDJE NIGGA!");
+                                newasm::terminate(newasm::exit_codes::invalid_syntax);
+                                return 1;
+                            }
+                            v.clear();
+                            v = newasm::header::functions::split_fixed(contents.at(idx), ':');
+                            if(v.size() != 2)
+                            {
+                                //newasm::header::functions::err("IPAK JE OVDJE!");
+                                newasm::header::functions::err("ERROR BIO OVDJE -> Parsing: `" + contents.at(idx) + "`");
+                                
+                                newasm::terminate(newasm::exit_codes::invalid_syntax);
+                                return 1;
+                            }
+                            std::string& key = v.at(0), & value__ = v.at(1);
+
+                            key = newasm::header::functions::trim(key);
+                            value__ = newasm::header::functions::trim(value__);
+
+                            if(!newasm::header::functions::istext(key))
+                            {
+                                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                                return 1;
+                            }
+                            key = newasm::header::functions::remq(key);
+                            if(newasm::header::functions::isnumeric(value__))
+                            {
+                                addr_temp = newasm::hardware::randAccessMem.write<int>(std::stoi(value__));
+                                i.context->addr.push_back(addr_temp);
+                                i.context->keys.push_back(key);
+                                i.context->type.push_back(newasm::datatypes::number);
+                                continue;
+                            }
+                            if(newasm::header::functions::isfloat(value__))
+                            {
+                                addr_temp = newasm::hardware::randAccessMem.write<float>(std::stof(value__));
+                                i.context->addr.push_back(addr_temp);
+                                i.context->keys.push_back(key);
+                                i.context->type.push_back(newasm::datatypes::decimal);
+                                continue;
+                            }
+                            if(newasm::header::functions::ischar(value__))
+                            {
+                                addr_temp = newasm::hardware::randAccessMem.write<char>(newasm::header::functions::remsq(value__).at(0));
+                                i.context->addr.push_back(addr_temp);
+                                i.context->keys.push_back(key);
+                                i.context->type.push_back(newasm::datatypes::character);
+                                continue;
+                            }
+                            if(newasm::header::functions::istext(value__))
+                            {
+                                addr_temp = newasm::hardware::randAccessMem.write<std::string>(newasm::header::functions::remq(value__));
+                                i.context->addr.push_back(addr_temp);
+                                i.context->keys.push_back(key);
+                                i.context->type.push_back(newasm::datatypes::text);
+                                continue;
+                            }
+                            newasm::terminate(newasm::exit_codes::invalid_init);
+                            return 1;
+                        }
+                        return 1;
+                    }
+                    //////////////tuples
                     if(i.type == newasm::datatypes::tuple)
                     {
                         if(newasm::header::data::tupleIndex != -1)

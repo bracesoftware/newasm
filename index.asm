@@ -1988,7 +1988,10 @@ using "ios"
     mov tlr, TetsSTR
     call std::ios::writeln
 .data
-    ctx myContext: nil ; beta feature
+    ctx myContext: () ; beta feature
+    ./test
+        ctx myContext2: ()
+    ./!test
 .start
     mov &myContext, ("key": 1.67, "key2": 843, "lmfao": "ja sam degen")
     mov tlr, myContext("key")
@@ -1996,8 +1999,14 @@ using "ios"
     mov tlr, myContext("lmfao")
     call std::ios::writeln
 
-    mov &myContext, nil
+    mov &myContext, ("nigger":98)
     mov tlr, myContext("key")
+    call std::ios::writeln
+    mov tlr, myContext("nigger")
+    call std::ios::writeln
+
+    mov &test::myContext, ("yay":"yay called!")
+    mov tlr, test::myContext("yay")
     call std::ios::writeln
 
     ;LMFAO TEST

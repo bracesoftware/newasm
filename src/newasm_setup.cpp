@@ -93,6 +93,7 @@ namespace newasm
 		const int invalid_tuple = 52;
         const int channel_deadlock = 53;
         const int invalid_alloc = 54;
+        const int invalid_init = 55;
 
         const std::unordered_map<int, std::string> identifier = {
             {noterm_point, "NoTerminationPoint"},
@@ -149,7 +150,8 @@ namespace newasm
 			{tuple_redef, "TupleRedefinition"},
 			{invalid_tuple, "InvalidTuple"},
             {channel_deadlock, "ThreadChannelDeadlock"},
-            {invalid_alloc, "InvalidAlloc"}
+            {invalid_alloc, "InvalidAlloc"},
+            {invalid_init, "InvalidVarInitializer"}
         };
     }
     namespace cmp_results
@@ -424,7 +426,7 @@ namespace newasm
         {
             int addr;
         };
-        
+
         struct tupleData
         {
             std::vector<int> addr;

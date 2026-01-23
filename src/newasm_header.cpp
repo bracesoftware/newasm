@@ -1266,7 +1266,62 @@ namespace newasm
             {
                 return parseTuple(str);
             }
-			std::pair<bool, std::pair<std::string, std::string>> checkTupleFormat(const std::string& input)
+            inline std::vector<std::string> parseContext(const std::string& input)
+            {
+                std::vector<std::string> result;
+                if(input == "()")
+                {
+                    return result;
+                }
+
+                size_t start = input.find('(');
+                size_t end = input.rfind(')');
+
+                auto isWhitespaces = [](const std::string& str) -> bool {
+                    if(str.empty())
+                    {
+                        return true;
+                    }
+                    for(unsigned char c : str)
+                    {
+                        if(!std::isspace((unsigned char)c))
+                        {
+                            return false;
+                        }
+                    }
+                    return true;
+                };
+
+                if(start == std::string::npos || end == std::string::npos || start >= end)
+                {
+                    return result;
+                }
+
+                if(isWhitespaces(input.substr(start + 1, end - start - 1)))
+                {
+                    return result;
+                }
+
+                std::string inner = input.substr(start + 1, end - start - 1);
+
+                size_t pos = 0;
+                while(true)
+                {
+                    size_t comma = inner.find(',', pos);
+                    if(comma == std::string::npos)
+                    {
+                        result.push_back(inner.substr(pos));
+                        break;
+                    }
+
+                    result.push_back(inner.substr(pos, comma - pos));
+                    pos = comma + 1;
+                }
+
+                return result;
+            }
+
+			inline std::pair<bool, std::pair<std::string, std::string>> checkTupleFormat(const std::string& input)
 			{
 				size_t i = 0;
 				size_t n = input.size();
@@ -1330,6 +1385,10 @@ namespace newasm
 
 				return {true, {text, text2}};
 			}
+            inline auto checkTupleOrContextFormat(const std::string& input)
+            {
+                return checkTupleFormat(input);
+            }
 			std::pair<bool, std::pair<std::string, std::string>> checkTupleFormat2(const std::string& input)
 			{
 				size_t i = 0;
