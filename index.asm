@@ -1987,6 +1987,15 @@ using "ios"
 
     mov tlr, TetsSTR
     call std::ios::writeln
+.data
+    ctx myContext: nil
+.start
+    mov &myContext, ("key": 1.67, "key2": 843, "lmfao": "ja sam degen")
+    mov tlr, myContext("key")
+    call std::ios::writeln
+
+    mov &myContext, nil
+    mov tlr, 
 
     mov tlr, 223
     ret *tlr
