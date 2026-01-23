@@ -169,6 +169,7 @@ namespace newasm
         const int tuple = 6;
         const int blueprint = 7;
         const int yunion = 8;
+        const int mycontext = 9;
     }
     namespace constv
     {
@@ -423,15 +424,25 @@ namespace newasm
         {
             int addr;
         };
+        
         struct tupleData
         {
             std::vector<int> addr;
             std::vector<int> type;
         };
+
         struct classData
         {
             std::vector<int> addr; // i love C++
         };
+
+        struct contextData
+        {
+            std::vector<std::string> keys;
+            std::vector<int> addr;
+            std::vector<int> type;
+        };
+
         struct varData
         {
             int addr; // address where it is stored
@@ -439,6 +450,7 @@ namespace newasm
             tupleData* tuple = nullptr; // if it is a tuple, we use this instead of addr
             classData* blueprint = nullptr; // if it is a class, we use this
             unionData* yunion = nullptr; // if it is an union, we use this
+            contextData* context = nullptr; // if it is a context, use this
 
             //decorator data
             bool locked = false;

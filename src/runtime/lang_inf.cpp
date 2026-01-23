@@ -289,6 +289,7 @@ namespace newasm
                 const int chan = 12;
 
                 const int union__ = 13;
+                const int context__ = 14;
 
                 const std::unordered_map<int, std::string> identifiers__ = {
                     {num, "intg"},
@@ -300,6 +301,7 @@ namespace newasm
                     {cont, "cont"},
 					{tuple, "tuple"},
                     {union__, "union"},
+                    {context__, "ctx"},
 
                     {class__, "class"},
 					

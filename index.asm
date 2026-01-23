@@ -1988,14 +1988,19 @@ using "ios"
     mov tlr, TetsSTR
     call std::ios::writeln
 .data
-    ctx myContext: nil
+    ctx myContext: nil ; beta feature
 .start
     mov &myContext, ("key": 1.67, "key2": 843, "lmfao": "ja sam degen")
     mov tlr, myContext("key")
     call std::ios::writeln
+    mov tlr, myContext("lmfao")
+    call std::ios::writeln
 
     mov &myContext, nil
-    mov tlr, 
+    mov tlr, myContext("key")
+    call std::ios::writeln
+
+    ;LMFAO TEST
 
     mov tlr, 223
     ret *tlr

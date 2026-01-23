@@ -1200,7 +1200,7 @@ namespace newasm
 				return std::string("var_") + buffer;
 			}
 			
-			bool istuple(std::string str)
+			bool istuple(std::string &str)
 			{
 				if(str.front() == '(' && str.back() == ')')
 				{
@@ -1208,8 +1208,13 @@ namespace newasm
 				}
 				return false;
 			}
+
+            inline bool isTupleOrContext(std::string &str)
+            {
+                return istuple(str);
+            }
 			
-			std::vector<std::string> parseTuple(const std::string& line)
+			inline std::vector<std::string> parseTuple(const std::string& line)
 			{
 				std::vector<std::string> result;
 				size_t i = 0;
@@ -1257,6 +1262,10 @@ namespace newasm
 				}
 				return result;
 			}
+            inline std::vector<std::string> parseTupleOrContext(const std::string &str)
+            {
+                return parseTuple(str);
+            }
 			std::pair<bool, std::pair<std::string, std::string>> checkTupleFormat(const std::string& input)
 			{
 				size_t i = 0;
