@@ -137,6 +137,8 @@ namespace newasm
 
             const int sel = 70;
             const int align = 71;
+            
+            const int merge = 72;
 
             const int __say = 100;
 
@@ -224,6 +226,8 @@ namespace newasm
 
                 {sel, "sel"},
                 {align, "align"},
+
+                {merge, "merge"}, //merge for contexts
 
                 {__say, "__say"}
             };

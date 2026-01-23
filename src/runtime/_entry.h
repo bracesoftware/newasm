@@ -321,6 +321,8 @@ namespace newasm
 						bool indexText = newasm::header::functions::istext(tupleOrContextIndex);
 						if(indexText)
 						{
+							//newasm::header::functions::err("tupleOrContextName: `" + tupleOrContextName + "`");
+							//newasm::header::functions::err("tupleOrContextIndex: `" + tupleOrContextIndex + "`");
 							bool validContext = true;
 							auto it = newasm::variables::ids.find(tupleOrContextName);
 							if(it == newasm::variables::ids.end())
@@ -337,13 +339,17 @@ namespace newasm
 							}
 
 							tupleOrContextIndex = newasm::header::functions::remq(tupleOrContextIndex);
-							int idx = 0;
-							for(idx = 0; idx < it->second.context->keys.size(); ++idx)
+							int idx = newasm::header::functions::getIndex<std::string>(it->second.context->keys, tupleOrContextIndex);
+							#if 0
+							if(idx != (-1))
 							{
-								if(it->second.context->keys.at(idx) == tupleOrContextIndex)
-								{
-									break;
-								}
+								newasm::header::functions::wrn("Found key: `" + tupleOrContextIndex + "` at idx " + std::to_string(idx) + ", it->second.context->keys.at(idx): `" + it->second.context->keys.at(idx) + "`");
+							}
+							#endif
+							if(idx == (-1))
+							{
+								newasm::terminate(newasm::exit_codes::invalid_memacc);
+								return;
 							}
 
 							if(it->second.context->type[idx] == newasm::datatypes::number)
@@ -356,8 +362,8 @@ namespace newasm
 							}
 							if(it->second.context->type[idx] == newasm::datatypes::character)
 							{
-								std::string buf(1, newasm::hardware::randAccessMem.peek<float>(it->second.context->addr[idx]));
-								suf = "\"" + buf + "\"";
+								std::string buf(1, newasm::hardware::randAccessMem.peek<char>(it->second.context->addr[idx]));
+								suf = "'" + buf + "'";
 							}
 							if(it->second.context->type[idx] == newasm::datatypes::text)
 							{
@@ -456,7 +462,7 @@ namespace newasm
 							}
 							if(it->second.tuple->type[i] == newasm::datatypes::character)
 							{
-								std::string buf(1, newasm::hardware::randAccessMem.peek<float>(it->second.tuple->addr[i]));
+								std::string buf(1, newasm::hardware::randAccessMem.peek<char>(it->second.tuple->addr[i]));
 								temp = "'" + buf + "'";
 								contents.push_back(temp);
 								continue;

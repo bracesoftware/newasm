@@ -267,6 +267,7 @@ namespace newasm
 //#define NEWASM_STRICT_TEST
 
 #include "kernel/_utils.cpp"
+#include "runtime/async_thread.cpp"
 
 namespace newasm
 {
@@ -572,6 +573,8 @@ namespace newasm
             return 1;
         }
 
+        std::thread asyncCode(newasm::async_thread::entry);
+
         newasm::header::functions::trim(newasm::header::settings::script_file);
         newasm::execute(newasm::header::settings::script_file, -1);
 
@@ -586,6 +589,9 @@ namespace newasm
 
         std::cout << newasm::header::col::gray << "\t\tTime elapsed: " << elapsed.count() << " ms\n";
         std::cout << newasm::header::col::reset;
+
+        newasm::async_thread::running = false;
+        asyncCode.join();
 
         // Print the debug buffer
         newasm::progwin::api::cout("Cleaning up the buffer..............." + newasm::header::col::light_red + "\n\tsys -> ..\n--logout--\n");

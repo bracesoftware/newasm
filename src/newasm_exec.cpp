@@ -352,6 +352,7 @@ namespace newasm
 				return 1;
 			}
         }
+        
         if(newasm::header::functions::isalphanum(name))
         {
             auto it = newasm::inverted_types.find(dtyp);
@@ -584,6 +585,9 @@ namespace newasm
                     newasm::variables::ids[name].type = newasm::datatypes::mycontext;
 
                     newasm::variables::ids.at(name).context = new newasm::variables::contextData;
+
+                    //newasm::header::functions::info("Created context: " + name);
+
                     if(contents.size() == 0)
                     {
                         return 1;
@@ -608,6 +612,9 @@ namespace newasm
                         std::string& key = v.at(0), & value__ = v.at(1);
                         key = newasm::header::functions::trim(key);
                         value__ = newasm::header::functions::trim(value__);
+
+                        //newasm::header::functions::info("Adding stuff to `" + name + "` = " + key + ":" + value__ + "---" + value);
+
                         if(!newasm::header::functions::istext(key))
                         {
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);
@@ -1114,6 +1121,165 @@ namespace newasm
                     return 1;
                 }
             }
+            //merge
+            case newasm::core::lang_inf::merge:
+            {
+                newasm::runtime::functions::parse(suf);
+                if(!newasm::header::functions::isref(suf))
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_memacc);
+                    return 1;
+                }
+                
+                suf = newasm::header::functions::remamp(suf);
+                auto it = newasm::variables::ids.find(suf);
+                if(it == newasm::variables::ids.end())
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_memacc);
+                    return 1;
+                }
+
+                auto contents = newasm::header::functions::parseContext(opr);
+
+                if(contents.size() == 0)
+                {
+                    return 1;
+                }
+
+                std::vector<std::string> v;
+                int addr;
+                for(int i = 0; i < contents.size(); ++i)
+                {
+                    v.clear();
+                    // This function guarantees v.size() to be 2!!!!
+                    v = newasm::header::functions::split_fixed(contents.at(i), ':');
+                    
+                    std::string& key = v.at(0), & value = v.at(1);
+                    key = newasm::header::functions::trim(key);
+                    value = newasm::header::functions::trim(value);
+
+                    if(!newasm::header::functions::istext(key))
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_init);
+                        return 1;
+                    }
+                    key = newasm::header::functions::remq(key);
+                    //auto key_ = it->second.context->keys.find(key);
+                    auto& KEYS____ = it->second.context->keys;
+                    auto key_ = std::find(KEYS____.begin(), KEYS____.end(), key);
+                    if(key_ == it->second.context->keys.end()) //key doesn't exist, we add it
+                    {
+                        if(value == NIL_STR)
+                        {
+                            newasm::terminate(newasm::exit_codes::invalid_memacc);
+                            return 1;
+                        }
+                        if(newasm::header::functions::isnumeric(value))
+                        {
+                            addr = newasm::hardware::randAccessMem.write<int>(std::stoi(value));
+                            it->second.context->keys.push_back(key);
+                            it->second.context->type.push_back(newasm::datatypes::number);
+                            it->second.context->addr.push_back(addr);
+                            continue;
+                        }
+                        if(newasm::header::functions::isfloat(value))
+                        {
+                            addr = newasm::hardware::randAccessMem.write<float>(std::stof(value));
+                            it->second.context->keys.push_back(key);
+                            it->second.context->type.push_back(newasm::datatypes::decimal);
+                            it->second.context->addr.push_back(addr);
+                            continue;
+                        }
+                        if(newasm::header::functions::ischar(value))
+                        {
+                            addr = newasm::hardware::randAccessMem.write<char>(newasm::header::functions::remsq(value).at(0));
+                            it->second.context->keys.push_back(key);
+                            it->second.context->type.push_back(newasm::datatypes::character);
+                            it->second.context->addr.push_back(addr);
+                            continue;
+                        }
+                        if(newasm::header::functions::istext(value))
+                        {
+                            addr = newasm::hardware::randAccessMem.write<std::string>(newasm::header::functions::remq(value));
+                            it->second.context->keys.push_back(key);
+                            it->second.context->type.push_back(newasm::datatypes::text);
+                            it->second.context->addr.push_back(addr);
+                            continue;
+                        }
+                    }
+                    if(key_ != it->second.context->keys.end()) //key exists. we can modify it or delete it
+                    {
+                        int idx = newasm::header::functions::getIndex(it->second.context->keys, key);
+
+                        addr = it->second.context->addr[idx];
+                        //we delete everything from RAM anyway
+                        // might be inefficient, so i'll look into optimizing a lil
+                        if(it->second.context->type[idx] == newasm::datatypes::number)
+                        {
+                            newasm::hardware::randAccessMem.delete__HEAP(addr, addr + sizeof(int));
+                        }
+                        if(it->second.context->type[idx] == newasm::datatypes::decimal)
+                        {
+                            newasm::hardware::randAccessMem.delete__HEAP(addr, addr + sizeof(float));
+                        }
+                        if(it->second.context->type[idx] == newasm::datatypes::character)
+                        {
+                            newasm::hardware::randAccessMem.delete__HEAP(addr, addr + sizeof(char));
+                        }
+                        if(it->second.context->type[idx] == newasm::datatypes::text)
+                        {
+                            int buffer_len, bytes;
+                            std::memcpy(&buffer_len, &newasm::hardware::randAccessMem.__memory__[addr], sizeof(int));
+                            bytes = sizeof(int) + buffer_len;
+                            newasm::hardware::randAccessMem.delete__HEAP(addr, addr + bytes);
+                        }
+                        //if the user wants to get rid of the key,
+                        // we erase it completely from contextData
+                        if(value == NIL_STR)
+                        {
+                            it->second.context->addr.erase(it->second.context->addr.begin() + idx);
+                            it->second.context->type.erase(it->second.context->type.begin() + idx);
+                            it->second.context->keys.erase(it->second.context->keys.begin() + idx);
+                            continue;
+                        }
+                        
+                        //now, if the user wants to keep the key,
+                        //we just give the keys new values
+                        if(newasm::header::functions::isnumeric(value))
+                        {
+                            addr = newasm::hardware::randAccessMem.write<int>(std::stoi(value));
+                            it->second.context->addr[idx] = addr;
+                            it->second.context->type[idx] = newasm::datatypes::number;
+                            //it->second.context->keys[idx] --------> we DON'T touch this, we want the key to stay the same
+                            continue;
+                        }
+                        if(newasm::header::functions::isfloat(value))
+                        {
+                            addr = newasm::hardware::randAccessMem.write<float>(std::stof(value));
+                            it->second.context->addr[idx] = addr;
+                            it->second.context->type[idx] = newasm::datatypes::decimal;
+                            continue;
+                        }
+                        if(newasm::header::functions::ischar(value))
+                        {
+                            addr = newasm::hardware::randAccessMem.write<char>(newasm::header::functions::remsq(value).at(0));
+                            it->second.context->addr[idx] = addr;
+                            it->second.context->type[idx] = newasm::datatypes::character;
+                            continue;
+                        }
+                        if(newasm::header::functions::istext(value))
+                        {
+                            addr = newasm::hardware::randAccessMem.write<std::string>(newasm::header::functions::remq(value));
+                            it->second.context->addr[idx] = addr;
+                            it->second.context->type[idx] = newasm::datatypes::text;
+                            continue;
+                        }
+                        newasm::terminate(newasm::exit_codes::invalid_init);
+                        return 1;
+                    }
+                }
+                return 1;
+            }
             //lea
             case newasm::core::lang_inf::lea:
             {
@@ -1121,7 +1287,7 @@ namespace newasm
                 {
                     if(std::stoi(opr) == -1)
                     {
-                        if(suf == "null")
+                        if(suf == NIL_STR)
                         {
                             newasm::header::data::tupleIndex = -1;
                             return 1;
@@ -2131,11 +2297,15 @@ namespace newasm
                             return 1;
                         }
 
+                        //newasm::header::functions::info("Modifying context: " + suf);
+
                         auto oldcontents_ = i.context->keys.size();
+                        //newasm::header::functions::info("Found keys: " + std::to_string(oldcontents_));
                         int addr = 0;
                         for(int idx = 0; idx < oldcontents_; ++idx)
                         {
                             addr = i.context->addr[idx];
+                            //newasm::header::functions::info("Deleting key: " + i.context->keys[idx]);
                             if(i.context->type[idx] == newasm::datatypes::number)
                             {
                                 newasm::hardware::randAccessMem.delete__HEAP(addr, addr + sizeof(int));
@@ -2163,12 +2333,29 @@ namespace newasm
 
                         auto contents = newasm::header::functions::parseContext(opr);
 
+                        auto size = i.context->keys.size();
+                        if(i.context->addr.size() != size)
+                        {
+                            //newasm::header::functions::err("ADDR.SIZE NIJE JEDNAK SIZE: " + std::to_string(i.context->addr.size()));
+                            newasm::header::functions::err("You should NOT have seen this message! Code: CTX1-" + std::to_string(size) + "-" + std::to_string(i.context->addr.size()));
+                            newasm::terminate(newasm::exit_codes::invalid_alloc);
+                            return 1;
+                        }
+                        if(i.context->type.size() != size)
+                        {
+                            //newasm::header::functions::err("TYPE.SIZE NIJE JEDNAK SIZE: " + std::to_string(i.context->type.size()));
+                            newasm::header::functions::err("You should NOT have seen this message! Code: CTX2-" + std::to_string(size) + "-" + std::to_string(i.context->type.size()));
+                            newasm::terminate(newasm::exit_codes::invalid_alloc);
+                            return 1;
+                        }
+
                         i.context->addr.clear();
                         i.context->keys.clear();
                         i.context->type.clear();
 
                         std::vector<std::string> v;
                         int addr_temp = 0;
+                        //newasm::header::functions::info("Adding to existing context: " + suf);
                         for(int idx = 0; idx < contents.size(); ++idx)
                         {
                             if(!contents.at(idx).find(':'))
@@ -2191,6 +2378,7 @@ namespace newasm
 
                             key = newasm::header::functions::trim(key);
                             value__ = newasm::header::functions::trim(value__);
+                            //newasm::header::functions::info("2: Adding keys to `" + suf + "` = " + key + ":" + value__);
 
                             if(!newasm::header::functions::istext(key))
                             {

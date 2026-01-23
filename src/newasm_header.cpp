@@ -1385,10 +1385,23 @@ namespace newasm
 
 				return {true, {text, text2}};
 			}
+
+            template<typename T>
+            inline int getIndex(const std::vector<T>& v, const T& target)
+            {
+                auto it = std::find(v.begin(), v.end(), target);
+                if(it != v.end())
+                {
+                    return std::distance(v.begin(), it);
+                }
+                return (-1);
+            }
+
             inline auto checkTupleOrContextFormat(const std::string& input)
             {
                 return checkTupleFormat(input);
             }
+            
 			std::pair<bool, std::pair<std::string, std::string>> checkTupleFormat2(const std::string& input)
 			{
 				size_t i = 0;

@@ -1999,14 +1999,40 @@ using "ios"
     mov tlr, myContext("lmfao")
     call std::ios::writeln
 
-    mov &myContext, ("nigger":98)
-    mov tlr, myContext("key")
-    call std::ios::writeln
-    mov tlr, myContext("nigger")
+    mov &myContext, ("hehe":98)
+
+    mov tlr, myContext("hehe")
     call std::ios::writeln
 
-    mov &test::myContext, ("yay":"yay called!")
-    mov tlr, test::myContext("yay")
+    mov &test::myContext2, ("yay":"yay called!")
+    mov tlr, test::myContext2("yay")
+    call std::ios::writeln
+
+    mov &test::myContext2, ()
+
+    merge &test::myContext2, ("yay": 23)
+
+    mov tlr, test::myContext2("yay")
+    call std::ios::writeln
+
+    merge &myContext, ("hehe" : nil, "kjdhf": "VEOMA KORISNA STVAR JBG") ; hehe will be deleted cuz we set it to nil
+    mov tlr, myContext("kjdhf")
+    call std::ios::writeln
+
+    merge &myContext, ("hehe": 387) ; fix invalid memacc -> we give it a new value
+    mov tlr, myContext("hehe") ; <- invalid memory access error 
+    call std::ios::writeln
+
+    merge &test::myContext2, ("test" : 243)
+    mov tlr, test::myContext2("test")
+    call std::ios::writeln
+
+    merge &test::myContext2, ("test": "very cool")
+    mov tlr, test::myContext2("test")
+    call std::ios::writeln
+
+    merge &test::myContext2, ("test": nil, "test": "very cool again") ; this should work again!
+    mov tlr, test::myContext2("test")
     call std::ios::writeln
 
     ;LMFAO TEST

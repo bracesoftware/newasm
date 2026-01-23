@@ -1,13 +1,13 @@
 // NewASM Virtual Machine
 
 #if _NEWASM_OS == _NEWASM_OS_windows
-    #include "_compat/win32/utils.h"
+    #include "_Compat/win32/utils.h"
 #elif _NEWASM_OS == _NEWASM_OS_linux
-    #include "_compat/linux/utils.h"
+    #include "_Compat/linux/utils.h"
 #elif _NEWASM_OS == _NEWASM_OS_windows_old
-    #include "_compat/winold/utils.h"
+    #include "_Compat/winold/utils.h"
 #elif _NEWASM_OS == _NEWASM_OS_android
-    #include "_compat/android/utils.h"
+    #include "_Compat/android/utils.h"
 #elif _NEWASM_OS == _NEWASM_OS_macos
-    #include "_compat/macos/utils.h"
+    #include "_Compat/macos/utils.h"
 #endif
