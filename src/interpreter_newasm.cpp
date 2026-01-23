@@ -294,7 +294,7 @@ namespace newasm
             newasm::core::env_vars::functions::save_env();
             printf___("\t\tSaving environment variables...\n");
             
-            printf___("\t\tCleaning up dynamic tuple data...\n");
+            printf___("\t\tCleaning up dynamic tuple and context data...\n");
             for(auto i = newasm::variables::ids.begin(); i != newasm::variables::ids.end(); ++i)
             {
                 if(i->second.type == newasm::datatypes::tuple)
@@ -302,6 +302,13 @@ namespace newasm
                     if(i->second.tuple != nullptr)
                     {
                         delete i->second.tuple;
+                    }
+                }
+                if(i->second.type == newasm::datatypes::mycontext)
+                {
+                    if(i->second.context != nullptr)
+                    {
+                        delete i->second.context;
                     }
                 }
             }

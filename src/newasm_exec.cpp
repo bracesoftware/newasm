@@ -2182,7 +2182,7 @@ namespace newasm
                             if(v.size() != 2)
                             {
                                 //newasm::header::functions::err("IPAK JE OVDJE!");
-                                newasm::header::functions::err("ERROR BIO OVDJE -> Parsing: `" + contents.at(idx) + "`");
+                                //newasm::header::functions::err("ERROR BIO OVDJE -> Parsing: `" + contents.at(idx) + "`");
                                 
                                 newasm::terminate(newasm::exit_codes::invalid_syntax);
                                 return 1;
