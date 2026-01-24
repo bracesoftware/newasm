@@ -28,7 +28,7 @@ namespace newasm
     {
         namespace iostream
         {
-            void out_bopr(const std::string &reg)
+            inline void out_bopr(const std::string &reg)
             {
                 if(reg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::ext))
                 {
@@ -87,7 +87,7 @@ namespace newasm
                     std::cout << reg;
                 }
             }
-            std::string get_ref_val__2(const std::string &reg)
+            inline std::string get_ref_val__2(const std::string &reg)
             {
                 std::stringstream ss;
                 if(reg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::ext))

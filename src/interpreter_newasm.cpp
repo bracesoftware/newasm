@@ -354,10 +354,6 @@ namespace newasm
 {
     int entry(int argc, char* argv[])
     {
-        newasm::Console::show("TEST");
-        newasm::Console::out("LMAO THIS SHI WORKS");
-        newasm::Console::in();
-        newasm::Console::close();
         auto get_time = [&]() -> std::string {
             auto now = std::chrono::system_clock::now();
             std::time_t t = std::chrono::system_clock::to_time_t(now);
@@ -584,6 +580,7 @@ namespace newasm
 
         std::thread asyncCode(newasm::async_thread::entry);
 
+        newasm::Console::show("NewASM Application Window");
         newasm::header::functions::trim(newasm::header::settings::script_file);
         newasm::execute(newasm::header::settings::script_file, -1);
 
@@ -617,6 +614,8 @@ namespace newasm
         __LOG_FILE.open(__LOG_FILE__, std::ios::app);
         __LOG_FILE << "[" << get_time() << "] System exited.\n";
         __LOG_FILE.close();
+
+        newasm::Console::close();
         return 0;
     }
 }

@@ -21,7 +21,7 @@ the Initial Developer. All Rights Reserved.
 #ifndef __newasm_included
     #error [New-ASM] Cannot compile.
 #endif
-
+/*
 // get shi from go
 extern "C"
 {
@@ -31,32 +31,61 @@ extern "C"
     void close_console();
 }
 
+*/
+
+// NOTE: THIS FILE IS A WRAPPER FOR CONSOLE API (THIS IS JUST PSEUDO CODE)
+// I'M PLANNING TO ADD A FAST GUI, SO APPS LOOK LIKE THEY ARE APPS
+// FOR NOW WE JUST DO THESE
+
 
 namespace newasm
 {
+    static bool consoleOpen = false;
     class Console
     {
         public:
         inline static void show(std::string text)
         {
-            show_console(const_cast<char*>(text.c_str()));
+            //show_console(const_cast<char*>(text.c_str()));
+            if(newasm::consoleOpen)
+            {
+                return;
+            }
+            newasm::consoleOpen = true;
             return;
         }
         inline static void out(std::string text)
         {
-            console_out(const_cast<char*>(text.c_str()));
+            if(!newasm::consoleOpen)
+            {
+                return;
+            }
+
+            //console_out(const_cast<char*>(text.c_str()));
+            std::cout << text;
             return;
         }
         inline static std::string in()
         {
-            char* str = console_in();
+            if(!newasm::consoleOpen)
+            {
+                return std::string("nil");
+            }
+            /*char* str = console_in();
             std::string buf(str);
-            free_string(str);
-            return buf;
+            free_string(str);*/
+            std::string line;
+            std::getline(std::cin, line);
+            return line;
         }
         inline static void close()
         {
-            close_console();
+            if(!newasm::consoleOpen)
+            {
+                return;
+            }
+            //close_console();
+            newasm::consoleOpen = false;
             return;
         }
     };
