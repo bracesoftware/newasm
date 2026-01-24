@@ -97,3 +97,26 @@ namespace newasm
         //gg
     }
 }
+
+#if 0
+namespace newasm
+{
+    class Utils
+    {
+        public:
+        template<typename T>
+        inline static void print(T what)
+        {
+            std::cout << what;
+            return;
+        }
+
+        template<typename T>
+        inline static void println(T what)
+        {
+            std::cout << what << std::endl;
+            return;
+        }
+    };
+}
+#endif
