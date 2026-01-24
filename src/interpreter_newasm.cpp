@@ -82,6 +82,11 @@ the Initial Developer. All Rights Reserved.
 #include "vm/blueprint/class.cpp"
 // hardware changes
 #include "vm/hardware/multiproc.cpp"
+extern "C"
+{
+    void free_string(char* str);
+}
+#include "vm/_console.cpp"
 
 // Resources (assets) used in the program
 #include "runtime/assets/text.cpp"
@@ -349,6 +354,10 @@ namespace newasm
 {
     int entry(int argc, char* argv[])
     {
+        newasm::Console::show("TEST");
+        newasm::Console::out("LMAO THIS SHI WORKS");
+        newasm::Console::in();
+        newasm::Console::close();
         auto get_time = [&]() -> std::string {
             auto now = std::chrono::system_clock::now();
             std::time_t t = std::chrono::system_clock::to_time_t(now);

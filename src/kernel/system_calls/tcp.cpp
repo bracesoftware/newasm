@@ -28,7 +28,6 @@ extern "C"
     int send_tcp(const char* addr, const char* msg);
     char* recv_tcp(const char* addr);
     void tcp_init();
-    void free_string(char* str);
 }
 
 
