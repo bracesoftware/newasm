@@ -2034,6 +2034,10 @@ using "ios"
     merge &test::myContext2, ("test": nil, "test": "very cool again") ; this should work again!
     mov tlr, test::myContext2("test")
     call std::ios::writeln
+    
+    ;idk
+    mov tlr, "Hey"
+    mov stl, 0c0
 
     ;LMFAO TEST
 

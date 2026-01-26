@@ -100,14 +100,15 @@
     {
       "scope": "keyword.section.newasm",
       "settings": {
-        "foreground": "#569CD6"
+        "foreground": "#569CD6",
+        "fontStyle": "bold underline"
       }
     },
     {
       "scope": "register.control.newasm",
       "settings": {
         "foreground": "#A1C4E8",
-        "fontStyle": "italic"
+        "fontStyle": "italic bold"
       }
     },
     {
