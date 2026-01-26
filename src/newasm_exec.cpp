@@ -25,21 +25,23 @@ the Initial Developer. All Rights Reserved.
 namespace newasm
 {
     int execute(std::string file, int lineidx_____);
-    void unsins(std::string ins)
+    inline void unsins(std::string ins)
     {
         newasm::header::functions::wrn(
             static_cast<std::string>("Instruction `") +
             newasm::header::style::underline+ins+newasm::header::col::reset
             +static_cast<std::string>("` is not supported in the REPL mode.")
         );
+        return;
     }
-    void unsins_repl(std::string ins)
+    inline void unsins_repl(std::string ins)
     {
         newasm::header::functions::wrn(
             static_cast<std::string>("Instruction `") +
             newasm::header::style::underline+ins+newasm::header::col::reset
             +static_cast<std::string>("` is not supported outside the REPL mode.")
         );
+        return;
     }
     //int redirect_exec(std::string filename);
     inline int terminate(int exit_code)//, std::string line)
