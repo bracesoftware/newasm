@@ -1901,15 +1901,17 @@ using "ios"
     intg random: 0
     tuple testTupleOh: (0, 543.534, "oh my God")
 .start
-    movas string
+    movas intg
 
     mov tlr, myUnion
-    mov stl, 0c1
-    mov fdx, 1
-    sysenter "ios"
-    syscall
+    call std::ios::writeln
+
+    movas string
 
     mov tlr, myUnion2
+    mov fdx, 1
+    mov stl, 0c1
+    sysenter "ios"
     syscall
 
     del &myUnion2 ; note that del also follows the `movas`
