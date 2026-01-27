@@ -11,6 +11,13 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 ## What's new
 
 + Updated the runtime so the profiling at the end of the program is more accurate.
++ Added the new `crypto` kernel module:
+
+| Module | ID    | Arguments | Description |
+| ----- | ---------------- | --------- | ----------- |
+| `crypto` | `1` | `tlr` | Performs SHA256 hash on a string stored in `tlr`. The result is stored in `tlr`. |
+| `crypto` | `2` | `tlr`, `stl` | Performs XOR Base64 encryption on a string stored in `tlr`. The result is stored in `tlr`. Store a specific key into `stl`. |
+| `crypto` | `3` | `tlr`, `stl` | Performs XOR Base64 decryption on a string stored in `tlr`. The result is stored in `tlr`. Store a specific key into `stl`. |
 
 ## What's changed
 

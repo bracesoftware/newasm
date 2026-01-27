@@ -37,8 +37,56 @@ namespace newasm
                         return 1;
                     }
 
-                    auto result = newasm::syscalls::crypto::sha256(newasm::mem::regs::tlr.get_value());
+                    auto do_ = newasm::header::functions::remq(newasm::mem::regs::tlr.get_value());
+                    auto result = newasm::syscalls::crypto::sha256(do_);
                     newasm::mem::regs::tlr.set_value(result);
+                    newasm::mem::regs::tlr.add_end_("\"");
+                    return 1;
+                }
+                if(newasm::mem::regs::fdx == 2) //xorbase64 encrypt
+                {
+                    if(!newasm::header::functions::istext(newasm::mem::regs::tlr.get_value()))
+                    {
+                        newasm::header::functions::krnl("`tlr` (" + newasm::mem::regs::tlr.get_value() + ") has to be a string value.");
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    if(!newasm::header::functions::istext(newasm::mem::regs::stl.get_value()))
+                    {
+                        newasm::header::functions::krnl("`stl` (" + newasm::mem::regs::stl.get_value() + ") has to be a string value.");
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+
+                    auto key = newasm::header::functions::remq(newasm::mem::regs::stl.get_value());
+
+                    auto do_ = newasm::header::functions::remq(newasm::mem::regs::tlr.get_value());
+                    auto result = newasm::syscalls::crypto::xorbase64_encrypt(do_, key);
+                    newasm::mem::regs::tlr.set_value(result);
+                    newasm::mem::regs::tlr.add_end_("\"");
+                    return 1;
+                }
+                if(newasm::mem::regs::fdx == 3) //xorbase64 decrypt
+                {
+                    if(!newasm::header::functions::istext(newasm::mem::regs::tlr.get_value()))
+                    {
+                        newasm::header::functions::krnl("`tlr` (" + newasm::mem::regs::tlr.get_value() + ") has to be a string value.");
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    if(!newasm::header::functions::istext(newasm::mem::regs::stl.get_value()))
+                    {
+                        newasm::header::functions::krnl("`stl` (" + newasm::mem::regs::stl.get_value() + ") has to be a string value.");
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+
+                    auto key = newasm::header::functions::remq(newasm::mem::regs::stl.get_value());
+
+                    auto do_ = newasm::header::functions::remq(newasm::mem::regs::tlr.get_value());
+                    auto result = newasm::syscalls::crypto::xorbase64_decrypt(do_, key);
+                    newasm::mem::regs::tlr.set_value(result);
+                    newasm::mem::regs::tlr.add_end_("\"");
                     return 1;
                 }
                 newasm::terminate(newasm::exit_codes::unknown_fdx);
@@ -750,20 +798,18 @@ namespace newasm
                 //input text
                 if(newasm::mem::regs::fdx == 3)
                 {
-                    newasm::start = std::chrono::high_resolution_clock::now();
+                    newasm::perf::inputWasteTimer.start();
                     std::getline(std::cin, newasm::mem::regs::tlr.ref_value());
-                    newasm::end = std::chrono::high_resolution_clock::now();
-                    newasm::runtime_deduction.push_back(newasm::end - newasm::start);
+                    newasm::perf::inputWasteTimer.stop();
                     newasm::mem::regs::tlr.add_end_("\"");
                     return 1;
                 }
                 //input numbers and floats
                 if(newasm::mem::regs::fdx == 4)
                 {
-                    newasm::start = std::chrono::high_resolution_clock::now();
+                    newasm::perf::inputWasteTimer.start();
                     std::cin >> newasm::mem::regs::tlr;
-                    newasm::end = std::chrono::high_resolution_clock::now();
-                    newasm::runtime_deduction.push_back(newasm::end - newasm::start);
+                    newasm::perf::inputWasteTimer.stop();
                     if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr) && !newasm::header::functions::isfloat(newasm::mem::regs::tlr))
                     {
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);

@@ -294,26 +294,6 @@ Output:
 hi from macro
 ```
 
-## Built-in operands
-This language brings some built-in references, or rather operands, with itself - list:
-
-- `"ios"` - used as an operand in `syscall`, represents a module of system calls responsible for input and output streaming;
-- `"fs"` - used as an operand in `syscall`, represents a module of system calls responsible for input and output streaming;
-- `"ext"` - used as an operand in `syscall`, represents a module of system calls responsible for execution flow (starting child processes);
-- `"cmanip"` - used as an operand in `syscall`, represents a module of system calls responsible for container and data structure manipulation;
-- `"net"` - used as an operand in `syscall`, represents a module of system calls responsible for network features;
-- `"mem"` - used as an operand in `syscall`, represents a module of system calls responsible for memory/data management;
-- `"txtop"` - used as an operand in `syscall`, represents a module of system calls responsible for textual operations;
-- `"chrono"` - used as an operand in `syscall`, represents a module of system calls responsible for time;
-- `"thread"` - used as an operand in `syscall`, represents a module of system calls responsible for threads;
-- `"tuple"` - used as an operand in `syscall`, represents a module of system calls responsible for tuples;
-- `"tcp"` - used as an operand in `syscall`, represents a module of system calls responsible for TCP protocol;
-- `"http"` - used as an operand in `syscall`, represents a module of system calls responsible for HTTP protocol;
-- `&%null` - used to leave references/pointers unassigned/uninitialized.
-- `%nl` - used as a null operand in some instructions.
-
-> **WARNING**: Syntax such as `" ios"` is invalid.
-
 ## Instructions
 Below is a list of available instructions. General syntax is:
 
@@ -485,8 +465,9 @@ Perform a specific system call within a system module.
 | `math` | `5` | `tlr` | Finds `abs()` of the number inside `tlr`. Stores the result inside `tlr`. |
 | `math` | `6` | `tlr` | Finds `cbrt()` of the number inside `tlr`. Stores the result inside `tlr`. |
 | `misc` | `1` | `tlr`, `stl` | Returns a random number, with `tlr` being the minimum, and `stl` being the maximum. |
-
-
+| `crypto` | `1` | `tlr` | Performs SHA256 hash on a string stored in `tlr`. The result is stored in `tlr`. |
+| `crypto` | `2` | `tlr`, `stl` | Performs XOR Base64 encryption on a string stored in `tlr`. The result is stored in `tlr`. Store a specific key into `stl`. |
+| `crypto` | `3` | `tlr`, `stl` | Performs XOR Base64 decryption on a string stored in `tlr`. The result is stored in `tlr`. Store a specific key into `stl`. |
 
 ### `int` instruction
 Send system interrupts, basically manipulate with the interpreter.

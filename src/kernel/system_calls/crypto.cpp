@@ -26,6 +26,8 @@ the Initial Developer. All Rights Reserved.
 extern "C"
 {
     char* crypto_sha256_hex(const char* text);
+    char* crypto_xor_base64_encrypt(const char* text, const char* key);
+    char* crypto_xor_base64_decrypt(const char* text, const char* key);
 }
 
 
@@ -38,6 +40,22 @@ namespace newasm
             inline std::string sha256(const std::string& text)
             {
                 char* result = crypto_sha256_hex(text.c_str());
+                std::string res(result);
+                free_string(result);
+                return res;
+            }
+
+            inline std::string xorbase64_encrypt(const std::string& text, const std::string& key)
+            {
+                char* result = crypto_xor_base64_encrypt(text.c_str(), key.c_str());
+                std::string res(result);
+                free_string(result);
+                return res;
+            }
+
+            inline std::string xorbase64_decrypt(const std::string& text, const std::string& key)
+            {
+                char* result = crypto_xor_base64_decrypt(text.c_str(), key.c_str());
                 std::string res(result);
                 free_string(result);
                 return res;
