@@ -466,8 +466,8 @@ Perform a specific system call within a system module.
 | `math` | `6` | `tlr` | Finds `cbrt()` of the number inside `tlr`. Stores the result inside `tlr`. |
 | `misc` | `1` | `tlr`, `stl` | Returns a random number, with `tlr` being the minimum, and `stl` being the maximum. |
 | `crypto` | `1` | `tlr` | Performs SHA256 hash on a string stored in `tlr`. The result is stored in `tlr`. |
-| `crypto` | `2` | `tlr`, `stl` | Performs XOR Base64 encryption on a string stored in `tlr`. The result is stored in `tlr`. Store a specific key into `stl`. |
-| `crypto` | `3` | `tlr`, `stl` | Performs XOR Base64 decryption on a string stored in `tlr`. The result is stored in `tlr`. Store a specific key into `stl`. |
+| `crypto` | `2` | `tlr`, `stl` | Performs XOR encryption on a string stored in `tlr`. The result is stored in `tlr`. Store a specific key into `stl`. |
+| `crypto` | `3` | `tlr`, `stl` | Performs XOR decryption on a string stored in `tlr`. The result is stored in `tlr`. Store a specific key into `stl`. |
 
 ### `int` instruction
 Send system interrupts, basically manipulate with the interpreter.

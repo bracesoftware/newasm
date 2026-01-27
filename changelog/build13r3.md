@@ -16,8 +16,8 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 | Module | ID    | Arguments | Description |
 | ----- | ---------------- | --------- | ----------- |
 | `crypto` | `1` | `tlr` | Performs SHA256 hash on a string stored in `tlr`. The result is stored in `tlr`. |
-| `crypto` | `2` | `tlr`, `stl` | Performs XOR Base64 encryption on a string stored in `tlr`. The result is stored in `tlr`. Store a specific key into `stl`. |
-| `crypto` | `3` | `tlr`, `stl` | Performs XOR Base64 decryption on a string stored in `tlr`. The result is stored in `tlr`. Store a specific key into `stl`. |
+| `crypto` | `2` | `tlr`, `stl` | Performs XOR encryption on a string stored in `tlr`. The result is stored in `tlr`. Store a specific key into `stl`. |
+| `crypto` | `3` | `tlr`, `stl` | Performs XOR decryption on a string stored in `tlr`. The result is stored in `tlr`. Store a specific key into `stl`. |
 
 ## What's changed
 

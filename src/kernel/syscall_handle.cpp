@@ -43,7 +43,7 @@ namespace newasm
                     newasm::mem::regs::tlr.add_end_("\"");
                     return 1;
                 }
-                if(newasm::mem::regs::fdx == 2) //xorbase64 encrypt
+                if(newasm::mem::regs::fdx == 2) //xor encrypt
                 {
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr.get_value()))
                     {
@@ -61,12 +61,12 @@ namespace newasm
                     auto key = newasm::header::functions::remq(newasm::mem::regs::stl.get_value());
 
                     auto do_ = newasm::header::functions::remq(newasm::mem::regs::tlr.get_value());
-                    auto result = newasm::syscalls::crypto::xorbase64_encrypt(do_, key);
+                    auto result = newasm::syscalls::crypto::xor_encrypt(do_, key);
                     newasm::mem::regs::tlr.set_value(result);
                     newasm::mem::regs::tlr.add_end_("\"");
                     return 1;
                 }
-                if(newasm::mem::regs::fdx == 3) //xorbase64 decrypt
+                if(newasm::mem::regs::fdx == 3) //xor decrypt
                 {
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr.get_value()))
                     {
@@ -84,7 +84,7 @@ namespace newasm
                     auto key = newasm::header::functions::remq(newasm::mem::regs::stl.get_value());
 
                     auto do_ = newasm::header::functions::remq(newasm::mem::regs::tlr.get_value());
-                    auto result = newasm::syscalls::crypto::xorbase64_decrypt(do_, key);
+                    auto result = newasm::syscalls::crypto::xor_decrypt(do_, key);
                     newasm::mem::regs::tlr.set_value(result);
                     newasm::mem::regs::tlr.add_end_("\"");
                     return 1;

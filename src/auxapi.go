@@ -143,69 +143,56 @@ func crypto_sha256_hex(data *C.char) *C.char {
 	return C.CString(out)
 }
 
-/*
 //export crypto_xor_base64_encrypt
-func crypto_xor_base64_encrypt(data *C.char, key C.char) *C.char {
-	goData := C.GoString(data)
-	b := []byte(goData)
+func crypto_xor_base64_encrypt(data *C.char, dataLen C.int, key *C.char, keyLen C.int) *C.char {
+    goData := C.GoBytes(unsafe.Pointer(data), dataLen)
+    goKey := C.GoBytes(unsafe.Pointer(key), keyLen)
 
-	for i := range b {
-		b[i] ^= byte(key)
-	}
+    for i := range goData {
+        goData[i] ^= goKey[i % len(goKey)]
+    }
 
-	out := base64.StdEncoding.EncodeToString(b)
-	return C.CString(out)
+    out := base64.StdEncoding.EncodeToString(goData)
+    return C.CString(out)
 }
 
 //export crypto_xor_base64_decrypt
-func crypto_xor_base64_decrypt(data *C.char, key C.char) *C.char {
-	goData := C.GoString(data)
+func crypto_xor_base64_decrypt(data *C.char, dataLen C.int, key *C.char, keyLen C.int) *C.char {
+    goData := C.GoBytes(unsafe.Pointer(data), dataLen)
+    goKey := C.GoBytes(unsafe.Pointer(key), keyLen)
 
-	b, err := base64.StdEncoding.DecodeString(goData)
-	if err != nil {
+    decoded, err := base64.StdEncoding.DecodeString(string(goData))
+    if err != nil {
         fmt.Println("NewASM GO :: Decryption XORBase64 error -> ", err)
-		return C.CString("")
-	}
+        return C.CString("")
+    }
 
+    for i := range decoded {
+        decoded[i] ^= goKey[i % len(goKey)]
+    }
+
+    return C.CString(string(decoded))
+}
+
+//export crypto_xor_encrypt
+func crypto_xor_encrypt(data *C.char, key *C.char) *C.char {
+	goData := C.GoString(data)
+	goKey := C.GoString(key)
+
+	b := []byte(goData)
 	for i := range b {
-		b[i] ^= byte(key)
+		b[i] ^= goKey[i % len(goKey)]
 	}
 
 	return C.CString(string(b))
 }
 
-*/
-
-//export crypto_xor_base64_encrypt
-func crypto_xor_base64_encrypt(data *C.char, key *C.char) *C.char {
+//export crypto_xor_decrypt
+func crypto_xor_decrypt(data *C.char, key *C.char) *C.char {
 	goData := C.GoString(data)
 	goKey := C.GoString(key)
 
 	b := []byte(goData)
-
-	for i := range b {
-		b[i] ^= goKey[i % len(goKey)]
-	}
-
-	out := base64.StdEncoding.EncodeToString(b)
-	return C.CString(out)
-}
-
-// ────────────────────────────────
-// XOR + Base64 DECRYPT
-// ────────────────────────────────
-
-//export crypto_xor_base64_decrypt
-func crypto_xor_base64_decrypt(data *C.char, key *C.char) *C.char {
-	goData := C.GoString(data)
-	goKey := C.GoString(key)
-
-	b, err := base64.StdEncoding.DecodeString(goData)
-	if err != nil {
-        fmt.Println("NewASM GO :: Decryption XORBase64 error -> ", err)
-		return C.CString("")
-	}
-
 	for i := range b {
 		b[i] ^= goKey[i % len(goKey)]
 	}
