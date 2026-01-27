@@ -24,6 +24,26 @@ namespace newasm
     {
         int handleSysCall()
         {
+            //crypto
+            if(newasm::kernel::cfg::Crypto)
+            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::crypto)
+            {
+                if(newasm::mem::regs::fdx == 1) //sha256
+                {
+                    if(!newasm::header::functions::istext(newasm::mem::regs::tlr.get_value()))
+                    {
+                        newasm::header::functions::krnl("`tlr` (" + newasm::mem::regs::tlr.get_value() + ") has to be a string value.");
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+
+                    auto result = newasm::syscalls::crypto::sha256(newasm::mem::regs::tlr.get_value());
+                    newasm::mem::regs::tlr.set_value(result);
+                    return 1;
+                }
+                newasm::terminate(newasm::exit_codes::unknown_fdx);
+                return 1;
+            }
             //misc
             if(newasm::kernel::cfg::Misc)
             if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::misc)

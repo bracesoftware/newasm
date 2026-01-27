@@ -172,6 +172,7 @@ is in the runtime
 #include "kernel/system_calls/tcp.cpp"
 #include "kernel/system_calls/http.cpp"
 #include "kernel/system_calls/misc.cpp"
+#include "kernel/system_calls/crypto.cpp"
 
 #include "runtime/containers.cpp"
 #include "runtime/env_vars.cpp"

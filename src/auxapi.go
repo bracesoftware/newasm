@@ -32,6 +32,8 @@ import (
     "io"
     "strings"
     "unsafe"
+    //for crypto
+    "crypto/sha256"
 )
 
 //export send_tcp
@@ -127,4 +129,14 @@ func http_post(url *C.char, data *C.char) *C.char {
     }
 
     return C.CString(string(body))
+}
+
+//crypto shi
+
+//export crypto_sha256_hex
+func crypto_sha256_hex(data *C.char) *C.char {
+	goData := C.GoString(data)
+	hash := sha256.Sum256([]byte(goData))
+	out := hex.EncodeToString(hash[:])
+	return C.CString(out)
 }

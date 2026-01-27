@@ -147,6 +147,11 @@ namespace newasm
                         newasm::kernel::cfg::Misc = true;
                         return;
                     }
+                    if(arg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::crypto))
+                    {
+                        newasm::kernel::cfg::Crypto = true;
+                        return;
+                    }
                     newasm::compiler::abort(newasm::compiler::fail::invalid_krnlmod);
                     return;
                 }

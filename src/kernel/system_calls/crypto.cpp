@@ -17,27 +17,31 @@ the Initial Developer. All Rights Reserved.
 
 */
 
+
+#ifndef __newasm_included
+    #error [New-ASM] Cannot compile.
+#endif
+
+// get shi from go
+extern "C"
+{
+    char* crypto_sha256_hex(const char* text);
+}
+
+
 namespace newasm
 {
-    namespace kernel
+    namespace syscalls
     {
-        namespace cfg
+        namespace crypto
         {
-            bool IOStream = false;
-            bool Extensions = false;
-            bool Thread = false;
-            bool Chrono = false;
-            bool Network = false;
-            bool Memory = false;
-            bool TextOperations = false;
-            bool ContainerManipulation = false;
-            bool FileStream = false;
-            bool Tuple = false;
-            bool TCProtocol = false;
-            bool HTTP = false;
-            bool Math = false;
-            bool Misc = false;
-            bool Crypto = false;
+            inline std::string sha256(const std::string& text)
+            {
+                char* result = crypto_sha256_hex(text.c_str());
+                std::string res(result);
+                free_string(result);
+                return res;
+            }
         }
     }
 }

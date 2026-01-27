@@ -253,6 +253,7 @@ namespace newasm
                 constinit const int http = 12;
                 constinit const int math = 13;
                 constinit const int misc = 14;
+                constinit const int crypto = 15;
 
                 const std::unordered_map<int, std::string> identifiers__ = {
                     {ios, "ios"},
@@ -268,7 +269,8 @@ namespace newasm
                     {tcp, "tcp"},
                     {http, "http"},
                     {math, "math"},
-                    {misc, "misc"}
+                    {misc, "misc"},
+                    {crypto, "crypto"}
                 };
             }
             namespace directives
