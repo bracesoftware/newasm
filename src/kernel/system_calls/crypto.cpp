@@ -26,8 +26,8 @@ the Initial Developer. All Rights Reserved.
 extern "C"
 {
     char* crypto_sha256_hex(const char* text);
-    char* crypto_xor_encrypt(const char* text, const char* key);
-    char* crypto_xor_decrypt(const char* text, const char* key);
+    //char* crypto_xor_encrypt(const char* text, const char* key);
+    //char* crypto_xor_decrypt(const char* text, const char* key);
 }
 
 
@@ -45,20 +45,45 @@ namespace newasm
                 return res;
             }
 
-            inline std::string xor_encrypt(const std::string& text, const std::string& key)
+            inline std::string to_hex(const std::string& input)
             {
-                char* result = crypto_xor_encrypt(text.data(), key.data());
-                std::string res(result);
-                free_string(result);
-                return res;
+                std::ostringstream ss;
+                for(unsigned char c : input)
+                {
+                    ss << std::hex << std::setw(2) << std::setfill('0') << (int)c;
+                }
+                return ss.str();
             }
 
-            inline std::string xor_decrypt(const std::string& text, const std::string& key)
+            inline std::string from_hex(const std::string& hex)
             {
-                char* result = crypto_xor_decrypt(text.data(), key.data());
-                std::string res(result);
-                free_string(result);
-                return res;
+                std::string result;
+                for(size_t i = 0; i < hex.length(); i += 2)
+                {
+                    std::string byte = hex.substr(i, 2);
+                    result += static_cast<char>(std::stoi(byte, nullptr, 16));
+                }
+                return result;
+            }
+
+            inline std::string xor_encrypt(const std::string& text, const std::string& key)
+            {
+                std::string result = text;
+                for(size_t i = 0; i < result.size(); ++i)
+                {
+                    result[i] ^= key[i % key.size()];
+                }
+                return to_hex(result);
+            }
+
+            inline std::string xor_decrypt(const std::string& hex_text, const std::string& key)
+            {
+                std::string raw = from_hex(hex_text);
+                for(size_t i = 0; i < raw.size(); ++i)
+                {
+                    raw[i] ^= key[i % key.size()];
+                }
+                return raw;
             }
         }
     }
