@@ -29,6 +29,7 @@ namespace newasm
         {
             const std::string data_folder = ".newasm";
             const std::string temp_vers = "__temp_vers.txt";
+            const std::string temp_runtime = "__temp_runtime.txt";
             const std::string virtual_mem = "vmem._sys";
             const std::string dynlib_ex = ".newasm_dl";
             const std::string setup_ex = ".newasm_set";

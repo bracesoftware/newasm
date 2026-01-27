@@ -1110,6 +1110,11 @@ namespace newasm
 			
 			std::pair<bool, std::vector<std::string>> parseNamespaceSegments(const std::string& line)
 			{
+                if(line.empty())
+                {
+                    return {false, {}};
+                }
+                
 				if(line.at(0) == ':')
 				{
 					return {false, {}};

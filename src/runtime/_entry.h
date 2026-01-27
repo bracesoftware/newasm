@@ -27,7 +27,7 @@ namespace newasm
     {
         void main()
         {
-            version = 1;
+            version = newasm::RUNTIME_VERSION;
             newasm::header::functions::log("Runtime loaded.");
         }
         namespace functions

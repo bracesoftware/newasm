@@ -73,9 +73,9 @@ the Initial Developer. All Rights Reserved.
 #define __newasm_included
 #include "runtime/alpha.cpp"
 #include "newasm_stdex.cpp"
-#include "sys._compat.cpp"
+#include "sys._platformSpecific.cpp"
 
-#include "getch._compat.cpp"
+#include "taster._platformSpecific.cpp"
 
 // thread init
 #include "kernel/threads/_flags.cpp"
@@ -96,6 +96,7 @@ namespace newasm
 {
     //newasm::_std::shared_memory sharedMem;
     const int BUILD_NUMBER = 12;
+    const int RUNTIME_VERSION = 2;
     bool vercheck = true;
     bool dwin = false;
     const std::string tab = "\t\t\t";
@@ -136,7 +137,7 @@ is in the runtime
 #include "runtime/lang_inf.cpp"
 
 #include "runtime/progwin_api.cpp"
-#include "utils._compat.cpp"
+#include "utils._platformSpecific.cpp"
 
 #include "runtime/utils.cpp"
 #include "runtime/common/opcodes.h"
@@ -174,7 +175,7 @@ is in the runtime
 #include "vm/hardware/io_ports.cpp"
 //
 #include "kernel/dynamic/commonlibs.cpp"
-#include "libs._compat.cpp"
+#include "libs._platformSpecific.cpp"
 //
 #include "kernel/krnlcfg.cpp"
 #include "kernel/syscall_handle.cpp"
@@ -233,11 +234,15 @@ namespace newasm
         {
             // download test
             std::string url = "https://bracesoftware.github.io/web/newasm_server/vers.txt";
+            std::string url2 = "https://bracesoftware.github.io/web/newasm_server/runtime.txt";
             std::string output_path = newasm::core::constants::data_folder + newasm::core::constants::separator + newasm::core::constants::temp_vers;
+            std::string output_path2 = newasm::core::constants::data_folder + newasm::core::constants::separator + newasm::core::constants::temp_runtime;
 
             //newasm::header::functions::info("Checking for updates...");
             newasm::utils::loading("Checking for updates...", newasm::utils::load_speed);
-            bool checkres = newasm::net::download(url, output_path);
+            bool checkres1 = newasm::net::download(url, output_path);
+            bool checkres2 = newasm::net::download(url2, output_path2);
+            bool checkres = checkres1 && checkres2;
             if(checkres)
             {
                 std::cout << newasm::header::col::gray;
@@ -246,7 +251,7 @@ namespace newasm
                 std::ifstream file(output_path);
                 if(!file)
                 {
-                    std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + static_cast<std::string>("Error while checking the version."));
+                    std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + static_cast<std::string>("Error while checking the build version."));
                     std::cout << newasm::header::col::reset;
                     return 1;
                 }
@@ -258,7 +263,25 @@ namespace newasm
                     std::cout << newasm::header::col::reset;
                     return 1;
                 }
-                std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + static_cast<std::string>("Running the latest version of the runtime environment!"));
+                std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + static_cast<std::string>("Running the latest version of the system!"));
+                std::cout << newasm::header::col::reset;
+
+                std::ifstream file2(output_path2);
+                if(!file2)
+                {
+                    std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + static_cast<std::string>("Error while checking the runtime version."));
+                    std::cout << newasm::header::col::reset;
+                    return 1;
+                }
+                std::string runtimenumber;
+                std::getline(file2, runtimenumber);
+                if(newasm::RUNTIME_VERSION < std::stoi(newasm::header::functions::trim((runtimenumber))))
+                {
+                    std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + static_cast<std::string>("NewASM Runtime ") + newasm::header::functions::trim((runtimenumber)) + " update is available!");
+                    std::cout << newasm::header::col::reset;
+                    return 1;
+                }
+                std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + static_cast<std::string>("The runtime is running on the latest version."));
                 std::cout << newasm::header::col::reset;
                 return 1;
             }
@@ -578,7 +601,7 @@ namespace newasm
             return 1;
         }
 
-        std::thread asyncCode(newasm::async_thread::entry);
+        newasm::async_thread::entry();
 
         newasm::Console::show("NewASM Application Window");
         newasm::header::functions::trim(newasm::header::settings::script_file);
@@ -597,7 +620,6 @@ namespace newasm
         std::cout << newasm::header::col::reset;
 
         newasm::async_thread::running = false;
-        asyncCode.join();
 
         // Print the debug buffer
         newasm::progwin::api::cout("Cleaning up the buffer..............." + newasm::header::col::light_red + "\n\tsys -> ..\n--logout--\n");

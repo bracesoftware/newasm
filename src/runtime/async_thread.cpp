@@ -25,16 +25,14 @@ namespace newasm
 {
     namespace async_thread
     {
-        bool running = true;
+        std::atomic<bool> running = true;
         void entry()
         {
-            while(true)
+            if constexpr(0)
             {
-                // do stuff
-
-                if(!newasm::async_thread::running)
+                while(newasm::async_thread::running)
                 {
-                    break;
+                    //shitness
                 }
             }
             return;
