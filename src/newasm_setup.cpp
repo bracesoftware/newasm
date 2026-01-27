@@ -94,6 +94,7 @@ namespace newasm
         const int channel_deadlock = 53;
         const int invalid_alloc = 54;
         const int invalid_init = 55;
+        const int linker_err = 56;
 
         const std::unordered_map<int, std::string> identifier = {
             {noterm_point, "NoTerminationPoint"},
@@ -151,7 +152,8 @@ namespace newasm
 			{invalid_tuple, "InvalidTuple"},
             {channel_deadlock, "ThreadChannelDeadlock"},
             {invalid_alloc, "InvalidAlloc"},
-            {invalid_init, "InvalidVarInitializer"}
+            {invalid_init, "InvalidVarInitializer"},
+            {linker_err, "LinkerError"}
         };
     }
     namespace cmp_results

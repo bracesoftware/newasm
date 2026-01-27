@@ -1084,6 +1084,11 @@ namespace newasm
         }
         switch(it->second)
         {
+            case newasm::core::lang_inf::Link___:
+            {
+                newasm::terminate(newasm::exit_codes::linker_err);
+                return 1;
+            }
             //send
             case newasm::core::lang_inf::send:
             {
@@ -3188,6 +3193,11 @@ namespace newasm
         }
         switch(it->second)
         {
+            case newasm::core::lang_inf::Link___:
+            {
+                newasm::terminate(newasm::exit_codes::linker_err);
+                return 1;
+            }
             //movas
             case newasm::core::lang_inf::movas:
             {
@@ -5118,6 +5128,11 @@ namespace newasm
 
         switch(it->second)
         {
+            case newasm::core::lang_inf::Link___:
+            {
+                newasm::terminate(newasm::exit_codes::linker_err);
+                return 1;
+            }
             //exit
             case newasm::core::lang_inf::exit:
             {

@@ -62,7 +62,7 @@ namespace newasm
             }
             return;
         }
-        static inline std::vector<std::string> readFile(const std::string& filename)
+        static inline std::pair<bool, std::vector<std::string>> readFile(const std::string& filename)
         {
             std::ifstream file(filename);
             std::vector<std::string> lines;
@@ -70,7 +70,7 @@ namespace newasm
             if(!file.is_open())
             {
                 newasm::header::functions::linkinfo("System has encountered an error while opening `" + filename + "`.");
-                return lines;
+                return {false, lines};
             }
 
             std::string line;
@@ -80,7 +80,7 @@ namespace newasm
             }
 
             file.close();
-            return lines;
+            return {true, lines};
         }
         static inline std::pair<bool, std::string> linkFile__A(const std::string& line_)
         {
@@ -99,12 +99,17 @@ namespace newasm
         static inline void link(const std::string& filename, const std::string& outputfilename)
         {
             newasm::header::functions::linkinfo("Processing entry file `" + filename + "`...");
-            auto v = newasm::Linker::readFile(filename);
+            auto P = newasm::Linker::readFile(filename);
+            if(!P.first)
+            {
+                return;
+            }
+            auto v = P.second;
             int files = 0;
 
             std::string temp;
             std::vector<std::string> v2;
-            std::cout << newasm::header::col::gray;
+            bool temp2;
             for(int i = 0; i < v.size(); ++i)
             {
                 temp.clear();
@@ -112,10 +117,18 @@ namespace newasm
                 auto p = newasm::Linker::linkFile__A(v[i]);
                 if(p.first)
                 {
-                    files++;
-                    v2 = newasm::Linker::readFile(p.second);
+                    auto c = newasm::Linker::readFile(p.second);
+                    v2 = c.second;
+                    temp2 = c.first;
+                    if(!c.first)
+                    {
+                        continue;
+                    }
+                    std::cout << newasm::header::col::gray;
                     newasm::header::functions::nullprint("\tLinking `../" + p.second + "`...");
                     newasm::Linker::replaceVectorElement(v, v2, i);
+
+                    files++;
                 }
             }
 
