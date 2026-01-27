@@ -45,27 +45,6 @@ namespace newasm
                 return res;
             }
 
-            inline std::string to_hex(const std::string& input)
-            {
-                std::ostringstream ss;
-                for(unsigned char c : input)
-                {
-                    ss << std::hex << std::setw(2) << std::setfill('0') << (int)c;
-                }
-                return ss.str();
-            }
-
-            inline std::string from_hex(const std::string& hex)
-            {
-                std::string result;
-                for(size_t i = 0; i < hex.length(); i += 2)
-                {
-                    std::string byte = hex.substr(i, 2);
-                    result += static_cast<char>(std::stoi(byte, nullptr, 16));
-                }
-                return result;
-            }
-
             inline std::string xor_encrypt(const std::string& text, const std::string& key)
             {
                 std::string result = text;
@@ -73,17 +52,12 @@ namespace newasm
                 {
                     result[i] ^= key[i % key.size()];
                 }
-                return to_hex(result);
+                return result;
             }
 
-            inline std::string xor_decrypt(const std::string& hex_text, const std::string& key)
+            inline std::string xor_decrypt(const std::string& text, const std::string& key)
             {
-                std::string raw = from_hex(hex_text);
-                for(size_t i = 0; i < raw.size(); ++i)
-                {
-                    raw[i] ^= key[i % key.size()];
-                }
-                return raw;
+                return xor_encrypt(text, key);
             }
         }
     }
