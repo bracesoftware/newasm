@@ -49,6 +49,7 @@ the Initial Developer. All Rights Reserved.
 #include <random>
 #include <map>
 #include <cstring>
+#include <regex>
 //LOl
 #include <limits>
 #include <cstdlib> //memcpy, rand
@@ -144,6 +145,7 @@ is in the runtime
 
 #include "newasm_dynlib.cpp"
 #include "newasm_header.cpp"
+#include "linker/asmlink.cpp"
 
 #include "runtime/common/tokenize.h"
 #include "newasm_setup.cpp"
@@ -395,6 +397,7 @@ namespace newasm
         };
 
         fs::create_directory(newasm::data::getDataFolder() + newasm::core::constants::separator + newasm::core::constants::data_folder);
+        //fs::create_directory(newasm::data::getDataFolder() + newasm::core::constants::separator + newasm::core::constants::linker);
         #define __LOG_FILE__ (newasm::data::getDataFolder() + newasm::core::constants::separator + newasm::core::constants::data_folder + newasm::core::constants::separator + "__newasm.log")
         std::ofstream __LOG_FILE(__LOG_FILE__, std::ios::app);
         __LOG_FILE << "[" << get_time() << "] System opened.\n";
@@ -424,6 +427,11 @@ namespace newasm
             newasm::core::constants::cache_folder
         );
 
+        fs::path linker_folder = fs::path(newasm::core::constants::data_folder+
+            newasm::core::constants::separator+
+            newasm::core::constants::linker
+        );
+
         fs::path user_folder = fs::path(newasm::core::constants::data_folder+
             newasm::core::constants::separator+
             newasm::core::constants::user_folder
@@ -439,6 +447,10 @@ namespace newasm
         if(!fs::exists(user_folder))
         {
             fs::create_directories(user_folder);
+        }
+        if(!fs::exists(linker_folder))
+        {
+            fs::create_directories(linker_folder);
         }
         //newasm::_virtual::main();
         newasm::user::main();
@@ -543,13 +555,7 @@ namespace newasm
             EMPTYLINE;
             return 1;
         }
-        newasm::header::settings::script_file = argv[1];
-        newasm::header::functions::trim(newasm::header::settings::script_file);
-        if(!std::filesystem::exists(newasm::header::settings::script_file))
-        {
-            newasm::header::functions::err("Cannot open the file: `" + newasm::header::settings::script_file + "`");
-            return 1;
-        }
+
         //if the file is provided, do this
         newasm::header::functions::log("System loading...");
 
@@ -563,10 +569,24 @@ namespace newasm
         }
 
         std::cout << std::endl;
+        newasm::header::settings::script_file = argv[1];
+        newasm::header::functions::trim(newasm::header::settings::script_file);
+        newasm::header::settings::script_file_LINKED = linker_folder.string() + newasm::core::constants::separator + newasm::header::settings::script_file;
+
+        newasm::Linker::link(newasm::header::settings::script_file, newasm::header::settings::script_file_LINKED);
+
+        newasm::header::functions::wait(4000);
+
+        if(!std::filesystem::exists(newasm::header::settings::script_file_LINKED))
+        {
+            newasm::header::functions::err("Cannot open the file: `" + newasm::header::settings::script_file + "`");
+            return 1;
+        }
+        std::cout << std::endl;
         newasm::header::execution_flow::entry_exec = newasm::header::settings::script_file;
 
         newasm::core::env_vars::functions::setup_env();
-        newasm::project_data::impl::setup_proj();
+        newasm::project_data::impl::setup_proj(newasm::header::settings::script_file);
         newasm::hardware::randAccessMem.init();
         newasm::header::functions::info("Sucessfully allocated 10 MB of memory.");
         newasm::header::functions::info(
@@ -604,8 +624,8 @@ namespace newasm
         newasm::async_thread::entry();
 
         newasm::Console::show("NewASM Application Window");
-        newasm::header::functions::trim(newasm::header::settings::script_file);
-        newasm::execute(newasm::header::settings::script_file, -1);
+        newasm::header::functions::trim(newasm::header::settings::script_file_LINKED);
+        newasm::execute(newasm::header::settings::script_file_LINKED, -1);
 
         /*newasm::procline(".start");
         newasm::procline("mov tlr, \"hello from built-in\"");

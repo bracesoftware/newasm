@@ -2041,6 +2041,8 @@ using "ios"
     mov tlr, "Hey"
     mov stl, 0c0
 
+link "testfile.asm" ; link a file
+
     ;LMFAO TEST
 
     mov tlr, 223

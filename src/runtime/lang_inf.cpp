@@ -28,6 +28,7 @@ namespace newasm
         namespace constants
         {
             const std::string data_folder = ".newasm";
+            const std::string linker = "__link__";
             const std::string temp_vers = "__temp_vers.txt";
             const std::string temp_runtime = "__temp_runtime.txt";
             const std::string virtual_mem = "vmem._sys";

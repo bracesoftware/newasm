@@ -126,6 +126,7 @@ namespace newasm
         {
             int debug = 1;
             std::string script_file = newasm::header::constants::default_input;
+            std::string script_file_LINKED = newasm::header::constants::default_input;
             bool extra = false;
             bool create_new_projfile = false;
             bool logging = false;
@@ -247,6 +248,11 @@ namespace newasm
             {
                 if(newasm::header::settings::debug == 1)
                     std::cout << newasm::header::col::gray << " debug: " << newasm::header::col::reset << text << std::endl;
+            }
+            void linkinfo(std::string text)
+            {
+                if(newasm::header::settings::debug == 1)
+                    std::cout << newasm::header::col::lime_teal << " linker: " << newasm::header::col::reset << text << std::endl;
             }
             
             /*void init()
@@ -507,6 +513,7 @@ namespace newasm
                 }
                 while(it != start && std::isspace(static_cast<unsigned char>(*it)));
 
+                //returns trimmed string
                 return std::string(start, it + 1);
             }
             inline bool isnumeric_(const std::string &str)
@@ -1852,9 +1859,9 @@ namespace newasm
                 }
                 return 1;
             }
-            int setup_proj()
+            int setup_proj(const std::string& script_file)
             {
-                std::ifstream internal_fileobject(newasm::header::settings::script_file + static_cast<std::string>(".newasm_proj"));
+                std::ifstream internal_fileobject(script_file + static_cast<std::string>(".newasm_proj"));
                 if(internal_fileobject.is_open())
                 {
                     std::string line,key,value;

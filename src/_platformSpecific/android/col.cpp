@@ -36,6 +36,7 @@ namespace newasm
 
             const std::string light_red = "\x1b[38;5;210m";
             const std::string light_blue = "\x1b[38;5;117m";
+            const std::string lime_teal = "\033[38;2;0;255;170m";
 
             const std::string reset = "\033[0m";
         }
