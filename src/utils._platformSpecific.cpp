@@ -12,9 +12,11 @@
     #include "_platformSpecific/macos/utils.h"
 #endif
 
+#if 0
 //////EXPERIMENTAL
 #if _NEWASM_OS == _NEWASM_OS_windows
     #include "vm/experimental._console.cpp"
 #elif _NEWASM_OS == _NEWASM_OS_windows_old
     #include "vm/experimental._console.cpp"
+#endif
 #endif
