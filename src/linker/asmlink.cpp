@@ -104,6 +104,7 @@ namespace newasm
 
             std::string temp;
             std::vector<std::string> v2;
+            std::cout << newasm::header::col::gray;
             for(int i = 0; i < v.size(); ++i)
             {
                 temp.clear();
@@ -117,6 +118,8 @@ namespace newasm
                     newasm::Linker::replaceVectorElement(v, v2, i);
                 }
             }
+
+            std::cout << newasm::header::col::reset;
 
             newasm::header::functions::nullprint("\tSuccessfully linked " + std::to_string(files) + " files.");
             newasm::Linker::writeFile(outputfilename, v);
