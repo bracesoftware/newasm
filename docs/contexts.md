@@ -1,6 +1,8 @@
 - [Go back...](../README.md)
 
 ## Contexts
+> Added in build 12.
+
 Context is a data container, or rather its own type, that can hold different information linked to a specific textual key, which is very similar to hashmaps.
 
 To declare a context, do:

@@ -1,4 +1,6 @@
 # Linker
+> Added in build 13.
+
 You can easily link more source files into one using the `link` compile time instruction:
 
 `entry.asm`:
