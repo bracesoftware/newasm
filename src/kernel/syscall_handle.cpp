@@ -159,9 +159,12 @@ namespace newasm
                         return 1;
                     }
           
+                    newasm::start = std::chrono::high_resolution_clock::now();
                     std::string result = newasm::syscalls::http::get(
                         newasm::header::functions::remq(newasm::mem::regs::tlr.get_value())
                     );
+                    newasm::end = std::chrono::high_resolution_clock::now();
+                    newasm::network_deduction.push_back(newasm::end - newasm::start);
                     
                     auto removeexc = [](std::string& input) -> std::string {
                             for(int i = 0; i < input.size(); ++i)
@@ -191,10 +194,14 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                         return 1;
                     }
+
+                    newasm::start = std::chrono::high_resolution_clock::now();
                     std::string result = newasm::syscalls::http::post(
                         newasm::header::functions::remq(newasm::mem::regs::tlr.get_value()),
                         newasm::header::functions::remq(newasm::mem::regs::stl.get_value())
                     );
+                    newasm::end = std::chrono::high_resolution_clock::now();
+                    newasm::network_deduction.push_back(newasm::end - newasm::start);
 
                     auto removeexc = [](std::string& input) -> std::string {
                             for(int i = 0; i < input.size(); ++i)
@@ -232,10 +239,15 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                         return 1;
                     }
+
+                    newasm::start = std::chrono::high_resolution_clock::now();
                     int result = newasm::syscalls::tcp::send(
                         newasm::header::functions::remq(newasm::mem::regs::tlr.get_value()), 
                         newasm::header::functions::remq(newasm::mem::regs::stl.get_value())
                     );
+                    newasm::end = std::chrono::high_resolution_clock::now();
+                    newasm::network_deduction.push_back(newasm::end - newasm::start);
+
                     newasm::mem::regs::tlr.set_value(std::to_string(result));
                     return 1;
                 }
@@ -246,9 +258,14 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                         return 1;
                     }
+
+                    newasm::start = std::chrono::high_resolution_clock::now();
                     std::string result = newasm::syscalls::tcp::recv(
                         newasm::header::functions::remq(newasm::mem::regs::tlr.get_value())
                     );
+                    newasm::end = std::chrono::high_resolution_clock::now();
+                    newasm::network_deduction.push_back(newasm::end - newasm::start);
+
                     newasm::mem::regs::tlr.set_value("\"" + (result) + "\"");
                     return 1;
                 }
@@ -713,14 +730,20 @@ namespace newasm
                 //input text
                 if(newasm::mem::regs::fdx == 3)
                 {
+                    newasm::start = std::chrono::high_resolution_clock::now();
                     std::getline(std::cin, newasm::mem::regs::tlr.ref_value());
+                    newasm::end = std::chrono::high_resolution_clock::now();
+                    newasm::runtime_deduction.push_back(newasm::end - newasm::start);
                     newasm::mem::regs::tlr.add_end_("\"");
                     return 1;
                 }
                 //input numbers and floats
                 if(newasm::mem::regs::fdx == 4)
                 {
+                    newasm::start = std::chrono::high_resolution_clock::now();
                     std::cin >> newasm::mem::regs::tlr;
+                    newasm::end = std::chrono::high_resolution_clock::now();
+                    newasm::runtime_deduction.push_back(newasm::end - newasm::start);
                     if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr) && !newasm::header::functions::isfloat(newasm::mem::regs::tlr))
                     {
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);

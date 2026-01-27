@@ -4259,11 +4259,17 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                     return 1;
                 }
-                if(newasm::header::functions::wait(std::stoi(suf)) == -1)
+                auto k = newasm::header::functions::wait(std::stoi(suf));
+
+                if(k != -1)
+                {
+                    newasm::wasted_deduction.push_back(std::chrono::duration<double, std::milli>(std::stof(suf)));
+                }
+
+                if(k == -1)
                 {
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                 }
-
                 return 1;
             }
             //sel

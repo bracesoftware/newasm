@@ -97,12 +97,18 @@ namespace newasm
 {
     //newasm::_std::shared_memory sharedMem;
     const int BUILD_NUMBER = 13;
-    const int RUNTIME_VERSION = 2;
+    const int RUNTIME_VERSION = 3;
     bool vercheck = true;
     bool dwin = false;
     const std::string tab = "\t\t\t";
     std::unordered_map<std::string,std::vector<std::string>>* dyn_ins_set;
     std::vector<std::pair<std::string,std::string>>* env_vars;
+
+    auto start = std::chrono::high_resolution_clock::now();
+    auto end = std::chrono::high_resolution_clock::now();
+    std::vector<std::chrono::duration<double, std::milli>> runtime_deduction;
+    std::vector<std::chrono::duration<double, std::milli>> wasted_deduction;
+    std::vector<std::chrono::duration<double, std::milli>> network_deduction;
 
     namespace global
     {
@@ -635,8 +641,34 @@ namespace newasm
         newasm::procline("syscall");*/
 
         std::chrono::duration<double, std::milli> elapsed = newasm::perf::end - newasm::perf::start;
+        std::chrono::duration<double, std::milli> input_wasted = std::chrono::duration<double, std::milli>::zero();
+        std::chrono::duration<double, std::milli> wait_wasted = std::chrono::duration<double, std::milli>::zero();
+        std::chrono::duration<double, std::milli> network_wasted = std::chrono::duration<double, std::milli>::zero();
+
+        for(int i = 0; i < newasm::runtime_deduction.size(); ++i)
+        {
+            input_wasted = input_wasted + newasm::runtime_deduction.at(i);
+        }
+
+        for(int i = 0; i < newasm::wasted_deduction.size(); ++i)
+        {
+            wait_wasted = wait_wasted + newasm::wasted_deduction.at(i);
+        }
+
+        for(int i = 0; i < newasm::network_deduction.size(); ++i)
+        {
+            network_wasted = network_wasted + newasm::network_deduction.at(i);
+        }
 
         std::cout << newasm::header::col::gray << "\t\tTime elapsed: " << elapsed.count() << " ms\n";
+        std::cout << newasm::header::col::gray << "\t\t\t" << input_wasted.count() << " ms wasted on user input\n";
+        std::cout << newasm::header::col::gray << "\t\t\t" << network_wasted.count() << " ms wasted on network latency\n";
+        //
+        std::cout << newasm::header::style::underline;
+        std::cout << newasm::header::col::gray << "\t\t\t" << wait_wasted.count() << " ms wasted on `wait`\n";
+        std::cout << newasm::header::col::reset;
+        std::cout << newasm::header::col::gray << "\t\t\tTotal: ";
+        std::cout << (elapsed.count() - input_wasted.count() - wait_wasted.count() - network_wasted.count()) << " ms\n";
         std::cout << newasm::header::col::reset;
 
         newasm::async_thread::running = false;
