@@ -45,7 +45,7 @@ using "ios"
 > [!WARNING]
 > The wiki is being completely reworked, so it may be missing some stuff.
 
-NewASM allows you to write semi-efficient low-level programs in one universal assembly-like language. This language features many things immediatelly out-of-the-box *such as concurrency, thread channels, basic crypto, math and console functionality, etc.*, so you do not have to worry about any library installation. However, if you wish to add any new functionality, you can easily integrate dynamic libraries (DLLs, SOs) into your project.
+NewASM allows you to write semi-efficient low-level programs in one universal assembly-like language. This language features many things immediatelly out-of-the-box *such as concurrency, thread channels, basic crypto, file, math and console functionality, etc.*, so you do not have to worry about any library installation. However, if you wish to add any new functionality, you can easily integrate dynamic libraries (DLLs, SOs) into your project.
 
 Since NewASM runs in a virtual machine, it is thus running in a fully controlled sealed environment, so it is great for learning and experimenting.
 
