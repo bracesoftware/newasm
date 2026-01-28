@@ -2036,7 +2036,19 @@ using "ios"
     merge &test::myContext2, ("test": nil, "test": "very cool again") ; this should work again!
     mov tlr, test::myContext2("test")
     call std::ios::writeln
-    
+.data
+    [transient]
+        intg mynum: 43
+    [!transient]
+.start
+    mov tlr, mynum
+    call std::ios::writeln
+.data
+    intg mynum2: 29843
+.start
+    mov tlr, mynum ; will display 29843
+    call std::ios::writeln
+
     ;idk
     mov tlr, "Hey"
     mov stl, 0c0

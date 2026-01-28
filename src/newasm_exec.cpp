@@ -205,21 +205,25 @@ namespace newasm
     {
         if(section == static_cast<std::string>("data"))
         {
+            newasm::garbageCollector::DO();
             newasm::system::section = newasm::code_stream::sections::data;
             return 1;
         }
         if(section == static_cast<std::string>("start"))
         {
+            newasm::garbageCollector::DO();
             newasm::system::section = newasm::code_stream::sections::start;
             return 1;
         }
         if(section == static_cast<std::string>("hndl"))
         {
+            newasm::garbageCollector::DO();
             newasm::system::section = newasm::code_stream::sections::hndl;
             return 1;
         }
         if(section == static_cast<std::string>("text"))
         {
+            newasm::garbageCollector::DO();
             newasm::system::section = newasm::code_stream::sections::text;
             return 1;
         }
@@ -409,6 +413,13 @@ namespace newasm
 
                     newasm::variables::ids.at(name).addr = newasm::hardware::randAccessMem.write<int>(std::stoi(value));
                     newasm::variables::ids.at(name).locked = newasm::expcfg::lockbool;
+                    newasm::variables::ids.at(name).transient__ = newasm::expcfg::transientbool;
+
+                    if(newasm::expcfg::transientbool)
+                    {
+                        newasm::garbage::FLAG = 1;
+                        newasm::garbage::addr__.push_back(name);
+                    }
                     return 1;
                 }
                 //decimal numbers

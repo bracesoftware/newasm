@@ -256,6 +256,7 @@ struct __global_newasm final
 
 static __global_newasm nG;
 
+#include "runtime/garbage_collector.cpp"
 #include "newasm_exec.cpp"
 
 #include "runtime/procline_insert.cpp"

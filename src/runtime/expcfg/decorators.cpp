@@ -23,15 +23,18 @@ namespace newasm
     {
         const int lock = 1;
         const int volatile__ = 2;
+        const int transient__ = 3;
 
         std::unordered_map<int, std::string> decorators = {
             {lock, "lock"},
-            {volatile__, "volatile"}
+            {volatile__, "volatile"},
+            {transient__, "transient"}
         };
 
         //decorator settings
         bool lockbool = false;
         bool volatilebool = false;
+        bool transientbool = false;
 
         //impl
         void process_dec(std::string text)
@@ -58,6 +61,14 @@ namespace newasm
                         return;
                     }
                 }
+                if(newasm::header::functions::trim(text.substr(1)) == newasm::expcfg::decorators.at(newasm::expcfg::transient__))
+                {
+                    if(newasm::expcfg::transientbool)
+                    {
+                        newasm::expcfg::transientbool = false;
+                        return;
+                    }
+                }
             }
             /*
             CONSTRUCTIVE DECORATORS
@@ -70,6 +81,11 @@ namespace newasm
             if(text == newasm::expcfg::decorators.at(newasm::expcfg::volatile__))
             {
                 newasm::expcfg::volatilebool = true;
+                return;
+            }
+            if(text == newasm::expcfg::decorators.at(newasm::expcfg::transient__))
+            {
+                newasm::expcfg::transientbool = true;
                 return;
             }
             newasm::terminate(newasm::exit_codes::invalid_syntax);

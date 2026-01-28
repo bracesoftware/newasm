@@ -458,6 +458,7 @@ namespace newasm
 
             //decorator data
             bool locked = false;
+            bool transient__ = false;
         };
         std::unordered_map<std::string, newasm::variables::varData> ids;
     }
