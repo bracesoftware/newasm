@@ -61,7 +61,7 @@ namespace newasm
             const int pop = 4;//
             const int retn = 5;
             const int mov = 6;//
-            const int syscall = 7;
+            const int syscall = 7;//
             const int proc = 8;
             const int call = 9;
             const int rem = 10;
@@ -103,7 +103,7 @@ namespace newasm
             const int free__ = 43;//
             const int stack = 44; //
             const int wait = 45;
-            const int sysenter = 46;
+            const int sysenter = 46;//
             const int xchg = 47;
             const int int__ = 48;
             const int cls = 49;
