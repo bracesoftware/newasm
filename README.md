@@ -6,14 +6,16 @@
 
 <div align="center" style="border-radius: 5px;">
     <img height="30" align="center" src="readme_resources/brace_product.png">
-</div>
+    
+![Language](https://img.shields.io/github/languages/top/USER/REPO?style=flat&color=brightgreen)
+![Issues](https://img.shields.io/github/issues/USER/REPO?style=flat&color=brightgreen)
+![Pull Requests](https://img.shields.io/github/issues-pr/USER/REPO?style=flat&color=brightgreen)
+![Stars](https://img.shields.io/github/stars/USER/REPO?style=flat&color=brightgreen)
+![Forks](https://img.shields.io/github/forks/USER/REPO?style=flat&color=brightgreen)
+![Downloads](https://img.shields.io/github/downloads/USER/REPO/total?style=flat&color=brightgreen)
+![License](https://img.shields.io/github/license/USER/REPO?style=flat&color=brightgreen)
 
-![Lang](https://img.shields.io/github/languages/top/USER/REPO?style=for-the-badge)
-![Issues](https://img.shields.io/github/issues/USER/REPO?style=for-the-badge)
-![PRs](https://img.shields.io/github/issues-pr/USER/REPO?style=for-the-badge)
-![Stars](https://img.shields.io/github/stars/USER/REPO?style=for-the-badge)
-![Downloads](https://img.shields.io/github/downloads/USER/REPO/total?style=for-the-badge)
-![License](https://img.shields.io/github/license/USER/REPO?style=for-the-badge)
+</div>
 
 <h3 align = "center">Interpreted Low-Level Language that Mimics Assembly</h3>
 
