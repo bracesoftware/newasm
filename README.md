@@ -5,7 +5,7 @@
 <h1 align = "center">Welcome to the <i><b>NewASM</b></i> Wiki</h1>
 
 <div align="center" style="border-radius: 5px;">
-    <h3><img height="30" align="center" src="readme_resources/brace_product.png"></h3>
+    <h3><img border-radius="5px" height="30" align="center" src="readme_resources/brace_product.png"></h3>
 
 ![Language](https://img.shields.io/github/languages/top/USER/REPO?style=flat&color=brightgreen)
 ![Issues](https://img.shields.io/github/issues/USER/REPO?style=flat&color=brightgreen)
