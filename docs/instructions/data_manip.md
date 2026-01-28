@@ -4,7 +4,7 @@ These instructions are used to manipulate with data and memory.
 This article includes the following instructions:
 1. [`mov`](#mov)
 2. [`stor`](#stor)
-3. [`heap` and `load`]
+3. [`heap` and `load`](#heap-and-load)
 4. [`pop` and `push`](#push-and-pop)
 5. [`stack`](#stack)
 
