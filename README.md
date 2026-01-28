@@ -113,7 +113,7 @@ Interpreter mode runs your application through several phases.
 2. **Internal compilation**: In this phase, the system tokenizes and resolves some compile-time stuff before running the program. This ensures safe and stable program execution. In this phase, the system is telling the virtual machine what kernel modules will be used during the execution of the program.
 3. **Execution**: Final phase, the system runs the compiled code!
 
-> [!INFO]
+> [!TIP]
 > We're planning to add JIT compilation into native code, but that's in the testing phase.
 ***
 ## The language
