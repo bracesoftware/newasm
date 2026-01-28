@@ -95,7 +95,9 @@ namespace newasm
 
             {{newasm::core::lang_inf::refs::misc, 1}, "sys_misc_rand"},
 
-            {{newasm::core::lang_inf::refs::crypto, 1}, "sys_crypto_sha256"}
+            {{newasm::core::lang_inf::refs::crypto, 1}, "sys_crypto_sha256"},
+            {{newasm::core::lang_inf::refs::crypto, 2}, "sys_crypto_xor_enc"},
+            {{newasm::core::lang_inf::refs::crypto, 3}, "sys_crypto_xor_dec"}
         };
     }
 }
