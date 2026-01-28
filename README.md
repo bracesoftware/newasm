@@ -7,13 +7,11 @@
 <div align="center" style="border-radius: 5px;">
     <h3><img border-radius="5px" height="30" align="center" src="readme_resources/brace_product.png"></h3>
 
-![Language](https://img.shields.io/github/languages/top/USER/REPO?style=flat&color=brightgreen)
-![Issues](https://img.shields.io/github/issues/USER/REPO?style=flat&color=brightgreen)
-![Pull Requests](https://img.shields.io/github/issues-pr/USER/REPO?style=flat&color=brightgreen)
-![Stars](https://img.shields.io/github/stars/USER/REPO?style=flat&color=brightgreen)
-![Forks](https://img.shields.io/github/forks/USER/REPO?style=flat&color=brightgreen)
-![Downloads](https://img.shields.io/github/downloads/USER/REPO/total?style=flat&color=brightgreen)
-![License](https://img.shields.io/github/license/USER/REPO?style=flat&color=brightgreen)
+![Language](https://img.shields.io/github/languages/top/bracesoftware/newasm?style=flat&color=brightgreen)
+![Issues](https://img.shields.io/github/issues/bracesoftware/newasm?style=flat&color=brightgreen)
+![Pull Requests](https://img.shields.io/github/issues-pr/bracesoftware/newasm?style=flat&color=brightgreen)
+![Downloads](https://img.shields.io/github/downloads/bracesoftware/newasm/total?style=flat&color=brightgreen)
+![License](https://img.shields.io/github/license/bracesoftware/newasm?style=flat&color=brightgreen)
 
 </div>
 
