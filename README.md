@@ -120,6 +120,7 @@ Interpreter mode runs your application through several phases.
 This section of the wiki provides a deep walkthrough of the language itself.
 ### Table of contents
 - [Code sections](#code-sections)
+- [Available instructions](#available-instructions)
 ***
 #### Code sections
 NewASM code is, as in other assemblers, divided into different sections that have their own syntax.
@@ -129,3 +130,22 @@ There are 4 different sections and each one has a different purpose:
 3. `.text` - this is where you declare macros;
 4. `.hndl` - in this section, you assign procedures their own hex codes you can use in call stack.
 
+You change a section by doing:
+```asm
+.section_name
+```
+
+For example:
+
+```asm
+.start
+    ; code
+.data
+    ; declarations
+    ; etc...
+```
+
+***
+#### Available instructions
+NewASM features many instructions, around 70 of them. Here is a list:
+1. [`mov`](docs/instructions/mov.md)
