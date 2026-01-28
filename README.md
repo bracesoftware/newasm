@@ -115,12 +115,12 @@ Interpreter mode runs your application through several phases.
 
 > [!INFO]
 > We're planning to add JIT compilation into native code, but that's in the testing phase.
-
+***
 ## The language
 This section of the wiki provides a deep walkthrough of the language itself.
 ### Table of contents
 - [Code sections](#code-sections)
-
+***
 #### Code sections
 NewASM code is, as in other assemblers, divided into different sections that have their own syntax.
 There are 4 different sections and each one has a different purpose:
