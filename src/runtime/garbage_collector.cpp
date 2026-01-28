@@ -67,7 +67,8 @@ namespace newasm
                     addr = it.addr;
                     int buffer_len;
                     std::memcpy(&buffer_len, &newasm::hardware::randAccessMem.__memory__[addr], sizeof(int));
-                    newasm::hardware::randAccessMem.delete__HEAP(addr, addr + sizeof(char));
+                    int bytes = buffer_len + sizeof(int);
+                    newasm::hardware::randAccessMem.delete__HEAP(addr, addr + bytes);
                     continue;
                 }
             }

@@ -444,6 +444,13 @@ namespace newasm
 
                     newasm::variables::ids.at(name).addr = newasm::hardware::randAccessMem.write<float>(std::stof(value));
                     newasm::variables::ids.at(name).locked = newasm::expcfg::lockbool;
+                    newasm::variables::ids.at(name).transient__ = newasm::expcfg::transientbool;
+
+                    if(newasm::expcfg::transientbool)
+                    {
+                        newasm::garbage::FLAG = 1;
+                        newasm::garbage::addr__.push_back(name);
+                    }
                     return 1;
                 }
                 // text
@@ -465,6 +472,13 @@ namespace newasm
 
                     newasm::variables::ids.at(name).addr = newasm::hardware::randAccessMem.write<std::string>(newasm::header::functions::remq(value));
                     newasm::variables::ids.at(name).locked = newasm::expcfg::lockbool;
+                    newasm::variables::ids.at(name).transient__ = newasm::expcfg::transientbool;
+
+                    if(newasm::expcfg::transientbool)
+                    {
+                        newasm::garbage::FLAG = 1;
+                        newasm::garbage::addr__.push_back(name);
+                    }
 
                     /*
                     std::cout << "_____________BACKTRACE_____________\n";
@@ -525,6 +539,13 @@ namespace newasm
 
                     newasm::variables::ids.at(name).addr = newasm::hardware::randAccessMem.write<char>(newasm::header::functions::remsq(value).at(0));
                     newasm::variables::ids.at(name).locked = newasm::expcfg::lockbool;
+                    newasm::variables::ids.at(name).transient__ = newasm::expcfg::transientbool;
+
+                    if(newasm::expcfg::transientbool)
+                    {
+                        newasm::garbage::FLAG = 1;
+                        newasm::garbage::addr__.push_back(name);
+                    }
                     return 1;
                 }
                 // tuples
