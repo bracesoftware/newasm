@@ -50,6 +50,26 @@ namespace newasm
                     newasm::hardware::randAccessMem.delete__HEAP(addr, addr + sizeof(int));
                     continue;
                 }
+                if(it.type = newasm::datatypes::decimal)
+                {
+                    addr = it.addr;
+                    newasm::hardware::randAccessMem.delete__HEAP(addr, addr + sizeof(float));
+                    continue;
+                }
+                if(it.type = newasm::datatypes::character)
+                {
+                    addr = it.addr;
+                    newasm::hardware::randAccessMem.delete__HEAP(addr, addr + sizeof(char));
+                    continue;
+                }
+                if(it.type = newasm::datatypes::text)
+                {
+                    addr = it.addr;
+                    int buffer_len;
+                    std::memcpy(&buffer_len, &newasm::hardware::randAccessMem.__memory__[addr], sizeof(int));
+                    newasm::hardware::randAccessMem.delete__HEAP(addr, addr + sizeof(char));
+                    continue;
+                }
             }
 
             newasm::garbage::addr__.clear();
