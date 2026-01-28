@@ -55,20 +55,20 @@ namespace newasm
         }
         namespace lang_inf
         {
-            const int load = 1;
-            const int stor = 2;
+            const int load = 1;//
+            const int stor = 2;//
             const int sysreq = 3;
-            const int pop = 4;
+            const int pop = 4;//
             const int retn = 5;
-            const int mov = 6;
+            const int mov = 6;//
             const int syscall = 7;
             const int proc = 8;
             const int call = 9;
             const int rem = 10;
             const int halt = 11;
-            const int push = 12;
+            const int push = 12;//
             const int jmp = 13;
-            const int heap = 14;
+            const int heap = 14;//
             const int cmp = 15;
             const int je = 16;
             const int jne = 17;
@@ -99,9 +99,9 @@ namespace newasm
             const int shr = 40;
 
             const int db = 41;
-            const int malloc__ = 42;
-            const int free__ = 43;
-            const int stack = 44;
+            const int malloc__ = 42;///
+            const int free__ = 43;//
+            const int stack = 44; //
             const int wait = 45;
             const int sysenter = 46;
             const int xchg = 47;
@@ -137,7 +137,7 @@ namespace newasm
             const int movasx = 68;
             const int movas = 69;
 
-            const int sel = 70;
+            const int sel = 70;//
             const int align = 71;
             
             const int merge = 72;

@@ -372,38 +372,6 @@ In this example, we basically do `fdx=1`, `myvar=fdx`, `return 1`:
     retn myvar
 ```
 
-#### Available register list
-- There are input and output registers. Input registers are used to get the input from the user, and output registers are used to store data which will be used as an argument in a `syscall` or an operand in an instruction.
-
-| Register name | Full name | Description |
-| ------------- | --------- | ----------- |
-| `fdx` | function index | Holds an index of a function `syscall` will call. |
-| `tlr` | typeless register | Typeless register (can hold any value, even code literals). Used as an output argument in some `syscall`s. |
-| `stl` | secondary typeless register | Typeless register; however used to hold built-in operands for `syscall`s. |
-| `bos` | byte output size | Specify the number of bytes you want to print out. Works only on `syscall` 1 in `"ios"`. |
-| `stk` | stack pointer | Points at the top of the stack. |
-| `hea` | heap pointer | Points at an address in the heap. |
-| `psx` | procedure scope exit value | Holds value returned inside a procedure using `halt`. |
-| `prp` | procedure pointer | Points at the procedure that was called using `call`. |
-| `cpr` | comparsion result register | Holds a value of the comparsion (`cmp`) result; `1` for `equal`, `2` for less and `3` for greater (although there are 6 logical variants of `jmp`, only these 3 cases are required and detected by `cmp`). |
-| `cr0` | primary calculation register | Register in which all the calculation results are stored. Read [this](#calculation-instructions) for more information... |
-| `cr1` | alternate calculation register | Register which is used as a second operand in calculations. Read [this](#calculation-instructions) for more information... |
-| `br0` | primary bit operation register | Register in which all the bitwise calculation results are stored. Read [this](#bit-operations) for more information...  |
-| `br1` | alternate bit operation register | Register which is used as a second operand in bitwise calculations. Read [this](#bit-operations) for more information... |
-| `cpt` | container pointer | Register holding an address specifically of a container or a data structure. Read [this](#containers-and-data-structures) for more information... |
-| `tr0` | primary thread register | Dummy for threads. |
-| `tr1` | alternate thread register | Another dummy for threads. |
-
-#### Special character list
-Special characters supported by the virtual machine are listed below.
-| Character code | Description |
-| ----- | ---------------- |
-| `0c0` | empty character |
-| `0c1` | new line |
-| `0c2` | carriage return |
-| `0c3` | tabulator |
-| `0c4` | alert |
-| `0c5` | backspace |
 
 
 ### `syscall` and `sysenter` instructions
@@ -602,7 +570,7 @@ Return a value inside a function.
     sysenter "ios"
     syscall
 
-    retn 0
+    ret 0
 ```
 
 - **TIP**: If you just want to pop the value off the stack, and not store it anywhere, just do:
