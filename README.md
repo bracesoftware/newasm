@@ -156,7 +156,7 @@ NewASM features many instructions, around 70 of them. Here is a list:
 4. [Execution flow instructions](docs/instructions/exec_flow.md)
 
 ***
-### Storing data into variables and containers
+#### Storing data into variables and containers
 In NewASM there's a huge variety of built in variable types and data containers, with standard variables coming soon (as soon as we figure out the appropriate syntax!).
 1. DOCS REWORK COMING SOON!
 
