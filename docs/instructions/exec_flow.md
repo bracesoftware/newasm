@@ -2,6 +2,8 @@
 These instructions define how your program behaves under certain circumstances.
 Following instructions are covered by this article:
 1. [`ret` and its variants](#ret-and-its-variants)
+2. [`proc`, `end` and `call`](#proc-end-and-call)
+3. [`cmp`, `jmp` and other `jmp` variants](#cmp-jmp-and-other-jmp-variants)
 
 ## `ret` and its variants
 There are 4 variants:
@@ -34,3 +36,36 @@ retn tlr ; ends the program with exit code 4
         halt 0
     end
 ```
+
+## `proc`, `end` and `call`
+These are used to declare a function/procedure and call it.
+
+```asm
+.start
+    proc myproc
+        ; do smth
+        halt 0 ; return 0
+    end
+
+    call myproc ; calls the function
+```
+
+## `cmp`, `jmp` and other `jmp` variants
+
+Compare register values with lvalues and jump to a specific label according to the result.
+
+```asm
+    cmp tlr, 2
+    jz label ; if tlr == 2 jump to label
+```
+
+| Instruction | Processed if... |
+| ----------- | --------------- |
+| `je`/`jz` | comparsion returned `equal`. |
+| `jne`/`jnz` | comparsion returned `not equal`. |
+| `jl` | comparsion returned `less`. |
+| `jg` | comparsion returned `greater`. |
+| `jle` | comparsion returned `less or equal`. |
+| `jge` | comparsion returned `greater or equal`. |
+
+The `jmp` instruction is used as an unconditional jump.

@@ -62,20 +62,20 @@ namespace newasm
             const int retn = 5;//
             const int mov = 6;//
             const int syscall = 7;//
-            const int proc = 8;
-            const int call = 9;
+            const int proc = 8;//
+            const int call = 9;//
             const int rem = 10;
             const int halt = 11;//
             const int push = 12;//
-            const int jmp = 13;
+            const int jmp = 13;//
             const int heap = 14;//
-            const int cmp = 15;
-            const int je = 16;
-            const int jne = 17;
-            const int jl = 18;
-            const int jg = 19;
-            const int jle = 20;
-            const int jge = 21;
+            const int cmp = 15;//
+            const int je = 16;//
+            const int jne = 17;//
+            const int jl = 18;//
+            const int jg = 19;//
+            const int jle = 20;//
+            const int jge = 21;//
 
             const int ret = 22;//
             const int zero = 23;
@@ -83,7 +83,7 @@ namespace newasm
             const int dec = 25;
 
             const int exit = 26;
-            const int end = 27;
+            const int end = 27;//
             const int nop = 28;
             const int add = 29;
             const int sub = 30;

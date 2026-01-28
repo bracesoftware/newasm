@@ -153,6 +153,7 @@ NewASM features many instructions, around 70 of them. Here is a list:
 1. [Data manipulation instructions](docs/instructions/data_manip.md)
 2. [Manual memory allocation instructions](docs/instructions/malloc.md)
 3. [Kernel-related instructions](docs/instructions/kernel.md)
+4. [Execution flow instructions](docs/instructions/exec_flow.md)
 
 ***
 ### Storing data into variables and containers
