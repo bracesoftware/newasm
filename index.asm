@@ -2060,6 +2060,7 @@ link "testfile.asm" ; link a file
     mov tlr, 223
     ret *tlr
 
+using "ctx"
     ;using "kuku"
 using "ios"
 .data
@@ -2091,3 +2092,24 @@ using "ios"
     }
 
     movasx movaddr movas mov vmov sigmas
+
+.data
+    intg[] array_wow: [100]
+    tuple boom: ()
+    intg i: 0
+.start
+    mov tlr, array_wow[0]
+    lea &boom, 1
+    mov &boom, 2
+:loop
+    cmp i, 100
+    jz outside
+    ;do smth w 0
+
+    mov cr0, i
+    mov cr1, 1
+    add
+    mov &i, *cr0
+
+    jmp loop
+:outside
