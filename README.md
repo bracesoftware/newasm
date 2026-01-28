@@ -6,8 +6,14 @@
 
 <div align="center" style="border-radius: 5px;">
     <img height="30" align="center" src="readme_resources/brace_product.png">
-    <img height="30" align="center" src="readme_resources/cpp_logo.png">
 </div>
+
+![Lang](https://img.shields.io/github/languages/top/USER/REPO?style=for-the-badge)
+![Issues](https://img.shields.io/github/issues/USER/REPO?style=for-the-badge)
+![PRs](https://img.shields.io/github/issues-pr/USER/REPO?style=for-the-badge)
+![Stars](https://img.shields.io/github/stars/USER/REPO?style=for-the-badge)
+![Downloads](https://img.shields.io/github/downloads/USER/REPO/total?style=for-the-badge)
+![License](https://img.shields.io/github/license/USER/REPO?style=for-the-badge)
 
 <h3 align = "center">Interpreted Low-Level Language that Mimics Assembly</h3>
 
