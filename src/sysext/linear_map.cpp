@@ -41,7 +41,23 @@ namespace newasm
                 return __map__.at(__map__.size() - 1).second;
             }
 
-            void debug__()
+            inline int size()
+            {
+                return __map__.size();
+            }
+
+            inline std::pair<T, U> operator()(int index)
+            {
+                if(index >= this->size())
+                {
+                    throw std::out_of_range("linear_map: Function `this::operator()` cannot reach index " + std::to_string(index) + ".");
+                    return {__map__.at(0).first, __map__.at(0).second};
+                }
+                auto p = __map__.at(index);
+                return p;
+            }
+
+            inline void debug__()
             {
                 for(auto& p : __map__)
                 {
@@ -74,7 +90,7 @@ namespace newasm
                 throw std::out_of_range(ss.str());
             }
 
-            const U& __(T index, int offset) const
+            inline const U& __(T index, int offset) const
             {
                 for(int i = 0; i < __map__.size(); ++i)
                 {
@@ -91,7 +107,7 @@ namespace newasm
                 throw std::out_of_range("linear_map: Key not found in `::__(T, int)`.");
             }
 
-            void erase(T index)
+            inline void erase(T index)
             {
                 for(int i = 0; i < __map__.size(); ++i)
                 {
@@ -103,7 +119,7 @@ namespace newasm
                 }
             }
 
-            const U& at(T index) const
+            inline const U& at(T index) const
             {
                 for(auto& p : __map__)
                 {

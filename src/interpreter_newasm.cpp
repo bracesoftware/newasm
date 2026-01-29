@@ -174,6 +174,30 @@ namespace newasm
     }
 
     void* test = nullptr;
+
+    class forLinker
+    {
+        public:
+        static inline newasm::_std::linear_map<int, std::string> files;
+
+        static inline std::string getFile(int line)
+        {
+            for(int i = 0; i < files.size() - 1; ++i)
+            {
+                if(i + 1 == files.size())
+                {
+                    return files(files.size() - 2).second;
+                }
+                if(files(i).first <= line && line < files(i + 1).first)
+                {
+                    //std::cout << "RETURNED `" << files(i).second << "`" << std::endl; 
+                    return files(i).second;
+                }
+            }
+            //std::cout << "RETURNED `" << files[0] << "`" << std::endl;
+            return files[0];
+        }
+    };
 }
 
 /*

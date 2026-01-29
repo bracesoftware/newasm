@@ -106,7 +106,9 @@ namespace newasm
             }
             auto v = P.second;
             int files = 0;
+            newasm::forLinker::files[0] = filename;
 
+            int linetemp;
             std::string temp;
             std::vector<std::string> v2;
             bool temp2;
@@ -128,6 +130,8 @@ namespace newasm
                     newasm::header::functions::nullprint("\t Linking `../" + p.second + "`...");
                     newasm::Linker::replaceVectorElement(v, v2, i);
 
+                    newasm::forLinker::files[i] = p.second;
+                    newasm::forLinker::files[i + v2.size() - 1] = filename;
                     files++;
                 }
             }

@@ -98,7 +98,7 @@ namespace newasm
                 newasm::header::col::gray <<
                 newasm::header::style::bold <<
                 newasm::header::style::underline <<
-                newasm::header::settings::script_file <<
+                newasm::forLinker::getFile(newasm::header::data::lastlndx) << //newasm::header::settings::script_file <<
                 ":" <<
                 newasm::header::data::lastlndx;
             }
