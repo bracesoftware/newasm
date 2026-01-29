@@ -2055,12 +2055,18 @@ using "ios"
 
 link "testfile.asm" ; link a file
 
+    using "ctx"
+    mov tlr, &test::myContext2
+    mov fdx, 1
+    sysenter "ctx"
+    syscall
+
+    call std::ios::writeln
+    
     ;LMFAO TEST
 
     mov tlr, 223
     ret *tlr
-
-using "ctx"
     ;using "kuku"
 using "ios"
 .data

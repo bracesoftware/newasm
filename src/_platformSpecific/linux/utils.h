@@ -55,17 +55,43 @@ namespace newasm
     }
     namespace runtime
     {
-        bool start_program(const std::string& path) {
+        inline bool startProgramOld(const std::string& path)
+        {
             pid_t pid = fork();
-            if (pid == 0) {
-                // dijete
+            if (pid == 0)
+            {
                 execl(path.c_str(), path.c_str(), NULL);
-                _exit(1); // ako execl ne uspije
-            } else if (pid > 0) {
+                _exit(1);
+            }
+            else if (pid > 0)
+            {
                 return true; // roditelj
-            } else {
+            }
+            else
+            {
                 return false; // greška
             }
+            return false;
+        }
+        inline bool startProgramNew(const std::string& path)
+        {
+            pid_t pid = fork();
+            if (pid == 0)
+            {
+                execlp(
+                    "x-terminal-emulator",
+                    "x-terminal-emulator",
+                    "-e",
+                    path.c_str(),
+                    (char*)nullptr
+                );
+                _exit(1);
+            }
+            return pid > 0;
+        }
+        inline bool start_program(const std::string& path)
+        {
+            return startProgramNew(path);
         }
     }
 }

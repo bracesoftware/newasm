@@ -442,6 +442,7 @@ Perform a specific system call within a system module.
 | `crypto` | `1` | `tlr` | Performs SHA256 hash on a string stored in `tlr`. The result is stored in `tlr`. |
 | `crypto` | `2` | `tlr`, `stl` | Performs XOR encryption on a string stored in `tlr`. The result is stored in `tlr`. Store a specific key into `stl`. |
 | `crypto` | `3` | `tlr`, `stl` | Performs XOR decryption on a string stored in `tlr`. The result is stored in `tlr`. Store a specific key into `stl`. |
+| `ctx` | `1` | `tlr` | Get context size, `tlr` is a reference to a context. |
 
 ### `int` instruction
 Send system interrupts, basically manipulate with the interpreter.

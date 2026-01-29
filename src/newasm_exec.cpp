@@ -4267,6 +4267,16 @@ namespace newasm
                         newasm::header::data::module = newasm::core::lang_inf::refs::crypto;
                         return 1;
                     }
+                    case newasm::core::lang_inf::refs::ctx:
+                    {
+                        if(newasm::thread_line)
+                        {
+                            newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::ctx;
+                            return 1;
+                        }
+                        newasm::header::data::module = newasm::core::lang_inf::refs::ctx;
+                        return 1;
+                    }
                     default:
                     {
                         newasm::terminate(newasm::exit_codes::os_error);

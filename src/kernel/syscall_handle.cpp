@@ -369,6 +369,35 @@ namespace newasm
                 newasm::terminate(newasm::exit_codes::unknown_fdx);
                 return 1;
             }
+            //ctx
+            if(newasm::kernel::cfg::Context)
+            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::ctx)
+            {
+                if(newasm::mem::regs::fdx == 1) // context size
+                {
+                    if(!newasm::header::functions::isref(newasm::mem::regs::tlr.get_value()))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+
+                    std::string context_name = newasm::mem::regs::tlr.get_value().substr(1);
+                  
+                    auto it = newasm::variables::ids.find(context_name);
+                    if(it != newasm::variables::ids.end())
+                    {
+                        if(it->second.type == newasm::datatypes::mycontext)
+                        {
+                            newasm::mem::regs::tlr.set_value(std::to_string(it->second.context->addr.size()));
+                            return 1;
+                        }
+                    }
+                    newasm::terminate(newasm::exit_codes::invalid_memacc);
+                    return 1;
+                }
+                newasm::terminate(newasm::exit_codes::unknown_fdx);
+                return 1;
+            }
             //ext
             if(newasm::kernel::cfg::Extensions)
             if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::ext)

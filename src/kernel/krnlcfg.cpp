@@ -38,6 +38,7 @@ namespace newasm
             bool Math = false;
             bool Misc = false;
             bool Crypto = false;
+            bool Context = false;
         }
     }
 }

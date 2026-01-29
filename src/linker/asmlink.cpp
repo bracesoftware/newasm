@@ -125,7 +125,7 @@ namespace newasm
                         continue;
                     }
                     std::cout << newasm::header::col::gray;
-                    newasm::header::functions::nullprint("\t\32Linking `../" + p.second + "`...");
+                    newasm::header::functions::nullprint("\t Linking `../" + p.second + "`...");
                     newasm::Linker::replaceVectorElement(v, v2, i);
 
                     files++;
