@@ -1,8 +1,8 @@
 # `NewASM` Release Notes
 Welcome to **`NewASM`**: an interpreted low-level programming language which combines explicit memory and register control, giving it a breeze of assembly-like feel, with high-level functionalities such as objects, threads and more.
 
-* Version: `build 12`
-* Version of the runtime: `3`
+* Version: `build 14`
+* Version of the runtime: `4`
 
 *NOTE*: This is a pre-release which means that this product version doesn't represent the final quality of the product - it may contain bugs and problems that aren't yet discovered.
 
@@ -10,18 +10,22 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 
 ## What's new
 
-+ Updated the runtime so the profiling at the end of the program is more accurate.
-+ Added the new `crypto` kernel module:
++ Updated the runtime and the language. Added the new `transient` decorator which marks a simple variable as a temporary variable, which is cleaned up in the next section.
+```asm
+.data
+    [transient]
+        intg variable: 1
+    [!transient]
+```
++ Added the new `ctx` kernel module:
 
 | Module | ID    | Arguments | Description |
 | ----- | ---------------- | --------- | ----------- |
-| `crypto` | `1` | `tlr` | Performs SHA256 hash on a string stored in `tlr`. The result is stored in `tlr`. |
-| `crypto` | `2` | `tlr`, `stl` | Performs XOR encryption on a string stored in `tlr`. The result is stored in `tlr`. Store a specific key into `stl`. |
-| `crypto` | `3` | `tlr`, `stl` | Performs XOR decryption on a string stored in `tlr`. The result is stored in `tlr`. Store a specific key into `stl`. |
+| `ctx` | `1` | `tlr` | Get context (reference to a context is in `tlr`) size and store result in `tlr`. |
 
 ## What's changed
 
-- No important changes were made.
++ We're attempting to fix `nprogwin` bug on Linux builds.
 
 ## Fixed issues
 
