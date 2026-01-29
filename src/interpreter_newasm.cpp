@@ -96,8 +96,9 @@ extern "C"
 namespace newasm
 {
     //newasm::_std::shared_memory sharedMem;
-    const int BUILD_NUMBER = 13;
-    const int RUNTIME_VERSION = 3;
+    const int BUILD_NUMBER = 14;
+    const int RUNTIME_VERSION = 4;
+    //--------------------------------------
     bool vercheck = true;
     bool dwin = false;
     const std::string tab = "\t\t\t";
