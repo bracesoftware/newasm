@@ -646,6 +646,7 @@ namespace newasm
                         std::string& key = v.at(0), & value__ = v.at(1);
                         key = newasm::header::functions::trim(key);
                         value__ = newasm::header::functions::trim(value__);
+                        newasm::runtime::functions::parse(value__);
 
                         //newasm::header::functions::info("Adding stuff to `" + name + "` = " + key + ":" + value__ + "---" + value);
 
@@ -2418,6 +2419,7 @@ namespace newasm
                             key = newasm::header::functions::trim(key);
                             value__ = newasm::header::functions::trim(value__);
                             //newasm::header::functions::info("2: Adding keys to `" + suf + "` = " + key + ":" + value__);
+                            newasm::runtime::functions::parse(value__);
 
                             if(!newasm::header::functions::istext(key))
                             {
