@@ -26,6 +26,8 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 | ----- | ---------------- | --------- | ----------- |
 | `ctx` | `1` | `tlr` | Get context (reference to a context is in `tlr`) size and store result in `tlr`. |
 
++ Added the new `nodbg` option in `newasm_args` which disables the `nprogwin` debugger.
+
 ## What's changed
 
 + We're attempting to fix `nprogwin` bug on Linux builds.
