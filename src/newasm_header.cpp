@@ -293,6 +293,7 @@ namespace newasm
                 std::cout << "\n  Compiled with: C++" << __cplusplus << " on " << __DATE__ << " at " << __TIME__;
                 
                 std::cout << "\n\n  Runtime version: v" << newasm::runtime::version;
+                std::cout << "\tKernel version: v" << newasm::KERNEL_VERSION;
                 
                 std::cout << "\n  " << newasm::header::system_info::copyright_claim <<
                 newasm::header::col::reset << std::endl;

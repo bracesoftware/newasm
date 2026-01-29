@@ -98,6 +98,7 @@ namespace newasm
     //newasm::_std::shared_memory sharedMem;
     const int BUILD_NUMBER = 14;
     const int RUNTIME_VERSION = 4;
+    const int KERNEL_VERSION = 1;
     //--------------------------------------
     bool vercheck = true;
     bool dwin = false;

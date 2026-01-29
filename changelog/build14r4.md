@@ -3,10 +3,13 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 
 * Version: `build 14`
 * Version of the runtime: `4`
+* Kernel version: `1`
 
-*NOTE*: This is a pre-release which means that this product version doesn't represent the final quality of the product - it may contain bugs and problems that aren't yet discovered.
+> [!NOTE]
+> This is a pre-release which means that this product version doesn't represent the final quality of the product - it may contain bugs and problems that aren't yet discovered.
 
-*ALERT!*: Some unstable builds can eventually gain runtime updates. NewASM Runtime is a back-end collection of backend engines that let the front-end systems work. We recommend immediatelly updating as soon as the runtime updates for a specific version.
+> [!WARNING]
+> Some unstable builds can eventually gain runtime and kernel updates. NewASM Runtime is a back-end collection of runtime engines that let the front-end systems work. We recommend immediatelly updating as soon as the runtime updates for a specific version. Same goes with the kernel.
 
 ## What's new
 
