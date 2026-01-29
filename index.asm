@@ -2092,11 +2092,14 @@ using "ios"
     }
 
     movasx movaddr movas mov vmov sigmas
+    xd test1 test2
 
 .data
-    intg[] array_wow: [100]
+    intg array_size: 100
+    intg[] array_wow: [100] ; not yet in the language
     tuple boom: ()
     intg i: 0
+    string[array_size] how_tO_make_ThIS: nil
 .start
     mov tlr, array_wow[0]
     lea &boom, 1
