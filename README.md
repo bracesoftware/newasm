@@ -74,6 +74,7 @@ export newasm_args=arg1,arg2
 | `l` | - | Turn on the logging system. |
 | `nv` | - | Disable version checking. |
 | `std` | - | Use the standard library. |
+| `nodbg` | - | Disable the debug window. |
 
 Example:
 ```bat

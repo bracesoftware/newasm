@@ -44,16 +44,28 @@ namespace newasm
         {
             inline void cout(std::string text)
             {
+                if(!newasm::dwin)
+                {
+                    return;
+                }
                 //send_req("cout:"+text+"\n");
                 newasm::progwin::buffer = newasm::progwin::buffer + text + "\n";
             }
             inline void flush()
             {
+                if(!newasm::dwin)
+                {
+                    return;
+                }
                 send_req("cout:" + newasm::progwin::buffer);
                 newasm::progwin::buffer = "";
             }
             inline void exit()
             {
+                if(!newasm::dwin)
+                {
+                    return;
+                }
                 send_req("exit:0");
             }
         }

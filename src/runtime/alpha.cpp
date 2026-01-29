@@ -29,5 +29,6 @@ namespace newasm
         inline constinit const char* logging = "l";
         inline constinit const char* nover_check = "nv";
         inline constinit const char* use_std = "std";
+        inline constinit const char* nodbg = "nodbg";
     }
 }

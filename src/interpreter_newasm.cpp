@@ -101,7 +101,7 @@ namespace newasm
     const int KERNEL_VERSION = 1;
     //--------------------------------------
     bool vercheck = true;
-    bool dwin = false;
+    bool dwin = true;
     const std::string tab = "\t\t\t";
     std::unordered_map<std::string,std::vector<std::string>>* dyn_ins_set;
     std::vector<std::pair<std::string,std::string>>* env_vars;
@@ -555,6 +555,11 @@ namespace newasm
             if(arguments[i] == newasm::args::use_std) // use standard lib
             {
                 newasm::header::settings::use_std = true;
+                continue;
+            }
+            if(arguments[i] == newasm::args::nodbg) // disable progwin
+            {
+                newasm::dwin = false;
                 continue;
             }
 
