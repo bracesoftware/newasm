@@ -2068,7 +2068,7 @@ link "testfile.asm" ; link a file
     call std::ios::writeln
     ;LMFAO TEST
 :hehe
-
+mov
     mov tlr, 223
     ret *tlr
     ;using "kuku"
