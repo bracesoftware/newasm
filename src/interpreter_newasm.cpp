@@ -176,12 +176,14 @@ namespace newasm
 
     void* test = nullptr;
 
-    class forLinker
+    class forLinker__OLD
     {
         public:
         static inline newasm::_std::linear_map<int, std::string> files;
         static inline newasm::_std::linear_map<std::string, int> file_sizes;
         static inline int linked_size;
+
+        static inline std::vector<std::string> debug;
 
         static inline std::string getNextFile(int& line)
         {
@@ -210,21 +212,62 @@ namespace newasm
             return 0;
         }
 
-        static inline int getLine(int& lastlinedx, const std::string& filename)
+        static inline int getNextFile__C(int& line)
         {
-            int result = 0;
-            result = getNextFile__B(lastlinedx) - lastlinedx;
-            return result;
-        }
-
-        static inline std::string getFile(int& line)
-        {
-            for(int i = files.size() - 1; i != 0; --i)
+            for(int i = files.size() - 2; i != 0; --i)
             {
                 if(line >= files(i).first)
                 {
                     //std::cout << "1->RETURNED `" << files(i).second << "`" << std::endl;
+                    return files(i + 1).first;
+                }
+            }
+            //std::cout << "2->RETURNED `" << files[0] << "`" << std::endl;
+            return 0;
+        }
+
+        static inline int getLine_SKLJ(int& lastlinedx)
+        {
+            int result = 0;
+            result = std::abs(getNextFile__C(lastlinedx) - lastlinedx);
+            return result;
+        }
+
+        static inline int getLine(int& line)
+        {
+            for(int i = files.size() - 1;; --i)
+            {
+                //std::cout << "getLine :: Comparing (" << i << "): line -> " << line << "; files(i).first -> " << files(i).first << std::endl;
+                debug.push_back("getLine :: Comparing (" + std::to_string(i) + "): line -> " + std::to_string(line) + "; files(i).first -> " + std::to_string(files(i).first));
+                if(line >= files(i).first)
+                {
+                    //std::cout << "1->RETURNED `" << files(i).second << "`" << std::endl;
+                    return std::abs(line - files(i).first);
+                }
+
+                if(i == 0)
+                {
+                    break;
+                }
+            }
+            //std::cout << "2->RETURNED `" << files[0] << "`" << std::endl;
+            return line;
+        }
+
+        static inline std::string getFile(int& line)
+        {
+            for(int i = files.size() - 1;; --i)
+            {
+                debug.push_back("getFile :: Comparing (" + std::to_string(i) + "): line -> " + std::to_string(line) + "; files(i).first -> " + std::to_string(files(i).first));
+                if(line >= files(i).first)
+                {
+                    //std::cout << "1->RETURNED `" << files(i).second << "`" << std::endl;
                     return files(i).second;
+                }
+
+                if(i == 0)
+                {
+                    break;
                 }
             }
             //std::cout << "2->RETURNED `" << files[0] << "`" << std::endl;
@@ -243,6 +286,22 @@ namespace newasm
             }
             //std::cout << "RETURNED `" << files[0] << "`" << std::endl;
             return files[0];
+        }
+    };
+
+    class forLinker
+    {
+        public:
+        static inline std::vector<std::pair<std::string, int>> lineData;
+
+        static inline std::string getFile(int line)
+        {
+            return lineData.at(line).first;
+        }
+
+        static inline int getLine(int lastlinedx)
+        {
+            return lineData.at(lastlinedx).second;
         }
     };
 }
@@ -503,6 +562,7 @@ namespace newasm
     int entry(int argc, char* argv[])
     {
         if constexpr(0) newasm::native_jit::print("Hello from JIT COMPILER!");
+        newasm::forLinker__OLD::debug.reserve(100);
         auto get_time = [&]() -> std::string {
             auto now = std::chrono::system_clock::now();
             std::time_t t = std::chrono::system_clock::to_time_t(now);
@@ -520,7 +580,7 @@ namespace newasm
             return oss.str();
         };
 
-        newasm::forLinker::linked_size = 0;
+        newasm::forLinker__OLD::linked_size = 0;
         fs::create_directory(newasm::data::getDataFolder() + newasm::core::constants::separator + newasm::core::constants::data_folder);
         //fs::create_directory(newasm::data::getDataFolder() + newasm::core::constants::separator + newasm::core::constants::linker);
         #define __LOG_FILE__ (newasm::data::getDataFolder() + newasm::core::constants::separator + newasm::core::constants::data_folder + newasm::core::constants::separator + "__newasm.log")
@@ -795,6 +855,12 @@ namespace newasm
         std::cout << (elapsed.count() - newasm::perf::inputWasteTimer.count() - wait_wasted.count() - network_wasted.count()) << " ms\n";
         std::cout << newasm::header::col::reset;
 
+        auto& dbg = newasm::forLinker__OLD::debug;
+        for(int i = 0; i < dbg.size(); ++i)
+        {
+            newasm::progwin::api::cout(dbg.at(i) + "\n");
+        }
+
         newasm::async_thread::running = false;
 
         // Print the debug buffer
@@ -858,7 +924,7 @@ namespace newasm
         }
         #endif
 
-#include "_entry.cpp"
+#include "sys_boot__.cpp"
 
 #if 0
 

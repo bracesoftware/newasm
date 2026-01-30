@@ -106,17 +106,24 @@ namespace newasm
             }
             auto v = P.second;
             int files = 0;
-            newasm::forLinker::files[0] = filename;
-            newasm::forLinker::file_sizes[filename] = v.size();
+            newasm::forLinker__OLD::files[1] = filename;
+            newasm::forLinker__OLD::file_sizes[filename] = v.size();
+
+            for(int i = 0; i < v.size(); ++i)
+            {
+                newasm::forLinker::lineData.push_back({filename, i + 1});
+            }
 
             int linetemp;
             std::string temp;
             std::vector<std::string> v2;
+            std::vector<std::pair<std::string, int>> lineDataLocal;
             bool temp2;
             for(int i = 0; i < v.size(); ++i)
             {
                 temp.clear();
                 v2.clear();
+                lineDataLocal.clear();
                 auto p = newasm::Linker::linkFile__A(v[i]);
                 if(p.first)
                 {
@@ -131,10 +138,17 @@ namespace newasm
                     newasm::header::functions::nullprint("\t Linking `../" + p.second + "`...");
                     newasm::Linker::replaceVectorElement(v, v2, i);
 
-                    newasm::forLinker::file_sizes[p.second] = v2.size();
+                    for(int j = 0; j < v2.size(); ++j)
+                    {
+                        lineDataLocal.push_back({p.second, j + 1});
+                    }
 
-                    newasm::forLinker::files[i] = p.second;
-                    newasm::forLinker::files[i + v2.size() - 1] = filename;
+                    newasm::Linker::replaceVectorElement(newasm::forLinker::lineData, lineDataLocal, i);
+
+                    newasm::forLinker__OLD::file_sizes[p.second] = v2.size();
+
+                    newasm::forLinker__OLD::files[i] = p.second;
+                    newasm::forLinker__OLD::files[i + v2.size() + 1] = filename;
                     files++;
                 }
             }
@@ -143,7 +157,7 @@ namespace newasm
 
             newasm::header::functions::nullprint("\tSuccessfully linked " + std::to_string(files) + " files.");
             newasm::Linker::writeFile(outputfilename, v);
-            newasm::forLinker::linked_size = v.size();
+            newasm::forLinker__OLD::linked_size = v.size();
             return;
         }
     };

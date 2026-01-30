@@ -2062,6 +2062,8 @@ link "testfile.asm" ; link a file
     syscall
 
     call std::ios::writeln
+
+    link "testfile3.asm"
     
     ;LMFAO TEST
 
