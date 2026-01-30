@@ -51,8 +51,8 @@ namespace newasm
             {
                 newasm::dynlib::mem::invalid_dynlibs.push_back(newasm::dynlib::settings::analyzed_dynlib);
                 std::cout << newasm::header::col::reset
-                << newasm::header::col::red << "\t\t\t\t"
-                << "Aborted dynamic library implementation.\n"<< "\t\t\t\t"
+                << newasm::header::col::red << "  \t"
+                << "Aborted dynamic library implementation.\n"<< "  \t"
                 << "Runtime error " << error_code << " \"" << newasm::header::col::gray << newasm::header::style::underline
                 << newasm::dynlib::err_codes::identifier.at(error_code) << newasm::header::col::reset
                 << newasm::header::col::red << "\" in " << newasm::header::col::gray << newasm::header::style::underline

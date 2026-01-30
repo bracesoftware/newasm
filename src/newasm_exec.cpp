@@ -269,18 +269,14 @@ namespace newasm
         }
         return 1;
     }
-    int process_l(std::string wholeline, std::string stat, std::string arg, int lineidx)
+    inline int process_l(std::string arg, int lineidx)
     {
-        if(stat == static_cast<std::string>("_"))
+        if(newasm::mem::functions::datavalid(arg,newasm::mem::labels))
         {
-            if(newasm::mem::functions::datavalid(arg,newasm::mem::labels))
-            {
-                newasm::terminate(newasm::exit_codes::label_redef);//,wholeline);
-                return 1;
-            }
-            newasm::mem::labels[arg] = lineidx;
+            newasm::terminate(newasm::exit_codes::label_redef);//,wholeline);
             return 1;
         }
+        newasm::mem::labels[arg] = lineidx;
         return 1;
     }
 	#if 0
@@ -6339,7 +6335,7 @@ namespace newasm
             {
                 arg = line.substr(1);
                 arg = newasm::header::functions::trim(arg);
-                newasm::process_l(line,"_",arg,lineidx);
+                newasm::process_l(arg, lineidx);
             }
         }
         catch(std::exception& err)
@@ -6532,7 +6528,7 @@ namespace newasm
                 if(line.at(0) == ':')
                 {
                     lineidx++;
-                    newasm::process_l(line, "_", newasm::header::functions::trim(line.substr(1)), lineidx);
+                    newasm::process_l(newasm::header::functions::trim(line.substr(1)), lineidx);
                     newasm::mem::COD.push_back("; label");
                     continue;
                 }

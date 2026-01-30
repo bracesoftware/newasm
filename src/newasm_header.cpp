@@ -1764,7 +1764,7 @@ namespace newasm
                             std::string ins,suf,op;
                             //std::cout << "Debugging MEGA CRASH " << "2\n";
                             //std::vector<std::string> lines;
-                            std::cout << newasm::header::col::reset << "\t\t\tSuccessfully loaded dynamic library: " + 
+                            std::cout << newasm::header::col::gray << "\tSuccessfully loaded dynamic library: " + 
                                 static_cast<std::string>(newasm::header::col::gray) + 
                                 dynamic_libs[i] << "\n";
 
@@ -1853,7 +1853,7 @@ namespace newasm
                         }
                         if(!std::filesystem::exists(dynamic_libs[i] + newasm::core::constants::dynlib_ex))
                         {
-                            std::cout << newasm::header::col::red << "\t\t\tFailed to load dynamic library: " + 
+                            std::cout << newasm::header::col::red << " \tFailed to load dynamic library: " + 
                                 static_cast<std::string>(newasm::header::col::gray) + 
                                 dynamic_libs[i] << "\n";
                                 //std::cout << "Debugging MEGA CRASH " << "8\n";

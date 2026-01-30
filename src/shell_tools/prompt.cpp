@@ -30,7 +30,12 @@ namespace newasm
             //std::cout << std::endl;
 
             if((input == "Y") or (input == "y")) return true;
-            newasm::header::functions::err("Operation cancelled.");
+            if((input == "N") or (input == "n"))
+            {
+                newasm::header::functions::err("Operation cancelled successfully.");
+                return false;
+            }
+            newasm::header::functions::err("Unknown option. Operation cancelled.");
             return false;
         }
     }
