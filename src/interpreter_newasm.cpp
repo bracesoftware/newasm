@@ -180,16 +180,62 @@ namespace newasm
     {
         public:
         static inline newasm::_std::linear_map<int, std::string> files;
+        static inline newasm::_std::linear_map<std::string, int> file_sizes;
+        static inline int linked_size;
 
-        static inline std::string getFile(int line)
+        static inline std::string getNextFile(int& line)
+        {
+            for(int i = files.size() - 1; i != 0; --i)
+            {
+                if(line < files(i).first)
+                {
+                    return files(i).second;
+                }
+            }
+            //std::cout << "RETURNED `" << files[0] << "`" << std::endl;
+            return files[0];
+        }
+
+        static inline int getNextFile__B(int& line)
+        {
+            for(int i = files.size() - 1; i != 0; --i)
+            {
+                //std::cout << "getNextFile__B->1(): files(i).first = " << files(i).first << "; files(i).second = " << files(i).second << std::endl;
+                if(line < files(i).first)
+                {
+                    //std::cout << "getNextFile__B->2(): files(i).first = " << files(i).first << "; files(i).second = " << files(i).second << std::endl;
+                    return files(i).first;
+                }
+            }
+            return 0;
+        }
+
+        static inline int getLine(int& lastlinedx, const std::string& filename)
+        {
+            int result = 0;
+            result = getNextFile__B(lastlinedx) - lastlinedx;
+            return result;
+        }
+
+        static inline std::string getFile(int& line)
+        {
+            for(int i = files.size() - 1; i != 0; --i)
+            {
+                if(line >= files(i).first)
+                {
+                    //std::cout << "1->RETURNED `" << files(i).second << "`" << std::endl;
+                    return files(i).second;
+                }
+            }
+            //std::cout << "2->RETURNED `" << files[0] << "`" << std::endl;
+            return files[0];
+        }
+
+        static inline std::string getFile__B(int& line)
         {
             for(int i = 0; i < files.size() - 1; ++i)
             {
-                if(i + 1 == files.size())
-                {
-                    return files(files.size() - 2).second;
-                }
-                if(files(i).first <= line && line < files(i + 1).first)
+                if(files(i).first <= line)
                 {
                     //std::cout << "RETURNED `" << files(i).second << "`" << std::endl; 
                     return files(i).second;
@@ -474,6 +520,7 @@ namespace newasm
             return oss.str();
         };
 
+        newasm::forLinker::linked_size = 0;
         fs::create_directory(newasm::data::getDataFolder() + newasm::core::constants::separator + newasm::core::constants::data_folder);
         //fs::create_directory(newasm::data::getDataFolder() + newasm::core::constants::separator + newasm::core::constants::linker);
         #define __LOG_FILE__ (newasm::data::getDataFolder() + newasm::core::constants::separator + newasm::core::constants::data_folder + newasm::core::constants::separator + "__newasm.log")

@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
         std::cerr << "[NewASM] You got VERY ZAJEBAN -> " << e.what() << std::endl;
     }
     
-    for(int i = 0; i < newasm::forLinker::files.size(); ++i)
+    if(0) for(int i = 0; i < newasm::forLinker::files.size(); ++i)
     {
         std::cout << newasm::forLinker::files(i).first << " = " << newasm::forLinker::files(i).second << std::endl;
     }

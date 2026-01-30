@@ -100,7 +100,7 @@ namespace newasm
                 newasm::header::style::underline <<
                 newasm::forLinker::getFile(newasm::header::data::lastlndx) << //newasm::header::settings::script_file <<
                 ":" <<
-                newasm::header::data::lastlndx;
+                newasm::forLinker::getLine(newasm::header::data::lastlndx, newasm::forLinker::getFile(newasm::header::data::lastlndx));
             }
             if(newasm::header::data::proc_now == true)
             {
