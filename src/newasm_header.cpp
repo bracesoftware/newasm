@@ -161,22 +161,23 @@ namespace newasm
                     std::hash<std::string> hasher;
                     size_t h = hasher(input);
 
-                    // konvertuj hash u "alfanumerički" string
                     static const char charset[] =
                         "0123456789"
                         "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                         "abcdefghijklmnopqrstuvwxyz";
 
-                    const size_t base = sizeof(charset) - 1; // 62 znakova
+                    const size_t base = sizeof(charset) - 1;
 
                     std::string result;
-                    while (h > 0) {
+                    while (h > 0)
+                    {
                         result.push_back(charset[h % base]);
                         h /= base;
                     }
 
-                    if (result.empty()) {
-                        result = "0"; // fallback ako je hash = 0
+                    if (result.empty())
+                    {
+                        result = "0";
                     }
 
                     return result;

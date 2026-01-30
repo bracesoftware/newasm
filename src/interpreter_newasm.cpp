@@ -27,6 +27,7 @@ the Initial Developer. All Rights Reserved.
 #pragma unroll
 
 #include "runtime/common/os.h"
+#include "runtime/common/arch.h"
 
 #define EMPTYLINE std::cout<<"\n"
 #include <iostream>

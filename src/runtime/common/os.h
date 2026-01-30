@@ -49,6 +49,7 @@ namespace newasm
             const int android = 3;
             const int macos = 4;
         }
+
         int getos()
         {
             return
