@@ -629,8 +629,6 @@ __say 0,"debug5"
     sysenter "ios"
     syscall  
 
-   
-
     mov prp , &halttest
     mov stl , 0c1
     mov fdx , 6
@@ -2064,8 +2062,12 @@ link "testfile.asm" ; link a file
     call std::ios::writeln
 
     link "testfile3.asm"
-    
+    jmp hehe
+    :lel__________
+    mov tlr, "labele rade fino Allaha mi"
+    call std::ios::writeln
     ;LMFAO TEST
+:hehe
 
     mov tlr, 223
     ret *tlr

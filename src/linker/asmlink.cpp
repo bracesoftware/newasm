@@ -62,6 +62,14 @@ namespace newasm
             }
             return;
         }
+        template<typename T>
+        static inline void replaceVectorElement__NEW(std::vector<T>& v, const std::vector<T>& n, std::size_t index)
+        {
+            if (index >= v.size()) return;
+
+            v.insert(v.erase(v.begin() + index), n.begin(), n.end());
+        }
+
         static inline std::pair<bool, std::vector<std::string>> readFile(const std::string& filename)
         {
             std::ifstream file(filename);
@@ -136,14 +144,14 @@ namespace newasm
                     }
                     std::cout << newasm::header::col::gray;
                     newasm::header::functions::nullprint("\t Linking `../" + p.second + "`...");
-                    newasm::Linker::replaceVectorElement(v, v2, i);
+                    newasm::Linker::replaceVectorElement__NEW(v, v2, i);
 
                     for(int j = 0; j < v2.size(); ++j)
                     {
                         lineDataLocal.push_back({p.second, j + 1});
                     }
 
-                    newasm::Linker::replaceVectorElement(newasm::forLinker::lineData, lineDataLocal, i);
+                    newasm::Linker::replaceVectorElement__NEW(newasm::forLinker::lineData, lineDataLocal, i);
 
                     newasm::forLinker__OLD::file_sizes[p.second] = v2.size();
 
