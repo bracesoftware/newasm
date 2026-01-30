@@ -22,6 +22,7 @@ the Initial Developer. All Rights Reserved.
 #include <sys/mman.h>
 #include <unistd.h>
 
+#if _NEWASM_ARCH == _NEWASM_ARCH_x86_32bit
 static void jit_print_x86_32(const char* text)
 {
     unsigned char code[] = {
@@ -45,7 +46,7 @@ static void jit_print_x86_32(const char* text)
 
     munmap(mem, sizeof(code));
 }
-
+#elif _NEWASM_ARCH == _NEWASM_ARCH_x86_64bit
 static void jit_print_x86_64(const char* text)
 {
     unsigned char code[] = {
@@ -68,7 +69,7 @@ static void jit_print_x86_64(const char* text)
 
     munmap(mem, sizeof(code));
 }
-
+#elif _NEWASM_ARCH == _NEWASM_ARCH_arm_32bit
 static void jit_print_arm32(const char* text)
 {
     unsigned int code[] = {
@@ -93,7 +94,7 @@ static void jit_print_arm32(const char* text)
 
     munmap(mem, sizeof(code));
 }
-
+#elif _NEWASM_ARCH == _NEWASM_ARCH_arm_64bit
 static void jit_print_arm64(const char* text)
 {
     uint32_t code[] = {
@@ -118,7 +119,7 @@ static void jit_print_arm64(const char* text)
 
     munmap(mem, sizeof(code));
 }
-
+#endif
 
 namespace newasm
 {

@@ -17,6 +17,8 @@ the Initial Developer. All Rights Reserved.
 
 */
 
+#if _NEWASM_ARCH == _NEWASM_ARCH_x86_32bit
+
 static void jit_print_win_x86_32(const char* text)
 {
     unsigned char code[] = {
@@ -40,6 +42,8 @@ static void jit_print_win_x86_32(const char* text)
     VirtualFree(mem, 0, MEM_RELEASE);
 }
 
+#elif _NEWASM_ARCH == _NEWASM_ARCH_x86_64bit
+
 static void jit_print_win_x86_64(const char* text)
 {
     unsigned char code[] = {
@@ -61,6 +65,8 @@ static void jit_print_win_x86_64(const char* text)
 
     VirtualFree(mem, 0, MEM_RELEASE);
 }
+
+#endif
 
 namespace newasm
 {

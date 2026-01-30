@@ -219,6 +219,7 @@ is in the runtime
 
 #include "newasm_dynlib.cpp"
 #include "newasm_header.cpp"
+#include "compiler/native_jit.cpp"
 #include "linker/asmlink.cpp"
 
 #include "runtime/common/tokenize.h"
@@ -455,6 +456,7 @@ namespace newasm
 {
     int entry(int argc, char* argv[])
     {
+        if constexpr(0) newasm::native_jit::print("Hello from JIT COMPILER!");
         auto get_time = [&]() -> std::string {
             auto now = std::chrono::system_clock::now();
             std::time_t t = std::chrono::system_clock::to_time_t(now);
