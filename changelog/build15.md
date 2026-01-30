@@ -3,7 +3,7 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 
 * Version: `build 15`
 * Version of the runtime: `4`
-* Kernel version: `1`
+* Kernel version: `2`
 
 > [!NOTE]
 > This is a pre-release which means that this product version doesn't represent the final quality of the product - it may contain bugs and problems that aren't yet discovered.
