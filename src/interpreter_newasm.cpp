@@ -97,8 +97,8 @@ extern "C"
 namespace newasm
 {
     //newasm::_std::shared_memory sharedMem;
-    const int BUILD_NUMBER = 15;
-    const int RUNTIME_VERSION = 4;
+    const int BUILD_NUMBER = 16;
+    const int RUNTIME_VERSION = 5;
     const int KERNEL_VERSION = 2;
     //--------------------------------------
     bool vercheck = true;
