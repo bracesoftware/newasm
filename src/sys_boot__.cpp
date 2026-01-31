@@ -1,5 +1,16 @@
 // NewASM Virtual Machine
 
+namespace newasm
+{
+    namespace bootloader
+    {
+        inline void entry() noexcept
+        {
+            return;
+        }
+    }
+}
+
 int main(int argc, char* argv[])
 {
     if constexpr(0) std::ios::sync_with_stdio(false);
