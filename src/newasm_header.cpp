@@ -598,6 +598,7 @@ namespace newasm
             inline bool isfloat(const std::string& s)
             {
                 int dotCount = 0;
+                int minusSign = 0;
 
                 if(s.empty()) return false;
 
@@ -620,13 +621,29 @@ namespace newasm
                             return false;
                         }
                     } 
+                    else if(c == '-')
+                    {
+                        minusSign++;
+                        if(minusSign > 1)
+                        {
+                            return false;
+                        }
+                    }
                     else 
                     {
-                        return false; // nevažeći karakter
+                        return false;
                     }
                 }
 
-                return dotCount == 1; // mora biti točno jedna točka
+                if(minusSign == 1)
+                {
+                    if(s.at(0) != '-')
+                    {
+                        return false;
+                    }
+                }
+
+                return dotCount == 1;
             }
 
             inline bool istext_(const std::string& str)

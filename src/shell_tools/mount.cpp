@@ -24,7 +24,7 @@ static const std::string __stdlib_code = R"(
 ;
 .data
     ./std
-        intg version: 13
+        intg version: 16
 
         ./math
             float pi: 3.141
@@ -85,6 +85,47 @@ static const std::string __stdlib_code = R"(
                 halt 0
             end
         ./!ios
+        ./math
+            proc addition
+                mov cr0, *tlr
+                mov cr1, *stl
+
+                add
+
+                mov tlr, *cr0
+                halt 0
+            end
+
+            proc subtraction
+                mov cr0, *tlr
+                mov cr1, *stl
+
+                sub
+
+                mov tlr, *cr0
+                halt 0
+            end
+
+            proc multiplication
+                mov cr0, *tlr
+                mov cr1, *stl
+
+                mul
+
+                mov tlr, *cr0
+                halt 0
+            end
+
+            proc division
+                mov cr0, *tlr
+                mov cr1, *stl
+
+                div
+
+                mov tlr, *cr0
+                halt 0
+            end
+        ./!math
     ./!std
 ;============================================================================================
 ;

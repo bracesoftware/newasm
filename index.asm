@@ -899,6 +899,7 @@ sysenter "ios"
     syscall   
 
     proc  __exit_proc
+        db tlr
         mov   tlr , "exit proc called"
         mov   stl , 0c1
         ;mov bos, 100
@@ -2068,6 +2069,17 @@ link "testfile.asm" ; link a file
     call std::ios::writeln
     ;LMFAO TEST
 :hehe
+
+    mov tlr, 38356
+    mov stl, -25
+    call std::math::addition
+    call std::ios::writeln
+
+    mov tlr, 38356
+    mov stl, -25
+    call std::math::subtraction
+    call std::ios::writeln
+
 mov
     mov tlr, 223
     ret *tlr
@@ -2110,6 +2122,8 @@ using "ios"
     tuple boom: ()
     intg i: 0
     string[array_size] how_tO_make_ThIS: nil
+
+    intg myNumber: nil->myTag
 .start
     mov tlr, array_wow[0]
     lea &boom, 1

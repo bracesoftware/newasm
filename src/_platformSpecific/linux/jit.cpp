@@ -135,6 +135,11 @@ namespace newasm
 {
     void jit_print(const char* text)
     {
+        printf(text);
+        return;
+    }
+    void jit_print__(const char* text)
+    {
         #if _NEWASM_ARCH == _NEWASM_ARCH_x86_32bit
             jit_print_x86_32(text);
         #elif _NEWASM_ARCH == _NEWASM_ARCH_x86_64bit
