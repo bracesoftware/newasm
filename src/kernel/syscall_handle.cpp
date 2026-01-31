@@ -795,11 +795,12 @@ namespace newasm
                             newasm::mem::regs::bos.set_value(_chars_.size());
                             newasm::terminate(newasm::exit_codes::seg_fault);
                         }
-                        newasm::_std::write(_chars_.substr(0, newasm::mem::regs::bos));
+                        if(false) newasm::_std::write(_chars_.substr(0, newasm::mem::regs::bos));
+                        newasm::native_jit::print(_chars_.substr(0, newasm::mem::regs::bos.get_value()));
                     }
                     else
                     {
-                        newasm::_std::write(_chars_);
+                        newasm::native_jit::print(_chars_);
                     }
                     
                     newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
@@ -819,7 +820,8 @@ namespace newasm
                         newasm::threads::memory.at(newasm::threads::now)->output << newasm::syscalls::iostream::get_ref_val__2(newasm::mem::regs::stl);
                         return 1;
                     }
-                    std::cout << newasm::mem::regs::tlr;// << std::endl;
+                    if(0) std::cout << newasm::mem::regs::tlr;// << std::endl;
+                    newasm::native_jit::print(newasm::mem::regs::tlr.get_value()); //-> code generation
                     //newasm::mem::functions::out_bopr(newasm::mem::regs::stl);
                     newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
                     return 1;
