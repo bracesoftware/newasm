@@ -463,7 +463,7 @@ namespace newasm
 
 struct __global_newasm final
 {
-    inline __global_newasm() noexcept
+    explicit inline __global_newasm() noexcept
     {
         // THIS CODE IS CALLED BEFORE EVERYTHING ELSE!!!
         //std::ios::sync_with_stdio(false);
@@ -660,7 +660,7 @@ namespace newasm
 
             // Formatiraj u string
             std::ostringstream oss;
-            oss << std::put_time(&tm, "%d/%m/%Y-%H:%M:%S");
+            oss << std::put_time(&tm, "%d/%m/%Y-%H:%M:%S");//<- wtf ovo je nova stvar?!?!
             return oss.str();
         };
 
