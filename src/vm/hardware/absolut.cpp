@@ -33,6 +33,9 @@ namespace newasm
                 return MEM_SIZE;
             }
 
+            explicit randAccessMem__() noexcept
+            {}
+
             // free = 0
             // occupied = 1
 

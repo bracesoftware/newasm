@@ -45,7 +45,7 @@ namespace newasm
         bool short_int_value = false;
         
         public:
-        _register(std::string regname, T val)
+        explicit _register(std::string regname, T val)
             : name(regname), value(val), initial_value(val){}
 
         inline void make_short(bool set) noexcept
@@ -81,16 +81,23 @@ namespace newasm
             }
             return this->value;
         }
-        inline void set_value(const T& new_val_)
+        inline void set_value(const T& new_val)
         {
-            T new_val = new_val_;
+            //T new_val = new_val_;
             if constexpr(std::is_same_v<T, int>)
             {
                 if(this->short_int_value)
                 {
                     if(new_val > std::numeric_limits<short>::max() or new_val < std::numeric_limits<short>::min())
                     {
-                        new_val = 0;
+                        if(newasm::thread_line)
+                        {
+                            //std::cout << "THIS IS AN ERROR ! \n";
+                            this->thread_values.at(newasm::threads::now) = 0;
+                            return;
+                        }
+                        this->value = 0;
+                        return;
                     }
                 }
             }
@@ -111,16 +118,22 @@ namespace newasm
             }
             return value;
         }
-        inline _register<T>& operator=(const T& new_val_)
+        inline _register<T>& operator=(const T& new_val)
         {
-            T new_val = new_val_;
+            //T new_val = new_val_;
             if constexpr(std::is_same_v<T, int>)
             {
                 if(this->short_int_value)
                 {
                     if(new_val > std::numeric_limits<short>::max() or new_val < std::numeric_limits<short>::min())
                     {
-                        new_val = 0;
+                        if(newasm::thread_line)
+                        {
+                            thread_values.at(newasm::threads::now) = 0;
+                            return *this;
+                        }
+                        value = 0;
+                        return *this;
                     }
                 }
             }

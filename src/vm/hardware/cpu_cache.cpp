@@ -44,6 +44,8 @@ namespace newasm
 
             mutable __line__ __cache__[t_cachesize];
 
+            explicit CPU_CACHE__() noexcept {}
+
             // A block of RAM memory links to a specific cache line index
             // Doesn't require linear search, and thus cache is way faster than RAM,
             // cuz we have a direct memory access
