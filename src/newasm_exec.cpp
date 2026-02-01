@@ -166,8 +166,14 @@ namespace newasm
 				struct_name = newasm::header::functions::mangleName(vec, symbol_name);
 			}
 
+            if(!newasm::header::functions::isalphanum(struct_name))
+            {
+                return 1;
+            }
+
             if(!newasm::mem::functions::datavalid(struct_name, newasm::mem::structs))
             {
+                //std::cout << "struct_name: " << struct_name << std::endl;
                 newasm::terminate(newasm::exit_codes::undefined_object);
                 return 1;
             }
@@ -368,7 +374,7 @@ namespace newasm
                 //objects
                 case newasm::core::lang_inf::typenames::obj:
                 {
-                    if(newasm::header::data::struct_now)
+                    if(!newasm::brace_stack__.empty())
                     {
                         newasm::terminate(newasm::exit_codes::nested_object);
                         return 1;
@@ -384,6 +390,7 @@ namespace newasm
                     newasm::header::data::struct_decl = name;
                     newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
                  
+                    newasm::brace_stack__.push_back(newasm::brace_stack::object_block);
                     return 1;
                 }
                 // whole numbers
@@ -734,12 +741,7 @@ namespace newasm
                 // class
                 case newasm::core::lang_inf::typenames::class__:
                 {
-                    if(newasm::header::data::struct_now)
-                    {
-                        newasm::terminate(newasm::exit_codes::nested_object);
-                        return 1;
-                    }
-                    if(newasm::header::data::blueprint_now)
+                    if(!newasm::brace_stack__.empty())
                     {
                         newasm::terminate(newasm::exit_codes::nested_object);
                         return 1;
@@ -756,16 +758,13 @@ namespace newasm
 
                     newasm::header::data::blueprint_now = true;
                     newasm::header::data::blueprint_decl = name;
+
+                    newasm::brace_stack__.push_back(newasm::brace_stack::class_block);
                     return 1;
                 }
                 case newasm::core::lang_inf::typenames::union__:
                 {
-                    if(newasm::header::data::struct_now)
-                    {
-                        newasm::terminate(newasm::exit_codes::nested_object);
-                        return 1;
-                    }
-                    if(newasm::header::data::blueprint_now)
+                    if(!newasm::brace_stack__.empty())
                     {
                         newasm::terminate(newasm::exit_codes::nested_object);
                         return 1;
@@ -884,6 +883,7 @@ namespace newasm
 
         if(!newasm::mem::functions::datavalid(struct_name, newasm::mem::structs))
         {
+            //std::cout << "struct_name: " << struct_name << std::endl;
             newasm::terminate(newasm::exit_codes::undefined_object);
             return 1;
         }
@@ -3916,6 +3916,8 @@ namespace newasm
                 newasm::threads::memory.at(suf)->paused = false;
                 newasm::threads::sys_module[suf] = 0;
                 newasm::mem::regs::resetRegisters(suf);
+
+                newasm::brace_stack__.push_back(newasm::brace_stack::thread_block);
                 
                 //newasm::threads::thread_count++;
                 return 1;
@@ -5972,23 +5974,32 @@ namespace newasm
             // CLOSING BRACE
             case newasm::compiler::closingBrace:
             {
-                if(newasm::header::data::struct_now)
+                if(newasm::brace_stack__.empty())
                 {
-                    newasm::header::data::struct_now = false;
+                    newasm::terminate(newasm::exit_codes::unexpected_cbrace);
                     return 1;
                 }
-                if(newasm::threads::thread_now)
+
+                int brace_purpose = newasm::brace_stack__.back();
+                newasm::brace_stack__.pop_back();
+
+                if(brace_purpose == newasm::brace_stack::thread_block)
                 {
                     newasm::threads::thread_now = false;
                     return 1;
                 }
-                if(newasm::header::data::blueprint_now)
+                if(brace_purpose == newasm::brace_stack::object_block)
+                {
+                    newasm::header::data::struct_now = false;
+                    return 1;
+                }
+                if(brace_purpose == newasm::brace_stack::class_block)
                 {
                     //std::cout << "Terminated class -> " << newasm::header::data::blueprint_decl << std::endl;
                     newasm::header::data::blueprint_now = false;
                     return 1;
                 }
-                newasm::terminate(newasm::exit_codes::unexpected_cbrace);
+                
                 return 1;
             }
             // MACRO TERMINATOR

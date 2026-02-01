@@ -162,7 +162,7 @@ namespace newasm
             return lhs == rhs.value;
         }
 
-        void add_end_(std::string str__)
+        void add_end_(const std::string& str__)
         {
             if constexpr(!std::is_same_v<T, std::string>)
             {

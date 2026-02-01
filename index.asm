@@ -2079,8 +2079,19 @@ link "testfile.asm" ; link a file
     mov stl, -25
     call std::math::subtraction
     call std::ios::writeln
+.data
+    ./hi
+        intg age: 19
+        tuple humanData: ("ele bre", "nigga")
+    ./!hi
+.start
+    mov tlr, "Hello, I am {hi::humanData(0)} {hi::humanData(1)}, I am {hi::age}"
+    sysenter "txtop"
+    mov fdx, 4
+    syscall
 
-mov
+    call std::ios::writeln
+
     mov tlr, 223
     ret *tlr
     ;using "kuku"

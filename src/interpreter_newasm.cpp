@@ -126,7 +126,15 @@ namespace newasm
     std::unordered_map<std::string, int> inverted_ins;
     std::unordered_map<std::string, int> inverted_kernel;
     std::unordered_map<std::string, int> inverted_types;
-
+    //------------------------------------------------------
+    namespace brace_stack
+    {
+        constinit const int object_block = 0;
+        constinit const int thread_block = 1;
+        constinit const int class_block = 2;
+    }
+    std::vector<int> brace_stack__;
+    //------------------------------------------------------
     class timer
     {
         private:

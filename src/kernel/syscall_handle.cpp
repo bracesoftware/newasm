@@ -22,13 +22,155 @@ namespace newasm
 {
     namespace kernel
     {
-        int handleSysCall()
+        constexpr uint32_t makeHash(int16_t a, int16_t b)
         {
-            //crypto
-            if(newasm::kernel::cfg::Crypto)
-            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::crypto)
+            return (uint32_t(uint16_t(a)) << 16) | uint32_t(uint16_t(b));
+        }
+
+        inline int handleSysCall()
+        {
+            //ext
+            if(newasm::kernel::cfg::Extensions)
+            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::ext)
             {
-                if(newasm::mem::regs::fdx == 1) //sha256
+                newasm::kernel::dynamic::CALL(newasm::mem::regs::dlx, std::to_string(newasm::mem::regs::fdx));
+                return 1;
+            }
+            if(newasm::kernel::cfg::ContainerManipulation) if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::cmanip)
+            if(newasm::mem::regs::cpt == newasm::header::constants::inv_reg_val)
+            {
+                newasm::terminate(newasm::exit_codes::invalid_memacc);
+                return 1;
+            }
+            int code = newasm::kernel::makeHash(newasm::threads::functions::get_sysenter(), newasm::mem::regs::fdx.get_value());
+            if(newasm::kernel::cfg::Math) switch(code)
+            {
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::math, 1): //sinus
+                {
+                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr.get_value()) &&
+                    !newasm::header::functions::isfloat(newasm::mem::regs::tlr.get_value()))
+                    {
+                        newasm::header::functions::krnl("`tlr` (" + newasm::mem::regs::tlr.get_value() + ") has to be a numeric value.");
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    float value = std::stof(newasm::mem::regs::tlr.get_value());
+
+                    newasm::mem::regs::tlr.set_value(std::to_string(std::sin(value)));
+                    return 1;
+                }
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::math, 2): //cosinus
+                {
+                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr.get_value()) &&
+                    !newasm::header::functions::isfloat(newasm::mem::regs::tlr.get_value()))
+                    {
+                        newasm::header::functions::krnl("`tlr` (" + newasm::mem::regs::tlr.get_value() + ") has to be a numeric value.");
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    float value = std::stof(newasm::mem::regs::tlr.get_value());
+
+                    newasm::mem::regs::tlr.set_value(std::to_string(std::cos(value)));
+                    return 1;
+                }
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::math, 3): //tangens
+                {
+                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr.get_value()) &&
+                    !newasm::header::functions::isfloat(newasm::mem::regs::tlr.get_value()))
+                    {
+                        newasm::header::functions::krnl("`tlr` (" + newasm::mem::regs::tlr.get_value() + ") has to be a numeric value.");
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    float value = std::stof(newasm::mem::regs::tlr.get_value());
+
+                    newasm::mem::regs::tlr.set_value(std::to_string(std::tan(value)));
+                    return 1;
+                }
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::math, 4): //sqrt
+                {
+                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr.get_value()) &&
+                    !newasm::header::functions::isfloat(newasm::mem::regs::tlr.get_value()))
+                    {
+                        newasm::header::functions::krnl("`tlr` (" + newasm::mem::regs::tlr.get_value() + ") has to be a numeric value.");
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    float value = std::stof(newasm::mem::regs::tlr.get_value());
+
+                    if(value < 0)
+                    {
+                        newasm::header::functions::krnl("`tlr` (" + newasm::mem::regs::tlr.get_value() + ") was negative, so it was converted with `::abs`.");
+                        value = -value;
+                    }
+
+                    newasm::mem::regs::tlr.set_value(std::to_string(std::sqrt(value)));
+                    return 1;
+                }
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::math, 5): //absolute value
+                {
+                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr.get_value()) &&
+                    !newasm::header::functions::isfloat(newasm::mem::regs::tlr.get_value()))
+                    {
+                        newasm::header::functions::krnl("`tlr` (" + newasm::mem::regs::tlr.get_value() + ") has to be a numeric value.");
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    float value = std::stof(newasm::mem::regs::tlr.get_value());
+
+                    newasm::mem::regs::tlr.set_value(std::to_string(std::abs(value)));
+                    return 1;
+                }
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::math, 6): //cbrt
+                {
+                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr.get_value()) &&
+                    !newasm::header::functions::isfloat(newasm::mem::regs::tlr.get_value()))
+                    {
+                        newasm::header::functions::krnl("`tlr` (" + newasm::mem::regs::tlr.get_value() + ") has to be a numeric value.");
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    float value = std::stof(newasm::mem::regs::tlr.get_value());
+
+                    newasm::mem::regs::tlr.set_value(std::to_string(std::cbrt(value)));
+                    return 1;
+                }
+                default:
+                {
+                    newasm::terminate(newasm::exit_codes::unknown_fdx);
+                    return 1;
+                }
+            }
+            if(newasm::kernel::cfg::Misc) switch(code)
+            {
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::misc, 1): // misc, random
+                {
+                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr.get_value()))
+                    {
+                        newasm::header::functions::krnl("`tlr` (" + newasm::mem::regs::tlr.get_value() + ") has to be a numeric value.");
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::stl.get_value()))
+                    {
+                        newasm::header::functions::krnl("`stl` (" + newasm::mem::regs::stl.get_value() + ") has to be a numeric value.");
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+
+                    int result = newasm::syscalls::misc::rand(std::stoi(newasm::mem::regs::tlr.get_value()), std::stoi(newasm::mem::regs::stl.get_value()));
+                    newasm::mem::regs::tlr.set_value(std::to_string(result));
+                    return 1;
+                }
+                default:
+                {
+                    newasm::terminate(newasm::exit_codes::unknown_fdx);
+                    return 1;
+                }
+            }
+            if(newasm::kernel::cfg::Crypto) switch(code)
+            {
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::crypto, 1): // crypto, sha256
                 {
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr.get_value()))
                     {
@@ -43,7 +185,7 @@ namespace newasm
                     newasm::mem::regs::tlr.add_end_("\"");
                     return 1;
                 }
-                if(newasm::mem::regs::fdx == 2) //xor encrypt
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::crypto, 2): // crypto, xor encrypt
                 {
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr.get_value()))
                     {
@@ -66,7 +208,7 @@ namespace newasm
                     newasm::mem::regs::tlr.add_end_("\"");
                     return 1;
                 }
-                if(newasm::mem::regs::fdx == 3) //xor decrypt
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::crypto, 3): // crypto, xor decrypt
                 {
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr.get_value()))
                     {
@@ -89,137 +231,16 @@ namespace newasm
                     newasm::mem::regs::tlr.add_end_("\"");
                     return 1;
                 }
-                newasm::terminate(newasm::exit_codes::unknown_fdx);
-                return 1;
-            }
-            //misc
-            if(newasm::kernel::cfg::Misc)
-            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::misc)
-            {
-                if(newasm::mem::regs::fdx == 1) //rand
+                default:
                 {
-                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr.get_value()))
-                    {
-                        newasm::header::functions::krnl("`tlr` (" + newasm::mem::regs::tlr.get_value() + ") has to be a numeric value.");
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                        return 1;
-                    }
-                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::stl.get_value()))
-                    {
-                        newasm::header::functions::krnl("`stl` (" + newasm::mem::regs::stl.get_value() + ") has to be a numeric value.");
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                        return 1;
-                    }
-
-                    int result = newasm::syscalls::misc::rand(std::stoi(newasm::mem::regs::tlr.get_value()), std::stoi(newasm::mem::regs::stl.get_value()));
-                    newasm::mem::regs::tlr.set_value(std::to_string(result));
+                    newasm::terminate(newasm::exit_codes::unknown_fdx);
                     return 1;
                 }
-                newasm::terminate(newasm::exit_codes::unknown_fdx);
-                return 1;
-            }
-            //math
-            if(newasm::kernel::cfg::Math)
-            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::math)
-            {
-                if(newasm::mem::regs::fdx == 1) //sinus
-                {
-                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr.get_value()) &&
-                    !newasm::header::functions::isfloat(newasm::mem::regs::tlr.get_value()))
-                    {
-                        newasm::header::functions::krnl("`tlr` (" + newasm::mem::regs::tlr.get_value() + ") has to be a numeric value.");
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                        return 1;
-                    }
-                    float value = std::stof(newasm::mem::regs::tlr.get_value());
-
-                    newasm::mem::regs::tlr.set_value(std::to_string(std::sin(value)));
-                    return 1;
-                }
-                if(newasm::mem::regs::fdx == 2) //cosinus
-                {
-                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr.get_value()) &&
-                    !newasm::header::functions::isfloat(newasm::mem::regs::tlr.get_value()))
-                    {
-                        newasm::header::functions::krnl("`tlr` (" + newasm::mem::regs::tlr.get_value() + ") has to be a numeric value.");
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                        return 1;
-                    }
-                    float value = std::stof(newasm::mem::regs::tlr.get_value());
-
-                    newasm::mem::regs::tlr.set_value(std::to_string(std::cos(value)));
-                    return 1;
-                }
-                if(newasm::mem::regs::fdx == 3) //tangens
-                {
-                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr.get_value()) &&
-                    !newasm::header::functions::isfloat(newasm::mem::regs::tlr.get_value()))
-                    {
-                        newasm::header::functions::krnl("`tlr` (" + newasm::mem::regs::tlr.get_value() + ") has to be a numeric value.");
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                        return 1;
-                    }
-                    float value = std::stof(newasm::mem::regs::tlr.get_value());
-
-                    newasm::mem::regs::tlr.set_value(std::to_string(std::tan(value)));
-                    return 1;
-                }
-                if(newasm::mem::regs::fdx == 4) //sqrt
-                {
-                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr.get_value()) &&
-                    !newasm::header::functions::isfloat(newasm::mem::regs::tlr.get_value()))
-                    {
-                        newasm::header::functions::krnl("`tlr` (" + newasm::mem::regs::tlr.get_value() + ") has to be a numeric value.");
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                        return 1;
-                    }
-                    float value = std::stof(newasm::mem::regs::tlr.get_value());
-
-                    if(value < 0)
-                    {
-                        newasm::header::functions::krnl("`tlr` (" + newasm::mem::regs::tlr.get_value() + ") was negative, so it was converted with `::abs`.");
-                        value = -value;
-                    }
-
-                    newasm::mem::regs::tlr.set_value(std::to_string(std::sqrt(value)));
-                    return 1;
-                }
-                if(newasm::mem::regs::fdx == 5) //absolute value
-                {
-                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr.get_value()) &&
-                    !newasm::header::functions::isfloat(newasm::mem::regs::tlr.get_value()))
-                    {
-                        newasm::header::functions::krnl("`tlr` (" + newasm::mem::regs::tlr.get_value() + ") has to be a numeric value.");
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                        return 1;
-                    }
-                    float value = std::stof(newasm::mem::regs::tlr.get_value());
-
-                    newasm::mem::regs::tlr.set_value(std::to_string(std::abs(value)));
-                    return 1;
-                }
-                if(newasm::mem::regs::fdx == 6) //cbrt
-                {
-                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr.get_value()) &&
-                    !newasm::header::functions::isfloat(newasm::mem::regs::tlr.get_value()))
-                    {
-                        newasm::header::functions::krnl("`tlr` (" + newasm::mem::regs::tlr.get_value() + ") has to be a numeric value.");
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                        return 1;
-                    }
-                    float value = std::stof(newasm::mem::regs::tlr.get_value());
-
-                    newasm::mem::regs::tlr.set_value(std::to_string(std::cbrt(value)));
-                    return 1;
-                }
-                newasm::terminate(newasm::exit_codes::unknown_fdx);
-                return 1;
             }
             //http
-            if(newasm::kernel::cfg::HTTP)
-            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::http)
+            if(newasm::kernel::cfg::HTTP) switch(code)
             {
-                if(newasm::mem::regs::fdx == 1) // get http
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::http, 1): // get http
                 {
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
                     {
@@ -250,7 +271,7 @@ namespace newasm
                     newasm::mem::regs::tlr.set_value(removeexc(result));
                     return 1;
                 }
-                if(newasm::mem::regs::fdx == 2) // post http
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::http, 2): // post http
                 {
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
                     {
@@ -287,15 +308,16 @@ namespace newasm
                     newasm::mem::regs::tlr.set_value(removeexc(result));
                     return 1;
                 }
-
-                newasm::terminate(newasm::exit_codes::unknown_fdx);
-                return 1;
+                default:
+                {
+                    newasm::terminate(newasm::exit_codes::unknown_fdx);
+                    return 1;
+                }
             }
             //tcp
-            if(newasm::kernel::cfg::TCProtocol)
-            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::tcp)
+            if(newasm::kernel::cfg::TCProtocol) switch(code)
             {
-                if(newasm::mem::regs::fdx == 1) // send tcp
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::tcp, 1): // send tcp
                 {
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
                     {
@@ -319,7 +341,7 @@ namespace newasm
                     newasm::mem::regs::tlr.set_value(std::to_string(result));
                     return 1;
                 }
-                if(newasm::mem::regs::fdx == 2) // recv tcp
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::tcp, 2): // recv tcp
                 {
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
                     {
@@ -337,14 +359,16 @@ namespace newasm
                     newasm::mem::regs::tlr.set_value("\"" + (result) + "\"");
                     return 1;
                 }
-                newasm::terminate(newasm::exit_codes::unknown_fdx);
-                return 1;
+                default:
+                {
+                    newasm::terminate(newasm::exit_codes::unknown_fdx);
+                    return 1;
+                }
             }
             //tuple
-            if(newasm::kernel::cfg::Tuple)
-            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::tuple)
+            if(newasm::kernel::cfg::Tuple) switch(code)
             {
-                if(newasm::mem::regs::fdx == 1) // tuple size
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::tuple, 1): // tuple size
                 {
                     if(!newasm::header::functions::isref(newasm::mem::regs::tlr.get_value()))
                     {
@@ -366,14 +390,16 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::invalid_memacc);
                     return 1;
                 }
-                newasm::terminate(newasm::exit_codes::unknown_fdx);
-                return 1;
+                default:
+                {
+                    newasm::terminate(newasm::exit_codes::unknown_fdx);
+                    return 1;
+                }
             }
             //ctx
-            if(newasm::kernel::cfg::Context)
-            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::ctx)
+            if(newasm::kernel::cfg::Context) switch(code)
             {
-                if(newasm::mem::regs::fdx == 1) // context size
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::ctx, 1): // ctx size
                 {
                     if(!newasm::header::functions::isref(newasm::mem::regs::tlr.get_value()))
                     {
@@ -395,21 +421,16 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::invalid_memacc);
                     return 1;
                 }
-                newasm::terminate(newasm::exit_codes::unknown_fdx);
-                return 1;
-            }
-            //ext
-            if(newasm::kernel::cfg::Extensions)
-            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::ext)
-            {
-                newasm::kernel::dynamic::CALL(newasm::mem::regs::dlx, std::to_string(newasm::mem::regs::fdx));
-                return 1;
+                default:
+                {
+                    newasm::terminate(newasm::exit_codes::unknown_fdx);
+                    return 1;
+                }
             }
             //thread
-            if(newasm::kernel::cfg::Thread)
-            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::thread)
+            if(newasm::kernel::cfg::Thread) switch(code)
             {
-                if(newasm::mem::regs::fdx == 1) //print output of the thread
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::thread, 1): //print output of the thread
                 {
                     if(!newasm::header::functions::isref(newasm::mem::regs::tlr))
                     {
@@ -431,7 +452,7 @@ namespace newasm
                     newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
                     return 1;
                 }
-                if(newasm::mem::regs::fdx == 2) //get returned val from thread
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::thread, 2): //get returned val from thread
                 {
                     if(!newasm::header::functions::isref(newasm::mem::regs::tlr))
                     {
@@ -454,45 +475,50 @@ namespace newasm
                     newasm::mem::regs::tlr = newasm::threads::memory.at(thread__)->returned_val;
                     return 1;
                 }
-                newasm::terminate(newasm::exit_codes::invalid_syntax);
-                return 1;
+                default:
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_syntax);
+                    return 1;
+                }
             }
             //chrono
-            if(newasm::kernel::cfg::Chrono)
-            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::chrono)
+            if(newasm::kernel::cfg::Chrono) switch(code)
             {
-                if(newasm::mem::regs::fdx == 1) //getyear
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::chrono, 1): //getyear
                 {
                     newasm::mem::regs::tlr = std::to_string(newasm::chrono::year());
                     return 1;
                 }
-                if(newasm::mem::regs::fdx == 2) //getmonth
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::chrono, 2): //getmonth
                 {
                     newasm::mem::regs::tlr = std::to_string(newasm::chrono::month());
                     return 1;
                 }
-                if(newasm::mem::regs::fdx == 3) //day
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::chrono, 3): //day
                 {
                     newasm::mem::regs::tlr = std::to_string(newasm::chrono::day());
                     return 1;
                 }
-                if(newasm::mem::regs::fdx == 4) //hour
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::chrono, 4): //hour
                 {
                     newasm::mem::regs::tlr = std::to_string(newasm::chrono::hour());
                     return 1;
                 }
-                if(newasm::mem::regs::fdx == 5) //min
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::chrono, 5): //min
                 {
                     newasm::mem::regs::tlr = std::to_string(newasm::chrono::minute());
                     return 1;
                 }
-                if(newasm::mem::regs::fdx == 6) //sec
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::chrono, 6): //sec
                 {
                     newasm::mem::regs::tlr = std::to_string(newasm::chrono::second());
                     return 1;
                 }
-                newasm::terminate(newasm::exit_codes::unknown_fdx);
-                return 1;
+                default:
+                {
+                    newasm::terminate(newasm::exit_codes::unknown_fdx);
+                    return 1;
+                }
             }
             //////process management (execution flow)
             //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::exf))
@@ -523,12 +549,12 @@ namespace newasm
                 newasm::terminate(newasm::exit_codes::unknown_fdx);
                 return 1;
             }*/
+
             //net
             //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::net))
-            if(newasm::kernel::cfg::Network)
-            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::net)
+            if(newasm::kernel::cfg::Network) switch(code)
             {
-                if(newasm::mem::regs::fdx == 1) //download files
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::net, 1): //download files
                 {
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
                     {
@@ -572,10 +598,9 @@ namespace newasm
             }
             //memory/data manipulation
             //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::mem))
-            if(newasm::kernel::cfg::Memory)
-            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::mem)
+            if(newasm::kernel::cfg::Memory) switch(code)
             {
-                if(newasm::mem::regs::fdx == 1)
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::mem, 1):
                 {
                     if(!newasm::header::functions::isref(newasm::mem::regs::tlr))
                     {
@@ -590,15 +615,17 @@ namespace newasm
                     newasm::syscalls::mem::constvals.push_back(newasm::header::functions::remamp(newasm::mem::regs::tlr));
                     return 1;
                 }
-                newasm::terminate(newasm::exit_codes::unknown_fdx);
-                return 1;
+                default:
+                {
+                    newasm::terminate(newasm::exit_codes::unknown_fdx);
+                    return 1;
+                }
             }
             //text manipulation
             //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::txtop))
-            if(newasm::kernel::cfg::TextOperations)
-            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::txtop)
+            if(newasm::kernel::cfg::TextOperations) switch(code)
             {
-                if(newasm::mem::regs::fdx == 1)
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::txtop, 1): //concat
                 {
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr.get_value()))
                     {
@@ -614,7 +641,7 @@ namespace newasm
                     newasm::syscalls::txtop::impl::concat();
                     return 1;
                 }
-                if(newasm::mem::regs::fdx == 2)
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::txtop, 2)://trim
                 {
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr.get_value()))
                     {
@@ -625,7 +652,7 @@ namespace newasm
                     newasm::syscalls::txtop::impl::trim();
                     return 1;
                 }
-                if(newasm::mem::regs::fdx == 3)
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::txtop, 3)://tokenize
                 {
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr.get_value()))
                     {
@@ -636,21 +663,32 @@ namespace newasm
                     newasm::syscalls::txtop::impl::tokenize();
                     return 1;
                 }
-                newasm::terminate(newasm::exit_codes::unknown_fdx);
-                return 1;
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::txtop, 4)://format
+                {
+                    if(!newasm::header::functions::istext(newasm::mem::regs::tlr.get_value()))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+
+                    std::string string__ = newasm::header::functions::remq(newasm::mem::regs::tlr.get_value());
+                    newasm::syscalls::txtop::impl::fmat(string__);
+                    newasm::mem::regs::tlr.set_value(string__);
+                    newasm::mem::regs::tlr.add_end_("\"");
+                    return 1;
+                }
+                default:
+                {
+                    newasm::terminate(newasm::exit_codes::unknown_fdx);
+                    return 1;
+                }
             }
             //////////// container manipulation
             //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::cmanip))
-            if(newasm::kernel::cfg::ContainerManipulation)
-            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::cmanip)
+            if(newasm::kernel::cfg::ContainerManipulation) switch(code)
             {
-                if(newasm::mem::regs::cpt == newasm::header::constants::inv_reg_val)
-                {
-                    newasm::terminate(newasm::exit_codes::invalid_memacc);
-                    return 1;
-                }
                 //clear
-                if(newasm::mem::regs::fdx == 1)
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::cmanip, 1):
                 {
                     if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::bit_arrays))
                     {
@@ -661,7 +699,7 @@ namespace newasm
                     return 1;
                 }
                 //flip
-                if(newasm::mem::regs::fdx == 2)
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::cmanip, 2):
                 {
                     if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::bit_arrays))
                     {
@@ -672,7 +710,7 @@ namespace newasm
                     return 1;
                 }
                 //reverse
-                if(newasm::mem::regs::fdx == 3)
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::cmanip, 3):
                 {
                     if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::bit_arrays))
                     {
@@ -683,7 +721,7 @@ namespace newasm
                     return 1;
                 }
                 //set at
-                if(newasm::mem::regs::fdx == 4)
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::cmanip, 4):
                 {
                     if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::bit_arrays))
                     {
@@ -704,7 +742,7 @@ namespace newasm
                     return 1;
                 }
                 // get at
-                if(newasm::mem::regs::fdx == 5)
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::cmanip, 5):
                 {
                     if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::bit_arrays))
                     {
@@ -717,7 +755,7 @@ namespace newasm
                 }
                 //binary trees
                 //set at parent of
-                if(newasm::mem::regs::fdx == 6)
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::cmanip, 6):
                 {
                     if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::binary_trees))
                     {
@@ -728,7 +766,7 @@ namespace newasm
                     return 1;
                 }
                 //right child
-                if(newasm::mem::regs::fdx == 7)
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::cmanip, 7):
                 {
                     if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::binary_trees))
                     {
@@ -739,7 +777,7 @@ namespace newasm
                     return 1;
                 }
                 //left child
-                if(newasm::mem::regs::fdx == 8)
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::cmanip, 8):
                 {
                     if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::binary_trees))
                     {
@@ -750,7 +788,7 @@ namespace newasm
                     return 1;
                 }
                 //get
-                if(newasm::mem::regs::fdx == 9)
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::cmanip, 9):
                 {
                     if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::binary_trees))
                     {
@@ -761,16 +799,18 @@ namespace newasm
                     newasm::mem::regs::tlr = std::to_string(result);
                     return 1;
                 }
-                newasm::terminate(newasm::exit_codes::unknown_fdx);
-                return 1;
+                default:
+                {
+                    newasm::terminate(newasm::exit_codes::unknown_fdx);
+                    return 1;
+                }
             }
             ///// input-output stream
             //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::ios))
-            if(newasm::kernel::cfg::IOStream)
-            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::ios)
+            if(newasm::kernel::cfg::IOStream) switch(code)
             {
                 //print text
-                if(newasm::mem::regs::fdx == 1)
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::ios, 1):
                 {
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
                     {
@@ -807,7 +847,7 @@ namespace newasm
                     return 1;
                 }
                 //print numbers and floats
-                if(newasm::mem::regs::fdx == 2)
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::ios, 2):
                 {
                     if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr) && !newasm::header::functions::isfloat(newasm::mem::regs::tlr))
                     {
@@ -827,7 +867,7 @@ namespace newasm
                     return 1;
                 }
                 //input text
-                if(newasm::mem::regs::fdx == 3)
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::ios, 3):
                 {
                     newasm::perf::inputWasteTimer.start();
                     std::getline(std::cin, newasm::mem::regs::tlr.ref_value());
@@ -836,7 +876,7 @@ namespace newasm
                     return 1;
                 }
                 //input numbers and floats
-                if(newasm::mem::regs::fdx == 4)
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::ios, 4):
                 {
                     newasm::perf::inputWasteTimer.start();
                     std::cin >> newasm::mem::regs::tlr;
@@ -849,7 +889,7 @@ namespace newasm
                     return 1;
                 }
                 //print values of builtin operands
-                if(newasm::mem::regs::fdx == 5)
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::ios, 5):
                 {
                     if(newasm::thread_line)
                     {
@@ -861,7 +901,7 @@ namespace newasm
                     return 1;
                 }
                 //print references
-                if(newasm::mem::regs::fdx == 6)
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::ios, 6):
                 {
                     if(!newasm::header::functions::isref(newasm::mem::regs::tlr))
                     {
@@ -881,7 +921,7 @@ namespace newasm
                     return 1;
                 }
                 //print characters
-                if(newasm::mem::regs::fdx == 7)
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::ios, 7):
                 {
                     //std::cout << "tlr is: \"" << newasm::mem::regs::tlr << "\"\n";
                     if(!newasm::header::functions::ischar(newasm::mem::regs::tlr))
@@ -901,7 +941,8 @@ namespace newasm
                     newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
                     return 1;
                 }
-                if(newasm::mem::regs::fdx == 8)
+                //input characters
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::ios, 8):
                 {
                     std::cin >> newasm::mem::regs::tlr;
                     newasm::mem::regs::tlr.add_end_("'");
@@ -912,16 +953,18 @@ namespace newasm
                     }
                     return 1;
                 }
-                newasm::terminate(newasm::exit_codes::unknown_fdx);
-                return 1;
+                default:
+                {
+                    newasm::terminate(newasm::exit_codes::unknown_fdx);
+                    return 1;
+                }
             }
             //////file stream
             //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::fs))
-            if(newasm::kernel::cfg::FileStream)
-            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::fs)
+            if(newasm::kernel::cfg::FileStream) switch(code)
             {
                 //create folder
-                if(newasm::mem::regs::fdx == 1)
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::fs, 1):
                 {
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
                     {
@@ -933,7 +976,7 @@ namespace newasm
                     return 1;
                 }
                 //remove folder
-                if(newasm::mem::regs::fdx == 2)
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::fs, 2):
                 {
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
                     {
@@ -945,7 +988,7 @@ namespace newasm
                     return 1;
                 }
                 //create file
-                if(newasm::mem::regs::fdx == 3)
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::fs, 3):
                 {
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
                     {
@@ -957,7 +1000,7 @@ namespace newasm
                     return 1;
                 }
                 //remove file
-                if(newasm::mem::regs::fdx == 4)
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::fs, 4):
                 {
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
                     {
@@ -969,7 +1012,7 @@ namespace newasm
                     return 1;
                 }
                 //overwrite text
-                if(newasm::mem::regs::fdx == 5)
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::fs, 5):
                 {
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
                     {
@@ -986,7 +1029,7 @@ namespace newasm
                     return 1;
                 }
                 //append text
-                if(newasm::mem::regs::fdx == 6)
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::fs, 6):
                 {
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
                     {
@@ -1003,7 +1046,7 @@ namespace newasm
                     return 1;
                 }
                 //remove content
-                if(newasm::mem::regs::fdx == 7)
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::fs, 7):
                 {
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
                     {
@@ -1020,7 +1063,7 @@ namespace newasm
                     return 1;
                 }
                 //read line
-                if(newasm::mem::regs::fdx == 8)
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::fs, 8):
                 {
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
                     {
@@ -1037,8 +1080,11 @@ namespace newasm
                     newasm::mem::regs::tlr = static_cast<std::string>("\"")+newasm::mem::regs::tlr+static_cast<std::string>("\"");
                     return 1;
                 }
-                newasm::terminate(newasm::exit_codes::unknown_fdx);
-                return 1;
+                default:
+                {
+                    newasm::terminate(newasm::exit_codes::unknown_fdx);
+                    return 1;
+                }
             }
             newasm::terminate(newasm::exit_codes::sysenter_fail);
             return 1;
