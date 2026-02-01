@@ -26,6 +26,13 @@ the Initial Developer. All Rights Reserved.
 #pragma GCC diagnostic ignored "-Wunused-result" // used gcc for ts
 #pragma unroll
 
+namespace newasm
+{
+    const int BUILD_NUMBER = 16;
+    const int RUNTIME_VERSION = 5;
+    const int KERNEL_VERSION = 2;
+}
+
 #include "runtime/common/os.h"
 #include "runtime/common/arch.h"
 
@@ -92,15 +99,75 @@ extern "C"
 #include "vm/hardware/cpu_register.cpp"
 
 // Resources (assets) used in the program
-#include "runtime/assets/text.cpp"
-#include "runtime/assets/def.cpp"
-
 namespace newasm
 {
-    //newasm::_std::shared_memory sharedMem;
-    const int BUILD_NUMBER = 16;
-    const int RUNTIME_VERSION = 5;
-    const int KERNEL_VERSION = 2;
+    namespace constv
+    {
+        const std::string quote = "\"";
+    }
+
+    void callproc(std::string& name);
+    int process_s_(bool &valid, std::string wholeline, std::string stat, std::string arg);
+    int process_s(std::string& section);
+    namespace user
+    {
+        int udb_hash(const std::string& input);
+    }
+    int terminate(int exit_code);
+    void async(const std::string& name);
+    namespace header
+    {
+        namespace functions
+        {
+            void krnl(std::string text);
+            //void parseRegDeref(std::string& arg);
+            std::pair<bool, int> issizeof(const std::string& str);
+        }
+    }
+    namespace common
+    {
+        std::vector<std::string> tokenize(const std::string line);
+    }
+    namespace runtime
+    {
+        int version;
+        namespace functions
+        {
+            void parse(std::string& suf);
+
+            template<bool _procNameParse>
+            void parse(std::string& suf);
+        }
+    }
+    namespace compiler
+    {
+        struct lineData
+        {
+            std::string raw;
+            int type;
+            std::vector<std::string> tokens;
+            std::string other;
+
+            int priArgType = 0;
+            int altArgType = 0;
+        };
+
+        std::string parse_def(std::string suf);
+        void process_comptis(std::string ins, std::string arg1);
+        void process_comptiso(std::string ins, std::string arg1, std::string arg2);
+        bool iscomptins(std::string ins);
+    }
+    
+    int procline(newasm::compiler::lineData& line);
+    int procline(std::string& text);
+    int procline(const char* line);
+
+    void tokenize(std::string str);
+    namespace impl
+    {
+        std::string eval(std::string str);
+    }
+
     //--------------------------------------
     bool vercheck = true;
     bool dwin = true;
