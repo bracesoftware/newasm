@@ -30,21 +30,33 @@ namespace newasm
         inline int handleSysCall()
         {
             //ext
-            if(newasm::kernel::cfg::Extensions)
             if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::ext)
             {
                 newasm::kernel::dynamic::CALL(newasm::mem::regs::dlx, std::to_string(newasm::mem::regs::fdx));
                 return 1;
             }
-            if(newasm::kernel::cfg::ContainerManipulation) if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::cmanip)
+            if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::cmanip)
             if(newasm::mem::regs::cpt == newasm::header::constants::inv_reg_val)
             {
                 newasm::terminate(newasm::exit_codes::invalid_memacc);
                 return 1;
             }
             int code = newasm::kernel::makeHash(newasm::threads::functions::get_sysenter(), newasm::mem::regs::fdx.get_value());
-            if(newasm::kernel::cfg::Math) switch(code)
+            switch(code)
             {
+                /*
+ /$$      /$$             /$$     /$$      
+| $$$    /$$$            | $$    | $$      
+| $$$$  /$$$$  /$$$$$$  /$$$$$$  | $$$$$$$ 
+| $$ $$/$$ $$ |____  $$|_  $$_/  | $$__  $$
+| $$  $$$| $$  /$$$$$$$  | $$    | $$  \ $$
+| $$\  $ | $$ /$$__  $$  | $$ /$$| $$  | $$
+| $$ \/  | $$|  $$$$$$$  |  $$$$/| $$  | $$
+|__/     |__/ \_______/   \___/  |__/  |__/
+                                           
+                                           
+                                           
+                */
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::math, 1): //sinus
                 {
                     if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr.get_value()) &&
@@ -135,14 +147,19 @@ namespace newasm
                     newasm::mem::regs::tlr.set_value(std::to_string(std::cbrt(value)));
                     return 1;
                 }
-                default:
-                {
-                    newasm::terminate(newasm::exit_codes::unknown_fdx);
-                    return 1;
-                }
-            }
-            if(newasm::kernel::cfg::Misc) switch(code)
-            {
+                /*
+ /$$      /$$ /$$                    
+| $$$    /$$$|__/                    
+| $$$$  /$$$$ /$$  /$$$$$$$  /$$$$$$$
+| $$ $$/$$ $$| $$ /$$_____/ /$$_____/
+| $$  $$$| $$| $$|  $$$$$$ | $$      
+| $$\  $ | $$| $$ \____  $$| $$      
+| $$ \/  | $$| $$ /$$$$$$$/|  $$$$$$$
+|__/     |__/|__/|_______/  \_______/
+                                     
+                                     
+                                     
+                */
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::misc, 1): // misc, random
                 {
                     if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr.get_value()))
@@ -162,14 +179,18 @@ namespace newasm
                     newasm::mem::regs::tlr.set_value(std::to_string(result));
                     return 1;
                 }
-                default:
-                {
-                    newasm::terminate(newasm::exit_codes::unknown_fdx);
-                    return 1;
-                }
-            }
-            if(newasm::kernel::cfg::Crypto) switch(code)
-            {
+/*
+  /$$$$$$                                  /$$              
+ /$$__  $$                                | $$              
+| $$  \__/  /$$$$$$  /$$   /$$  /$$$$$$  /$$$$$$    /$$$$$$ 
+| $$       /$$__  $$| $$  | $$ /$$__  $$|_  $$_/   /$$__  $$
+| $$      | $$  \__/| $$  | $$| $$  \ $$  | $$    | $$  \ $$
+| $$    $$| $$      | $$  | $$| $$  | $$  | $$ /$$| $$  | $$
+|  $$$$$$/| $$      |  $$$$$$$| $$$$$$$/  |  $$$$/|  $$$$$$/
+ \______/ |__/       \____  $$| $$____/    \___/   \______/ 
+                     /$$  | $$| $$                          
+                    |  $$$$$$/| $$                          
+                     \______/ |__/                          */
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::crypto, 1): // crypto, sha256
                 {
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr.get_value()))
@@ -231,15 +252,18 @@ namespace newasm
                     newasm::mem::regs::tlr.add_end_("\"");
                     return 1;
                 }
-                default:
-                {
-                    newasm::terminate(newasm::exit_codes::unknown_fdx);
-                    return 1;
-                }
-            }
-            //http
-            if(newasm::kernel::cfg::HTTP) switch(code)
-            {
+/*
+ /$$   /$$ /$$$$$$$$ /$$$$$$$$ /$$$$$$$ 
+| $$  | $$|__  $$__/|__  $$__/| $$__  $$
+| $$  | $$   | $$      | $$   | $$  \ $$
+| $$$$$$$$   | $$      | $$   | $$$$$$$/
+| $$__  $$   | $$      | $$   | $$____/ 
+| $$  | $$   | $$      | $$   | $$      
+| $$  | $$   | $$      | $$   | $$      
+|__/  |__/   |__/      |__/   |__/      
+                                        
+                                        
+                                        */
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::http, 1): // get http
                 {
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
@@ -308,15 +332,18 @@ namespace newasm
                     newasm::mem::regs::tlr.set_value(removeexc(result));
                     return 1;
                 }
-                default:
-                {
-                    newasm::terminate(newasm::exit_codes::unknown_fdx);
-                    return 1;
-                }
-            }
-            //tcp
-            if(newasm::kernel::cfg::TCProtocol) switch(code)
-            {
+/*
+ /$$$$$$$$ /$$$$$$  /$$$$$$$                       /$$                                   /$$
+|__  $$__//$$__  $$| $$__  $$                     | $$                                  | $$
+   | $$  | $$  \__/| $$  \ $$ /$$$$$$   /$$$$$$  /$$$$$$    /$$$$$$   /$$$$$$$  /$$$$$$ | $$
+   | $$  | $$      | $$$$$$$//$$__  $$ /$$__  $$|_  $$_/   /$$__  $$ /$$_____/ /$$__  $$| $$
+   | $$  | $$      | $$____/| $$  \__/| $$  \ $$  | $$    | $$  \ $$| $$      | $$  \ $$| $$
+   | $$  | $$    $$| $$     | $$      | $$  | $$  | $$ /$$| $$  | $$| $$      | $$  | $$| $$
+   | $$  |  $$$$$$/| $$     | $$      |  $$$$$$/  |  $$$$/|  $$$$$$/|  $$$$$$$|  $$$$$$/| $$
+   |__/   \______/ |__/     |__/       \______/    \___/   \______/  \_______/ \______/ |__/
+                                                                                            
+                                                                                            
+                                                                                            */
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::tcp, 1): // send tcp
                 {
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
@@ -359,15 +386,18 @@ namespace newasm
                     newasm::mem::regs::tlr.set_value("\"" + (result) + "\"");
                     return 1;
                 }
-                default:
-                {
-                    newasm::terminate(newasm::exit_codes::unknown_fdx);
-                    return 1;
-                }
-            }
-            //tuple
-            if(newasm::kernel::cfg::Tuple) switch(code)
-            {
+/*
+ /$$$$$$$$                  /$$          
+|__  $$__/                 | $$          
+   | $$ /$$   /$$  /$$$$$$ | $$  /$$$$$$ 
+   | $$| $$  | $$ /$$__  $$| $$ /$$__  $$
+   | $$| $$  | $$| $$  \ $$| $$| $$$$$$$$
+   | $$| $$  | $$| $$  | $$| $$| $$_____/
+   | $$|  $$$$$$/| $$$$$$$/| $$|  $$$$$$$
+   |__/ \______/ | $$____/ |__/ \_______/
+                 | $$                    
+                 | $$                    
+                 |__/                    */
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::tuple, 1): // tuple size
                 {
                     if(!newasm::header::functions::isref(newasm::mem::regs::tlr.get_value()))
@@ -390,15 +420,7 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::invalid_memacc);
                     return 1;
                 }
-                default:
-                {
-                    newasm::terminate(newasm::exit_codes::unknown_fdx);
-                    return 1;
-                }
-            }
-            //ctx
-            if(newasm::kernel::cfg::Context) switch(code)
-            {
+                //CONTEXTTTTTTTTTT
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::ctx, 1): // ctx size
                 {
                     if(!newasm::header::functions::isref(newasm::mem::regs::tlr.get_value()))
@@ -421,15 +443,18 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::invalid_memacc);
                     return 1;
                 }
-                default:
-                {
-                    newasm::terminate(newasm::exit_codes::unknown_fdx);
-                    return 1;
-                }
-            }
-            //thread
-            if(newasm::kernel::cfg::Thread) switch(code)
-            {
+/*
+ /$$$$$$$$ /$$                                           /$$
+|__  $$__/| $$                                          | $$
+   | $$   | $$$$$$$   /$$$$$$   /$$$$$$   /$$$$$$   /$$$$$$$
+   | $$   | $$__  $$ /$$__  $$ /$$__  $$ |____  $$ /$$__  $$
+   | $$   | $$  \ $$| $$  \__/| $$$$$$$$  /$$$$$$$| $$  | $$
+   | $$   | $$  | $$| $$      | $$_____/ /$$__  $$| $$  | $$
+   | $$   | $$  | $$| $$      |  $$$$$$$|  $$$$$$$|  $$$$$$$
+   |__/   |__/  |__/|__/       \_______/ \_______/ \_______/
+                                                            
+                                                            
+                                                            */
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::thread, 1): //print output of the thread
                 {
                     if(!newasm::header::functions::isref(newasm::mem::regs::tlr))
@@ -475,15 +500,18 @@ namespace newasm
                     newasm::mem::regs::tlr = newasm::threads::memory.at(thread__)->returned_val;
                     return 1;
                 }
-                default:
-                {
-                    newasm::terminate(newasm::exit_codes::invalid_syntax);
-                    return 1;
-                }
-            }
-            //chrono
-            if(newasm::kernel::cfg::Chrono) switch(code)
-            {
+/*
+  /$$$$$$  /$$                                              
+ /$$__  $$| $$                                              
+| $$  \__/| $$$$$$$   /$$$$$$   /$$$$$$  /$$$$$$$   /$$$$$$ 
+| $$      | $$__  $$ /$$__  $$ /$$__  $$| $$__  $$ /$$__  $$
+| $$      | $$  \ $$| $$  \__/| $$  \ $$| $$  \ $$| $$  \ $$
+| $$    $$| $$  | $$| $$      | $$  | $$| $$  | $$| $$  | $$
+|  $$$$$$/| $$  | $$| $$      |  $$$$$$/| $$  | $$|  $$$$$$/
+ \______/ |__/  |__/|__/       \______/ |__/  |__/ \______/ 
+                                                            
+                                                            
+                                                            */
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::chrono, 1): //getyear
                 {
                     newasm::mem::regs::tlr = std::to_string(newasm::chrono::year());
@@ -514,12 +542,7 @@ namespace newasm
                     newasm::mem::regs::tlr = std::to_string(newasm::chrono::second());
                     return 1;
                 }
-                default:
-                {
-                    newasm::terminate(newasm::exit_codes::unknown_fdx);
-                    return 1;
-                }
-            }
+                
             //////process management (execution flow)
             //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::exf))
             /*if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::exf)
@@ -550,10 +573,18 @@ namespace newasm
                 return 1;
             }*/
 
-            //net
-            //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::net))
-            if(newasm::kernel::cfg::Network) switch(code)
-            {
+/*
+ /$$   /$$             /$$                                       /$$      
+| $$$ | $$            | $$                                      | $$      
+| $$$$| $$  /$$$$$$  /$$$$$$   /$$  /$$  /$$  /$$$$$$   /$$$$$$ | $$   /$$
+| $$ $$ $$ /$$__  $$|_  $$_/  | $$ | $$ | $$ /$$__  $$ /$$__  $$| $$  /$$/
+| $$  $$$$| $$$$$$$$  | $$    | $$ | $$ | $$| $$  \ $$| $$  \__/| $$$$$$/ 
+| $$\  $$$| $$_____/  | $$ /$$| $$ | $$ | $$| $$  | $$| $$      | $$_  $$ 
+| $$ \  $$|  $$$$$$$  |  $$$$/|  $$$$$/$$$$/|  $$$$$$/| $$      | $$ \  $$
+|__/  \__/ \_______/   \___/   \_____/\___/  \______/ |__/      |__/  \__/
+                                                                          
+                                                                          
+                                                                          */
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::net, 1): //download files
                 {
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
@@ -593,13 +624,18 @@ namespace newasm
                     );
                     return 1;
                 }
-                newasm::terminate(newasm::exit_codes::unknown_fdx);
-                return 1;
-            }
-            //memory/data manipulation
-            //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::mem))
-            if(newasm::kernel::cfg::Memory) switch(code)
-            {
+/*
+ /$$      /$$                                                      
+| $$$    /$$$                                                      
+| $$$$  /$$$$  /$$$$$$  /$$$$$$/$$$$   /$$$$$$   /$$$$$$  /$$   /$$
+| $$ $$/$$ $$ /$$__  $$| $$_  $$_  $$ /$$__  $$ /$$__  $$| $$  | $$
+| $$  $$$| $$| $$$$$$$$| $$ \ $$ \ $$| $$  \ $$| $$  \__/| $$  | $$
+| $$\  $ | $$| $$_____/| $$ | $$ | $$| $$  | $$| $$      | $$  | $$
+| $$ \/  | $$|  $$$$$$$| $$ | $$ | $$|  $$$$$$/| $$      |  $$$$$$$
+|__/     |__/ \_______/|__/ |__/ |__/ \______/ |__/       \____  $$
+                                                          /$$  | $$
+                                                         |  $$$$$$/
+                                                          \______/ */
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::mem, 1):
                 {
                     if(!newasm::header::functions::isref(newasm::mem::regs::tlr))
@@ -615,16 +651,18 @@ namespace newasm
                     newasm::syscalls::mem::constvals.push_back(newasm::header::functions::remamp(newasm::mem::regs::tlr));
                     return 1;
                 }
-                default:
-                {
-                    newasm::terminate(newasm::exit_codes::unknown_fdx);
-                    return 1;
-                }
-            }
-            //text manipulation
-            //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::txtop))
-            if(newasm::kernel::cfg::TextOperations) switch(code)
-            {
+/*
+ /$$$$$$$$                    /$$      /$$$$$$           
+|__  $$__/                   | $$     /$$__  $$          
+   | $$  /$$$$$$  /$$   /$$ /$$$$$$  | $$  \ $$  /$$$$$$ 
+   | $$ /$$__  $$|  $$ /$$/|_  $$_/  | $$  | $$ /$$__  $$
+   | $$| $$$$$$$$ \  $$$$/   | $$    | $$  | $$| $$  \ $$
+   | $$| $$_____/  >$$  $$   | $$ /$$| $$  | $$| $$  | $$
+   | $$|  $$$$$$$ /$$/\  $$  |  $$$$/|  $$$$$$/| $$$$$$$/
+   |__/ \_______/|__/  \__/   \___/   \______/ | $$____/ 
+                                               | $$      
+                                               | $$      
+                                               |__/      */
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::txtop, 1): //concat
                 {
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr.get_value()))
@@ -677,16 +715,18 @@ namespace newasm
                     newasm::mem::regs::tlr.add_end_("\"");
                     return 1;
                 }
-                default:
-                {
-                    newasm::terminate(newasm::exit_codes::unknown_fdx);
-                    return 1;
-                }
-            }
-            //////////// container manipulation
-            //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::cmanip))
-            if(newasm::kernel::cfg::ContainerManipulation) switch(code)
-            {
+/*
+  /$$$$$$                        /$$               /$$                               /$$      /$$                     /$$          
+ /$$__  $$                      | $$              |__/                              | $$$    /$$$                    |__/          
+| $$  \__/  /$$$$$$  /$$$$$$$  /$$$$$$    /$$$$$$  /$$ /$$$$$$$   /$$$$$$   /$$$$$$ | $$$$  /$$$$  /$$$$$$  /$$$$$$$  /$$  /$$$$$$ 
+| $$       /$$__  $$| $$__  $$|_  $$_/   |____  $$| $$| $$__  $$ /$$__  $$ /$$__  $$| $$ $$/$$ $$ |____  $$| $$__  $$| $$ /$$__  $$
+| $$      | $$  \ $$| $$  \ $$  | $$      /$$$$$$$| $$| $$  \ $$| $$$$$$$$| $$  \__/| $$  $$$| $$  /$$$$$$$| $$  \ $$| $$| $$  \ $$
+| $$    $$| $$  | $$| $$  | $$  | $$ /$$ /$$__  $$| $$| $$  | $$| $$_____/| $$      | $$\  $ | $$ /$$__  $$| $$  | $$| $$| $$  | $$
+|  $$$$$$/|  $$$$$$/| $$  | $$  |  $$$$/|  $$$$$$$| $$| $$  | $$|  $$$$$$$| $$      | $$ \/  | $$|  $$$$$$$| $$  | $$| $$| $$$$$$$/
+ \______/  \______/ |__/  |__/   \___/   \_______/|__/|__/  |__/ \_______/|__/      |__/     |__/ \_______/|__/  |__/|__/| $$____/ 
+                                                                                                                         | $$      
+                                                                                                                         | $$      
+                                                                                                                         |__/      */
                 //clear
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::cmanip, 1):
                 {
@@ -799,16 +839,18 @@ namespace newasm
                     newasm::mem::regs::tlr = std::to_string(result);
                     return 1;
                 }
-                default:
-                {
-                    newasm::terminate(newasm::exit_codes::unknown_fdx);
-                    return 1;
-                }
-            }
-            ///// input-output stream
-            //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::ios))
-            if(newasm::kernel::cfg::IOStream) switch(code)
-            {
+/*
+ /$$$$$$  /$$$$$$   /$$$$$$   /$$                                                
+|_  $$_/ /$$__  $$ /$$__  $$ | $$                                                
+  | $$  | $$  \ $$| $$  \__//$$$$$$    /$$$$$$   /$$$$$$   /$$$$$$  /$$$$$$/$$$$ 
+  | $$  | $$  | $$|  $$$$$$|_  $$_/   /$$__  $$ /$$__  $$ |____  $$| $$_  $$_  $$
+  | $$  | $$  | $$ \____  $$ | $$    | $$  \__/| $$$$$$$$  /$$$$$$$| $$ \ $$ \ $$
+  | $$  | $$  | $$ /$$  \ $$ | $$ /$$| $$      | $$_____/ /$$__  $$| $$ | $$ | $$
+ /$$$$$$|  $$$$$$/|  $$$$$$/ |  $$$$/| $$      |  $$$$$$$|  $$$$$$$| $$ | $$ | $$
+|______/ \______/  \______/   \___/  |__/       \_______/ \_______/|__/ |__/ |__/
+                                                                                 
+                                                                                 
+                                                                                 */
                 //print text
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::ios, 1):
                 {
@@ -953,16 +995,19 @@ namespace newasm
                     }
                     return 1;
                 }
-                default:
-                {
-                    newasm::terminate(newasm::exit_codes::unknown_fdx);
-                    return 1;
-                }
-            }
-            //////file stream
-            //if(opr == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::fs))
-            if(newasm::kernel::cfg::FileStream) switch(code)
-            {
+                /*
+ /$$$$$$$$ /$$ /$$            /$$$$$$   /$$                                                
+| $$_____/|__/| $$           /$$__  $$ | $$                                                
+| $$       /$$| $$  /$$$$$$ | $$  \__//$$$$$$    /$$$$$$   /$$$$$$   /$$$$$$  /$$$$$$/$$$$ 
+| $$$$$   | $$| $$ /$$__  $$|  $$$$$$|_  $$_/   /$$__  $$ /$$__  $$ |____  $$| $$_  $$_  $$
+| $$__/   | $$| $$| $$$$$$$$ \____  $$ | $$    | $$  \__/| $$$$$$$$  /$$$$$$$| $$ \ $$ \ $$
+| $$      | $$| $$| $$_____/ /$$  \ $$ | $$ /$$| $$      | $$_____/ /$$__  $$| $$ | $$ | $$
+| $$      | $$| $$|  $$$$$$$|  $$$$$$/ |  $$$$/| $$      |  $$$$$$$|  $$$$$$$| $$ | $$ | $$
+|__/      |__/|__/ \_______/ \______/   \___/  |__/       \_______/ \_______/|__/ |__/ |__/
+                                                                                           
+                                                                                           
+                                                                                           
+                */
                 //create folder
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::fs, 1):
                 {
@@ -1086,6 +1131,7 @@ namespace newasm
                     return 1;
                 }
             }
+            //idk how'd you even achieve this lmao
             newasm::terminate(newasm::exit_codes::sysenter_fail);
             return 1;
         }

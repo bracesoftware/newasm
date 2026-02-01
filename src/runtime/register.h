@@ -41,10 +41,21 @@ namespace newasm
         T value;
         newasm::_std::map<std::string, T> thread_values;
         T initial_value;
+
+        bool short_int_value = false;
         
         public:
         _register(std::string regname, T val)
             : name(regname), value(val), initial_value(val){}
+
+        inline void make_short(bool set) noexcept
+        {
+            if constexpr(std::is_same_v<T, int>)
+            {
+                short_int_value = set;
+            }
+            return;
+        }
 
         inline std::string identifier() const
         {
@@ -70,8 +81,19 @@ namespace newasm
             }
             return this->value;
         }
-        void set_value(T new_val)
+        inline void set_value(const T& new_val_)
         {
+            T new_val = new_val_;
+            if constexpr(std::is_same_v<T, int>)
+            {
+                if(this->short_int_value)
+                {
+                    if(new_val > std::numeric_limits<short>::max() or new_val < std::numeric_limits<short>::min())
+                    {
+                        new_val = 0;
+                    }
+                }
+            }
             if(newasm::thread_line)
             {
                 //std::cout << "THIS IS AN ERROR ! \n";
@@ -81,7 +103,7 @@ namespace newasm
             this->value = new_val;
             return;
         }
-        T& ref_value()
+        inline T& ref_value()
         {
             if(newasm::thread_line)
             {
@@ -89,8 +111,19 @@ namespace newasm
             }
             return value;
         }
-        _register<T>& operator=(const T& new_val)
+        inline _register<T>& operator=(const T& new_val_)
         {
+            T new_val = new_val_;
+            if constexpr(std::is_same_v<T, int>)
+            {
+                if(this->short_int_value)
+                {
+                    if(new_val > std::numeric_limits<short>::max() or new_val < std::numeric_limits<short>::min())
+                    {
+                        new_val = 0;
+                    }
+                }
+            }
             if(newasm::thread_line)
             {
                 thread_values.at(newasm::threads::now) = new_val;

@@ -304,11 +304,19 @@ namespace newasm
 
         static inline std::string getFile(int line)
         {
+            if(line < 0)
+            {
+                return lineData.at(0).first;
+            }
             return lineData.at(line).first;
         }
 
         static inline int getLine(int lastlinedx)
         {
+            if(lastlinedx < 0)
+            {
+                return 0;
+            }
             return lineData.at(lastlinedx).second;
         }
     };
@@ -569,6 +577,7 @@ namespace newasm
 {
     int entry(int argc, char* argv[])
     {
+        newasm::mem::regs::fdx.make_short(true);
         if constexpr(0) newasm::native_jit::print("Hello from JIT COMPILER!");
         newasm::forLinker__OLD::debug.reserve(100);
         auto get_time = [&]() -> std::string {

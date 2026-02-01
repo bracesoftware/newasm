@@ -4119,6 +4119,11 @@ namespace newasm
                 {
                     case newasm::core::lang_inf::refs::ios:
                     {
+                        if(!newasm::kernel::cfg::IOStream)
+                        {
+                            newasm::terminate(newasm::exit_codes::sysenter_fail);
+                            return 1;
+                        }
                         if(newasm::thread_line)
                         {
                             newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::ios;
@@ -4129,6 +4134,11 @@ namespace newasm
                     }
                     case newasm::core::lang_inf::refs::fs:
                     {
+                        if(!newasm::kernel::cfg::FileStream)
+                        {
+                            newasm::terminate(newasm::exit_codes::sysenter_fail);
+                            return 1;
+                        }
                         if(newasm::thread_line)
                         {
                             newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::fs;
@@ -4139,6 +4149,11 @@ namespace newasm
                     }
                     case newasm::core::lang_inf::refs::ext:
                     {
+                        if(!newasm::kernel::cfg::Extensions)
+                        {
+                            newasm::terminate(newasm::exit_codes::sysenter_fail);
+                            return 1;
+                        }
                         if(newasm::thread_line)
                         {
                             newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::ext;
@@ -4149,6 +4164,11 @@ namespace newasm
                     }
                     case newasm::core::lang_inf::refs::cmanip:
                     {
+                        if(!newasm::kernel::cfg::ContainerManipulation)
+                        {
+                            newasm::terminate(newasm::exit_codes::sysenter_fail);
+                            return 1;
+                        }
                         if(newasm::thread_line)
                         {
                             newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::cmanip;
@@ -4159,6 +4179,11 @@ namespace newasm
                     }
                     case newasm::core::lang_inf::refs::txtop:
                     {
+                        if(!newasm::kernel::cfg::TextOperations)
+                        {
+                            newasm::terminate(newasm::exit_codes::sysenter_fail);
+                            return 1;
+                        }
                         if(newasm::thread_line)
                         {
                             newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::txtop;
@@ -4169,6 +4194,11 @@ namespace newasm
                     }
                     case newasm::core::lang_inf::refs::net:
                     {
+                        if(!newasm::kernel::cfg::Network)
+                        {
+                            newasm::terminate(newasm::exit_codes::sysenter_fail);
+                            return 1;
+                        }
                         if(newasm::thread_line)
                         {
                             newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::net;
@@ -4179,6 +4209,11 @@ namespace newasm
                     }
                     case newasm::core::lang_inf::refs::mem:
                     {
+                        if(!newasm::kernel::cfg::Memory)
+                        {
+                            newasm::terminate(newasm::exit_codes::sysenter_fail);
+                            return 1;
+                        }
                         if(newasm::thread_line)
                         {
                             newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::mem;
@@ -4189,6 +4224,11 @@ namespace newasm
                     }
                     case newasm::core::lang_inf::refs::chrono:
                     {
+                        if(!newasm::kernel::cfg::Chrono)
+                        {
+                            newasm::terminate(newasm::exit_codes::sysenter_fail);
+                            return 1;
+                        }
                         if(newasm::thread_line)
                         {
                             newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::chrono;
@@ -4199,6 +4239,11 @@ namespace newasm
                     }
                     case newasm::core::lang_inf::refs::thread:
                     {
+                        if(!newasm::kernel::cfg::Thread)
+                        {
+                            newasm::terminate(newasm::exit_codes::sysenter_fail);
+                            return 1;
+                        }
                         if(newasm::thread_line)
                         {
                             newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::thread;
@@ -4209,6 +4254,11 @@ namespace newasm
                     }
                     case newasm::core::lang_inf::refs::tuple:
                     {
+                        if(!newasm::kernel::cfg::Tuple)
+                        {
+                            newasm::terminate(newasm::exit_codes::sysenter_fail);
+                            return 1;
+                        }
                         if(newasm::thread_line)
                         {
                             newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::tuple;
@@ -4219,6 +4269,11 @@ namespace newasm
                     }
                     case newasm::core::lang_inf::refs::tcp:
                     {
+                        if(!newasm::kernel::cfg::TCProtocol)
+                        {
+                            newasm::terminate(newasm::exit_codes::sysenter_fail);
+                            return 1;
+                        }
                         if(newasm::thread_line)
                         {
                             newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::tcp;
@@ -4229,6 +4284,11 @@ namespace newasm
                     }
                     case newasm::core::lang_inf::refs::http:
                     {
+                        if(!newasm::kernel::cfg::HTTP)
+                        {
+                            newasm::terminate(newasm::exit_codes::sysenter_fail);
+                            return 1;
+                        }
                         if(newasm::thread_line)
                         {
                             newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::http;
@@ -4239,6 +4299,11 @@ namespace newasm
                     }
                     case newasm::core::lang_inf::refs::math:
                     {
+                        if(!newasm::kernel::cfg::Math)
+                        {
+                            newasm::terminate(newasm::exit_codes::sysenter_fail);
+                            return 1;
+                        }
                         if(newasm::thread_line)
                         {
                             newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::math;
@@ -4249,6 +4314,11 @@ namespace newasm
                     }
                     case newasm::core::lang_inf::refs::misc:
                     {
+                        if(!newasm::kernel::cfg::Misc)
+                        {
+                            newasm::terminate(newasm::exit_codes::sysenter_fail);
+                            return 1;
+                        }
                         if(newasm::thread_line)
                         {
                             newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::misc;
@@ -4259,6 +4329,11 @@ namespace newasm
                     }
                     case newasm::core::lang_inf::refs::crypto:
                     {
+                        if(!newasm::kernel::cfg::Crypto)
+                        {
+                            newasm::terminate(newasm::exit_codes::sysenter_fail);
+                            return 1;
+                        }
                         if(newasm::thread_line)
                         {
                             newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::crypto;
@@ -4269,6 +4344,11 @@ namespace newasm
                     }
                     case newasm::core::lang_inf::refs::ctx:
                     {
+                        if(!newasm::kernel::cfg::Context)
+                        {
+                            newasm::terminate(newasm::exit_codes::sysenter_fail);
+                            return 1;
+                        }
                         if(newasm::thread_line)
                         {
                             newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::ctx;
