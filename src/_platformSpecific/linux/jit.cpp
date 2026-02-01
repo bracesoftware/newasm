@@ -135,7 +135,7 @@ namespace newasm
 {
     void jit_print(const char* text)
     {
-        printf(text);
+        std::cout << text;
         return;
     }
     void jit_print__(const char* text)

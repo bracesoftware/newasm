@@ -46,7 +46,7 @@ namespace newasm
         
         public:
         explicit inline _register(std::string regname, T val)
-            : name(regname), value(val), initial_value(val){}
+            : name(regname), value(val), initial_value(val) {}
 
         inline void make_short(bool set) noexcept
         {

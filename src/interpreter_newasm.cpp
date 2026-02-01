@@ -734,22 +734,25 @@ namespace newasm
         newasm::header::settings::create_new_projfile = true;
         newasm::dwin = true;
         
+        std::string args;
         char* args__ = nullptr;
         args__ = std::getenv("newasm_args");
         if(args__ == nullptr) // on Windows
         {
             args__ = std::getenv("newasm_args "); // Allow spaces
         }
+        args = args__;
         if(args__ == nullptr)
         {
             EMPTYLINE;
             newasm::header::functions::err("Arguments not provided.\n\tUse the `"+newasm::header::style::underline+
             "newasm_args"+newasm::header::col::reset+"` environment variable.");
+            newasm::header::functions::info("Using default values...");
             EMPTYLINE;
             EMPTYLINE;
-            return 1;
+            args = "h,std,l";
         }
-        std::string args(args__);
+        
         newasm::header::functions::trim(args);
         auto arguments = newasm::header::functions::split(args, ',');
         for(int i = 0; i < arguments.size(); ++i)
