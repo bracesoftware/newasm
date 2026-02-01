@@ -28,13 +28,12 @@ namespace newasm
             unsigned char __memory__[MEM_SIZE];
             newasm::containers::bit_array<MEM_SIZE> __memory_free__;
             
+            explicit inline randAccessMem__() noexcept {}
+
             inline int get_size() noexcept
             {
                 return MEM_SIZE;
             }
-
-            explicit randAccessMem__() noexcept
-            {}
 
             // free = 0
             // occupied = 1

@@ -45,7 +45,7 @@ namespace newasm
         bool short_int_value = false;
         
         public:
-        explicit _register(std::string regname, T val)
+        explicit inline _register(std::string regname, T val)
             : name(regname), value(val), initial_value(val){}
 
         inline void make_short(bool set) noexcept
@@ -247,7 +247,7 @@ namespace newasm
                                             \______/ 
 */
 
-    std::string operator+(const _register<std::string>& reg, const std::string& rhs)
+    inline std::string operator+(const _register<std::string>& reg, const std::string& rhs)
     {
         newasm::internal::ss_.str("");
         newasm::internal::ss_.clear();
@@ -255,7 +255,7 @@ namespace newasm
         newasm::internal::ss_ << rhs;
         return newasm::internal::ss_.str();
     }
-    std::string operator+(const _register<std::string>& reg, const _register<std::string>& reg2)
+    inline std::string operator+(const _register<std::string>& reg, const _register<std::string>& reg2)
     {
         newasm::internal::ss_.str("");
         newasm::internal::ss_.clear();
@@ -263,7 +263,7 @@ namespace newasm
         newasm::internal::ss_ << reg2.get_value();
         return newasm::internal::ss_.str();
     }
-    std::string operator+(const std::string& rhs, const _register<std::string>& reg)
+    inline std::string operator+(const std::string& rhs, const _register<std::string>& reg)
     {
         newasm::internal::ss_.str("");
         newasm::internal::ss_.clear();
@@ -272,7 +272,7 @@ namespace newasm
         return newasm::internal::ss_.str();
     }
 
-    std::string operator+(const std::string& lhs, int rhs)
+    inline std::string operator+(const std::string& lhs, int rhs)
     {
         newasm::internal::ss_.str("");
         newasm::internal::ss_.clear();
@@ -281,12 +281,12 @@ namespace newasm
         return newasm::internal::ss_.str();
     }
 
-    std::string operator+(int lhs, const std::string& rhs)
+    inline std::string operator+(int lhs, const std::string& rhs)
     {
         return std::to_string(lhs) + rhs;
     }
 
-    std::string operator+(const char* lhs, const newasm::_register<std::string>& rhs)
+    inline std::string operator+(const char* lhs, const newasm::_register<std::string>& rhs)
     {
         newasm::internal::ss_.str("");
         newasm::internal::ss_.clear();
@@ -295,7 +295,7 @@ namespace newasm
         return newasm::internal::ss_.str();
     }
 
-    std::string operator+(const newasm::_register<std::string>& lhs, const char* rhs)
+    inline std::string operator+(const newasm::_register<std::string>& lhs, const char* rhs)
     {
         newasm::internal::ss_.str("");
         newasm::internal::ss_.clear();
@@ -322,66 +322,66 @@ namespace newasm
 
     // add
     template<newasm::concepts::number T, newasm::concepts::number U>
-    auto operator+(newasm::_register<T> lhs, U rhs)
+    inline auto operator+(newasm::_register<T> lhs, U rhs)
     {
         return lhs.get_value() + rhs;
     }
     template<newasm::concepts::number T, newasm::concepts::number U>
-    auto operator+(U lhs, newasm::_register<T> rhs)
+    inline auto operator+(U lhs, newasm::_register<T> rhs)
     {
         return rhs.get_value() + lhs;
     }
     template<newasm::concepts::number T, newasm::concepts::number U>
-    auto operator+(newasm::_register<U> lhs, newasm::_register<T> rhs)
+    inline auto operator+(newasm::_register<U> lhs, newasm::_register<T> rhs)
     {
         return rhs.get_value() + lhs.get_value();
     }
     //sub
     template<newasm::concepts::number T, newasm::concepts::number U>
-    auto operator-(newasm::_register<T> lhs, U rhs)
+    inline auto operator-(newasm::_register<T> lhs, U rhs)
     {
         return lhs.get_value() - rhs;
     }
     template<newasm::concepts::number T, newasm::concepts::number U>
-    auto operator-(U lhs, newasm::_register<T> rhs)
+    inline auto operator-(U lhs, newasm::_register<T> rhs)
     {
         return lhs.get_value() - rhs;
     }
     template<newasm::concepts::number T, newasm::concepts::number U>
-    auto operator-(newasm::_register<U> lhs, newasm::_register<T> rhs)
+    inline auto operator-(newasm::_register<U> lhs, newasm::_register<T> rhs)
     {
         return rhs.get_value() - lhs.get_value();
     }
     //mul
     template<newasm::concepts::number T, newasm::concepts::number U>
-    auto operator*(newasm::_register<T> lhs, U rhs)
+    inline auto operator*(newasm::_register<T> lhs, U rhs)
     {
         return lhs.get_value() * rhs;
     }
     template<newasm::concepts::number T, newasm::concepts::number U>
-    auto operator*(U lhs, newasm::_register<T> rhs)
+    inline auto operator*(U lhs, newasm::_register<T> rhs)
     {
         return rhs.get_value() * lhs;
     }
     template<newasm::concepts::number T, newasm::concepts::number U>
-    auto operator*(newasm::_register<U> lhs, newasm::_register<T> rhs)
+    inline auto operator*(newasm::_register<U> lhs, newasm::_register<T> rhs)
     {
         return rhs.get_value() * lhs.get_value();
     }
 
     //div
     template<newasm::concepts::number T, newasm::concepts::number U>
-    auto operator/(newasm::_register<T> lhs, U rhs)
+    inline auto operator/(newasm::_register<T> lhs, U rhs)
     {
         return lhs.get_value() / rhs;
     }
     template<newasm::concepts::number T, newasm::concepts::number U>
-    auto operator/(U lhs, newasm::_register<T> rhs)
+    inline auto operator/(U lhs, newasm::_register<T> rhs)
     {
         return lhs / rhs.get_value();
     }
     template<newasm::concepts::number T, newasm::concepts::number U>
-    auto operator/(newasm::_register<T> lhs, newasm::_register<T> rhs)
+    inline auto operator/(newasm::_register<T> lhs, newasm::_register<T> rhs)
     {
         return lhs.get_value() / rhs.get_value();
     }
@@ -389,102 +389,100 @@ namespace newasm
     //bitwise ops
     // and
     template<newasm::concepts::number T, newasm::concepts::number U>
-    auto operator&(newasm::_register<T> lhs, U rhs)
+    inline auto operator&(newasm::_register<T> lhs, U rhs)
     {
         return lhs.get_value() & rhs;
     }
     template<newasm::concepts::number T, newasm::concepts::number U>
-    auto operator&(U lhs, newasm::_register<T> rhs)
+    inline auto operator&(U lhs, newasm::_register<T> rhs)
     {
         return lhs & rhs.get_value();
     }
     template<newasm::concepts::number T, newasm::concepts::number U>
-    auto operator&(newasm::_register<U> lhs, newasm::_register<T> rhs)
+    inline auto operator&(newasm::_register<U> lhs, newasm::_register<T> rhs)
     {
         return lhs.get_value() & rhs.get_value();
     }
 
     // or
     template<newasm::concepts::number T, newasm::concepts::number U>
-    auto operator|(newasm::_register<T> lhs, U rhs)
+    inline auto operator|(newasm::_register<T> lhs, U rhs)
     {
         return lhs.get_value() | rhs;
     }
     template<newasm::concepts::number T, newasm::concepts::number U>
-    auto operator|(U lhs, newasm::_register<T> rhs)
+    inline auto operator|(U lhs, newasm::_register<T> rhs)
     {
         return lhs | rhs.get_value();
     }
     template<newasm::concepts::number T, newasm::concepts::number U>
-    auto operator|(newasm::_register<U> lhs, newasm::_register<T> rhs)
+    inline auto operator|(newasm::_register<U> lhs, newasm::_register<T> rhs)
     {
         return lhs.get_value() | rhs.get_value();
     }
 
     // xor
     template<newasm::concepts::number T, newasm::concepts::number U>
-    auto operator^(newasm::_register<T> lhs, U rhs)
+    inline auto operator^(newasm::_register<T> lhs, U rhs)
     {
         return lhs.get_value() ^ rhs;
     }
     template<newasm::concepts::number T, newasm::concepts::number U>
-    auto operator^(U lhs, newasm::_register<T> rhs)
+    inline auto operator^(U lhs, newasm::_register<T> rhs)
     {
         return lhs ^ rhs.get_value();
     }
     template<newasm::concepts::number T, newasm::concepts::number U>
-    auto operator^(newasm::_register<U> lhs, newasm::_register<T> rhs)
+    inline auto operator^(newasm::_register<U> lhs, newasm::_register<T> rhs)
     {
         return lhs.get_value() ^ rhs.get_value();
     }
 
     // shift left
     template<newasm::concepts::number T, newasm::concepts::number U>
-    auto operator<<(newasm::_register<T> lhs, U rhs)
+    inline auto operator<<(newasm::_register<T> lhs, U rhs)
     {
         return lhs.get_value() << rhs;
     }
     template<newasm::concepts::number T, newasm::concepts::number U>
-    auto operator<<(U lhs, newasm::_register<T> rhs)
+    inline auto operator<<(U lhs, newasm::_register<T> rhs)
     {
         return lhs << rhs.get_value();
     }
     template<newasm::concepts::number T, newasm::concepts::number U>
-    auto operator<<(newasm::_register<U> lhs, newasm::_register<T> rhs)
+    inline auto operator<<(newasm::_register<U> lhs, newasm::_register<T> rhs)
     {
         return lhs.get_value() << rhs.get_value();
     }
 
     // shift right
     template<newasm::concepts::number T, newasm::concepts::number U>
-    auto operator>>(newasm::_register<T> lhs, U rhs)
+    inline auto operator>>(newasm::_register<T> lhs, U rhs)
     {
         return lhs.get_value() >> rhs;
     }
     template<newasm::concepts::number T, newasm::concepts::number U>
-    auto operator>>(U lhs, newasm::_register<T> rhs)
+    inline auto operator>>(U lhs, newasm::_register<T> rhs)
     {
         return lhs >> rhs.get_value();
     }
     template<newasm::concepts::number T, newasm::concepts::number U>
-    auto operator>>(newasm::_register<U> lhs, newasm::_register<T> rhs)
+    inline auto operator>>(newasm::_register<U> lhs, newasm::_register<T> rhs)
     {
         return lhs.get_value() >> rhs.get_value();
     }
 
     //not
     template<newasm::concepts::number T>
-    auto operator ~(newasm::_register<T> rhs)
+    inline auto operator ~(newasm::_register<T> rhs)
     {
         return ~rhs.get_value();
     }
 
     //other
     template<newasm::concepts::number T>
-    auto operator!(newasm::_register<T> rhs)
+    inline auto operator!(newasm::_register<T> rhs)
     {
         return !rhs.get_value();
     }
-
-
 }

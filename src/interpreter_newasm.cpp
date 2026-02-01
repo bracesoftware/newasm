@@ -89,6 +89,7 @@ extern "C"
     void free_string(char* str);
 }
 #include "vm/_console.cpp"
+#include "vm/hardware/cpu_register.cpp"
 
 // Resources (assets) used in the program
 #include "runtime/assets/text.cpp"
@@ -326,7 +327,6 @@ namespace newasm
 Essential stuff needed to run
 is in the runtime
 */
-#include "runtime/register.h"
 
 #include "kernel/malloc.h"
 #include "runtime/handlers.cpp"
