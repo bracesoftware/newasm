@@ -233,24 +233,24 @@ namespace newasm
                 std::cout << newasm::header::system_info::name << " " << text << std::endl;
                 return 0;
             }
-            void err(std::string text)
+            inline void err(const std::string& text)
             {
                 std::cout << newasm::header::col::light_red << " error: " << newasm::header::col::reset << text << std::endl;
             }
-            void wrn(std::string text)
+            inline void wrn(const std::string& text)
             {
                 std::cout << newasm::header::col::yellow << " warning: " << newasm::header::col::reset << text << std::endl;
             }
-            void info(std::string text)
+            inline void info(const std::string& text)
             {
                 std::cout << newasm::header::col::light_blue << " info: " << newasm::header::col::gray << text << newasm::header::col::reset << std::endl;
             }
-            void dbg(std::string text)
+            inline void dbg(const std::string& text)
             {
                 if(newasm::header::settings::debug == 1)
                     std::cout << newasm::header::col::gray << " debug: " << newasm::header::col::reset << text << std::endl;
             }
-            void linkinfo(std::string text)
+            inline void linkinfo(const std::string& text)
             {
                 if(newasm::header::settings::debug == 1)
                     std::cout << newasm::header::col::aqua << " linker: " << newasm::header::col::reset << text << std::endl;
