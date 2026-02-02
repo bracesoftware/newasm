@@ -253,7 +253,7 @@ namespace newasm
             void linkinfo(std::string text)
             {
                 if(newasm::header::settings::debug == 1)
-                    std::cout << newasm::header::col::lime_teal << " linker: " << newasm::header::col::reset << text << std::endl;
+                    std::cout << newasm::header::col::aqua << " linker: " << newasm::header::col::reset << text << std::endl;
             }
             
             /*void init()
