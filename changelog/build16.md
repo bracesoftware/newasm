@@ -2,7 +2,7 @@
 Welcome to **`NewASM`**: an interpreted low-level programming language which combines explicit memory and register control, giving it a breeze of assembly-like feel, with high-level functionalities such as objects, threads and more.
 
 * Version: `build 16`
-* Version of the runtime: `4`
+* Version of the runtime: `5`
 * Kernel version: `2`
 
 > [!NOTE]
