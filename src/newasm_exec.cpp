@@ -92,7 +92,8 @@ namespace newasm
             newasm::header::col::red <<
             "\" in ";
 
-            if(newasm::header::execution_flow::exec_redirected == false) if(newasm::header::data::proc_now == false)
+            //if(newasm::header::execution_flow::exec_redirected == false)
+            if(newasm::header::data::proc_now == false)
             {
                 std::cout <<
                 newasm::header::col::gray <<
@@ -111,6 +112,7 @@ namespace newasm
                 newasm::mem::regs::prp;
                 temp_proc = true;
             }
+            #if 0
             if(newasm::header::execution_flow::exec_redirected) if(newasm::header::data::proc_now == false)
             {
                 std::cout << "child process "<<
@@ -121,6 +123,7 @@ namespace newasm
                 ":" <<
                 newasm::header::data::lastlndx;
             }
+            #endif
 
             std::cout <<
             newasm::header::col::reset <<
