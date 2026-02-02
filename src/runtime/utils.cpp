@@ -62,9 +62,9 @@ namespace newasm
 
             while(percent <= 100)
             {
-                std::cout << newasm::header::col::gray
-                << "\r\t" << animation[anim_index] << " "<< newasm::header::style::underline << text 
-                << newasm::header::col::reset << newasm::header::col::gray
+                std::cout << newasm::header::col::yellow
+                << "\r\t" << animation[anim_index] << " "<< newasm::header::col::gray << newasm::header::style::underline << text 
+                << newasm::header::col::reset << newasm::header::col::yellow
                 << " [" << percent << "%]" << std::flush;
                 std::cout << newasm::header::col::reset;
 
