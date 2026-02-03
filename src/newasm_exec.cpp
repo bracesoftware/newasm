@@ -4591,6 +4591,9 @@ namespace newasm
                     //std::cout << "Creating proc: " << opr << std::endl;
                     return 1;
                 }
+
+                newasm::terminate(newasm::exit_codes::os_error);
+                return 1;
             }
             //heap
             case newasm::core::lang_inf::heap:
@@ -4621,7 +4624,7 @@ namespace newasm
             //db - debug
             case newasm::core::lang_inf::db:
             {
-                auto debugRegister = [](std::string str1, std::string str2)
+                auto debugRegister = [](const std::string& str1, const std::string& str2)
                 {
                     newasm::progwin::api::cout(str1 + static_cast<std::string>(" = `") + 
                         str2 + 

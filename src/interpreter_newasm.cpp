@@ -213,17 +213,23 @@ namespace newasm
         std::thread t;
 
         public:
-        timer() : running(false), elapsed_ms(0.0) {}
+        explicit inline timer() : running(false), elapsed_ms(0.0) {}
 
         inline void start()
         {
-            if (running) return;
+            if(running)
+            {
+                return;
+            }
+
             running = true;
             elapsed_ms = 0.0;
 
-            t = std::thread([this]() {
+            t = std::thread([this]()
+            {
                 auto last = std::chrono::high_resolution_clock::now();
-                while (running) {
+                while(running)
+                {
                     auto now = std::chrono::high_resolution_clock::now();
                     elapsed_ms += std::chrono::duration<double, std::milli>(now - last).count();
                     last = now;
