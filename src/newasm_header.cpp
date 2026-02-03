@@ -235,11 +235,11 @@ namespace newasm
             }
             inline void err(const std::string& text)
             {
-                std::cout << newasm::header::col::light_red << " error: " << newasm::header::col::reset << text << std::endl;
+                std::cout << newasm::header::col::light_red << "! error: " << newasm::header::col::reset << text << std::endl;
             }
             inline void wrn(const std::string& text)
             {
-                std::cout << newasm::header::col::yellow << " warning: " << newasm::header::col::reset << text << std::endl;
+                std::cout << newasm::header::col::yellow << "! warning: " << newasm::header::col::reset << text << std::endl;
             }
             inline void info(const std::string& text)
             {
@@ -252,8 +252,12 @@ namespace newasm
             }
             inline void linkinfo(const std::string& text)
             {
-                if(newasm::header::settings::debug == 1)
-                    std::cout << newasm::header::col::aqua << " linker: " << newasm::header::col::reset << text << std::endl;
+                std::cout << newasm::header::col::aqua << " linker: " << newasm::header::col::reset << text << std::endl;
+            }
+
+            inline void compilerinfo(const std::string& text)
+            {
+                std::cout << newasm::header::col::aqua << " compiler: " << newasm::header::col::gray << text << std::endl;
             }
             
             /*void init()

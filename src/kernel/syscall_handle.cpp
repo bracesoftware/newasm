@@ -27,6 +27,37 @@ namespace newasm
             return (uint32_t(uint16_t(a)) << 16) | uint32_t(uint16_t(b));
         }
 
+        static inline void write_stl()
+        {
+            #if 0
+            newasm::mem::regs::stl = newasm::header::functions::trim(newasm::mem::regs::stl.get_value());
+            if(newasm::chars::map.find(newasm::mem::regs::stl.get_value()) == newasm::chars::map.end())
+            {
+                newasm::Console::out("");
+                return;
+            }
+            newasm::Console::out(newasm::chars::map.at(newasm::mem::regs::stl.get_value()));
+            #endif
+            newasm::Console::out(newasm::mem::regs::stl.get_value());
+            return;
+        }
+
+        static inline void write_tlr()
+        {
+            #if 0
+            newasm::mem::regs::tlr = newasm::header::functions::trim(newasm::mem::regs::tlr.get_value());
+            if(newasm::chars::map.find(newasm::mem::regs::tlr.get_value()) == newasm::chars::map.end())
+            {
+                newasm::Console::out("");
+                return;
+            }
+            newasm::Console::out(newasm::chars::map.at(newasm::mem::regs::tlr.get_value()));
+            #endif
+            newasm::runtime::functions::parse(newasm::mem::regs::tlr.ref_value());
+            newasm::Console::out(newasm::mem::regs::tlr.get_value());
+            return;
+        }
+
         inline int handleSysCall()
         {
             //ext
@@ -473,8 +504,9 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::expected_await);
                         return 1;
                     }
-                    std::cout << newasm::threads::memory.at(thread__)->output.str();
-                    newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
+                    
+                    newasm::Console::out(newasm::threads::memory.at(thread__)->output.str());
+                    newasm::kernel::write_stl();
                     return 1;
                 }
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::thread, 2): //get returned val from thread
@@ -877,15 +909,17 @@ namespace newasm
                             newasm::mem::regs::bos.set_value(_chars_.size());
                             newasm::terminate(newasm::exit_codes::seg_fault);
                         }
-                        if(false) newasm::_std::write(_chars_.substr(0, newasm::mem::regs::bos));
-                        newasm::native_jit::print(_chars_.substr(0, newasm::mem::regs::bos.get_value()));
+                        //if(false) newasm::_std::write(_chars_.substr(0, newasm::mem::regs::bos));
+                        //newasm::native_jit::print(_chars_.substr(0, newasm::mem::regs::bos.get_value()));
+                        newasm::Console::out(_chars_.substr(0, newasm::mem::regs::bos.get_value()));
                     }
                     else
                     {
-                        newasm::native_jit::print(_chars_);
+                        //newasm::native_jit::print(_chars_);
+                        newasm::Console::out(_chars_);
                     }
                     
-                    newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
+                    newasm::kernel::write_stl();
                     return 1;
                 }
                 //print numbers and floats
@@ -903,16 +937,20 @@ namespace newasm
                         return 1;
                     }
                     if(0) std::cout << newasm::mem::regs::tlr;// << std::endl;
-                    newasm::native_jit::print(newasm::mem::regs::tlr.get_value()); //-> code generation
+                    // newasm::native_jit::print(newasm::mem::regs::tlr.get_value()); //-> code generation
                     //newasm::mem::functions::out_bopr(newasm::mem::regs::stl);
-                    newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
+                    //newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
+
+                    newasm::Console::out(newasm::mem::regs::tlr.get_value());
+                    newasm::kernel::write_stl();
                     return 1;
                 }
                 //input text
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::ios, 3):
                 {
                     newasm::perf::inputWasteTimer.start();
-                    std::getline(std::cin, newasm::mem::regs::tlr.ref_value());
+                    //std::getline(std::cin, newasm::mem::regs::tlr.ref_value());
+                    newasm::mem::regs::tlr.set_value(newasm::Console::in());
                     newasm::perf::inputWasteTimer.stop();
                     newasm::mem::regs::tlr.add_end_("\"");
                     return 1;
@@ -921,7 +959,8 @@ namespace newasm
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::ios, 4):
                 {
                     newasm::perf::inputWasteTimer.start();
-                    std::cin >> newasm::mem::regs::tlr;
+                    //std::cin >> newasm::mem::regs::tlr;
+                    newasm::mem::regs::tlr.set_value(newasm::Console::in());
                     newasm::perf::inputWasteTimer.stop();
                     if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr) && !newasm::header::functions::isfloat(newasm::mem::regs::tlr))
                     {
@@ -933,13 +972,16 @@ namespace newasm
                 //print values of builtin operands
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::ios, 5):
                 {
+                    #if 0
                     if(newasm::thread_line)
                     {
                         newasm::threads::memory.at(newasm::threads::now)->output << newasm::syscalls::iostream::get_ref_val__2(newasm::mem::regs::tlr);
                         return 1;
                     }
                     //newasm::mem::functions::out_bopr(newasm::mem::regs::tlr);
-                    newasm::syscalls::iostream::out_bopr(newasm::mem::regs::tlr);
+                    //newasm::syscalls::iostream::out_bopr(newasm::mem::regs::tlr);
+                    newasm::kernel::write_tlr();
+                    #endif
                     return 1;
                 }
                 //print references
@@ -957,9 +999,10 @@ namespace newasm
                         newasm::threads::memory.at(newasm::threads::now)->output << newasm::syscalls::iostream::get_ref_val__2(newasm::mem::regs::stl);
                         return 1;
                     }
-                    std::cout << newasm::header::functions::remamp(newasm::mem::regs::tlr);
+                    
+                    newasm::Console::out(newasm::header::functions::remamp(newasm::mem::regs::tlr));
                     //newasm::mem::functions::out_bopr(newasm::mem::regs::stl);
-                    newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
+                    newasm::kernel::write_stl();
                     return 1;
                 }
                 //print characters
@@ -978,15 +1021,18 @@ namespace newasm
                         newasm::threads::memory.at(newasm::threads::now)->output << newasm::syscalls::iostream::get_ref_val__2(newasm::mem::regs::stl);
                         return 1;
                     }
-                    std::cout << newasm::header::functions::remsq(newasm::mem::regs::tlr);
+                    //std::cout << newasm::header::functions::remsq(newasm::mem::regs::tlr);
                     //newasm::mem::functions::out_bopr(newasm::mem::regs::stl);
-                    newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
+
+                    newasm::Console::out(newasm::header::functions::remsq(newasm::mem::regs::tlr));
+                    //newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
+                    newasm::kernel::write_stl();
                     return 1;
                 }
                 //input characters
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::ios, 8):
                 {
-                    std::cin >> newasm::mem::regs::tlr;
+                    newasm::mem::regs::tlr.set_value(newasm::Console::in());
                     newasm::mem::regs::tlr.add_end_("'");
                     if(!newasm::header::functions::ischar(newasm::mem::regs::tlr))
                     {

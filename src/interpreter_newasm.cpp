@@ -75,6 +75,7 @@ namespace SYS = newasm;
 // For registers
 #include <type_traits>
 #include <concepts>
+#include "runtime/common/chars.h"
 
 #include "sysext/out.cpp"
 #include "vm/external.cpp"
@@ -494,7 +495,6 @@ static __global_newasm nG;
 #include "shell_tools/mount.cpp"
 #include "newasm_shell.cpp"
 
-#include "runtime/common/chars.h"
 #include "runtime/_entry.h"
 
 namespace fs = std::filesystem;
@@ -873,11 +873,14 @@ namespace newasm
         newasm::core::env_vars::functions::setup_env();
         newasm::project_data::impl::setup_proj(newasm::header::settings::script_file);
         newasm::hardware::randAccessMem.init();
+        std::cout << std::endl;
         newasm::header::functions::info("Sucessfully allocated 10 MB of memory.");
         newasm::header::functions::info(
             static_cast<std::string>("Preparing to execute: ") + newasm::header::col::yellow +
             newasm::project_data::name + static_cast<std::string>(" ") + newasm::project_data::version
             + newasm::header::col::reset);
+
+        std::cout << std::endl;
 
         /*
             Before executing the file we need to open the program window.

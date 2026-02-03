@@ -1158,8 +1158,8 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                         return 1;
                     }
-                    std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + newasm::header::functions::remq(opr));
-                    std::cout << newasm::header::col::reset;
+                    
+                    newasm::Console::out(newasm::tab + newasm::header::functions::remq(opr));
                     return 1;
                 }
             }
@@ -4068,7 +4068,8 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                         return 1;
                     }
-                    std::cout << "`sys_memsize` is deprecated.\n" << std::flush;
+                    //std::cout << "`sys_memsize` is deprecated.\n" << std::flush;
+                    newasm::header::functions::wrn("0x1 system interrupt is deprecated.");
                     return 1;
                 }
                 if(suf == static_cast<std::string>("0x2")) // sys_lazy_evhndlr
@@ -5350,14 +5351,7 @@ namespace newasm
             //cls
             case newasm::core::lang_inf::cls:
             {
-                #if _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
-                    std::system("cls");
-                #elif _NEWASM_OS == _NEWASM_OS_linux
-                    std::system("clear");
-                #elif _NEWASM_OS == _NEWASM_OS_android
-                    std::cout << "\033[2J\033[H";
-                #endif
-
+                newasm::Console::cls();
                 return 1;
             }
             //xchg
@@ -6637,7 +6631,7 @@ namespace newasm
             lineidx = 1;
             _file.close();
 
-            std::cout << "  " << newasm::header::col::gray << "[Info] -> Compiling...\n";
+            newasm::header::functions::compilerinfo("Compiling the project...");
             newasm::compiler::data::lnidx = 1;
             for(auto i = newasm::mem::COD.begin(); i != newasm::mem::COD.end(); ++i)
             {
@@ -6646,7 +6640,7 @@ namespace newasm
             }
             if(!newasm::compiler::data::aborted)
             {
-                std::cout << "  " << newasm::header::col::gray << "[Info] -> Compiled. Running...\n\n";
+                std::cout << "  " << newasm::header::col::gray << "\tProject successfully compiled. Running...\n\n";
             }
             if(newasm::compiler::data::aborted)
             {

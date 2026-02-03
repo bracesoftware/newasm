@@ -37,7 +37,9 @@ extern "C"
 // I'M PLANNING TO ADD A FAST GUI, SO APPS LOOK LIKE THEY ARE APPS
 // FOR NOW WE JUST DO THESE
 
+#ifndef USING_SDL_FINALLY
 #define USING_SDL_FINALLY 0
+#endif
 
 #if USING_SDL_FINALLY == 1
 extern "C"
@@ -47,6 +49,7 @@ extern "C"
     void inputFromConsole(char* buffer, int size);
     void printToConsole(const char* text);
     void closeConsoleWindow();
+    void cls();
 }
 #endif
 namespace newasm
@@ -55,6 +58,14 @@ namespace newasm
     class Console
     {
         public:
+        inline static void flush()
+        {
+            #if USING_SDL_FINALLY == 1
+            renderScreen();
+            #endif
+            return;
+        }
+
         inline static void show(const std::string& text)
         {
             //show_console(const_cast<char*>(text.c_str()));
@@ -80,6 +91,9 @@ namespace newasm
             #if USING_SDL_FINALLY == 1
             printToConsole(text.c_str());
             #endif
+            #if USING_SDL_FINALLY == 0
+            std::cout << text;
+            #endif
             return;
         }
         inline static std::string in()
@@ -95,9 +109,12 @@ namespace newasm
             return line;
             #endif
             #if USING_SDL_FINALLY == 0
-            return std::string("nil");
+            std::string line;
+            std::getline(std::cin, line);
+            return line;
             #endif
         }
+
         inline static void close()
         {
             if(!newasm::consoleOpen)
@@ -109,6 +126,28 @@ namespace newasm
 
             #if USING_SDL_FINALLY == 1
             closeConsoleWindow();
+            #endif
+            return;
+        }
+
+        inline static void cls()
+        {
+            if(!newasm::consoleOpen)
+            {
+                return;
+            }
+
+            #if USING_SDL_FINALLY == 1
+            cls();
+            #endif
+            #if USING_SDL_FINALLY == 0
+                #if _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
+                    std::system("cls");
+                #elif _NEWASM_OS == _NEWASM_OS_linux
+                    std::system("clear");
+                #elif _NEWASM_OS == _NEWASM_OS_android
+                    std::cout << "\033[2J\033[H";
+                #endif
             #endif
             return;
         }

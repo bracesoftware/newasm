@@ -36,6 +36,7 @@ extern "C"
     #include <SDL2/SDL_ttf.h>
     #include <string.h>
     #include <stdio.h>
+    #include <stdbool.h>
 
     #define SCREEN_COLS 80
     #define SCREEN_ROWS 25
@@ -47,6 +48,7 @@ extern "C"
         char ch;
         SDL_Color fg;
         SDL_Color bg;
+        bool dirty; 
     } Cell;
 
     Cell screen[SCREEN_ROWS][SCREEN_COLS];
@@ -57,11 +59,10 @@ extern "C"
     TTF_Font *font = NULL;
     int quit = 0;
 
-    ////////////////
     SDL_Color white = {255, 255, 255, 255};
     SDL_Color black = {0, 0, 0, 255};
-    SDL_Color blue = {0, 0, 150, 255};
-    //////////////////
+
+    SDL_Texture* glyphCache[256];
 
     extern void openConsoleWindow(const char* title)
     {
@@ -79,57 +80,97 @@ extern "C"
             SCREEN_COLS * FONT_WIDTH, SCREEN_ROWS * FONT_HEIGHT, 0);
         
         renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-
-        font = TTF_OpenFont("nfont.ttf", FONT_HEIGHT); 
-        if (!font) {
-            printf("Font error: %s\n", TTF_GetError());
-        }
         
-        memset(screen, 0, sizeof(screen));
-        return;
+        font = TTF_OpenFont("nfont.ttf", FONT_HEIGHT); 
+        if(!font)
+        {
+            printf("Font error: %s\n", TTF_GetError());
+            return;
+        }
+
+        for(int y = 0; y < SCREEN_ROWS; y++)
+        {
+            for(int x = 0; x < SCREEN_COLS; x++)
+            {
+                screen[y][x].ch = ' ';
+                screen[y][x].fg = white;
+                screen[y][x].bg = black;
+                screen[y][x].dirty = true;
+            }
+        }
+
+        for(int i = 0; i < 256; i++)
+        {
+            char str[2] = {
+                (char)i,
+                0
+            };
+            SDL_Surface* surf = TTF_RenderText_Solid(font, str, white);
+            if(surf)
+            {
+                glyphCache[i] = SDL_CreateTextureFromSurface(renderer, surf);
+                SDL_FreeSurface(surf);
+            }
+            else
+            {
+                glyphCache[i] = NULL;
+            }
+        }
     }
 
     extern void renderScreen()
     {
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderClear(renderer);
-
         for (int y = 0; y < SCREEN_ROWS; y++)
         {
             for(int x = 0; x < SCREEN_COLS; x++)
             {
-                Cell c = screen[y][x];
-                SDL_Rect dst = { x * FONT_WIDTH, y * FONT_HEIGHT, FONT_WIDTH, FONT_HEIGHT };
+                Cell *c = &screen[y][x];
+                
+                if(!c->dirty) continue;
 
-                SDL_SetRenderDrawColor(renderer, c.bg.r, c.bg.g, c.bg.b, 255);
+                SDL_Rect dst = {
+                    x * FONT_WIDTH,
+                    y * FONT_HEIGHT,
+                    FONT_WIDTH,
+                    FONT_HEIGHT
+                };
+
+                SDL_SetRenderDrawColor(renderer, c->bg.r, c->bg.g, c->bg.b, 255);
                 SDL_RenderFillRect(renderer, &dst);
 
-                if(c.ch > 31)
+                if(c->ch > 31 && glyphCache[(unsigned char)c->ch])
                 {
-                    char str[2] = { c.ch, 0 };
-                    SDL_Surface *surf = TTF_RenderText_Solid(font, str, c.fg);
-                    if(surf)
-                    {
-                        SDL_Texture *tex = SDL_CreateTextureFromSurface(renderer, surf);
-                        SDL_Rect charRect = { dst.x, dst.y, surf->w, surf->h };
-                        SDL_RenderCopy(renderer, tex, NULL, &charRect);
-                        
-                        SDL_DestroyTexture(tex);
-                        SDL_FreeSurface(surf);
-                    }
+                    SDL_Texture* tex = glyphCache[(unsigned char)c->ch];
+                    SDL_SetTextureColorMod(tex, c->fg.r, c->fg.g, c->fg.b);
+                    SDL_RenderCopy(renderer, tex, NULL, &dst);
                 }
+
+                c->dirty = false;
             }
         }
         SDL_RenderPresent(renderer);
-        return;
     }
 
     extern void scrollScreen()
     {
         memmove(&screen[0], &screen[1], sizeof(Cell) * (SCREEN_ROWS - 1) * SCREEN_COLS);
-        memset(&screen[SCREEN_ROWS - 1], 0, sizeof(Cell) * SCREEN_COLS);
+        
+        for(int x = 0; x < SCREEN_COLS; x++)
+        {
+            screen[SCREEN_ROWS-1][x].ch = ' ';
+            screen[SCREEN_ROWS-1][x].fg = white;
+            screen[SCREEN_ROWS-1][x].bg = black;
+        }
+
+        for(int y = 0; y < SCREEN_ROWS; y++)
+        {
+            for(int x = 0; x < SCREEN_COLS; x++)
+            {
+                screen[y][x].dirty = true;
+            }
+        }
+
         cursorY = SCREEN_ROWS - 1;
-        return;
     }
 
     extern void putChar(char ch, SDL_Color fg, SDL_Color bg)
@@ -155,11 +196,12 @@ extern "C"
             scrollScreen();
         }
 
-        screen[cursorY][cursorX].ch = ch;
-        screen[cursorY][cursorX].fg = fg;
-        screen[cursorY][cursorX].bg = bg;
+        Cell *c = &screen[cursorY][cursorX];
+        c->ch = ch;
+        c->fg = fg;
+        c->bg = bg;
+        c->dirty = true;
         cursorX++;
-        return;
     }
 
     extern void printTextToConsole(const char* text, SDL_Color fg, SDL_Color bg)
@@ -168,6 +210,7 @@ extern "C"
         {
             putChar(text[i], fg, bg);
         }
+
         renderScreen();
     }
 
@@ -180,6 +223,7 @@ extern "C"
     extern void requestInputFromConsole(char* buffer, int size, SDL_Color fg, SDL_Color bg)
     {
         int pos = 0;
+        buffer[0] = 0;
         SDL_StartTextInput();
         int inputDone = 0;
 
@@ -188,38 +232,33 @@ extern "C"
             SDL_Event e;
             while(SDL_PollEvent(&e))
             {
-                if(e.type == SDL_QUIT)
-                {
-                    quit = 1;
-                    inputDone = 1;
-                }
+                if(e.type == SDL_QUIT) { quit = 1; inputDone = 1; }
                 else if(e.type == SDL_TEXTINPUT)
                 {
                     if(pos < size - 1)
                     {
-                        buffer[pos++] = e.text.text[0];
+                        char ch = e.text.text[0];
+                        buffer[pos++] = ch;
                         buffer[pos] = 0;
-                        putChar(e.text.text[0], fg, bg);
+                        putChar(ch, fg, bg);
                         renderScreen();
                     }
                 }
                 else if(e.type == SDL_KEYDOWN)
                 {
-                    if(e.key.keysym.sym == SDLK_RETURN)
-                    {
-                        inputDone = 1;
-                    }
+                    if(e.key.keysym.sym == SDLK_RETURN) inputDone = 1;
                     else if(e.key.keysym.sym == SDLK_BACKSPACE && pos > 0)
                     {
                         pos--;
                         buffer[pos] = 0;
                         cursorX--;
                         if(cursorX < 0)
-                        { 
-                            cursorX = SCREEN_COLS - 1; 
-                            cursorY--; 
+                        {
+                            cursorX = SCREEN_COLS - 1;
+                            cursorY--;
                         }
                         screen[cursorY][cursorX].ch = ' ';
+                        screen[cursorY][cursorX].dirty = true;
                         renderScreen();
                     }
                 }
@@ -229,60 +268,43 @@ extern "C"
         SDL_StopTextInput();
         putChar('\n', fg, bg);
         renderScreen();
-        return;
     }
 
     extern void inputFromConsole(char* buffer, int size)
     {
         requestInputFromConsole(buffer, size, white, black);
-        return;
     }
+
 
     extern void closeConsoleWindow()
     {
-        if(font)
+        for(int i = 0; i < 256; i++)
         {
-            TTF_CloseFont(font);
+            if(glyphCache[i]) SDL_DestroyTexture(glyphCache[i]);
         }
-        if(renderer)
-        {
-            SDL_DestroyRenderer(renderer);
-        }
-        if(window)
-        {
-            SDL_DestroyWindow(window);
-        }
+        if(font) TTF_CloseFont(font);
+        if(renderer) SDL_DestroyRenderer(renderer);
+        if(window) SDL_DestroyWindow(window);
         TTF_Quit();
         SDL_Quit();
-        return;
     }
-}
 
-#if 0
-int main(int argc, char* argv[])
-{
-    SDL_Color white = {255, 255, 255, 255};
-    SDL_Color black = {0, 0, 0, 255};
-    SDL_Color blue = {0, 0, 150, 255};
-
-    openConsoleWindow("SDL VGA Emulator");
-
-    printTextToConsole("Welcome to SDL Screen Emulator\n", white, blue);
-    printTextToConsole("Type something: ", white, black);
-
-    char input[128] = {0};
-    requestInputFromConsole(input, sizeof(input), white, black);
-
-    if(!quit)
+    extern void cls()
     {
-        char reply[256];
-        snprintf(reply, sizeof(reply), "You typed: %s\n", input);
-        printTextToConsole(reply, white, black);
+        for (int y = 0; y < SCREEN_ROWS; y++)
+        {
+            for (int x = 0; x < SCREEN_COLS; x++)
+            {
+                screen[y][x].ch = ' ';
+                screen[y][x].fg = white;
+                screen[y][x].bg = black;
+                screen[y][x].dirty = true;
+            }
+        }
         
-        SDL_Delay(3000);
-    }
+        cursorX = 0;
+        cursorY = 0;
 
-    closeConsoleWindow();
-    return 0;
+        renderScreen();
+    }
 }
-#endif
