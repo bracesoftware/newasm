@@ -1757,12 +1757,9 @@ namespace newasm
             {
                 std::string final_str = s;
 
-                if(!newasm::header::functions::istext(s))
+                if((!newasm::header::functions::istext(final_str)) && (!newasm::header::functions::ischar(final_str)))
                 {
-                    return final_str;
-                }
-                if(!newasm::header::functions::ischar(s))
-                {
+                    //std::cout << "s: ``" << final_str << "`` is NOT text" << std::endl;
                     return final_str;
                 }
 
@@ -1814,6 +1811,7 @@ namespace newasm
                         final_str = before_slash + "?" + after_slash;
                     }
                 }
+                //std::cout << "s: ``" << final_str << "`` is FULLY parsed!" << std::endl;
                 return final_str;
             }
         }

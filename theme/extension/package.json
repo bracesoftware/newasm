@@ -93,6 +93,16 @@
 						}
 					},
 					{
+						"scope": [
+							"string.quoted.double.newasm constant.character.escape.newasm",
+							"constant.character.escape.newasm"
+						],
+						"settings": {
+							"foreground": "#00ffdd",
+							"fontStyle": "bold"
+						}
+					},
+					{
 						"scope": "comment.line.semicolon.newasm",
 						"settings": {
 							"foreground": "#7c817a"

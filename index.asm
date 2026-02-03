@@ -1,7 +1,7 @@
 ;ok
 .start
     align 3
-    cls
+    ;cls
 :startofprog
 using "ios"
 using "fs"
@@ -2086,7 +2086,7 @@ link "testfile.asm" ; link a file
         ctx myContext3: ("some_data": "lel")
     ./!hi
 .start
-    mov tlr, "Hello, I am {hi::humanData(0)} {hi::humanData(1)}, I am {hi::age} {hi::myContext3("some_data")}"
+    mov tlr, "Hello, I am {hi::humanData(0)} {hi::humanData(1)},\n I am {hi::age} yrs old\n{hi::myContext3("some_data")}"
     sysenter "txtop"
     mov fdx, 4
     syscall

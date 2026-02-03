@@ -145,6 +145,16 @@
       }
     },
     {
+      "scope": [
+        "string.quoted.double.newasm constant.character.escape.newasm",
+        "constant.character.escape.newasm"
+      ],
+      "settings": {
+        "foreground": "#00ffdd",
+        "fontStyle": "bold"
+      }
+    },
+    {
       "scope": "constant.numeric.newasm",
       "settings": {
         "foreground": "#F78C6C"
