@@ -2083,9 +2083,10 @@ link "testfile.asm" ; link a file
     ./hi
         intg age: 19
         tuple humanData: ("ele bre", "nigga")
+        ctx myContext3: ("some_data": "lel")
     ./!hi
 .start
-    mov tlr, "Hello, I am {hi::humanData(0)} {hi::humanData(1)}, I am {hi::age}"
+    mov tlr, "Hello, I am {hi::humanData(0)} {hi::humanData(1)}, I am {hi::age} {hi::myContext3("some_data")}"
     sysenter "txtop"
     mov fdx, 4
     syscall
