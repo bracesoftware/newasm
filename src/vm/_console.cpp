@@ -37,14 +37,25 @@ extern "C"
 // I'M PLANNING TO ADD A FAST GUI, SO APPS LOOK LIKE THEY ARE APPS
 // FOR NOW WE JUST DO THESE
 
+#define USING_SDL_FINALLY 0
 
+#if USING_SDL_FINALLY == 1
+extern "C"
+{
+    void openConsoleWindow(const char* title);
+    void renderScreen();
+    void inputFromConsole(char* buffer, int size);
+    void printToConsole(const char* text);
+    void closeConsoleWindow();
+}
+#endif
 namespace newasm
 {
     static bool consoleOpen = false;
     class Console
     {
         public:
-        inline static void show(std::string text)
+        inline static void show(const std::string& text)
         {
             //show_console(const_cast<char*>(text.c_str()));
             if(newasm::consoleOpen)
@@ -52,9 +63,13 @@ namespace newasm
                 return;
             }
             newasm::consoleOpen = true;
+
+            #if USING_SDL_FINALLY == 1
+            openConsoleWindow(text.c_str());
+            #endif
             return;
         }
-        inline static void out(std::string text)
+        inline static void out(const std::string& text)
         {
             if(!newasm::consoleOpen)
             {
@@ -62,7 +77,9 @@ namespace newasm
             }
 
             //console_out(const_cast<char*>(text.c_str()));
-            std::cout << text;
+            #if USING_SDL_FINALLY == 1
+            printToConsole(text.c_str());
+            #endif
             return;
         }
         inline static std::string in()
@@ -71,12 +88,15 @@ namespace newasm
             {
                 return std::string("nil");
             }
-            /*char* str = console_in();
-            std::string buf(str);
-            free_string(str);*/
-            std::string line;
-            std::getline(std::cin, line);
+            #if USING_SDL_FINALLY == 1
+            char input[128] = {0};
+            inputFromConsole(input, sizeof(input));
+            std::string line(input);
             return line;
+            #endif
+            #if USING_SDL_FINALLY == 0
+            return std::string("nil");
+            #endif
         }
         inline static void close()
         {
@@ -86,6 +106,10 @@ namespace newasm
             }
             //close_console();
             newasm::consoleOpen = false;
+
+            #if USING_SDL_FINALLY == 1
+            closeConsoleWindow();
+            #endif
             return;
         }
     };

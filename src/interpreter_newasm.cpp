@@ -901,6 +901,7 @@ namespace newasm
         newasm::async_thread::entry();
 
         newasm::Console::show("NewASM Application Window");
+        //newasm::Console::out("Ide totalni gas");
         newasm::header::functions::trim(newasm::header::settings::script_file_LINKED);
         newasm::execute(newasm::header::settings::script_file_LINKED, -1);
 
