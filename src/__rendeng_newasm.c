@@ -25,6 +25,10 @@ the Initial Developer. All Rights Reserved.
 // May be added in the future
 // Currently SDL is NOT included in the final binaries....
 
+/*
+why don't we have std::media::window, std::media::renderer, etc. xD
+*/
+
 extern "C"
 {
     #define SDL_MAIN_HANDLED
