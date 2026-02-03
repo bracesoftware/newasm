@@ -36,7 +36,7 @@ import (
     "crypto/sha256"
     "encoding/hex"
 )
-
+/*
 //export send_tcp
 func send_tcp(addr *C.char, msg *C.char) C.int {
     goAddr := C.GoString(addr)
@@ -57,6 +57,43 @@ func send_tcp(addr *C.char, msg *C.char) C.int {
 
     return 0
 }
+*/
+//export send_tcp
+func send_tcp(addr *C.char, msg *C.char, errBuf *C.char, bufSize C.int) C.int {
+    goAddr := C.GoString(addr)
+    goMsg := C.GoString(msg)
+
+    writeError := func(e error) {
+        if errBuf != nil && bufSize > 0 {
+            errStr := e.Error()
+            n := int(bufSize) - 1
+            if len(errStr) < n {
+                n = len(errStr)
+            }
+            
+            p := unsafe.Pointer(errBuf)
+            store := (*[1 << 30]byte)(p)[:n:n]
+            copy(store, errStr)
+            
+            *(*byte)(unsafe.Pointer(uintptr(p) + uintptr(n))) = 0
+        }
+    }
+
+    conn, err := net.Dial("tcp", goAddr)
+    if err != nil {
+        writeError(err)
+        return -1
+    }
+    defer conn.Close()
+
+    _, err = conn.Write([]byte(goMsg))
+    if err != nil {
+        writeError(err)
+        return -2
+    }
+
+    return 0
+}
 
 //export recv_tcp
 func recv_tcp(addr *C.char) *C.char {
@@ -64,14 +101,14 @@ func recv_tcp(addr *C.char) *C.char {
 
     conn, err := net.Dial("tcp", goAddr)
     if err != nil {
-        return C.CString(fmt.Sprintf("NewASM GO :: Error -> %v", err))
+        return C.CString(fmt.Sprintf("Dial error -> %v", err))
     }
     defer conn.Close()
 
     buf := make([]byte, 1024)
     n, err := conn.Read(buf)
     if err != nil {
-        return C.CString(fmt.Sprintf("NewASM GO :: Read error -> %v", err))
+        return C.CString(fmt.Sprintf("Read error -> %v", err))
     }
 
     return C.CString(string(buf[:n]))
@@ -101,13 +138,13 @@ func http_get(url *C.char) *C.char {
 
     resp, err := http.Get(goURL)
     if err != nil {
-        return C.CString(fmt.Sprintf("NewASM GO :: HTTP GET error -> %v", err))
+        return C.CString(fmt.Sprintf("HTTP GET error -> %v", err))
     }
     defer resp.Body.Close()
 
     body, err := io.ReadAll(resp.Body)
     if err != nil {
-        return C.CString(fmt.Sprintf("NewASM GO :: Read body error -> %v", err))
+        return C.CString(fmt.Sprintf("Read body error -> %v", err))
     }
 
     return C.CString(string(body))
@@ -120,13 +157,13 @@ func http_post(url *C.char, data *C.char) *C.char {
 
     resp, err := http.Post(goURL, "application/x-www-form-urlencoded", strings.NewReader(goData))
     if err != nil {
-        return C.CString(fmt.Sprintf("NewASM GO :: HTTP POST error -> %v", err))
+        return C.CString(fmt.Sprintf("HTTP POST error -> %v", err))
     }
     defer resp.Body.Close()
 
     body, err := io.ReadAll(resp.Body)
     if err != nil {
-        return C.CString(fmt.Sprintf("NewASM GO :: Read body error -> %v", err))
+        return C.CString(fmt.Sprintf("Read body error -> %v", err))
     }
 
     return C.CString(string(body))

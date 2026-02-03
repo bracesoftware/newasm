@@ -389,14 +389,16 @@ namespace newasm
                     }
 
                     newasm::start = std::chrono::high_resolution_clock::now();
-                    int result = newasm::syscalls::tcp::send(
+                    auto result = newasm::syscalls::tcp::send(
                         newasm::header::functions::remq(newasm::mem::regs::tlr.get_value()), 
                         newasm::header::functions::remq(newasm::mem::regs::stl.get_value())
                     );
                     newasm::end = std::chrono::high_resolution_clock::now();
                     newasm::network_deduction.push_back(newasm::end - newasm::start);
 
-                    newasm::mem::regs::tlr.set_value(std::to_string(result));
+                    newasm::mem::regs::tlr.set_value(std::to_string(result.first));
+                    newasm::mem::regs::stl.set_value(result.second);
+                    newasm::mem::regs::stl.add_end_("\"");
                     return 1;
                 }
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::tcp, 2): // recv tcp

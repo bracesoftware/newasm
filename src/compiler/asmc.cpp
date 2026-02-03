@@ -364,6 +364,8 @@ namespace newasm
                 {
                     lineCompiled.tokens.at(i) = newasm::header::functions::trim(lineCompiled.tokens.at(i));
                     lineCompiled.tokens.at(i) = newasm::compiler::parse_def(lineCompiled.tokens.at(i));
+
+                    lineCompiled.tokens.at(i) = newasm::header::functions::parseBackslash(lineCompiled.tokens.at(i));
                     // optimisation
                     if(i == 1)
                     {

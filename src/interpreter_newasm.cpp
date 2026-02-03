@@ -125,6 +125,7 @@ namespace newasm
             void krnl(std::string text);
             //void parseRegDeref(std::string& arg);
             std::pair<bool, int> issizeof(const std::string& str);
+            inline std::string parseBackslash(const std::string& s);
         }
     }
     namespace common
@@ -144,6 +145,12 @@ namespace newasm
     }
     namespace compiler
     {
+        struct argumentData
+        {
+            int type;
+            int addr;
+        };
+
         struct lineData
         {
             std::string raw;
@@ -153,6 +160,9 @@ namespace newasm
 
             int priArgType = 0;
             int altArgType = 0;
+
+            newasm::compiler::argumentData suffixLiteral;
+            newasm::compiler::argumentData operandLiteral;
         };
 
         std::string parse_def(std::string suf);

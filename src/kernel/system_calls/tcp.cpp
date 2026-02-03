@@ -25,7 +25,7 @@ the Initial Developer. All Rights Reserved.
 // get shi from go
 extern "C"
 {
-    int send_tcp(const char* addr, const char* msg);
+    int send_tcp(const char* addr, const char* msg, const char* err_buf, int size);
     char* recv_tcp(const char* addr);
     void tcp_init();
 }
@@ -37,10 +37,12 @@ namespace newasm
     {
         namespace tcp
         {
-            int send(std::string addr, std::string content)
+            inline std::pair<int, std::string> send(std::string addr, std::string content)
             {
-                auto res = send_tcp(addr.c_str(), content.c_str());
-                return res;
+                char err_buf[128] = {0};
+                auto res = send_tcp(addr.c_str(), content.c_str(), err_buf, sizeof(err_buf));
+                std::string err(err_buf);
+                return {res, err};
             }
             std::string recv(std::string addr)
             {

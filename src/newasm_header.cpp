@@ -224,6 +224,7 @@ namespace newasm
                     dest = "u-Arch";//std::cout << "Unknown architecture" << std::endl;
                 #endif
             }
+
             void nullprint(std::string text)
             {
                 std::cout << text << std::endl;
@@ -1749,6 +1750,71 @@ namespace newasm
                 }
 
                 return tokens;
+            }
+
+            //////
+            inline std::string parseBackslash(const std::string& s) // RETURNS WHAT WE NEED, IT DOESN'T PASS BY REFERENCE
+            {
+                std::string final_str = s;
+
+                if(!newasm::header::functions::istext(s))
+                {
+                    return final_str;
+                }
+                if(!newasm::header::functions::ischar(s))
+                {
+                    return final_str;
+                }
+
+                std::string before_slash, after_slash;
+                char character;
+                int idx = 0;
+
+                while(true)
+                {
+                    idx = final_str.find('\\');
+
+                    if(idx == std::string::npos)
+                    {
+                        return final_str;
+                    }
+
+                    if(idx + 1 >= final_str.size())
+                    {
+                        return final_str;
+                    }
+
+                    character = final_str[idx + 1];
+
+                    // support for \n, \t, \r, \a etc.
+                    before_slash = final_str.substr(0, idx);
+                    after_slash = final_str.substr(idx + 2, final_str.size() - idx - 2);
+
+                    static const std::unordered_map<char, char> escape_map = {
+                        {'n', '\n'},
+                        {'r', '\r'},
+                        {'t', '\t'},
+                        {'v', '\v'},
+                        {'f', '\f'},
+                        {'a', '\a'},
+                        {'b', '\b'},
+                        {'\\', '\\'},
+                        {'\'', '\''},
+                        {'"', '\"'},
+                        {'0', '\0'}
+                    };
+
+                    auto charry = escape_map.find(character);
+                    if(charry != escape_map.end())
+                    {
+                        final_str = before_slash + charry->second + after_slash;
+                    }
+                    if(charry == escape_map.end())
+                    {
+                        final_str = before_slash + "?" + after_slash;
+                    }
+                }
+                return final_str;
             }
         }
     }
