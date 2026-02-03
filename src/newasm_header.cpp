@@ -658,10 +658,15 @@ namespace newasm
                 }
                 return !str.empty() && str.front() == '"' && str.back() == '"' && quocount == 2;
             }
+
             inline bool istext(const std::string& s)
             {
-                return s.size() >= 2 && s.front() == '"' && s.back() == '"' &&
-                    std::count(s.begin(), s.end(), '"') == 2;
+                return (s.size() >= 2 && s.front() == '"' && s.back() == '"');
+            }
+
+            inline bool istext__(const std::string& s)
+            {
+                return (s.size() >= 2 && s.front() == '"' && s.back() == '"' && std::count(s.begin(), s.end(), '"') == 2);
             }
 
             inline bool isref_(const std::string& str)

@@ -33,6 +33,8 @@ namespace newasm
     const int KERNEL_VERSION = 2;
 }
 
+namespace SYS = newasm;
+
 #include "runtime/common/os.h"
 #include "runtime/common/arch.h"
 

@@ -1096,6 +1096,15 @@ namespace newasm
         }
        
 
+        auto it = newasm::inverted_ins.find(ins);
+        if(it == newasm::inverted_ins.end())
+        {
+            newasm::terminate(newasm::exit_codes::invalid_ins);
+            return 1;
+        }
+
+        //we got this stop flag under the instruction checking
+        //so we can easily check what instructions are being added to a function,etc
         if(newasm::system::stop == 1)
         {
             newasm::system::proclines ++;
@@ -1105,15 +1114,9 @@ namespace newasm
             newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo.raw);
             return 1;
         }
-        //parse the operand
-        newasm::runtime::functions::parse(opr);
 
-        auto it = newasm::inverted_ins.find(ins);
-        if(it == newasm::inverted_ins.end())
-        {
-            newasm::terminate(newasm::exit_codes::invalid_ins);
-            return 1;
-        }
+        //parse the operand before execution
+        newasm::runtime::functions::parse(opr);
         switch(it->second)
         {
             case newasm::core::lang_inf::Link___:
@@ -6169,13 +6172,11 @@ namespace newasm
 
         if(newasm::lambda::lambda_now)
         {
-            if(newasm::thread_line)
+            if((newasm::thread_line && newasm::lambda::GLOBAL.thread) or (!newasm::thread_line && !newasm::lambda::GLOBAL.thread))
             {
-                if(newasm::lambda::GLOBAL.thread)
-                {
-                    newasm::lambda::GLOBAL.contents.push_back(line.raw);
-                }
+                newasm::lambda::GLOBAL.contents.push_back(line.raw);
             }
+            #if 0
             if(!newasm::thread_line)
             {
                 if(!newasm::lambda::GLOBAL.thread)
@@ -6183,6 +6184,7 @@ namespace newasm
                     newasm::lambda::GLOBAL.contents.push_back(line.raw);
                 }
             }
+            #endif
             return 1;
         }
 
