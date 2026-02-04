@@ -171,3 +171,4 @@ NewASM features many instructions, around 70 of them. Here is a list:
 NewASM features different concepts such as decorators, namespaces, primitive classes and more advanced stuff.
 1. [Decorators](docs/concepts/deco.md)
 2. [Namespaces](docs/concepts/namespaces.md)
+3. [Lambda procedures](docs/concepts/lambda.md)
