@@ -169,7 +169,7 @@ namespace newasm
             newasm::compiler::argumentData suffixLiteral;
             newasm::compiler::argumentData operandLiteral;
 
-            int whatAmIDoing = 0;
+            int whatAmIDoing = INVALID_INS;
         };
 
         std::string parse_def(std::string suf);

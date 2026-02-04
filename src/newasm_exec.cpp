@@ -1126,8 +1126,14 @@ namespace newasm
 
         //parse the operand before execution
         newasm::runtime::functions::parse(opr);
-        switch(lineData.whatAmIDoing)//switch(it->second)
+        switch(lineInfo.whatAmIDoing)//switch(it->second)
         {
+            case INVALID_INS:
+            {
+                newasm::terminate(newasm::exit_codes::invalid_ins);
+                return 1;
+            }
+            //link
             case newasm::core::lang_inf::Link___:
             {
                 newasm::terminate(newasm::exit_codes::linker_err);
@@ -3237,8 +3243,15 @@ namespace newasm
             newasm::terminate(newasm::exit_codes::invalid_ins);//,wholeline);
             return 1;
         }*/
+
         switch(lineInfo.whatAmIDoing)//switch(it->second)
         {
+            case INVALID_INS:
+            {
+                newasm::terminate(newasm::exit_codes::invalid_ins);
+                return 1;
+            }
+            //link
             case newasm::core::lang_inf::Link___:
             {
                 newasm::terminate(newasm::exit_codes::linker_err);
@@ -3984,6 +3997,7 @@ namespace newasm
                 {
                     if(!newasm::thread_line)
                     {
+                        //std::cout << "THIS IS FUCKD UP!!" << std::endl;
                         newasm::terminate(newasm::exit_codes::invalid_syntax);
                         return 1;
                     }
@@ -5286,6 +5300,12 @@ namespace newasm
 
         switch(lineInfo.whatAmIDoing)//switch(it->second)
         {
+            case INVALID_INS:
+            {
+                newasm::terminate(newasm::exit_codes::invalid_ins);
+                return 1;
+            }
+            //link
             case newasm::core::lang_inf::Link___:
             {
                 newasm::terminate(newasm::exit_codes::linker_err);

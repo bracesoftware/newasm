@@ -308,6 +308,20 @@ namespace newasm
                             lineCompiled.other = newasm::header::functions::trim(line.substr(idx__ + 2));
                             lineCompiled.tokens.push_back(linetokens_inline.at(0));
                             lineCompiled.tokens.push_back(linetokens_inline.at(1));
+
+                            std::string& instruction = linetokens_inline.at(0);
+
+                            auto it = newasm::inverted_ins.find(instruction);
+                            if(it != newasm::inverted_ins.end())
+                            {
+                                lineCompiled.whatAmIDoing = it->second;
+                            }
+
+                            if(it == newasm::inverted_ins.end())
+                            if(newasm::mem::functions::datavalid(instruction, newasm::mem::instructions))
+                            {
+                                lineCompiled.whatAmIDoing = INS_EXTERNAL;
+                            }
                             return lineCompiled;
                         }
                         if(linetokens_inline.size() == 1) // process_is(line, linetokens_inline.at(0), linetokens_inline.at(1))
@@ -315,6 +329,20 @@ namespace newasm
                             lineCompiled.type = newasm::compiler::conditional;
                             lineCompiled.other = newasm::header::functions::trim(line.substr(idx__ + 2));
                             lineCompiled.tokens.push_back(linetokens_inline.at(0));
+
+                            std::string& instruction = linetokens_inline.at(0);
+
+                            auto it = newasm::inverted_ins.find(instruction);
+                            if(it != newasm::inverted_ins.end())
+                            {
+                                lineCompiled.whatAmIDoing = it->second;
+                            }
+
+                            if(it == newasm::inverted_ins.end())
+                            if(newasm::mem::functions::datavalid(instruction, newasm::mem::instructions))
+                            {
+                                lineCompiled.whatAmIDoing = INS_EXTERNAL;
+                            }
                             return lineCompiled;
                         }
                     }
@@ -358,15 +386,17 @@ namespace newasm
                 lineCompiled.tokens = linetokens;
                 lineCompiled.tokens.at(0) = instruction;
 
-                auto it = newasm::inverted_ins.find(ins);
-                if(it == newasm::inverted_ins.end())
+                auto it = newasm::inverted_ins.find(instruction);
+                if(it != newasm::inverted_ins.end())
                 {
-                    //newasm::terminate(newasm::exit_codes::invalid_ins);
-                    newasm::compiler::abort(newasm::compiler::fail::unmatched_syntax);
-                    return lineCompiled;
+                    lineCompiled.whatAmIDoing = it->second;
                 }
 
-                lineCompiled.whatAmIDoing = it->second;
+                if(it == newasm::inverted_ins.end())
+                if(newasm::mem::functions::datavalid(instruction, newasm::mem::instructions))
+                {
+                    lineCompiled.whatAmIDoing = INS_EXTERNAL;
+                }
 
                 lineCompiled.priArgType = newasm::datatypes::symbol_name;
                 lineCompiled.altArgType = newasm::datatypes::symbol_name;
