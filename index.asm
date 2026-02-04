@@ -1307,10 +1307,16 @@ sysenter "ios"
     mov tlr, &TEST
     syscall ; display the thread output
 
+    mov tlr, "DLL moment of thruth: "
+    call std::ios::write
+
     mov dlx, "testlib"
     mov fdx, 1
     sysenter "ext"
     syscall
+
+    call std::ios::writeln
+    
 using "ios"
 .data
     [lock]

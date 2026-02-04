@@ -19,7 +19,7 @@ the Initial Developer. All Rights Reserved.
 
 #include <windows.h>
 using LibHandle = HMODULE;
-using FuncHandler = std::string(*)();
+using FuncHandler = const char*(*)();
 LibHandle loadLibrary(const char* libname)
 {
     return LoadLibraryA(libname);
@@ -80,7 +80,7 @@ namespace newasm
                     return 1;
                 }
 
-                newasm::mem::regs::tlr.set_value(_NEWASM_CALL_FUNC());
+                newasm::mem::regs::tlr.set_value(std::string(_NEWASM_CALL_FUNC()));
 
                 closeLibrary(newasm::library);
                 return 0;
