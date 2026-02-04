@@ -1105,12 +1105,12 @@ namespace newasm
         }
        
 
-        auto it = newasm::inverted_ins.find(ins);
+        /*auto it = newasm::inverted_ins.find(ins);
         if(it == newasm::inverted_ins.end())
         {
             newasm::terminate(newasm::exit_codes::invalid_ins);
             return 1;
-        }
+        }*/
 
         //we got this stop flag under the instruction checking
         //so we can easily check what instructions are being added to a function,etc
@@ -1126,7 +1126,7 @@ namespace newasm
 
         //parse the operand before execution
         newasm::runtime::functions::parse(opr);
-        switch(it->second)
+        switch(lineData.whatAmIDoing)//switch(it->second)
         {
             case newasm::core::lang_inf::Link___:
             {
@@ -3230,13 +3230,14 @@ namespace newasm
             newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo.raw);
             return 1;
         }
+        /*
         auto it = newasm::inverted_ins.find(ins);
         if(it == newasm::inverted_ins.end())
         {
             newasm::terminate(newasm::exit_codes::invalid_ins);//,wholeline);
             return 1;
-        }
-        switch(it->second)
+        }*/
+        switch(lineInfo.whatAmIDoing)//switch(it->second)
         {
             case newasm::core::lang_inf::Link___:
             {
@@ -5276,14 +5277,14 @@ namespace newasm
     }
     int process_i(std::string line, std::string ins, newasm::compiler::lineData& lineInfo)
     {
-        auto it = newasm::inverted_ins.find(ins);
+        /*auto it = newasm::inverted_ins.find(ins);
         if(it == newasm::inverted_ins.end())
         {
             newasm::terminate(newasm::exit_codes::invalid_ins);
             return 1;
-        }
+        }*/
 
-        switch(it->second)
+        switch(lineInfo.whatAmIDoing)//switch(it->second)
         {
             case newasm::core::lang_inf::Link___:
             {
@@ -5337,7 +5338,7 @@ namespace newasm
             //std::cout << newasm::system::cproc << " : " << newline << std::endl;
             return 1;
         }
-        switch(it->second)
+        switch(lineInfo.whatAmIDoing)//switch(it->second)
         {
             //nop
             case newasm::core::lang_inf::nop:

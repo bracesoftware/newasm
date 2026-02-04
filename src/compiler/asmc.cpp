@@ -358,6 +358,16 @@ namespace newasm
                 lineCompiled.tokens = linetokens;
                 lineCompiled.tokens.at(0) = instruction;
 
+                auto it = newasm::inverted_ins.find(ins);
+                if(it == newasm::inverted_ins.end())
+                {
+                    //newasm::terminate(newasm::exit_codes::invalid_ins);
+                    newasm::compiler::abort(newasm::compiler::fail::unmatched_syntax);
+                    return lineCompiled;
+                }
+
+                lineCompiled.whatAmIDoing = it->second;
+
                 lineCompiled.priArgType = newasm::datatypes::symbol_name;
                 lineCompiled.altArgType = newasm::datatypes::symbol_name;
 

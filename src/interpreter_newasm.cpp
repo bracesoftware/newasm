@@ -168,6 +168,8 @@ namespace newasm
 
             newasm::compiler::argumentData suffixLiteral;
             newasm::compiler::argumentData operandLiteral;
+
+            int whatAmIDoing = 0;
         };
 
         std::string parse_def(std::string suf);
