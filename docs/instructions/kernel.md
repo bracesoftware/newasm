@@ -17,13 +17,13 @@ You use `sysenter` to expose a specific kernel module to the program, and `sysca
 #### `syscall` list
 | Module | ID    | Arguments | Description |
 | ----- | ---------------- | --------- | ----------- |
-| `ios` | `1` | `tlr`, `stl`, `bos` | Prints exclusively text with the size of `bos` (byte output size). Uses `stl` as a help argument. |
-| `ios` | `2` | `tlr`, `stl` | Prints integers and floating point numbers. Uses `stl` as a help argument. |
+| `ios` | `1` | `tlr`, `bos` | Prints exclusively text with the size of `bos` (byte output size). Uses `stl` as a help argument. |
+| `ios` | `2` | `tlr` | Prints integers and floating point numbers. Uses `stl` as a help argument. |
 | `ios` | `3` | - | Requests textual user input and stores the value in `tlr`. |
 | `ios` | `4` | - | Requests numeric (including floats) user input and stores the value in `tlr`. |
 | `ios` | `5` | `tlr` | Prints the textual value of a built-in operand. |
-| `ios` | `6` | `tlr`, `stl` | Prints the name of a symbol a reference is pointing to. |
-| `ios` | `7` | `tlr`, `stl` | Prints a single character. |
+| `ios` | `6` | `tlr` | Prints the name of a symbol a reference is pointing to. |
+| `ios` | `7` | `tlr` | Prints a single character. |
 | `ios` | `8` | - | Requests a single character input from the user and stores the value in `tlr`. |
 | `fs` | `1` | `tlr` | Create a directory; with `tlr` being a string containing the directory name. |
 | `fs` | `2` | `tlr` | Remove a directory; with `tlr` being a string containing the directory name. |
