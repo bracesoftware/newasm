@@ -1,3 +1,7 @@
+<div align="center">
+    <img height="300" src="https://github.com/bracesoftware/newasm/readme_resources/newasm_logo.png">
+</div>
+
 # `NewASM` Release Notes
 Welcome to **`NewASM`**: an interpreted low-level programming language which combines explicit memory and register control, giving it a breeze of assembly-like feel, with high-level functionalities such as objects, threads and more.
 
