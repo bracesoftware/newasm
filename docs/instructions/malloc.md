@@ -6,6 +6,7 @@ This article includes the following instructions:
 2. [`sel`](#sel)
 3. [`vmov` and `cast`](#vmov-and-cast)
 4. [`movaddr`, `movasx` and `lea`](#movaddr-and-movasx)
+5. [`merge`](#merge)
 
 ### `malloc` and `free`
 Easily manage heap memory. Example:
@@ -139,3 +140,6 @@ del &tuple
 lea &tuple, index
 movasx &tuple, *hea ; specific addr
 ```
+
+## `merge`
+Used for merging contexts.

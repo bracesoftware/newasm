@@ -99,7 +99,7 @@ namespace newasm
             const int shr = 40;//
 
             const int db = 41;//
-            const int malloc__ = 42;///
+            const int malloc__ = 42;//
             const int free__ = 43;//
             const int stack = 44; //
             const int wait = 45;//
@@ -116,8 +116,8 @@ namespace newasm
             const int case__ = 54;//
             const int default__ = 55;//
 
-            const int in__ = 56;
-            const int out__ = 57;
+            const int in__ = 56;//
+            const int out__ = 57;//
 
             const int cast__ = 58;//
             const int async__ = 59;//
@@ -140,7 +140,7 @@ namespace newasm
             const int sel = 70;//
             const int align = 71;//
             
-            const int merge = 72;
+            const int merge = 72;//
 
             /// @brief //////
             const int Link___ = 73;

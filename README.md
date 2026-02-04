@@ -148,6 +148,10 @@ For example:
 ```
 
 ***
+#### Storing data into variables and containers
+In NewASM there's a huge variety of built in variable types and data containers. [Read more...](docs/data.md)
+
+***
 #### Available instructions
 NewASM features many instructions, around 70 of them. Here is a list:
 1. [Data manipulation instructions](docs/instructions/data_manip.md)
@@ -161,12 +165,9 @@ NewASM features many instructions, around 70 of them. Here is a list:
 9. [Switch block instructions](docs/instructions/switch.md)
 10. [I/O port-related instructions](docs/instructions/ioports.md)
 
-***
-#### Storing data into variables and containers
-In NewASM there's a huge variety of built in variable types and data containers, with standard variables coming soon (as soon as we figure out the appropriate syntax!).
-1. DOCS REWORK COMING SOON!
 
 ***
 #### Language concepts
 NewASM features different concepts such as decorators, namespaces, primitive classes and more advanced stuff.
-1. DOCS REWORK COMING SOON!
+1. [Decorators](docs/concepts/deco.md)
+2. [Namespaces](docs/concepts/namespaces.md)
