@@ -19,6 +19,7 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 
 + Removed old way of printing the new-line character.
 + Now you can use the `\` to specify special characters directly inside the string, as in any other language!
++ Updated the EXDK so it returns `const char*` instead of `std::string`, making NewASM interoperable with languages such as C, C++, Go, Rust and all of languages supporting C strings!
 
 ## Fixed issues
 

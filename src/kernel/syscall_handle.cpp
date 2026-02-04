@@ -64,6 +64,7 @@ namespace newasm
             if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::ext)
             {
                 newasm::kernel::dynamic::CALL(newasm::mem::regs::dlx, std::to_string(newasm::mem::regs::fdx));
+                newasm::mem::regs::tlr.add_end_("\"");
                 return 1;
             }
             if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::cmanip)
