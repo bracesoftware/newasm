@@ -155,7 +155,7 @@ NewASM features many instructions, around 70 of them. Here is a list:
 3. [Kernel-related instructions](docs/instructions/kernel.md)
 4. [Execution flow instructions](docs/instructions/exec_flow.md)
 5. [Miscellaneous instructions](docs/instructions/misc.md)
-5. [Mathematical instructions](docs/instructions/math.md)
+5. [Mathematical instructions and bit operations](docs/instructions/math.md)
 
 ***
 #### Storing data into variables and containers
