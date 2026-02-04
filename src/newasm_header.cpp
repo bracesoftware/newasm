@@ -1835,18 +1835,24 @@ namespace newasm
 
         namespace impl
         {
-            int parse_proj_settings(const std::string &key, const std::string &value)
+            inline int parse_proj_settings(const std::string &key, const std::string &value)
             {
                 if(key == static_cast<std::string>("name"))
                 {
                     newasm::project_data::name = value;
+                    return 1;
                 }
                 if(key == static_cast<std::string>("version"))
                 {
                     newasm::project_data::version = value;
+                    return 1;
                 }
                 if(key == static_cast<std::string>("dlibs"))
                 {
+                    if(value == NIL_STR)
+                    {
+                        return 1;
+                    }
                     dynamic_libs.clear();
                     newasm::header::functions::info("Loading the dynamic libraries...");
                     //std::cout << "Debugging MEGA CRASH " << "1\n";
@@ -1991,7 +1997,9 @@ namespace newasm
 
                         if(internal_fileobject.is_open())
                         {
-                            internal_fileobject << "name = Unnamed project" << "\n" << "version = 0.0.1" << "\n";
+                            internal_fileobject << "name = Unnamed project" << "\n";
+                            internal_fileobject << "version = 0.0.1" << "\n";
+                            internal_fileobject << "dlibs = nil" << "\n";
                             internal_fileobject.close();
                         }
                     }

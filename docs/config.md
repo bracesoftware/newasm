@@ -28,6 +28,9 @@ version = 0.0.1
 dlibs = testlib, sayhi
 ```
 
+> [!TIP]
+> If you don't use any dynamic libraries, just do `dlibs = nil`.
+
 ## Dynamic libraries
 Dynamic libraries (`.newasm_dl` file) are files that provide user-made instructions. For example, let's say this is a NewASM dynamic library you wrote:
 
