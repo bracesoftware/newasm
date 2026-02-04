@@ -120,8 +120,8 @@ Interpreter mode runs your application through several phases.
 This section of the wiki provides a deep walkthrough of the language itself.
 ### Table of contents
 - [Code sections](#code-sections)
-- [Available instructions](#available-instructions)
 - [Storing data into variables and containers](#storing-data-into-variables-and-containers)
+- [Available instructions](#available-instructions)
 - [Language concepts](#language-concepts)
 ***
 #### Code sections
@@ -172,3 +172,4 @@ NewASM features different concepts such as decorators, namespaces, primitive cla
 1. [Decorators](docs/concepts/deco.md)
 2. [Namespaces](docs/concepts/namespaces.md)
 3. [Lambda procedures](docs/concepts/lambda.md)
+4. [Environment variables](docs/concepts/env.md)
