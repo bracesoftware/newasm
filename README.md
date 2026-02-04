@@ -180,3 +180,7 @@ NewASM features different concepts such as decorators, namespaces, primitive cla
 2. [Namespaces](docs/concepts/namespaces.md)
 3. [Lambda procedures](docs/concepts/lambda.md)
 4. [Environment variables](docs/concepts/env.md)
+
+## Other resources
+This is a list of extra resources that might help.
+1. [Error exit codes](docs/exit_codes.md)
