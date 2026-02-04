@@ -87,6 +87,9 @@ When running the `newasm` executeable, you can run it in 2 different modes:
 
 To run the interpreter, use `newasm <filename>.asm`, but to run the shell, just run the `newasm` app.
 
+> [!NOTE]
+> To read more about configuring your NewASM application, [click here...](docs/config.md)
+
 ***
 
 #### Shell mode
