@@ -98,15 +98,15 @@ namespace newasm
             const int shl = 39;//
             const int shr = 40;//
 
-            const int db = 41;
+            const int db = 41;//
             const int malloc__ = 42;///
             const int free__ = 43;//
             const int stack = 44; //
-            const int wait = 45;
+            const int wait = 45;//
             const int sysenter = 46;//
-            const int xchg = 47;
-            const int int__ = 48;
-            const int cls = 49;
+            const int xchg = 47;//
+            const int int__ = 48;//
+            const int cls = 49;//
 
             const int await__ = 50;
             const int retf = 51;//

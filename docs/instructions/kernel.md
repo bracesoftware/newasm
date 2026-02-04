@@ -2,6 +2,7 @@
 These instructions are used to manipulate with the kernel and access its functions.
 Following instructions will be covered in the article:
 1. [`sysenter` and `syscall`](#sysenter-and-syscall)
+2. [`int`](#int)
 
 ## `sysenter` and `syscall`
 You use `sysenter` to expose a specific kernel module to the program, and `syscall` to call a specific function from the exposed module.
@@ -72,3 +73,12 @@ You use `sysenter` to expose a specific kernel module to the program, and `sysca
 | `crypto` | `3` | `tlr`, `stl` | Performs XOR decryption on a string stored in `tlr`. The result is stored in `tlr`. Store a specific key into `stl`. |
 | `tuple` | `1` | `tlr` | Get tuple size, `tlr` is a reference to a tuple. Result is stored in `tlr`. |
 | `ctx` | `1` | `tlr` | Get context size, `tlr` is a reference to a context. Result is stored in `tlr`. |
+
+## `int`
+This instruction is used to directly talk to the system.
+
+```asm
+int 0x3 ; tells the system to manually calculate the `bos` size for output
+```
+
+Currently, only `0x3` is available. Others are deprecated.
