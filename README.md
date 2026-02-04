@@ -118,6 +118,10 @@ Interpreter mode runs your application through several phases.
 
 > [!TIP]
 > We're planning to add JIT compilation into native code, but that's in the testing phase.
+
+> [!NOTE]
+> [Click here...](docs/comptins.md) to read more about compile-time instructions/directives.
+
 ***
 ## The language
 This section of the wiki provides a deep walkthrough of the language itself.
