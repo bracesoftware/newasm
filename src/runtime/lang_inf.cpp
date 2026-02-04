@@ -57,14 +57,14 @@ namespace newasm
         {
             const int load = 1;//
             const int stor = 2;//
-            const int sysreq = 3;
+            const int sysreq = 3;//-- WILL BE REWORKED
             const int pop = 4;//
             const int retn = 5;//
             const int mov = 6;//
             const int syscall = 7;//
             const int proc = 8;//
             const int call = 9;//
-            const int rem = 10;
+            const int rem = 10;//
             const int halt = 11;//
             const int push = 12;//
             const int jmp = 13;//
@@ -78,13 +78,13 @@ namespace newasm
             const int jge = 21;//
 
             const int ret = 22;//
-            const int zero = 23;
-            const int inc = 24;
-            const int dec = 25;
+            const int zero = 23;//
+            const int inc = 24;//
+            const int dec = 25;//
 
-            const int exit = 26;
+            const int exit = 26;//
             const int end = 27;//
-            const int nop = 28;
+            const int nop = 28;//
             const int add = 29;
             const int sub = 30;
             const int div = 31;
