@@ -4,6 +4,7 @@ These instructions are used to manually allocate memory on the heap and use it.
 This article includes the following instructions:
 1. [`malloc` and `free`](#malloc-and-free)
 2. [`sel`](#sel)
+3. [`vmov` and `cast`](#vmov-and-cast)
 
 ### `malloc` and `free`
 Easily manage heap memory. Example:
@@ -53,4 +54,16 @@ To select what block we want to manipulate, we use `sel`:
     mov hea, [0]
     ; do smth
     free alloc
+```
+
+## `vmov` and `cast`
+
+You can save data and load data from the virtual memory. Virtual memory behaves differently from the heap and the stack. In order to allocate a specific amount of cells in the virtual memory, use `malloc`:
+
+```asm
+malloc 27_ ; use the _ operator to tell malloc to REALLOCATE number of cells in the virtual memory
+vmov {4}, "Hello" ; in the new vmov instruction we can modify this memory
+cast string ; tell the interpreter to read a string
+mov tlr, {4} ; using the {} operator we access the data inside the virtual memory
+malloc 0_ ; we can free the memory manually, but not really needed since the program does that for us
 ```

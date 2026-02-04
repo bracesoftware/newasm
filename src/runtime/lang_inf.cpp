@@ -128,14 +128,14 @@ namespace newasm
             const int send = 62;//
             const int recv = 63;//
 
-            const int del = 64;
+            const int del = 64;//
             const int movaddr = 65;
 
-            const int jz = 66;
-            const int jnz = 67;
+            const int jz = 66;//
+            const int jnz = 67;//
 
             const int movasx = 68;
-            const int movas = 69;
+            const int movas = 69;//
 
             const int sel = 70;//
             const int align = 71;
