@@ -25,7 +25,7 @@ This instruction allows you to change values of registers and variables.
 | ------------- | --------- | ----------- |
 | `fdx` | function index | Holds an index of a function `syscall` will call. |
 | `tlr` | typeless register | Typeless register (can hold any value, even code literals). Used as an output argument in some `syscall`s. |
-| `stl` | secondary typeless register | Typeless register; however used to hold built-in operands for `syscall`s. |
+| `stl` | secondary typeless register | Typeless register as well; used as a helping register in `syscall`s. |
 | `bos` | byte output size | Specify the number of bytes you want to print out. Works only on `syscall` 1 in `"ios"`. |
 | `stk` | stack pointer | Points at the top of the stack. |
 | `hea` | heap pointer | Points at an address in the heap. |
@@ -44,16 +44,18 @@ This instruction allows you to change values of registers and variables.
 Special characters supported by the virtual machine are listed below.
 | Character code | Description |
 | ----- | ---------------- |
-| `0c0` | empty character |
-| `0c1` | new line |
-| `0c2` | carriage return |
-| `0c3` | tabulator |
-| `0c4` | alert |
-| `0c5` | backspace |
+| `\n` | newline |
+| `\r` | carriage return |
+| `\b` | backspace |
+| `\a` | alert |
+| `\t` | tabulator |
+| `\v` | vertical tab |
+| `\f` | form feed |
+| `\0` | null terminator |
 
 ## `stor`
 > [!WARNING]
-> This instruction will be probably removed in the future.
+> This instruction cannot be used for anything else but objects.
 
 This is used strictly for objects.
 
