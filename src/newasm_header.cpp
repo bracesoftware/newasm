@@ -60,7 +60,11 @@ namespace newasm
             std::string lastln = "";
             int lastlndx = 0;
             bool exception = true;
-            bool repl = false;
+            #if 0
+                #ifndef newasm::header::data::repl
+                    bool repl = false;
+                #endif
+            #endif
             bool repl_end = false;
             bool proc_now = false;
             bool struct_now = false;
@@ -1753,14 +1757,18 @@ namespace newasm
             }
 
             //////
+            template<bool _Force = false>
             inline std::string parseBackslash(const std::string& s) // RETURNS WHAT WE NEED, IT DOESN'T PASS BY REFERENCE
             {
                 std::string final_str = s;
 
-                if((!newasm::header::functions::istext(final_str)) && (!newasm::header::functions::ischar(final_str)))
+                if constexpr(!_Force)
                 {
-                    //std::cout << "s: ``" << final_str << "`` is NOT text" << std::endl;
-                    return final_str;
+                    if((!newasm::header::functions::istext(final_str)) && (!newasm::header::functions::ischar(final_str)))
+                    {
+                        //std::cout << "s: ``" << final_str << "`` is NOT text" << std::endl;
+                        return final_str;
+                    }
                 }
 
                 std::string before_slash, after_slash;

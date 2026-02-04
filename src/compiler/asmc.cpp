@@ -218,6 +218,7 @@ namespace newasm
                 lineCompiled.type = newasm::compiler::dataDecl;
                 lineCompiled.tokens.push_back(typ);
                 lineCompiled.tokens.push_back(name);
+                value = newasm::header::functions::parseBackslash(value);
                 lineCompiled.tokens.push_back(value);
 
                 if(typ == "obj")

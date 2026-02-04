@@ -60,7 +60,7 @@ using "math"
         __say 0,"thread debug 9"
         __say 0,"thread debug 10"
         
-        mov tlr, "Hello from thread"
+        mov tlr, "Hello from thread\n"
         mov stl, 0c1
         mov fdx, 1
         sysenter "ios"
@@ -98,7 +98,7 @@ using "math"
         __say 0,"thread debug 2"
         __say 0,"thread debug 4"
 
-        mov tlr, "hello from thread 2"
+        mov tlr, "hello from thread 2\n"
         mov bos, 5
         mov stl, 0c1
         mov fdx, 1
@@ -107,7 +107,7 @@ using "math"
     }
     thread  testthread3 -> {
 
-        mov tlr, "hello from thread 3"
+        mov tlr, "hello from thread 3\n"
         mov bos, 5
         mov stl, 0c1
         mov fdx, 1
@@ -2065,7 +2065,7 @@ link "testfile.asm" ; link a file
     link "testfile3.asm"
     jmp hehe
     :lel__________
-    mov tlr, "labele rade fino Allaha mi"
+    mov tlr, "labele rade fino Allaha mi\n"
     call std::ios::writeln
     ;LMFAO TEST
 :hehe
@@ -2083,16 +2083,25 @@ link "testfile.asm" ; link a file
     ./hi
         intg age: 19
         tuple humanData: ("ele bre", "nigga")
-        ctx myContext3: ("some_data": "lel")
+        ctx myContext3: ("some_data": "l\tel")
     ./!hi
 .start
-    mov tlr, "Hello, I am {hi::humanData(0)} {hi::humanData(1)},\n I am {hi::age} yrs old\n{hi::myContext3("some_data")}"
+    mov tlr, "\nHello, I am {hi::humanData(0)} {hi::humanData(1)},\n I am {hi::age} yrs old\n{hi::myContext3("some_data")}"
     sysenter "txtop"
     mov fdx, 4
     syscall
 
     call std::ios::writeln
 
+    mov tlr, "\tHello my people!"
+    call std::ios::write
+    mov tlr, "I love newasm\a"
+    call std::ios::writeln
+    mov tlr, "I am cool"
+    call std::ios::writeln
+    mov tlr, "I am cool 2"
+    call std::ios::writeln
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     mov tlr, 223
     ret *tlr
     ;using "kuku"

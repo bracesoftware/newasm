@@ -299,10 +299,10 @@ namespace newasm
 					std::cout << "ParseObject :: ZAJEBUCNUO TE -> " << e.what() << std::endl;
 				}
 
-                if(newasm::chars::map.find(suf) != newasm::chars::map.end())
+                /*if(newasm::chars::map.find(suf) != newasm::chars::map.end())
                 {
                     suf = newasm::chars::map.at(suf);
-                }
+                }*/
 				
 				// Just a specific tuple OR context index
 				if(newasm::header::functions::checkTupleFormat(suf).first)

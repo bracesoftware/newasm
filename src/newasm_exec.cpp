@@ -467,6 +467,7 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                         return 1;
                     }
+                    //value = newasm::header::functions::parseBackslash(value);
                     //newasm::header::functions::remq(value);
                     if(newasm::header::data::struct_now)
                     {
@@ -534,6 +535,7 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                         return 1;
                     }
+                    //value = newasm::header::functions::parseBackslash(value);
                     //newasm::header::functions::remsq(value);
                     if(newasm::header::data::struct_now)
                     {
@@ -592,6 +594,7 @@ namespace newasm
                         //charz
                         if(newasm::header::functions::ischar(value_buf))
                         {
+                            value_buf = newasm::header::functions::parseBackslash<true>(value_buf); //addin true means we're forcing backslash evaluation
                             address = newasm::hardware::randAccessMem.write<char>(newasm::header::functions::remsq(value_buf).at(0));
                             newasm::variables::ids.at(name).tuple->addr.push_back(address);
                             newasm::variables::ids.at(name).tuple->type.push_back(newasm::datatypes::character);
@@ -600,6 +603,7 @@ namespace newasm
                         //stringz
                         if(newasm::header::functions::istext(value_buf))
                         {
+                            value_buf = newasm::header::functions::parseBackslash<true>(value_buf);
                             address = newasm::hardware::randAccessMem.write<std::string>(newasm::header::functions::remq(value_buf));
                             newasm::variables::ids.at(name).tuple->addr.push_back(address);
                             newasm::variables::ids.at(name).tuple->type.push_back(newasm::datatypes::text);
@@ -661,6 +665,7 @@ namespace newasm
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                             return 1;
                         }
+                        
                         key = newasm::header::functions::remq(key);
                         if(newasm::header::functions::isnumeric(value__))
                         {
@@ -680,6 +685,7 @@ namespace newasm
                         }
                         if(newasm::header::functions::ischar(value__))
                         {
+                            value__ = newasm::header::functions::parseBackslash<true>(value__);
                             addr_temp = newasm::hardware::randAccessMem.write<char>(newasm::header::functions::remsq(value__).at(0));
                             newasm::variables::ids.at(name).context->addr.push_back(addr_temp);
                             newasm::variables::ids.at(name).context->keys.push_back(key);
@@ -688,6 +694,7 @@ namespace newasm
                         }
                         if(newasm::header::functions::istext(value__))
                         {
+                            value__ = newasm::header::functions::parseBackslash<true>(value__);
                             addr_temp = newasm::hardware::randAccessMem.write<std::string>(newasm::header::functions::remq(value__));
                             newasm::variables::ids.at(name).context->addr.push_back(addr_temp);
                             newasm::variables::ids.at(name).context->keys.push_back(key);
@@ -794,12 +801,14 @@ namespace newasm
                     }
                     if(newasm::header::functions::ischar(value))
                     {
+                        value = newasm::header::functions::parseBackslash<true>(value);
                         char val = newasm::header::functions::remsq(value).at(0);
                         newasm::variables::ids.at(name).yunion->addr = newasm::hardware::randAccessMem.write<char>(val);
                         return 1;
                     }
                     if(newasm::header::functions::istext(value))
                     {
+                        value = newasm::header::functions::parseBackslash<true>(value);
                         std::string val = newasm::header::functions::remq(value);
                         newasm::variables::ids.at(name).yunion->addr = newasm::hardware::randAccessMem.write<std::string>(val);
                         return 1;

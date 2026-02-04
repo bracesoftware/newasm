@@ -82,6 +82,11 @@ namespace newasm
         }
         inline static void out(const std::string& text)
         {
+            if(newasm::header::data::repl)
+            {
+                std::cout << text;
+                return;
+            }
             if(!newasm::consoleOpen)
             {
                 return;
@@ -98,6 +103,12 @@ namespace newasm
         }
         inline static std::string in()
         {
+            if(newasm::header::data::repl)
+            {
+                std::string line;
+                std::getline(std::cin, line);
+                return line;
+            }
             if(!newasm::consoleOpen)
             {
                 return std::string("nil");

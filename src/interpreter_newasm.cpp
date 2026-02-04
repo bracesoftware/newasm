@@ -28,9 +28,9 @@ the Initial Developer. All Rights Reserved.
 
 namespace newasm
 {
-    const int BUILD_NUMBER = 16;
+    const int BUILD_NUMBER = 17;
     const int RUNTIME_VERSION = 5;
-    const int KERNEL_VERSION = 2;
+    const int KERNEL_VERSION = 3;
 }
 
 namespace SYS = newasm;
@@ -98,7 +98,6 @@ extern "C"
 {
     void free_string(char* str);
 }
-#include "vm/_console.cpp"
 #include "vm/hardware/cpu_register.cpp"
 
 // Resources (assets) used in the program
@@ -125,7 +124,13 @@ namespace newasm
             void krnl(std::string text);
             //void parseRegDeref(std::string& arg);
             std::pair<bool, int> issizeof(const std::string& str);
+
+            template<bool _Force>
             inline std::string parseBackslash(const std::string& s);
+        }
+        namespace data
+        {
+            bool repl = false;
         }
     }
     namespace common
@@ -408,6 +413,8 @@ namespace newasm
         }
     };
 }
+
+#include "vm/_console.cpp"
 
 /*
 Essential stuff needed to run

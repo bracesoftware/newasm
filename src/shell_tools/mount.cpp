@@ -24,7 +24,7 @@ static const std::string __stdlib_code = R"(
 ;
 .data
     ./std
-        intg version: 16
+        intg version: 17
 
         ./math
             float pi: 3.141
@@ -43,7 +43,7 @@ static const std::string __stdlib_code = R"(
             proc write
                 .$__newasm_cfg_manip __autobos=__TRUE
                 .$__newasm_krnl_config IOS/YES__
-                mov stl, 0c0 ; null terminator
+                ; DEPRECATED->mov stl, 0c0 ; null terminator
                 
                 mov fdx, 0
 
@@ -65,7 +65,7 @@ static const std::string __stdlib_code = R"(
             proc writeln
                 .$__newasm_cfg_manip __autobos=__TRUE
                 .$__newasm_krnl_config IOS/YES__
-                mov stl, 0c1 ; newline character
+                ; mov stl, 0c1 ; newline character
 
                 mov fdx, 0
                 
@@ -80,6 +80,11 @@ static const std::string __stdlib_code = R"(
                 
                 sysenter "ios"
                 syscall
+
+                mov tlr, "\n" ; we just print newline char
+                mov fdx, 1
+                syscall
+
                 .$__newasm_cfg_manip __autobos=__FALSE
                 .$__newasm_krnl_config IOS/NO__
                 halt 0

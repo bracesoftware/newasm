@@ -508,7 +508,7 @@ namespace newasm
                     }
                     
                     newasm::Console::out(newasm::threads::memory.at(thread__)->output.str());
-                    newasm::kernel::write_stl();
+                    //newasm::kernel::write_stl();
                     return 1;
                 }
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::thread, 2): //get returned val from thread
@@ -899,7 +899,7 @@ namespace newasm
                     if(newasm::thread_line)
                     {
                         newasm::threads::memory.at(newasm::threads::now)->output << _chars_;
-                        newasm::threads::memory.at(newasm::threads::now)->output << newasm::syscalls::iostream::get_ref_val__2(newasm::mem::regs::stl);
+                        //newasm::threads::memory.at(newasm::threads::now)->output << newasm::syscalls::iostream::get_ref_val__2(newasm::mem::regs::stl);
                         return 1;
                     }
 
@@ -921,7 +921,7 @@ namespace newasm
                         newasm::Console::out(_chars_);
                     }
                     
-                    newasm::kernel::write_stl();
+                    //newasm::kernel::write_stl();
                     return 1;
                 }
                 //print numbers and floats
@@ -944,7 +944,7 @@ namespace newasm
                     //newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
 
                     newasm::Console::out(newasm::mem::regs::tlr.get_value());
-                    newasm::kernel::write_stl();
+                    //newasm::kernel::write_stl();
                     return 1;
                 }
                 //input text
@@ -998,13 +998,13 @@ namespace newasm
                     if(newasm::thread_line)
                     {
                         newasm::threads::memory.at(newasm::threads::now)->output << newasm::header::functions::remamp(newasm::mem::regs::tlr);
-                        newasm::threads::memory.at(newasm::threads::now)->output << newasm::syscalls::iostream::get_ref_val__2(newasm::mem::regs::stl);
+                        //newasm::threads::memory.at(newasm::threads::now)->output << newasm::syscalls::iostream::get_ref_val__2(newasm::mem::regs::stl);
                         return 1;
                     }
                     
                     newasm::Console::out(newasm::header::functions::remamp(newasm::mem::regs::tlr));
                     //newasm::mem::functions::out_bopr(newasm::mem::regs::stl);
-                    newasm::kernel::write_stl();
+                    //newasm::kernel::write_stl();
                     return 1;
                 }
                 //print characters
@@ -1020,7 +1020,7 @@ namespace newasm
                     if(newasm::thread_line)
                     {
                         newasm::threads::memory.at(newasm::threads::now)->output << newasm::header::functions::remsq(newasm::mem::regs::tlr);
-                        newasm::threads::memory.at(newasm::threads::now)->output << newasm::syscalls::iostream::get_ref_val__2(newasm::mem::regs::stl);
+                        //newasm::threads::memory.at(newasm::threads::now)->output << newasm::syscalls::iostream::get_ref_val__2(newasm::mem::regs::stl);
                         return 1;
                     }
                     //std::cout << newasm::header::functions::remsq(newasm::mem::regs::tlr);
@@ -1028,7 +1028,7 @@ namespace newasm
 
                     newasm::Console::out(newasm::header::functions::remsq(newasm::mem::regs::tlr));
                     //newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
-                    newasm::kernel::write_stl();
+                    //newasm::kernel::write_stl();
                     return 1;
                 }
                 //input characters
