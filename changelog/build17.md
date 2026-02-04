@@ -1,5 +1,5 @@
 <div align="center">
-    <img height="300" src="https://github.com/bracesoftware/newasm/readme_resources/newasm_logo.png">
+    <img height="300" src="https://github.com/bracesoftware/newasm/blob/main/readme_resources/newasm_logo.png">
 </div>
 
 # `NewASM` Release Notes
