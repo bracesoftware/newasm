@@ -28,11 +28,10 @@ Below is the simple `Hello World` program written in New-Assembly.
 ```asm
 using "ios"
 .data
-    string text : "Hello world"
+    string text : "Hello world\n"
     intg len : $-text
 .start
     mov tlr, text
-    mov stl, 0c1
     mov fdx, 1
     mov bos, len
 
