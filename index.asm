@@ -1492,7 +1492,7 @@ using "ios"
         syscall
     }
 
-    send &threads::lol::myChannel, "Data from the channel"
+    send &threads::lol::myChannel, "Data from the channel\n"
     await &testChannel
     sysenter "thread"
     mov tlr, &testChannel

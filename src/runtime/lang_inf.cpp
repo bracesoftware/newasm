@@ -108,7 +108,7 @@ namespace newasm
             const int int__ = 48;//
             const int cls = 49;//
 
-            const int await__ = 50;
+            const int await__ = 50;//
             const int retf = 51;//
             const int vmov = 52;
 
@@ -120,13 +120,13 @@ namespace newasm
             const int out__ = 57;
 
             const int cast__ = 58;
-            const int async__ = 59;
+            const int async__ = 59;//
 
             const int lea = 60;
-            const int thread__ = 61;
+            const int thread__ = 61;//
 
-            const int send = 62;
-            const int recv = 63;
+            const int send = 62;//
+            const int recv = 63;//
 
             const int del = 64;
             const int movaddr = 65;
