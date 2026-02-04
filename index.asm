@@ -2101,6 +2101,19 @@ link "testfile.asm" ; link a file
     call std::ios::writeln
     mov tlr, "I am cool 2"
     call std::ios::writeln
+
+.data
+    string testToPrint: "Hello World\n"
+    intg length: $ - testToPrint
+.start
+    int 0x3
+    mov tlr, testToPrint
+    mov bos, length
+    mov fdx, 1
+    sysenter "ios"
+    syscall
+    syscall
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     mov tlr, 223
     ret *tlr
