@@ -45,7 +45,6 @@ Here's a basic example of using channels:
 
     thread testChannel -> {
         recv &threads::lol::myChannel ; <-- this blocks the thread until it receives data, data is stored in tlr
-        mov stl, 0c1
         mov fdx, 1
         sysenter "ios"
         syscall
