@@ -110,40 +110,40 @@ namespace newasm
 
             const int await__ = 50;//
             const int retf = 51;//
-            const int vmov = 52;
+            const int vmov = 52;//
 
-            const int switch__ = 53;
-            const int case__ = 54;
-            const int default__ = 55;
+            const int switch__ = 53;//
+            const int case__ = 54;//
+            const int default__ = 55;//
 
             const int in__ = 56;
             const int out__ = 57;
 
-            const int cast__ = 58;
+            const int cast__ = 58;//
             const int async__ = 59;//
 
-            const int lea = 60;
+            const int lea = 60;//
             const int thread__ = 61;//
 
             const int send = 62;//
             const int recv = 63;//
 
             const int del = 64;//
-            const int movaddr = 65;
+            const int movaddr = 65;//
 
             const int jz = 66;//
             const int jnz = 67;//
 
-            const int movasx = 68;
+            const int movasx = 68;//
             const int movas = 69;//
 
             const int sel = 70;//
-            const int align = 71;
+            const int align = 71;//
             
             const int merge = 72;
 
+            /// @brief //////
             const int Link___ = 73;
-
             const int __say = 100;
 
             const std::unordered_map<int, std::string> instruction_set = {

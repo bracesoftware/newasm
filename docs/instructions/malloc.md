@@ -5,6 +5,7 @@ This article includes the following instructions:
 1. [`malloc` and `free`](#malloc-and-free)
 2. [`sel`](#sel)
 3. [`vmov` and `cast`](#vmov-and-cast)
+4. [`movaddr`, `movasx` and `lea`](#movaddr-and-movasx)
 
 ### `malloc` and `free`
 Easily manage heap memory. Example:
@@ -66,4 +67,75 @@ vmov {4}, "Hello" ; in the new vmov instruction we can modify this memory
 cast string ; tell the interpreter to read a string
 mov tlr, {4} ; using the {} operator we access the data inside the virtual memory
 malloc 0_ ; we can free the memory manually, but not really needed since the program does that for us
+```
+
+## `movaddr` and `movasx`
+Super fun! Using `movaddr` you can manually set the address of a specific variable.
+
+> [!WARNING]
+> The `del` instruction is more documented in union-related documentation.
+
+```asm
+
+.data
+    string toBeDeleted : "hello"
+    ./funny
+        intg deletedNumber : 89
+    ./!funny
+.start
+    mov tlr, toBeDeleted
+    mov stl, 0c1
+    sysenter "ios"
+    mov fdx, 1
+    syscall
+
+    del &toBeDeleted ; delete the mem block it is pointin' to
+    del &funny::deletedNumber
+    malloc 64
+        mov hea, [0]
+        load *, "Hello from crazy var!"
+        ;load &, &toBeDeleted ; seg fault, we're writing to a memory block we marked as deleted
+        movaddr &toBeDeleted, *hea ; correct
+        mov tlr, toBeDeleted
+        mov stl, 0c1
+        sysenter "ios"
+        mov fdx, 1
+        syscall
+
+        heap 21 ; 16 chars in a string and 4 bytes for a header and 1 byte for a new var
+        ; if we had done "heap 20" it would
+        ; modify the variable before it,
+        ; but we would not get any error
+        ; since it is valid code
+        load *, 72345
+        movaddr &funny::deletedNumber, *hea
+        mov tlr, funny::deletedNumber
+        mov stl, 0c1
+        mov fdx, 2
+        syscall
+
+        mov tlr, toBeDeleted
+        mov stl, 0c1
+        sysenter "ios"
+        mov fdx, 1
+        syscall
+    free
+```
+Output:
+```
+Hello from crazy var!
+72345
+Hello from crazy var!
+```
+
+### `movasx` for tuples
+
+You can also change the pointer a member of a tuple is holding, with `lea` and `movasx`:
+
+```asm
+lea &tuple, index
+del &tuple
+
+lea &tuple, index
+movasx &tuple, *hea ; specific addr
 ```

@@ -10,6 +10,7 @@ Instructions covered in this article are listed below:
 7. [`cls`](#cls)
 8. [`wait`](#wait)
 9. [`xchg`](#xchg)
+10. [`align`](#align)
 
 ## `rem`
 Old-styled comments. Not recommended; wasting virtual CPU cycles!
@@ -85,4 +86,12 @@ Output:
 ```
 2
 1
+```
+
+## `align`
+Define memory address alignment.
+
+```asm
+.start
+    align <number>
 ```

@@ -157,7 +157,9 @@ NewASM features many instructions, around 70 of them. Here is a list:
 5. [Miscellaneous instructions](docs/instructions/misc.md)
 6. [Mathematical instructions and bit operations](docs/instructions/math.md)
 7. [Thread-related instructions](docs/instructions/thread.md)
-7. [Union-related instructions](docs/instructions/union.md)
+8. [Union-related instructions](docs/instructions/union.md)
+9. [Switch block instructions](docs/instructions/switch.md)
+10. [I/O port-related instructions](docs/instructions/ioports.md)
 
 ***
 #### Storing data into variables and containers
