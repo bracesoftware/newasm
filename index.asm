@@ -176,8 +176,7 @@ using "math"
     syscall
 :label3543
     ;mipazuzuzu
-.hndl
-    ~exit = __exit_proc
+
 .start
     proc  PROCEDURETEST
         __say 0, "PROCEDURETEST called"
@@ -369,7 +368,6 @@ __say 0,"debug5"
         mov  stl , "loloool"
         halt 1
     end
-.hndl
 .data
     string  teststring : "83"
     float  testdecimal : 0.0
@@ -1001,8 +999,7 @@ sysenter "ios"
     syscall
     int 0x3
     wait 2000
-.hndl
-    0x827 = procedurename ;assign a hex code to a procedure
+
 .start
     proc procedurename
         mov tlr, <0> ;get the first argument
@@ -1012,6 +1009,7 @@ sysenter "ios"
         syscall
         halt 0
     end
+    evt 0x827 -> procedurename ;assign a hex code to a procedure
     db stk
 
     push 1 ; push the sec arg
@@ -1026,14 +1024,13 @@ sysenter "ios"
     stack ;clear up the stack after the procedure call
 
 
-.hndl
-    0x00 = thisisanerror
 .start
     db stk
     proc thisisanerror
         __say 0,"works"
         halt 0
     end
+    evt 0x00 -> thisisanerror
     push  0x00
     stack
     db stk
@@ -1809,9 +1806,7 @@ using "ios"
         halt 0
     end
 :dhjfjd
-.hndl
-    0xff = std::testproc
-    0xff3 = lol::writexd
+
 .text
     testmacro : #
         switch *tlr
@@ -1826,6 +1821,7 @@ using "ios"
     ;push 0
     def testreallycool, &gg
     push "Hello from testproc"
+    evt 0xff -> std::testproc
     push 0xff
     stack
 
@@ -1859,6 +1855,7 @@ using "ios"
             halt 0
         end
     ./!lol
+    evt 0xff3 -> lol::writexd
 
     push 3
     push 0xff3

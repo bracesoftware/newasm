@@ -33,7 +33,6 @@ namespace newasm
             const int text = 1;
             const int data = 2;
             const int start = 3;
-            const int hndl = 4;
         }
     }
     namespace exit_codes

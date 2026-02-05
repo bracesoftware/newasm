@@ -14,3 +14,23 @@ Events are code blocks that execute automatically when certain things happen in 
     }
 ```
 
+### Built-in events
+| Identifier | Description |
+| ---------- | ----------- |
+| `'termination'` | Called when the program dies. |
+
+Besides using built-in events, you can assign certain procedures their unique hex codes that can be used in the call stack, i.e. when calling functions using the stack.
+
+```asm
+.start
+	proc myFunction
+		; do smth
+		halt 0
+	end
+
+	evt 0x9 -> myFunction
+
+	; now you can do:
+	push 0x9
+	stack
+```

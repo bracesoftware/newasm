@@ -86,7 +86,7 @@ namespace newasm
         const int macroTerminator = 5;
         const int lambdaTerminator = 6;
         const int sectionModifier = 7;
-        const int handleModifier = 8;
+        //const int handleModifier = 8;
         const int macroDecl = 9;
         const int dataDecl = 10;
         const int macroCall = 11;
@@ -207,8 +207,7 @@ namespace newasm
                 static std::unordered_map<std::string, int> sections = {
                     {"start", newasm::code_stream::sections::start},
                     {"data", newasm::code_stream::sections::data},
-                    {"text", newasm::code_stream::sections::text},
-                    {"hndl", newasm::code_stream::sections::hndl}
+                    {"text", newasm::code_stream::sections::text}
                 };
 
                 auto it = sections.find(section);
@@ -219,6 +218,7 @@ namespace newasm
                 return lineCompiled;
             }
             // HANDLE MODIFIER
+            #if 0
             if(newasm::header::functions::parseHandleModifier(line))
             {
                 auto tmp = newasm::header::functions::split_fixed(line, '=');
@@ -234,6 +234,7 @@ namespace newasm
                 
                 return lineCompiled;
             }
+            #endif
             // MACRO DECL
             auto data_macroDecl = newasm::header::functions::parseDataMacroDecl(line);
             if(data_macroDecl.first == 1)

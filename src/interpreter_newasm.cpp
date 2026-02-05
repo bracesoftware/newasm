@@ -135,6 +135,7 @@ namespace newasm
         const std::string quote = "\"";
     }
 
+    int process_hndl(std::string tohandle, std::string procedure);
     void callproc(std::string& name);
     int process_s_(bool &valid, std::string wholeline, std::string stat, std::string arg);
     int process_s(std::string& section);

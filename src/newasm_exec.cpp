@@ -272,6 +272,7 @@ namespace newasm
         #endif
         return;
     }
+    #if 0
     int process_s_(bool &valid, std::string wholeline, std::string stat, std::string arg)
     {
         if(newasm::system::stop == 1)
@@ -311,6 +312,7 @@ namespace newasm
         }
         return 1;
     }
+    #endif
     inline int process_l(std::string arg, int lineidx)
     {
         if(newasm::mem::functions::datavalid(arg,newasm::mem::labels))
@@ -3974,6 +3976,41 @@ namespace newasm
             }
             case newasm::core::lang_inf::evt:
             {
+                #if 0
+                auto objectData = newasm::header::functions::parseObject(newasm::header::data::case_line);
+                if(objectData.first)
+                {
+                    std::string member_name = newasm::header::functions::trim(objectData.second.second);
+                    std::string struct_name = newasm::header::functions::trim(objectData.second.first);
+
+                    if(newasm::header::functions::parseNamespaceSegments(struct_name).first)
+                    {
+                        newasm::progwin::api::cout("Object<yes> NMS -> " + struct_name);
+                        auto i = newasm::header::functions::parseNamespaceSegments(struct_name);
+                        std::string symbol_name = i.second.back();
+                        auto vec = i.second;
+                        vec.pop_back(); // namespace list
+                        
+                        struct_name = newasm::header::functions::mangleName(vec, symbol_name);
+                    }
+                }
+                #endif
+                if(newasm::header::functions::ishex(suf))
+                {
+                    std::string proc_name = newasm::header::data::case_line;
+                    if(newasm::header::functions::parseNamespaceSegments(newasm::header::data::case_line).first)
+                    {
+                        newasm::progwin::api::cout("Object<yes> NMS -> " + newasm::header::data::case_line);
+                        auto i = newasm::header::functions::parseNamespaceSegments(newasm::header::data::case_line);
+                        std::string symbol_name = i.second.back();
+                        auto vec = i.second;
+                        vec.pop_back(); // namespace list
+                        
+                        proc_name = newasm::header::functions::mangleName(vec, symbol_name);
+                    }
+                    newasm::process_hndl(suf, proc_name);
+                    return 1;
+                }
                 if(newasm::header::data::case_line != static_cast<std::string>("{"))
                 {
                     newasm::terminate(newasm::exit_codes::invalid_syntax);
@@ -5587,9 +5624,9 @@ namespace newasm
         return 1;
     }
     
-    int process_hndl(std::string tohandle, std::string procedure)
+    inline int process_hndl(std::string tohandle, std::string procedure)
     {
-        if(newasm::header::settings::lazy_evhndlr == false) if(!newasm::mem::functions::datavalid(procedure, newasm::mem::funcs))
+        if(!newasm::mem::functions::datavalid(procedure, newasm::mem::funcs))
         {
             newasm::terminate(newasm::exit_codes::invalid_evhndlr);
             return 1;
@@ -6338,6 +6375,7 @@ namespace newasm
                 return 1;
             }
             // HANDLE MODIFIERS
+            #if 0
             case newasm::compiler::handleModifier:
             {
                 if(newasm::system::section != newasm::code_stream::sections::hndl)
@@ -6348,6 +6386,7 @@ namespace newasm
                 newasm::process_hndl(line.tokens.at(0), line.tokens.at(1));
                 return 1;
             }
+            #endif
             // MACRO DECL
             case newasm::compiler::macroDecl:
             {
