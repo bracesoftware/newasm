@@ -1,6 +1,8 @@
 ## Events
 > [!WARNING]
 > This feature was added in build 18.
+
+
 Events are code blocks that execute automatically when certain things happen in your code.
 
 ```asm
