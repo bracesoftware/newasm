@@ -103,6 +103,10 @@ extern "C"
 // Resources (assets) used in the program
 namespace newasm
 {
+    //////////EVENTS
+    inline void handle_exit();
+    bool exit_handled = false;
+    ////////////
     namespace constv
     {
         const std::string quote = "\"";
@@ -259,7 +263,11 @@ namespace newasm
         inline void stop()
         {
             running = false;
-            if(t.joinable()) t.join();
+            if(t.joinable())
+            {
+                //std::cout << std::endl;
+                t.join();
+            }
         }
 
         inline double count() const

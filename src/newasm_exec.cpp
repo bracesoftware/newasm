@@ -46,6 +46,10 @@ namespace newasm
     //int redirect_exec(std::string filename);
     inline int terminate(int exit_code)//, std::string line)
     {
+        if(!newasm::header::data::repl)
+        {
+            newasm::handle_exit();
+        }
         bool temp_proc = false;
         //std::cout << "TERMINATEEE" << std::endl;
         if(newasm::header::data::repl)
@@ -6584,8 +6588,12 @@ namespace newasm
         //else
         return 0;
     }
-    int execute(std::string file, int lineidx_____)
+    inline void handle_exit()
     {
+        if(newasm::exit_handled)
+        {
+            return;
+        }
         auto exec_exit_handle = []() -> void {
             newasm::runtime::functions::parse<true>(newasm::handlers::exit_handler);
             auto it = newasm::mem::funcs.find(newasm::handlers::exit_handler);
@@ -6605,6 +6613,12 @@ namespace newasm
             }
             return;
         };
+        exec_exit_handle();
+        newasm::exit_handled = true;
+        return;
+    }
+    inline int execute(std::string file, int lineidx_____)
+    {
         if(lineidx_____ == -1)
         {
             newasm::mem::regs::resetRegisters();
@@ -6710,6 +6724,12 @@ namespace newasm
                 try
                 {
                     newasm::procline(newasm::compiler::compiledCode.at(newasm::mem::regs::lcx.get_value()));
+                    #if 0
+                    if(newasm::mem::regs::lcx.get_value() == newasm::compiler::compiledCode.size() - 1)
+                    {
+                        exec_exit_handle();
+                    }
+                    #endif
                 }
                 catch(const std::exception& e)
                 {
@@ -6726,8 +6746,6 @@ namespace newasm
                     newasm::mem::regs::lcx.set_value(newasm::code_stream::jumpto - 1);
                 }
             }
-
-            exec_exit_handle();
 
             if(!newasm::system::terminated)
             {

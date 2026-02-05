@@ -1,8 +1,9 @@
 # Data
 There are a few topics covered within this article:
 1. [Variables](#variables)
-2. [Simple arrays](#simple-arrays)
-3. [Objects and classes](#objects-and-classes)
+2. [Unions](#unions)
+3. [Simple arrays](#simple-arrays)
+4. [Objects and classes](#objects-and-classes)
 
 ## Variables
 There are several types of normal variables in NewASM, they are integers, floats, strings and characters.
@@ -11,13 +12,17 @@ Strings are dynamic, unlike in C, so they take up 4 bytes for the header and the
 Characters take 1 byte of memory.
 
 To declare a variable, you do this:
-```
+```asm
 .data
     intg integer: 0
     float pi: 3.14
     string some_text: "Hello World\n"
     char character: '\t'
 ```
+
+## Unions
+You can also create unions, as in the C language. Check union-related instructions documentation.
+
 ## Simple arrays
 Also called static objects. There are 2 types of simple arrays:
 - tuples,
