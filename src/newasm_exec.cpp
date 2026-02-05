@@ -312,7 +312,7 @@ namespace newasm
 		return true;
 	}
 	#endif
-    int process_d(std::string wholeline, std::string dtyp, std::string _name, std::string value)
+    int process_d(std::string wholeline, std::string dtyp, std::string _name, std::string value, newasm::compiler::lineData& line)
     {
         newasm::runtime::functions::parse(value);
         if(newasm::header::functions::issizeof(value).first)
@@ -370,13 +370,15 @@ namespace newasm
         
         if(newasm::header::functions::isalphanum(name))
         {
+            #if 0
             auto it = newasm::inverted_types.find(dtyp);
             if(it == newasm::inverted_types.end())
             {
                 newasm::terminate(newasm::exit_codes::invalid_syntax);
                 return 1;
             }
-            switch(it->second)
+            #endif
+            switch(line.parsedType)
             {
                 //objects
                 case newasm::core::lang_inf::typenames::obj:
@@ -6036,7 +6038,7 @@ namespace newasm
         std::cout << std::endl;
         std::cout << "\t\t\t" << line.other << std::endl;
         #endif
-        if(!newasm::global::event_now)
+        //if(!newasm::global::event_now)
         if(newasm::system::terminated)
         {
             return 1;
@@ -6277,7 +6279,7 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::invalid_syntax);
                     return 1;
                 }
-                newasm::process_d(line.raw, line.tokens.at(0),line.tokens.at(1),line.tokens.at(2));
+                newasm::process_d(line.raw, line.tokens.at(0),line.tokens.at(1),line.tokens.at(2), line);
                 return 1;
             }
             // MACRO CALL

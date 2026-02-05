@@ -174,6 +174,7 @@ namespace newasm
             newasm::compiler::argumentData operandLiteral;
 
             int whatAmIDoing = INVALID_INS;
+            short parsedType = INVALID_INS;
         };
 
         std::string parse_def(std::string suf);

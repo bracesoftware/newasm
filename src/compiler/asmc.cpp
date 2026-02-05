@@ -221,6 +221,12 @@ namespace newasm
                 value = newasm::header::functions::parseBackslash(value);
                 lineCompiled.tokens.push_back(value);
 
+                auto it = newasm::inverted_types.find(typ);
+                if(it != newasm::inverted_types.end())
+                {
+                    lineCompiled.parsedType = it->second;
+                }
+
                 if(typ == "obj")
                 {
                     auto t = newasm::header::functions::tokenize__2(value);

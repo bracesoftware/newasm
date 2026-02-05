@@ -331,8 +331,6 @@ namespace newasm
                 //PRIVATE
                 newasm::mem::regs::lcx.reset(thread_name);
             }
-
-
         }
 
         struct struct_member

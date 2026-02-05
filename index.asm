@@ -1224,7 +1224,7 @@ sysenter "ios"
 
     malloc 243_
     __say 0, "Dbg 2"
-    vmov {100}, "Hello World from virtual memory"
+    vmov {100}, "Hello World from virtual memory\n"
     __say 0, "Dbg 3"
     cast string
     __say 0, "Dbg 4"

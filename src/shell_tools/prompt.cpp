@@ -29,7 +29,10 @@ namespace newasm
             std::getline(std::cin, input);
             //std::cout << std::endl;
 
-            if((input == "Y") or (input == "y")) return true;
+            if((input == "Y") or (input == "y"))
+            {
+                return true;
+            }
             if((input == "N") or (input == "n"))
             {
                 newasm::header::functions::err("Operation cancelled successfully.");

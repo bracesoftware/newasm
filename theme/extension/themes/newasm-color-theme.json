@@ -150,7 +150,7 @@
         "constant.character.escape.newasm"
       ],
       "settings": {
-        "foreground": "#7186d4",
+        "foreground": "#BEB7FF",
         "fontStyle": "bold"
       }
     },
@@ -169,7 +169,7 @@
     {
       "scope": "namespace.newasm",
       "settings": {
-        "foreground": "#7FDBCA",
+        "foreground": "#BEB7FF",
       }
     },
     {
