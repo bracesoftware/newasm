@@ -28,7 +28,7 @@ the Initial Developer. All Rights Reserved.
 
 namespace newasm
 {
-    const int BUILD_NUMBER = 17;
+    const int BUILD_NUMBER = 18;
     const int RUNTIME_VERSION = 5;
     const int KERNEL_VERSION = 3;
 }
@@ -103,9 +103,32 @@ extern "C"
 // Resources (assets) used in the program
 namespace newasm
 {
+    namespace kernel
+    {
+        constexpr uint32_t makeHash(int16_t a, int16_t b)
+        {
+            return (uint32_t(uint16_t(a)) << 16) | uint32_t(uint16_t(b));
+        }
+    }
+
+    namespace decorators
+    {
+        constinit const short DESTRUCTIVE = 1;
+        constinit const short CONSTRUCTIVE = 2;
+
+        namespace id
+        {
+            constinit const short TRANSIENT = 1;
+            constinit const short VOLATILE = 2;
+            constinit const short LOCK = 3;
+        }
+    }
     //////////EVENTS
+    ///exit
     inline void handle_exit();
     bool exit_handled = false;
+    bool handling_exit = false;
+    std::string exit_handler__;
     ////////////
     namespace constv
     {
@@ -175,6 +198,9 @@ namespace newasm
 
             int whatAmIDoing = INVALID_INS;
             short parsedType = INVALID_INS;
+            short whatCodeSection = INVALID_INS;
+            int letsDecorateVariables = INVALID_INS; //kernel'z makeHash returns an int
+            short whatTheFuckAreEvents = INVALID_INS;
         };
 
         std::string parse_def(std::string suf);
@@ -225,6 +251,7 @@ namespace newasm
         constinit const int object_block = 0;
         constinit const int thread_block = 1;
         constinit const int class_block = 2;
+        constinit const int event_block = 3;
     }
     std::vector<int> brace_stack__;
     //------------------------------------------------------
@@ -427,6 +454,28 @@ namespace newasm
 
 #include "vm/_console.cpp"
 
+namespace newasm
+{
+    namespace events
+    {
+        bool parsing_now = false;
+        int current = INVALID_INS;
+        struct Handler final
+        {
+            std::vector<int> addr;
+        };
+        //exit event
+        newasm::events::Handler exitHandler;
+        constinit const int exitId = 1;
+        bool exitNow = false;
+        //other events
+
+        const std::unordered_map<std::string, int> eventNames = {
+            {"'termination'", newasm::events::exitId}
+        };
+    }
+}
+
 /*
 Essential stuff needed to run
 is in the runtime
@@ -622,7 +671,17 @@ namespace newasm
             printf___("\t\tCleaning up environment variable memory...\n");
             
             newasm::threads::functions::free_mem();
-            printf___("\t\tCleaning up thread data...\n");
+            printf___("\t\tCleaning up thread and event data...\n");
+            for(auto i = newasm::variables::ids.begin(); i != newasm::variables::ids.end(); ++i)
+            {
+                if(i->second.type == newasm::datatypes::event)
+                {
+                    if(i->second.event != nullptr)
+                    {
+                        delete i->second.event;
+                    }
+                }
+            }
             newasm::core::env_vars::functions::save_env();
             printf___("\t\tSaving environment variables...\n");
             
@@ -681,6 +740,7 @@ namespace newasm
     int entry(int argc, char* argv[])
     {
         newasm::mem::regs::fdx.make_short(true);
+        newasm::variables::ids.reserve(1000); // for funsies
         if constexpr(0) newasm::native_jit::print("Hello from JIT COMPILER!");
         newasm::forLinker__OLD::debug.reserve(100);
         auto get_time = [&]() -> std::string {

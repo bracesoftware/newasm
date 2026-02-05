@@ -174,7 +174,7 @@ namespace newasm
         const int blueprint = 7;
         const int yunion = 8;
         const int mycontext = 9;
-        const int function = 10;
+        const int event = 10;
     }
     namespace constv
     {
@@ -446,11 +446,9 @@ namespace newasm
             std::vector<int> type;
         };
 
-        struct functionData
+        struct eventData
         {
             std::vector<int> addr;
-            int ret_addr;
-            int type;
         };
 
         struct varData
@@ -461,7 +459,7 @@ namespace newasm
             classData* blueprint = nullptr; // if it is a class, we use this
             unionData* yunion = nullptr; // if it is an union, we use this
             contextData* context = nullptr; // if it is a context, use this
-            functionData* function = nullptr;
+            eventData* event = nullptr;
 
             //decorator data
             bool locked = false;

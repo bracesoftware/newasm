@@ -4,6 +4,7 @@ Following instructions are covered by this article:
 1. [`ret` and its variants](#ret-and-its-variants)
 2. [`proc`, `end` and `call`](#proc-end-and-call)
 3. [`cmp`, `jmp` and other `jmp` variants](#cmp-jmp-and-other-jmp-variants)
+4. [`evt`](#evt)
 
 ## `ret` and its variants
 There are 4 variants:
@@ -69,3 +70,6 @@ Compare register values with lvalues and jump to a specific label according to t
 | `jge` | comparsion returned `greater or equal`. |
 
 The `jmp` instruction is used as an unconditional jump.
+
+## `evt`
+Allows you to have events, read more about this instruction inside the concepts docs.

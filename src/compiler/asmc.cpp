@@ -142,8 +142,34 @@ namespace newasm
             //decorator
             if(newasm::header::functions::isdeco(line).first)
             {
+                static const std::unordered_map<std::string, short> decorators = {
+                    {"lock", newasm::decorators::id::LOCK},
+                    {"volatile", newasm::decorators::id::VOLATILE},
+                    {"transient", newasm::decorators::id::TRANSIENT}
+                };
                 lineCompiled.type = newasm::compiler::decorator;
                 lineCompiled.tokens.push_back(newasm::header::functions::isdeco(line).second);
+
+                auto decorator = lineCompiled.tokens.at(0);
+                short constructionStatus = decorator.at(0) == '!' ? newasm::decorators::DESTRUCTIVE : newasm::decorators::CONSTRUCTIVE;
+                std::string real_decorator;
+
+                if(constructionStatus == newasm::decorators::DESTRUCTIVE)
+                {
+                    real_decorator = newasm::header::functions::trim(decorator.substr(1));
+                }
+                if(constructionStatus == newasm::decorators::CONSTRUCTIVE)
+                {
+                    real_decorator = newasm::header::functions::trim(decorator);
+                }
+
+                auto it = decorators.find(real_decorator);
+                //std::cout << "constructionStatus: " << constructionStatus << std::endl;
+                //std::cout << "newasm::header::functions::trim(decorator.substr(1)): `" << newasm::header::functions::trim(decorator.substr(1)) << "`" << std::endl;
+                if(it != decorators.end())
+                {
+                    lineCompiled.letsDecorateVariables = newasm::kernel::makeHash(constructionStatus, it->second);
+                }
                 return lineCompiled;
             }
             //namespace
@@ -177,6 +203,19 @@ namespace newasm
             {
                 lineCompiled.type = newasm::compiler::sectionModifier;
                 lineCompiled.tokens.push_back(newasm::header::functions::trim(line.substr(1)));
+                auto& section = lineCompiled.tokens.at(0);
+                static std::unordered_map<std::string, int> sections = {
+                    {"start", newasm::code_stream::sections::start},
+                    {"data", newasm::code_stream::sections::data},
+                    {"text", newasm::code_stream::sections::text},
+                    {"hndl", newasm::code_stream::sections::hndl}
+                };
+
+                auto it = sections.find(section);
+                if(it != sections.end())
+                {
+                    lineCompiled.whatCodeSection = it->second;
+                }
                 return lineCompiled;
             }
             // HANDLE MODIFIER
@@ -305,7 +344,7 @@ namespace newasm
             {
                 if(is_str_(line, idx__) == false && is_str_(line, idx__ + 1) == false)
                 {
-                    if(line.size() != idx__+2)
+                    if(line.size() != idx__ + 2)
                     {
                         std::vector<std::string> linetokens_inline = newasm::common::tokenize(line.substr(0, idx__));
                         if(linetokens_inline.size() == 2)
@@ -316,6 +355,7 @@ namespace newasm
                             lineCompiled.tokens.push_back(linetokens_inline.at(1));
 
                             std::string& instruction = linetokens_inline.at(0);
+                            std::string& otherShit = linetokens_inline.at(1);
 
                             auto it = newasm::inverted_ins.find(instruction);
                             if(it != newasm::inverted_ins.end())
@@ -327,6 +367,15 @@ namespace newasm
                             if(newasm::mem::functions::datavalid(instruction, newasm::mem::instructions))
                             {
                                 lineCompiled.whatAmIDoing = INS_EXTERNAL;
+                            }
+                            //compiling eventNames cuz SPEED
+                            if(lineCompiled.whatAmIDoing == newasm::core::lang_inf::evt)
+                            {
+                                auto it2 = newasm::events::eventNames.find(otherShit);
+                                if(it2 != newasm::events::eventNames.end())
+                                {
+                                    lineCompiled.whatTheFuckAreEvents = it2->second;
+                                }
                             }
                             return lineCompiled;
                         }

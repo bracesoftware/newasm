@@ -487,6 +487,10 @@ namespace newasm
             [[nodiscard]]
             inline std::vector<std::string> split_fixed(const std::string &str, char delimiter)
             {
+                if constexpr(0)
+                {
+                    std::cout << "split_fixed -> str: `" << str << "`, delimiter: `" << delimiter << "`\n";
+                }
                 size_t pos = str.find(delimiter);
                 std::vector<std::string> tokens;
 

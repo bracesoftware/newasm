@@ -22,11 +22,6 @@ namespace newasm
 {
     namespace kernel
     {
-        constexpr uint32_t makeHash(int16_t a, int16_t b)
-        {
-            return (uint32_t(uint16_t(a)) << 16) | uint32_t(uint16_t(b));
-        }
-
         static inline void write_stl()
         {
             #if 0

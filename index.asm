@@ -897,8 +897,10 @@ sysenter "ios"
     mov   stl , 0c1
     mov   fdx , 2
     syscall   
-
+jmp shjfjsdhfj
     proc  __exit_proc
+        mov tlr, "Hiiii"
+        call std::ios::writeln
         db tlr
         mov   tlr , "exit proc called"
         mov   stl , 0c1
@@ -909,6 +911,19 @@ sysenter "ios"
         syscall   
         halt 0
     end
+:shjfjsdhfj
+    evt 'termination' -> {
+        mov tlr, "Hiiii"
+        call std::ios::writeln
+        db tlr
+        mov   tlr , "exit proc called"
+        mov   stl , 0c1
+        mov bos, 16
+        ;mov bos, 100
+        mov   fdx , 1
+        sysenter "ios"
+        syscall
+    }
 
     db   cpt
     db   tlr
@@ -2121,7 +2136,10 @@ link "testfile.asm" ; link a file
     syscall
     syscall
     
-    f
+    evt 'termination' -> { ; this will automatically append to the event, so different files can use it
+        mov tlr, "Hello guyz! \n This code is lowk insane\t!"
+        call std::ios::writeln
+    }
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     mov tlr, 223

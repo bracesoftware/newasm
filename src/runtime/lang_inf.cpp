@@ -141,9 +141,10 @@ namespace newasm
             const int align = 71;//
             
             const int merge = 72;//
+            const int evt = 73;//
 
             /// @brief //////
-            const int Link___ = 73;
+            const int Link___ = 99;
             const int __say = 100;
 
             const std::unordered_map<int, std::string> instruction_set = {
@@ -232,6 +233,7 @@ namespace newasm
                 {align, "align"},
 
                 {merge, "merge"}, //merge for contexts
+                {evt, "evt"},
 
                 {__say, "__say"},
                 {Link___, "link"}

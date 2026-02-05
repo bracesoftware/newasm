@@ -92,6 +92,7 @@ namespace newasm
             {67, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::sel)},
             {68, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::align)},
             {69, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::merge)},
+            {70, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::evt)},
 
             {100, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::__say)}
         };

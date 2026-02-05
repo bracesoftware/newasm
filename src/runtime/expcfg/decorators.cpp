@@ -21,25 +21,55 @@ namespace newasm
 {
     namespace expcfg
     {
-        const int lock = 1;
-        const int volatile__ = 2;
-        const int transient__ = 3;
-
-        std::unordered_map<int, std::string> decorators = {
-            {lock, "lock"},
-            {volatile__, "volatile"},
-            {transient__, "transient"}
-        };
-
         //decorator settings
         bool lockbool = false;
         bool volatilebool = false;
         bool transientbool = false;
 
         //impl
-        void process_dec(std::string text)
+        inline void process_dec(newasm::compiler::lineData& line)
         {
-            newasm::progwin::api::cout("Deco::"+text);
+            switch(line.letsDecorateVariables)
+            {
+                case INVALID_INS:
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_syntax);
+                    return;
+                }
+                case newasm::kernel::makeHash(newasm::decorators::DESTRUCTIVE, newasm::decorators::id::LOCK):
+                {
+                    newasm::expcfg::lockbool = false;
+                    return;
+                }
+                case newasm::kernel::makeHash(newasm::decorators::DESTRUCTIVE, newasm::decorators::id::VOLATILE):
+                {
+                    newasm::expcfg::volatilebool = false;
+                    return;
+                }
+                case newasm::kernel::makeHash(newasm::decorators::DESTRUCTIVE, newasm::decorators::id::TRANSIENT):
+                {
+                    newasm::expcfg::transientbool = false;
+                    return;
+                }
+                case newasm::kernel::makeHash(newasm::decorators::CONSTRUCTIVE, newasm::decorators::id::LOCK):
+                {
+                    newasm::expcfg::lockbool = true;
+                    return;
+                }
+                case newasm::kernel::makeHash(newasm::decorators::CONSTRUCTIVE, newasm::decorators::id::VOLATILE):
+                {
+                    newasm::expcfg::volatilebool = true;
+                    return;
+                }
+                case newasm::kernel::makeHash(newasm::decorators::CONSTRUCTIVE, newasm::decorators::id::TRANSIENT):
+                {
+                    newasm::expcfg::transientbool = true;
+                    return;
+                }
+            }
+            newasm::terminate(newasm::exit_codes::invalid_syntax);
+            //newasm::progwin::api::cout("Deco::"+text);
+            #if 0
             /*
             DESTRUCTIVE DECORATORS
             */
@@ -89,6 +119,7 @@ namespace newasm
                 return;
             }
             newasm::terminate(newasm::exit_codes::invalid_syntax);
+            #endif
             return;
         }
     }

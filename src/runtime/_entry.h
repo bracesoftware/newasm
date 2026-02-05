@@ -291,12 +291,16 @@ namespace newasm
 				};
 				parseFromRAM(suf);
 				newasm::parseopr_struct(suf);
-				try{
-					std::cout;
-				}
-				catch(std::exception& e)
+				if constexpr(0)
 				{
-					std::cout << "ParseObject :: ZAJEBUCNUO TE -> " << e.what() << std::endl;
+					try
+					{
+						std::cout;
+					}
+					catch(std::exception& e)
+					{
+						std::cout << "ParseObject :: ZAJEBUCNUO TE -> " << e.what() << std::endl;
+					}
 				}
 
                 /*if(newasm::chars::map.find(suf) != newasm::chars::map.end())

@@ -25,6 +25,7 @@ the Initial Developer. All Rights Reserved.
 namespace newasm
 {
     int execute(std::string file, int lineidx_____);
+    static inline int terminate_(int exit_code);
     inline void unsins(std::string ins)
     {
         newasm::header::functions::wrn(
@@ -43,13 +44,28 @@ namespace newasm
         );
         return;
     }
-    //int redirect_exec(std::string filename);
-    inline int terminate(int exit_code)//, std::string line)
+    inline void __CRASH__()
     {
+        newasm::header::functions::err("Application crashed.");
+        return;
+    }
+    inline int terminate(int exit_code)
+    {
+        if constexpr(0) if(newasm::handling_exit)
+        {
+            newasm::__CRASH__();
+            return 1;
+        }
         if(!newasm::header::data::repl)
         {
             newasm::handle_exit();
         }
+        newasm::terminate_(exit_code);
+        return 1;
+    }
+    //int redirect_exec(std::string filename);
+    static inline int terminate_(int exit_code)//, std::string line)
+    {
         bool temp_proc = false;
         //std::cout << "TERMINATEEE" << std::endl;
         if(newasm::header::data::repl)
@@ -116,6 +132,17 @@ namespace newasm
                 newasm::mem::regs::prp;
                 temp_proc = true;
             }
+            if(newasm::events::exitNow == true)
+            {
+                std::cout << "the 'termination' event " <<
+                newasm::header::col::gray <<
+                newasm::header::style::bold <<
+                newasm::header::style::underline <<
+                newasm::mem::regs::prp;
+                temp_proc = true;
+            }            
+
+
             #if 0
             if(newasm::header::execution_flow::exec_redirected) if(newasm::header::data::proc_now == false)
             {
@@ -214,34 +241,36 @@ namespace newasm
         return 1;
     }
     
-    int process_s(std::string& section)
+    inline void process_s(std::string& section, newasm::compiler::lineData& line)
     {
+        
+        #if 0
         if(section == static_cast<std::string>("data"))
         {
             newasm::garbageCollector::DO();
             newasm::system::section = newasm::code_stream::sections::data;
-            return 1;
+            return;
         }
         if(section == static_cast<std::string>("start"))
         {
             newasm::garbageCollector::DO();
             newasm::system::section = newasm::code_stream::sections::start;
-            return 1;
+            return;
         }
         if(section == static_cast<std::string>("hndl"))
         {
             newasm::garbageCollector::DO();
             newasm::system::section = newasm::code_stream::sections::hndl;
-            return 1;
+            return;
         }
         if(section == static_cast<std::string>("text"))
         {
             newasm::garbageCollector::DO();
             newasm::system::section = newasm::code_stream::sections::text;
-            return 1;
+            return;
         }
-        newasm::terminate(newasm::exit_codes::invalid_section);
-        return 1;
+        #endif
+        return;
     }
     int process_s_(bool &valid, std::string wholeline, std::string stat, std::string arg)
     {
@@ -312,7 +341,8 @@ namespace newasm
 		return true;
 	}
 	#endif
-    int process_d(std::string wholeline, std::string dtyp, std::string _name, std::string value, newasm::compiler::lineData& line)
+    int process_d(const std::string& wholeline, const std::string& dtyp, const std::string& _name,
+        std::string& value, newasm::compiler::lineData& line)
     {
         newasm::runtime::functions::parse(value);
         if(newasm::header::functions::issizeof(value).first)
@@ -3302,6 +3332,11 @@ namespace newasm
             //halt
             case newasm::core::lang_inf::halt:
             {
+                if(not newasm::header::data::proc_now and not newasm::lambda::process)
+                {
+                    newasm::terminate(newasm::exit_codes::unexpected_end);
+                    return 1;
+                }
                 if(newasm::lambda::process)
                 {
                     newasm::lambda::GLOBAL.result = suf;
@@ -3932,6 +3967,30 @@ namespace newasm
                     {
                         newasm::header::data::case_matched = true;
                         newasm::procline(newasm::header::data::case_line);
+                        return 1;
+                    }
+                }
+                return 1;
+            }
+            case newasm::core::lang_inf::evt:
+            {
+                if(newasm::header::data::case_line != static_cast<std::string>("{"))
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_syntax);
+                    return 1;
+                }
+                switch(lineInfo.whatTheFuckAreEvents)
+                {
+                    case INVALID_INS:
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    case newasm::events::exitId:
+                    {
+                        newasm::events::current = newasm::events::exitId;
+                        newasm::events::parsing_now = true;
+                        newasm::brace_stack__.push_back(newasm::brace_stack::event_block);
                         return 1;
                     }
                 }
@@ -6073,7 +6132,7 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::invalid_syntax);
                     return 1;
                 }*/
-                newasm::expcfg::process_dec(line.tokens.at(0));
+                newasm::expcfg::process_dec(line);
                 return 1;
             }
             // NAMESPACE
@@ -6116,6 +6175,11 @@ namespace newasm
                 {
                     //std::cout << "Terminated class -> " << newasm::header::data::blueprint_decl << std::endl;
                     newasm::header::data::blueprint_now = false;
+                    return 1;
+                }
+                if(brace_purpose == newasm::brace_stack::event_block)
+                {
+                    newasm::events::parsing_now = false;
                     return 1;
                 }
                 
@@ -6194,6 +6258,16 @@ namespace newasm
             }
         }
 
+        if(newasm::events::parsing_now)
+        {
+            if(newasm::events::current == newasm::events::exitId)
+            {
+                int address = newasm::hardware::randAccessMem.write<std::string>(line.raw);
+                newasm::events::exitHandler.addr.push_back(address);
+                return 1;
+            }
+        }
+
         if(newasm::header::data::blueprint_now)
         {
             auto it = newasm::variables::ids.at(newasm::header::data::blueprint_decl);
@@ -6246,7 +6320,21 @@ namespace newasm
             case newasm::compiler::sectionModifier:
             {
                 //auto testbool = true;
-                newasm::process_s(line.tokens.at(0));
+                if constexpr(0) newasm::process_s(line.tokens.at(0), line);
+                switch(line.whatCodeSection) // faster
+                {
+                    case INVALID_INS:
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_section);
+                        return 1;
+                    }
+                    default: // exists
+                    {
+                        newasm::garbageCollector::DO();
+                        newasm::system::section = line.whatCodeSection;
+                        return 1;
+                    }
+                }
                 return 1;
             }
             // HANDLE MODIFIERS
@@ -6590,8 +6678,34 @@ namespace newasm
         //else
         return 0;
     }
+
+    // in order to make a good exit handler,
+    //we need to use our own memory allocator
+    //instead of C++ STL's BS
     inline void handle_exit()
     {
+        if(newasm::exit_handled)
+        {
+            return;
+        }
+        newasm::exit_handled = true;
+
+        std::string line;
+        newasm::events::exitNow = true;
+        for(int i = 0; i < newasm::events::exitHandler.addr.size(); ++i)
+        {
+            line = newasm::RAM->peek<std::string>(newasm::events::exitHandler.addr.at(i));
+            newasm::procline(line);
+        }
+        newasm::events::exitNow = false;
+        return;
+    }
+
+    [[deprecated]]
+    inline void handle_exit_() //VERY MEMORY UNSAFE FUNCTION!
+                                //beware C++ developers!
+    {
+        return;
         if(newasm::exit_handled)
         {
             return;

@@ -24,7 +24,7 @@ namespace newasm
     {
         namespace functions
         {
-            std::pair<bool, int> issizeof(const std::string& str)
+            inline std::pair<bool, int> issizeof(const std::string& str)
             {
                 std::string opr;
                 //std::cout << "\t" << "STR IN ISSIZEOF : `" << str << "`\n";

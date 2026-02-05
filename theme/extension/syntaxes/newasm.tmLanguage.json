@@ -22,7 +22,7 @@
     },
     {
       "name": "keyword.control.newasm",
-      "match":  "\\b(merge|align|sel|movas|movasx|jz|jnz|movaddr|del|send|recv|thread|lea|async|cast|in|out|default|switch|case|vmov|await|retf|cls|load|stor|sysreq|pop|retn|mov|syscall|proc|call|rem|halt|push|jmp|heap|cmp|je|jne|jl|jg|jle|jge|ret|zero|inc|dec|exit|end|nop|add|sub|div|mul|exp|log|and|or|xor|not|shl|shr|db|malloc|free|stack|wait|sysenter|xchg|int|__say)\\b"
+      "match":  "\\b(evt|merge|align|sel|movas|movasx|jz|jnz|movaddr|del|send|recv|thread|lea|async|cast|in|out|default|switch|case|vmov|await|retf|cls|load|stor|sysreq|pop|retn|mov|syscall|proc|call|rem|halt|push|jmp|heap|cmp|je|jne|jl|jg|jle|jge|ret|zero|inc|dec|exit|end|nop|add|sub|div|mul|exp|log|and|or|xor|not|shl|shr|db|malloc|free|stack|wait|sysenter|xchg|int|__say)\\b"
     },
     {
       "name": "comptins.newasm",
@@ -63,6 +63,10 @@
     {
       "name": "constant.numeric.newasm",
       "match": "0c\\w+"
+    },
+    {
+      "name": "namespace.newasm",
+      "match": "'(termination)'"
     },
     {
       "name": "constant.numeric.newasm",
