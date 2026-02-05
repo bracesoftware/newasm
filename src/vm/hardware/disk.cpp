@@ -80,14 +80,23 @@ namespace newasm
             inline std::string readDisk_(std::streampos start, std::streampos end)
             {
                 std::ifstream file(this->path, std::ios::binary);
-                if (!file) return std::string("");
+                if(!file)
+                {
+                    return std::string("");
+                }
 
                 std::streamsize size = end - start;
                 file.seekg(start);
-                if (!file) return std::string("");
+                if(!file)
+                {
+                    return std::string("");
+                }
                 std::string buffer(size, '\0');
                 file.read(&buffer[0], size);
-                if (!file) return std::string("");
+                if(!file)
+                {
+                    return std::string("");
+                }
                 file.close();
 
                 return buffer;

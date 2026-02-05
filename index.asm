@@ -902,6 +902,7 @@ sysenter "ios"
         db tlr
         mov   tlr , "exit proc called"
         mov   stl , 0c1
+        mov bos, 16
         ;mov bos, 100
         mov   fdx , 1
         sysenter "ios"
