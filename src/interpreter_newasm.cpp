@@ -737,6 +737,16 @@ namespace newasm
                     }
                 }
             }
+            for(auto i = newasm::variables::ids.begin(); i != newasm::variables::ids.end(); ++i)
+            {
+                if(i->second.type == newasm::datatypes::static_objz)
+                {
+                    if(i->second.obj != nullptr)
+                    {
+                        delete i->second.obj;
+                    }
+                }
+            }
             printf___("\t\tCleaning up union data...\n");
             for(auto i = newasm::variables::ids.begin(); i != newasm::variables::ids.end(); ++i)
             {

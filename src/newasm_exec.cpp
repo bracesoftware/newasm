@@ -458,6 +458,10 @@ namespace newasm
                     newasm::header::data::struct_now = true;
                     newasm::header::data::struct_decl = name;
                     newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
+
+                    newasm::variables::ids[name].type = newasm::datatypes::static_objz;
+
+                    newasm::variables::ids.at(name).obj = new newasm::variables::staticObjectData;
                  
                     newasm::brace_stack__.push_back(newasm::brace_stack::object_block);
                     return 1;
@@ -4192,6 +4196,8 @@ namespace newasm
                     return 1;
                 }
 
+                type = it->second;
+
                 auto it2 = newasm::variables::ids.find(suf);
                 if(it2 == newasm::variables::ids.end())
                 {
@@ -4200,7 +4206,6 @@ namespace newasm
                     return 1;
                 }
 
-                type = it->second;
                 real_type = it2->second.type;
 
                 switch(type)
@@ -4271,6 +4276,15 @@ namespace newasm
                     case newasm::core::lang_inf::typenames::context__:
                     {
                         if(real_type != newasm::datatypes::mycontext)
+                        {
+                            newasm::terminate(newasm::exit_codes::sysreq_fail);
+                            return 1;
+                        }
+                        return 1;
+                    }
+                    case newasm::core::lang_inf::typenames::obj:
+                    {
+                        if(real_type != newasm::datatypes::static_objz)
                         {
                             newasm::terminate(newasm::exit_codes::sysreq_fail);
                             return 1;

@@ -174,6 +174,7 @@ namespace newasm
         const int yunion = 8;
         const int mycontext = 9;
         const int event = 10;
+        const int static_objz = 11;
     }
     namespace constv
     {
@@ -450,6 +451,11 @@ namespace newasm
             std::vector<int> addr;
         };
 
+        struct staticObjectData
+        {
+            short addr = 0;
+        };
+
         struct varData
         {
             int addr; // address where it is stored
@@ -459,6 +465,7 @@ namespace newasm
             unionData* yunion = nullptr; // if it is an union, we use this
             contextData* context = nullptr; // if it is a context, use this
             eventData* event = nullptr;
+            staticObjectData* obj = nullptr;
 
             //decorator data
             bool locked = false;

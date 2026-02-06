@@ -60,6 +60,7 @@ namespace newasm
                             if(__memory_free__.get_at(k) != 0)
                             {
                                 free_block = false;
+                                i = k;
                                 break;
                             }
                         }
