@@ -18,6 +18,7 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 ## What's new
 
 + Added new sealed labels that can be used to create jump points within threads, making threads way more functional.
++ Added the new `evt` instruction.
 
 ## What's changed
 
