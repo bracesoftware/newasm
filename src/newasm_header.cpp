@@ -1218,7 +1218,7 @@ namespace newasm
 				return {true, segments};
 			}
 
-            std::string demangleName(const std::vector<std::string>& namespaces, const std::string& symbol_name)
+            inline std::string demangleName(const std::vector<std::string>& namespaces, const std::string& symbol_name)
             {
                 std::stringstream ss;
                 for(int i = 0; i < namespaces.size(); ++i)
@@ -1229,25 +1229,22 @@ namespace newasm
                 return ss.str();
             }
 
-			std::string mangleName(const std::vector<std::string>& namespaces, const std::string& symbol_name)
+			inline std::string mangleName(const std::vector<std::string>& namespaces, const std::string& symbol_name)
 			{
 				std::string fullpath;
 
-				// Spoji sve namespaceove sa separatorom
-				for (const auto& ns : namespaces)
+				for(const auto& ns : namespaces)
 				{
 					fullpath += ns + "::";
 				}
 				fullpath += symbol_name + static_cast<std::string>(__TIME__) + static_cast<std::string>(__DATE__); // prevent bad code
 
-				// Izračunaj hash
 				size_t hash_val = std::hash<std::string>{}(fullpath);
 
-				// Pretvori hash u heksadecimalni string (za čitljivost)
 				char buffer[17];
-				snprintf(buffer, sizeof(buffer), "%016zx", hash_val);
+				snprintf(buffer, sizeof(buffer), "%016zx", hash_val); //turn to hexadecimal format
 
-				return std::string("var_") + buffer;
+				return std::string("__newasm_symbol") + buffer;
 			}
 			
 			bool istuple(std::string &str)

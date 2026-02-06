@@ -80,9 +80,9 @@ In examble above, we're reading the value of heap pointer and storing it inside 
 The `load` instruction allows us to store and load data on the heap. This depends on the value stored in `hea`.
 
 ```asm
-. data
+.data
     float testdecimal: 0.0
-. start
+.start
     ; If the suffix of the LOAD instruction is `*`,
     ; then we will update the value in the address heap pointer
     ; is pointing to - HOWEVER, if the suffix is `&`, then we will 
@@ -141,8 +141,6 @@ These 2 instructions are used to push and pop stuff off the stack memory.
 This instruction is used to clear the call stack information from the stack memory.
 
 ```asm
-.hndl
-    0x827 = procedurename ; assign a hex code to a procedure
 .start
     proc procedurename
         mov tlr, <0> ; get the first argument
@@ -152,6 +150,8 @@ This instruction is used to clear the call stack information from the stack memo
         syscall
         halt 0
     end
+
+    evt 0x827 -> procedurename
     db stk
 
     push 1 ; push the sec arg

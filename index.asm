@@ -201,7 +201,7 @@ using "math"
     nop
     call  PROCEDURETEST
 
-    sysreq  data , &return_vals
+    sysreq &return_vals -> string
 
     mov &return_vals, *psx
     mov  tlr , return_vals
@@ -2125,6 +2125,9 @@ link "testfile.asm" ; link a file
     string testToPrint: "Hello World\n"
     intg length: $ - testToPrint
     intg i__: 0
+    ./namespace
+        char lmao: 'p'
+    ./!namespace
 .start
     int 0x3
     mov tlr, testToPrint
@@ -2142,6 +2145,7 @@ link "testfile.asm" ; link a file
         call std::ios::writeln
     }
 ;jmp skipallthishsit
+    ./tredz
     thread testThread -> {
         {:threadLabel} ; new sealed labels coming
         mov tlr, "hello world from thread\n"
@@ -2157,9 +2161,16 @@ link "testfile.asm" ; link a file
         ;p
         retf 0
     }
-
-    await &testThread
-    mov tlr, &testThread
+    ./!tredz
+;jmp dsfdsfdsdssdf
+    sysreq & tredz::testThread -> thread
+    sysreq &lol::writexd -> proc
+    sysreq &std::ios::writeln -> proc
+    sysreq &namespace::lmao -> char
+    ;sysreq &wee
+:dsfdsfdsdssdf
+    await &tredz::testThread
+    mov tlr, &tredz::testThread
     sysenter "thread"
     mov fdx, 1
     syscall

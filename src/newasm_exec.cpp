@@ -382,7 +382,9 @@ namespace newasm
 		std::string name = _name;
 		if(!newasm::header::data::struct_now) if(newasm::nms::count != 0)
 		{
+            //std::cout << "original name: `" << name << "`, ";
 			name = newasm::header::functions::mangleName(newasm::nms::stack, name);
+            //std::cout << "mangled name: `" << name << "`" << std::endl;
 		}
 		
         if(!newasm::header::data::struct_now) if(newasm::mem::functions::datavalid(name, newasm::mem::data))
@@ -2198,6 +2200,7 @@ namespace newasm
                     
                 return 1;
             }
+            #if 0
             //sysreq
             case newasm::core::lang_inf::sysreq:
             {
@@ -2227,6 +2230,7 @@ namespace newasm
                     return 1;
                 }
             }
+            #endif
             //movasx
             case newasm::core::lang_inf::movasx:
             {
@@ -3315,6 +3319,7 @@ namespace newasm
                 newasm::terminate(newasm::exit_codes::invalid_ins);
                 return 1;
             }
+            
             //link
             case newasm::core::lang_inf::Link___:
             {
@@ -4050,6 +4055,7 @@ namespace newasm
                 {
                     newasm::header::data::case_matched = true;
                     newasm::procline(newasm::header::data::case_line);
+                    //newasm::header::data::case_line.clear();
                     return 1;
                 }
                 if(newasm::header::functions::isnumeric(newasm::header::data::switched_value))
@@ -4065,6 +4071,7 @@ namespace newasm
                         {
                             newasm::header::data::case_matched = true;
                             newasm::procline(newasm::header::data::case_line);
+                            //newasm::header::data::case_line.clear()
                             return 1;
                         }
                     }
@@ -4141,6 +4148,150 @@ namespace newasm
                 }
                 return 1;
             }
+            //sysreq
+            case newasm::core::lang_inf::sysreq:
+            {
+                if(!newasm::header::functions::isref(suf))
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_syntax);
+                    return 1;
+                }
+                suf = newasm::header::functions::remamp(suf);
+
+                newasm::runtime::functions::parse<true>(suf);
+
+                //std::cout << "sysreq suf: `" << suf << "`" << std::endl;
+
+                auto& typ = newasm::header::data::case_line;
+                auto it = newasm::inverted_types.find(typ);
+                int type = 0;
+                int real_type = 0;
+                if(it == newasm::inverted_types.end())
+                {
+                    if(typ == "thread")
+                    {
+                        if(newasm::threads::memory.find(suf) == newasm::threads::memory.end())
+                        {
+                            //std::cout << "cant find thread: `" << suf << "`" << std::endl;
+                            newasm::terminate(newasm::exit_codes::sysreq_fail);
+                            return 1;
+                        }
+                        return 1;
+                    }
+                    if(typ == "proc")
+                    {
+                        if(newasm::mem::funcs.find(suf) == newasm::mem::funcs.end())
+                        {
+                            //std::cout << "cant find proc: `" << suf << "`" << std::endl;
+                            newasm::terminate(newasm::exit_codes::sysreq_fail);
+                            return 1;
+                        }
+                        return 1;
+                    }
+                    newasm::terminate(newasm::exit_codes::invalid_syntax);
+                    return 1;
+                }
+
+                auto it2 = newasm::variables::ids.find(suf);
+                if(it2 == newasm::variables::ids.end())
+                {
+                    //std::cout << "cant find var: `" << suf << "`" << std::endl;
+                    newasm::terminate(newasm::exit_codes::sysreq_fail);
+                    return 1;
+                }
+
+                type = it->second;
+                real_type = it2->second.type;
+
+                switch(type)
+                {
+                    case newasm::core::lang_inf::typenames::num:
+                    {
+                        if(real_type != newasm::datatypes::number)
+                        {
+                            newasm::terminate(newasm::exit_codes::sysreq_fail);
+                            return 1;
+                        }
+                        return 1;
+                    }
+                    case newasm::core::lang_inf::typenames::decm:
+                    {
+                        if(real_type != newasm::datatypes::decimal)
+                        {
+                            newasm::terminate(newasm::exit_codes::sysreq_fail);
+                            return 1;
+                        }
+                        return 1;
+                    }
+                    case newasm::core::lang_inf::typenames::char__:
+                    {
+                        if(real_type != newasm::datatypes::character)
+                        {
+                            newasm::terminate(newasm::exit_codes::sysreq_fail);
+                            return 1;
+                        }
+                        return 1;
+                    }
+                    case newasm::core::lang_inf::typenames::txt:
+                    {
+                        if(real_type != newasm::datatypes::text)
+                        {
+                            newasm::terminate(newasm::exit_codes::sysreq_fail);
+                            return 1;
+                        }
+                        return 1;
+                    }
+                    case newasm::core::lang_inf::typenames::union__:
+                    {
+                        if(real_type != newasm::datatypes::yunion)
+                        {
+                            newasm::terminate(newasm::exit_codes::sysreq_fail);
+                            return 1;
+                        }
+                        return 1;
+                    }
+                    case newasm::core::lang_inf::typenames::class__:
+                    {
+                        if(real_type != newasm::datatypes::blueprint)
+                        {
+                            newasm::terminate(newasm::exit_codes::sysreq_fail);
+                            return 1;
+                        }
+                        return 1;
+                    }
+                    case newasm::core::lang_inf::typenames::tuple:
+                    {
+                        if(real_type != newasm::datatypes::tuple)
+                        {
+                            newasm::terminate(newasm::exit_codes::sysreq_fail);
+                            return 1;
+                        }
+                        return 1;
+                    }
+                    case newasm::core::lang_inf::typenames::context__:
+                    {
+                        if(real_type != newasm::datatypes::mycontext)
+                        {
+                            newasm::terminate(newasm::exit_codes::sysreq_fail);
+                            return 1;
+                        }
+                        return 1;
+                    }
+                }
+
+                #if 0
+                if(type != it2->second.type)
+                {
+                    //std::cout << "found but invalid type: `" << suf << "`" << std::endl;
+                    newasm::terminate(newasm::exit_codes::sysreq_fail);
+                    return 1;
+                }
+                #endif
+
+                newasm::terminate(newasm::exit_codes::invalid_syntax);
+                return 1;
+            }
+            //thread
             case newasm::core::lang_inf::thread__:
             {
                 if(newasm::header::data::case_line != static_cast<std::string>("{"))
@@ -4148,6 +4299,12 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::invalid_syntax);
                     return 1;
                 }
+
+                if(newasm::nms::count != 0)
+                {
+                    suf = newasm::header::functions::mangleName(newasm::nms::stack, suf);
+                }
+
                 newasm::threads::thread_now = true;
                 newasm::threads::thread_decl = suf;
                 newasm::threads::memory[suf] = new newasm::threads::object__();
@@ -4159,6 +4316,7 @@ namespace newasm
                 newasm::brace_stack__.push_back(newasm::brace_stack::thread_block);
                 
                 //newasm::threads::thread_count++;
+                //newasm::header::data::case_line.clear();
                 return 1;
             }
             case newasm::core::lang_inf::recv:
@@ -4256,13 +4414,16 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                     return 1;
                 }
+                #if 0
                 if(!newasm::mem::functions::datavalid(
                     newasm::header::functions::remamp(suf), newasm::threads::memory))
                 {
                     newasm::terminate(newasm::exit_codes::invalid_thread);
                     return 1;
                 }
+                #endif
                 std::string thread__ = newasm::header::functions::remamp(suf);
+                newasm::runtime::functions::parse<true>(thread__);
                 auto it = newasm::threads::memory.find(thread__);
                 if(it == newasm::threads::memory.end())
                 {
@@ -5620,6 +5781,7 @@ namespace newasm
                 }
                 newasm::procline(newasm::header::data::case_line);
                 newasm::header::data::case_matched = true;
+                //newasm::header::data::case_line.clear();
                 return 1;
             }
             //cls

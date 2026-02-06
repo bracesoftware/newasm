@@ -3,6 +3,7 @@ These instructions are used to manipulate with the kernel and access its functio
 Following instructions will be covered in the article:
 1. [`sysenter` and `syscall`](#sysenter-and-syscall)
 2. [`int`](#int)
+3. [`sysreq`](#sysreq)
 
 ## `sysenter` and `syscall`
 You use `sysenter` to expose a specific kernel module to the program, and `syscall` to call a specific function from the exposed module.
@@ -82,3 +83,16 @@ int 0x3 ; tells the system to manually calculate the `bos` size for output
 ```
 
 Currently, only `0x3` is available. Others are deprecated.
+
+## `sysreq`
+
+Use this instruction to check if a symbol exists!
+
+```asm
+.data
+    intg myData: 0
+.start
+    sysreq &myData -> intg ; checks if an integer named myData exists
+```
+
+Works also for procedures and threads.
