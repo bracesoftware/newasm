@@ -26,7 +26,7 @@ namespace newasm
     namespace threads
     {
         bool thread_now = false;
-        std::string thread_decl = "\r";
+        std::string thread_decl = "?";
         class object__
         {
             private:
@@ -48,7 +48,7 @@ namespace newasm
                 #endif
             }
 
-            inline void prepare_sys()
+            inline void recompile_threadProc()
             {
                 if(this->prepared)
                 {
@@ -65,6 +65,7 @@ namespace newasm
                 {
                     if(this->contents.at(i).type == newasm::compiler::sealedLabel)
                     {
+                        //std::cout << "Successfully added label: `" << this->contents.at(i).other << "`" << std::endl;
                         this->labels[this->contents.at(i).other] = i;
                         this->contents.at(i).type = newasm::compiler::empty;
                         continue;

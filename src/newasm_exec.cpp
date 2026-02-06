@@ -58,7 +58,10 @@ namespace newasm
         }
         if(!newasm::header::data::repl)
         {
-            newasm::handle_exit();
+            if(!newasm::header::data::exception)
+            {
+                newasm::handle_exit();
+            }
         }
         newasm::terminate_(exit_code);
         return 1;
@@ -3416,13 +3419,19 @@ namespace newasm
                     newasm::unsins(ins);
                     return 1;
                 }
-                if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                if(!newasm::thread_line and !newasm::mem::functions::datavalid(suf, newasm::mem::labels))
                 {
+                    //std::cout << "THIS HAPPENED!!!" << std::endl;
                     newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
                     return 1;
                 }
-                if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
+                if(newasm::thread_line and !newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
                 {
+                    //std::cout << "Trying to find label: `" << suf << "`" << std::endl;
+                    if constexpr(0) for(auto i = newasm::threads::memory.at(newasm::threads::now)->labels.begin(); i != newasm::threads::memory.at(newasm::threads::now)->labels.end(); ++i)
+                    {
+                        std::cout << "first: `" << i->first << "`, second: " << i->second << std::endl;
+                    }
                     newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
                     return 1;
                 }
@@ -4260,7 +4269,7 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::invalid_thread);
                     return 1;
                 }
-                newasm::threads::memory.at(thread__)->prepare_sys();
+                //if(0) newasm::threads::memory.at(thread__)->prepare_sys();
                 try
                 {
                     while(true)
@@ -5194,6 +5203,7 @@ namespace newasm
                 auto it_ = newasm::mem::regs::identifiers.find(suf);
                 if(it_ == newasm::mem::regs::identifiers.end())
                 {
+                    //std::cout << "THIS ACTUALLY HAPPENED NIGZ" << std::endl;
                     newasm::terminate(newasm::exit_codes::bus_err);
                     return 1;
                 }
@@ -6343,7 +6353,9 @@ namespace newasm
 
                 if(brace_purpose == newasm::brace_stack::thread_block)
                 {
+                    std::string& thread__ = newasm::threads::thread_decl;
                     newasm::threads::thread_now = false;
+                    newasm::threads::memory.at(thread__)->recompile_threadProc();
                     return 1;
                 }
                 if(brace_purpose == newasm::brace_stack::object_block)
@@ -6788,7 +6800,7 @@ namespace newasm
                 auto JIT_COMPILED = newasm::compiler::DO(line);
                 newasm::threads::memory.at(name)->contents.push_back(JIT_COMPILED);
             }
-            newasm::threads::memory.at(name)->prepare_sys();
+            newasm::threads::memory.at(name)->recompile_threadProc();
             newasm::threads::valid_threads.push_back(name);
         }
         return;
@@ -7073,7 +7085,7 @@ namespace newasm
         if(method == 0)
         for(auto i = newasm::threads::valid_threads.begin(); i != newasm::threads::valid_threads.end(); ++i)
         {
-            newasm::threads::memory.at(*i)->prepare_sys();
+            //if(0) newasm::threads::memory.at(*i)->prepare_sys();
             if(newasm::threads::memory.at(*i)->returned)
             {
                 continue;

@@ -103,6 +103,7 @@ extern "C"
 // Resources (assets) used in the program
 namespace newasm
 {
+    const bool DO_HANDLE_EXIT = true;
     std::string CONST__ = NIL_STR;
     std::string& real_line = CONST__;
     namespace kernel

@@ -2141,7 +2141,7 @@ link "testfile.asm" ; link a file
         mov tlr, "\nHello guyz! \n This code is lowk insane\t!"
         call std::ios::writeln
     }
-jmp skipallthishsit
+;jmp skipallthishsit
     thread testThread -> {
         {:threadLabel} ; new sealed labels coming
         mov tlr, "hello world from thread\n"
@@ -2152,8 +2152,9 @@ jmp skipallthishsit
         mov tlr, i__
         inc tlr
         mov &i__, *tlr
-        cmp i__, 5
+        cmp tlr, 5
         jnz threadLabel ; label logic in threads so you can have complex multiprocessing
+        ;p
         retf 0
     }
 
