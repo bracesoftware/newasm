@@ -2124,6 +2124,7 @@ link "testfile.asm" ; link a file
 .data
     string testToPrint: "Hello World\n"
     intg length: $ - testToPrint
+    intg i__: 0
 .start
     int 0x3
     mov tlr, testToPrint
@@ -2132,12 +2133,36 @@ link "testfile.asm" ; link a file
     sysenter "ios"
     syscall
     syscall
+
+    mov tlr, "hello black world\n"
+    call std::ios::writeln
     
     evt 'termination' -> { ; this will automatically append to the event, so different files can use it
-        mov tlr, "Hello guyz! \n This code is lowk insane\t!"
+        mov tlr, "\nHello guyz! \n This code is lowk insane\t!"
         call std::ios::writeln
     }
+jmp skipallthishsit
+    thread testThread -> {
+        {:threadLabel} ; new sealed labels coming
+        mov tlr, "hello world from thread\n"
+        mov fdx, 1
+        sysenter "ios"
+        syscall
+        ;call std::ios::writeln
+        mov tlr, i__
+        inc tlr
+        mov &i__, *tlr
+        cmp i__, 5
+        jnz threadLabel ; label logic in threads so you can have complex multiprocessing
+        retf 0
+    }
 
+    await &testThread
+    mov tlr, &testThread
+    sysenter "thread"
+    mov fdx, 1
+    syscall
+:skipallthishsit
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     mov tlr, 223
     ret *tlr

@@ -103,12 +103,33 @@ extern "C"
 // Resources (assets) used in the program
 namespace newasm
 {
+    std::string CONST__ = NIL_STR;
+    std::string& real_line = CONST__;
     namespace kernel
     {
         constexpr uint32_t makeHash(int16_t a, int16_t b)
         {
             return (uint32_t(uint16_t(a)) << 16) | uint32_t(uint16_t(b));
         }
+    }
+
+    namespace compiler
+    {
+        const int empty = 0;
+        const int directive = 1;
+        const int decorator = 2;
+        const int namespace__ = 3;
+        const int closingBrace = 4;
+        const int macroTerminator = 5;
+        const int lambdaTerminator = 6;
+        const int sectionModifier = 7;
+        const int sealedLabel = 8;//const int handleModifier = 8;
+        const int macroDecl = 9;
+        const int dataDecl = 10;
+        const int macroCall = 11;
+        const int conditional = 12;
+        const int instruction = 13;
+        const int classInstance = 14;
     }
 
     namespace decorators
@@ -740,6 +761,7 @@ namespace newasm
 {
     int entry(int argc, char* argv[])
     {
+        //newasm::real_line.reserve(500);
         newasm::mem::regs::fdx.make_short(true);
         newasm::variables::ids.reserve(1000); // for funsies
         if constexpr(0) newasm::native_jit::print("Hello from JIT COMPILER!");

@@ -29,12 +29,50 @@ namespace newasm
         std::string thread_decl = "\r";
         class object__
         {
+            private:
+            bool prepared = false;
             public:
-            std::deque<std::string> contents;
+            std::vector<newasm::compiler::lineData> contents;
             std::stringstream output;
             std::string returned_val;
             bool returned = false;
             bool paused = false;
+            std::unordered_map<std::string, int> labels;
+
+            int lcx = 0;
+
+            explicit inline object__()
+            {
+                #if 0
+                this->contents.reserve(500);
+                #endif
+            }
+
+            inline void prepare_sys()
+            {
+                if(this->prepared)
+                {
+                    return;
+                }
+                this->prepared = true;
+
+                if(this->contents.empty())
+                {
+                    return;
+                }
+
+                for(int i = 0; i < this->contents.size(); ++i)
+                {
+                    if(this->contents.at(i).type == newasm::compiler::sealedLabel)
+                    {
+                        this->labels[this->contents.at(i).other] = i;
+                        this->contents.at(i).type = newasm::compiler::empty;
+                        continue;
+                    }
+                }
+
+                return;
+            }
         };
         std::unordered_map<std::string, newasm::threads::object__*> memory;
         std::vector<std::string> valid_threads;

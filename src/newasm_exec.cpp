@@ -113,7 +113,11 @@ namespace newasm
             "\" in ";
 
             //if(newasm::header::execution_flow::exec_redirected == false)
-            if(newasm::header::data::proc_now == false)
+            if(
+                newasm::header::data::proc_now == false and
+                newasm::thread_line == false and
+                newasm::events::exitNow == false
+            )
             {
                 std::cout <<
                 newasm::header::col::gray <<
@@ -132,15 +136,24 @@ namespace newasm
                 newasm::mem::regs::prp;
                 temp_proc = true;
             }
-            if(newasm::events::exitNow == true)
+            if(newasm::thread_line == true)
             {
-                std::cout << "the 'termination' event " <<
+                std::cout << "the thread " <<
                 newasm::header::col::gray <<
                 newasm::header::style::bold <<
                 newasm::header::style::underline <<
-                newasm::mem::regs::prp;
-                temp_proc = true;
-            }            
+                newasm::threads::now;
+                //temp_proc = true;
+            }
+            if(newasm::events::exitNow == true)
+            {
+                std::cout << "the event handler for " <<
+                newasm::header::col::gray <<
+                newasm::header::style::bold <<
+                newasm::header::style::underline <<
+                "'termination'";
+                //temp_proc = true;
+            }
 
 
             #if 0
@@ -176,6 +189,16 @@ namespace newasm
                     std::cout << std::endl;
                     std::cout << newasm::header::col::reset;
                 }
+            }
+
+            if(true)
+            {
+                std::cout << "\t\t\t" << newasm::header::col::reset << newasm::header::col::yellow;
+                std::cout << "  ^ backtrace: \"" << newasm::header::col::gray << newasm::header::style::underline;
+                std::cout << newasm::real_line;
+                std::cout << newasm::header::col::reset << newasm::header::col::yellow << "\"";
+                std::cout << std::endl;
+                std::cout << newasm::header::col::reset;
             }
         }
         return 1;
@@ -3359,7 +3382,12 @@ namespace newasm
                     return 1;
                 }
 
-                if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                {
+                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                    return 1;
+                }
+                if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
                 {
                     newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
                     return 1;
@@ -3368,6 +3396,13 @@ namespace newasm
                 {
                     return 1;
                 }
+
+                if(newasm::thread_line)
+                {
+                    newasm::threads::memory.at(newasm::threads::now)->lcx = newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
+                    return 1;
+                }
+
                 newasm::code_stream::jump = 1;
                 newasm::code_stream::jumpto = newasm::mem::labels[suf];
                 return 1;
@@ -3381,7 +3416,12 @@ namespace newasm
                     newasm::unsins(ins);
                     return 1;
                 }
-                if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                {
+                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                    return 1;
+                }
+                if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
                 {
                     newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
                     return 1;
@@ -3390,6 +3430,13 @@ namespace newasm
                 {
                     return 1;
                 }
+
+                if(newasm::thread_line)
+                {
+                    newasm::threads::memory.at(newasm::threads::now)->lcx = newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
+                    return 1;
+                }
+
                 newasm::code_stream::jump = 1;
                 newasm::code_stream::jumpto = newasm::mem::labels[suf];
                 return 1;
@@ -3402,13 +3449,23 @@ namespace newasm
                     newasm::unsins(ins);
                     return 1;
                 }
-                if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                {
+                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                    return 1;
+                }
+                if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
                 {
                     newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
                     return 1;
                 }
                 if(newasm::mem::regs::cpr != newasm::cmp_results::less)
                 {
+                    return 1;
+                }
+                if(newasm::thread_line)
+                {
+                    newasm::threads::memory.at(newasm::threads::now)->lcx = newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
                     return 1;
                 }
                 newasm::code_stream::jump = 1;
@@ -3424,13 +3481,23 @@ namespace newasm
                     return 1;
                 }
             
-                if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                {
+                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                    return 1;
+                }
+                if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
                 {
                     newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
                     return 1;
                 }
                 if(newasm::mem::regs::cpr != newasm::cmp_results::greater)
                 {
+                    return 1;
+                }
+                if(newasm::thread_line)
+                {
+                    newasm::threads::memory.at(newasm::threads::now)->lcx = newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
                     return 1;
                 }
                 newasm::code_stream::jump = 1;
@@ -3445,13 +3512,23 @@ namespace newasm
                     newasm::unsins(ins);
                     return 1;
                 }
-                if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                {
+                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                    return 1;
+                }
+                if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
                 {
                     newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
                     return 1;
                 }
                 if(newasm::mem::regs::cpr != newasm::cmp_results::less && newasm::mem::regs::cpr != newasm::cmp_results::equal)
                 {
+                    return 1;
+                }
+                if(newasm::thread_line)
+                {
+                    newasm::threads::memory.at(newasm::threads::now)->lcx = newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
                     return 1;
                 }
                 newasm::code_stream::jump = 1;
@@ -3467,7 +3544,12 @@ namespace newasm
                     return 1;
                 }
 
-                if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                {
+                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                    return 1;
+                }
+                if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
                 {
                     newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
                     return 1;
@@ -3475,6 +3557,12 @@ namespace newasm
 
                 if(newasm::mem::regs::cpr != newasm::cmp_results::greater && newasm::mem::regs::cpr != newasm::cmp_results::equal)
                 {
+                    return 1;
+                }
+
+                if(newasm::thread_line)
+                {
+                    newasm::threads::memory.at(newasm::threads::now)->lcx = newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
                     return 1;
                 }
 
@@ -3491,9 +3579,20 @@ namespace newasm
                     return 1;
                 }
 
-                if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
                 {
-                    newasm::terminate(newasm::exit_codes::bus_err);
+                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                    return 1;
+                }
+                if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
+                {
+                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                    return 1;
+                }
+
+                if(newasm::thread_line)
+                {
+                    newasm::threads::memory.at(newasm::threads::now)->lcx = newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
                     return 1;
                 }
 
@@ -4161,10 +4260,12 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::invalid_thread);
                     return 1;
                 }
+                newasm::threads::memory.at(thread__)->prepare_sys();
                 try
                 {
-                    while(!newasm::threads::memory.at(thread__)->contents.empty())
+                    while(true)
                     {
+                        #if 0
                         newasm::thread_line = true;
                         newasm::threads::now = (thread__);
                         newasm::procline(*newasm::threads::memory.at(thread__)->contents.begin());
@@ -4175,6 +4276,37 @@ namespace newasm
                             return 1;
                         }
                         newasm::threads::memory.at(thread__)->contents.pop_front();
+                        #endif
+                        if(newasm::threads::memory.at(thread__)->returned)
+                        {
+                            break;
+                        }
+                        if(newasm::threads::memory.at(thread__)->contents.empty())
+                        {
+                            newasm::threads::memory.at(thread__)->returned = true;
+                            newasm::threads::memory.at(thread__)->returned_val = "0";
+                            continue;
+                        }
+                        auto& IDX = newasm::threads::memory.at(thread__)->lcx;
+                        if(IDX == newasm::threads::memory.at(thread__)->contents.size())
+                        {
+                            newasm::threads::memory.at(thread__)->returned = true;
+                            newasm::threads::memory.at(thread__)->returned_val = "0";
+                            continue;
+                        }
+                        newasm::thread_line = true;
+                        newasm::threads::now = (thread__); // thread name
+                        newasm::procline(newasm::threads::memory.at(thread__)->contents.at(IDX));
+                        IDX++;
+                        newasm::thread_line = false;
+                        if(newasm::threads::memory.at(thread__)->paused)
+                        {
+                            IDX--;
+                            //std::cout << "Thread paused by channel: " << newasm::threads::now << std::endl;
+                            newasm::threads::memory.at(thread__)->paused = false;
+                            newasm::terminate(newasm::exit_codes::channel_deadlock);
+                            return 1;
+                        }
                     }
                 }
                 catch(const std::exception& e)
@@ -6140,6 +6272,17 @@ namespace newasm
             return 1;
         }
 
+        if constexpr(0)
+        {
+            std::cout << std::endl;
+            std::cout << "Current line: " << line.raw << std::endl;
+            std::cout << "Thread: " << newasm::thread_line << std::endl;
+            std::cout << "Exit now: " << newasm::events::exitNow << std::endl;
+            std::cout << std::endl;
+        }
+
+        newasm::real_line = line.raw;
+
         switch(line.type)
         {
             // EMPTY
@@ -6334,7 +6477,7 @@ namespace newasm
 
         if(newasm::threads::thread_now)
         {
-            newasm::threads::memory.at(newasm::threads::thread_decl)->contents.push_back(line.raw);
+            newasm::threads::memory.at(newasm::threads::thread_decl)->contents.push_back(line);
             return 1;
         }
         if(newasm::header::data::macro_now)
@@ -6353,6 +6496,12 @@ namespace newasm
 
         switch(line.type)
         {
+            // SEALED LABEL
+            case newasm::compiler::sealedLabel:
+            {
+                newasm::terminate(newasm::exit_codes::invalid_ins);
+                return 1;
+            }
             // SECTION MODIFIERS
             case newasm::compiler::sectionModifier:
             {
@@ -6636,8 +6785,10 @@ namespace newasm
             newasm::threads::memory[name] = new newasm::threads::object__();
             for(std::string &line : it->second)
             {
-                newasm::threads::memory.at(name)->contents.push_back(line);
+                auto JIT_COMPILED = newasm::compiler::DO(line);
+                newasm::threads::memory.at(name)->contents.push_back(JIT_COMPILED);
             }
+            newasm::threads::memory.at(name)->prepare_sys();
             newasm::threads::valid_threads.push_back(name);
         }
         return;
@@ -6922,21 +7073,35 @@ namespace newasm
         if(method == 0)
         for(auto i = newasm::threads::valid_threads.begin(); i != newasm::threads::valid_threads.end(); ++i)
         {
+            newasm::threads::memory.at(*i)->prepare_sys();
+            if(newasm::threads::memory.at(*i)->returned)
+            {
+                continue;
+            }
             if(newasm::threads::memory.at(*i)->contents.empty())
             {
                 continue;
             }
+            auto& IDX = newasm::threads::memory.at(*i)->lcx;
+            if(IDX == newasm::threads::memory.at(*i)->contents.size())
+            {
+                newasm::threads::memory.at(*i)->returned = true;
+                newasm::threads::memory.at(*i)->returned_val = "0";
+                continue;
+            }
             newasm::thread_line = true;
             newasm::threads::now = (*i); // thread name
-            newasm::procline(*newasm::threads::memory.at(*i)->contents.begin());
+            newasm::procline(newasm::threads::memory.at(*i)->contents.at(IDX));
+            IDX++;
             newasm::thread_line = false;
             if(newasm::threads::memory.at(*i)->paused)
             {
+                IDX--;
                 //std::cout << "Thread paused by channel: " << newasm::threads::now << std::endl;
                 newasm::threads::memory.at(*i)->paused = false;
                 continue;
             }
-            newasm::threads::memory.at(*i)->contents.pop_front();
+            //newasm::threads::memory.at(*i)->contents.pop_front();
             //continue;
         }
         return;

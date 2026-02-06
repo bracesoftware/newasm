@@ -24,6 +24,7 @@ int main(int argc, char* argv[])
     catch(const std::exception& e)
     {
         std::cerr << "[NewASM] You got VERY ZAJEBAN -> " << e.what() << std::endl;
+        throw;
     }
     
     if(false)

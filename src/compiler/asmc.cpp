@@ -78,22 +78,6 @@ namespace newasm
             return;
         }
 
-        const int empty = 0;
-        const int directive = 1;
-        const int decorator = 2;
-        const int namespace__ = 3;
-        const int closingBrace = 4;
-        const int macroTerminator = 5;
-        const int lambdaTerminator = 6;
-        const int sectionModifier = 7;
-        //const int handleModifier = 8;
-        const int macroDecl = 9;
-        const int dataDecl = 10;
-        const int macroCall = 11;
-        const int conditional = 12;
-        const int instruction = 13;
-        const int classInstance = 14;
-
         std::vector<newasm::compiler::lineData> compiledCode;
 
         [[nodiscard]]
@@ -137,6 +121,14 @@ namespace newasm
                 {
                     newasm::compiler::abort(newasm::compiler::fail::unmatched_syntax);
                 }
+                return lineCompiled;
+            }
+            //sealed label
+            auto sealedLabelData = newasm::header::functions::parseSealedLabel(line);
+            if(sealedLabelData.first)
+            {
+                lineCompiled.type = newasm::compiler::sealedLabel;
+                lineCompiled.other = sealedLabelData.second;
                 return lineCompiled;
             }
             //decorator

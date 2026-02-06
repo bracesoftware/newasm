@@ -497,7 +497,15 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::invalid_thread);
                         return 1;
                     }
+                    #if 0
                     if(!newasm::threads::memory.at(thread__)->contents.empty())
+                    {
+                        newasm::terminate(newasm::exit_codes::expected_await);
+                        return 1;
+                    }
+                    #endif
+                    //if(newasm::threads::memory.at(thread__)->lcx != newasm::threads::memory.at(thread__)->contents.size())
+                    if(!newasm::threads::memory.at(thread__)->returned)
                     {
                         newasm::terminate(newasm::exit_codes::expected_await);
                         return 1;
@@ -520,7 +528,16 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::invalid_thread);
                         return 1;
                     }
+                    #if 0
                     if(!newasm::threads::memory.at(thread__)->contents.empty())
+                    {
+                        newasm::terminate(newasm::exit_codes::expected_await);
+                        return 1;
+                    }
+                    #endif
+
+                    //if(newasm::threads::memory.at(thread__)->lcx != newasm::threads::memory.at(thread__)->contents.size())
+                    if(!newasm::threads::memory.at(thread__)->returned)
                     {
                         newasm::terminate(newasm::exit_codes::expected_await);
                         return 1;

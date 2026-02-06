@@ -1553,7 +1553,7 @@ namespace newasm
                 return { true, { before, inside } };
             }
 
-            bool parseHandleModifier(const std::string& s)
+            inline bool parseHandleModifier(const std::string& s)
             {
                 size_t i = 0;
                 size_t n = s.size();
@@ -1825,6 +1825,33 @@ namespace newasm
                 }
                 //std::cout << "s: ``" << final_str << "`` is FULLY parsed!" << std::endl;
                 return final_str;
+            }
+            /////////////////////
+
+            inline std::pair<bool, std::string> parseSealedLabel(const std::string& s)
+            {
+                if(s.empty() or s.size() < 2)
+                {
+                    return {false, NIL_STR};
+                }
+                if(s.front() != '{' and s.back() != '}')
+                {
+                    return {false, NIL_STR};
+                }
+                std::string str = newasm::header::functions::trim(s.substr(1, s.size() - 2));
+                if(str.at(0) != ':')
+                {
+                    return {false, NIL_STR};
+                }
+
+                str = newasm::header::functions::trim(str.substr(1));
+
+                if(!newasm::header::functions::isalphanum(str))
+                {
+                    return {false, NIL_STR};
+                }
+
+                return {true, str};
             }
         }
     }
