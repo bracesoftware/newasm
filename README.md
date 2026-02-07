@@ -49,19 +49,11 @@ NewASM allows you to write semi-efficient low-level programs in one universal as
 Since NewASM runs in a virtual machine, it is thus running in a fully controlled sealed environment, so it is great for learning and experimenting.
 
 # Table of contents
-- [Documentation](#documentation)
-- [Table of contents](#table-of-contents)
-  - [Using the executeable](#using-the-executeable)
-    - [Launch modes](#launch-modes)
-      - [Shell mode](#shell-mode)
-      - [Interpreter mode](#interpreter-mode)
-  - [The language](#the-language)
-    - [Table of contents](#table-of-contents-1)
-      - [Code sections](#code-sections)
-      - [Storing data into variables and containers](#storing-data-into-variables-and-containers)
-      - [Available instructions](#available-instructions)
-      - [Language concepts](#language-concepts)
-  - [Other resources](#other-resources)
+- [Using the executeable](#using-the-executeable)
+  - [Launch modes](#launch-modes)
+  - [Shell mode](#shell-mode)
+  - [Interpreter mode](#interpreter-mode)
+- [The language](#the-language)
 
 ## Using the executeable
 NewASM build consists of 2 programs, `newasm` and `nprogwin`. What YOU need is the `newasm` executable file which may be run in 2 modes.
@@ -134,19 +126,11 @@ Interpreter mode runs your application through several phases.
 ## The language
 This section of the wiki provides a deep walkthrough of the language itself.
 ### Table of contents
-- [Documentation](#documentation)
-- [Table of contents](#table-of-contents)
-  - [Using the executeable](#using-the-executeable)
-    - [Launch modes](#launch-modes)
-      - [Shell mode](#shell-mode)
-      - [Interpreter mode](#interpreter-mode)
-  - [The language](#the-language)
-    - [Table of contents](#table-of-contents-1)
-      - [Code sections](#code-sections)
-      - [Storing data into variables and containers](#storing-data-into-variables-and-containers)
-      - [Available instructions](#available-instructions)
-      - [Language concepts](#language-concepts)
-  - [Other resources](#other-resources)
+- [Code sections](#code-sections)
+- [Available instructions](#available-instructions)
+- [Language concepts](#language-concepts)
+- [Other helpful resources](#other-resources)
+
 ***
 #### Code sections
 NewASM code is, as in other assemblers, divided into different sections that have their own syntax.
