@@ -2173,7 +2173,6 @@ link "testfile.asm" ; link a file
     sysreq &std::ios::writeln -> proc
     sysreq &namespace::lmao -> char
 
-    f
     ;sysreq &wee
 :dsfdsfdsdssdf
     await &tredz::testThread
