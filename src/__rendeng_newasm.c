@@ -23,8 +23,6 @@ extern "C"
     #define FONT_WIDTH 10
     #define FONT_HEIGHT 18
 
-    #define NULLPTR nullptr
-
     typedef struct
     {
         char ch;
