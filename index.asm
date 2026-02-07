@@ -2145,6 +2145,11 @@ link "testfile.asm" ; link a file
         call std::ios::writeln
     }
 ;jmp skipallthishsit
+    ./lol
+        proc writexd
+            halt 0
+        end
+    ./!lol
     ./tredz
     thread testThread -> {
         {:threadLabel} ; new sealed labels coming
