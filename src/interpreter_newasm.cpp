@@ -959,7 +959,7 @@ namespace newasm
             }
         }
 
-        std::cout << std::endl;
+        EMPTYLINE;
         newasm::header::settings::script_file = argv[1];
         newasm::header::functions::trim(newasm::header::settings::script_file);
         newasm::header::settings::script_file_LINKED = linker_folder.string() + newasm::core::constants::separator + newasm::header::settings::script_file;
@@ -973,20 +973,20 @@ namespace newasm
             newasm::header::functions::err("Cannot open the file: `" + newasm::header::settings::script_file + "`");
             return 1;
         }
-        std::cout << std::endl;
+        EMPTYLINE;
         newasm::header::execution_flow::entry_exec = newasm::header::settings::script_file;
 
         newasm::core::env_vars::functions::setup_env();
         newasm::project_data::impl::setup_proj(newasm::header::settings::script_file);
         newasm::hardware::randAccessMem.init();
-        std::cout << std::endl;
+        EMPTYLINE;
         newasm::header::functions::info("Sucessfully allocated 10 MB of memory.");
         newasm::header::functions::info(
             static_cast<std::string>("Preparing to execute: ") + newasm::header::col::yellow +
             newasm::project_data::name + static_cast<std::string>(" ") + newasm::project_data::version
             + newasm::header::col::reset);
 
-        std::cout << std::endl;
+        EMPTYLINE;
 
         /*
             Before executing the file we need to open the program window.
