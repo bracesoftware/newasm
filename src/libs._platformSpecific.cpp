@@ -1,4 +1,5 @@
-// NewASM Virtual Machine
+// Copyright (c) 2026 Brace Software Co.
+// NewASM Virtual Machine and Toolchain
 
 #if _NEWASM_OS == _NEWASM_OS_windows
     #include "_platformSpecific/win32/libs.cpp"

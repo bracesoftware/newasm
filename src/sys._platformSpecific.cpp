@@ -1,4 +1,5 @@
-// NewASM Virtual Machine
+// Copyright (c) 2026 Brace Software Co.
+// NewASM Virtual Machine and Toolchain
 
 // Colors
 #if _NEWASM_OS == _NEWASM_OS_windows
