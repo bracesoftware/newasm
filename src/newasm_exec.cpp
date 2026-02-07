@@ -77,13 +77,12 @@ namespace newasm
             return 1;
         }
         //newasm::header::data::lastln = line;
+
         if(!newasm::system::terminated)
         {
-            std::cout << std::endl;
             newasm::mem::regs::exc = exit_code;
-            newasm::header::functions::info(newasm::constv::pxstr + std::to_string(newasm::mem::regs::exc));
         }
-        
+
         newasm::system::terminated = true;
 
         if(newasm::header::data::exception)

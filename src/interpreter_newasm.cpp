@@ -12,7 +12,7 @@
 
 namespace newasm
 {
-    const int BUILD_NUMBER = 18;
+    const int BUILD_NUMBER = 19;
     const int RUNTIME_VERSION = 5;
     const int KERNEL_VERSION = 3;
 }
@@ -1021,6 +1021,9 @@ namespace newasm
         //newasm::Console::out("Ide totalni gas");
         newasm::header::functions::trim(newasm::header::settings::script_file_LINKED);
         newasm::execute(newasm::header::settings::script_file_LINKED, -1);
+
+        EMPTYLINE;
+        newasm::header::functions::info(newasm::constv::pxstr + std::to_string(newasm::mem::regs::exc));
 
         /*newasm::procline(".start");
         newasm::procline("mov tlr, \"hello from built-in\"");
