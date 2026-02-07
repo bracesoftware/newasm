@@ -7,8 +7,8 @@ Events are code blocks that execute automatically when certain things happen in 
 
 ```asm
 .start
-	evt 'termination' -> { 	; this will automatically append to the event, so different files can use
-							; the same identifier
+    evt 'termination' -> { 	; this will automatically append to the event, so different files can use
+                            ; the same identifier
         mov tlr, "Hello guyz! \n This code is lowk insane\t!"
         call std::ios::writeln
     }
@@ -23,14 +23,14 @@ Besides using built-in events, you can assign certain procedures their unique he
 
 ```asm
 .start
-	proc myFunction
-		; do smth
-		halt 0
-	end
+    proc myFunction
+        ; do smth
+        halt 0
+    end
 
-	evt 0x9 -> myFunction
+    evt 0x9 -> myFunction
 
-	; now you can do:
-	push 0x9
-	stack
+    ; now you can do:
+    push 0x9
+    stack
 ```
