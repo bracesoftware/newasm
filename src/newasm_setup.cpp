@@ -88,8 +88,8 @@ namespace newasm
         const int invalid_thread = 48;
         const int invalid_exp = 49;
         const int vmem_overflow = 50;
-		const int tuple_redef = 51;
-		const int invalid_tuple = 52;
+        const int tuple_redef = 51;
+        const int invalid_tuple = 52;
         const int channel_deadlock = 53;
         const int invalid_alloc = 54;
         const int invalid_init = 55;
@@ -146,9 +146,9 @@ namespace newasm
             {invalid_thread, "InvalidThread"},
             {invalid_exp, "InvalidExpression"},
             {vmem_overflow, "VirtualMemOverflow"},
-			{namespace_err, "NamespaceError"},
-			{tuple_redef, "TupleRedefinition"},
-			{invalid_tuple, "InvalidTuple"},
+            {namespace_err, "NamespaceError"},
+            {tuple_redef, "TupleRedefinition"},
+            {invalid_tuple, "InvalidTuple"},
             {channel_deadlock, "ThreadChannelDeadlock"},
             {invalid_alloc, "InvalidAlloc"},
             {invalid_init, "InvalidVarInitializer"},
@@ -339,21 +339,21 @@ namespace newasm
             std::string name;
             std::string value;
         };
-		////////
+        ////////
         std::unordered_map<std::string, std::string> data;
         std::unordered_map<std::string, int> datatypes;
         struct attrib
         {
-			std::vector<std::string> namespaces;
+            std::vector<std::string> namespaces;
             bool locked = false;
         };
         std::unordered_map<std::string, newasm::mem::attrib> data_attrib;
-		///////////
-		struct tuple_data
-		{
-			std::vector<std::string> contents;
-		};
-		std::unordered_map<std::string, newasm::mem::tuple_data> tuple;
+        ///////////
+        struct tuple_data
+        {
+            std::vector<std::string> contents;
+        };
+        std::unordered_map<std::string, newasm::mem::tuple_data> tuple;
 
         std::map<std::string, std::vector<std::string>> funcs;
         struct procData

@@ -215,16 +215,16 @@ namespace newasm
             std::string member_name = newasm::header::functions::trim(objectData.second.second);
             std::string struct_name = newasm::header::functions::trim(objectData.second.first);
 
-			if(newasm::header::functions::parseNamespaceSegments(struct_name).first)
-			{
-				newasm::progwin::api::cout("Object<yes> NMS -> " + struct_name);
-				auto i = newasm::header::functions::parseNamespaceSegments(struct_name);
-				std::string symbol_name = i.second.back();
-				auto vec = i.second;
-				vec.pop_back(); // namespace list
-				
-				struct_name = newasm::header::functions::mangleName(vec, symbol_name);
-			}
+            if(newasm::header::functions::parseNamespaceSegments(struct_name).first)
+            {
+                newasm::progwin::api::cout("Object<yes> NMS -> " + struct_name);
+                auto i = newasm::header::functions::parseNamespaceSegments(struct_name);
+                std::string symbol_name = i.second.back();
+                auto vec = i.second;
+                vec.pop_back(); // namespace list
+                
+                struct_name = newasm::header::functions::mangleName(vec, symbol_name);
+            }
 
             if(!newasm::header::functions::isalphanum(struct_name))
             {
@@ -349,26 +349,26 @@ namespace newasm
         newasm::mem::labels[arg] = lineidx;
         return 1;
     }
-	#if 0
-	static bool namespaceCollision(std::string name)
-	{
-		if(newasm::nms::count != newasm::mem::data_attrib[name].namespaces.size())
-		{
-			return false;
-		}
-		if(newasm::nms::count == newasm::mem::data_attrib.at(name).namespaces.size())
-		{
-			for(int i = 0; i < newasm::nms::count; ++i)
-			{
-				if(newasm::nms::stack.at(i) != newasm::mem::data_attrib.at(name).namespaces.at(i))
-				{
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-	#endif
+    #if 0
+    static bool namespaceCollision(std::string name)
+    {
+        if(newasm::nms::count != newasm::mem::data_attrib[name].namespaces.size())
+        {
+            return false;
+        }
+        if(newasm::nms::count == newasm::mem::data_attrib.at(name).namespaces.size())
+        {
+            for(int i = 0; i < newasm::nms::count; ++i)
+            {
+                if(newasm::nms::stack.at(i) != newasm::mem::data_attrib.at(name).namespaces.at(i))
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    #endif
     int process_d(const std::string& wholeline, const std::string& dtyp, const std::string& _name,
         std::string& value, newasm::compiler::lineData& line)
     {
@@ -379,53 +379,53 @@ namespace newasm
             //std::cout << "SIZEOF OPERATOR DETECTED :: " << value << std::endl;
         }
         //std::cout << dtyp << ":" << name << ":" << value << std::endl;
-		std::string name = _name;
-		if(!newasm::header::data::struct_now) if(newasm::nms::count != 0)
-		{
+        std::string name = _name;
+        if(!newasm::header::data::struct_now) if(newasm::nms::count != 0)
+        {
             //std::cout << "original name: `" << name << "`, ";
-			name = newasm::header::functions::mangleName(newasm::nms::stack, name);
+            name = newasm::header::functions::mangleName(newasm::nms::stack, name);
             //std::cout << "mangled name: `" << name << "`" << std::endl;
-		}
-		
+        }
+        
         if(!newasm::header::data::struct_now) if(newasm::mem::functions::datavalid(name, newasm::mem::data))
         {
-			if(true)
-			{
-				newasm::terminate(newasm::exit_codes::var_redef);
-				return 1;
-			}
+            if(true)
+            {
+                newasm::terminate(newasm::exit_codes::var_redef);
+                return 1;
+            }
         }
         if(!newasm::header::data::struct_now) if(newasm::mem::functions::datavalid(name, newasm::variables::ids))
         {
-			if(true)
-			{
-				newasm::terminate(newasm::exit_codes::var_redef);
-				return 1;
-			}
+            if(true)
+            {
+                newasm::terminate(newasm::exit_codes::var_redef);
+                return 1;
+            }
         }
         if(!newasm::header::data::struct_now) if(newasm::mem::functions::datavalid(name, newasm::mem::structs))
         {
             if(true)//if(newasm::namespaceCollision(name))
-			{
-				newasm::terminate(newasm::exit_codes::object_redef);
-				return 1;
-			}
+            {
+                newasm::terminate(newasm::exit_codes::object_redef);
+                return 1;
+            }
         }
         if(!newasm::header::data::struct_now) if(newasm::mem::functions::datavalid(name, newasm::threads::memory))
         {
             if(true)//if(newasm::namespaceCollision(name))
-			{
-				newasm::terminate(newasm::exit_codes::object_redef);
-				return 1;
-			}
+            {
+                newasm::terminate(newasm::exit_codes::object_redef);
+                return 1;
+            }
         }
-		if(!newasm::header::data::struct_now) if(newasm::mem::functions::datavalid(name, newasm::mem::tuple))
+        if(!newasm::header::data::struct_now) if(newasm::mem::functions::datavalid(name, newasm::mem::tuple))
         {
             if(true)//if(newasm::namespaceCollision(name))
-			{
-				newasm::terminate(newasm::exit_codes::tuple_redef);
-				return 1;
-			}
+            {
+                newasm::terminate(newasm::exit_codes::tuple_redef);
+                return 1;
+            }
         }
         
         if(newasm::header::functions::isalphanum(name))
@@ -6015,12 +6015,12 @@ namespace newasm
             newasm::expcfg::process_dec(newasm::header::functions::isdeco(line).second);
             return 1;
         }
-		if(newasm::system::section == newasm::code_stream::sections::data)
-		if(newasm::header::functions::parseNamespace(line).first)
-		{
-			newasm::nms::process_nms(newasm::header::functions::parseNamespace(line).second);
-			return 1;
-		}
+        if(newasm::system::section == newasm::code_stream::sections::data)
+        if(newasm::header::functions::parseNamespace(line).first)
+        {
+            newasm::nms::process_nms(newasm::header::functions::parseNamespace(line).second);
+            return 1;
+        }
         if(line == static_cast<std::string>("}"))
         {
             if(newasm::header::data::struct_now)
@@ -6420,9 +6420,9 @@ namespace newasm
         }
 
         if(newasm::nms::count != 0)
-		{
-			name = newasm::header::functions::mangleName(newasm::nms::stack, name);
-		}
+        {
+            name = newasm::header::functions::mangleName(newasm::nms::stack, name);
+        }
 
         newasm::header::data::struct_now = true;
         newasm::header::data::struct_decl = name;

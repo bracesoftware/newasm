@@ -1132,91 +1132,93 @@ namespace newasm
 
                 return {false, {"", ""}};
             }
-			std::pair<bool, std::string> parseNamespace(const std::string& line)
-			{
-				size_t i = 0;
-				while (i < line.length() && std::isspace(line[i])) i++;
-				if (i >= line.length() || line[i] != '.') return {false, ""};
-				i++;
-				while (i < line.length() && std::isspace(line[i])) i++;
-				if (i >= line.length() || line[i] != '/') return {false, ""};
-				i++;
-				while (i < line.length() && std::isspace(line[i])) i++;
+            std::pair<bool, std::string> parseNamespace(const std::string& line)
+            {
+                size_t i = 0;
+                while (i < line.length() && std::isspace(line[i])) i++;
+                if (i >= line.length() || line[i] != '.') return {false, ""};
+                i++;
+                while (i < line.length() && std::isspace(line[i])) i++;
+                if (i >= line.length() || line[i] != '/') return {false, ""};
+                i++;
+                while (i < line.length() && std::isspace(line[i])) i++;
 
-				std::string namespace_name;
-				while (i < line.length() && !std::isspace(line[i]))
-				{
-					namespace_name += line[i++];
-				}
-				if (namespace_name.empty()) return {false, ""};
+                std::string namespace_name;
+                while (i < line.length() && !std::isspace(line[i]))
+                {
+                    namespace_name += line[i++];
+                }
+                if (namespace_name.empty()) return {false, ""};
 
-				return {true, namespace_name};
-			}
-			
-			std::pair<bool, std::vector<std::string>> parseNamespaceSegments(const std::string& line)
-			{
+                return {true, namespace_name};
+            }
+            
+            std::pair<bool, std::vector<std::string>> parseNamespaceSegments(const std::string& line)
+            {
                 if(line.empty())
                 {
                     return {false, {}};
                 }
                 
-				if(line.at(0) == ':')
-				{
-					return {false, {}};
-				}
-				
-				if(line.back() == ':')
-				{
-					return {false, {}};
-				}
-				
-				if(line.find("::") == std::string::npos)
-				{
-					return {false, {}};
-				}
-				
-				std::vector<std::string> segments;
-				size_t pos = 0;
-				size_t len = line.length();
+                if(line.at(0) == ':')
+                {
+                    return {false, {}};
+                }
+                
+                if(line.back() == ':')
+                {
+                    return {false, {}};
+                }
+                
+                if(line.find("::") == std::string::npos)
+                {
+                    return {false, {}};
+                }
+                
+                std::vector<std::string> segments;
+                size_t pos = 0;
+                size_t len = line.length();
 
-				while (pos < len)
-				{
-					size_t next_sep = line.find("::", pos);
-					if (next_sep == std::string::npos)
-					{
-						// Zadnji segment (ili jedini)
-						std::string segment = line.substr(pos);
-						if (!segment.empty())
-							segments.push_back(segment);
-						break;
-					}
-					else
-					{
-						std::string segment = line.substr(pos, next_sep - pos);
-						if (segment.empty())
-						{
-							// Dvostruki separator sa praznim segmentom nije validan
-							return {false, {}};
-						}
-						segments.push_back(segment);
-						pos = next_sep + 2; // preskoči "::"
-					}
-				}
+                while (pos < len)
+                {
+                    size_t next_sep = line.find("::", pos);
+                    if (next_sep == std::string::npos)
+                    {
+                        // Zadnji segment (ili jedini)
+                        std::string segment = line.substr(pos);
+                        if (!segment.empty())
+                            segments.push_back(segment);
+                        break;
+                    }
+                    else
+                    {
+                        std::string segment = line.substr(pos, next_sep - pos);
+                        if (segment.empty())
+                        {
+                            // Dvostruki separator sa praznim segmentom nije validan
+                            return {false, {}};
+                        }
+                        segments.push_back(segment);
+                        pos = next_sep + 2; // preskoči "::"
+                    }
+                }
 
-				if (segments.empty())
-					return {false, {}};
-				
-				for(int i = 0; i < segments.size(); ++i)
-				{
-					if(!newasm::header::functions::isalphanum(segments.at(i)))
-					{
-						return {false, {}};
-					}
-					segments.at(i) = newasm::header::functions::trim(segments.at(i));
-				}
+                if(segments.empty())
+                {
+                    return {false, {}};
+                }
+                
+                for(int i = 0; i < segments.size(); ++i)
+                {
+                    if(!newasm::header::functions::isalphanum(segments.at(i)))
+                    {
+                        return {false, {}};
+                    }
+                    segments.at(i) = newasm::header::functions::trim(segments.at(i));
+                }
 
-				return {true, segments};
-			}
+                return {true, segments};
+            }
 
             inline std::string demangleName(const std::vector<std::string>& namespaces, const std::string& symbol_name)
             {
@@ -1229,86 +1231,86 @@ namespace newasm
                 return ss.str();
             }
 
-			inline std::string mangleName(const std::vector<std::string>& namespaces, const std::string& symbol_name)
-			{
-				std::string fullpath;
+            inline std::string mangleName(const std::vector<std::string>& namespaces, const std::string& symbol_name)
+            {
+                std::string fullpath;
 
-				for(const auto& ns : namespaces)
-				{
-					fullpath += ns + "::";
-				}
-				fullpath += symbol_name + static_cast<std::string>(__TIME__) + static_cast<std::string>(__DATE__); // prevent bad code
+                for(const auto& ns : namespaces)
+                {
+                    fullpath += ns + "::";
+                }
+                fullpath += symbol_name + static_cast<std::string>(__TIME__) + static_cast<std::string>(__DATE__); // prevent bad code
 
-				size_t hash_val = std::hash<std::string>{}(fullpath);
+                size_t hash_val = std::hash<std::string>{}(fullpath);
 
-				char buffer[17];
-				snprintf(buffer, sizeof(buffer), "%016zx", hash_val); //turn to hexadecimal format
+                char buffer[17];
+                snprintf(buffer, sizeof(buffer), "%016zx", hash_val); //turn to hexadecimal format
 
-				return std::string("__newasm_symbol") + buffer;
-			}
-			
-			bool istuple(std::string &str)
-			{
-				if(str.front() == '(' && str.back() == ')')
-				{
-					return true;
-				}
-				return false;
-			}
+                return std::string("__newasm_symbol") + buffer;
+            }
+            
+            bool istuple(std::string &str)
+            {
+                if(str.front() == '(' && str.back() == ')')
+                {
+                    return true;
+                }
+                return false;
+            }
 
             inline bool isTupleOrContext(std::string &str)
             {
                 return istuple(str);
             }
-			
-			inline std::vector<std::string> parseTuple(const std::string& line)
-			{
-				std::vector<std::string> result;
-				size_t i = 0;
-				size_t n = line.size();
+            
+            inline std::vector<std::string> parseTuple(const std::string& line)
+            {
+                std::vector<std::string> result;
+                size_t i = 0;
+                size_t n = line.size();
 
-				while(i < n && std::isspace(line[i])) i++;
-				if(i < n && line[i] == '(') i++;
+                while(i < n && std::isspace(line[i])) i++;
+                if(i < n && line[i] == '(') i++;
 
-				while(i < n)
-				{
-					while( i < n && std::isspace(line[i])) i++;
+                while(i < n)
+                {
+                    while( i < n && std::isspace(line[i])) i++;
 
-					if(i >= n || line[i] == ')') break;
+                    if(i >= n || line[i] == ')') break;
 
-					if(line[i] == '"')
-					{
-						std::string val;
-						val += line[i++];
-						while (i < n)
-						{
-							val += line[i];
-							if (line[i] == '"' && val.back() != '\\')
-							{
-								i++;
-								break;
-							}
-							i++;
-						}
-						result.push_back(val);
-					}
-					else
-					{
-						std::string val;
-						while(i < n && line[i] != ',' && line[i] != ')')
-						{
-							if(!std::isspace(line[i]))
-								val += line[i];
-							else if(!val.empty())
-								break;
-							i++;
-						}
-						result.push_back(val);
-					}
-					while (i < n && (std::isspace(line[i]) || line[i] == ',')) i++;
-				}
-				return result;
-			}
+                    if(line[i] == '"')
+                    {
+                        std::string val;
+                        val += line[i++];
+                        while (i < n)
+                        {
+                            val += line[i];
+                            if (line[i] == '"' && val.back() != '\\')
+                            {
+                                i++;
+                                break;
+                            }
+                            i++;
+                        }
+                        result.push_back(val);
+                    }
+                    else
+                    {
+                        std::string val;
+                        while(i < n && line[i] != ',' && line[i] != ')')
+                        {
+                            if(!std::isspace(line[i]))
+                                val += line[i];
+                            else if(!val.empty())
+                                break;
+                            i++;
+                        }
+                        result.push_back(val);
+                    }
+                    while (i < n && (std::isspace(line[i]) || line[i] == ',')) i++;
+                }
+                return result;
+            }
             inline std::vector<std::string> parseTupleOrContext(const std::string &str)
             {
                 return parseTuple(str);
@@ -1368,70 +1370,70 @@ namespace newasm
                 return result;
             }
 
-			inline std::pair<bool, std::pair<std::string, std::string>> checkTupleFormat(const std::string& input)
-			{
-				size_t i = 0;
-				size_t n = input.size();
+            inline std::pair<bool, std::pair<std::string, std::string>> checkTupleFormat(const std::string& input)
+            {
+                size_t i = 0;
+                size_t n = input.size();
 
-				auto skipSpaces = [&](size_t& pos)
-				{
-					while(pos < n && std::isspace(static_cast<unsigned char>(input[pos])))
-					{
-						++pos;
-					}
-				};
+                auto skipSpaces = [&](size_t& pos)
+                {
+                    while(pos < n && std::isspace(static_cast<unsigned char>(input[pos])))
+                    {
+                        ++pos;
+                    }
+                };
 
-				skipSpaces(i);
-				size_t startText = i;
+                skipSpaces(i);
+                size_t startText = i;
 
-				while(i < n && !std::isspace(static_cast<unsigned char>(input[i])) && input[i] != '(')
-				{
-					++i;
-				}
+                while(i < n && !std::isspace(static_cast<unsigned char>(input[i])) && input[i] != '(')
+                {
+                    ++i;
+                }
 
-				if (startText == i)
-				{
-					return {false, {"", ""}};
-				}
+                if (startText == i)
+                {
+                    return {false, {"", ""}};
+                }
 
-				std::string text = input.substr(startText, i - startText);
+                std::string text = input.substr(startText, i - startText);
 
-				skipSpaces(i);
+                skipSpaces(i);
 
-				if (i >= n || input[i] != '(')
-				{
-					return {false, {"", ""}};
-				}
-				++i;
+                if (i >= n || input[i] != '(')
+                {
+                    return {false, {"", ""}};
+                }
+                ++i;
 
-				skipSpaces(i);
+                skipSpaces(i);
 
-				size_t startText2 = i;
-				while(i < n && input[i] != ')')
-				{
-					++i;
-				}
-				if(i >= n)
-				{
-					return {false, {"", ""}};
-				}
-				if(startText2 == i)
-				{
-					return {false, {"", ""}};
-				}
+                size_t startText2 = i;
+                while(i < n && input[i] != ')')
+                {
+                    ++i;
+                }
+                if(i >= n)
+                {
+                    return {false, {"", ""}};
+                }
+                if(startText2 == i)
+                {
+                    return {false, {"", ""}};
+                }
 
-				std::string text2 = input.substr(startText2, i - startText2);
+                std::string text2 = input.substr(startText2, i - startText2);
 
-				++i;
-				skipSpaces(i);
+                ++i;
+                skipSpaces(i);
 
-				if(i != n)
-				{
-					return {false, {"", ""}};
-				}
+                if(i != n)
+                {
+                    return {false, {"", ""}};
+                }
 
-				return {true, {text, text2}};
-			}
+                return {true, {text, text2}};
+            }
 
             template<typename T>
             inline int getIndex(const std::vector<T>& v, const T& target)
@@ -1449,68 +1451,68 @@ namespace newasm
                 return checkTupleFormat(input);
             }
             
-			std::pair<bool, std::pair<std::string, std::string>> checkTupleFormat2(const std::string& input)
-			{
-				size_t i = 0;
-				size_t n = input.size();
+            std::pair<bool, std::pair<std::string, std::string>> checkTupleFormat2(const std::string& input)
+            {
+                size_t i = 0;
+                size_t n = input.size();
 
-				auto skipSpaces = [&](size_t& pos)
-				{
-					while(pos < n && std::isspace(static_cast<unsigned char>(input[pos])))
-					{
-						++pos;
-					}
-				};
-				skipSpaces(i);
-				size_t startText = i;
+                auto skipSpaces = [&](size_t& pos)
+                {
+                    while(pos < n && std::isspace(static_cast<unsigned char>(input[pos])))
+                    {
+                        ++pos;
+                    }
+                };
+                skipSpaces(i);
+                size_t startText = i;
 
-				while(i < n && (std::isalnum(static_cast<unsigned char>(input[i])) || input[i] == '_'))
-				{
-					++i;
-				}
+                while(i < n && (std::isalnum(static_cast<unsigned char>(input[i])) || input[i] == '_'))
+                {
+                    ++i;
+                }
 
-				if (startText == i)
-				{
-					return {false, {"", ""}};
-				}
+                if (startText == i)
+                {
+                    return {false, {"", ""}};
+                }
 
-				std::string text = input.substr(startText, i - startText);
+                std::string text = input.substr(startText, i - startText);
 
-				skipSpaces(i);
+                skipSpaces(i);
 
-				if (i >= n || input[i] != '(')
-				{
-					return {false, {"", ""}};
-				}
-				++i;
+                if (i >= n || input[i] != '(')
+                {
+                    return {false, {"", ""}};
+                }
+                ++i;
 
-				skipSpaces(i);
+                skipSpaces(i);
 
-				size_t startText2 = i;
-				while (i < n && input[i] != ')') {
-					++i;
-				}
-				if (i >= n)
-				{
-					return {false, {"", ""}};
-				}
-				if (startText2 == i)
-				{
-					return {false, {"", ""}};
-				}
+                size_t startText2 = i;
+                while (i < n && input[i] != ')') {
+                    ++i;
+                }
+                if (i >= n)
+                {
+                    return {false, {"", ""}};
+                }
+                if (startText2 == i)
+                {
+                    return {false, {"", ""}};
+                }
 
-				std::string text2 = input.substr(startText2, i - startText2);
+                std::string text2 = input.substr(startText2, i - startText2);
 
-				++i;
-				skipSpaces(i);
+                ++i;
+                skipSpaces(i);
 
-				if (i != n)
-				{
-					return {false, {"", ""}};
-				}
+                if (i != n)
+                {
+                    return {false, {"", ""}};
+                }
 
-				return {true, {text, text2}};
-			}
+                return {true, {text, text2}};
+            }
 
             std::pair<bool, std::pair<std::string, std::string>> parseObject(const std::string &input_)
             {
