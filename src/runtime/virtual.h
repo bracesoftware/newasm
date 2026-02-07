@@ -9,13 +9,14 @@ namespace newasm
         newasm::core::constants::separator + newasm::core::constants::virtual_mem;
         class RAM
         {
-        private:
+            private:
             std::string path;
             int size;
-        public:
-            RAM(std::string filename, int bytes) : path(filename), size(bytes) {}
 
-            void init(int bytes)
+            public:
+            explicit inline RAM(std::string filename, int bytes) : path(filename), size(bytes) {}
+
+            inline void init(int bytes)
             {
                 std::ofstream file(path, std::ios::binary | std::ios::trunc);
                 for (int i = 0; i < bytes; ++i) file.put(0);
@@ -23,7 +24,7 @@ namespace newasm
                 //std::cout << "Inicijaliziran ram.bin sa " << bytes << " bajtova.\n";
             }
 
-            void writebyteat(int index, std::string character)
+            inline void writebyteat(int index, std::string character)
             {
                 std::fstream file(path, std::ios::binary | std::ios::in | std::ios::out);
                 if (!file.is_open())
@@ -38,7 +39,7 @@ namespace newasm
                 //std::cout << "Zapisano '" << character[0] << "' na poziciju " << index << ".\n";
             }
 
-            std::string readbyteat(int index)
+            inline std::string readbyteat(int index)
             {
                 std::ifstream file(path, std::ios::binary);
                 if (!file.is_open())
@@ -61,7 +62,7 @@ namespace newasm
                 }
             }
 
-            void writeintat(int index, int value)
+            inline void writeintat(int index, int value)
             {
                 std::fstream file(path, std::ios::binary | std::ios::in | std::ios::out);
                 if (!file.is_open())
@@ -78,7 +79,7 @@ namespace newasm
                 //std::cout << "Zapisano int: " << value << " na poziciju " << index << ".\n";
             }
 
-            int readintat(int index)
+            inline int readintat(int index)
             {
                 std::ifstream file(path, std::ios::binary);
                 if (!file.is_open())
@@ -97,7 +98,8 @@ namespace newasm
                 file.close();
                 return value;
             }
-            void writefloatat(int index, float value)
+
+            inline void writefloatat(int index, float value)
             {
                 std::fstream file(path, std::ios::binary | std::ios::in | std::ios::out);
                 if (!file.is_open())
@@ -113,7 +115,7 @@ namespace newasm
                 //std::cout << "Zapisano float: " << value << " na poziciju " << index << ".\n";
             }
 
-            float readfloatat(int index)
+            inline float readfloatat(int index)
             {
                 std::ifstream file(path, std::ios::binary);
                 if (!file.is_open())
@@ -128,7 +130,8 @@ namespace newasm
 
                 return value;
             }
-            void writestringat(int index, const std::string& text)
+
+            inline void writestringat(int index, const std::string& text)
             {
                 std::fstream file(path, std::ios::binary | std::ios::in | std::ios::out);
                 if (!file.is_open())
@@ -146,7 +149,7 @@ namespace newasm
                 //std::cout << "Zapisano string: \"" << text << "\" na poziciju " << index << ".\n";
             }
 
-            std::string readstringat(int index)
+            inline std::string readstringat(int index)
             {
                 std::ifstream file(path, std::ios::binary);
                 if (!file.is_open())
