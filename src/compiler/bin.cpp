@@ -91,6 +91,7 @@ namespace newasm
                 read_bin(in, ld.whatTheFuckAreEvents);
                 return;
             }
+            //label addresses
             void save_labels(std::ofstream& out, const std::unordered_map<std::string, int>& labels)
             {
                 uint32_t count = labels.size();
@@ -119,6 +120,7 @@ namespace newasm
                 }
                 return;
             }
+            //file data for each line
             void save_files(std::ofstream& out, const std::vector<std::pair<std::string, int>>& files)
             {
                 uint32_t count = files.size();
@@ -144,12 +146,55 @@ namespace newasm
                 }
                 return;
             }
+            //newasm_dl
+            void save_dynlibs(std::ofstream& out, const std::unordered_map<std::string, std::vector<std::string>>& labels)
+            {
+                uint32_t count = labels.size();
+                write_bin(out, count);
+
+                for(auto& [name, vec] : labels)
+                {
+                    write_string(out, name);
+                    uint32_t vec_size = vec.size();
+                    write_bin(out, vec_size);
+                    for(uint32_t i = 0; i < vec_size; ++i)
+                    {
+                        write_string(out, vec.at(i));
+                    }
+                }
+                return;
+            }
+            void load_dynlibs(std::ifstream& in, std::unordered_map<std::string, std::vector<std::string>>& labels)
+            {
+                uint32_t count;
+                read_bin(in, count);
+
+                labels.clear();
+                for(uint32_t i = 0; i < count; ++i)
+                {
+                    std::string temp;
+                    std::string name;
+                    uint32_t content_size;
+                    std::vector<std::string> content;
+                    read_string(in, name);
+                    read_bin(in, content_size);
+                    for(uint32_t i = 0; i < content_size; ++i)
+                    {
+                        read_string(in, temp);
+                        content.push_back(temp);
+                    }
+                    labels.emplace(std::move(name), std::move(content));
+                }
+                return;
+            }
             //finally
             inline bool ASSEMBLE(
                 const std::string& path,
                 const std::vector<newasm::compiler::lineData>& lines,
                 const std::unordered_map<std::string, int>& labels,
-                const std::vector<std::pair<std::string, int>>& files)
+                const std::vector<std::pair<std::string, int>>& files,
+                const std::unordered_map<std::string, std::vector<std::string>>& ins
+            )
             {
                 std::ofstream out(path, std::ios::binary);
                 if(!out)
@@ -200,6 +245,9 @@ namespace newasm
                 write_bin(out, newasm::kernel::cfg::Misc);
                 write_bin(out, newasm::kernel::cfg::Crypto);
                 write_bin(out, newasm::kernel::cfg::Context);
+
+                //dynamic libs (*.newasm_dl files)
+                save_dynlibs(out, ins);
                 return true;
             }
 
@@ -226,17 +274,19 @@ namespace newasm
                 return;
             }
 
-            int load_app(
+            bool load_app(
                 const std::string& path,
                 std::vector<lineData>& lines,
                 std::unordered_map<std::string, int>& labels,
-                std::vector<std::pair<std::string, int>>& files)
+                std::vector<std::pair<std::string, int>>& files,
+                std::unordered_map<std::string, std::vector<std::string>>& ins
+            )
             {
                 std::ifstream in(path, std::ios::binary);
                 if(!in)
                 {
                     newasm::compiler::bin::exit_load(path, newasm::compiler::bin::UNKNOWN_ERROR);
-                    return 0;
+                    return false;
                 }
 
                 // MAGIC
@@ -245,7 +295,7 @@ namespace newasm
                 if(std::memcmp(magic, NEWASM_APP_SIGNATURE, NEWASM_SIGNATURE_SIZE) != 0)
                 {
                     newasm::compiler::bin::exit_load(path, newasm::compiler::bin::INVALID_APP);
-                    return 0;
+                    return false;
                 }
 
                 // VERSION
@@ -260,7 +310,7 @@ namespace newasm
                     std::cout << "runtimever: " << runtimever << std::endl;
                     std::cout << "krnl: " << krnl << std::endl;
                     newasm::compiler::bin::exit_load(path, newasm::compiler::bin::INCOMPATIBLE_APP);
-                    return 0;
+                    return false;
                 }
 
                 // lineData
@@ -295,7 +345,10 @@ namespace newasm
                 read_bin(in, newasm::kernel::cfg::Misc);
                 read_bin(in, newasm::kernel::cfg::Crypto);
                 read_bin(in, newasm::kernel::cfg::Context);
-                return 0;
+                
+                //dynamic libs (*.newasm_dl files)
+                load_dynlibs(in, ins);
+                return true;
             }
 
         }

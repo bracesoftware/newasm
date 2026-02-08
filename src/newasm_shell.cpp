@@ -30,7 +30,8 @@ namespace newasm
             {"passwd",      {"/",               "Change the password."}},
             {"usernm",      {"/",               "Change the username."}},
             {"mount",       {"<setup>",         "Mount a pre-installed setup. Use `mount ?` to see a list of available setups."}},
-            {"run",         {"<binary name>",   "Run a compiled NewASM application."}}
+            {"run",         {"<binary name>",   "Run a compiled NewASM application."}},
+            {"perf",         {"/",               "Show profiler statistics for the last app you ran."}}
         };
         void help_info()
         {
@@ -118,6 +119,9 @@ namespace newasm
                     newasm::header::data::repl = true;
                     
                     newasm::repl();
+
+                    newasm::header::data::repl = false;
+                    return;
                 };
                 auto dwin = []() -> void {
                     if(newasm::ctl::data::progwin)
@@ -221,6 +225,12 @@ namespace newasm
                         newasm::user::impl::changeUsername();
                         return 1;
                     }
+                    if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::perf__))
+                    {
+                        _newasm_CHECKLOGIN;
+                        newasm::GLOBAL::global_showPerf();
+                        return 1;
+                    }
                 }
                 if(tokens.size() == 2)
                 {
@@ -234,15 +244,29 @@ namespace newasm
 
                         newasm::Console::show("NewASM Application Window");
 
-                        newasm::compiler::bin::load_app( // create the binary format
+                        bool startExecution = newasm::compiler::bin::load_app( // create the binary format
                             tokens[1],
                             newasm::compiler::compiledCode,
                             newasm::mem::labels,
-                            newasm::forLinker::lineData
+                            newasm::forLinker::lineData,
+                            newasm::mem::instructions
                         );
 
-                        newasm::execute<true>();
-                        newasm::GLOBAL::cleanup();
+                        newasm::GLOBAL::global_load_std();
+
+                        if(startExecution)
+                        {
+                            newasm::execute<true>();
+                        }
+                        
+                        try
+                        {
+                            newasm::GLOBAL::cleanup();
+                        }
+                        catch(std::exception& e)
+                        {
+                            std::cout << "ZAJEBAO TE KLINAP BAJO!! -> " << e.what() << std::endl;
+                        }
                         
                         newasm::Console::close();
                         return 1;

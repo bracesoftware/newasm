@@ -7098,6 +7098,10 @@ namespace newasm
     template<bool what>
     void execute()
     {
+        newasm::wasted_deduction.clear();
+        newasm::network_deduction.clear();
+        newasm::perf::inputWasteTimer.clear();
+        
         if constexpr(what == true)
         {
             newasm::mem::regs::resetRegisters();
@@ -7111,6 +7115,7 @@ namespace newasm
         {
             if(newasm::system::terminated)
             {
+                //std::cout << "THIS HAPPENED WHIGGAZ" << std::endl;
                 break;
             }
 
@@ -7119,6 +7124,7 @@ namespace newasm
             if(newasm::mem::regs::lcx.get_value() == newasm::compiler::compiledCode.size())
             {
                 // prevent crash.
+                //std::cout << "THIS ACTUALLY HAPPENED WHIGGAZ" << std::endl;
                 break;
             }
 
@@ -7246,7 +7252,8 @@ namespace newasm
                 newasm::bin_out_name,
                 newasm::compiler::compiledCode,
                 newasm::mem::labels,
-                newasm::forLinker::lineData
+                newasm::forLinker::lineData,
+                newasm::mem::instructions
             );
 
             newasm::header::functions::wait(1000);

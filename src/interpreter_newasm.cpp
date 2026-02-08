@@ -87,6 +87,11 @@ extern "C"
 // Resources (assets) used in the program
 namespace newasm
 {
+    namespace flags
+    {
+        bool loaded_std = false;
+    }
+
     template<bool what>
     inline void execute();
 
@@ -104,6 +109,10 @@ namespace newasm
     namespace GLOBAL
     {
         inline void cleanup();
+        bool (*global_load_std)() = nullptr;
+        void (*global_showPerf)() = nullptr;
+
+        bool showed_perf = false;
     }
 
     namespace compiler
@@ -317,6 +326,12 @@ namespace newasm
         inline double count() const
         {
             return elapsed_ms.load();
+        }
+
+        inline void clear()
+        {
+            elapsed_ms = 0.0;
+            return;
         }
     };
 
@@ -672,6 +687,11 @@ namespace newasm
     {
         void cleanup()
         {
+            newasm::GLOBAL::showed_perf = false;
+
+            newasm::mem::instructions.clear();
+            newasm::flags::loaded_std = false;
+
             newasm::kernel::cfg::IOStream = false;
             newasm::kernel::cfg::Extensions = false;
             newasm::kernel::cfg::Thread = false;
@@ -689,10 +709,13 @@ namespace newasm
             newasm::kernel::cfg::Crypto = false;
             newasm::kernel::cfg::Context = false;
 
+            newasm::mem::datatypes.clear();
+            newasm::mem::data.clear();
+            newasm::mem::data_attrib.clear();
+
             newasm::mem::structs.clear();
             newasm::mem::funcs.clear();
 
-            newasm::system::terminated = false;
             newasm::containers::functions::free_dyn_mem();
             newasm::stack::free_macro_mem();
 
@@ -745,6 +768,8 @@ namespace newasm
                 }
             }
             newasm::variables::ids.clear();
+
+            newasm::system::terminated = false;
             return;
         }
     }
@@ -932,15 +957,22 @@ namespace newasm
         auto load_std = []() -> bool {
             if(newasm::header::settings::use_std)
             {
+                if(newasm::flags::loaded_std)
+                {
+                    return false;
+                }
                 if(!std::filesystem::exists(newasm::header::constants::std_library))
                 {
                     newasm::header::functions::err("Standard library not found.\n\t`" + newasm::header::constants::std_library + "` is missing.");
                     return false;
                 }
                 newasm::procfile(newasm::header::constants::std_library); // firstly get the stl goin
+                newasm::flags::loaded_std = true;
             }
             return true;
         };
+
+        newasm::GLOBAL::global_load_std = load_std;
 
         auto ver_check = []() -> void {
             if(newasm::vercheck)
@@ -952,6 +984,47 @@ namespace newasm
                 }
             }
         };
+
+        auto showPerf = []() -> void {
+            if(newasm::GLOBAL::showed_perf)
+            {
+                return;
+            }
+            newasm::GLOBAL::showed_perf = true;
+            std::chrono::duration<double, std::milli> elapsed = newasm::perf::end - newasm::perf::start;
+            //std::chrono::duration<double, std::milli> input_wasted = std::chrono::duration<double, std::milli>::zero();
+            std::chrono::duration<double, std::milli> wait_wasted = std::chrono::duration<double, std::milli>::zero();
+            std::chrono::duration<double, std::milli> network_wasted = std::chrono::duration<double, std::milli>::zero();
+
+            /*for(int i = 0; i < newasm::runtime_deduction.size(); ++i)
+            {
+                input_wasted = input_wasted + newasm::runtime_deduction.at(i);
+            }*/
+
+            for(int i = 0; i < newasm::wasted_deduction.size(); ++i)
+            {
+                wait_wasted = wait_wasted + newasm::wasted_deduction.at(i);
+            }
+
+            for(int i = 0; i < newasm::network_deduction.size(); ++i)
+            {
+                network_wasted = network_wasted + newasm::network_deduction.at(i);
+            }
+
+            std::cout << newasm::header::col::gray << "\t\tTime elapsed: " << elapsed.count() << " ms\n";
+            std::cout << newasm::header::col::gray << "\t\t\t" << newasm::perf::inputWasteTimer.count() << " ms wasted on user input\n";
+            std::cout << newasm::header::col::gray << "\t\t\t" << network_wasted.count() << " ms wasted on network latency\n";
+            //
+            std::cout << newasm::header::style::underline;
+            std::cout << newasm::header::col::gray << "\t\t\t" << wait_wasted.count() << " ms wasted on `wait`\n";
+            std::cout << newasm::header::col::reset;
+            std::cout << newasm::header::col::gray << "\t\t\tTotal: ";
+            std::cout << (elapsed.count() - newasm::perf::inputWasteTimer.count() - wait_wasted.count() - network_wasted.count()) << " ms\n";
+            std::cout << newasm::header::col::reset;
+            return;
+        };
+
+        newasm::GLOBAL::global_showPerf = showPerf;
 
         //shell mode
         if(argc == 1)//(newasm::global::mode == newasm::global::MODE_SHELL)
@@ -1062,36 +1135,7 @@ namespace newasm
         newasm::procline("sysenter \"ios\"");
         newasm::procline("syscall");*/
 
-        std::chrono::duration<double, std::milli> elapsed = newasm::perf::end - newasm::perf::start;
-        //std::chrono::duration<double, std::milli> input_wasted = std::chrono::duration<double, std::milli>::zero();
-        std::chrono::duration<double, std::milli> wait_wasted = std::chrono::duration<double, std::milli>::zero();
-        std::chrono::duration<double, std::milli> network_wasted = std::chrono::duration<double, std::milli>::zero();
-
-        /*for(int i = 0; i < newasm::runtime_deduction.size(); ++i)
-        {
-            input_wasted = input_wasted + newasm::runtime_deduction.at(i);
-        }*/
-
-        for(int i = 0; i < newasm::wasted_deduction.size(); ++i)
-        {
-            wait_wasted = wait_wasted + newasm::wasted_deduction.at(i);
-        }
-
-        for(int i = 0; i < newasm::network_deduction.size(); ++i)
-        {
-            network_wasted = network_wasted + newasm::network_deduction.at(i);
-        }
-
-        std::cout << newasm::header::col::gray << "\t\tTime elapsed: " << elapsed.count() << " ms\n";
-        std::cout << newasm::header::col::gray << "\t\t\t" << newasm::perf::inputWasteTimer.count() << " ms wasted on user input\n";
-        std::cout << newasm::header::col::gray << "\t\t\t" << network_wasted.count() << " ms wasted on network latency\n";
-        //
-        std::cout << newasm::header::style::underline;
-        std::cout << newasm::header::col::gray << "\t\t\t" << wait_wasted.count() << " ms wasted on `wait`\n";
-        std::cout << newasm::header::col::reset;
-        std::cout << newasm::header::col::gray << "\t\t\tTotal: ";
-        std::cout << (elapsed.count() - newasm::perf::inputWasteTimer.count() - wait_wasted.count() - network_wasted.count()) << " ms\n";
-        std::cout << newasm::header::col::reset;
+        newasm::GLOBAL::global_showPerf();
 
         auto& dbg = newasm::forLinker__OLD::debug;
         for(int i = 0; i < dbg.size(); ++i)

@@ -68,10 +68,12 @@ namespace newasm
             void free_mem()
             {
                 valid_threads.clear();
+                #if 0
                 if(newasm::threads::memory.empty())
                 {
                     return;
                 }
+                #endif
                 for(auto i = newasm::threads::memory.begin(); i != newasm::threads::memory.end(); ++i)
                 {
                     if(i->second != nullptr)

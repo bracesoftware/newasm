@@ -986,14 +986,14 @@ sysenter "ios"
 .start
     malloc 12
     mov hea, [0]
-    load *, "OhMy"
+    load *, "OhMy\n"
     load &, &testText
     free nil
     mov tlr, testText
     db tlr
     mov stl, 0c1
     int 0x3
-    mov bos, 4
+    mov bos, 5
     mov fdx, 1
     sysenter "ios"
     syscall

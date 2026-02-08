@@ -186,6 +186,7 @@ namespace newasm
         {
             inline void free_dyn_mem()
             {
+                #if 0
                 if(bit_arrays.empty())
                 {
                     return;
@@ -198,6 +199,7 @@ namespace newasm
                 {
                     return;
                 }
+                #endif
                 for(std::unordered_map<std::string, newasm::containers::bit_array<newasm::containers::default_size>*>::iterator i = newasm::containers::bit_arrays.begin();
                 i != newasm::containers::bit_arrays.end(); ++i)
                 {
