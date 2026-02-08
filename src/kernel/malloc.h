@@ -36,6 +36,7 @@ namespace newasm
             {
                 if(i->second != nullptr) delete i->second;
             }
+            newasm::stack::macros.clear();
             return;
         }
     }

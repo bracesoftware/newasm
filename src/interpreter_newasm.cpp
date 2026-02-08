@@ -672,6 +672,7 @@ namespace newasm
     {
         void cleanup()
         {
+            newasm::system::terminated = false;
             newasm::containers::functions::free_dyn_mem();
             newasm::stack::free_macro_mem();
 
@@ -723,6 +724,7 @@ namespace newasm
                     }
                 }
             }
+            newasm::variables::ids.clear();
             return;
         }
     }

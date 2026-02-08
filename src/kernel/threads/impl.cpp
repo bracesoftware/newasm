@@ -78,6 +78,8 @@ namespace newasm
                         delete i->second;
                     }
                 }
+                newasm::threads::memory.clear();
+                return;
             }
             int get_sysenter()
             {

@@ -222,6 +222,10 @@ namespace newasm
                         delete i->second;
                     }
                 }
+
+                newasm::containers::bit_arrays.clear();
+                newasm::containers::binary_trees.clear();
+                newasm::containers::thread_channels.clear();
                 return;
             }
         }
