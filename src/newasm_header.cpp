@@ -304,7 +304,8 @@ namespace newasm
                 {"l",           {"/",               "Enables the logging system."}},
                 {"nv",          {"/",               "Disables the version check feature."}},
                 {"std",         {"/",               "Load the standard library before staring the application."}},
-                {"nodbg",       {"/",               "Disables the debugger window. May increase performance."}}
+                {"nodbg",       {"/",               "Disables the debugger window. May increase performance."}},
+                {"out",         {"<binary name>",   "Provide binary name for the compiler, default is `a.out`."}}
             };
 
             inline void help_info() noexcept

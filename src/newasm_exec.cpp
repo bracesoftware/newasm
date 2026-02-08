@@ -7174,9 +7174,11 @@ namespace newasm
                 return 1;
             }
 
-            newasm::compiler::bin::ASSEMBLE(
+            newasm::compiler::bin::ASSEMBLE( // create the binary format
                 newasm::bin_out_name,
-                
+                newasm::compiler::compiledCode,
+                newasm::mem::labels,
+                newasm::forLinker::lineData
             );
 
             newasm::header::functions::wait(1000);

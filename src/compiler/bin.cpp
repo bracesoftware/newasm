@@ -178,7 +178,14 @@ namespace newasm
 
                 return true;
             }
-            bool load_app(
+
+            void exit_load(int exit_code)
+            {
+
+                return;
+            }
+
+            int load_app(
                 const std::string& path,
                 std::vector<lineData>& lines,
                 std::unordered_map<std::string, int>& labels,
@@ -187,14 +194,18 @@ namespace newasm
                 std::ifstream in(path, std::ios::binary);
                 if(!in)
                 {
-                    return false;
+                    //unknown error
+                    return 0;
                 }
 
                 // MAGIC
                 char magic[13] = {};
                 in.read(magic, 12);
-                if (std::string(magic) != NEWASM_APP_SIGNATURE)
-                    return false;
+                if(std::string(magic) != NEWASM_APP_SIGNATURE)
+                {
+                    //not a valid newasm application
+                    return 0;
+                }
 
                 // VERSION
                 uint8_t buildnum, runtimever, krnl;
@@ -204,7 +215,8 @@ namespace newasm
 
                 if(buildnum != newasm::BUILD_NUMBER and runtimever != newasm::RUNTIME_VERSION and krnl != newasm::KERNEL_VERSION)
                 {
-                    return false;
+                    //incompatible binary
+                    return 0;
                 }
 
                 // lineData
@@ -222,7 +234,7 @@ namespace newasm
                 // files
                 load_files(in, files);
 
-                return true;
+                return 0;
             }
 
         }
