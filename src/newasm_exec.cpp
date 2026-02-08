@@ -7174,6 +7174,11 @@ namespace newasm
                 return 1;
             }
 
+            newasm::compiler::bin::ASSEMBLE(
+                newasm::bin_out_name,
+                
+            );
+
             newasm::header::functions::wait(1000);
             newasm::perf::start = std::chrono::high_resolution_clock::now();
 

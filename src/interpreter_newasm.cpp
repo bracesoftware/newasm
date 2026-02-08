@@ -190,7 +190,7 @@ namespace newasm
             int addr;
         };
 
-        struct lineData
+        struct lineData final
         {
             std::string raw;
             int type;
@@ -200,8 +200,8 @@ namespace newasm
             int priArgType = 0;
             int altArgType = 0;
 
-            newasm::compiler::argumentData suffixLiteral;
-            newasm::compiler::argumentData operandLiteral;
+            //newasm::compiler::argumentData suffixLiteral;
+            //newasm::compiler::argumentData operandLiteral;
 
             int whatAmIDoing = INVALID_INS;
             short parsedType = INVALID_INS;
@@ -229,6 +229,7 @@ namespace newasm
     //--------------------------------------
     bool vercheck = true;
     bool dwin = true;
+    std::string bin_out_name = "a.out";
     const std::string tab = "\t\t\t";
     std::unordered_map<std::string,std::vector<std::string>>* dyn_ins_set;
     std::vector<std::pair<std::string,std::string>>* env_vars;
@@ -566,6 +567,7 @@ struct __global_newasm final
 static __global_newasm nG;
 
 #include "runtime/garbage_collector.cpp"
+#include "compiler/bin.cpp"
 #include "newasm_exec.cpp"
 
 #include "runtime/procline_insert.cpp"
@@ -869,9 +871,23 @@ namespace newasm
         
         newasm::header::functions::trim(args);
         auto arguments = newasm::header::functions::split(args, ',');
+        std::string value;
+        auto parseArgValue = [&](std::string& string) -> void {
+            auto eqsign_pos = string.find('=');
+            if(eqsign_pos != std::string::npos)
+            {
+                auto temp = newasm::header::functions::split_fixed(string, '=');
+                string = newasm::header::functions::trim(temp[0]);
+                value = newasm::header::functions::trim(temp[1]);
+                return;
+            }
+            value.clear();
+            return;
+        };
         for(int i = 0; i < arguments.size(); ++i)
         {
             newasm::header::functions::trim(arguments[i]);
+            parseArgValue(arguments[i]);
             if(arguments[i] == newasm::args::help) // help argument
             {
                 newasm::header::functions::help_info();
@@ -895,6 +911,17 @@ namespace newasm
             if(arguments[i] == newasm::args::nodbg) // disable progwin
             {
                 newasm::dwin = false;
+                continue;
+            }
+            if(arguments[i] == newasm::args::out) // disable progwin
+            {
+                if(value.empty())
+                {
+                    newasm::header::functions::wrn("Using standard binary name: " + newasm::bin_out_name);
+                    continue;
+                }
+                newasm::bin_out_name = value;
+                value.clear();
                 continue;
             }
 
