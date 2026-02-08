@@ -227,12 +227,24 @@ namespace newasm
                     _newasm_CHECKLOGIN;
                     if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::run__))
                     {
+                        //pre cleanup
+                        newasm::compiler::compiledCode.clear();
+                        newasm::mem::labels.clear();
+                        newasm::forLinker::lineData.clear();
+
+                        newasm::Console::show("NewASM Application Window");
+
                         newasm::compiler::bin::load_app( // create the binary format
                             tokens[1],
                             newasm::compiler::compiledCode,
                             newasm::mem::labels,
                             newasm::forLinker::lineData
                         );
+
+                        newasm::execute<true>();
+                        newasm::GLOBAL::cleanup();
+                        
+                        newasm::Console::close();
                         return 1;
                     }
                     if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::mount__))

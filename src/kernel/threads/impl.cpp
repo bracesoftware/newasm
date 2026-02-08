@@ -67,6 +67,7 @@ namespace newasm
         {
             void free_mem()
             {
+                valid_threads.clear();
                 if(newasm::threads::memory.empty())
                 {
                     return;

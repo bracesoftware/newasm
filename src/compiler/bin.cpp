@@ -183,6 +183,23 @@ namespace newasm
                 // files
                 save_files(out, files);
 
+                //used kernel modules
+                write_bin(out, newasm::kernel::cfg::IOStream);
+                write_bin(out, newasm::kernel::cfg::Extensions);
+                write_bin(out, newasm::kernel::cfg::Thread);
+                write_bin(out, newasm::kernel::cfg::Chrono);
+                write_bin(out, newasm::kernel::cfg::Network);
+                write_bin(out, newasm::kernel::cfg::Memory);
+                write_bin(out, newasm::kernel::cfg::TextOperations);
+                write_bin(out, newasm::kernel::cfg::ContainerManipulation);
+                write_bin(out, newasm::kernel::cfg::FileStream);
+                write_bin(out, newasm::kernel::cfg::Tuple);
+                write_bin(out, newasm::kernel::cfg::TCProtocol);
+                write_bin(out, newasm::kernel::cfg::HTTP);
+                write_bin(out, newasm::kernel::cfg::Math);
+                write_bin(out, newasm::kernel::cfg::Misc);
+                write_bin(out, newasm::kernel::cfg::Crypto);
+                write_bin(out, newasm::kernel::cfg::Context);
                 return true;
             }
 
@@ -215,11 +232,6 @@ namespace newasm
                 std::unordered_map<std::string, int>& labels,
                 std::vector<std::pair<std::string, int>>& files)
             {
-                lines.clear();
-                labels.clear();
-                files.clear();
-                newasm::hardware::randAccessMem.__memory_free__.clear();
-
                 std::ifstream in(path, std::ios::binary);
                 if(!in)
                 {
@@ -266,9 +278,23 @@ namespace newasm
                 // files
                 load_files(in, files);
 
-                newasm::execute<true>();
-
-                newasm::GLOBAL::cleanup();
+                //used kernel modules
+                read_bin(in, newasm::kernel::cfg::IOStream);
+                read_bin(in, newasm::kernel::cfg::Extensions);
+                read_bin(in, newasm::kernel::cfg::Thread);
+                read_bin(in, newasm::kernel::cfg::Chrono);
+                read_bin(in, newasm::kernel::cfg::Network);
+                read_bin(in, newasm::kernel::cfg::Memory);
+                read_bin(in, newasm::kernel::cfg::TextOperations);
+                read_bin(in, newasm::kernel::cfg::ContainerManipulation);
+                read_bin(in, newasm::kernel::cfg::FileStream);
+                read_bin(in, newasm::kernel::cfg::Tuple);
+                read_bin(in, newasm::kernel::cfg::TCProtocol);
+                read_bin(in, newasm::kernel::cfg::HTTP);
+                read_bin(in, newasm::kernel::cfg::Math);
+                read_bin(in, newasm::kernel::cfg::Misc);
+                read_bin(in, newasm::kernel::cfg::Crypto);
+                read_bin(in, newasm::kernel::cfg::Context);
                 return 0;
             }
 

@@ -672,6 +672,26 @@ namespace newasm
     {
         void cleanup()
         {
+            newasm::kernel::cfg::IOStream = false;
+            newasm::kernel::cfg::Extensions = false;
+            newasm::kernel::cfg::Thread = false;
+            newasm::kernel::cfg::Chrono = false;
+            newasm::kernel::cfg::Network = false;
+            newasm::kernel::cfg::Memory = false;
+            newasm::kernel::cfg::TextOperations = false;
+            newasm::kernel::cfg::ContainerManipulation = false;
+            newasm::kernel::cfg::FileStream = false;
+            newasm::kernel::cfg::Tuple = false;
+            newasm::kernel::cfg::TCProtocol = false;
+            newasm::kernel::cfg::HTTP = false;
+            newasm::kernel::cfg::Math = false;
+            newasm::kernel::cfg::Misc = false;
+            newasm::kernel::cfg::Crypto = false;
+            newasm::kernel::cfg::Context = false;
+
+            newasm::mem::structs.clear();
+            newasm::mem::funcs.clear();
+
             newasm::system::terminated = false;
             newasm::containers::functions::free_dyn_mem();
             newasm::stack::free_macro_mem();
@@ -922,9 +942,21 @@ namespace newasm
             return true;
         };
 
+        auto ver_check = []() -> void {
+            if(newasm::vercheck)
+            {
+                newasm::vers::main();
+                if(std::filesystem::exists(newasm::core::constants::data_folder + newasm::core::constants::separator + newasm::core::constants::temp_vers))
+                {
+                    std::filesystem::remove(newasm::core::constants::data_folder + newasm::core::constants::separator + newasm::core::constants::temp_vers);
+                }
+            }
+        };
+
         //shell mode
         if(argc == 1)//(newasm::global::mode == newasm::global::MODE_SHELL)
         {
+            ver_check();
             EMPTYLINE;
             newasm::header::functions::info("Loading the shell mode...");
             newasm::core::env_vars::functions::setup_env();
@@ -955,14 +987,7 @@ namespace newasm
         //if the file is provided, do this
         newasm::header::functions::log("System loading...");
 
-        if(newasm::vercheck)
-        {
-            newasm::vers::main();
-            if(std::filesystem::exists(newasm::core::constants::data_folder + newasm::core::constants::separator + newasm::core::constants::temp_vers))
-            {
-                std::filesystem::remove(newasm::core::constants::data_folder + newasm::core::constants::separator + newasm::core::constants::temp_vers);
-            }
-        }
+        ver_check();
 
         EMPTYLINE;
         newasm::header::settings::script_file = argv[1];

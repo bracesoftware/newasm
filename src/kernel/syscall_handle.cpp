@@ -39,6 +39,13 @@ namespace newasm
 
         inline int handleSysCall()
         {
+            #if 0
+            std::cout << "SYSCALL: fdx = " << newasm::mem::regs::fdx.get_value() << std::endl;
+            std::cout << "SYSCALL: tlr = " << newasm::mem::regs::tlr.get_value() << std::endl;
+            std::cout << "SYSCALL: stl = " << newasm::mem::regs::stl.get_value() << std::endl;
+            std::cout << "SYSCALL: dlx = " << newasm::mem::regs::dlx.get_value() << std::endl;
+            #endif
+
             //ext
             if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::ext)
             {
