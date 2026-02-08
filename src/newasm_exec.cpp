@@ -8,7 +8,7 @@
 
 namespace newasm
 {
-    int execute(std::string file, int lineidx_____);
+    int compile_and_exec(std::string file, int lineidx_____);
     static inline int terminate_(int exit_code);
     inline void unsins(std::string ins)
     {
@@ -35,6 +35,7 @@ namespace newasm
     }
     inline int terminate(int exit_code)
     {
+        std::cout << "\nTERMINATE CALLED -> lmao -> " << exit_code << std::endl;
         if constexpr(0) if(newasm::handling_exit)
         {
             newasm::__CRASH__();
@@ -4392,14 +4393,18 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                     return 1;
                 }
+
+                suf = newasm::header::functions::remamp(suf);
+                newasm::runtime::functions::parse<true>(suf);
+
                 if(!newasm::mem::functions::datavalid(
-                    newasm::header::functions::remamp(suf), newasm::mem::funcs))
+                    suf, newasm::mem::funcs))
                 {
                     newasm::terminate(newasm::exit_codes::invalid_proc);
                     return 1;
                 }
                 
-                newasm::async(newasm::header::functions::remamp(suf));
+                newasm::async(suf);
                 return 1;
             }
             //await
@@ -7115,7 +7120,8 @@ namespace newasm
         {
             if(newasm::system::terminated)
             {
-                //std::cout << "THIS HAPPENED WHIGGAZ" << std::endl;
+                __newasmDBG(std::cout << "\nREAL_LINE: " << newasm::real_line << std::endl)
+                __newasmDBG(std::cout << "THIS HAPPENED WHIGGAZ" << std::endl)
                 break;
             }
 
@@ -7124,7 +7130,7 @@ namespace newasm
             if(newasm::mem::regs::lcx.get_value() == newasm::compiler::compiledCode.size())
             {
                 // prevent crash.
-                //std::cout << "THIS ACTUALLY HAPPENED WHIGGAZ" << std::endl;
+                __newasmDBG(std::cout << "THIS ACTUALLY HAPPENED WHIGGAZ" << std::endl)
                 break;
             }
 

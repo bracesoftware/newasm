@@ -39,11 +39,13 @@ namespace newasm
 
         inline int handleSysCall()
         {
-            #if 0
-            std::cout << "SYSCALL: fdx = " << newasm::mem::regs::fdx.get_value() << std::endl;
-            std::cout << "SYSCALL: tlr = " << newasm::mem::regs::tlr.get_value() << std::endl;
-            std::cout << "SYSCALL: stl = " << newasm::mem::regs::stl.get_value() << std::endl;
-            std::cout << "SYSCALL: dlx = " << newasm::mem::regs::dlx.get_value() << std::endl;
+            #if 1
+            __newasmDBG(std::cout << "\nSYSCALL: fdx = " << newasm::mem::regs::fdx.get_value() << std::endl)
+            __newasmDBG(std::cout << "SYSCALL: tlr = " << newasm::mem::regs::tlr.get_value() << std::endl)
+            __newasmDBG(std::cout << "SYSCALL: stl = " << newasm::mem::regs::stl.get_value() << std::endl)
+            //__newasmDBG(std::cout << "SYSCALL: dlx = " << newasm::mem::regs::dlx.get_value() << std::endl)
+            __newasmDBG(std::cout << "SYSCALL: sysenter = " << newasm::threads::functions::get_sysenter() << std::endl)
+            __newasmDBG(std::cout << "SYSCALL: thread = " << newasm::thread_line << std::endl)
             #endif
 
             //ext

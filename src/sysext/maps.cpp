@@ -22,6 +22,7 @@ namespace newasm
                 auto it = std::unordered_map<K, V>::find(key);
                 if(it == std::unordered_map<K, V>::end())
                 {
+                    std::cout << "realline->`" << newasm::real_line << "`\n";
                     throw std::out_of_range("Key \"" + key + "\" not found in const `::at`.");
                 }
                 return it->second;

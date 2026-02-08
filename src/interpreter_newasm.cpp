@@ -10,6 +10,7 @@
 #pragma GCC diagnostic ignored "-Wunused-result" // used gcc for ts
 #pragma unroll
 
+#define NEWASM_DEBUG 0
 namespace newasm
 {
     const int BUILD_NUMBER = 19;
@@ -60,11 +61,16 @@ namespace SYS = newasm;
 #include <type_traits>
 #include <concepts>
 #include "runtime/common/chars.h"
-
+#include "vm/impl.cpp"
+namespace newasm
+{
+    std::string CONST__ = NIL_STR;
+    std::string& real_line = CONST__;
+}
 #include "sysext/out.cpp"
 #include "vm/external.cpp"
 #include "sysext/maps.cpp"
-#include "vm/impl.cpp"
+
 #include "sysext/csimple.cpp"
 #define __newasm_included
 #include "runtime/alpha.cpp"
@@ -96,8 +102,7 @@ namespace newasm
     inline void execute();
 
     const bool DO_HANDLE_EXIT = true;
-    std::string CONST__ = NIL_STR;
-    std::string& real_line = CONST__;
+    
     namespace kernel
     {
         constexpr uint32_t makeHash(int16_t a, int16_t b)
@@ -688,9 +693,16 @@ namespace newasm
         void cleanup()
         {
             newasm::GLOBAL::showed_perf = false;
+            newasm::header::data::exception = true;
+            newasm::stack::events.clear();
+
+            newasm::events::exitHandler.addr.clear();
 
             newasm::mem::instructions.clear();
             newasm::flags::loaded_std = false;
+
+            newasm::nms::stack.clear();
+            newasm::nms::count = 0;
 
             newasm::kernel::cfg::IOStream = false;
             newasm::kernel::cfg::Extensions = false;
@@ -1031,6 +1043,7 @@ namespace newasm
         {
             ver_check();
             EMPTYLINE;
+            newasm::header::functions::wait(2000);
             newasm::header::functions::info("Loading the shell mode...");
             newasm::core::env_vars::functions::setup_env();
 

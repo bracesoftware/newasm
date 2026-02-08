@@ -106,3 +106,9 @@ namespace newasm
     };
 }
 #endif
+
+#if NEWASM_DEBUG == 1
+    #define __newasmDBG(f__) f__;
+#elif NEWASM_DEBUG == 0
+    #define __newasmDBG(f__)
+#endif
