@@ -326,6 +326,7 @@ namespace newasm
                 const int usernm__ = 12;
                 const int renenv__ = 13;
                 const int mount__ = 14;
+                const int run__ = 15;
 
                 const std::unordered_map<int, std::string> identifiers__ = {
                     {exit__, "exit"},
@@ -341,7 +342,8 @@ namespace newasm
                     {passwd__, "passwd"},
                     {usernm__, "usernm"},
                     {renenv__, "renenv"},
-                    {mount__, "mount"}
+                    {mount__, "mount"},
+                    {run__, "run"}
                 };
             }
 

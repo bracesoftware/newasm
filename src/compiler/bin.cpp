@@ -2,6 +2,7 @@
 // NewASM Virtual Machine and Toolchain
 
 #define NEWASM_APP_SIGNATURE "__newasm_app"
+#define NEWASM_SIGNATURE_SIZE 12
 
 namespace newasm
 {
@@ -80,6 +81,9 @@ namespace newasm
 
                 read_string(in, ld.other);
 
+                read_bin(in, ld.priArgType);
+                read_bin(in, ld.altArgType);
+
                 read_bin(in, ld.whatAmIDoing);
                 read_bin(in, ld.parsedType);
                 read_bin(in, ld.whatCodeSection);
@@ -154,13 +158,16 @@ namespace newasm
                 }
 
                 // MAGIC
-                const char magic[] = NEWASM_APP_SIGNATURE;
-                out.write(magic, sizeof(magic));
+                out.write(NEWASM_APP_SIGNATURE, NEWASM_SIGNATURE_SIZE);
 
                 // VERSION
-                write_bin(out, newasm::BUILD_NUMBER);
-                write_bin(out, newasm::RUNTIME_VERSION);
-                write_bin(out, newasm::KERNEL_VERSION);
+                int buildnum = newasm::BUILD_NUMBER;
+                int runtimever = newasm::RUNTIME_VERSION;
+                int krnl = newasm::KERNEL_VERSION;
+
+                write_bin(out, buildnum);
+                write_bin(out, runtimever);
+                write_bin(out, krnl);
 
                 // lineData
                 uint32_t lineCount = lines.size();
@@ -179,9 +186,26 @@ namespace newasm
                 return true;
             }
 
-            void exit_load(int exit_code)
-            {
+            constinit const int UNKNOWN_ERROR = 1;
+            constinit const int INVALID_APP = 2;
+            constinit const int INCOMPATIBLE_APP = 3;
 
+            void exit_load(const std::string& path, int exit_code)
+            {
+                static const std::unordered_map<int, std::string> loading_errors = {
+                    {UNKNOWN_ERROR, "unknown error or no such file found"},
+                    {INVALID_APP, "not a valid NewASM application"},
+                    {INCOMPATIBLE_APP, "not a compatible NewASM binary format"}
+                };
+
+                newasm::header::functions::err("Failed to load the application.\n");
+
+                if(loading_errors.find(exit_code) == loading_errors.end())
+                {
+                    return;
+                }
+
+                newasm::header::functions::nullprint(newasm::header::col::gray + "\t\t" + path + ": " + loading_errors.at(exit_code) + "\n\n");
                 return;
             }
 
@@ -191,31 +215,39 @@ namespace newasm
                 std::unordered_map<std::string, int>& labels,
                 std::vector<std::pair<std::string, int>>& files)
             {
+                lines.clear();
+                labels.clear();
+                files.clear();
+                newasm::hardware::randAccessMem.__memory_free__.clear();
+
                 std::ifstream in(path, std::ios::binary);
                 if(!in)
                 {
-                    //unknown error
+                    newasm::compiler::bin::exit_load(path, newasm::compiler::bin::UNKNOWN_ERROR);
                     return 0;
                 }
 
                 // MAGIC
-                char magic[13] = {};
-                in.read(magic, 12);
-                if(std::string(magic) != NEWASM_APP_SIGNATURE)
+                char magic[NEWASM_SIGNATURE_SIZE];
+                in.read(magic, NEWASM_SIGNATURE_SIZE);
+                if(std::memcmp(magic, NEWASM_APP_SIGNATURE, NEWASM_SIGNATURE_SIZE) != 0)
                 {
-                    //not a valid newasm application
+                    newasm::compiler::bin::exit_load(path, newasm::compiler::bin::INVALID_APP);
                     return 0;
                 }
 
                 // VERSION
-                uint8_t buildnum, runtimever, krnl;
+                int buildnum, runtimever, krnl;
                 read_bin(in, buildnum);
                 read_bin(in, runtimever);
                 read_bin(in, krnl);
 
-                if(buildnum != newasm::BUILD_NUMBER and runtimever != newasm::RUNTIME_VERSION and krnl != newasm::KERNEL_VERSION)
+                if((buildnum != newasm::BUILD_NUMBER) or (runtimever != newasm::RUNTIME_VERSION) or (krnl != newasm::KERNEL_VERSION))
                 {
-                    //incompatible binary
+                    std::cout << "buildnum: " << buildnum << std::endl;
+                    std::cout << "runtimever: " << runtimever << std::endl;
+                    std::cout << "krnl: " << krnl << std::endl;
+                    newasm::compiler::bin::exit_load(path, newasm::compiler::bin::INCOMPATIBLE_APP);
                     return 0;
                 }
 
@@ -234,6 +266,9 @@ namespace newasm
                 // files
                 load_files(in, files);
 
+                newasm::execute<true>();
+
+                newasm::GLOBAL::cleanup();
                 return 0;
             }
 

@@ -72,11 +72,11 @@ namespace newasm
         template<int t_bitarraysize>
         class bit_array final
         {
-        private:
+            private:
             int bitarraysize = t_bitarraysize;
             int bitarrayvalue[(t_bitarraysize/(__newasm__integer_bits))+1];
-        public:
-            bit_array()
+            public:
+            explicit inline bit_array()
             {
                 //std::cout << "Created a bitarray with a size of " << sizeof(bitarrayvalue)/sizeof(int) << std::endl;
                 if(!(0 < this->bitarraysize))
@@ -96,10 +96,13 @@ namespace newasm
 
             inline void clear() noexcept
             {
+                #if 0
                 for(int i = 0; i < sizeof(bitarrayvalue); i++)
                 {
                     bitarrayvalue[i] = 0;
                 }
+                #endif
+                std::memset(bitarrayvalue, 0, sizeof(bitarrayvalue));
 
                 return;
             }

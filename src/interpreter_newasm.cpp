@@ -87,6 +87,9 @@ extern "C"
 // Resources (assets) used in the program
 namespace newasm
 {
+    template<bool what>
+    inline void execute();
+
     const bool DO_HANDLE_EXIT = true;
     std::string CONST__ = NIL_STR;
     std::string& real_line = CONST__;
@@ -96,6 +99,11 @@ namespace newasm
         {
             return (uint32_t(uint16_t(a)) << 16) | uint32_t(uint16_t(b));
         }
+    }
+
+    namespace GLOBAL
+    {
+        inline void cleanup();
     }
 
     namespace compiler
@@ -664,23 +672,12 @@ namespace newasm
     {
         void cleanup()
         {
-            auto printf___ = [](const char* msg) -> void {
-                std::cout << msg << std::flush;
-                return;
-            };
-            //std::cout << "\n";
-            newasm::header::functions::log("System cleaning up...");
-            std::cout << newasm::header::col::gray;
             newasm::containers::functions::free_dyn_mem();
-            printf___("\t\tCleaning up containers...\n");
             newasm::stack::free_macro_mem();
-            printf___("\t\tCleaning up macro data...\n");
 
-            printf___("\t\tCleaning up DL data...\n");
-            printf___("\t\tCleaning up environment variable memory...\n");
-            
             newasm::threads::functions::free_mem();
-            printf___("\t\tCleaning up thread and event data...\n");
+            newasm::core::env_vars::functions::save_env();
+         
             for(auto i = newasm::variables::ids.begin(); i != newasm::variables::ids.end(); ++i)
             {
                 if(i->second.type == newasm::datatypes::event)
@@ -690,13 +687,6 @@ namespace newasm
                         delete i->second.event;
                     }
                 }
-            }
-            newasm::core::env_vars::functions::save_env();
-            printf___("\t\tSaving environment variables...\n");
-            
-            printf___("\t\tCleaning up dynamic tuple and context data...\n");
-            for(auto i = newasm::variables::ids.begin(); i != newasm::variables::ids.end(); ++i)
-            {
                 if(i->second.type == newasm::datatypes::tuple)
                 {
                     if(i->second.tuple != nullptr)
@@ -711,10 +701,6 @@ namespace newasm
                         delete i->second.context;
                     }
                 }
-            }
-            printf___("\t\tCleaning up class data...\n");
-            for(auto i = newasm::variables::ids.begin(); i != newasm::variables::ids.end(); ++i)
-            {
                 if(i->second.type == newasm::datatypes::blueprint)
                 {
                     if(i->second.blueprint != nullptr)
@@ -722,9 +708,6 @@ namespace newasm
                         delete i->second.blueprint;
                     }
                 }
-            }
-            for(auto i = newasm::variables::ids.begin(); i != newasm::variables::ids.end(); ++i)
-            {
                 if(i->second.type == newasm::datatypes::static_objz)
                 {
                     if(i->second.obj != nullptr)
@@ -732,10 +715,6 @@ namespace newasm
                         delete i->second.obj;
                     }
                 }
-            }
-            printf___("\t\tCleaning up union data...\n");
-            for(auto i = newasm::variables::ids.begin(); i != newasm::variables::ids.end(); ++i)
-            {
                 if(i->second.type == newasm::datatypes::yunion)
                 {
                     if(i->second.yunion != nullptr)
@@ -744,9 +723,6 @@ namespace newasm
                     }
                 }
             }
-            printf___("Closing...");
-            std::cout << newasm::header::col::reset;
-            std::cout << std::endl;
             return;
         }
     }
@@ -1047,7 +1023,7 @@ namespace newasm
         newasm::Console::show("NewASM Application Window");
         //newasm::Console::out("Ide totalni gas");
         newasm::header::functions::trim(newasm::header::settings::script_file_LINKED);
-        newasm::execute(newasm::header::settings::script_file_LINKED, -1);
+        newasm::compile_and_exec(newasm::header::settings::script_file_LINKED, -1);
 
         EMPTYLINE;
         newasm::header::functions::info(newasm::constv::pxstr + std::to_string(newasm::mem::regs::exc));
@@ -1104,9 +1080,13 @@ namespace newasm
 
         newasm::header::functions::pause();
 
-        newasm::header::functions::info("Cleaning up...");
+        newasm::header::functions::info("Cleaning up memory...");
 
         newasm::GLOBAL::cleanup();
+        std::cout << newasm::header::col::gray;
+        newasm::header::functions::nullprint("\n\tShutting down...");
+        std::cout << newasm::header::col::reset;
+        std::cout << std::endl;
 
         newasm::progwin::api::exit();
 

@@ -7094,7 +7094,75 @@ namespace newasm
         newasm::exit_handled = true;
         return;
     }
-    inline int execute(std::string file, int lineidx_____)
+
+    template<bool what>
+    void execute()
+    {
+        if constexpr(what == true)
+        {
+            newasm::mem::regs::resetRegisters();
+            newasm::mem::regs::hea = 0;
+            newasm::mem::regs::lcx.set_value(0);
+        }
+
+        newasm::perf::start = std::chrono::high_resolution_clock::now();
+
+        while(!(newasm::mem::regs::lcx.get_value() == newasm::compiler::compiledCode.size()))
+        {
+            if(newasm::system::terminated)
+            {
+                break;
+            }
+
+            newasm::mem::regs::lcx.set_value(newasm::mem::regs::lcx.get_value() + 1);
+
+            if(newasm::mem::regs::lcx.get_value() == newasm::compiler::compiledCode.size())
+            {
+                // prevent crash.
+                break;
+            }
+
+            newasm::header::data::lastln = newasm::compiler::compiledCode.at(newasm::mem::regs::lcx.get_value()).raw;
+            
+            newasm::header::data::lastlndx = newasm::mem::regs::lcx.get_value();
+    
+            //newasm::proclineUncompiled(newasm::mem::COD.at(newasm::mem::regs::lcx.get_value()));
+            
+            try
+            {
+                newasm::procline(newasm::compiler::compiledCode.at(newasm::mem::regs::lcx.get_value()));
+                #if 0
+                if(newasm::mem::regs::lcx.get_value() == newasm::compiler::compiledCode.size() - 1)
+                {
+                    exec_exit_handle();
+                }
+                #endif
+            }
+            catch(const std::exception& e)
+            {
+                std::cerr << "Kompajler te zajebucnuo -> " << e.what() << '\n';
+                std::cout << "LCX value -> " << newasm::mem::regs::lcx.get_value() << std::endl;
+                std::cout << "CC size -> " << newasm::compiler::compiledCode.size() << std::endl;
+                std::cout << "Line data -> " << newasm::compiler::compiledCode.at(newasm::mem::regs::lcx.get_value()).raw << std::endl;
+            }
+            
+
+            if(newasm::code_stream::jump)
+            {
+                newasm::code_stream::jump = 0;
+                newasm::mem::regs::lcx.set_value(newasm::code_stream::jumpto - 1);
+            }
+        }
+
+        if(!newasm::system::terminated)
+        {
+            newasm::terminate(newasm::exit_codes::noterm_point); // You got to end your programs.
+        }
+        newasm::perf::end = std::chrono::high_resolution_clock::now();
+        return;
+    }
+
+    inline int compile_and_exec(std::string file, int lineidx_____)
     {
         if(lineidx_____ == -1)
         {
@@ -7182,61 +7250,7 @@ namespace newasm
             );
 
             newasm::header::functions::wait(1000);
-            newasm::perf::start = std::chrono::high_resolution_clock::now();
-
-            while(!(newasm::mem::regs::lcx.get_value() == newasm::mem::COD.size()))
-            {
-                if(newasm::system::terminated)
-                {
-                    break;
-                }
-
-                newasm::mem::regs::lcx.set_value(newasm::mem::regs::lcx.get_value() + 1);
-
-                if(newasm::mem::regs::lcx.get_value() == newasm::mem::COD.size())
-                {
-                    // prevent crash.
-                    break;
-                }
-
-                newasm::header::data::lastln = newasm::mem::COD.at(newasm::mem::regs::lcx.get_value());
-                
-                newasm::header::data::lastlndx = newasm::mem::regs::lcx.get_value();
-        
-                //newasm::proclineUncompiled(newasm::mem::COD.at(newasm::mem::regs::lcx.get_value()));
-                
-                try
-                {
-                    newasm::procline(newasm::compiler::compiledCode.at(newasm::mem::regs::lcx.get_value()));
-                    #if 0
-                    if(newasm::mem::regs::lcx.get_value() == newasm::compiler::compiledCode.size() - 1)
-                    {
-                        exec_exit_handle();
-                    }
-                    #endif
-                }
-                catch(const std::exception& e)
-                {
-                    std::cerr << "Kompajler te zajebucnuo -> " << e.what() << '\n';
-                    std::cout << "LCX value -> " << newasm::mem::regs::lcx.get_value() << std::endl;
-                    std::cout << "CC size -> " << newasm::compiler::compiledCode.size() << std::endl;
-                    std::cout << "Line data -> " << newasm::compiler::compiledCode.at(newasm::mem::regs::lcx.get_value()).raw << std::endl;
-                }
-                
-
-                if(newasm::code_stream::jump)
-                {
-                    newasm::code_stream::jump = 0;
-                    newasm::mem::regs::lcx.set_value(newasm::code_stream::jumpto - 1);
-                }
-            }
-
-            if(!newasm::system::terminated)
-            {
-                newasm::terminate(newasm::exit_codes::noterm_point); // You got to end your programs.
-            }
-            newasm::perf::end = std::chrono::high_resolution_clock::now();
-            return 1;
+            newasm::execute<false>();
         }
         else
         {

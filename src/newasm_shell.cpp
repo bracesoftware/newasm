@@ -29,7 +29,8 @@ namespace newasm
             {"printenv",    {"/",               "View all environment variables."}},
             {"passwd",      {"/",               "Change the password."}},
             {"usernm",      {"/",               "Change the username."}},
-            {"mount",       {"<setup>",         "Mount a pre-installed setup. Use `mount ?` to see a list of available setups."}}
+            {"mount",       {"<setup>",         "Mount a pre-installed setup. Use `mount ?` to see a list of available setups."}},
+            {"run",         {"<binary name>",   "Run a compiled NewASM application."}}
         };
         void help_info()
         {
@@ -224,6 +225,16 @@ namespace newasm
                 if(tokens.size() == 2)
                 {
                     _newasm_CHECKLOGIN;
+                    if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::run__))
+                    {
+                        newasm::compiler::bin::load_app( // create the binary format
+                            tokens[1],
+                            newasm::compiler::compiledCode,
+                            newasm::mem::labels,
+                            newasm::forLinker::lineData
+                        );
+                        return 1;
+                    }
                     if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::mount__))
                     {
                         if(tokens[1] == newasm::shell_tools::mount::setup_help) //?
