@@ -95,8 +95,8 @@ namespace newasm
         }
         inline void set_value(const T& new_val)
         {
-            newasm::_std::scope_exit a([this] {
-                this->log_change();
+            newasm::_std::scope_exit a([this]() {
+                this->log_change;
             });
             //T new_val = new_val_;
             if constexpr(std::is_same_v<T, int>)
@@ -135,6 +135,9 @@ namespace newasm
         }
         inline _register<T>& operator=(const T& new_val)
         {
+            newasm::_std::scope_exit a([this]() {
+                this->log_change;
+            });
             //T new_val = new_val_;
             if constexpr(std::is_same_v<T, int>)
             {
