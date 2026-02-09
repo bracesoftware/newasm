@@ -31,7 +31,8 @@ namespace newasm
             {"usernm",      {"/",               "Change the username."}},
             {"mount",       {"<setup>",         "Mount a pre-installed setup. Use `mount ?` to see a list of available setups."}},
             {"run",         {"<binary name>",   "Run a compiled NewASM application."}},
-            {"perf",         {"/",               "Show profiler statistics for the last app you ran."}}
+            {"perf",        {"/",               "Show profiler statistics for the last app you ran."}},
+            {"usestd",      {"/",               "Enable the `std` flag."}}
         };
         void help_info()
         {
@@ -111,7 +112,7 @@ namespace newasm
                 };
                 auto repl = []() -> void {
                     newasm::GLOBAL::global_load_std();
-                    
+
                     newasm::header::data::repl_end = false;
                     newasm::header::functions::info(
                         static_cast<std::string>("Read-Eval-Print Loop mode loaded; to leave, use the `")+
@@ -233,6 +234,13 @@ namespace newasm
                         _newasm_CHECKLOGIN;
                         newasm::GLOBAL::global_showPerf();
                         return 1;
+                    }
+                    if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::usestd__))
+                    {
+                        _newasm_CHECKLOGIN;
+                        newasm::header::functions::info("Successfully enabled the standard library flag.\n\tUse `mount stdlib` to mount the library.");
+                        newasm::header::settings::use_std = true;
+                        return;
                     }
                 }
                 if(tokens.size() == 2)

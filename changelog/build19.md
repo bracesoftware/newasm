@@ -19,6 +19,7 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 
 + Added the `run` shell command.
 + Added the `perf` shell command.
++ Added the `usestd` shell command.
 
 ## What's changed
 

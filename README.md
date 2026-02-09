@@ -113,6 +113,7 @@ Shell mode brings commands with it. The shell mode is the PRIMARY mode for end u
 | `mount` | `<setup name>` | Mount a pre-installed setup. Use `mount ?` to see a list of available setups. |
 | `run` | `<binary name>` | Run a compiled NewASM application. |
 | `perf` |- | Display performance details about the last application you ran. |
+| `usestd` |- | Enable the `std` flag. |
 
 #### Interpreter mode
 Interpreter mode compiles and runs your application through several phases.

@@ -923,7 +923,7 @@ namespace newasm
             newasm::header::functions::info("Using default values...");
             EMPTYLINE;
             EMPTYLINE;
-            args = "h,std,l,nodbg";
+            args = "h,l,nodbg";
         }
         
         newasm::header::functions::trim(args);
