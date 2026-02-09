@@ -248,6 +248,10 @@ namespace newasm
 
                 //dynamic libs (*.newasm_dl files)
                 save_dynlibs(out, ins);
+
+                //project data
+                write_string(out, newasm::project_data::name);
+                write_string(out, newasm::project_data::version);
                 return true;
             }
 
@@ -348,6 +352,10 @@ namespace newasm
                 
                 //dynamic libs (*.newasm_dl files)
                 load_dynlibs(in, ins);
+
+                //project data
+                read_string(in, newasm::project_data::name);
+                read_string(in, newasm::project_data::version);
                 return true;
             }
 

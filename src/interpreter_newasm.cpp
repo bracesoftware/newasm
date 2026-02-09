@@ -78,6 +78,11 @@ namespace newasm
             bool repl = false;
         }
     }
+    namespace project_data
+    {
+        std::string name = "";
+        std::string version = "";
+    }
 }
 #include "sysext/scope_exit.cpp"
 #include "sysext/out.cpp"
@@ -1038,6 +1043,7 @@ namespace newasm
                 network_wasted = network_wasted + newasm::network_deduction.at(i);
             }
 
+            std::cout << newasm::header::col::gray << "  Profiler info for: " << newasm::header::col::yellow << newasm::project_data::name << " " << newasm::project_data::version << std::endl;
             std::cout << newasm::header::col::gray << "\t\tTime elapsed: " << elapsed.count() << " ms\n";
             std::cout << newasm::header::col::gray << "\t\t\t" << newasm::perf::inputWasteTimer.count() << " ms wasted on user input\n";
             std::cout << newasm::header::col::gray << "\t\t\t" << network_wasted.count() << " ms wasted on network latency\n";

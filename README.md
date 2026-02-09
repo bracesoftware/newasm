@@ -74,10 +74,11 @@ export newasm_args=arg1,arg2
 | `nv` | - | Disable version checking. |
 | `std` | - | Use the standard library. |
 | `nodbg` | - | Disable the debug window. |
+| `out` | `<binary name>` | Provide binary name for the compiler, default is `a.out`. This is argument is useful only in compiler/interpreter mode. |
 
 Example:
 ```bat
-set newasm_args=l,h,std
+set newasm_args=l,h,std,out=app
 ```
 
 ### Launch modes
@@ -93,7 +94,7 @@ To run the interpreter, use `newasm <filename>.asm`, but to run the shell, just 
 ***
 
 #### Shell mode
-Shell mode brings new different commands with it. Below is a list of available commands:
+Shell mode brings commands with it. The shell mode is the PRIMARY mode for end users. Basically the "operating system" for the virtual machine. Below is a list of available commands:
 | Command | Arguments | Description |
 | ---------------- | --------- | ----------- |
 | `help` | - | Displays this panel within the console. |
@@ -109,12 +110,16 @@ Shell mode brings new different commands with it. Below is a list of available c
 | `printenv` | - | Prints all the environment variables. |
 | `passwd` | - | Change your password. |
 | `usernm` | - | Change your username. |
+| `mount` | `<setup name>` | Mount a pre-installed setup. Use `mount ?` to see a list of available setups. |
+| `run` | `<binary name>` | Run a compiled NewASM application. |
+| `perf` |- | Display performance details about the last application you ran. |
 
 #### Interpreter mode
-Interpreter mode runs your application through several phases.
+Interpreter mode compiles and runs your application through several phases.
 1. **Linker phase**: In this phase, the linker links all files included in the application into one internal format.
 2. **Internal compilation**: In this phase, the system tokenizes and resolves some compile-time stuff before running the program. This ensures safe and stable program execution. In this phase, the system is telling the virtual machine what kernel modules will be used during the execution of the program.
-3. **Execution**: Final phase, the system runs the compiled code!
+3. **Binary format generation**: In this phase, the compiler spews out the binary for your app. Links the dynamic libraries you provided in the project file. This binary can be then reused in the shell.
+4. **Execution**: Final phase (used for app devs), the system runs the compiled code!
 
 > [!TIP]
 > We're planning to add JIT compilation into native code, but that's in the testing phase.

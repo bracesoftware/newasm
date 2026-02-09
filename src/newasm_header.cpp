@@ -1843,8 +1843,6 @@ namespace newasm
 
     namespace project_data
     {
-        std::string name = "";
-        std::string version = "";
         std::vector<std::string> dynamic_libs;
         std::vector<std::string> tokens;
 
