@@ -66,7 +66,20 @@ namespace newasm
 {
     std::string CONST__ = NIL_STR;
     std::string& real_line = CONST__;
+
+    namespace lambda
+    {
+        bool process = false; // if lambda contents is being processed
+    }
+    namespace header
+    {
+        namespace data
+        {
+            bool repl = false;
+        }
+    }
 }
+#include "sysext/scope_exit.cpp"
 #include "sysext/out.cpp"
 #include "vm/external.cpp"
 #include "sysext/maps.cpp"
@@ -184,10 +197,6 @@ namespace newasm
 
             template<bool _Force>
             inline std::string parseBackslash(const std::string& s);
-        }
-        namespace data
-        {
-            bool repl = false;
         }
     }
     namespace common
@@ -796,6 +805,7 @@ namespace newasm
     {
         //newasm::real_line.reserve(500);
         newasm::mem::regs::fdx.make_short(true);
+        newasm::mem::regs::fdx.log_things(true);
         newasm::variables::ids.reserve(1000); // for funsies
         if constexpr(0) newasm::native_jit::print("Hello from JIT COMPILER!");
         newasm::forLinker__OLD::debug.reserve(100);
@@ -1076,6 +1086,7 @@ namespace newasm
         newasm::header::functions::log("System loading...");
 
         ver_check();
+        newasm::flags::perf_available = true;
 
         EMPTYLINE;
         newasm::header::settings::script_file = argv[1];

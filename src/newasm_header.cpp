@@ -1892,7 +1892,7 @@ namespace newasm
                             newasm::dynlib::settings::lastlinedx = 0;
                             bool dynlib_errno = true;
                             //std::cout << "Debugging MEGA CRASH " << "3\n";
-                            while (std::getline(file, line))
+                            while(std::getline(file, line))
                             {
                                 line = newasm::header::functions::trim(line);
                                 tokens = newasm::common::tokenize(line);
@@ -1951,6 +1951,8 @@ namespace newasm
                                     ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::jl) ||
                                     ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::jle) ||
                                     ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::jg) ||
+                                    ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::jz) ||
+                                    ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::jnz) ||
                                     ins == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::jge)
                                 ))
                                 {

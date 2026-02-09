@@ -17,7 +17,8 @@ namespace newasm
         template<typename T>
         concept number = std::is_arithmetic_v<T>;
     }
-    template<typename T> class _register final
+    template<typename T>
+    class _register final
     {
         private:
         std::string name;
@@ -27,11 +28,38 @@ namespace newasm
         T initial_value;
 
         bool short_int_value = false;
+        bool log = false;
         
         public:
         explicit inline _register(std::string regname, T val)
             : name(regname), value(val), initial_value(val) {}
 
+
+        inline void log_change() const
+        {
+            if(this->log == false)
+            {
+                return;
+            }
+            std::cout << std::endl;
+            std::cout << "newasm::real_line" << newasm::real_line << std::endl;
+            std::cout << "newasm::lambda::process -> " << newasm::lambda::process << "\n";
+            std::cout << "newasm::header::data::repl -> " << newasm::header::data::repl << "\n";
+            std::cout << "newasm::thread_line -> " << newasm::thread_line << "\n";
+            std::cout << "value -> " << this->value << "\n";
+            if(newasm::thread_line)
+            {
+                //this->thread_values.at(newasm::threads::now);
+                std::cout << "thread value -> " << this->thread_values.at(newasm::threads::now) << "\n";
+            }
+            return;
+        }
+
+        inline void log_things(bool set) noexcept
+        {
+            this->log = set;
+            return;
+        }
         inline void make_short(bool set) noexcept
         {
             if constexpr(std::is_same_v<T, int>)
@@ -67,6 +95,9 @@ namespace newasm
         }
         inline void set_value(const T& new_val)
         {
+            newasm::_std::scope_exit a([this] {
+                this->log_change();
+            });
             //T new_val = new_val_;
             if constexpr(std::is_same_v<T, int>)
             {

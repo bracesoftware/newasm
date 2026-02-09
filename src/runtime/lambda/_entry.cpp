@@ -16,6 +16,5 @@ namespace newasm
         };
         newasm::lambda::_obj GLOBAL; // crazy 
         bool lambda_now = false; // if lambda is being declared
-        bool process = false; // if lambda contents is being processed
     }
 }

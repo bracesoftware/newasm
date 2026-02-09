@@ -35,7 +35,7 @@ namespace newasm
     }
     inline int terminate(int exit_code)
     {
-        std::cout << "\nTERMINATE CALLED -> lmao -> " << exit_code << std::endl;
+        //std::cout << "\nTERMINATE CALLED -> lmao -> " << exit_code << std::endl;
         if constexpr(0) if(newasm::handling_exit)
         {
             newasm::__CRASH__();

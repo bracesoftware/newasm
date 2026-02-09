@@ -245,7 +245,7 @@ namespace newasm
 
                         newasm::Console::show("NewASM Application Window");
 
-                        bool startExecution = newasm::compiler::bin::load_app( // create the binary format
+                        bool startExecution = newasm::compiler::bin::load_app( //load the binary format
                             tokens[1],
                             newasm::compiler::compiledCode,
                             newasm::mem::labels,
