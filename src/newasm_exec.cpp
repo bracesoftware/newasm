@@ -1171,11 +1171,15 @@ namespace newasm
         //so we can easily check what instructions are being added to a function,etc
         if(newasm::system::stop == 1)
         {
+            #if 0
             newasm::system::proclines ++;
             std::string newline = ins + static_cast<std::string>(" ") + suf + static_cast<std::string>(",") + opr;
             // OLD -> newasm::mem::funcs[newasm::system::cproc].push_back(newline);
             //std::cout << newasm::system::cproc << " : " << newline << std::endl;
             newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo.raw);
+            #endif
+            newasm::system::proclines ++;
+            newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo);
             return 1;
         }
 
@@ -3286,11 +3290,15 @@ namespace newasm
     {
         if(newasm::system::stop == 1)
         {
+            #if 0
             newasm::system::proclines ++;
             std::string newline = ins + static_cast<std::string>(" ") + suf;
             // OLD -> newasm::mem::funcs[newasm::system::cproc].push_back(newline);
             //std::cout << newasm::system::cproc << " : " << newline << std::endl;
             newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo.raw);
+            #endif
+            newasm::system::proclines ++;
+            newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo);
             return 1;
         }
         /*
@@ -5498,7 +5506,7 @@ namespace newasm
                             return 1;
                         }
                         bool found = false;
-                        for(std::map<std::string, std::vector<std::string>>::iterator i = newasm::mem::funcs.begin(); i != newasm::mem::funcs.end(); ++i)
+                        for(decltype(newasm::mem::funcs)::iterator i = newasm::mem::funcs.begin(); i != newasm::mem::funcs.end(); ++i)
                         {
                             if(found)
                             {
@@ -5666,7 +5674,7 @@ namespace newasm
                             newasm::terminate(newasm::exit_codes::invalid_proc);
                             return 1;
                         }
-                        for(std::map<std::string, std::vector<std::string>>::iterator i = newasm::mem::funcs.begin(); i != newasm::mem::funcs.end(); ++i)
+                        for(decltype(newasm::mem::funcs)::iterator i = newasm::mem::funcs.begin(); i != newasm::mem::funcs.end(); ++i)
                         {
                             if(std::next(i) == newasm::mem::funcs.end())
                             {
@@ -5760,10 +5768,14 @@ namespace newasm
         }
         if(newasm::system::stop == 1)
         {
+            #if 0
             newasm::system::proclines ++;
             std::string newline = ins;
             newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo.raw);
             //std::cout << newasm::system::cproc << " : " << newline << std::endl;
+            #endif
+            newasm::system::proclines ++;
+            newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo);
             return 1;
         }
         switch(lineInfo.whatAmIDoing)//switch(it->second)
@@ -6472,7 +6484,7 @@ namespace newasm
                 {
                     if(newasm::system::stop == 1)
                     {
-                        newasm::mem::funcs[newasm::system::cproc].push_back(line.raw);
+                        newasm::mem::funcs[newasm::system::cproc].push_back(line);
                         return 1;
                     }
                 }
@@ -6935,7 +6947,7 @@ namespace newasm
         if(it != newasm::mem::funcs.end())
         {
             newasm::system::processing_proc = name;
-            for(std::string& line : it->second)
+            for(auto& line : it->second)
             {
                 if(newasm::system::stoproc == 1)
                 {
@@ -6943,9 +6955,9 @@ namespace newasm
                     newasm::header::data::proc_now = false;
                     break;
                 }
-                newasm::header::data::lastln = line;
-                auto JIT_COMPILED = newasm::compiler::DO(line);
-                newasm::procline(JIT_COMPILED);
+                newasm::header::data::lastln = line.raw;
+                //auto JIT_COMPILED = newasm::compiler::DO(line);
+                newasm::procline(line);
                 //std::cout << "Executed : " << line << std::endl;
             }
             //newasm::header::data::proc_now = false;
@@ -6960,10 +6972,10 @@ namespace newasm
         if(it != newasm::mem::funcs.end())
         {
             newasm::threads::memory[name] = new newasm::threads::object__();
-            for(std::string &line : it->second)
+            for(auto& line : it->second)
             {
-                auto JIT_COMPILED = newasm::compiler::DO(line);
-                newasm::threads::memory.at(name)->contents.push_back(JIT_COMPILED);
+                //auto JIT_COMPILED = newasm::compiler::DO(line);
+                newasm::threads::memory.at(name)->contents.push_back(line);
             }
             newasm::threads::memory.at(name)->recompile_threadProc();
             newasm::threads::valid_threads.push_back(name);
@@ -6978,9 +6990,9 @@ namespace newasm
         auto it = newasm::mem::funcs.find(name);
         if(it != newasm::mem::funcs.end())
         {
-            for(std::string &line : it->second)
+            for(auto& line : it->second)
             {
-                newasm::global::event_codeblock.push_back(line);
+                newasm::global::event_codeblock.push_back(line.raw);
             }
         }
         return;

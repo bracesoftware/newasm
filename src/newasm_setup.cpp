@@ -339,7 +339,7 @@ namespace newasm
         };
         std::unordered_map<std::string, newasm::mem::tuple_data> tuple;
 
-        std::map<std::string, std::vector<std::string>> funcs;
+        std::map<std::string, std::vector<newasm::compiler::lineData>> funcs;
         struct procData
         {
             std::string original_name;

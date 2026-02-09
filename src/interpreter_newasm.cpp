@@ -801,7 +801,9 @@ namespace newasm
 
             newasm::system::terminated = false;
 
-            newasm::
+            newasm::expcfg::transientbool = false;
+            newasm::expcfg::volatilebool = false;
+            newasm::expcfg::lockbool = false;
             return;
         }
     }
