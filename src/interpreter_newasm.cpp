@@ -911,7 +911,10 @@ namespace newasm
         {
             args__ = std::getenv("newasm_args "); // Allow spaces
         }
-        args = args__;
+        if(args__)
+        {
+            args = args__;
+        }
         if(args__ == nullptr)
         {
             EMPTYLINE;
