@@ -240,7 +240,7 @@ namespace newasm
                         _newasm_CHECKLOGIN;
                         newasm::header::functions::info("Successfully enabled the standard library flag.\n\tUse `mount stdlib` to mount the library.");
                         newasm::header::settings::use_std = true;
-                        return;
+                        return 1;
                     }
                 }
                 if(tokens.size() == 2)
