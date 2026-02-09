@@ -800,6 +800,8 @@ namespace newasm
             newasm::variables::ids.clear();
 
             newasm::system::terminated = false;
+
+            newasm::
             return;
         }
     }
