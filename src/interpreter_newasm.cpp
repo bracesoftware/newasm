@@ -702,6 +702,9 @@ namespace newasm
     {
         void cleanup()
         {
+            newasm::exit_handled = false;
+            newasm::lambda::GLOBAL.reset_forKernel();
+            newasm::header::flags::autobos = false;
             newasm::GLOBAL::showed_perf = false;
             newasm::header::data::exception = true;
             newasm::stack::events.clear();
@@ -805,7 +808,7 @@ namespace newasm
     {
         //newasm::real_line.reserve(500);
         newasm::mem::regs::fdx.make_short(true);
-        newasm::mem::regs::fdx.log_things(true);
+        newasm::mem::regs::fdx.log_things(false);
         newasm::variables::ids.reserve(1000); // for funsies
         if constexpr(0) newasm::native_jit::print("Hello from JIT COMPILER!");
         newasm::forLinker__OLD::debug.reserve(100);

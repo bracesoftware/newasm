@@ -121,6 +121,7 @@ namespace newasm
                     newasm::repl();
 
                     newasm::header::data::repl = false;
+                    newasm::GLOBAL::cleanup();
                     return;
                 };
                 auto dwin = []() -> void {
@@ -530,7 +531,7 @@ namespace newasm
                 }
                 std::string command;
                 std::string username = newasm::user::global::username;
-                std::cout << newasm::header::col::green << "shell@" << 
+                std::cout << newasm::header::col::green << "\nshell@" << 
                 newasm::header::col::yellow<<username<<newasm::header::col::green
                 <<"~" <<newasm::header::col::blue << format_path() << newasm::header::col::green <<"$ "
                 << newasm::header::col::reset;
