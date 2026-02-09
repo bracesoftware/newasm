@@ -55,6 +55,7 @@ namespace newasm
     static inline int terminate_(int exit_code)//, std::string line)
     {
         bool temp_proc = false;
+        std::cout << std::endl;
         //std::cout << "TERMINATEEE" << std::endl;
         if(newasm::header::data::repl)
         {
