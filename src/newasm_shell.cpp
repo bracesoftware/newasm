@@ -110,6 +110,8 @@ namespace newasm
                     return tokens;
                 };
                 auto repl = []() -> void {
+                    newasm::GLOBAL::global_load_std();
+                    
                     newasm::header::data::repl_end = false;
                     newasm::header::functions::info(
                         static_cast<std::string>("Read-Eval-Print Loop mode loaded; to leave, use the `")+
