@@ -238,6 +238,7 @@ namespace newasm
                     if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::run__))
                     {
                         //pre cleanup
+                        newasm::flags::perf_available = false;
                         newasm::compiler::compiledCode.clear();
                         newasm::mem::labels.clear();
                         newasm::forLinker::lineData.clear();
@@ -257,6 +258,7 @@ namespace newasm
                         if(startExecution)
                         {
                             newasm::execute<true>();
+                            newasm::flags::perf_available = true;
                         }
                         
                         try

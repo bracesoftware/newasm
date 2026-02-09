@@ -96,6 +96,7 @@ namespace newasm
     namespace flags
     {
         bool loaded_std = false;
+        bool perf_available = false;
     }
 
     template<bool what>
@@ -998,11 +999,12 @@ namespace newasm
         };
 
         auto showPerf = []() -> void {
-            if(newasm::GLOBAL::showed_perf)
+            if(!newasm::flags::perf_available)
             {
+                newasm::header::functions::err("No performance information is available.");
                 return;
             }
-            newasm::GLOBAL::showed_perf = true;
+            newasm::flags::perf_available = false;
             std::chrono::duration<double, std::milli> elapsed = newasm::perf::end - newasm::perf::start;
             //std::chrono::duration<double, std::milli> input_wasted = std::chrono::duration<double, std::milli>::zero();
             std::chrono::duration<double, std::milli> wait_wasted = std::chrono::duration<double, std::milli>::zero();

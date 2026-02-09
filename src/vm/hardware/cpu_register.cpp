@@ -187,7 +187,7 @@ namespace newasm
         {
             if(newasm::thread_line)
             {
-                return lhs = rhs.thread_values.at(newasm::threads::now);
+                return lhs == rhs.thread_values.at(newasm::threads::now);
             }
             return lhs == rhs.value;
         }
