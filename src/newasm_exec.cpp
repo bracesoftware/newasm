@@ -4595,6 +4595,12 @@ namespace newasm
             //async
             case newasm::core::lang_inf::async__:
             {
+                if(newasm::header::data::proc_now)
+                {
+                    newasm::terminate(newasm::exit_codes::jit_fail);
+                    return 1;
+                }
+
                 if(!newasm::header::functions::isref(suf))
                 {
                     //std::cout << "suf - `" << suf << '`' << std::endl;
@@ -4627,6 +4633,12 @@ namespace newasm
             //await
             case newasm::core::lang_inf::await__:
             {
+                if(newasm::header::data::proc_now)
+                {
+                    newasm::terminate(newasm::exit_codes::jit_fail);
+                    return 1;
+                }
+                
                 if(!newasm::header::functions::isref(suf))
                 {
                     //std::cout << "suf - `" << suf << '`' << std::endl;
