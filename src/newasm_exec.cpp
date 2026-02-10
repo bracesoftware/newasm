@@ -3465,22 +3465,38 @@ namespace newasm
                     return 1;
                 }
                 if(newasm::header::data::proc_now)
+                if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids.at(newasm::system::processing_proc).proc->labels))
                 {
+                    std::cout << "VOLIMO C++!" << std::endl;
+                    for(auto it = newasm::variables::ids.at(newasm::system::processing_proc).proc->labels.begin(); it != newasm::variables::ids.at(newasm::system::processing_proc).proc->labels.end(); ++it)
+                    {
+                        std::cout << "it->first: `" << it->first << "`, it->second: `" << it->second << "`\n";
+                    }
                     newasm::terminate(newasm::exit_codes::bus_err);
                     return 1;
                 }
-                if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                if(!newasm::header::data::proc_now)
                 {
-                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                    return 1;
-                }
-                if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
-                {
-                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                    return 1;
+                    if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                    {
+                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                        return 1;
+                    }
+                    if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
+                    {
+                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                        return 1;
+                    }
                 }
                 if(newasm::mem::regs::cpr != newasm::cmp_results::equal)
                 {
+                    return 1;
+                }
+                if(newasm::header::data::proc_now)
+                {
+                    auto& j = newasm::variables::ids.at(newasm::system::processing_proc);
+                    j.proc->idx = j.proc->labels.at(suf);
+                    //std::cout << "jumped to " << j.proc->idx << '\n';
                     return 1;
                 }
 
@@ -3504,28 +3520,32 @@ namespace newasm
                     return 1;
                 }
                 if(newasm::header::data::proc_now)
+                if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids.at(newasm::system::processing_proc).proc->labels))
                 {
                     newasm::terminate(newasm::exit_codes::bus_err);
                     return 1;
                 }
-                if(!newasm::thread_line and !newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                if(!newasm::header::data::proc_now)
                 {
-                    //std::cout << "THIS HAPPENED!!!" << std::endl;
-                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                    return 1;
-                }
-                if(newasm::thread_line and !newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
-                {
-                    //std::cout << "Trying to find label: `" << suf << "`" << std::endl;
-                    if constexpr(0) for(auto i = newasm::threads::memory.at(newasm::threads::now)->labels.begin(); i != newasm::threads::memory.at(newasm::threads::now)->labels.end(); ++i)
+                    if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
                     {
-                        std::cout << "first: `" << i->first << "`, second: " << i->second << std::endl;
+                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                        return 1;
                     }
-                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                    return 1;
+                    if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
+                    {
+                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                        return 1;
+                    }
                 }
                 if(newasm::mem::regs::cpr == newasm::cmp_results::equal)
                 {
+                    return 1;
+                }
+                if(newasm::header::data::proc_now)
+                {
+                    auto& j = newasm::variables::ids.at(newasm::system::processing_proc);
+                    j.proc->idx = j.proc->labels.at(suf);
                     return 1;
                 }
 
@@ -3548,22 +3568,33 @@ namespace newasm
                     return 1;
                 }
                 if(newasm::header::data::proc_now)
+                if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids.at(newasm::system::processing_proc).proc->labels))
                 {
                     newasm::terminate(newasm::exit_codes::bus_err);
                     return 1;
                 }
-                if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                if(!newasm::header::data::proc_now)
                 {
-                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                    return 1;
-                }
-                if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
-                {
-                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                    return 1;
+                    if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                    {
+                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                        return 1;
+                    }
+                    if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
+                    {
+                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                        return 1;
+                    }
                 }
                 if(newasm::mem::regs::cpr != newasm::cmp_results::less)
                 {
+                    return 1;
+                }
+
+                if(newasm::header::data::proc_now)
+                {
+                    auto& j = newasm::variables::ids.at(newasm::system::processing_proc);
+                    j.proc->idx = j.proc->labels.at(suf);
                     return 1;
                 }
                 if(newasm::thread_line)
@@ -3571,6 +3602,7 @@ namespace newasm
                     newasm::threads::memory.at(newasm::threads::now)->lcx = newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
                     return 1;
                 }
+
                 newasm::code_stream::jump = 1;
                 newasm::code_stream::jumpto = newasm::mem::labels[suf];
                 return 1;
@@ -3584,23 +3616,33 @@ namespace newasm
                     return 1;
                 }
                 if(newasm::header::data::proc_now)
+                if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids.at(newasm::system::processing_proc).proc->labels))
                 {
                     newasm::terminate(newasm::exit_codes::bus_err);
                     return 1;
                 }
-            
-                if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                if(!newasm::header::data::proc_now)
                 {
-                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                    return 1;
-                }
-                if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
-                {
-                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                    return 1;
+                    if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                    {
+                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                        return 1;
+                    }
+                    if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
+                    {
+                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                        return 1;
+                    }
                 }
                 if(newasm::mem::regs::cpr != newasm::cmp_results::greater)
                 {
+                    return 1;
+                }
+
+                if(newasm::header::data::proc_now)
+                {
+                    auto& j = newasm::variables::ids.at(newasm::system::processing_proc);
+                    j.proc->idx = j.proc->labels.at(suf);
                     return 1;
                 }
                 if(newasm::thread_line)
@@ -3621,22 +3663,33 @@ namespace newasm
                     return 1;
                 }
                 if(newasm::header::data::proc_now)
+                if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids.at(newasm::system::processing_proc).proc->labels))
                 {
                     newasm::terminate(newasm::exit_codes::bus_err);
                     return 1;
                 }
-                if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                if(!newasm::header::data::proc_now)
                 {
-                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                    return 1;
-                }
-                if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
-                {
-                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                    return 1;
+                    if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                    {
+                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                        return 1;
+                    }
+                    if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
+                    {
+                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                        return 1;
+                    }
                 }
                 if(newasm::mem::regs::cpr != newasm::cmp_results::less && newasm::mem::regs::cpr != newasm::cmp_results::equal)
                 {
+                    return 1;
+                }
+
+                if(newasm::header::data::proc_now)
+                {
+                    auto& j = newasm::variables::ids.at(newasm::system::processing_proc);
+                    j.proc->idx = j.proc->labels.at(suf);
                     return 1;
                 }
                 if(newasm::thread_line)
@@ -3658,24 +3711,34 @@ namespace newasm
                 }
 
                 if(newasm::header::data::proc_now)
+                if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids.at(newasm::system::processing_proc).proc->labels))
                 {
                     newasm::terminate(newasm::exit_codes::bus_err);
                     return 1;
                 }
-
-                if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                if(!newasm::header::data::proc_now)
                 {
-                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                    return 1;
-                }
-                if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
-                {
-                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                    return 1;
+                    if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                    {
+                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                        return 1;
+                    }
+                    if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
+                    {
+                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                        return 1;
+                    }
                 }
 
                 if(newasm::mem::regs::cpr != newasm::cmp_results::greater && newasm::mem::regs::cpr != newasm::cmp_results::equal)
                 {
+                    return 1;
+                }
+
+                if(newasm::header::data::proc_now)
+                {
+                    auto& j = newasm::variables::ids.at(newasm::system::processing_proc);
+                    j.proc->idx = j.proc->labels.at(suf);
                     return 1;
                 }
 
@@ -3699,19 +3762,29 @@ namespace newasm
                 }
 
                 if(newasm::header::data::proc_now)
+                if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids.at(newasm::system::processing_proc).proc->labels))
                 {
                     newasm::terminate(newasm::exit_codes::bus_err);
                     return 1;
                 }
-
-                if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                if(!newasm::header::data::proc_now)
                 {
-                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                    return 1;
+                    if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
+                    {
+                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                        return 1;
+                    }
+                    if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
+                    {
+                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                        return 1;
+                    }
                 }
-                if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
+
+                if(newasm::header::data::proc_now)
                 {
-                    newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
+                    auto& j = newasm::variables::ids.at(newasm::system::processing_proc);
+                    j.proc->idx = j.proc->labels.at(suf);
                     return 1;
                 }
 
@@ -6933,7 +7006,12 @@ namespace newasm
             // SEALED LABEL
             case newasm::compiler::sealedLabel:
             {
-                newasm::terminate(newasm::exit_codes::invalid_ins);
+                if(newasm::system::stop == 0)
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_ins);
+                    return 1;
+                }
+                newasm::variables::ids.at(newasm::system::cproc).proc->contents.push_back(line);
                 return 1;
             }
             // SECTION MODIFIERS
@@ -7183,7 +7261,7 @@ namespace newasm
         }
         return;
     }
-    inline void callproc(std::string& name)
+    inline void callproc(const std::string& name)
     {
         newasm::system::stoproc = 0;
         newasm::header::data::proc_now = true;

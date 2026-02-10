@@ -2229,51 +2229,66 @@ jmp doneshit
     syscall
 :skipallthishsit
 .data
-    intg input: 0 ; argument
-    intg temp: 0
-    intg result: 0
+    ./std
+        ./__
+            intg input: 0 ; argument
+            intg temp: 0
+            intg result: 0
+        ./!__
 .start
-    jmp main
-:dofactorial
-    mov tlr, "Hi again"
-    call std::ios::writeln
-    mov imm, 1
-    mov &result, input ; result = 5
-    mov &temp, input ; temp = 5
-:dofactorial1
-    mov tlr, "Hi again 2"
-    call std::ios::writeln
-    mov cr2, temp
-    mov cr3, 1
-    sub ; temp = temp - 1
-    mov &temp, *cr2 ; temp
-    cmp cr2, 0 ; if(temp == 0)
-    jz finished ; finished
-    mov tlr, "Hi again 3"
-    call std::ios::writeln
-    mov cr3, temp 
-    mov cr2, result ; cr2 = result
-    mul ; result = result * temp
-    mov &result, *cr2 ; save
-    mov tlr, input
-    call std::ios::writeln
-    mov tlr, result
-    call std::ios::writeln
-    mov tlr, temp
-    call std::ios::writeln
-    ;ret 0
-    jmp dofactorial1
-:main
-    mov tlr, "Hi again 4"
-    call std::ios::writeln
-    mov &input, 5 ; we want factorial of 5
-    jmp dofactorial
-:finished
-    zero imm
-    mov tlr, "factorial of 5 is "
-    call std::ios::write
-    mov tlr, result
-    call std::ios::writeln
+        ./math
+            proc factorial
+                mov imm, 1
+                mov &std::__::input, *tlr ; we take tlr as input lel
+                mov &std::__::result, std::__::input ; result = 5
+                mov &std::__::temp, std::__::input ; temp = 5
+                {:funcBody}
+                mov cr2, std::__::temp
+                mov cr3, 1
+                sub ; temp = temp - 1
+                mov &std::__::temp, *cr2 ; temp
+
+                cmp cr2, 0 ; if(temp == 0)
+                jz finished ; finished
+    
+                mov cr3, std::__::temp 
+                mov cr2, std::__::result ; cr2 = result
+                mul ; result = result * temp
+                mov &std::__::result, *cr2 ; save
+                
+                jmp funcBody
+
+                {:finished}
+                mov tlr, std::__::result
+                zero imm
+                halt 0
+            end
+        ./!math
+    ./!std
+
+    thread TestFactorial -> {
+        mov tlr, "factorial of 5 is "
+        call std::ios::write
+        mov tlr, 5
+        call std::math::factorial
+        call std::ios::writeln
+        mov tlr, "factorial of 10 is "
+        call std::ios::write
+        mov tlr, 10
+        call std::math::factorial
+        call std::ios::writeln
+        mov tlr, "factorial of 2 is "
+        call std::ios::write
+        mov tlr, 2
+        call std::math::factorial
+        call std::ios::writeln
+    }
+
+    await &TestFactorial
+    mov tlr, &TestFactorial
+    sysenter "thread"
+    mov fdx, 1
+    syscall
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     mov tlr, 223
     ret *tlr

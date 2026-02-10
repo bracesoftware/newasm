@@ -939,7 +939,7 @@ namespace newasm
                     if(newasm::thread_line)
                     {
                         newasm::threads::memory.at(newasm::threads::now)->output << newasm::mem::regs::tlr.get_value();
-                        newasm::threads::memory.at(newasm::threads::now)->output << newasm::syscalls::iostream::get_ref_val__2(newasm::mem::regs::stl);
+                        //newasm::threads::memory.at(newasm::threads::now)->output << newasm::syscalls::iostream::get_ref_val__2(newasm::mem::regs::stl);
                         return 1;
                     }
                     if(0) std::cout << newasm::mem::regs::tlr;// << std::endl;

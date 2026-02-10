@@ -500,6 +500,7 @@ namespace newasm
                     }
                 }
 
+                //std::cout << "JIT compiler successfully compiled " << this->labels.size() << " labels in proc " << this->original_name <<  "." << std::endl;
                 return;
             }
         };
