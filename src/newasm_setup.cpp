@@ -218,11 +218,17 @@ namespace newasm
 
             newasm::_register<float> cr0("cr0", 0);
             newasm::_register<float> cr1("cr1", 0);
+            newasm::_register<int> cr2("cr2", 0);
+            newasm::_register<int> cr3("cr3", 0);
+
+            //instruction mode modifier
+            newasm::_register<int> imm("imm", 0);
 
             const int tlr__ = 1;
             const int stl__ = 2;
             const int psx__ = 3;
             //const int prp__ = 4;
+            const int imm__ = 4;
             const int cpt__ = 5;
 
             const int tr0__ = 6;
@@ -241,11 +247,15 @@ namespace newasm
             const int stk__ = 16;
             const int hea__ = 17;
 
+            const int cr2__ = 18;
+            const int cr3__ = 19;
+
             std::unordered_map<std::string, int> identifiers = {
                 {"tlr", tlr__},
                 {"stl", stl__},
                 {"psx", psx__},
                 //{"prp", prp__},
+                {"imm", imm__},
                 {"cpt", cpt__},
                 {"tr0", tr0__},
                 {"tr1", tr1__},
@@ -259,12 +269,15 @@ namespace newasm
                 {"cr1", cr1__},
                 {"stk", stk__},
                 {"hea", hea__},
+                {"cr2", cr2__},
+                {"cr3", cr3__}
             };
 
             void resetRegisters()
             {
                 newasm::mem::regs::stk.reset();
                 newasm::mem::regs::hea.reset();
+                newasm::mem::regs::imm.reset();
 
                 //newasm::hardware::randAccessMem.init();
 
@@ -285,6 +298,8 @@ namespace newasm
 
                 newasm::mem::regs::cr0.reset();
                 newasm::mem::regs::cr1.reset();
+                newasm::mem::regs::cr2.reset();
+                newasm::mem::regs::cr3.reset();
 
                 newasm::mem::regs::dlx.reset();
 
@@ -294,6 +309,7 @@ namespace newasm
             void resetRegisters(const std::string& thread_name)
             {
                 newasm::mem::regs::stk.reset(thread_name);
+                newasm::mem::regs::imm.reset(thread_name);
                 newasm::mem::regs::hea.reset(thread_name);
                 newasm::mem::regs::tlr.reset(thread_name);
                 newasm::mem::regs::stl.reset(thread_name);
@@ -312,6 +328,8 @@ namespace newasm
 
                 newasm::mem::regs::cr0.reset(thread_name);
                 newasm::mem::regs::cr1.reset(thread_name);
+                newasm::mem::regs::cr2.reset(thread_name);
+                newasm::mem::regs::cr3.reset(thread_name);
 
                 newasm::mem::regs::dlx.reset(thread_name);
 
@@ -601,6 +619,21 @@ namespace newasm
                         case newasm::mem::regs::cr1__:
                         {
                             arg = std::to_string(newasm::mem::regs::cr1.get_value());
+                            break;
+                        }
+                        case newasm::mem::regs::cr2__:
+                        {
+                            arg = std::to_string(newasm::mem::regs::cr2.get_value());
+                            break;
+                        }
+                        case newasm::mem::regs::cr3__:
+                        {
+                            arg = std::to_string(newasm::mem::regs::cr3.get_value());
+                            break;
+                        }
+                        case newasm::mem::regs::imm__:
+                        {
+                            arg = std::to_string(newasm::mem::regs::imm.get_value());
                             break;
                         }
                         case newasm::mem::regs::stk__:

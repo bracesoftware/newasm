@@ -8,7 +8,7 @@ static const std::string __stdlib_code = R"(
 ;
 .data
     ./std
-        intg version: 18
+        intg version: 20
 
         ./math
             float pi: 3.141
@@ -75,7 +75,8 @@ static const std::string __stdlib_code = R"(
             end
         ./!ios
         ./math
-            proc addition
+            proc fadd
+                zero imm
                 mov cr0, *tlr
                 mov cr1, *stl
 
@@ -85,7 +86,8 @@ static const std::string __stdlib_code = R"(
                 halt 0
             end
 
-            proc subtraction
+            proc fsub
+                zero imm
                 mov cr0, *tlr
                 mov cr1, *stl
 
@@ -95,7 +97,8 @@ static const std::string __stdlib_code = R"(
                 halt 0
             end
 
-            proc multiplication
+            proc fmul
+                zero imm
                 mov cr0, *tlr
                 mov cr1, *stl
 
@@ -105,7 +108,8 @@ static const std::string __stdlib_code = R"(
                 halt 0
             end
 
-            proc division
+            proc fdiv
+                zero imm
                 mov cr0, *tlr
                 mov cr1, *stl
 
@@ -114,6 +118,112 @@ static const std::string __stdlib_code = R"(
                 mov tlr, *cr0
                 halt 0
             end
+
+            proc fexp
+                zero imm
+                mov cr0, *tlr
+                mov cr1, *stl
+
+                exp
+
+                mov tlr, *cr0
+                halt 0
+            end
+
+            proc flog
+                zero imm
+                mov cr0, *tlr
+                mov cr1, *stl
+
+                log
+
+                mov tlr, *cr0
+                halt 0
+            end
+
+            proc imod
+                mov imm, 1
+                mov cr2, *tlr
+                mov cr3, *stl
+
+                log
+
+                mov tlr, *cr2
+                halt 0
+            end
+
+            proc iadd
+                mov imm, 1
+                mov cr2, *tlr
+                mov cr3, *stl
+
+                add
+
+                zero imm
+                mov tlr, *cr2
+                halt 0
+            end
+
+            proc isub
+                mov imm, 1
+                mov cr2, *tlr
+                mov cr3, *stl
+
+                sub
+
+                zero imm
+                mov tlr, *cr2
+                halt 0
+            end
+
+            proc imul
+                mov imm, 1
+                mov cr2, *tlr
+                mov cr3, *stl
+
+                mul
+
+                zero imm
+                mov tlr, *cr2
+                halt 0
+            end
+
+            proc idiv
+                mov imm, 1
+                mov cr2, *tlr
+                mov cr3, *stl
+
+                div
+
+                zero imm
+                mov tlr, *cr2
+                halt 0
+            end
+
+            proc iexp
+                mov imm, 1
+                mov cr2, *tlr
+                mov cr3, *stl
+
+                exp
+
+                zero imm
+                mov tlr, *cr2
+                halt 0
+            end
+
+            proc ilog
+                mov imm, 1
+                mov cr2, *tlr
+                mov cr3, *stl
+
+                log
+
+                zero imm
+                mov tlr, *cr2
+                halt 0
+            end
+
         ./!math
     ./!std
 ;============================================================================================

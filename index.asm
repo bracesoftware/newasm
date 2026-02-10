@@ -2112,12 +2112,12 @@ link "testfile.asm" ; link a file
 
     mov tlr, 38356
     mov stl, -25
-    call std::math::addition
+    call std::math::iadd
     call std::ios::writeln
 
     mov tlr, 38356
     mov stl, -25
-    call std::math::subtraction
+    call std::math::isub
     call std::ios::writeln
 .data
     ./hi
@@ -2189,10 +2189,20 @@ link "testfile.asm" ; link a file
     }
     ./!tredz
 ;jmp dsfdsfdsdssdf
+    mov tlr, "HERE IT CRASHES!!! 1"
+    call std::ios::writeln
     sysreq & tredz::testThread -> thread
+    mov tlr, "HERE IT CRASHES!!! 2"
+    call std::ios::writeln
     sysreq &lol::writexd -> proc
+    mov tlr, "HERE IT CRASHES!!! 3"
+    call std::ios::writeln
     sysreq &std::ios::writeln -> proc
+    mov tlr, "HERE IT CRASHES!!! 4"
+    call std::ios::writeln
     sysreq &namespace::lmao -> char
+    mov tlr, "HERE IT CRASHES!!! 5"
+    call std::ios::writeln
 
     ;sysreq &wee
 :dsfdsfdsdssdf
@@ -2210,22 +2220,24 @@ link "testfile.asm" ; link a file
 .start
     jmp main
 :dofactorial
+    mov imm, 1
     mov &result, input
 :dofactorial1
-    mov cr0, result
-    mov cr1, 1
+    mov cr2, result
+    mov cr3, 1
     sub ; cr0 = result - 1
-    cmp cr0, 0
+    cmp cr2, 0
     jz finished
-    mov cr1, *cr0 ; cr1 = cr0
-    mov cr0, result
+    mov cr3, *cr2 ; cr1 = cr0
+    mov cr2, result
     mul ; cr0 = result * result - 1
-    mov &result, *cr0 ; sacuvamo
+    mov &result, *cr2 ; save
     jmp dofactorial1
 :main
     mov &input, 5 ; hocemo factorial broja 5
     jmp dofactorial
 :finished
+    zero imm
     mov tlr, "factorial of 5 is "
     call std::ios::write
     mov tlr, result

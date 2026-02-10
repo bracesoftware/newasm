@@ -23,5 +23,20 @@ namespace newasm
             }
             return dest;
         }
+
+        int ipow(int base, int exp)
+        {
+            int r = 1;
+            while(exp > 0)
+            {
+                if(exp & 1)
+                {
+                    r *= base;
+                }
+                base *= base;
+                exp >>= 1;
+            }
+            return r;
+        }
     }
 }

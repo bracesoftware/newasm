@@ -127,6 +127,8 @@ namespace newasm
             const int merge = 72;//
             const int evt = 73;//
 
+            const int mod__ = 74;//
+
             /// @brief //////
             const int Link___ = 99;
             const int __say = 100;
@@ -218,6 +220,8 @@ namespace newasm
 
                 {merge, "merge"}, //merge for contexts
                 {evt, "evt"},
+
+                {mod__, "mod"},
 
                 {__say, "__say"},
                 {Link___, "link"}
