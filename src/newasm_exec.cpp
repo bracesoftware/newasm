@@ -3386,7 +3386,11 @@ namespace newasm
                     newasm::unsins(ins);
                     return 1;
                 }
-
+                if(newasm::header::data::proc_now)
+                {
+                    newasm::terminate(newasm::exit_codes::bus_err);
+                    return 1;
+                }
                 if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
                 {
                     newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
@@ -3419,6 +3423,11 @@ namespace newasm
                 if(newasm::header::data::repl)
                 {
                     newasm::unsins(ins);
+                    return 1;
+                }
+                if(newasm::header::data::proc_now)
+                {
+                    newasm::terminate(newasm::exit_codes::bus_err);
                     return 1;
                 }
                 if(!newasm::thread_line and !newasm::mem::functions::datavalid(suf, newasm::mem::labels))
@@ -3460,6 +3469,11 @@ namespace newasm
                     newasm::unsins(ins);
                     return 1;
                 }
+                if(newasm::header::data::proc_now)
+                {
+                    newasm::terminate(newasm::exit_codes::bus_err);
+                    return 1;
+                }
                 if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
                 {
                     newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
@@ -3489,6 +3503,11 @@ namespace newasm
                 if(newasm::header::data::repl)
                 {
                     newasm::unsins(ins);
+                    return 1;
+                }
+                if(newasm::header::data::proc_now)
+                {
+                    newasm::terminate(newasm::exit_codes::bus_err);
                     return 1;
                 }
             
@@ -3523,6 +3542,11 @@ namespace newasm
                     newasm::unsins(ins);
                     return 1;
                 }
+                if(newasm::header::data::proc_now)
+                {
+                    newasm::terminate(newasm::exit_codes::bus_err);
+                    return 1;
+                }
                 if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
                 {
                     newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
@@ -3552,6 +3576,12 @@ namespace newasm
                 if(newasm::header::data::repl)
                 {
                     newasm::unsins(ins);
+                    return 1;
+                }
+
+                if(newasm::header::data::proc_now)
+                {
+                    newasm::terminate(newasm::exit_codes::bus_err);
                     return 1;
                 }
 
@@ -3587,6 +3617,12 @@ namespace newasm
                 if(newasm::header::data::repl)
                 {
                     newasm::unsins(ins);
+                    return 1;
+                }
+
+                if(newasm::header::data::proc_now)
+                {
+                    newasm::terminate(newasm::exit_codes::bus_err);
                     return 1;
                 }
 
