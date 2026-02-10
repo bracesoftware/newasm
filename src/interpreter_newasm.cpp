@@ -744,7 +744,7 @@ namespace newasm
             newasm::mem::data_attrib.clear();
 
             newasm::mem::structs.clear();
-            newasm::mem::funcs.clear();
+            //newasm::mem::funcs.clear();
 
             newasm::containers::functions::free_dyn_mem();
             newasm::stack::free_macro_mem();
@@ -794,6 +794,13 @@ namespace newasm
                     if(i->second.yunion != nullptr)
                     {
                         delete i->second.yunion;
+                    }
+                }
+                if(i->second.type == newasm::datatypes::proc)
+                {
+                    if(i->second.proc != nullptr)
+                    {
+                        delete i->second.proc;
                     }
                 }
             }

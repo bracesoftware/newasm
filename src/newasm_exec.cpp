@@ -121,7 +121,7 @@ namespace newasm
                 newasm::header::col::gray <<
                 newasm::header::style::bold <<
                 newasm::header::style::underline <<
-                newasm::mem::regs::prp;
+                newasm::system::processing_proc;
                 temp_proc = true;
             }
             if(newasm::thread_line == true)
@@ -168,11 +168,12 @@ namespace newasm
             std::cout << newasm::header::col::reset;
             if(temp_proc)
             {
-                if(newasm::mem::funcs_data[newasm::system::processing_proc].mangled)
+                auto& k = newasm::variables::ids.at(newasm::system::processing_proc).proc;
+                if(k->mangled)
                 {
                     std::cout << "\t\t\t" << newasm::header::col::reset << newasm::header::col::light_blue;
                     std::cout << "  ^ original procedure: \"" << newasm::header::col::gray << newasm::header::style::underline;
-                    std::cout << newasm::mem::funcs_data[newasm::system::processing_proc].original_name;
+                    std::cout << k->original_name;
                     std::cout << newasm::header::col::reset << newasm::header::col::light_blue << "\"";
                     std::cout << std::endl;
                     std::cout << newasm::header::col::reset;
@@ -561,9 +562,7 @@ namespace newasm
                         return 1;
                     }
                     if(!newasm::mem::functions::datavalid(
-                    newasm::header::functions::remamp(value), newasm::mem::data) 
-                    && !newasm::mem::functions::datavalid(
-                    newasm::header::functions::remamp(value), newasm::mem::funcs)
+                    newasm::header::functions::remamp(value), newasm::mem::data)
                     && !newasm::mem::functions::datavalid(
                     newasm::header::functions::remamp(value), newasm::variables::ids)
                     && value != static_cast<std::string>(NIL_STR))
@@ -1030,6 +1029,7 @@ namespace newasm
         {
             strreg = newasm::mem::regs::psx;
         }
+        /*
         if(suf == newasm::mem::regs::prp.identifier())
         {
             strreg = newasm::mem::regs::prp;
@@ -1037,7 +1037,7 @@ namespace newasm
         if(suf == newasm::mem::regs::cpt.identifier())
         {
             strreg = newasm::mem::regs::cpt;
-        }
+        }*/
 
         if(suf == newasm::mem::regs::tr0.identifier())
         {
@@ -1179,7 +1179,8 @@ namespace newasm
             newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo.raw);
             #endif
             newasm::system::proclines ++;
-            newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo);
+            newasm::variables::ids.at(newasm::system::cproc).proc->contents.push_back(lineInfo);
+            //newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo);
             return 1;
         }
 
@@ -2099,30 +2100,6 @@ namespace newasm
                         newasm::mem::data[opr] = std::to_string(newasm::mem::regs::hea);
                         return 1;
                     }
-                    case newasm::mem::regs::prp__:
-                    {
-                        if(newasm::mem::datatypes[opr] != newasm::datatypes::reference)
-                        {
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                            return 1;
-                        }
-                        newasm::mem::data[opr] = newasm::mem::regs::prp;
-                        //auto i = std::find(newasm::mem::uninitialized_pointer.begin(), newasm::mem::uninitialized_pointer.end(), opr);
-                        //if(i != newasm::mem::uninitialized_pointer.end()) newasm::mem::uninitialized_pointer.erase(i);
-                        return 1;
-                    }
-                    case newasm::mem::regs::cpt__:
-                    {
-                        if(newasm::mem::datatypes[opr] != newasm::datatypes::reference)
-                        {
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                            return 1;
-                        }
-                        newasm::mem::data[opr] = newasm::mem::regs::cpt;
-                        //auto i = std::find(newasm::mem::uninitialized_pointer.begin(), newasm::mem::uninitialized_pointer.end(), opr);
-                        //if(i != newasm::mem::uninitialized_pointer.end()) newasm::mem::uninitialized_pointer.erase(i);
-                        return 1;
-                    }
                     
                     case newasm::mem::regs::cpr__:
                     {
@@ -2894,6 +2871,7 @@ namespace newasm
                         }
                         return 1;
                     }
+                    #if 0
                     case newasm::mem::regs::prp__:
                     {
                         if(!newasm::header::functions::isref(opr))
@@ -2904,7 +2882,7 @@ namespace newasm
                         if(!newasm::mem::functions::datavalid(
                         newasm::header::functions::remamp(opr), newasm::mem::data) 
                         && !newasm::mem::functions::datavalid(
-                        newasm::header::functions::remamp(opr), newasm::mem::funcs))
+                        newasm::header::functions::remamp(opr), newasm::variables::ids))
                         {
                             newasm::terminate(newasm::exit_codes::invalid_memacc);
                             return 1;
@@ -2930,6 +2908,7 @@ namespace newasm
                         newasm::mem::regs::cpt = (opr);
                         return 1;
                     }
+                    #endif
                     case newasm::mem::regs::cpr__:
                     {
                         if(!newasm::header::functions::isnumeric(opr))
@@ -3097,6 +3076,7 @@ namespace newasm
                         strreg = newasm::mem::regs::psx;
                         break;
                     }
+                    #if 0
                     case newasm::mem::regs::prp__:
                     {
                         strreg = newasm::mem::regs::prp;
@@ -3107,6 +3087,7 @@ namespace newasm
                         strreg = newasm::mem::regs::cpt;
                         break;
                     }
+                    #endif
                 }
 
                 if(intreg != newasm::header::constants::inv_ireg_val)
@@ -3298,7 +3279,8 @@ namespace newasm
             newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo.raw);
             #endif
             newasm::system::proclines ++;
-            newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo);
+            newasm::variables::ids.at(newasm::system::cproc).proc->contents.push_back(lineInfo);
+            //newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo);
             return 1;
         }
         /*
@@ -4213,11 +4195,19 @@ namespace newasm
                     }
                     if(typ == "proc")
                     {
-                        if(newasm::mem::funcs.find(suf) == newasm::mem::funcs.end())
+                        if(newasm::variables::ids.find(suf) == newasm::variables::ids.end())
                         {
                             //std::cout << "cant find proc: `" << suf << "`" << std::endl;
                             newasm::terminate(newasm::exit_codes::sysreq_fail);
                             return 1;
+                        }
+                        if(newasm::variables::ids.find(suf) != newasm::variables::ids.end())
+                        {
+                            if(newasm::variables::ids.at(suf).type != newasm::datatypes::proc)
+                            {
+                                newasm::terminate(newasm::exit_codes::sysreq_fail);
+                                return 1;
+                            }
                         }
                         return 1;
                     }
@@ -4443,12 +4433,21 @@ namespace newasm
                 newasm::runtime::functions::parse<true>(suf);
 
                 if(!newasm::mem::functions::datavalid(
-                    suf, newasm::mem::funcs))
+                    suf, newasm::variables::ids))
                 {
                     newasm::terminate(newasm::exit_codes::invalid_proc);
                     return 1;
                 }
-                
+
+                if(newasm::mem::functions::datavalid(suf, newasm::variables::ids))
+                {
+                    if(newasm::variables::ids.at(suf).type != newasm::datatypes::proc)
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_proc);
+                        return 1;
+                    }
+                }
+
                 newasm::async(suf);
                 return 1;
             }
@@ -4963,10 +4962,20 @@ namespace newasm
 
                 if(newasm::header::functions::isalphanum(suf))
                 {
-                    if(!newasm::mem::functions::datavalid(suf,newasm::mem::funcs))
+                    auto p = newasm::mem::functions::datavalid(suf,newasm::variables::ids);
+                    if(!p)
                     {
                         newasm::terminate(newasm::exit_codes::invalid_proc);
                         return 1;
+                    }
+
+                    if(p)
+                    {
+                        if(newasm::variables::ids.at(suf).type != newasm::datatypes::proc)
+                        {
+                            newasm::terminate(newasm::exit_codes::invalid_proc);
+                            return 1;
+                        }
                     }
 
                     newasm::callproc(suf);
@@ -5056,7 +5065,7 @@ namespace newasm
 
                 if(newasm::header::functions::isalphanum(suf))
                 {
-                    if(newasm::mem::functions::datavalid(suf,newasm::mem::funcs))
+                    if(newasm::mem::functions::datavalid(suf,newasm::variables::ids))
                     {
                         newasm::terminate(newasm::exit_codes::proc_redef);
                         return 1;
@@ -5065,6 +5074,8 @@ namespace newasm
                     newasm::system::cproc = suf;
                     newasm::system::proclines = 0;
                     //std::cout << "Creating proc: " << opr << std::endl;
+                    newasm::variables::ids[newasm::system::cproc].proc = new newasm::variables::procedureData;
+                    newasm::variables::ids.at(newasm::system::cproc).type = newasm::datatypes::proc;
                     return 1;
                 }
 
@@ -5157,6 +5168,7 @@ namespace newasm
                     debugRegister(suf, std::to_string(newasm::mem::regs::hea));
                     return 1;
                 }
+                #if 0
                 if(suf == newasm::mem::regs::prp.identifier())
                 {
                     debugRegister(suf, (newasm::mem::regs::prp));
@@ -5167,6 +5179,7 @@ namespace newasm
                     debugRegister(suf, (newasm::mem::regs::cpt));
                     return 1;
                 }
+                #endif
                 if(suf == newasm::mem::regs::cpr.identifier())
                 {
                     debugRegister(suf, std::to_string(newasm::mem::regs::cpr));
@@ -5311,6 +5324,7 @@ namespace newasm
                     newasm::terminate(newasm::mem::regs::hea);//,wholeline);
                     return 1;
                 }
+                #if 0
                 if(suf == newasm::mem::regs::prp.identifier())
                 {
                     if(newasm::header::functions::isnumeric(newasm::mem::regs::prp))
@@ -5329,6 +5343,7 @@ namespace newasm
                         return 1;
                     }
                 }
+                #endif
                 if(suf == newasm::mem::regs::cpr.identifier())
                 {
                     newasm::header::data::exception = false;
@@ -5390,8 +5405,8 @@ namespace newasm
                     }
                     case newasm::mem::regs::hea__: newasm::mem::regs::hea.reset(); break;
                     case newasm::mem::regs::psx__: newasm::mem::regs::psx.reset(); break;
-                    case newasm::mem::regs::prp__: newasm::mem::regs::prp.reset(); break;
-                    case newasm::mem::regs::cpt__: newasm::mem::regs::cpt.reset(); break;
+                    //case newasm::mem::regs::prp__: newasm::mem::regs::prp.reset(); break;
+                    //case newasm::mem::regs::cpt__: newasm::mem::regs::cpt.reset(); break;
                     case newasm::mem::regs::cpr__: newasm::mem::regs::cpr.reset(); break;
                     case newasm::mem::regs::cr0__: newasm::mem::regs::cr0.reset(); break;
                     case newasm::mem::regs::cr1__: newasm::mem::regs::cr1.reset(); break;
@@ -5534,12 +5549,19 @@ namespace newasm
                     }
                     //and then, we have this beautiful procedure pointer...
                     //we'll just pickup the next procedure from the map memory
+                    #if 0
                     case newasm::mem::regs::prp__:
                     {
-                        if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::prp), newasm::mem::funcs))
+                        auto prp_ = newasm::header::functions::remamp(newasm::mem::regs::prp);
+                        auto z = newasm::mem::functions::datavalid(prp_, newasm::variables::ids);
+                        if(!z)
                         {
                             newasm::terminate(newasm::exit_codes::invalid_proc);
                             return 1;
+                        }
+                        if(z)
+                        {
+                            if(newasm::variables::ids.at(prp_))
                         }
                         bool found = false;
                         for(decltype(newasm::mem::funcs)::iterator i = newasm::mem::funcs.begin(); i != newasm::mem::funcs.end(); ++i)
@@ -5564,9 +5586,11 @@ namespace newasm
                     }
                     case newasm::mem::regs::cpt__:
                     {
-                        //make later
+                        //make later,
+                        // or rather NEVER!
                         return 1;
                     }
+                    #endif
                     default:
                     {
                         newasm::terminate(newasm::exit_codes::os_error);
@@ -5701,6 +5725,7 @@ namespace newasm
                         newasm::mem::regs::tr0 = std::to_string(tmp);
                         return 1;
                     }
+                    #if 0
                     //and then, we have this beautiful procedure pointer...
                     //we'll just pickup the last procedure from the map memory
                     case newasm::mem::regs::prp__:
@@ -5728,8 +5753,10 @@ namespace newasm
                     case newasm::mem::regs::cpt__:
                     {
                         //make later
+                        //seems like never to me
                         return 1;
                     }
+                    #endif
                     default:
                     {
                         newasm::terminate(newasm::exit_codes::invalid_exp);
@@ -5794,8 +5821,13 @@ namespace newasm
                     return 1;
                 }
 
-                newasm::mem::funcs_data[newasm::system::cproc].mangled = newasm::system::mangled_proc;
-                newasm::mem::funcs_data[newasm::system::cproc].original_name = newasm::system::original_proc;
+                //newasm::mem::funcs_data[newasm::system::cproc].mangled = newasm::system::mangled_proc;
+                //newasm::mem::funcs_data[newasm::system::cproc].original_name = newasm::system::original_proc;
+
+                auto& a = newasm::variables::ids.at(newasm::system::cproc);
+                a.proc->mangled = newasm::system::mangled_proc;
+                a.proc->original_name = newasm::system::original_proc;
+                a.proc->JIT_compile();
 
                 newasm::system::stop = 0;
                 //std::cout << "Finished proc: " << newasm::system::cproc << std::endl;
@@ -5811,7 +5843,8 @@ namespace newasm
             //std::cout << newasm::system::cproc << " : " << newline << std::endl;
             #endif
             newasm::system::proclines ++;
-            newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo);
+            newasm::variables::ids.at(newasm::system::cproc).proc->contents.push_back(lineInfo);
+            //newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo);
             return 1;
         }
         switch(lineInfo.whatAmIDoing)//switch(it->second)
@@ -5981,10 +6014,13 @@ namespace newasm
     
     inline int process_hndl(std::string tohandle, std::string procedure)
     {
-        if(!newasm::mem::functions::datavalid(procedure, newasm::mem::funcs))
+        if(!newasm::mem::functions::datavalid(procedure, newasm::variables::ids))
         {
-            newasm::terminate(newasm::exit_codes::invalid_evhndlr);
-            return 1;
+            if(newasm::variables::ids.at(procedure).type != newasm::datatypes::proc)
+            {
+                newasm::terminate(newasm::exit_codes::invalid_evhndlr);
+                return 1;
+            }
         }
         if(tohandle == newasm::core::lang_inf::events::identifiers__.at(newasm::core::lang_inf::events::exit))
         {
@@ -6520,7 +6556,8 @@ namespace newasm
                 {
                     if(newasm::system::stop == 1)
                     {
-                        newasm::mem::funcs[newasm::system::cproc].push_back(line);
+                        newasm::variables::ids.at(newasm::system::cproc).proc->contents.push_back(line);
+                        //newasm::mem::funcs[newasm::system::cproc].push_back(line);
                         return 1;
                     }
                 }
@@ -6978,11 +7015,12 @@ namespace newasm
     {
         newasm::system::stoproc = 0;
         newasm::header::data::proc_now = true;
-        newasm::mem::regs::prp = static_cast<std::string>("&") + name;
-        auto it = newasm::mem::funcs.find(name);
-        if(it != newasm::mem::funcs.end())
+        //newasm::mem::regs::prp = static_cast<std::string>("&") + name;
+        auto it = newasm::variables::ids.find(name);
+        if(it != newasm::variables::ids.end())
         {
             newasm::system::processing_proc = name;
+            #if 0
             for(auto& line : it->second)
             {
                 if(newasm::system::stoproc == 1)
@@ -6996,6 +7034,21 @@ namespace newasm
                 newasm::procline(line);
                 //std::cout << "Executed : " << line << std::endl;
             }
+            #endif
+            it->second.proc->idx = 0;
+            auto& proc_contents = it->second.proc->contents;
+            for(int i = 0; i < proc_contents.size(); ++i)
+            {
+                if(newasm::system::stoproc == 1)
+                {
+                    newasm::system::stoproc = 0;
+                    newasm::header::data::proc_now = false;
+                    break;
+                }
+                newasm::procline(proc_contents.at(it->second.proc->idx));
+                newasm::header::data::lastln = proc_contents.at(it->second.proc->idx).raw;
+                it->second.proc->idx++;
+            }
             //newasm::header::data::proc_now = false;
         }
         newasm::header::data::proc_now = false;
@@ -7004,21 +7057,18 @@ namespace newasm
 
     inline void async(const std::string& name)
     {
-        auto it = newasm::mem::funcs.find(name);
-        if(it != newasm::mem::funcs.end())
+        auto it = newasm::variables::ids.find(name);
+        if(it != newasm::variables::ids.end())
         {
             newasm::threads::memory[name] = new newasm::threads::object__();
-            for(auto& line : it->second)
-            {
-                //auto JIT_COMPILED = newasm::compiler::DO(line);
-                newasm::threads::memory.at(name)->contents.push_back(line);
-            }
-            newasm::threads::memory.at(name)->recompile_threadProc();
+            newasm::threads::memory.at(name)->contents = newasm::variables::ids.at(name).proc->contents;
+            newasm::threads::memory.at(name)->labels = newasm::variables::ids.at(name).proc->labels;//recompile_threadProc();
             newasm::threads::valid_threads.push_back(name);
         }
         return;
     }
 
+    #if 0
     [[maybe_unused]]
     inline void copyproc(std::string& name)
     {
@@ -7033,6 +7083,7 @@ namespace newasm
         }
         return;
     }
+    #endif
     int analyze(std::string file)
     {
         std::ifstream internal_fileobject(/*newasm::header::constants::scripts_folder + */file);
@@ -7116,6 +7167,7 @@ namespace newasm
         return;
     }
 
+    #if 0
     [[deprecated]]
     inline void handle_exit_() //VERY MEMORY UNSAFE FUNCTION!
                                 //beware C++ developers!
@@ -7148,6 +7200,7 @@ namespace newasm
         newasm::exit_handled = true;
         return;
     }
+    #endif
 
     template<bool what>
     void execute()

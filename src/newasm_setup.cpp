@@ -157,8 +157,11 @@ namespace newasm
         const int blueprint = 7;
         const int yunion = 8;
         const int mycontext = 9;
-        const int event = 10;
+        const int proc = 10;
+        
+        const int event = 100;
         const int static_objz = 11;
+
     }
     namespace constv
     {
@@ -199,7 +202,7 @@ namespace newasm
             newasm::_register<std::string> stl("stl", newasm::header::constants::inv_reg_val);
 
             newasm::_register<std::string> psx("psx", newasm::header::constants::inv_reg_val);
-            newasm::_register<std::string> prp("prp", newasm::header::constants::inv_reg_val);
+            //newasm::_register<std::string> prp("prp", newasm::header::constants::inv_reg_val);
             newasm::_register<std::string> cpt("cpt", newasm::header::constants::inv_reg_val);
 
             newasm::_register<std::string> tr0("tr0", newasm::header::constants::inv_reg_val);
@@ -219,7 +222,7 @@ namespace newasm
             const int tlr__ = 1;
             const int stl__ = 2;
             const int psx__ = 3;
-            const int prp__ = 4;
+            //const int prp__ = 4;
             const int cpt__ = 5;
 
             const int tr0__ = 6;
@@ -242,7 +245,7 @@ namespace newasm
                 {"tlr", tlr__},
                 {"stl", stl__},
                 {"psx", psx__},
-                {"prp", prp__},
+                //{"prp", prp__},
                 {"cpt", cpt__},
                 {"tr0", tr0__},
                 {"tr1", tr1__},
@@ -269,7 +272,7 @@ namespace newasm
                 newasm::mem::regs::stl.reset();
 
                 newasm::mem::regs::psx.reset();
-                newasm::mem::regs::prp.reset();
+                //newasm::mem::regs::prp.reset();
                 newasm::mem::regs::cpt.reset();
 
                 newasm::mem::regs::tr0.reset();
@@ -288,7 +291,7 @@ namespace newasm
                 //PRIVATE
                 newasm::mem::regs::lcx.reset();
             }
-            void resetRegisters(std::string thread_name)
+            void resetRegisters(const std::string& thread_name)
             {
                 newasm::mem::regs::stk.reset(thread_name);
                 newasm::mem::regs::hea.reset(thread_name);
@@ -296,7 +299,7 @@ namespace newasm
                 newasm::mem::regs::stl.reset(thread_name);
 
                 newasm::mem::regs::psx.reset(thread_name);
-                newasm::mem::regs::prp.reset(thread_name);
+                //newasm::mem::regs::prp.reset(thread_name);
                 newasm::mem::regs::cpt.reset(thread_name);
 
                 newasm::mem::regs::tr0.reset(thread_name);
@@ -339,7 +342,7 @@ namespace newasm
         };
         std::unordered_map<std::string, newasm::mem::tuple_data> tuple;
 
-        std::map<std::string, std::vector<newasm::compiler::lineData>> funcs;
+        //std::map<std::string, std::vector<newasm::compiler::lineData>> funcs;
         struct procData
         {
             std::string original_name;
@@ -407,37 +410,80 @@ namespace newasm
     // absolutely normal structure
     namespace variables
     {
-        struct unionData
+        struct unionData final
         {
             int addr;
         };
 
-        struct tupleData
+        struct tupleData final
         {
             std::vector<int> addr;
             std::vector<int> type;
         };
 
-        struct classData
+        struct classData final
         {
             std::vector<int> addr; // i love C++
         };
 
-        struct contextData
+        struct contextData final
         {
             std::vector<std::string> keys;
             std::vector<int> addr;
             std::vector<int> type;
         };
 
-        struct eventData
+        struct eventData final
         {
             std::vector<int> addr;
         };
 
-        struct staticObjectData
+        struct staticObjectData final
         {
             short addr = 0;
+        };
+
+        class procedureData final
+        {
+            private:
+            bool prepared = false;
+            public:
+            std::vector<newasm::compiler::lineData> contents;
+            std::unordered_map<std::string, int> labels;
+            int idx;
+
+            std::string original_name;
+            bool mangled = false;
+
+            explicit inline procedureData() noexcept {}
+            inline ~procedureData() noexcept {}
+
+            inline void JIT_compile()
+            {
+                if(this->prepared)
+                {
+                    return;
+                }
+                this->prepared = true;
+
+                if(this->contents.empty())
+                {
+                    return;
+                }
+
+                for(int i = 0; i < this->contents.size(); ++i)
+                {
+                    if(this->contents.at(i).type == newasm::compiler::sealedLabel)
+                    {
+                        //std::cout << "Successfully added label: `" << this->contents.at(i).other << "`" << std::endl;
+                        this->labels[this->contents.at(i).other] = i;
+                        this->contents.at(i).type = newasm::compiler::empty;
+                        continue;
+                    }
+                }
+
+                return;
+            }
         };
 
         struct varData
@@ -448,6 +494,8 @@ namespace newasm
             classData* blueprint = nullptr; // if it is a class, we use this
             unionData* yunion = nullptr; // if it is an union, we use this
             contextData* context = nullptr; // if it is a context, use this
+            procedureData* proc = nullptr; //if it is a proc, use this
+
             eventData* event = nullptr;
             staticObjectData* obj = nullptr;
 
@@ -493,11 +541,13 @@ namespace newasm
                             arg = newasm::mem::regs::psx.get_value();
                             break;
                         }
+                        #if 0
                         case newasm::mem::regs::prp__:
                         {
                             arg = newasm::mem::regs::prp.get_value();
                             break;
                         }
+                        #endif
                         case newasm::mem::regs::cpt__:
                         {
                             arg = newasm::mem::regs::cpt.get_value();
