@@ -56,13 +56,11 @@ namespace newasm
                 return 1;
             }
             if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::cmanip)
-            #if 0
             if(newasm::mem::regs::tlr == newasm::header::constants::inv_reg_val)
             {
                 newasm::terminate(newasm::exit_codes::invalid_memacc);
                 return 1;
             }
-            #endif
             int code = newasm::kernel::makeHash(newasm::threads::functions::get_sysenter(), newasm::mem::regs::fdx.get_value());
             switch(code)
             {

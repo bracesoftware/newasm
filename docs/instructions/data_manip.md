@@ -30,7 +30,6 @@ This instruction allows you to change values of registers and variables.
 | `stk` | stack pointer | Points at the top of the stack. |
 | `hea` | heap pointer | Points at an address in the heap. |
 | `psx` | procedure scope exit value | Holds value returned inside a procedure using `halt`. |
-| `prp` | procedure pointer | Points at the procedure that was called using `call`. |
 | `cpr` | comparsion result register | Holds a value of the comparsion (`cmp`) result; `1` for `equal`, `2` for less and `3` for greater (although there are 6 logical variants of `jmp`, only these 3 cases are required and detected by `cmp`). |
 | `cr0` | primary calculation register | Register in which all the calculation results are stored. Read [this](#calculation-instructions) for more information... |
 | `cr1` | alternate calculation register | Register which is used as a second operand in calculations. Read [this](#calculation-instructions) for more information... |

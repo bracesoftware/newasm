@@ -470,14 +470,14 @@ __say 0,"debug5"
 
     ;heap -1 ; let all the memory go VERY UNACCURATE
 
-    stor  prp , &testreference
+    stor  stl , &testreference
     mov  tlr , testreference
     mov  fdx , 6
     mov  stl , 0c1
     syscall   ; test2342343
 
-    mov  prp , &testreference
-    stor  prp , &testreference
+    mov  stl , &testreference
+    stor  stl , &testreference
     mov  tlr , testreference
     mov  fdx , 6
     mov  stl , 0c1
@@ -626,23 +626,37 @@ __say 0,"debug5"
     mov  fdx , 1
     sysenter "ios"
     syscall  
-
+jmp c3454345343f
     mov prp , &halttest
     mov stl , 0c1
     mov fdx , 6
 
     dec  prp
+:c3454345343f
+nop
+nop
+nop
+nop
+nop
+nop
 .data
     ref  prptest : &PROCEDURETEST
     ref  uninref: nil
     ref reference74298374: nil
     float  logtest : 0.0
 .start
+jmp raspalekidarre
     stor   prp , &prptest
     mov tlr, prptest
     sysenter "ios"
     syscall 
-
+:raspalekidarre
+nop
+nop
+nop
+nop
+nop
+nop
 
     mov   cr0 , 8.0
     mov   cr1 , 2.0
@@ -654,7 +668,13 @@ __say 0,"debug5"
     mov   stl , 0c1
     mov   fdx , 2
     sysenter "ios"
-    syscall   
+    syscall
+
+    ./LMAOOOOOOOOOO
+        proc hihi
+            halt 0
+        end
+    ./!LMAOOOOOOOOOO   
 
 .data
     obj  mystruct : { ;comment
@@ -666,7 +686,7 @@ __say 0,"debug5"
         intg  lol : 45
         float  decimal : 833.4
         string  text : "hi from struct again"
-        ref  reference : &prptest
+        ref  reference : &LMAOOOOOOOOOO::hihi
     }
 
 .start
@@ -2182,6 +2202,34 @@ link "testfile.asm" ; link a file
     mov fdx, 1
     syscall
 :skipallthishsit
+
+.data
+    intg input: 0 ; argument
+    intg result: 0
+
+.start
+    jmp main
+:dofactorial
+    mov &result, input
+:dofactorial1
+    mov cr0, result
+    mov cr1, 1
+    sub ; cr0 = result - 1
+    cmp cr0, 0
+    jz finished
+    mov cr1, *cr0 ; cr1 = cr0
+    mov cr0, result
+    mul ; cr0 = result * result - 1
+    mov &result, *cr0 ; sacuvamo
+    jmp dofactorial1
+:main
+    mov &input, 5 ; hocemo factorial broja 5
+    jmp dofactorial
+:finished
+    mov tlr, "factorial of 5 is "
+    call std::ios::write
+    mov tlr, result
+    call std::ios::writeln
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     mov tlr, 223
     ret *tlr

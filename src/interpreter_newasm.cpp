@@ -13,8 +13,8 @@
 #define NEWASM_DEBUG 0
 namespace newasm
 {
-    const int BUILD_NUMBER = 19;
-    const int RUNTIME_VERSION = 5;
+    const int BUILD_NUMBER = 20;
+    const int RUNTIME_VERSION = 6;
     const int KERNEL_VERSION = 3;
 }
 

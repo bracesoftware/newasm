@@ -5185,12 +5185,13 @@ namespace newasm
                     debugRegister(suf, (newasm::mem::regs::prp));
                     return 1;
                 }
+                #endif
                 if(suf == newasm::mem::regs::cpt.identifier())
                 {
                     debugRegister(suf, (newasm::mem::regs::cpt));
                     return 1;
                 }
-                #endif
+                
                 if(suf == newasm::mem::regs::cpr.identifier())
                 {
                     debugRegister(suf, std::to_string(newasm::mem::regs::cpr));
