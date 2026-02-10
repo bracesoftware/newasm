@@ -83,8 +83,8 @@ set newasm_args=l,h,std,out=app
 
 ### Launch modes
 When running the `newasm` executeable, you can run it in 2 different modes:
-* **interpreter**: this is the default interpreter mode, it just does the primary idea of what it is supposed to do - run the assembly code;
-* **shell**: this is the shell, or control console, mode - application will run as the command prompt with its own commands, you can install packages and maintain your project.
+* **shell**: this is the shell/control console mode, the core of the virtual machine - application will run as the command prompt with its own commands, you can install packages and maintain your project;
+* **compiler/interpreter**: this mode is used for developing applications - linking libraries and files, generating reusable binaries, testing the app and getting profiler information.
 
 To run the interpreter, use `newasm <filename>.asm`, but to run the shell, just run the `newasm` app.
 
@@ -115,8 +115,8 @@ Shell mode brings commands with it. The shell mode is the PRIMARY mode for end u
 | `perf` |- | Display performance details about the last application you ran. |
 | `usestd` |- | Enable the `std` flag. |
 
-#### Interpreter mode
-Interpreter mode compiles and runs your application through several phases.
+#### Compiler/interpreter mode
+Compiler/interpreter mode compiles and runs your application through several phases.
 1. **Linker phase**: In this phase, the linker links all files included in the application into one internal format.
 2. **Internal compilation**: In this phase, the system tokenizes and resolves some compile-time stuff before running the program. This ensures safe and stable program execution. In this phase, the system is telling the virtual machine what kernel modules will be used during the execution of the program.
 3. **Binary format generation**: In this phase, the compiler spews out the binary for your app. Links the dynamic libraries you provided in the project file. This binary can be then reused in the shell.
