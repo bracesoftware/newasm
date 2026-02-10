@@ -3467,11 +3467,13 @@ namespace newasm
                 if(newasm::header::data::proc_now)
                 if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids.at(newasm::system::processing_proc).proc->labels))
                 {
+                    #if 0
                     std::cout << "VOLIMO C++!" << std::endl;
                     for(auto it = newasm::variables::ids.at(newasm::system::processing_proc).proc->labels.begin(); it != newasm::variables::ids.at(newasm::system::processing_proc).proc->labels.end(); ++it)
                     {
                         std::cout << "it->first: `" << it->first << "`, it->second: `" << it->second << "`\n";
                     }
+                    #endif
                     newasm::terminate(newasm::exit_codes::bus_err);
                     return 1;
                 }
@@ -3490,6 +3492,7 @@ namespace newasm
                 }
                 if(newasm::mem::regs::cpr != newasm::cmp_results::equal)
                 {
+                    //std::cout << "\nnewasm::mem::regs::cpr = " << newasm::mem::regs::cpr << std::endl;
                     return 1;
                 }
                 if(newasm::header::data::proc_now)
@@ -3785,6 +3788,7 @@ namespace newasm
                 {
                     auto& j = newasm::variables::ids.at(newasm::system::processing_proc);
                     j.proc->idx = j.proc->labels.at(suf);
+                    //std::cout << "Zasto ne skaces pizda ti mater'na? -> " << j.proc->idx << std::endl;
                     return 1;
                 }
 
@@ -7287,12 +7291,16 @@ namespace newasm
             #endif
             it->second.proc->idx = 0;
             auto& proc_contents = it->second.proc->contents;
-            for(int i = 0; i < proc_contents.size(); ++i)
+            while(true)//for(int i = 0; i < proc_contents.size(); ++i)
             {
                 if(newasm::system::stoproc == 1)
                 {
                     newasm::system::stoproc = 0;
                     newasm::header::data::proc_now = false;
+                    break;
+                }
+                if(it->second.proc->idx == proc_contents.size())
+                {
                     break;
                 }
                 newasm::header::data::lastln = proc_contents.at(it->second.proc->idx).raw;
