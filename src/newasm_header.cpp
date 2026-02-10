@@ -1074,7 +1074,7 @@ namespace newasm
 
             void pause()
             {
-                std::cout << newasm::header::col::gray << "\tPress `q` to terminate the session..." << newasm::header::col::reset;
+                std::cout << newasm::header::col::gray << "\tPress `q` to terminate the session..." << newasm::header::col::reset << std::endl;
                 std::thread listener(inputListener);
                 while(true)
                 {
