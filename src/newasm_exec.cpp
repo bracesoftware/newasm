@@ -2890,6 +2890,7 @@ namespace newasm
                         newasm::mem::regs::prp = (opr);
                         return 1;
                     }
+                    #endif
                     case newasm::mem::regs::cpt__: // container pointer
                     {
                         if(!newasm::header::functions::isref(opr))
@@ -2908,7 +2909,6 @@ namespace newasm
                         newasm::mem::regs::cpt = (opr);
                         return 1;
                     }
-                    #endif
                     case newasm::mem::regs::cpr__:
                     {
                         if(!newasm::header::functions::isnumeric(opr))
@@ -3082,12 +3082,12 @@ namespace newasm
                         strreg = newasm::mem::regs::prp;
                         break;
                     }
+                    #endif
                     case newasm::mem::regs::cpt__:
                     {
                         strreg = newasm::mem::regs::cpt;
                         break;
                     }
-                    #endif
                 }
 
                 if(intreg != newasm::header::constants::inv_ireg_val)
@@ -5406,7 +5406,7 @@ namespace newasm
                     case newasm::mem::regs::hea__: newasm::mem::regs::hea.reset(); break;
                     case newasm::mem::regs::psx__: newasm::mem::regs::psx.reset(); break;
                     //case newasm::mem::regs::prp__: newasm::mem::regs::prp.reset(); break;
-                    //case newasm::mem::regs::cpt__: newasm::mem::regs::cpt.reset(); break;
+                    case newasm::mem::regs::cpt__: newasm::mem::regs::cpt.reset(); break;
                     case newasm::mem::regs::cpr__: newasm::mem::regs::cpr.reset(); break;
                     case newasm::mem::regs::cr0__: newasm::mem::regs::cr0.reset(); break;
                     case newasm::mem::regs::cr1__: newasm::mem::regs::cr1.reset(); break;
@@ -5584,13 +5584,13 @@ namespace newasm
                         }
                         return 1;
                     }
+                    #endif
                     case newasm::mem::regs::cpt__:
                     {
                         //make later,
                         // or rather NEVER!
                         return 1;
                     }
-                    #endif
                     default:
                     {
                         newasm::terminate(newasm::exit_codes::os_error);
@@ -5750,13 +5750,13 @@ namespace newasm
                         }
                         return 1;
                     }
+                    #endif
                     case newasm::mem::regs::cpt__:
                     {
                         //make later
                         //seems like never to me
                         return 1;
                     }
-                    #endif
                     default:
                     {
                         newasm::terminate(newasm::exit_codes::invalid_exp);
