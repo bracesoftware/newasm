@@ -365,7 +365,7 @@ namespace newasm
     template<newasm::concepts::number T, newasm::concepts::number U>
     inline auto operator-(U lhs, newasm::_register<T> rhs)
     {
-        return lhs.get_value() - rhs;
+        return lhs - rhs.get_value();
     }
     template<newasm::concepts::number T, newasm::concepts::number U>
     inline auto operator-(newasm::_register<U> lhs, newasm::_register<T> rhs)

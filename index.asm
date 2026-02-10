@@ -2203,6 +2203,22 @@ link "testfile.asm" ; link a file
     sysreq &namespace::lmao -> char
     mov tlr, "HERE IT CRASHES!!! 5"
     call std::ios::writeln
+jmp doneshit
+.data
+    intg k: 0
+.start
+:doshit
+    mov tlr, k
+    cmp tlr, 100
+    jz doneshit
+    mov fdx, 2
+    syscall
+    mov tlr, k
+    inc tlr
+    mov &k, *tlr
+    jmp doshit
+
+:doneshit
 
     ;sysreq &wee
 :dsfdsfdsdssdf
@@ -2212,29 +2228,45 @@ link "testfile.asm" ; link a file
     mov fdx, 1
     syscall
 :skipallthishsit
-
 .data
     intg input: 0 ; argument
+    intg temp: 0
     intg result: 0
-
 .start
     jmp main
 :dofactorial
+    mov tlr, "Hi again"
+    call std::ios::writeln
     mov imm, 1
-    mov &result, input
+    mov &result, input ; result = 5
+    mov &temp, input ; temp = 5
 :dofactorial1
-    mov cr2, result
+    mov tlr, "Hi again 2"
+    call std::ios::writeln
+    mov cr2, temp
     mov cr3, 1
-    sub ; cr0 = result - 1
-    cmp cr2, 0
-    jz finished
-    mov cr3, *cr2 ; cr1 = cr0
-    mov cr2, result
-    mul ; cr0 = result * result - 1
+    sub ; temp = temp - 1
+    mov &temp, *cr2 ; temp
+    cmp cr2, 0 ; if(temp == 0)
+    jz finished ; finished
+    mov tlr, "Hi again 3"
+    call std::ios::writeln
+    mov cr3, temp 
+    mov cr2, result ; cr2 = result
+    mul ; result = result * temp
     mov &result, *cr2 ; save
+    mov tlr, input
+    call std::ios::writeln
+    mov tlr, result
+    call std::ios::writeln
+    mov tlr, temp
+    call std::ios::writeln
+    ;ret 0
     jmp dofactorial1
 :main
-    mov &input, 5 ; hocemo factorial broja 5
+    mov tlr, "Hi again 4"
+    call std::ios::writeln
+    mov &input, 5 ; we want factorial of 5
     jmp dofactorial
 :finished
     zero imm

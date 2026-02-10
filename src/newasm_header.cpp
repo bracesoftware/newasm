@@ -1091,27 +1091,37 @@ namespace newasm
             std::pair<bool, std::pair<std::string, std::string>> parseDirective(const std::string& line)
             {
                 size_t i = 0;
-                while (i < line.length() && std::isspace(line[i])) i++;
-                if (i >= line.length() || line[i] != '.') return {false, {"", ""}};
+                while(i < line.length() && std::isspace(line[i])) i++;
+                if(i >= line.length() || line[i] != '.')
+                {
+                    //std::cout << "THIS HAPPENED" << std::endl;
+                    return {false, {"", ""}};
+                }
                 i++;
-                while (i < line.length() && std::isspace(line[i])) i++;
-                if (i >= line.length() || line[i] != '$') return {false, {"", ""}};
+                while(i < line.length() && std::isspace(line[i])) i++;
+                if(i >= line.length() || line[i] != '$')
+                {
+                    //std::cout << line.length <<
+                    return {false, {"", ""}};
+                }
                 i++;
-                while (i < line.length() && std::isspace(line[i])) i++;
+                while(i < line.length() && std::isspace(line[i])) i++;
                 std::string directive;
-                while (i < line.length() && !std::isspace(line[i]))
+                while(i < line.length() && !std::isspace(line[i]))
                 {
                     directive += line[i++];
                 }
-                while (i < line.length() && std::isspace(line[i])) i++;
+                while(i < line.length() && std::isspace(line[i])) i++;
                 std::string argument;
-                while (i < line.length() && !std::isspace(line[i]))
+                while(i < line.length() && !std::isspace(line[i]))
                 {
                     argument += line[i++];
                 }
 
-                if (!directive.empty())
+                //i now fuckin hate spaces after if/while/for
+                if(!directive.empty())
                 {
+                    //std::cout << directive << '-' << argument << std::endl;
                     return {true, {directive, argument}};
                 }
 

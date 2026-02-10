@@ -6086,20 +6086,21 @@ namespace newasm
             {
                 if(newasm::mem::regs::imm == 1)
                 {
-                    newasm::mem::regs::cr2 = newasm::mem::regs::cr2 - newasm::mem::regs::cr3;
+                    //newasm::mem::regs::cr2 = newasm::mem::regs::cr2 - newasm::mem::regs::cr3;
+                    newasm::mem::regs::cr2.set_value(newasm::mem::regs::cr2.get_value() - newasm::mem::regs::cr3.get_value());
                     return 1;
                 }
-                newasm::mem::regs::cr0 = newasm::mem::regs::cr0 - newasm::mem::regs::cr1;
+                newasm::mem::regs::cr0.set_value(newasm::mem::regs::cr0.get_value() - newasm::mem::regs::cr1.get_value());
                 return 1;
             }
             case newasm::core::lang_inf::div:
             {
                 if(newasm::mem::regs::imm == 1)
                 {
-                    newasm::mem::regs::cr2 = newasm::mem::regs::cr2 / newasm::mem::regs::cr3;
+                    newasm::mem::regs::cr2.set_value(newasm::mem::regs::cr2.get_value() / newasm::mem::regs::cr3.get_value());
                     return 1;
                 }
-                newasm::mem::regs::cr0 = newasm::mem::regs::cr0 / newasm::mem::regs::cr1;
+                newasm::mem::regs::cr0.set_value(newasm::mem::regs::cr0.get_value() / newasm::mem::regs::cr1.get_value());
                 return 1;
             }
             case newasm::core::lang_inf::mul:
@@ -6116,7 +6117,7 @@ namespace newasm
             {
                 if(newasm::mem::regs::imm == 1)
                 {
-                    newasm::mem::regs::cr2 = newasm::mem::regs::cr2 % newasm::mem::regs::cr3;
+                    newasm::mem::regs::cr2.set_value(newasm::mem::regs::cr2.get_value() % newasm::mem::regs::cr3.get_value());
                     return 1;
                 }
                 newasm::mem::regs::cr0 = 0.0;
