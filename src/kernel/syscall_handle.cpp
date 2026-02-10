@@ -56,11 +56,13 @@ namespace newasm
                 return 1;
             }
             if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::cmanip)
+            #if 0
             if(newasm::mem::regs::tlr == newasm::header::constants::inv_reg_val)
             {
                 newasm::terminate(newasm::exit_codes::invalid_memacc);
                 return 1;
             }
+            #endif
             int code = newasm::kernel::makeHash(newasm::threads::functions::get_sysenter(), newasm::mem::regs::fdx.get_value());
             switch(code)
             {
@@ -737,7 +739,6 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                         return 1;
                     }
-
                     newasm::syscalls::txtop::impl::tokenize();
                     return 1;
                 }
@@ -748,7 +749,6 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                         return 1;
                     }
-
                     std::string string__ = newasm::header::functions::remq(newasm::mem::regs::tlr.get_value());
                     newasm::syscalls::txtop::impl::fmat(string__);
                     newasm::mem::regs::tlr.set_value(string__);
@@ -770,40 +770,40 @@ namespace newasm
                 //clear
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::cmanip, 1):
                 {
-                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::tlr),newasm::containers::bit_arrays))
+                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt), newasm::containers::bit_arrays))
                     {
                         newasm::terminate(newasm::exit_codes::invalid_memacc);
                         return 1;
                     }
-                    newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::tlr))->clear();
+                    newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->clear();
                     return 1;
                 }
                 //flip
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::cmanip, 2):
                 {
-                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::tlr),newasm::containers::bit_arrays))
+                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::bit_arrays))
                     {
                         newasm::terminate(newasm::exit_codes::invalid_memacc);
                         return 1;
                     }
-                    newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::tlr))->flip();
+                    newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->flip();
                     return 1;
                 }
                 //reverse
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::cmanip, 3):
                 {
-                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::tlr),newasm::containers::bit_arrays))
+                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::bit_arrays))
                     {
                         newasm::terminate(newasm::exit_codes::invalid_memacc);
                         return 1;
                     }
-                    newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::tlr))->reverse();
+                    newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->reverse();
                     return 1;
                 }
                 //set at
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::cmanip, 4):
                 {
-                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::tlr),newasm::containers::bit_arrays))
+                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::bit_arrays))
                     {
                         newasm::terminate(newasm::exit_codes::invalid_memacc);
                         return 1;
@@ -818,18 +818,18 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                         return 1;
                     }
-                    newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::tlr))->set_at(std::stoi(newasm::mem::regs::tlr),std::stoi(newasm::mem::regs::stl));
+                    newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->set_at(std::stoi(newasm::mem::regs::tlr),std::stoi(newasm::mem::regs::stl));
                     return 1;
                 }
                 // get at
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::cmanip, 5):
                 {
-                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::tlr),newasm::containers::bit_arrays))
+                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::bit_arrays))
                     {
                         newasm::terminate(newasm::exit_codes::invalid_memacc);
                         return 1;
                     }
-                    int result = newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::tlr))->get_at(std::stoi(newasm::mem::regs::tlr));
+                    int result = newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->get_at(std::stoi(newasm::mem::regs::tlr));
                     newasm::mem::regs::tlr = std::to_string(result);
                     return 1;
                 }
@@ -837,45 +837,45 @@ namespace newasm
                 //set at parent of
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::cmanip, 6):
                 {
-                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::tlr),newasm::containers::binary_trees))
+                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::binary_trees))
                     {
                         newasm::terminate(newasm::exit_codes::invalid_memacc);
                         return 1;
                     }
-                    newasm::containers::binary_trees.at(newasm::header::functions::remamp(newasm::mem::regs::tlr))->set_at_parent_of(std::stoi(newasm::mem::regs::tlr),std::stoi(newasm::mem::regs::stl));
+                    newasm::containers::binary_trees.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->set_at_parent_of(std::stoi(newasm::mem::regs::tlr),std::stoi(newasm::mem::regs::stl));
                     return 1;
                 }
                 //right child
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::cmanip, 7):
                 {
-                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::tlr),newasm::containers::binary_trees))
+                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::binary_trees))
                     {
                         newasm::terminate(newasm::exit_codes::invalid_memacc);
                         return 1;
                     }
-                    newasm::containers::binary_trees.at(newasm::header::functions::remamp(newasm::mem::regs::tlr))->set_at_right_child_of(std::stoi(newasm::mem::regs::tlr),std::stoi(newasm::mem::regs::stl));
+                    newasm::containers::binary_trees.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->set_at_right_child_of(std::stoi(newasm::mem::regs::tlr),std::stoi(newasm::mem::regs::stl));
                     return 1;
                 }
                 //left child
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::cmanip, 8):
                 {
-                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::tlr),newasm::containers::binary_trees))
+                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::binary_trees))
                     {
                         newasm::terminate(newasm::exit_codes::invalid_memacc);
                         return 1;
                     }
-                    newasm::containers::binary_trees.at(newasm::header::functions::remamp(newasm::mem::regs::tlr))->set_at_left_child_of(std::stoi(newasm::mem::regs::tlr),std::stoi(newasm::mem::regs::stl));
+                    newasm::containers::binary_trees.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->set_at_left_child_of(std::stoi(newasm::mem::regs::tlr),std::stoi(newasm::mem::regs::stl));
                     return 1;
                 }
                 //get
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::cmanip, 9):
                 {
-                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::tlr),newasm::containers::binary_trees))
+                    if(!newasm::mem::functions::datavalid(newasm::header::functions::remamp(newasm::mem::regs::cpt),newasm::containers::binary_trees))
                     {
                         newasm::terminate(newasm::exit_codes::invalid_memacc);
                         return 1;
                     }
-                    int result = newasm::containers::binary_trees.at(newasm::header::functions::remamp(newasm::mem::regs::tlr))->get_at(std::stoi(newasm::mem::regs::tlr));
+                    int result = newasm::containers::binary_trees.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->get_at(std::stoi(newasm::mem::regs::tlr));
                     newasm::mem::regs::tlr = std::to_string(result);
                     return 1;
                 }

@@ -2100,7 +2100,18 @@ namespace newasm
                         newasm::mem::data[opr] = std::to_string(newasm::mem::regs::hea);
                         return 1;
                     }
-                    
+                    case newasm::mem::regs::cpt__:
+                    {
+                        if(newasm::mem::datatypes[opr] != newasm::datatypes::reference)
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                            return 1;
+                        }
+                        newasm::mem::data[opr] = newasm::mem::regs::cpt;
+                        //auto i = std::find(newasm::mem::uninitialized_pointer.begin(), newasm::mem::uninitialized_pointer.end(), opr);
+                        //if(i != newasm::mem::uninitialized_pointer.end()) newasm::mem::uninitialized_pointer.erase(i);
+                        return 1;
+                    }
                     case newasm::mem::regs::cpr__:
                     {
                         if(newasm::mem::datatypes[opr] != newasm::datatypes::number)

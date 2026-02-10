@@ -826,7 +826,7 @@ __say 0,"debug5"
 
     sysenter "cmanip"
 
-    mov   tlr , &testbitarr
+    mov   cpt , &testbitarr
     mov   tlr , 2
     mov   stl , 1
     mov   fdx , 4
@@ -853,7 +853,7 @@ __say 0,"debug5"
     cont testbintree : ? bin_tree
 
 .start
-    mov   tlr , &testbintree
+    mov   cpt , &testbintree
  sysenter "cmanip"
     mov   tlr , 0
     mov   stl , 33
@@ -923,7 +923,7 @@ jmp shjfjsdhfj
         syscall
     }
 
-    db   tlr
+    db   cpt
     db   tlr
     db   hea
     db   stk
