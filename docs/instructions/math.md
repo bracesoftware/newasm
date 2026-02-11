@@ -14,6 +14,7 @@ Following instructions are covered in the article:
 10. [`xor`](#mathematical-instructions-and-bit-operations)
 11. [`shl`](#mathematical-instructions-and-bit-operations)
 12. [`shr`](#mathematical-instructions-and-bit-operations)
+13. [`mod`](#mathematical-instructions-and-bit-operations)
 
 > [!TIP]
 > First 6 of these operations by default use the `cr0` and `cr1` registers. They store the result in `cr0`. They ALWAYS return a `float` value!
@@ -30,6 +31,15 @@ mov cr1, 2
     	exp ; cr0 : power(cr0,cr1)
     	log ; cr0 : log_c1(cr0)
 ```
+
+If we want to work with integers instead of floats, we have to change the value of the `imm` (instruction mode modifier) to 1.
+```asm
+mov imm, 1
+```
+
+Now all these math instructions use the `cr2` and `cr3` registers instead, and they're integers.
+Math instruction that works only when `imm` is 1 is the `mod` instruction.
+
 
 ## Manipulating bits
 There are 6 bitwise operations you can use:

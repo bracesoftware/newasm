@@ -23,6 +23,7 @@ This instruction allows you to change values of registers and variables.
 
 | Register name | Full name | Description |
 | ------------- | --------- | ----------- |
+| `imm` | instruction mode modifier | Used to alter instruction behaviour. |
 | `fdx` | function index | Holds an index of a function `syscall` will call. |
 | `tlr` | typeless register | Typeless register (can hold any value, even code literals). Used as an output argument in some `syscall`s. |
 | `stl` | secondary typeless register | Typeless register as well; used as a helping register in `syscall`s. |
@@ -31,10 +32,12 @@ This instruction allows you to change values of registers and variables.
 | `hea` | heap pointer | Points at an address in the heap. |
 | `psx` | procedure scope exit value | Holds value returned inside a procedure using `halt`. |
 | `cpr` | comparsion result register | Holds a value of the comparsion (`cmp`) result; `1` for `equal`, `2` for less and `3` for greater (although there are 6 logical variants of `jmp`, only these 3 cases are required and detected by `cmp`). |
-| `cr0` | primary calculation register | Register in which all the calculation results are stored. Read [this](#calculation-instructions) for more information... |
-| `cr1` | alternate calculation register | Register which is used as a second operand in calculations. Read [this](#calculation-instructions) for more information... |
-| `br0` | primary bit operation register | Register in which all the bitwise calculation results are stored. Read [this](#bit-operations) for more information...  |
-| `br1` | alternate bit operation register | Register which is used as a second operand in bitwise calculations. Read [this](#bit-operations) for more information... |
+| `cr0` | primary calculation register | Register in which all the calculation results are stored. Read [this](math.md) for more information... |
+| `cr1` | alternate calculation register | Register which is used as a second operand in calculations. Read [this](math.md) for more information... |
+| `cr2` | primary integer calculation register | Register in which all the calculation results are stored when `imm` is 1. Read [this](math.md) for more information... |
+| `cr3` | alternate integer calculation register | Register which is used as a second operand in calculations when `imm` is 1. Read [this](math.md) for more information... |
+| `br0` | primary bit operation register | Register in which all the bitwise calculation results are stored. Read [this](math.md) for more information...  |
+| `br1` | alternate bit operation register | Register which is used as a second operand in bitwise calculations. Read [this](math.md) for more information... |
 | `cpt` | container pointer | Register holding an address specifically of a container or a data structure. Read [this](#containers-and-data-structures) for more information... |
 | `tr0` | primary thread register | Dummy for threads. |
 | `tr1` | alternate thread register | Another dummy for threads. |
