@@ -7486,7 +7486,7 @@ namespace newasm
             newasm::mem::regs::lcx.set_value(0);
         }
 
-        newasm::perf::start = std::chrono::high_resolution_clock::now();
+        newasm::perf::start = std::chrono::steady_clock::now();
 
         while(!(newasm::mem::regs::lcx.get_value() == newasm::compiler::compiledCode.size()))
         {
@@ -7542,7 +7542,7 @@ namespace newasm
         {
             newasm::terminate(newasm::exit_codes::noterm_point); // You got to end your programs.
         }
-        newasm::perf::end = std::chrono::high_resolution_clock::now();
+        newasm::perf::end = std::chrono::steady_clock::now();
         return;
     }
 

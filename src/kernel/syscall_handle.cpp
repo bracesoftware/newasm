@@ -292,11 +292,11 @@ namespace newasm
                         return 1;
                     }
           
-                    newasm::start = std::chrono::high_resolution_clock::now();
+                    newasm::start = std::chrono::steady_clock::now();
                     std::string result = newasm::syscalls::http::get(
                         newasm::header::functions::remq(newasm::mem::regs::tlr.get_value())
                     );
-                    newasm::end = std::chrono::high_resolution_clock::now();
+                    newasm::end = std::chrono::steady_clock::now();
                     newasm::network_deduction.push_back(newasm::end - newasm::start);
                     
                     auto removeexc = [](std::string& input) -> std::string {
@@ -328,12 +328,12 @@ namespace newasm
                         return 1;
                     }
 
-                    newasm::start = std::chrono::high_resolution_clock::now();
+                    newasm::start = std::chrono::steady_clock::now();
                     std::string result = newasm::syscalls::http::post(
                         newasm::header::functions::remq(newasm::mem::regs::tlr.get_value()),
                         newasm::header::functions::remq(newasm::mem::regs::stl.get_value())
                     );
-                    newasm::end = std::chrono::high_resolution_clock::now();
+                    newasm::end = std::chrono::steady_clock::now();
                     newasm::network_deduction.push_back(newasm::end - newasm::start);
 
                     auto removeexc = [](std::string& input) -> std::string {
@@ -377,12 +377,12 @@ namespace newasm
                         return 1;
                     }
 
-                    newasm::start = std::chrono::high_resolution_clock::now();
+                    newasm::start = std::chrono::steady_clock::now();
                     auto result = newasm::syscalls::tcp::send(
                         newasm::header::functions::remq(newasm::mem::regs::tlr.get_value()), 
                         newasm::header::functions::remq(newasm::mem::regs::stl.get_value())
                     );
-                    newasm::end = std::chrono::high_resolution_clock::now();
+                    newasm::end = std::chrono::steady_clock::now();
                     newasm::network_deduction.push_back(newasm::end - newasm::start);
 
                     newasm::mem::regs::tlr.set_value(std::to_string(result.first));
@@ -398,11 +398,11 @@ namespace newasm
                         return 1;
                     }
 
-                    newasm::start = std::chrono::high_resolution_clock::now();
+                    newasm::start = std::chrono::steady_clock::now();
                     std::string result = newasm::syscalls::tcp::recv(
                         newasm::header::functions::remq(newasm::mem::regs::tlr.get_value())
                     );
-                    newasm::end = std::chrono::high_resolution_clock::now();
+                    newasm::end = std::chrono::steady_clock::now();
                     newasm::network_deduction.push_back(newasm::end - newasm::start);
 
                     newasm::mem::regs::tlr.set_value("\"" + (result) + "\"");

@@ -271,8 +271,8 @@ namespace newasm
     std::unordered_map<std::string,std::vector<std::string>>* dyn_ins_set;
     std::vector<std::pair<std::string,std::string>>* env_vars;
 
-    auto start = std::chrono::high_resolution_clock::now();
-    auto end = std::chrono::high_resolution_clock::now();
+    auto start = std::chrono::steady_clock::now();
+    auto end = std::chrono::steady_clock::now();
     std::vector<std::chrono::duration<double, std::milli>> runtime_deduction;
     std::vector<std::chrono::duration<double, std::milli>> wasted_deduction;
     std::vector<std::chrono::duration<double, std::milli>> network_deduction;
@@ -322,10 +322,10 @@ namespace newasm
 
             t = std::thread([this]()
             {
-                auto last = std::chrono::high_resolution_clock::now();
+                auto last = std::chrono::steady_clock::now();
                 while(running)
                 {
-                    auto now = std::chrono::high_resolution_clock::now();
+                    auto now = std::chrono::steady_clock::now();
                     elapsed_ms += std::chrono::duration<double, std::milli>(now - last).count();
                     last = now;
                     std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -357,8 +357,8 @@ namespace newasm
 
     namespace perf
     {
-        auto start = std::chrono::high_resolution_clock::now();
-        auto end = std::chrono::high_resolution_clock::now();
+        auto start = std::chrono::steady_clock::now();
+        auto end = std::chrono::steady_clock::now();
 
         newasm::timer inputWasteTimer;
     }
