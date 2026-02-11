@@ -2305,6 +2305,28 @@ jmp doneshit
     sysenter "thread"
     mov fdx, 1
     syscall
+
+    thread thisisfun -> {
+        mov tlr, "this is really fun"
+        call std::ios::writeln
+        mov tlr, 908
+        call std::ios::writeln
+        mov tlr, 243.4
+        call std::ios::writeln
+    }
+
+    mov tlr, 763
+    call std::ios::writeln
+    mov tlr, "hellouzz"
+    call std::ios::writeln
+    mov tlr, 'o'
+    call std::ios::writeln
+
+    await &thisisfun
+    mov tlr, &thisisfun
+    sysenter "thread"
+    mov fdx, 1
+    syscall
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     mov tlr, 223
     ret *tlr

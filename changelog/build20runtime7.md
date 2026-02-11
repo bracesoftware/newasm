@@ -17,7 +17,7 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 
 ## What's new
 
-+ Instructions such as `sel` are now thread safe.
++ Instructions such as `sel`, `switch` and `case` are now thread safe.
 
 ## What's changed
 
