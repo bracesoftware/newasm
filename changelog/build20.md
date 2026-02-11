@@ -21,6 +21,7 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 + Removed the `prp` register.
 + Now standard procedures can also contain sealed labels.
 + Concurrency is more stable.
++ Added the `mod` instruction.
 
 ## What's changed
 

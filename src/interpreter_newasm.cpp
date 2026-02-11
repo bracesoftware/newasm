@@ -31,6 +31,7 @@ namespace SYS = newasm;
 #include <unordered_map>
 #include <string_view>
 #include <stdexcept>
+#include <ostream>
 #include <string>
 #include <fstream>
 #include <cstdio>
