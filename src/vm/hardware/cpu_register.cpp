@@ -71,6 +71,7 @@ namespace newasm
             {
                 this->value = val;
             }
+            inline thread_safe() {}
 
             inline thread_safe<T>& operator=(const T& new_val)
             {
@@ -114,6 +115,20 @@ namespace newasm
         };
     }
 }
+
+template<typename T>
+bool operator==(const newasm::kernel::thread_safe<T>& a, const T& b)
+{
+    return static_cast<const T&>(a) == b;
+}
+
+template<typename T>
+bool operator==(const T& a, const newasm::kernel::thread_safe<T>& b)
+{
+    return a == static_cast<const T&>(b);
+}
+
+////actual registers
 
 namespace newasm
 {

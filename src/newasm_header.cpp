@@ -71,8 +71,8 @@ namespace newasm
             bool macro_now = false;
             std::string macro_decl = "";
             //switch-case
-            std::string switched_value;
-            bool case_matched = false;
+            newasm::kernel::thread_safe<std::string> switched_value;
+            newasm::kernel::thread_safe<bool> case_matched = false;
             std::string case_line;
             //tuples
             newasm::kernel::thread_safe<int> tupleIndex = -1;
@@ -161,13 +161,13 @@ namespace newasm
                     const size_t base = sizeof(charset) - 1;
 
                     std::string result;
-                    while (h > 0)
+                    while(h > 0)
                     {
                         result.push_back(charset[h % base]);
                         h /= base;
                     }
 
-                    if (result.empty())
+                    if(result.empty())
                     {
                         result = "0";
                     }
