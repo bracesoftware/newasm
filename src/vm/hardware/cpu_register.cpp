@@ -11,6 +11,112 @@ __newasm_LOAD_PACKAGE_MODULE(cpu_register_emulator, {
 
 namespace newasm
 {
+    namespace kernel
+    {
+        template<typename T>
+        class thread_safe final
+        {
+            #if 0
+            inline thread_safe<T>& operator=(const T& new_val)
+            {
+                if(newasm::thread_line)
+                {
+                    thread_values.at(newasm::threads::now) = new_val;
+                    return *this;
+                }
+                value = new_val;
+                return *this;
+            }
+
+            operator T&()
+            {
+                if(newasm::thread_line)
+                {
+                    return thread_values.at(newasm::threads::now);
+                }
+                return value;
+            }
+            #endif
+            private:
+            T value;
+            newasm::_std::map<std::string, T> thread_values;
+
+            inline T& get()
+            {
+                if(newasm::thread_line)
+                {
+                    return thread_values.at(newasm::threads::now);
+                }
+                return value;
+            }
+
+            inline const T& get() const
+            {
+                if(newasm::thread_line)
+                {
+                    return thread_values.at(newasm::threads::now);
+                }
+                return value;
+            }
+
+            //implementation of the thread safe proxy
+            //so all things we can do with T,we can do
+            //with thread_safe<T> the same way
+            public:
+            inline thread_safe(T&& val)
+            {
+                this->value = std::move(val);
+            }
+            inline thread_safe(const T& val)
+            {
+                this->value = val;
+            }
+
+            inline thread_safe<T>& operator=(const T& new_val)
+            {
+                get() = new_val;
+                return *this;
+            }
+
+            //some mov semantics hihi
+            inline thread_safe<T>& operator=(T&& new_val)
+            {
+                get() = std::move(new_val);
+                return *this;
+            }
+
+            inline operator T&()
+            {
+                return get();
+            }
+            inline operator const T&() const
+            {
+                return get();
+            }
+
+            inline T* operator->()
+            {
+                return &get();
+            }
+            inline const T* operator->() const
+            {
+                return &get();
+            }
+
+            inline T& operator*()
+            {
+                return get();
+            }
+            inline const T& operator*() const
+            {
+                return get();
+            }
+        };
+    }
+}
+
+namespace newasm
+{
     namespace internal
     {
         std::stringstream ss_;

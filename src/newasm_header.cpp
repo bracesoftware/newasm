@@ -75,7 +75,7 @@ namespace newasm
             bool case_matched = false;
             std::string case_line;
             //tuples
-            int tupleIndex = -1;
+            newasm::kernel::thread_safe<int> tupleIndex = -1;
 
             //for calling funcs
             std::string temp_;
@@ -84,9 +84,9 @@ namespace newasm
             bool std_now__ = false;
 
             //movas instruction
-            int movas_type = newasm::core::lang_inf::typenames::num;
+            newasm::kernel::thread_safe<int> movas_type = newasm::core::lang_inf::typenames::num;
             //malloc block
-            int malloc_block_used = 0;
+            newasm::kernel::thread_safe<int> malloc_block_used = 0;
 
             int alignment = 1;
         }
