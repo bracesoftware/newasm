@@ -8,7 +8,7 @@ Sealed labels are used to define jump points within thread code blocks, allowing
 
 ```asm
 .start
-	thread testThread -> {
+    thread testThread -> {
         {:threadLabel} ; sealed label
         mov tlr, "hello world from thread\n"
         mov fdx, 1
