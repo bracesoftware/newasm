@@ -68,8 +68,8 @@ namespace newasm
         {
             if(newasm::header::data::repl)
             {
-                //std::fputs(text.c_str(), stdout);
-                std::cout << text;
+                std::fputs(text.c_str(), stdout);
+                //std::cout << text;
                 return;
             }
             if(!newasm::consoleOpen)
@@ -82,8 +82,8 @@ namespace newasm
             printToConsole(text.c_str());
             #endif
             #if USING_SDL_FINALLY == 0
-            std::cout << text;
-            //std::fputs(text.c_str(), stdout);
+            //std::cout << text;
+            std::fputs(text.c_str(), stdout);
             #endif
             return;
         }

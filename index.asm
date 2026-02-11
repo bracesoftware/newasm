@@ -2228,6 +2228,22 @@ jmp doneshit
     mov fdx, 1
     syscall
 :skipallthishsit
+.start
+    mov tlr, "::ifac->factorial of 5 is "
+    call std::ios::write
+    mov tlr, 5
+    call std::math::ifac ; <- REAL STANDARD LIBRARY FUNC!
+    call std::ios::writeln
+    mov tlr, "::ifac->factorial of 0 is "
+    call std::ios::write
+    mov tlr, 0
+    call std::math::ifac ; <- REAL STANDARD LIBRARY FUNC!
+    call std::ios::writeln
+    mov tlr, "::ifac->factorial of 1 is "
+    call std::ios::write
+    mov tlr, 1
+    call std::math::ifac ; <- REAL STANDARD LIBRARY FUNC!
+    call std::ios::writeln
 .data
     ./std
         ./__
@@ -2237,7 +2253,7 @@ jmp doneshit
         ./!__
 .start
         ./math
-            proc factorial
+            proc factorial ; <- std::ifac PROTOTYPE!!
                 mov imm, 1
                 mov &std::__::input, *tlr ; we take tlr as input lel
                 mov &std::__::result, std::__::input ; result = 5

@@ -223,6 +223,46 @@
 
         ./!math
     ./!std
+.data
+    ./std
+        ./__P
+            intg input: 0 ; argument
+            intg temp: 0
+            intg result: 0
+        ./!__P
+.start
+        ./math
+            proc ifac
+                mov imm, 1
+                mov &std::__P::input, *tlr ; we take tlr as input lel
+                mov &std::__P::result, std::__P::input ; result = 5
+                mov &std::__P::temp, std::__P::input ; temp = 5
+                cmp tlr, 0
+                jz finished
+                {:funcBody}
+                mov cr2, std::__P::temp
+                mov cr3, 1
+                sub ; temp = temp - 1
+                mov &std::__P::temp, *cr2 ; temp
+
+                cmp cr2, 0 ; if(temp == 0)
+                jz finished ; finished
+    
+                mov cr3, std::__P::temp 
+                mov cr2, std::__P::result ; cr2 = result
+                mul ; result = result * temp
+                mov &std::__P::result, *cr2 ; save
+                
+                jmp funcBody
+
+                {:finished}
+                mov tlr, std::__P::result
+                zero imm
+                halt 0
+            end
+        ./!math
+    ./!std
+
 ;============================================================================================
 ;
 ; EOF
