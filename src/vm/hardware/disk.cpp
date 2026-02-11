@@ -17,7 +17,7 @@ namespace newasm
 
             public:
             std::string data;
-            DISK_(std::string disk_file, int mb_size, std::string label)
+            explicit inline DISK_(std::string disk_file, int mb_size, std::string label)
             : path(disk_file), size(mb_size), volume_label(label)
             {
                 if(!std::filesystem::exists(path))
