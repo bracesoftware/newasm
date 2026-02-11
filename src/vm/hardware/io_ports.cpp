@@ -17,8 +17,8 @@ namespace newasm
             mutable T value;
 
             public:
-            IOPort(int addr, T val)
-            : address(addr), value(val){}
+            explicit inline IOPort(int addr, T val)
+            : address(addr), value(val) {}
 
             inline int get_addr() const
             {
