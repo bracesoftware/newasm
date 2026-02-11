@@ -9,6 +9,10 @@
     #error WHAT
 #endif
 
+__newasm_LOAD_PACKAGE_MODULE(header, {
+    //setup goes here
+});
+
 namespace newasm
 {
     namespace header

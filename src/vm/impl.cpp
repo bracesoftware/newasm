@@ -112,3 +112,17 @@ namespace newasm
 #elif NEWASM_DEBUG == 0
     #define __newasmDBG(f__)
 #endif
+
+int __newasm__MODULEID = 1;
+#define __newasm_CHECK_JUMP_PROPERLY if(newasm::header::data::repl and not newasm::header::data::proc_now){newasm::unsins(ins);return 1;}
+#define __newasm_LOAD_PACKAGE_MODULE(name, func)        struct\
+    __global_newasm##name final{\
+    explicit inline __global_newasm##name() noexcept{\
+        auto __##name = []() -> void {func};\
+        std::cout << newasm::header::col::red << __newasm__MODULEID << ":" << newasm::header::col::gray << \
+        " Virtual machine is setting up module `" << #name << "`..." << std::endl;__##name();\
+        std::cout << newasm::header::col::reset;__newasm__MODULEID++;\
+    }\
+};static __global_newasm##name NEWASM__MODULE__##name
+
+#define __NEWASM_DUMMY 0

@@ -14,7 +14,7 @@
 namespace newasm
 {
     const int BUILD_NUMBER = 20;
-    const int RUNTIME_VERSION = 6;
+    const int RUNTIME_VERSION = 7;
     const int KERNEL_VERSION = 3;
 }
 
@@ -93,11 +93,13 @@ namespace newasm
 #include "sysext/csimple.cpp"
 #define __newasm_included
 #include "runtime/alpha.cpp"
+#include "sys._platformSpecific.cpp" //<- UNDER THIS ALL MODULES CAN LOAD
+__newasm_LOAD_PACKAGE_MODULE(vm_impl, {
+    //empty
+});
 #include "newasm_stdex.cpp"
-#include "sys._platformSpecific.cpp"
-
 #include "taster._platformSpecific.cpp"
-
+__newasm_LOAD_PACKAGE_MODULE(hostos_detect, {});
 // thread init
 #include "kernel/threads/_flags.cpp"
 #include "vm/blueprint/class.cpp"
@@ -819,6 +821,9 @@ namespace newasm
 
 #include "vm/utilities/procfile.cpp"
 
+__newasm_LOAD_PACKAGE_MODULE(main_module, {
+    return;
+});
 namespace newasm
 {
     int entry(int argc, char* argv[])

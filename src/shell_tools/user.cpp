@@ -1,6 +1,10 @@
 // Copyright (c) 2026 Brace Software Co.
 // NewASM Virtual Machine and Toolchain
 
+__newasm_LOAD_PACKAGE_MODULE(shell_tools__USER, {
+    //setup goes here
+});
+
 #define _newasm_CHECKLOGIN if(!newasm::user::loggedin){newasm::header::functions::err("You have to be logged in.");return(1);}std::cout<<""
 
 namespace newasm

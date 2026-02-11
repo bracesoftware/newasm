@@ -1,6 +1,10 @@
 // Copyright (c) 2026 Brace Software Co.
 // NewASM Virtual Machine and Toolchain
 
+__newasm_LOAD_PACKAGE_MODULE(compiler, {
+    //setup goes here
+});
+
 // JIT Compiler for NewASM
 
 namespace newasm

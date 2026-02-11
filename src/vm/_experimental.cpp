@@ -3,6 +3,10 @@
 
 // TESTING EXPERIMENTAL STUFF
 
+__newasm_LOAD_PACKAGE_MODULE(experimental__TESTS, {
+    //setup goes here
+});
+
 namespace newasm
 {
     class Experimental

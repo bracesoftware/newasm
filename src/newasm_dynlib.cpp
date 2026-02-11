@@ -5,6 +5,10 @@
     #error [New-ASM] Cannot compile.
 #endif
 
+__newasm_LOAD_PACKAGE_MODULE(dynlib, {
+    //setup goes here
+});
+
 namespace newasm
 {
     namespace dynlib

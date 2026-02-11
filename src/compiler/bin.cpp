@@ -1,6 +1,10 @@
 // Copyright (c) 2026 Brace Software Co.
 // NewASM Virtual Machine and Toolchain
 
+__newasm_LOAD_PACKAGE_MODULE(binary_gen, {
+    //setup goes here
+});
+
 #define NEWASM_APP_SIGNATURE "__newasm_app"
 #define NEWASM_SIGNATURE_SIZE 12
 

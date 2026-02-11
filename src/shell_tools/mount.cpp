@@ -1,6 +1,10 @@
 // Copyright (c) 2026 Brace Software Co.
 // NewASM Virtual Machine and Toolchain
 
+__newasm_LOAD_PACKAGE_MODULE(shell_tools__MOUNT, {
+    //setup goes here
+});
+
 static const std::string __stdlib_code = R"(
 ;
 ; NewASM Standard Library

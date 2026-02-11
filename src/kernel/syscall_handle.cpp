@@ -1,6 +1,10 @@
 // Copyright (c) 2026 Brace Software Co.
 // NewASM Virtual Machine and Toolchain
 
+__newasm_LOAD_PACKAGE_MODULE(KRNLCORE, {
+    //setup goes here
+});
+
 //literally kernel core
 namespace newasm
 {

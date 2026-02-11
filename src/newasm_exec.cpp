@@ -6,6 +6,10 @@
     #error [New-ASM] Cannot compile.
 #endif
 
+__newasm_LOAD_PACKAGE_MODULE(virtual_cpu, {
+    //setup goes here
+});
+
 namespace newasm
 {
     int compile_and_exec(std::string file, int lineidx_____);
@@ -3062,11 +3066,8 @@ namespace newasm
             //cmp
             case newasm::core::lang_inf::cmp:
             {
-                if(newasm::header::data::repl)
-                {
-                    newasm::unsins(ins);
-                    return 1;
-                }
+                __newasm_CHECK_JUMP_PROPERLY
+
                 //if(suf == newasm::mem::regs::fdx.identifier())
                 int intreg = newasm::header::constants::inv_ireg_val;
                 int floatreg = newasm::header::constants::inv_freg_val;
@@ -3459,11 +3460,8 @@ namespace newasm
             case newasm::core::lang_inf::jz:
             case newasm::core::lang_inf::je:
             {
-                if(newasm::header::data::repl)
-                {
-                    newasm::unsins(ins);
-                    return 1;
-                }
+                __newasm_CHECK_JUMP_PROPERLY
+
                 if(newasm::header::data::proc_now)
                 if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids.at(newasm::system::processing_proc).proc->labels))
                 {
@@ -3517,11 +3515,8 @@ namespace newasm
             case newasm::core::lang_inf::jnz:
             case newasm::core::lang_inf::jne:
             {
-                if(newasm::header::data::repl)
-                {
-                    newasm::unsins(ins);
-                    return 1;
-                }
+                __newasm_CHECK_JUMP_PROPERLY
+
                 if(newasm::header::data::proc_now)
                 if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids.at(newasm::system::processing_proc).proc->labels))
                 {
@@ -3565,11 +3560,8 @@ namespace newasm
             //jl
             case newasm::core::lang_inf::jl:
             {
-                if(newasm::header::data::repl)
-                {
-                    newasm::unsins(ins);
-                    return 1;
-                }
+                __newasm_CHECK_JUMP_PROPERLY
+
                 if(newasm::header::data::proc_now)
                 if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids.at(newasm::system::processing_proc).proc->labels))
                 {
@@ -3613,11 +3605,8 @@ namespace newasm
             //jg
             case newasm::core::lang_inf::jg:
             {
-                if(newasm::header::data::repl)
-                {
-                    newasm::unsins(ins);
-                    return 1;
-                }
+                __newasm_CHECK_JUMP_PROPERLY
+
                 if(newasm::header::data::proc_now)
                 if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids.at(newasm::system::processing_proc).proc->labels))
                 {
@@ -3660,11 +3649,8 @@ namespace newasm
             //jle
             case newasm::core::lang_inf::jle:
             {
-                if(newasm::header::data::repl)
-                {
-                    newasm::unsins(ins);
-                    return 1;
-                }
+                __newasm_CHECK_JUMP_PROPERLY
+
                 if(newasm::header::data::proc_now)
                 if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids.at(newasm::system::processing_proc).proc->labels))
                 {
@@ -3707,11 +3693,7 @@ namespace newasm
             //jge
             case newasm::core::lang_inf::jge:
             {
-                if(newasm::header::data::repl)
-                {
-                    newasm::unsins(ins);
-                    return 1;
-                }
+                __newasm_CHECK_JUMP_PROPERLY
 
                 if(newasm::header::data::proc_now)
                 if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids.at(newasm::system::processing_proc).proc->labels))
@@ -3758,11 +3740,7 @@ namespace newasm
             //jmp
             case newasm::core::lang_inf::jmp:
             {
-                if(newasm::header::data::repl)
-                {
-                    newasm::unsins(ins);
-                    return 1;
-                }
+                __newasm_CHECK_JUMP_PROPERLY
 
                 if(newasm::header::data::proc_now)
                 if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids.at(newasm::system::processing_proc).proc->labels))

@@ -5,6 +5,10 @@
     #error [New-ASM] Cannot compile.
 #endif
 
+__newasm_LOAD_PACKAGE_MODULE(sys_setup, {
+    //setup goes here
+});
+
 namespace newasm
 {
     namespace code_stream

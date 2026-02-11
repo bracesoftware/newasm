@@ -1,6 +1,12 @@
 // Copyright (c) 2026 Brace Software Co.
 // NewASM Virtual Machine and Toolchain
 
+__newasm_LOAD_PACKAGE_MODULE(bootloader, {
+    newasm::header::functions::wait(5000);
+    newasm::Console::cls_BARE_METAL__();
+    return;
+});
+
 namespace newasm
 {
     namespace bootloader

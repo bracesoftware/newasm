@@ -41,3 +41,7 @@
 #elif _NEWASM_OS == _NEWASM_OS_macos
     #include "_platformSpecific/macos/jit.cpp"
 #endif
+
+__newasm_LOAD_PACKAGE_MODULE(hostos_specific__SYS, {
+    //setup goes here
+});

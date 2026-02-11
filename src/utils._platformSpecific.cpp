@@ -1,6 +1,11 @@
 // Copyright (c) 2026 Brace Software Co.
 // NewASM Virtual Machine and Toolchain
 
+__newasm_LOAD_PACKAGE_MODULE(hostos_specific__UTILS, {
+    //setup goes here
+});
+
+
 #if _NEWASM_OS == _NEWASM_OS_windows
     #include "_platformSpecific/win32/utils.h"
 #elif _NEWASM_OS == _NEWASM_OS_linux

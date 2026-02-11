@@ -1,6 +1,9 @@
 // Copyright (c) 2026 Brace Software Co.
 // NewASM Virtual Machine and Toolchain
 
+__newasm_LOAD_PACKAGE_MODULE(console, {
+    //setup goes here
+});
 
 #ifndef __newasm_included
     #error [New-ASM] Cannot compile.
@@ -123,6 +126,20 @@ namespace newasm
 
             #if USING_SDL_FINALLY == 1
             closeConsoleWindow();
+            #endif
+            return;
+        }
+
+        inline static void cls_BARE_METAL__()
+        {
+            #if true
+                #if _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
+                    std::system("cls");
+                #elif _NEWASM_OS == _NEWASM_OS_linux
+                    std::system("clear");
+                #elif _NEWASM_OS == _NEWASM_OS_android
+                    std::cout << "\033[2J\033[H";
+                #endif
             #endif
             return;
         }

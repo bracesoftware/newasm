@@ -25,3 +25,5 @@ Sealed labels are used to define jump points within thread code blocks, allowing
     }
 ```
 
+> [!TIP]
+> These also work inside procedures.

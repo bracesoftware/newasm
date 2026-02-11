@@ -5,6 +5,10 @@
 #include "sysext/linear_map.cpp"
 #include "sysext/range.cpp"
 
+__newasm_LOAD_PACKAGE_MODULE(stdex, {
+    //setup goes here
+});
+
 namespace newasm
 {
     namespace tests
