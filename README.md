@@ -193,3 +193,4 @@ NewASM features different concepts such as decorators, namespaces, primitive cla
 This is a list of extra resources that might help.
 1. [Error exit codes](docs/exit_codes.md)
 2. [Calling external libraries (DLLs, SOs)](docs/interop.md)
+3. [Interesting examples](docs/examples.md)
