@@ -96,6 +96,11 @@ namespace newasm
                 newasm::compiler::abort(newasm::compiler::fail::expected_token);
                 return lineCompiled;
             }
+            if(line == NEWASM_JUMP_POINT)
+            {
+                lineCompiled.type = newasm::compiler::labelJumpPoint;
+                return lineCompiled;
+            }
             //directive
             if(newasm::header::functions::parseDirective(line).first)
             {

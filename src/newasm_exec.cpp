@@ -6786,6 +6786,14 @@ namespace newasm
             // EMPTY
             case newasm::compiler::empty:
             {
+                //although empty lines are not included
+                //in the binary, we still need to keep this fr repl
+                return 1;
+            }
+            //LABEL JUMP POINTS
+            case newasm::compiler::labelJumpPoint:
+            {
+                //skip
                 return 1;
             }
             // DIRECTIVES
@@ -7475,8 +7483,6 @@ namespace newasm
                 break;
             }
 
-            newasm::mem::regs::lcx.set_value(newasm::mem::regs::lcx.get_value() + 1);
-
             if(newasm::mem::regs::lcx.get_value() == newasm::compiler::compiledCode.size())
             {
                 // prevent crash.
@@ -7508,12 +7514,13 @@ namespace newasm
                 std::cout << "Line data -> " << newasm::compiler::compiledCode.at(newasm::mem::regs::lcx.get_value()).raw << std::endl;
             }
             
-
             if(newasm::code_stream::jump)
             {
                 newasm::code_stream::jump = 0;
                 newasm::mem::regs::lcx.set_value(newasm::code_stream::jumpto - 1);
             }
+
+            newasm::mem::regs::lcx.set_value(newasm::mem::regs::lcx.get_value() + 1);
         }
 
         if(!newasm::system::terminated)
@@ -7536,7 +7543,7 @@ namespace newasm
             //newasm::compiler::lineData first;
             //first.type = newasm::compiler::empty;
             //newasm::compiler::compiledCode.push_back(first);
-            newasm::mem::COD.push_back("; comment");
+            //newasm::mem::COD.push_back("; comment");
             newasm::mem::regs::lcx.set_value(0);
         }
         
@@ -7573,7 +7580,7 @@ namespace newasm
                 {
                     lineidx++;
                     newasm::process_l(newasm::header::functions::trim(line.substr(1)), lineidx);
-                    newasm::mem::COD.push_back("; label");
+                    newasm::mem::COD.push_back(NEWASM_JUMP_POINT);
                     continue;
                 }
                 newasm::mem::COD.push_back(line);
@@ -7584,11 +7591,42 @@ namespace newasm
 
             newasm::header::functions::compilerinfo("Compiling the project...");
             newasm::compiler::data::lnidx = 1;
-            for(auto i = newasm::mem::COD.begin(); i != newasm::mem::COD.end(); ++i)
+            __newasmDBG_COMPLEX({
+                std::cout << "LINE DATA SIZE -> " << newasm::forLinker::lineData.size() << std::endl;
+                std::cout << "MEM COD SIZE -> " << newasm::mem::COD.size() << std::endl;
+            });
+            try
             {
-                newasm::compiler::compiledCode.push_back(newasm::compiler::DO(*i));
-                newasm::compiler::data::lnidx ++;
+                for(int i = 0; i < newasm::mem::COD.size();)//for(auto i = newasm::mem::COD.begin(); i != newasm::mem::COD.end(); ++i)
+                {
+                    auto g = newasm::compiler::DO(newasm::mem::COD.at(i));
+                    if(g.type == newasm::compiler::empty) //VERY IMPORTANT OPTIMIZATIONZ!!
+                    {
+                        //empty lines are no more included in the binary!
+                        newasm::forLinker::lineData.erase(newasm::forLinker::lineData.begin() + i);
+                        newasm::mem::COD.erase(newasm::mem::COD.begin() + i);
+                        continue;
+                    }
+
+                    newasm::compiler::compiledCode.push_back(g);
+                    ++newasm::compiler::data::lnidx;
+                    ++i;
+                }
             }
+            catch(std::exception& e)
+            {
+                std::cout << "E JEBGA SAD KUME! -> " << e.what() << std::endl;
+                throw;
+            }
+
+            __newasmDBG_COMPLEX({
+                std::cout << "2: LINE DATA SIZE -> " << newasm::forLinker::lineData.size() << std::endl;
+                std::cout << "2: COMPILED CODE SIZE -> " << newasm::compiler::compiledCode.size() << std::endl;
+                std::cout << "Line data front -> " << newasm::forLinker::lineData.front().first << ", " << newasm::forLinker::lineData.front().second << std::endl;
+                std::cout << "Compiled code front -> " << newasm::compiler::compiledCode.front().raw << std::endl;
+                std::cout << "Line data back -> " << newasm::forLinker::lineData.back().first << ", " << newasm::forLinker::lineData.back().second << std::endl;
+                std::cout << "Compiled code back -> " << newasm::compiler::compiledCode.back().raw << std::endl;
+            });
             if(!newasm::compiler::data::aborted)
             {
                 std::cout << "  " << newasm::header::col::gray << "\tProject successfully compiled. Running...\n\n";

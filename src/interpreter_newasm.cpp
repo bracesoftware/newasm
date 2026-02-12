@@ -159,6 +159,7 @@ namespace newasm
         const int conditional = 12;
         const int instruction = 13;
         const int classInstance = 14;
+        const int labelJumpPoint = 15;//for optimization
     }
 
     namespace decorators
@@ -490,7 +491,7 @@ namespace newasm
         {
             if(line < 0)
             {
-                return lineData.at(0).first;
+                return lineData.front().first;
             }
             return lineData.at(line).first;
         }
@@ -499,7 +500,7 @@ namespace newasm
         {
             if(lastlinedx < 0)
             {
-                return 0;
+                return lineData.front().second;
             }
             return lineData.at(lastlinedx).second;
         }
@@ -822,6 +823,7 @@ namespace newasm
 #include "vm/utilities/procfile.cpp"
 
 __newasm_LOAD_PACKAGE_MODULE(main_module, {
+    newasm::mem::labels.max_load_factor(0.5f);
     return;
 });
 namespace newasm
@@ -832,6 +834,7 @@ namespace newasm
         newasm::mem::regs::fdx.make_short(true);
         newasm::mem::regs::fdx.log_things(false);
         newasm::variables::ids.reserve(1000); // for funsies
+        newasm::variables::ids.max_load_factor(0.5f);
         if constexpr(0) newasm::native_jit::print("Hello from JIT COMPILER!");
         newasm::forLinker__OLD::debug.reserve(100);
         auto get_time = [&]() -> std::string {

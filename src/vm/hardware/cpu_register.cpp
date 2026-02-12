@@ -62,16 +62,25 @@ namespace newasm
             //implementation of the thread safe proxy
             //so all things we can do with T,we can do
             //with thread_safe<T> the same way
+            inline void global_init()
+            {
+                thread_values.max_load_factor(0.5f);
+            }
             public:
             inline thread_safe(T&& val)
             {
+                global_init();
                 this->value = std::move(val);
             }
             inline thread_safe(const T& val)
             {
+                global_init();
                 this->value = val;
             }
-            inline thread_safe() {}
+            inline thread_safe()
+            {
+                global_init();
+            }
 
             inline thread_safe<T>& operator=(const T& new_val)
             {
@@ -156,7 +165,10 @@ namespace newasm
         
         public:
         explicit inline _register(std::string regname, T val)
-            : name(regname), value(val), initial_value(val) {}
+            : name(regname), value(val), initial_value(val)
+            {
+                thread_values.max_load_factor(0.5f);
+            }
 
 
         inline void log_change() const

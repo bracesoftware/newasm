@@ -1,4 +1,5 @@
-;ok
+link "test/p.asm"
+link "test/g.asm"
 .start
     align 3
     ;cls
@@ -2327,6 +2328,7 @@ jmp doneshit
     sysenter "thread"
     mov fdx, 1
     syscall
+    g
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     mov tlr, 223
     ret *tlr

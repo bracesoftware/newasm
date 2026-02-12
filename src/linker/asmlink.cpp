@@ -81,6 +81,7 @@ namespace newasm
             std::smatch match;
             if(std::regex_match(line, match, pattern))
             {
+                //std::cout << "linkFile__A -> aj idi u pizd mat" << std::endl;
                 return {true, match[1].str()}; // matchan, vraća tekst
             }
 
@@ -103,6 +104,7 @@ namespace newasm
 
             for(int i = 0; i < v.size(); ++i)
             {
+                __newasmDBG(std::cout << i << ": " << v.at(i) << "->" << filename << ":" << i+1 << std::endl)
                 newasm::forLinker::lineData.push_back({filename, i + 1});
             }
 
@@ -132,6 +134,7 @@ namespace newasm
 
                     for(int j = 0; j < v2.size(); ++j)
                     {
+                        __newasmDBG(std::cout << j << ": " << v2.at(j) << "->" << p.second << ":" << j+1 << std::endl)
                         lineDataLocal.push_back({p.second, j + 1});
                     }
 

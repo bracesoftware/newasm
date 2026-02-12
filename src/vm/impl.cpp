@@ -113,6 +113,15 @@ namespace newasm
     #define __newasmDBG(f__)
 #endif
 
+#if NEWASM_DEBUG == 1
+    #define __newasmDBG_COMPLEX(f__) struct\
+        __newasm_COMPLEX_DEBUG##__LINE__ final {\
+            explicit inline __newasm_COMPLEX_DEBUG##__LINE__()f__\
+        };__newasm_COMPLEX_DEBUG##__LINE__ _NEWASM_COMPLEX_DEBUG##__LINE__
+#elif NEWASM_DEBUG == 0
+    #define __newasmDBG_COMPLEX(f__)
+#endif
+
 int __newasm__MODULEID = 1;
 #define __newasm_CHECK_JUMP_PROPERLY if(newasm::header::data::repl and not newasm::header::data::proc_now){newasm::unsins(ins);return 1;}
 #define __newasm_LOAD_PACKAGE_MODULE(name, func)        struct\
@@ -126,3 +135,4 @@ int __newasm__MODULEID = 1;
 };static __global_newasm##name NEWASM__MODULE__##name
 
 #define __NEWASM_DUMMY 0
+#define NEWASM_JUMP_POINT "__NEWASM_COMPILER_JUMP_POINT"
