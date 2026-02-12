@@ -96,9 +96,15 @@ namespace newasm
                 newasm::compiler::abort(newasm::compiler::fail::expected_token);
                 return lineCompiled;
             }
-            if(line == NEWASM_JUMP_POINT)
+            //if(line == NEWASM_JUMP_POINT)
+            if(line.front() == ':')
             {
                 lineCompiled.type = newasm::compiler::labelJumpPoint;
+                lineCompiled.other = newasm::header::functions::trim(line.substr(1));
+                if(!newasm::header::functions::isalphanum(lineCompiled.other))
+                {
+                    newasm::compiler::abort(newasm::compiler::fail::unmatched_syntax);
+                }
                 return lineCompiled;
             }
             //directive

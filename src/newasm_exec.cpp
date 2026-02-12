@@ -3778,6 +3778,7 @@ namespace newasm
 
                 newasm::code_stream::jump = 1;
                 newasm::code_stream::jumpto = newasm::mem::labels[suf];
+                //std::cout << "JUMPED TO " << newasm::mem::labels[suf];
                 return 1;
             }
             //del
@@ -6794,6 +6795,9 @@ namespace newasm
             case newasm::compiler::labelJumpPoint:
             {
                 //skip
+                __newasmDBG_COMPLEX({
+                    std::cout << "labelJumpPoint -> skip: `" << line.raw << '`' << std::endl;
+                });
                 return 1;
             }
             // DIRECTIVES
@@ -7576,6 +7580,7 @@ namespace newasm
                     continue;
                 }
                 line = newasm::header::functions::remc(line);
+                #if 0
                 if(line.at(0) == ':')
                 {
                     lineidx++;
@@ -7583,6 +7588,7 @@ namespace newasm
                     newasm::mem::COD.push_back(NEWASM_JUMP_POINT);
                     continue;
                 }
+                #endif
                 newasm::mem::COD.push_back(line);
                 lineidx++;
             }
@@ -7617,6 +7623,13 @@ namespace newasm
             {
                 std::cout << "E JEBGA SAD KUME! -> " << e.what() << std::endl;
                 throw;
+            }
+            for(int i = 0; i < newasm::compiler::compiledCode.size(); ++i)
+            {
+                if(newasm::compiler::compiledCode.at(i).type == newasm::compiler::labelJumpPoint)
+                {
+                    newasm::process_l(newasm::compiler::compiledCode.at(i).other, i);
+                }
             }
 
             __newasmDBG_COMPLEX({
