@@ -314,9 +314,11 @@ namespace newasm
 
                 if((buildnum != newasm::BUILD_NUMBER) or (runtimever != newasm::RUNTIME_VERSION) or (krnl != newasm::KERNEL_VERSION))
                 {
-                    std::cout << "buildnum: " << buildnum << std::endl;
-                    std::cout << "runtimever: " << runtimever << std::endl;
-                    std::cout << "krnl: " << krnl << std::endl;
+                    __newasmDBG_COMPLEX({
+                        std::cout << "buildnum: " << buildnum << std::endl;
+                        std::cout << "runtimever: " << runtimever << std::endl;
+                        std::cout << "krnl: " << krnl << std::endl;
+                    });
                     newasm::compiler::bin::exit_load(path, newasm::compiler::bin::INCOMPATIBLE_APP);
                     return false;
                 }
