@@ -61,3 +61,4 @@ When a fatal error happens, program will shut down, returning a specific exit co
 | `54` | Invalid allocation. |
 | `55` | Invalid context initializer. |
 | `56` | The virtual machine reached a point where the linker failed. |
+| `57` | JIT compiler failure. Occurs when you try to create a procedure inside a thread code block. |
