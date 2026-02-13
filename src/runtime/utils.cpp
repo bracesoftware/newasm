@@ -71,6 +71,31 @@ namespace newasm
             std::cout << newasm::header::col::reset << std::endl;
         }
 
+        inline int inlineMenu(const std::vector<std::string>& options)
+        {
+            int selected = 0;
+            __NEWASM_inlineMenu___1(startY)
+            while(true)
+            {
+                __NEWASM_inlineMenu___2(startY, options)
+
+                char c = newasm::_compat::getch();
+                if(c == 'w' || c == 'W')
+                {
+                    selected = (selected > 0 ? selected - 1 : options.size() - 1);
+                }
+                if(c == 's' || c == 'S')
+                {
+                    selected = (selected + 1) % options.size();
+                }
+                if(c == '\n' or c == '\r')
+                {
+                    __NEWASM_inlineMenu___3(startY, options)
+                    return selected;
+                }
+            }
+        }
+
         void type(const std::string& text, int delay_ms = 50)
         {
             for(char c : text)

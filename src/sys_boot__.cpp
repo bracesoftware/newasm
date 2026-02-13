@@ -20,6 +20,11 @@ namespace newasm
 
 int main(int argc, char* argv[])
 {
+    if constexpr(false)
+    {
+        auto prompt = newasm::utils::inlineMenu({"opcija 1", "opcija 2", "opcija 3", "opcija 4"});
+        std::cout << "odabrali ste " << prompt << std::endl;
+    }
     if constexpr(0) std::ios::sync_with_stdio(false);
 
     newasm::Experimental::entry();

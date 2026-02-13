@@ -38,5 +38,21 @@ namespace newasm
             SetConsoleMode(hInput, mode); // restore
             return ch;
         }
+
+        // two very useful functions from stackoverflow >:)
+        inline void set_cursor(int x, int y) noexcept
+        {
+            COORD pos = {(SHORT)x, (SHORT)y};
+            SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+        }
+
+        inline void clear_line(int y) noexcept
+        {
+            HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+            COORD start = {0, (SHORT)y};
+            DWORD written;
+            FillConsoleOutputCharacter(h, ' ', 80, start, &written);
+            SetConsoleCursorPosition(h, start);
+        }
     }
 }

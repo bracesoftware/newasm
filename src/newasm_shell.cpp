@@ -238,11 +238,26 @@ namespace newasm
                         newasm::GLOBAL::global_showPerf();
                         return 1;
                     }
-                    if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::usestd__))
+                    if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::syscfg__))
                     {
                         _newasm_CHECKLOGIN;
-                        newasm::header::functions::info("Successfully enabled the standard library flag.\n\tUse `mount stdlib` to mount the library.");
-                        newasm::header::settings::use_std = true;
+                        newasm::header::functions::nullprint(newasm::header::col::red + newasm::header::style::bold + "System Configuration\n" +
+                            newasm::header::col::reset + newasm::header::col::gray + "  Navigate with `W` and `S` keys.\n");
+                        int option = newasm::utils::inlineMenu({
+                            "Cancel",
+                            "Enable the standard library"
+                        });
+                        if(option == 0)
+                        {
+                            newasm::header::functions::info("Operation cancelled successfully.");
+                            return 1;
+                        }
+                        if(option == 1)
+                        {
+                            newasm::header::functions::info("Successfully enabled the standard library flag.\n\tUse `mount stdlib` to mount the library.");
+                            newasm::header::settings::use_std = true;
+                            return 1;
+                        }
                         return 1;
                     }
                 }
