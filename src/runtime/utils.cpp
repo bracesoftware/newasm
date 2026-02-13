@@ -71,13 +71,84 @@ namespace newasm
             std::cout << newasm::header::col::reset << std::endl;
         }
 
-        inline int inlineMenu(const std::vector<std::string>& options)
+        //i wrote my own??
+        inline int inlineMenu(const std::vector<std::string>& v)
+        {
+            if(v.empty())
+            {
+                return (-1);
+            }
+            auto toupper = [](const std::string& s) -> std::string {
+                std::string result;
+                for(int i = 0; i < s.size(); ++i)
+                {
+                    result.push_back(std::toupper(s.at(i)));
+                }
+                return result;
+            };
+            auto get_longest = [](decltype(v) vec) -> int {
+                int result = 0;
+                for(int i = 0; i < vec.size(); ++i)
+                {
+                    if(result < vec.at(i).size())
+                    {
+                        result = vec.at(i).size();
+                    }
+                }
+                return result;
+            };
+            std::string empty_s;
+            auto format_empty = [&]() -> void {
+                auto _ = get_longest(v);
+                for(int i = 0; i < _; ++i)
+                {
+                    empty_s.push_back((char)32);
+                }
+            };
+            format_empty();
+            int selected = 0;
+            while(true)
+            {
+                if(selected < 0)
+                {
+                    selected = v.size() - 1;
+                }
+                if(selected >= v.size())
+                {
+                    selected = 0;
+                }
+                std::cout << newasm::header::col::reset + newasm::header::col::gray
+                << "Option " << selected <<":  [" << newasm::header::col::lime_teal + newasm::header::style::bold
+                << toupper(v.at(selected)) << newasm::header::col::reset + newasm::header::col::gray << "]";
+                std::cout << empty_s << '\r';
+                char c = newasm::_compat::getch();
+                if(c == 'A' or c == 'a')
+                {
+                    --selected;
+                    continue;
+                }
+                if(c == 'D' or c == 'd')
+                {
+                    ++selected;
+                    continue;
+                }
+                if(c == '\n' or c == '\r')
+                {
+                    std::cout << '\n';
+                    return selected;
+                }
+            }
+        }
+
+        //stackoverflow functions don't work cross-platform :(
+        inline int inlineMenu__OLD(const std::vector<std::string>& options)
         {
             int selected = 0;
             //int startY;
             __NEWASM_inlineMenu___1(startY)
             while(true)
             {
+                __NEWASM_inlineMenu___4
                 __NEWASM_inlineMenu___2(startY, options)
 
                 char c = newasm::_compat::getch();

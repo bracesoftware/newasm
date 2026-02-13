@@ -60,10 +60,12 @@ __newasm_LOAD_PACKAGE_MODULE(hostos_specific__SYS, {
         int __1 = csbi.dwCursorPosition.Y;
 
     #define __NEWASM_inlineMenu___2(__1, __2) for(int i = 0; i < __2.size(); ++i){newasm::_compat::clear_line(__1 + i);\
-        newasm::_compat::set_cursor(0, __1 + i);if(i == selected)std::cout << __NEWASM_inlineMenu___CS<<"> " << __NEWASM_inlineMenu___SOTS << __2[i]; \
-        else std::cout << "  " << __NEWASM_inlineMenu___NSOTS << __2[i];}
+        newasm::_compat::set_cursor(0, __1 + i);if(i == selected)std::cout << __NEWASM_inlineMenu___CS<<"> " << __NEWASM_inlineMenu___SOTS << __2[i] << '\n'; \
+        else std::cout << "  " << __NEWASM_inlineMenu___NSOTS << __2[i] << '\n';}
     
     #define __NEWASM_inlineMenu___3(__1, __2) for(int i = 0; i < __2.size(); ++i)newasm::_compat::clear_line(__1 + i);
+
+    #define __NEWASM_inlineMenu___4
 
 #elif _NEWASM_OS == _NEWASM_OS_linux
 
@@ -74,7 +76,9 @@ __newasm_LOAD_PACKAGE_MODULE(hostos_specific__SYS, {
         else std::cout << "  " << __NEWASM_inlineMenu___NSOTS<<__2[i] << "  \033[K\n";}
 
     #define __NEWASM_inlineMenu___3(__1, __2) std::cout << "\033[u"; \
-            for(size_t i = 0; i < __2.size(); ++i)std::cout << "\033[K\n";\
-            std::cout << "\033[u";int __1##__LINE__##__COUNTER__=0;
+        for(size_t i = 0; i < __2.size(); ++i)std::cout << "\033[K\n";\
+        std::cout << "\033[u";int __1##__LINE__##__COUNTER__=0;
+
+    #define __NEWASM_inlineMenu___4
 
 #endif

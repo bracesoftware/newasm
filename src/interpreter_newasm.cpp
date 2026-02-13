@@ -46,6 +46,7 @@ namespace SYS = newasm;
 #include <map>
 #include <cstring>
 #include <regex>
+#include <print>
 //LOl
 #include <limits>
 #include <cstdlib> //memcpy, rand
