@@ -18,7 +18,7 @@ namespace newasm
             
             public explicit inline randAccessMem__() noexcept {}
 
-            inline int get_size() noexcept
+            protected inline int get_size() noexcept
             {
                 return MEM_SIZE;
             }
