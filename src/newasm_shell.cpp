@@ -35,7 +35,7 @@ namespace newasm
             {"mount",       {"<setup>",         "Mount a pre-installed setup. Use `mount ?` to see a list of available setups."}},
             {"run",         {"<binary name>",   "Run a compiled NewASM application."}},
             {"perf",        {"/",               "Show profiler statistics for the last app you ran."}},
-            {"usestd",      {"/",               "Enable the `std` flag."}}
+            {"syscfg",      {"/",               "Open up the system configuration menu."}}
         };
         void help_info()
         {
@@ -242,7 +242,7 @@ namespace newasm
                     {
                         _newasm_CHECKLOGIN;
                         newasm::header::functions::nullprint(newasm::header::col::red + newasm::header::style::bold + "System Configuration\n" +
-                            newasm::header::col::reset + newasm::header::col::gray + "  Navigate with `W` and `S` keys.\n");
+                            newasm::header::col::reset + newasm::header::col::gray + "  Navigate with `A` and `D` keys.\n");
                         int option = newasm::utils::inlineMenu({
                             "Cancel",
                             "Enable the standard library"
