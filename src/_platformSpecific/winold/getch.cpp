@@ -7,10 +7,13 @@ namespace newasm
 {
     namespace _compat
     {
-        char getch()
+        inline char getch() noexcept //very useful
         {
             HANDLE hInput = GetStdHandle(STD_INPUT_HANDLE);
-            if (hInput == INVALID_HANDLE_VALUE) return 0;
+            if(hInput == INVALID_HANDLE_VALUE)
+            {
+                return 0;
+            }
 
             DWORD mode = 0;
             GetConsoleMode(hInput, &mode);
@@ -22,9 +25,9 @@ namespace newasm
 
             while(true)
             {
-                if (ReadConsoleInputA(hInput, &record, 1, &read))
+                if(ReadConsoleInputA(hInput, &record, 1, &read))
                 {
-                    if (record.EventType == KEY_EVENT && record.Event.KeyEvent.bKeyDown)
+                    if(record.EventType == KEY_EVENT && record.Event.KeyEvent.bKeyDown)
                     {
                         ch = record.Event.KeyEvent.uChar.AsciiChar;
                         break;

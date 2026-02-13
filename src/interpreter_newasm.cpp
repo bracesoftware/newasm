@@ -938,8 +938,8 @@ namespace newasm
         if(args__ == nullptr)
         {
             EMPTYLINE;
-            newasm::header::functions::err("Arguments not provided.\n\tUse the `"+newasm::header::style::underline+
-            "newasm_args"+newasm::header::col::reset+"` environment variable.");
+            newasm::header::functions::err("Arguments not provided.\n\tUse the `" + newasm::header::style::underline +
+                "newasm_args" + newasm::header::col::reset + "` environment variable.");
             newasm::header::functions::info("Using default values...");
             EMPTYLINE;
             EMPTYLINE;
