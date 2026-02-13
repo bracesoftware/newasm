@@ -74,6 +74,7 @@ namespace newasm
         inline int inlineMenu(const std::vector<std::string>& options)
         {
             int selected = 0;
+            //int startY;
             __NEWASM_inlineMenu___1(startY)
             while(true)
             {

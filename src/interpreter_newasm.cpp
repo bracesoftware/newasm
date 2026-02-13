@@ -1224,7 +1224,7 @@ namespace newasm
         __LOG_FILE.close();
 
         newasm::Console::close();
-        newasm::header::functions::wait(2000);
+        //newasm::header::functions::wait(2000);
         return 0;
     }
 }
