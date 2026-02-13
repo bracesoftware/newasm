@@ -16,7 +16,8 @@ namespace newasm
                 return;
             }
 
-            for (const auto& line : lines) {
+            for(const auto& line : lines)
+            {
                 file << line << '\n';
             }
 

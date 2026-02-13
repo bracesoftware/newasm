@@ -450,6 +450,7 @@ namespace newasm
                 return {false, "err"};
             }
 
+            [[maybe_unused]]
             std::string form_iso(std::string ins, std::string suf, std::string opr)
             {
                 std::stringstream result;
