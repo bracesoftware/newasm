@@ -7,6 +7,20 @@
 
 */
 
+#define public public:
+#define private private:
+#define protected protected:
+
+class hello final
+{
+    public int hi = 0;
+    private int hi2 = 2;
+    public explicit inline hello()
+    {
+        this->hi = 33;
+    }
+};
+
 #pragma GCC diagnostic ignored "-Wunused-result" // used gcc for ts
 #pragma unroll
 
