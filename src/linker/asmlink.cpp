@@ -5,8 +5,7 @@ namespace newasm
 {
     class Linker
     {
-        private:
-        static inline void writeFile(const std::string& filename, const std::vector<std::string>& lines)
+        private static inline void writeFile(const std::string& filename, const std::vector<std::string>& lines)
         {
             std::ofstream file(filename, std::ios::trunc);
 
@@ -26,7 +25,7 @@ namespace newasm
         }
 
         template<typename T>
-        static inline void replaceVectorElement(std::vector<T>& v, std::vector<T>& n, T value)
+        private static inline void replaceVectorElement(std::vector<T>& v, std::vector<T>& n, T value)
         {
             auto it = std::find(v.begin(), v.end(), value);
 
@@ -38,7 +37,7 @@ namespace newasm
             return;
         }
         template<typename T>
-        static inline void replaceVectorElement(std::vector<T>& v, std::vector<T>& n, int index)
+        private static inline void replaceVectorElement(std::vector<T>& v, std::vector<T>& n, int index)
         {
             if(index < v.size())
             {
@@ -48,14 +47,14 @@ namespace newasm
             return;
         }
         template<typename T>
-        static inline void replaceVectorElement__NEW(std::vector<T>& v, const std::vector<T>& n, std::size_t index)
+        private static inline void replaceVectorElement__NEW(std::vector<T>& v, const std::vector<T>& n, std::size_t index)
         {
             if (index >= v.size()) return;
 
             v.insert(v.erase(v.begin() + index), n.begin(), n.end());
         }
 
-        static inline std::pair<bool, std::vector<std::string>> readFile(const std::string& filename)
+        private static inline std::pair<bool, std::vector<std::string>> readFile(const std::string& filename)
         {
             std::ifstream file(filename);
             std::vector<std::string> lines;
@@ -75,7 +74,7 @@ namespace newasm
             file.close();
             return {true, lines};
         }
-        static inline std::pair<bool, std::string> linkFile__A(const std::string& line_)
+        private static inline std::pair<bool, std::string> linkFile__A(const std::string& line_)
         {
             std::string line = newasm::header::functions::remc(line_);
             static const std::regex pattern("^\\s*link\\s+\"([^\"]+)\"\\s*$");
@@ -89,8 +88,7 @@ namespace newasm
             return {false, ""}; // nije match
         }
 
-        public:
-        static inline void link(const std::string& filename, const std::string& outputfilename)
+        public static inline void link(const std::string& filename, const std::string& outputfilename)
         {
             newasm::header::functions::linkinfo("Processing entry file `" + filename + "`...");
             auto P = newasm::Linker::readFile(filename);

@@ -18,6 +18,16 @@ namespace newasm
     }
 }
 
+struct A {};
+struct B {};
+struct C extends A , B {};
+struct D extends private A, protected B {};
+
+class A__ {};
+class B__ {};
+class C__ extends A__ {};
+class D__ extends private C__, public B__ {};
+
 int main(int argc, char* argv[])
 {
     if constexpr(false)
