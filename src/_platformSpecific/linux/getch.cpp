@@ -8,7 +8,7 @@ namespace newasm
 {
     namespace _compat
     {
-        char getch()
+        inline char getch() noexcept
         {
             struct termios oldt, newt;
             tcgetattr(STDIN_FILENO, &oldt);
