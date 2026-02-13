@@ -13,9 +13,9 @@
 #define NEWASM_DEBUG 0
 namespace newasm
 {
-    const int BUILD_NUMBER = 21;
-    const int RUNTIME_VERSION = 7;
-    const int KERNEL_VERSION = 3;
+    inline constinit const int BUILD_NUMBER = 22;
+    inline constinit const int RUNTIME_VERSION = 7;
+    inline constinit const int KERNEL_VERSION = 3;
 }
 
 namespace SYS = newasm;
