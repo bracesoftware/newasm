@@ -9,7 +9,8 @@ namespace newasm
 {
     namespace hardware
     {
-        template<int memsize> class randAccessMem__ final
+        template<int memsize>
+        class randAccessMem__ final
         {
             public static constexpr int MEM_SIZE = memsize * 1024 * 1024;
             public unsigned char __memory__[MEM_SIZE];
