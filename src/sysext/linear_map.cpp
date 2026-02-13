@@ -8,10 +8,8 @@ namespace newasm
         template<typename T, typename U>
         class linear_map
         {
-            private:
-            std::vector<std::pair<T, U>> __map__;
-            public:
-            U& operator[](T index)
+            private std::vector<std::pair<T, U>> __map__;
+            public U& operator[](T index)
             {
                 for(auto& p : __map__)
                 {
@@ -25,12 +23,12 @@ namespace newasm
                 return __map__.at(__map__.size() - 1).second;
             }
 
-            inline int size()
+            public inline int size()
             {
                 return __map__.size();
             }
 
-            inline std::pair<T, U> operator()(int index)
+            public inline std::pair<T, U> operator()(int index)
             {
                 if(index >= this->size())
                 {
@@ -51,7 +49,7 @@ namespace newasm
                 return;
             }
 
-            const U& at(T index, int offset) const
+            public const U& at(T index, int offset) const
             {
                 for(int i = 0; i < __map__.size(); ++i)
                 {
@@ -74,7 +72,7 @@ namespace newasm
                 throw std::out_of_range(ss.str());
             }
 
-            inline const U& __(T index, int offset) const
+            public inline const U& __(T index, int offset) const
             {
                 for(int i = 0; i < __map__.size(); ++i)
                 {

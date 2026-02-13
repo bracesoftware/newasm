@@ -11,12 +11,11 @@ namespace newasm
     {
         template<int memsize> class randAccessMem__ final
         {
-            public:
-            static constexpr int MEM_SIZE = memsize * 1024 * 1024;
-            unsigned char __memory__[MEM_SIZE];
-            newasm::containers::bit_array<MEM_SIZE> __memory_free__;
+            public static constexpr int MEM_SIZE = memsize * 1024 * 1024;
+            public unsigned char __memory__[MEM_SIZE];
+            public newasm::containers::bit_array<MEM_SIZE> __memory_free__;
             
-            explicit inline randAccessMem__() noexcept {}
+            public explicit inline randAccessMem__() noexcept {}
 
             inline int get_size() noexcept
             {
@@ -26,8 +25,8 @@ namespace newasm
             // free = 0
             // occupied = 1
 
-            [[nodiscard]]
-            inline bool is_free(int addr) noexcept
+            @nodiscard
+            public inline bool is_free(int addr) noexcept
             {
                 return !(__memory_free__.get_at(addr));
             }
@@ -99,7 +98,7 @@ namespace newasm
             }
             // for int, float, char
             template<typename T>
-            inline int write(T value) noexcept
+            public inline int write(T value) noexcept
             {
                 if constexpr(std::is_same<T, std::string>::value)
                 {
@@ -145,7 +144,7 @@ namespace newasm
             }
 
             template<typename T>
-            inline int write(int address, T value) noexcept
+            public inline int write(int address, T value) noexcept
             {
                 if constexpr(std::is_same<T, std::string>::value)
                 {
@@ -180,7 +179,7 @@ namespace newasm
             }
 
             template<typename T>
-            inline int overwrite(int addr, T value) noexcept
+            public inline int overwrite(int addr, T value) noexcept
             {
                 //newasm::progwin::api::cout("Overwriting address: " + std::to_string(addr));
                 if(__memory_free__.get_at(addr) == 0)
@@ -233,7 +232,7 @@ namespace newasm
             }
 
             template<typename T>
-            inline T peek(int addr) noexcept
+            public inline T peek(int addr) noexcept
             {
                 if constexpr(std::is_same<T, std::string>::value)
                 {
@@ -261,7 +260,7 @@ namespace newasm
             }
 
             //malloc, free, heap, push, pop
-            inline int malloc(int bytes) noexcept
+            public inline int malloc(int bytes) noexcept
             {
                 int addr = get_free_alloc(sizeof(int) + bytes);
                 if(addr == -1)
@@ -281,7 +280,7 @@ namespace newasm
                 return addr;
             }
 
-            inline void free(int addr) noexcept
+            public inline void free(int addr) noexcept
             {
                 int bytes = 0;
                 std::memcpy(&bytes, &__memory__[addr], sizeof(int));
@@ -296,7 +295,7 @@ namespace newasm
             }
 
             template<typename T>
-            inline void push__STACK(T value) noexcept
+            public inline void push__STACK(T value) noexcept
             {
                 if constexpr(std::is_same<T, std::string>::value)
                 {
@@ -343,7 +342,7 @@ namespace newasm
             }
 
             template<typename T>
-            inline int pop__STACK(T& value) noexcept
+            public inline int pop__STACK(T& value) noexcept
             {
                 if constexpr(std::is_same<T, std::string>::value)
                 {
@@ -377,14 +376,14 @@ namespace newasm
                 return address;
             }
             template<typename T>
-            inline int pop__STACK() noexcept
+            public inline int pop__STACK() noexcept
             {
                 T value;
                 return pop__STACK<T>(value);
             }
             //
 
-            inline auto get__A(int addr) noexcept
+            public inline auto get__A(int addr) noexcept
             {
                 return &this->__memory__[addr];
             }

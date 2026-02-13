@@ -2,13 +2,13 @@
 // NewASM Virtual Machine and Toolchain
 
 #if _NEWASM_OS == _NEWASM_OS_windows
-    #include "_platformSpecific/win32/getch.cpp"
+    link "_platformSpecific/win32/getch";
 #elif _NEWASM_OS == _NEWASM_OS_linux
-    #include "_platformSpecific/linux/getch.cpp"
+    link "_platformSpecific/linux/getch";
 #elif _NEWASM_OS == _NEWASM_OS_windows_old
-    #include "_platformSpecific/winold/getch.cpp"
+    link "_platformSpecific/winold/getch";
 #elif _NEWASM_OS == _NEWASM_OS_android
-    #include "_platformSpecific/android/getch.cpp"
+    link "_platformSpecific/android/getch";
 #elif _NEWASM_OS == _NEWASM_OS_macos
-    #include "_platformSpecific/macos/getch.cpp"
+    link "_platformSpecific/macos/getch";
 #endif

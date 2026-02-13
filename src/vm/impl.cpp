@@ -124,7 +124,7 @@ namespace newasm
 
 int __newasm__MODULEID = 1;
 #define __newasm_CHECK_JUMP_PROPERLY if(newasm::header::data::repl and not newasm::header::data::proc_now){newasm::unsins(ins);return 1;}
-#define __newasm_LOAD_PACKAGE_MODULE(name, func)        struct\
+#define __newasm_LOAD_PACKAGE_MODULE(name, func)        struct \
     __global_newasm##name final{\
     explicit inline __global_newasm##name() noexcept{\
         auto __##name = []() -> void {func};\

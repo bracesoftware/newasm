@@ -1,4 +1,4 @@
 // Copyright (c) 2026 Brace Software Co.
 // NewASM Virtual Machine and Toolchain
 
-#error [NewASM] MacOS ain't supported.
+//#error [NewASM] MacOS ain't supported.

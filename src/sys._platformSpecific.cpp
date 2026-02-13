@@ -3,43 +3,43 @@
 
 // Colors
 #if _NEWASM_OS == _NEWASM_OS_windows
-    #include "_platformSpecific/win32/col.cpp"
+    link "_platformSpecific/win32/col";
 #elif _NEWASM_OS == _NEWASM_OS_linux
-    #include "_platformSpecific/linux/col.cpp"
+    link "_platformSpecific/linux/col";
 #elif _NEWASM_OS == _NEWASM_OS_windows_old
-    #include "_platformSpecific/winold/col.cpp"
+    link "_platformSpecific/winold/col";
 #elif _NEWASM_OS == _NEWASM_OS_android
-    #include "_platformSpecific/android/col.cpp"
+    link "_platformSpecific/android/col";
 #elif _NEWASM_OS == _NEWASM_OS_macos
-    #include "_platformSpecific/macos/col.cpp"
+    link "_platformSpecific/macos/col";
 #endif
 
 // Save folder
 #if _NEWASM_OS == _NEWASM_OS_windows
     #include <shlobj.h>
-    #include "_platformSpecific/win32/data.cpp"
+    link "_platformSpecific/win32/data";
 #elif _NEWASM_OS == _NEWASM_OS_linux
-    #include "_platformSpecific/linux/data.cpp"
+    link "_platformSpecific/linux/data";
 #elif _NEWASM_OS == _NEWASM_OS_windows_old
     #include <shlobj.h>
-    #include "_platformSpecific/winold/data.cpp"
+    link "_platformSpecific/winold/data";
 #elif _NEWASM_OS == _NEWASM_OS_android
-    #include "_platformSpecific/android/data.cpp"
+    link "_platformSpecific/android/data";
 #elif _NEWASM_OS == _NEWASM_OS_macos
-    #include "_platformSpecific/macos/data.cpp"
+    link "_platformSpecific/macos/data";
 #endif
 
 // JIT COMPILER
 #if _NEWASM_OS == _NEWASM_OS_windows
-    #include "_platformSpecific/win32/jit.cpp"
+    link "_platformSpecific/win32/jit";
 #elif _NEWASM_OS == _NEWASM_OS_linux
-    #include "_platformSpecific/linux/jit.cpp"
+    link "_platformSpecific/linux/jit";
 #elif _NEWASM_OS == _NEWASM_OS_windows_old
-    #include "_platformSpecific/winold/jit.cpp"
+    link "_platformSpecific/winold/jit";
 #elif _NEWASM_OS == _NEWASM_OS_android
-    #include "_platformSpecific/android/jit.cpp"
+    link "_platformSpecific/android/jit";
 #elif _NEWASM_OS == _NEWASM_OS_macos
-    #include "_platformSpecific/macos/jit.cpp"
+    link "_platformSpecific/macos/jit";
 #endif
 
 __newasm_LOAD_PACKAGE_MODULE(hostos_specific__SYS, {

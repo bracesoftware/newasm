@@ -7,15 +7,15 @@ __newasm_LOAD_PACKAGE_MODULE(hostos_specific__UTILS, {
 
 
 #if _NEWASM_OS == _NEWASM_OS_windows
-    #include "_platformSpecific/win32/utils.h"
+    link "_platformSpecific/win32/utils";
 #elif _NEWASM_OS == _NEWASM_OS_linux
-    #include "_platformSpecific/linux/utils.h"
+    link "_platformSpecific/linux/utils";
 #elif _NEWASM_OS == _NEWASM_OS_windows_old
-    #include "_platformSpecific/winold/utils.h"
+    link "_platformSpecific/winold/utils";
 #elif _NEWASM_OS == _NEWASM_OS_android
-    #include "_platformSpecific/android/utils.h"
+    link "_platformSpecific/android/utils";
 #elif _NEWASM_OS == _NEWASM_OS_macos
-    #include "_platformSpecific/macos/utils.h"
+    link "_platformSpecific/macos/utils";
 #endif
 
-#include "vm/_experimental.cpp"
+link "vm/_experimental";

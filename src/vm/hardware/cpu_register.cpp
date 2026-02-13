@@ -153,25 +153,23 @@ namespace newasm
     template<typename T>
     class _register final
     {
-        private:
-        std::string name;
+        private std::string name;
         //char name_cexpr[cexpr_size];
-        T value;
+        private T value;
         newasm::_std::map<std::string, T> thread_values;
         T initial_value;
 
         bool short_int_value = false;
         bool log = false;
         
-        public:
-        explicit inline _register(std::string regname, T val)
+        public explicit inline _register(std::string regname, T val)
             : name(regname), value(val), initial_value(val)
             {
                 thread_values.max_load_factor(0.5f);
             }
 
 
-        inline void log_change() const
+        public inline void log_change() const
         {
             if(this->log == false)
             {

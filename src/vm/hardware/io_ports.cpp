@@ -12,23 +12,23 @@ namespace newasm
         template<typename T>
         class IOPort final
         {
-            private:
-            mutable int address;
+            private mutable int address;
             mutable T value;
 
-            public:
-            explicit inline IOPort(int addr, T val)
+            public explicit inline IOPort(int addr, T val)
             : address(addr), value(val) {}
 
-            inline int get_addr() const
+            @nodiscard
+            public inline int get_addr() const
             {
                 return this->address;
             }
-            inline T get_value() const
+            @nodiscard
+            public inline T get_value() const
             {
                 return this->value;
             }
-            inline void set_value(T val)
+            public inline void set_value(T val)
             {
                 this->value = val;
             }

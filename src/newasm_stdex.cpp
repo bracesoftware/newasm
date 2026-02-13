@@ -1,9 +1,9 @@
 // Copyright (c) 2026 Brace Software Co.
 // NewASM Virtual Machine and Toolchain
 
-#include "sysext/shared_mem.cpp"
-#include "sysext/linear_map.cpp"
-#include "sysext/range.cpp"
+link "sysext/shared_mem";
+link "sysext/linear_map";
+link "sysext/range";
 
 __newasm_LOAD_PACKAGE_MODULE(stdex, {
     //setup goes here

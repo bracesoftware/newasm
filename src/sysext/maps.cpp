@@ -6,10 +6,9 @@ namespace newasm
     namespace _std
     {
         template<typename K, typename V>
-        class map : public std::unordered_map<K, V>
+        class map extends std::unordered_map<K, V>
         {
-            public:
-            V& at(const K& key) {
+            public V& at(const K& key) {
                 auto it = std::unordered_map<K, V>::find(key);
                 if(it == std::unordered_map<K, V>::end())
                 {
@@ -17,7 +16,7 @@ namespace newasm
                 }
                 return it->second;
             }
-            const V& at(const K& key) const
+            public const V& at(const K& key) const
             {
                 auto it = std::unordered_map<K, V>::find(key);
                 if(it == std::unordered_map<K, V>::end())

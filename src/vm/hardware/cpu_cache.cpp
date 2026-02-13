@@ -20,9 +20,8 @@ namespace newasm
         template<int t_cachesize>
         class CPU_CACHE__ final
         {
-            private:
-            constexpr static int invalid_address = (-1);
-            constexpr static int __newasm_LINEBYTES_ = __newasm_LINEBYTES;
+            private constexpr static int invalid_address = (-1);
+            private constexpr static int __newasm_LINEBYTES_ = __newasm_LINEBYTES;
             
             struct __line__ final
             {
@@ -30,14 +29,14 @@ namespace newasm
                 char value[4];
             }; // 8 bytes per line
 
-            mutable __line__ __cache__[t_cachesize];
+            private mutable __line__ __cache__[t_cachesize];
 
             // A block of RAM memory links to a specific cache line index
             // Doesn't require linear search, and thus cache is way faster than RAM,
             // cuz we have a direct memory access
 
             // Amount of addresses that map to a single cache line is __newasm_LINEBYTES
-            constexpr inline int __minusIPlus(int address) noexcept
+            private constexpr inline int __minusIPlus(int address) noexcept
             {
                 // a simple mathematical algorithm
                 return (
@@ -47,8 +46,7 @@ namespace newasm
                 );
             }
 
-            public:
-            constexpr inline void init() noexcept
+            public constexpr inline void init() noexcept
             {
                 for(int i = 0; i < t_cachesize; ++i)
                 {
@@ -57,8 +55,8 @@ namespace newasm
                 return;
             }
 
-            [[nodiscard]]
-            inline void* find_addr(int address) noexcept
+            @nodiscard
+            public inline void* find_addr(int address) noexcept
             {
                 if(__cache__[__minusIPlus(address)].addr == address)
                 {

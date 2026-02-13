@@ -20,8 +20,8 @@ namespace newasm
 
 namespace SYS = newasm;
 
-#include "runtime/common/os.h"
-#include "runtime/common/arch.h"
+link "runtime/common/os";
+link "runtime/common/arch";
 
 #define EMPTYLINE std::cout<<"\n"
 #include <iostream>
@@ -46,7 +46,6 @@ namespace SYS = newasm;
 #include <map>
 #include <cstring>
 #include <regex>
-#include <print>
 //LOl
 #include <limits>
 #include <cstdlib> //memcpy, rand
@@ -62,8 +61,8 @@ namespace SYS = newasm;
 // For registers
 #include <type_traits>
 #include <concepts>
-#include "runtime/common/chars.h"
-#include "vm/impl.cpp"
+link "runtime/common/chars";
+link "vm/impl";
 namespace newasm
 {
     std::string CONST__ = NIL_STR;
@@ -86,31 +85,32 @@ namespace newasm
         std::string version = "";
     }
 }
-#include "sysext/scope_exit.cpp"
-#include "sysext/out.cpp"
-#include "vm/external.cpp"
-#include "sysext/maps.cpp"
+link "sysext/scope_exit";
+link "sysext/out";
+link "vm/external";
+link "sysext/maps";
 
-#include "sysext/csimple.cpp"
+link "sysext/csimple";
 #define __newasm_included
-#include "runtime/alpha.cpp"
-#include "sys._platformSpecific.cpp" //<- UNDER THIS ALL MODULES CAN LOAD
+link "runtime/alpha";
+link "sys._platformSpecific";
+//<- UNDER THIS ALL MODULES CAN LOAD
 __newasm_LOAD_PACKAGE_MODULE(vm_impl, {
     //empty
 });
-#include "newasm_stdex.cpp"
-#include "taster._platformSpecific.cpp"
+link "newasm_stdex";
+link "taster._platformSpecific";
 __newasm_LOAD_PACKAGE_MODULE(hostos_detect, {});
 // thread init
-#include "kernel/threads/_flags.cpp"
-#include "vm/blueprint/class.cpp"
+link "kernel/threads/_flags";
+link "vm/blueprint/class";
 // hardware changes
-#include "vm/hardware/multiproc.cpp"
+link "vm/hardware/multiproc";
 extern "C"
 {
     void free_string(char* str);
 }
-#include "vm/hardware/cpu_register.cpp"
+link "vm/hardware/cpu_register";
 
 // Resources (assets) used in the program
 namespace newasm
@@ -508,7 +508,7 @@ namespace newasm
     };
 }
 
-#include "vm/_console.cpp"
+link "vm/_console";
 
 namespace newasm
 {
@@ -537,66 +537,66 @@ Essential stuff needed to run
 is in the runtime
 */
 
-#include "kernel/malloc.h"
-#include "runtime/handlers.cpp"
-#include "runtime/lang_inf.cpp"
+link "kernel/malloc";
+link "runtime/handlers";
+link "runtime/lang_inf";
 
-#include "runtime/progwin_api.cpp"
-#include "utils._platformSpecific.cpp"
+link "runtime/progwin_api";
+link "utils._platformSpecific";
 
-#include "runtime/utils.cpp"
-#include "runtime/common/opcodes.h"
+link "runtime/utils";
+link "runtime/common/opcodes";
 
-#include "newasm_dynlib.cpp"
-#include "newasm_header.cpp"
-#include "compiler/native_jit.cpp"
-#include "linker/asmlink.cpp"
+link "newasm_dynlib";
+link "newasm_header";
+link "compiler/native_jit";
+link "linker/asmlink";
 
-#include "runtime/common/tokenize.h"
-#include "newasm_setup.cpp"
-#include "runtime/virtual.h"
+link "runtime/common/tokenize";
+link "newasm_setup";
+link "runtime/virtual";
 
-#include "runtime/expcfg/decorators.cpp"
-#include "kernel/threads/impl.cpp"
+link "runtime/expcfg/decorators";
+link "kernel/threads/impl";
 
-#include "kernel/system_calls/io_stream.cpp"
-#include "kernel/system_calls/file_stream.cpp"
-#include "kernel/system_calls/exec_flow.cpp"
-#include "kernel/system_calls/c_manip.cpp"
-#include "kernel/system_calls/text_operations.cpp"
-#include "kernel/system_calls/net.cpp"
-#include "kernel/system_calls/mem.cpp"
-#include "kernel/system_calls/chrono.cpp"
-#include "kernel/system_calls/tuple.cpp"
-#include "kernel/system_calls/tcp.cpp"
-#include "kernel/system_calls/http.cpp"
-#include "kernel/system_calls/misc.cpp"
-#include "kernel/system_calls/crypto.cpp"
+link "kernel/system_calls/io_stream";
+link "kernel/system_calls/file_stream";
+link "kernel/system_calls/exec_flow";
+link "kernel/system_calls/c_manip";
+link "kernel/system_calls/text_operations";
+link "kernel/system_calls/net";
+link "kernel/system_calls/mem";
+link "kernel/system_calls/chrono";
+link "kernel/system_calls/tuple";
+link "kernel/system_calls/tcp";
+link "kernel/system_calls/http";
+link "kernel/system_calls/misc";
+link "kernel/system_calls/crypto";
 
-#include "runtime/containers.cpp"
-#include "runtime/env_vars.cpp"
+link "runtime/containers";
+link "runtime/env_vars";
 
-#include "runtime/lambda/_entry.cpp"
-#include "kernel/syscall_info.cpp"
+link "runtime/lambda/_entry";
+link "kernel/syscall_info";
 
-#include "vm/hardware/disk.cpp"
-#include "vm/hardware/io_ports.cpp"
+link "vm/hardware/disk";
+link "vm/hardware/io_ports";
 //
-#include "kernel/dynamic/commonlibs.cpp"
-#include "libs._platformSpecific.cpp"
+link "kernel/dynamic/commonlibs";
+link "libs._platformSpecific";
 //
-#include "kernel/krnlcfg.cpp"
-#include "kernel/syscall_handle.cpp"
+link "kernel/krnlcfg";
+link "kernel/syscall_handle";
 
-#include "runtime/namespaces.cpp"
-#include "runtime/pp/directives.cpp"
+link "runtime/namespaces";
+link "runtime/pp/directives";
 
-#include "compiler/asmc.cpp"
-#include "compiler/comptins.cpp"
+link "compiler/asmc";
+link "compiler/comptins";
 
-#include "vm/hardware/cpu_cache.cpp"
-#include "vm/hardware/absolut.cpp"
-#include "runtime/memory_impl.cpp"
+link "vm/hardware/cpu_cache";
+link "vm/hardware/absolut";
+link "runtime/memory_impl";
 
 namespace newasm
 {
@@ -614,22 +614,22 @@ struct __global_newasm final
 
 static __global_newasm nG;
 
-#include "runtime/garbage_collector.cpp"
-#include "compiler/bin.cpp"
-#include "newasm_exec.cpp"
+link "runtime/garbage_collector";
+link "compiler/bin";
+link "newasm_exec";
 
-#include "runtime/procline_insert.cpp"
-#include "runtime/repl_mode.cpp"
+link "runtime/procline_insert";
+link "runtime/repl_mode";
 
-#include "newasm_compexpr.cpp"
-#include "shell_tools/prompt.cpp"
+link "newasm_compexpr";
+link "shell_tools/prompt";
 
-#include "shell_tools/user.cpp"
-#include "shell_tools/env_control.cpp"
-#include "shell_tools/mount.cpp"
-#include "newasm_shell.cpp"
+link "shell_tools/user";
+link "shell_tools/env_control";
+link "shell_tools/mount";
+link "newasm_shell";
 
-#include "runtime/_entry.h"
+link "runtime/_entry";
 
 namespace fs = std::filesystem;
 
@@ -703,8 +703,8 @@ namespace newasm
 // MAIN
 //#define NEWASM_STRICT_TEST
 
-#include "kernel/_utils.cpp"
-#include "runtime/async_thread.cpp"
+link "kernel/_utils";
+link "runtime/async_thread";
 
 namespace newasm
 {
@@ -821,7 +821,7 @@ namespace newasm
     }
 }
 
-#include "vm/utilities/procfile.cpp"
+link "vm/utilities/procfile";
 
 __newasm_LOAD_PACKAGE_MODULE(main_module, {
     newasm::mem::labels.max_load_factor(0.5f);
@@ -1270,7 +1270,7 @@ namespace newasm
         }
         #endif
 
-#include "sys_boot__.cpp"
+link "sys_boot__";
 
 #if 0
 
