@@ -62,15 +62,6 @@ namespace SYS = newasm;
 // For registers
 #include <type_traits>
 #include <concepts>
-class hello final
-{
-    public: int hi = 0;
-    private: int hi2 = 2;
-    public : explicit inline hello()
-    {
-        this->hi = 33;
-    }
-};
 #include "runtime/common/chars.h"
 #include "vm/impl.cpp"
 namespace newasm
