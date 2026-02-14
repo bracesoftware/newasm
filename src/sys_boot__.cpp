@@ -31,10 +31,9 @@ class E__ extends public D__ {};
 
 int main(int argc, char* argv[])
 {
-    $defer
-        std::cout << "Defer works!" << std::endl;
-        return 0;
-    $
+    $defer //BC++ feature, $ blocks
+        newasm::GLOBAL::cleanup();
+    $// instead of {}, we use $..$
 
     if constexpr(false)
     {
