@@ -31,6 +31,8 @@ class E__ extends public D__ {};
 
 int main(int argc, char* argv[])
 {
+    
+
     if constexpr(false)
     {
         auto prompt = newasm::utils::inlineMenu({"opcija 1", "opcija 2", "opcija 3", "opcija 4"});
