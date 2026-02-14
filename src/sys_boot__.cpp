@@ -31,7 +31,10 @@ class E__ extends public D__ {};
 
 int main(int argc, char* argv[])
 {
-    
+    $defer
+        std::cout << "Defer works!" << std::endl;
+        return 0;
+    $
 
     if constexpr(false)
     {
