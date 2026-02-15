@@ -1,5 +1,8 @@
 link "test/p.asm"
 link "test/g.asm"
+.data
+    string PrintThisLaterLol: "Test string"
+    intg len2 : $ - PrintThisLaterLol
 .start
     align 3
     ;cls
@@ -2331,6 +2334,14 @@ jmp doneshit
     jmp yay
     g
     :yay
+    mov tlr, #PrintThisLaterLol ; takes a pointer to the string
+    mov bos, 56456
+    mov fdx, 1
+    sysenter "ios"
+    syscall
+
+    mov tlr, "HELLOOOOO\n"
+    call std::ios::write
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     mov tlr, 223
     ret *tlr
