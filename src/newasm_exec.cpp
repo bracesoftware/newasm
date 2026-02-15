@@ -13,6 +13,7 @@ __newasm_LOAD_PACKAGE_MODULE(virtual_cpu, {
 namespace newasm
 {
     int compile_and_exec(std::string file, int lineidx_____);
+    int compile(const std::string& file);
     static inline int terminate_(int exit_code);
     inline void unsins(std::string ins)
     {
@@ -7533,6 +7534,131 @@ namespace newasm
         }
         newasm::perf::end = std::chrono::steady_clock::now();
         return;
+    }
+
+    inline int compile(const std::string& file)
+    {
+        newasm::mem::COD.clear();
+        newasm::compiler::compiledCode.clear();
+        newasm::mem::instructions.clear();
+    
+        std::string line;
+        int lineidx = newasm::mem::regs::lcx.get_value();
+        newasm::system::terminated = false;
+
+        std::ifstream _file(file);
+        if(_file.is_open())
+        {
+            lineidx = 1;
+            if(lineidx_____ == -1) while(std::getline(_file, line))
+            {
+                //std::cout << lineidx << " |  " << line << std::endl;
+                line = newasm::header::functions::trim(line);
+
+                if(line.empty())
+                {
+                    lineidx++;
+                    newasm::mem::COD.push_back("; empty");
+                    continue;
+                }
+
+                if(line.at(0) == ';')
+                {
+                    lineidx++;
+                    newasm::mem::COD.push_back("; comment");
+                    continue;
+                }
+                line = newasm::header::functions::remc(line);
+                #if 0
+                if(line.at(0) == ':')
+                {
+                    lineidx++;
+                    newasm::process_l(newasm::header::functions::trim(line.substr(1)), lineidx);
+                    newasm::mem::COD.push_back(NEWASM_JUMP_POINT);
+                    continue;
+                }
+                #endif
+                newasm::mem::COD.push_back(line);
+                lineidx++;
+            }
+            lineidx = 1;
+            _file.close();
+
+            newasm::header::functions::compilerinfo("Compiling the project...");
+            newasm::compiler::data::lnidx = 1;
+            __newasmDBG_COMPLEX({
+                std::cout << "LINE DATA SIZE -> " << newasm::forLinker::lineData.size() << std::endl;
+                std::cout << "MEM COD SIZE -> " << newasm::mem::COD.size() << std::endl;
+            });
+            try
+            {
+                for(int i = 0; i < newasm::mem::COD.size();)//for(auto i = newasm::mem::COD.begin(); i != newasm::mem::COD.end(); ++i)
+                {
+                    auto g = newasm::compiler::DO(newasm::mem::COD.at(i));
+                    if(g.type == newasm::compiler::empty) //VERY IMPORTANT OPTIMIZATIONZ!!
+                    {
+                        //empty lines are no more included in the binary!
+                        newasm::forLinker::lineData.erase(newasm::forLinker::lineData.begin() + i);
+                        newasm::mem::COD.erase(newasm::mem::COD.begin() + i);
+                        continue;
+                    }
+
+                    newasm::compiler::compiledCode.push_back(g);
+                    ++newasm::compiler::data::lnidx;
+                    ++i;
+                }
+            }
+            catch(std::exception& e)
+            {
+                std::cout << "E JEBGA SAD KUME! -> " << e.what() << std::endl;
+                throw;
+            }
+            for(int i = 0; i < newasm::compiler::compiledCode.size(); ++i)
+            {
+                if(newasm::compiler::compiledCode.at(i).type == newasm::compiler::labelJumpPoint)
+                {
+                    newasm::process_l(newasm::compiler::compiledCode.at(i).other, i);
+                }
+            }
+
+            __newasmDBG_COMPLEX({
+                std::cout << "2: LINE DATA SIZE -> " << newasm::forLinker::lineData.size() << std::endl;
+                std::cout << "2: COMPILED CODE SIZE -> " << newasm::compiler::compiledCode.size() << std::endl;
+                std::cout << "Line data front -> " << newasm::forLinker::lineData.front().first << ", " << newasm::forLinker::lineData.front().second << std::endl;
+                std::cout << "Compiled code front -> " << newasm::compiler::compiledCode.front().raw << std::endl;
+                std::cout << "Line data back -> " << newasm::forLinker::lineData.back().first << ", " << newasm::forLinker::lineData.back().second << std::endl;
+                std::cout << "Compiled code back -> " << newasm::compiler::compiledCode.back().raw << std::endl;
+            });
+            if(!newasm::compiler::data::aborted)
+            {
+                std::cout << "  " << newasm::header::col::gray << "\tProject successfully compiled...\n\n";
+            }
+            if(newasm::compiler::data::aborted)
+            {
+                std::cout << "  " << newasm::header::col::red << "\tCompilation aborted.\n\n";
+            }
+            std::cout << newasm::header::col::reset;
+            if(newasm::compiler::data::aborted)
+            {
+                std::cout << std::endl;
+                return 1;
+            }
+
+            newasm::compiler::bin::ASSEMBLE( // create the binary format
+                newasm::bin_out_name,
+                newasm::compiler::compiledCode,
+                newasm::mem::labels,
+                newasm::forLinker::lineData,
+                newasm::mem::instructions
+            );
+        }
+        else
+        {
+            newasm::header::functions::err(
+                static_cast<std::string>("Unable to open the file: ") + static_cast<std::string>("`") + 
+                /*newasm::header::constants::scripts_folder +*/ file + static_cast<std::string>("`"));
+        }
+        return 0;
     }
 
     inline int compile_and_exec(std::string file, int lineidx_____)
