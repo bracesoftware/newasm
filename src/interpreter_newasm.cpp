@@ -535,6 +535,9 @@ Essential stuff needed to run
 is in the runtime
 */
 
+link "vm/hardware/cpu_cache";
+link "vm/hardware/absolut";
+
 link "kernel/malloc";
 link "runtime/handlers";
 link "runtime/lang_inf";
@@ -592,8 +595,6 @@ link "runtime/pp/directives";
 link "compiler/asmc";
 link "compiler/comptins";
 
-link "vm/hardware/cpu_cache";
-link "vm/hardware/absolut";
 link "runtime/memory_impl";
 
 namespace newasm
