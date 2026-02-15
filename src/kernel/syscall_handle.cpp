@@ -910,8 +910,25 @@ namespace newasm
                             newasm::terminate(newasm::exit_codes::seg_fault);
                             return 1;
                         }
-                        std::string buf(newasm::mem::regs::bos, '\0');
-                        for(int i = addr + sizeof(int); i <= addr + sizeof(int) + newasm::mem::regs::bos.get_value(); ++i)
+                        if(!newasm::header::flags::autobos)
+                        {
+                            std::string buf(newasm::mem::regs::bos, '\0');
+                            for(int i = addr; i <= addr + sizeof(int) + newasm::mem::regs::bos.get_value(); ++i)
+                            {
+                                if(!newasm::hardware::randAccessMem.is_valid_addr(i))
+                                {
+                                    newasm::terminate(newasm::exit_codes::seg_fault);
+                                    return 1;
+                                }
+                            }
+                            std::memcpy(buf.data(), &newasm::hardware::randAccessMem.__memory__[addr + sizeof(int)], newasm::mem::regs::bos);
+                            newasm::Console::out(buf.data()); // VERY DANGEROUS!!!
+                            return 1;
+                        }
+                        //if autobos is available
+                        //we do all pointer arithmetic for the programma'
+                        int buffer_len = 0;
+                        for(int i = addr; i <= addr + sizeof(int); ++i)
                         {
                             if(!newasm::hardware::randAccessMem.is_valid_addr(i))
                             {
@@ -919,8 +936,18 @@ namespace newasm
                                 return 1;
                             }
                         }
-                        std::memcpy(buf.data(), &newasm::hardware::randAccessMem.__memory__[addr + sizeof(int)], newasm::mem::regs::bos);
-                        newasm::Console::out(buf.data()); // VERY DANGEROUS!!!
+                        std::memcpy(&buffer_len, newasm::hardware::randAccessMem.get__A(addr), sizeof(int));
+                        for(int i = addr + sizeof(int); i <= addr + sizeof(int) + buffer_len; ++i)
+                        {
+                            if(!newasm::hardware::randAccessMem.is_valid_addr(i))
+                            {
+                                newasm::terminate(newasm::exit_codes::seg_fault);
+                                return 1;
+                            }
+                        }
+                        std::string buffer(buffer_len, '\0');
+                        std::memcpy(buffer.data(), newasm::hardware::randAccessMem.get__A(addr + sizeof(int)), buffer_len);
+                        newasm::Console::out(buffer.data()); // not VERY DANGEROUS!!!
                         return 1;
                     }
 
