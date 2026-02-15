@@ -169,7 +169,9 @@ namespace newasm
                     }
                     if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::cls__))
                     {
+                        newasm::consoleOpen = true;
                         newasm::Console::cls();
+                        newasm::consoleOpen = false;
                         return 1;
                     }
                     if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::login__))
