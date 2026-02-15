@@ -4,13 +4,13 @@
 ; 2025 (c) Brace Software Co.
 ;
 .data
-    ./std
-        intg version: 20
+./std
+intg version: 20
 
-        ./math
-            float pi: 3.141
-        ./!math
-    ./!std
+./math
+float pi: 3.141
+./!math
+./!std
 .start
 .$__newasm_sys_interrupt __std_now__
 ;
@@ -18,250 +18,250 @@
 ;
 ;============================================================================================
 .start
-    ; using "ios" ; using iostream for printing
-    ./std
-        ./ios
-            proc write
-                .$__newasm_cfg_manip __autobos=__TRUE
-                .$__newasm_krnl_config IOS/YES__
-                ; DEPRECATED->mov stl, 0c0 ; null terminator
-                
-                mov fdx, 0
+; using "ios" ; using iostream for printing
+./std
+./ios
+proc write
+.$__newasm_cfg_manip __autobos=__TRUE
+.$__newasm_krnl_config IOS/YES__
+; DEPRECATED->mov stl, 0c0 ; null terminator
 
-                switch *tlr
-                case intg -> mov fdx, 2
-                case float -> mov fdx, 2
-                case string -> mov fdx, 1
-                case char -> mov fdx, 7
-                case ref -> mov fdx, 6
-                default -> nop ;mov fdx, 1
+mov fdx, 0
 
-                sysenter "ios"
-                syscall
-                .$__newasm_krnl_config IOS/NO__
-                .$__newasm_cfg_manip __autobos=__FALSE
-                halt 0
-            end
+switch *tlr
+case intg -> mov fdx, 2
+case float -> mov fdx, 2
+case string -> mov fdx, 1
+case char -> mov fdx, 7
+case ref -> mov fdx, 6
+default -> nop ;mov fdx, 1
 
-            proc writeln
-                .$__newasm_cfg_manip __autobos=__TRUE
-                .$__newasm_krnl_config IOS/YES__
-                ; mov stl, 0c1 ; newline character
+sysenter "ios"
+syscall
+.$__newasm_krnl_config IOS/NO__
+.$__newasm_cfg_manip __autobos=__FALSE
+halt 0
+end
 
-                mov fdx, 0
-                
-                switch *tlr
-                case 1 -> mov fdx, 2
-                case intg -> mov fdx, 2
-                case float -> mov fdx, 2
-                case string -> mov fdx, 1
-                case char -> mov fdx, 7
-                case ref -> mov fdx, 6
-                default -> nop ;mov fdx, 1
-                
-                sysenter "ios"
-                syscall
+proc writeln
+.$__newasm_cfg_manip __autobos=__TRUE
+.$__newasm_krnl_config IOS/YES__
+; mov stl, 0c1 ; newline character
 
-                mov tlr, "\n" ; we just print newline char
-                mov fdx, 1
-                syscall
+mov fdx, 0
 
-                .$__newasm_cfg_manip __autobos=__FALSE
-                .$__newasm_krnl_config IOS/NO__
-                halt 0
-            end
-        ./!ios
-        ./math
-            proc fadd
-                zero imm
-                mov cr0, *tlr
-                mov cr1, *stl
+switch *tlr
+case 1 -> mov fdx, 2
+case intg -> mov fdx, 2
+case float -> mov fdx, 2
+case string -> mov fdx, 1
+case char -> mov fdx, 7
+case ref -> mov fdx, 6
+default -> nop ;mov fdx, 1
 
-                add
+sysenter "ios"
+syscall
 
-                mov tlr, *cr0
-                halt 0
-            end
+mov tlr, "\n" ; we just print newline char
+mov fdx, 1
+syscall
 
-            proc fsub
-                zero imm
-                mov cr0, *tlr
-                mov cr1, *stl
+.$__newasm_cfg_manip __autobos=__FALSE
+.$__newasm_krnl_config IOS/NO__
+halt 0
+end
+./!ios
+./math
+proc fadd
+zero imm
+mov cr0, *tlr
+mov cr1, *stl
 
-                sub
+add
 
-                mov tlr, *cr0
-                halt 0
-            end
+mov tlr, *cr0
+halt 0
+end
 
-            proc fmul
-                zero imm
-                mov cr0, *tlr
-                mov cr1, *stl
+proc fsub
+zero imm
+mov cr0, *tlr
+mov cr1, *stl
 
-                mul
+sub
 
-                mov tlr, *cr0
-                halt 0
-            end
+mov tlr, *cr0
+halt 0
+end
 
-            proc fdiv
-                zero imm
-                mov cr0, *tlr
-                mov cr1, *stl
+proc fmul
+zero imm
+mov cr0, *tlr
+mov cr1, *stl
 
-                div
+mul
 
-                mov tlr, *cr0
-                halt 0
-            end
+mov tlr, *cr0
+halt 0
+end
 
-            proc fexp
-                zero imm
-                mov cr0, *tlr
-                mov cr1, *stl
+proc fdiv
+zero imm
+mov cr0, *tlr
+mov cr1, *stl
 
-                exp
+div
 
-                mov tlr, *cr0
-                halt 0
-            end
+mov tlr, *cr0
+halt 0
+end
 
-            proc flog
-                zero imm
-                mov cr0, *tlr
-                mov cr1, *stl
+proc fexp
+zero imm
+mov cr0, *tlr
+mov cr1, *stl
 
-                log
+exp
 
-                mov tlr, *cr0
-                halt 0
-            end
+mov tlr, *cr0
+halt 0
+end
 
-            proc imod
-                mov imm, 1
-                mov cr2, *tlr
-                mov cr3, *stl
+proc flog
+zero imm
+mov cr0, *tlr
+mov cr1, *stl
 
-                log
+log
 
-                mov tlr, *cr2
-                halt 0
-            end
+mov tlr, *cr0
+halt 0
+end
 
-            proc iadd
-                mov imm, 1
-                mov cr2, *tlr
-                mov cr3, *stl
+proc imod
+mov imm, 1
+mov cr2, *tlr
+mov cr3, *stl
 
-                add
+log
 
-                zero imm
-                mov tlr, *cr2
-                halt 0
-            end
+mov tlr, *cr2
+halt 0
+end
 
-            proc isub
-                mov imm, 1
-                mov cr2, *tlr
-                mov cr3, *stl
+proc iadd
+mov imm, 1
+mov cr2, *tlr
+mov cr3, *stl
 
-                sub
+add
 
-                zero imm
-                mov tlr, *cr2
-                halt 0
-            end
+zero imm
+mov tlr, *cr2
+halt 0
+end
 
-            proc imul
-                mov imm, 1
-                mov cr2, *tlr
-                mov cr3, *stl
+proc isub
+mov imm, 1
+mov cr2, *tlr
+mov cr3, *stl
 
-                mul
+sub
 
-                zero imm
-                mov tlr, *cr2
-                halt 0
-            end
+zero imm
+mov tlr, *cr2
+halt 0
+end
 
-            proc idiv
-                mov imm, 1
-                mov cr2, *tlr
-                mov cr3, *stl
+proc imul
+mov imm, 1
+mov cr2, *tlr
+mov cr3, *stl
 
-                div
+mul
 
-                zero imm
-                mov tlr, *cr2
-                halt 0
-            end
+zero imm
+mov tlr, *cr2
+halt 0
+end
 
-            proc iexp
-                mov imm, 1
-                mov cr2, *tlr
-                mov cr3, *stl
+proc idiv
+mov imm, 1
+mov cr2, *tlr
+mov cr3, *stl
 
-                exp
+div
 
-                zero imm
-                mov tlr, *cr2
-                halt 0
-            end
+zero imm
+mov tlr, *cr2
+halt 0
+end
 
-            proc ilog
-                mov imm, 1
-                mov cr2, *tlr
-                mov cr3, *stl
+proc iexp
+mov imm, 1
+mov cr2, *tlr
+mov cr3, *stl
 
-                log
+exp
 
-                zero imm
-                mov tlr, *cr2
-                halt 0
-            end
+zero imm
+mov tlr, *cr2
+halt 0
+end
 
-        ./!math
-    ./!std
+proc ilog
+mov imm, 1
+mov cr2, *tlr
+mov cr3, *stl
+
+log
+
+zero imm
+mov tlr, *cr2
+halt 0
+end
+
+./!math
+./!std
 .data
-    ./std
-        ./__P
-            intg input: 0 ; argument
-            intg temp: 0
-            intg result: 0
-        ./!__P
+./std
+./__P
+intg input: 0 ; argument
+intg temp: 0
+intg result: 0
+./!__P
 .start
-        ./math
-            proc ifac
-                mov imm, 1
-                mov &std::__P::input, *tlr ; we take tlr as input lel
-                mov &std::__P::result, std::__P::input ; result = 5
-                mov &std::__P::temp, std::__P::input ; temp = 5
-                cmp tlr, 0
-                jz finished
-                {:funcBody}
-                mov cr2, std::__P::temp
-                mov cr3, 1
-                sub ; temp = temp - 1
-                mov &std::__P::temp, *cr2 ; temp
+./math
+proc ifac
+mov imm, 1
+mov &std::__P::input, *tlr ; we take tlr as input lel
+mov &std::__P::result, std::__P::input ; result = 5
+mov &std::__P::temp, std::__P::input ; temp = 5
+cmp tlr, 0
+jz finished
+{:funcBody}
+mov cr2, std::__P::temp
+mov cr3, 1
+sub ; temp = temp - 1
+mov &std::__P::temp, *cr2 ; temp
 
-                cmp cr2, 0 ; if(temp == 0)
-                jz finished ; finished
-    
-                mov cr3, std::__P::temp 
-                mov cr2, std::__P::result ; cr2 = result
-                mul ; result = result * temp
-                mov &std::__P::result, *cr2 ; save
-                
-                jmp funcBody
+cmp cr2, 0 ; if(temp == 0)
+jz finished ; finished
 
-                {:finished}
-                mov tlr, std::__P::result
-                zero imm
-                halt 0
-            end
-        ./!math
-    ./!std
+mov cr3, std::__P::temp
+mov cr2, std::__P::result ; cr2 = result
+mul ; result = result * temp
+mov &std::__P::result, *cr2 ; save
+
+jmp funcBody
+
+{:finished}
+mov tlr, std::__P::result
+zero imm
+halt 0
+end
+./!math
+./!std
 
 ;============================================================================================
 ;

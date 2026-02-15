@@ -35,7 +35,8 @@ namespace newasm
             {"mount",       {"<setup>",         "Mount a pre-installed setup. Use `mount ?` to see a list of available setups."}},
             {"run",         {"<binary name>",   "Run a compiled NewASM application."}},
             {"perf",        {"/",               "Show profiler statistics for the last app you ran."}},
-            {"syscfg",      {"/",               "Open up the system configuration menu."}}
+            {"syscfg",      {"/",               "Open up the system configuration menu."}},
+            {"cls",         {"/",               "Clear your screen."}}
         };
         void help_info()
         {
@@ -164,6 +165,11 @@ namespace newasm
                     {
                         newasm::ctl::data::finish = true;
                         newasm::header::functions::info("Cleaning up...");
+                        return 1;
+                    }
+                    if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::cls__))
+                    {
+                        newasm::Console::cls();
                         return 1;
                     }
                     if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::login__))
