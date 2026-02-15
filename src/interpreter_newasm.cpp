@@ -535,9 +535,6 @@ Essential stuff needed to run
 is in the runtime
 */
 
-link "vm/hardware/cpu_cache";
-link "vm/hardware/absolut";
-
 link "kernel/malloc";
 link "runtime/handlers";
 link "runtime/lang_inf";
@@ -587,6 +584,8 @@ link "kernel/dynamic/commonlibs";
 link "libs._platformSpecific";
 //
 link "kernel/krnlcfg";
+link "vm/hardware/cpu_cache";
+link "vm/hardware/absolut";
 link "kernel/syscall_handle";
 
 link "runtime/namespaces";
