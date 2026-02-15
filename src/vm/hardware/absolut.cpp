@@ -27,6 +27,20 @@ namespace newasm
             // occupied = 1
 
             @nodiscard
+            public inline bool is_valid_addr(int addr) noexcept
+            {
+                if(addr < 0)
+                {
+                    return false;
+                }
+                if(addr >= this->get_size())
+                {
+                    return false;
+                }
+                return true;
+            }
+
+            @nodiscard
             public inline bool is_free(int addr) noexcept
             {
                 return !(__memory_free__.get_at(addr));

@@ -896,6 +896,34 @@ namespace newasm
                 //print text
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::ios, 1):
                 {
+                    if(newasm::header::functions::isnumeric(newasm::mem::regs::tlr.get_value()))
+                    {
+                        int addr = std::stoi(newasm::mem::regs::tlr.get_value());
+                        if(!newasm::hardware::randAccessMem.is_valid_addr(addr))
+                        {
+                            newasm::terminate(newasm::exit_codes::seg_fault);
+                            return 1;
+                        }
+                        if(newasm::hardware::randAccessMem.is_free(addr))
+                        {
+                            newasm::header::functions::krnl("`tlr` ("+newasm::mem::regs::tlr.get_value()+") is not a valid value.");
+                            newasm::terminate(newasm::exit_codes::seg_fault);
+                            return 1;
+                        }
+                        std::string buf(newasm::mem::regs::bos, '\0');
+                        for(int i = addr + sizeof(int); i <= addr + sizeof(int) + newasm::mem::regs::bos.get_value(); ++i)
+                        {
+                            if(!newasm::hardware::randAccessMem.is_valid_addr(i))
+                            {
+                                newasm::terminate(newasm::exit_codes::seg_fault);
+                                return 1;
+                            }
+                        }
+                        std::memcpy(buf.data(), &newasm::hardware::randAccessMem.__memory__[addr + sizeof(int)], newasm::mem::regs::bos);
+                        newasm::Console::out(buf.data()); // VERY DANGEROUS!!!
+                        return 1;
+                    }
+
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
                     {
                         newasm::header::functions::krnl("`tlr` ("+newasm::mem::regs::tlr.get_value()+") is not a valid value.");
