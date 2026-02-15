@@ -33,7 +33,7 @@ namespace newasm
             {"passwd",      {"/",               "Change the password."}},
             {"usernm",      {"/",               "Change the username."}},
             {"mount",       {"<setup>",         "Mount a pre-installed setup. Use `mount ?` to see a list of available setups."}},
-            {"compile",     {"<input>",         "Compile your application."}},
+            //{"compile",     {"<input>",         "Compile your application."}},
             {"run",         {"<binary name>",   "Run a compiled NewASM application."}},
             {"perf",        {"/",               "Show profiler statistics for the last app you ran."}},
             {"syscfg",      {"/",               "Open up the system configuration menu."}},

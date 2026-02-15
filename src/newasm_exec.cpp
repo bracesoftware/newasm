@@ -7535,12 +7535,13 @@ namespace newasm
         newasm::perf::end = std::chrono::steady_clock::now();
         return;
     }
-
+    #if 0 //this ain't comin
     inline int compile(const std::string& file)
     {
         newasm::mem::COD.clear();
         newasm::compiler::compiledCode.clear();
         newasm::mem::instructions.clear();
+        newasm::mem::labels.clear();
     
         std::string line;
         int lineidx = newasm::mem::regs::lcx.get_value();
@@ -7550,7 +7551,7 @@ namespace newasm
         if(_file.is_open())
         {
             lineidx = 1;
-            if(lineidx_____ == -1) while(std::getline(_file, line))
+            while(std::getline(_file, line))
             {
                 //std::cout << lineidx << " |  " << line << std::endl;
                 line = newasm::header::functions::trim(line);
@@ -7569,15 +7570,7 @@ namespace newasm
                     continue;
                 }
                 line = newasm::header::functions::remc(line);
-                #if 0
-                if(line.at(0) == ':')
-                {
-                    lineidx++;
-                    newasm::process_l(newasm::header::functions::trim(line.substr(1)), lineidx);
-                    newasm::mem::COD.push_back(NEWASM_JUMP_POINT);
-                    continue;
-                }
-                #endif
+          
                 newasm::mem::COD.push_back(line);
                 lineidx++;
             }
@@ -7621,17 +7614,9 @@ namespace newasm
                 }
             }
 
-            __newasmDBG_COMPLEX({
-                std::cout << "2: LINE DATA SIZE -> " << newasm::forLinker::lineData.size() << std::endl;
-                std::cout << "2: COMPILED CODE SIZE -> " << newasm::compiler::compiledCode.size() << std::endl;
-                std::cout << "Line data front -> " << newasm::forLinker::lineData.front().first << ", " << newasm::forLinker::lineData.front().second << std::endl;
-                std::cout << "Compiled code front -> " << newasm::compiler::compiledCode.front().raw << std::endl;
-                std::cout << "Line data back -> " << newasm::forLinker::lineData.back().first << ", " << newasm::forLinker::lineData.back().second << std::endl;
-                std::cout << "Compiled code back -> " << newasm::compiler::compiledCode.back().raw << std::endl;
-            });
             if(!newasm::compiler::data::aborted)
             {
-                std::cout << "  " << newasm::header::col::gray << "\tProject successfully compiled...\n\n";
+                std::cout << "  " << newasm::header::col::gray << "\tProject successfully compiled.\n\n";
             }
             if(newasm::compiler::data::aborted)
             {
@@ -7651,6 +7636,7 @@ namespace newasm
                 newasm::forLinker::lineData,
                 newasm::mem::instructions
             );
+            return 1;
         }
         else
         {
@@ -7660,7 +7646,7 @@ namespace newasm
         }
         return 0;
     }
-
+    #endif
     inline int compile_and_exec(std::string file, int lineidx_____)
     {
         if(lineidx_____ == -1)
