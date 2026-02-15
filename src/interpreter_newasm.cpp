@@ -307,15 +307,13 @@ namespace newasm
     //------------------------------------------------------
     class timer
     {
-        private:
-        std::atomic<bool> running;
-        std::atomic<double> elapsed_ms;
-        std::thread t;
+        private std::atomic<bool> running;
+        private std::atomic<double> elapsed_ms;
+        private std::thread t;
 
-        public:
-        explicit inline timer() : running(false), elapsed_ms(0.0) {}
+        public explicit inline timer() : running(false), elapsed_ms(0.0) {}
 
-        inline void start()
+        public inline void start()
         {
             if(running)
             {
