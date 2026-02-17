@@ -54,14 +54,37 @@ namespace newasm
             v.insert(v.erase(v.begin() + index), n.begin(), n.end());
         }
 
+        template<bool anyExt>
         private static inline std::pair<bool, std::vector<std::string>> readFile(const std::string& filename)
         {
-            std::ifstream file(filename);
+            std::string filename_;
+            if constexpr(anyExt == false)
+            {
+                filename_ = filename;
+            }
+            if constexpr(anyExt == true)
+            {
+                static const std::vector<std::string> extensions = {
+                    "",
+                    ".newasm",
+                    ".asm",
+                    ".nasm"
+                };
+                for(int i = 0; i < extensions.size(); ++i)
+                {
+                    if(std::filesystem::exists(filename + extensions.at(i)))
+                    {
+                        filename_ = filename + extensions.at(i);
+                        break;
+                    }
+                }
+            }
+            std::ifstream file(filename_);
             std::vector<std::string> lines;
 
             if(!file.is_open())
             {
-                newasm::header::functions::linkinfo("System has encountered an error while opening `" + filename + "`.");
+                newasm::header::functions::linkinfo("System has encountered an error while opening `" + filename_ + "`.");
                 return {false, lines};
             }
 
@@ -91,7 +114,7 @@ namespace newasm
         public static inline void link(const std::string& filename, const std::string& outputfilename)
         {
             newasm::header::functions::linkinfo("Processing entry file `" + filename + "`...");
-            auto P = newasm::Linker::readFile(filename);
+            auto P = newasm::Linker::readFile<false>(filename);
             if(!P.first)
             {
                 return;
@@ -120,7 +143,7 @@ namespace newasm
                 auto p = newasm::Linker::linkFile__A(v[i]);
                 if(p.first)
                 {
-                    auto c = newasm::Linker::readFile(p.second);
+                    auto c = newasm::Linker::readFile<true>(p.second);
                     v2 = c.second;
                     temp2 = c.first;
                     if(!c.first)
