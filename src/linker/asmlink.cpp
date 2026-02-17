@@ -84,7 +84,7 @@ namespace newasm
 
             if(!file.is_open())
             {
-                newasm::header::functions::linkinfo("System has encountered an error while opening `" + filename_ + "`.");
+                newasm::header::functions::linkinfo("System has encountered an error while opening `" + filename + "` with extension `" + filename_ + "`.");
                 return {false, lines};
             }
 
