@@ -1,39 +1,56 @@
 // Copyright (c) 2026 Brace Software Co.
 // NewASM Virtual Machine and Toolchain
 
-#define VERSION_______________ 1
+#define VERSION_______________ 0
 
 #if VERSION_______________ == 1
+#pragma once
 #include <windows.h>
-#include <ostream>
+#include <iostream>
+#include <vector>
 #include <string_view>
 
 namespace newasm
 {
     using manip = std::ostream& (*)(std::ostream&);
 
-    struct colored_text
+    struct fmt
     {
-        manip color;
-        std::string_view text;
+        std::vector<manip> mods;
+        std::string_view  text{};
     };
 
-    inline colored_text operator+(manip c, std::string_view txt)
+    inline fmt operator+(manip a, manip b)
     {
-        return { c, txt };
+        return {{a, b}, {}};
     }
 
-    inline std::ostream&
-    operator<<(std::ostream& os, const colored_text& ct)
+    inline fmt operator+(fmt f, manip m)
     {
-        ct.color(os);
-        os << ct.text;
+        f.mods.push_back(m);
+        return f;
+    }
+
+    inline fmt operator+(manip m, std::string_view txt)
+    {
+        return {{m}, txt};
+    }
+
+    inline fmt operator+(fmt f, std::string_view txt)
+    {
+        f.text = txt;
+        return f;
+    }
+
+    inline std::ostream& operator<<(std::ostream& os, const fmt& f)
+    {
+        for (auto m : f.mods)
+            m(os);
+
+        os << f.text;
         return os;
     }
-}
 
-namespace newasm::winold
-{
     inline HANDLE console()
     {
         static HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -46,112 +63,132 @@ namespace newasm::winold
         return os;
     }
 
-    inline std::ostream& red(std::ostream& os)
+    namespace header
     {
-        return set(os, FOREGROUND_RED | FOREGROUND_INTENSITY);
-    }
+        namespace col
+        {
+            inline std::ostream& red(std::ostream& os)
+            {
+                return set(os, FOREGROUND_RED | FOREGROUND_INTENSITY);
+            }
 
-    inline std::ostream& green(std::ostream& os)
-    {
-        return set(os, FOREGROUND_GREEN | FOREGROUND_INTENSITY);
-    }
+            inline std::ostream& green(std::ostream& os)
+            {
+                return set(os, FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+            }
 
-    inline std::ostream& yellow(std::ostream& os)
-    {
-        return set(os, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY);
-    }
+            inline std::ostream& yellow(std::ostream& os)
+            {
+                return set(os,
+                    FOREGROUND_RED |
+                    FOREGROUND_GREEN |
+                    FOREGROUND_INTENSITY);
+            }
 
-    inline std::ostream& blue(std::ostream& os)
-    {
-        return set(os, FOREGROUND_BLUE | FOREGROUND_INTENSITY);
-    }
+            inline std::ostream& blue(std::ostream& os)
+            {
+                return set(os, FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+            }
 
-    inline std::ostream& magenta(std::ostream& os)
-    {
-        return set(os, FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_INTENSITY);
-    }
+            inline std::ostream& magenta(std::ostream& os)
+            {
+                return set(os,
+                    FOREGROUND_RED |
+                    FOREGROUND_BLUE |
+                    FOREGROUND_INTENSITY);
+            }
 
-    inline std::ostream& cyan(std::ostream& os)
-    {
-        return set(os, FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY);
-    }
+            inline std::ostream& cyan(std::ostream& os)
+            {
+                return set(os,
+                    FOREGROUND_GREEN |
+                    FOREGROUND_BLUE |
+                    FOREGROUND_INTENSITY);
+            }
 
-    inline std::ostream& gray(std::ostream& os)
-    {
-        return set(os, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
-    }
+            inline std::ostream& gray(std::ostream& os)
+            {
+                return set(os,
+                    FOREGROUND_RED |
+                    FOREGROUND_GREEN |
+                    FOREGROUND_BLUE);
+            }
 
-    inline std::ostream& kernel(std::ostream& os)
-    {
-        return set(os, FOREGROUND_GREEN);
-    }
+            // ANSI: 38;2;85;107;47  (olive / kernel-like)
+            inline std::ostream& kernel(std::ostream& os)
+            {
+                return set(os,
+                    FOREGROUND_GREEN |
+                    FOREGROUND_RED);
+            }
 
-    inline std::ostream& light_red(std::ostream& os)
-    {
-        return set(os, FOREGROUND_RED | FOREGROUND_INTENSITY);
-    }
+            // ANSI: 38;5;210 (light red / pink)
+            inline std::ostream& light_red(std::ostream& os)
+            {
+                return set(os,
+                    FOREGROUND_RED |
+                    FOREGROUND_INTENSITY);
+            }
 
-    inline std::ostream& light_blue(std::ostream& os)
-    {
-        return set(os, FOREGROUND_BLUE | FOREGROUND_INTENSITY);
-    }
+            // ANSI: 38;5;117 (light blue)
+            inline std::ostream& light_blue(std::ostream& os)
+            {
+                return set(os,
+                    FOREGROUND_BLUE |
+                    FOREGROUND_GREEN |
+                    FOREGROUND_INTENSITY);
+            }
 
-    inline std::ostream& lime_teal(std::ostream& os)
-    {
-        return set(os, FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY);
-    }
+            //ANSI: 38;2;0;255;170 (lime teal)
+            inline std::ostream& lime_teal(std::ostream& os)
+            {
+                return set(os,
+                    FOREGROUND_GREEN |
+                    FOREGROUND_BLUE |
+                    FOREGROUND_INTENSITY);
+            }
 
-    inline std::ostream& aqua(std::ostream& os)
-    {
-        return set(os, FOREGROUND_GREEN | FOREGROUND_BLUE);
-    }
+            //ansy: 38;2;41;204;193 (aqua)
+            inline std::ostream& aqua(std::ostream& os)
+            {
+                return set(os,
+                    FOREGROUND_GREEN |
+                    FOREGROUND_BLUE);
+            }
 
-    inline std::ostream& reset(std::ostream& os)
-    {
-        return set(os,
-            FOREGROUND_RED |
-            FOREGROUND_GREEN |
-            FOREGROUND_BLUE);
-    }
+            inline std::ostream& reset(std::ostream& os)
+            {
+                return set(os,
+                    FOREGROUND_RED |
+                    FOREGROUND_GREEN |
+                    FOREGROUND_BLUE);
+            }
+        }
 
-    inline std::ostream& bold(std::ostream& os)
-    {
-        return os; // Windows nema bold u console API-ju
-    }
+        namespace style
+        {
+            inline std::ostream& bold(std::ostream& os)
+            {
+                return set(os,
+                    FOREGROUND_RED |
+                    FOREGROUND_GREEN |
+                    FOREGROUND_BLUE |
+                    FOREGROUND_INTENSITY);
+            }
 
-    inline std::ostream& underline(std::ostream& os)
-    {
-        return os;
+            inline std::ostream& underline(std::ostream& os)
+            {
+                return os;
+            }
+        }
     }
 }
-namespace newasm::header
-{
-    namespace col
-    {
-        inline auto red                 = newasm::winold::red;
-        inline auto green               = newasm::winold::green;
-        inline auto yellow              = newasm::winold::yellow;
-        inline auto blue                = newasm::winold::blue;
-        inline auto magenta             = newasm::winold::magenta;
-        inline auto cyan                = newasm::winold::cyan;
-        inline auto gray                = newasm::winold::gray;
-        inline auto kernel              = newasm::winold::kernel;
-        inline auto light_red           = newasm::winold::light_red;
-        inline auto light_blue          = newasm::winold::light_blue;
-        inline auto lime_teal           = newasm::winold::lime_teal;
-        inline auto aqua                = newasm::winold::aqua;
-        inline auto reset               = newasm::winold::reset;
-    }
-    namespace style
-    {
-        inline auto bold                = newasm::winold::bold;
-        inline auto underline           = newasm::winold::underline;
-    }
-}
+
 #endif
 #if VERSION_______________ == 0
 namespace newasm
 {
+    inline void enable_ansi() noexcept {}
     namespace header
     {
         namespace col

@@ -4,6 +4,7 @@
 
 namespace newasm
 {
+    inline void enable_ansi() noexcept {}
     namespace header
     {
         namespace col

@@ -1,9 +1,27 @@
 // Copyright (c) 2026 Brace Software Co.
 // NewASM Virtual Machine and Toolchain
 
+#include <windows.h>
 
 namespace newasm
 {
+    inline void enable_ansi() noexcept
+    {
+        HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+        if(hOut == INVALID_HANDLE_VALUE)
+        {
+            return;
+        }
+
+        DWORD mode = 0;
+        if(!GetConsoleMode(hOut, &mode))
+        {
+            return;
+        }
+
+        SetConsoleMode(hOut, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+        return;
+    }
     namespace header
     {
         namespace col

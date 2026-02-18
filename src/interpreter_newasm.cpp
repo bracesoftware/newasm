@@ -13,6 +13,7 @@
 #define NEWASM_DEBUG 0
 namespace newasm
 {
+    inline void enable_ansi() noexcept;
     inline constinit const int BUILD_NUMBER = 22;
     inline constinit const int RUNTIME_VERSION = 7;
     inline constinit const int KERNEL_VERSION = 3;
@@ -96,6 +97,7 @@ link "runtime/alpha";
 link "sys._platformSpecific";
 //<- UNDER THIS ALL MODULES CAN LOAD
 __newasm_LOAD_PACKAGE_MODULE(vm_impl, {
+    newasm::enable_ansi();
     //empty
 });
 link "newasm_stdex";
