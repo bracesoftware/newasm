@@ -128,7 +128,7 @@ int __newasm__MODULEID = 1;
     __global_newasm##name final{\
     explicit inline __global_newasm##name() noexcept{\
         auto __##name = []() -> void {func};\
-        std::cout << newasm::header::col::red << __newasm__MODULEID << ":" << newasm::header::col::gray << \
+        std::cout << newasm::header::col::red << "[  Service " << __newasm__MODULEID << "  ]:" << newasm::header::col::gray << \
         " Virtual machine is setting up module `" << #name << "`..." << std::endl;__##name();\
         std::cout << newasm::header::col::reset;__newasm__MODULEID++;\
     }\

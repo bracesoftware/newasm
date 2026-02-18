@@ -1,7 +1,7 @@
 // Copyright (c) 2026 Brace Software Co.
 // NewASM Virtual Machine and Toolchain
 
-#define VERSION_______________ 0
+#define VERSION_______________ 1
 
 #if VERSION_______________ == 1
 #include <windows.h>
