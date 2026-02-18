@@ -94,8 +94,10 @@ Super fun! Using `movaddr` you can manually set the address of a specific variab
     del &funny::deletedNumber
     malloc 64
         mov hea, [0]
-        load *, "Hello from crazy var!"
-        ;load &, &toBeDeleted ; seg fault, we're writing to a memory block we marked as deleted
+        mov imm, 1
+        load "Hello from crazy var!"
+        ; mov imm, 2
+        ;load &toBeDeleted ; seg fault, we're writing to a memory block we marked as deleted
         movaddr &toBeDeleted, *hea ; correct
         mov tlr, toBeDeleted
         mov stl, 0c1
@@ -108,7 +110,8 @@ Super fun! Using `movaddr` you can manually set the address of a specific variab
         ; modify the variable before it,
         ; but we would not get any error
         ; since it is valid code
-        load *, 72345
+        mov imm, 1
+        load 72345
         movaddr &funny::deletedNumber, *hea
         mov tlr, funny::deletedNumber
         mov stl, 0c1
