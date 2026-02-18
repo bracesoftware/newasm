@@ -42,6 +42,7 @@ namespace newasm
         void help_info()
         {
             std::cout << "\n" << newasm::header::col::reset;
+            std::cout << newasm::header::col::light_blue << std::endl;
             std::cout
                     << std::setw(first_column) << std::left<<newasm::header::style::underline + newasm::header::style::bold+tabs+"Command"
                     << std::setw(second_column) << std::left<<"Arguments" 
@@ -570,7 +571,7 @@ namespace newasm
                 std::string username = newasm::user::global::username;
                 std::cout << newasm::header::col::green << "\nshell@" << 
                 newasm::header::col::yellow<<username<<newasm::header::col::green
-                <<"~" <<newasm::header::col::blue << format_path() << newasm::header::col::green <<"$ "
+                <<" " <<newasm::header::col::blue << format_path() << newasm::header::col::green <<"# "
                 << newasm::header::col::reset;
                 
                 std::getline(std::cin, command);

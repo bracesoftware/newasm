@@ -118,7 +118,7 @@ namespace newasm
                     selected = 0;
                 }
                 std::cout << newasm::header::col::reset + newasm::header::col::gray
-                << "Option " << selected <<":  [" << newasm::header::col::lime_teal + newasm::header::style::bold
+                << "Option " << selected + 1 <<":  [" << newasm::header::col::lime_teal + newasm::header::style::bold
                 << toupper(v.at(selected)) << newasm::header::col::reset + newasm::header::col::gray << "]";
                 std::cout << empty_s << '\r';
                 char c = newasm::_compat::getch();
