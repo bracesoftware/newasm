@@ -5,6 +5,32 @@
 
 #if VERSION_______________ == 1
 #include <windows.h>
+#include <ostream>
+#include <string_view>
+
+namespace newasm
+{
+    using manip = std::ostream& (*)(std::ostream&);
+
+    struct colored_text
+    {
+        manip color;
+        std::string_view text;
+    };
+
+    inline colored_text operator+(manip c, std::string_view txt)
+    {
+        return { c, txt };
+    }
+
+    inline std::ostream&
+    operator<<(std::ostream& os, const colored_text& ct)
+    {
+        ct.color(os);
+        os << ct.text;
+        return os;
+    }
+}
 
 namespace newasm::winold
 {
@@ -19,8 +45,6 @@ namespace newasm::winold
         SetConsoleTextAttribute(console(), attr);
         return os;
     }
-
-    // ===== osnovne boje =====
 
     inline std::ostream& red(std::ostream& os)
     {
@@ -82,7 +106,6 @@ namespace newasm::winold
         return set(os, FOREGROUND_GREEN | FOREGROUND_BLUE);
     }
 
-
     inline std::ostream& reset(std::ostream& os)
     {
         return set(os,
@@ -91,10 +114,9 @@ namespace newasm::winold
             FOREGROUND_BLUE);
     }
 
-
     inline std::ostream& bold(std::ostream& os)
     {
-        return os;
+        return os; // Windows nema bold u console API-ju
     }
 
     inline std::ostream& underline(std::ostream& os)
@@ -102,9 +124,6 @@ namespace newasm::winold
         return os;
     }
 }
-
-
-
 namespace newasm::header
 {
     namespace col
