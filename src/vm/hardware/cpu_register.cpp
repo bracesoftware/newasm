@@ -37,9 +37,9 @@ namespace newasm
                 return value;
             }
             #endif
-            private:
-            T value;
-            newasm::_std::map<std::string, T> thread_values;
+            
+            private T value;
+            private newasm::_std::map<std::string, T> thread_values;
 
             inline T& get()
             {
@@ -66,18 +66,18 @@ namespace newasm
             {
                 thread_values.max_load_factor(0.5f);
             }
-            public:
-            inline thread_safe(T&& val)
+            
+            public inline thread_safe(T&& val)
             {
                 global_init();
                 this->value = std::move(val);
             }
-            inline thread_safe(const T& val)
+            public inline thread_safe(const T& val)
             {
                 global_init();
                 this->value = val;
             }
-            inline thread_safe()
+            public inline thread_safe()
             {
                 global_init();
             }
