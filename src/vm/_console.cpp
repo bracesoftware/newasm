@@ -146,6 +146,11 @@ namespace newasm
 
         inline static void cls()
         {
+            if(newasm::header::data::repl)
+            {
+                newasm::Console::cls_BARE_METAL__();
+                return;
+            }
             if(!newasm::consoleOpen)
             {
                 return;
