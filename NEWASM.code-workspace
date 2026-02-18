@@ -1,10 +1,19 @@
 {
 	"folders": [
 		{
+			"name": "bcxx",
+			"path": "../bcxx"
+		},
+		{
+			"name": "NEWASM",
 			"path": "."
 		},
 		{
+			"name": "EleCraft-server_script-1.21.1",
 			"path": "../../../../../../Users/ele/Desktop/EleCraft-server_script-1.21.1"
 		}
-	]
+	],
+	"settings": {
+		"java.compile.nullAnalysis.mode": "disabled"
+	}
 }
