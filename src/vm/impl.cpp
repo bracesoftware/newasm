@@ -136,3 +136,10 @@ int __newasm__MODULEID = 1;
 
 #define __NEWASM_DUMMY 0
 #define NEWASM_JUMP_POINT "__NEWASM_COMPILER_JUMP_POINT"
+
+struct __ final{
+    public explicit inline __() {
+        newasm::enable_ansi();
+    }
+};
+__ ___;

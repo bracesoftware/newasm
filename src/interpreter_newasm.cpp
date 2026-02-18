@@ -97,7 +97,6 @@ link "runtime/alpha";
 link "sys._platformSpecific";
 //<- UNDER THIS ALL MODULES CAN LOAD
 __newasm_LOAD_PACKAGE_MODULE(vm_impl, {
-    newasm::enable_ansi();
     //empty
 });
 link "newasm_stdex";
