@@ -18,6 +18,7 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 ## What's new or changed?
 
 + Renamed the `usestd` command to `syscfg`.
++ Added the `cls` command to the shell.
 
 ## Fixed issues
 
