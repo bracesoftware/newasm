@@ -11,7 +11,7 @@ namespace newasm
         while(true)
         {
             line.clear();
-            std::cout << newasm::header::style::underline + newasm::header::col::gray;
+            std::cout << newasm::header::col::gray << ">> ";
             std::getline(std::cin,line);
             
             newasm::header::data::lastln = line;
