@@ -11,6 +11,29 @@
 #include <thread>
 #include <cstdio> // FOR remove()
 
+#if _NEWASM_OS == _NEWASM_OS_windows
+#include <windows.h>
+namespace newasm
+{
+    inline void enable_ansi() noexcept
+    {
+        HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+        if(hOut == INVALID_HANDLE_VALUE)
+        {
+            return;
+        }
+
+        DWORD mode = 0;
+        if(!GetConsoleMode(hOut, &mode))
+        {
+            return;
+        }
+
+        SetConsoleMode(hOut, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+        return;
+    }
+}
+#endif
 
 namespace newasm
 {
@@ -113,6 +136,9 @@ namespace newasm
 
 int main()
 {
+    #if _NEWASM_OS == _NEWASM_OS_windows
+    newasm::enable_ansi();
+    #endif
     newasm::ipc::impl::print("Booting...");
     std::string path_ = newasm::ipc::fileloc + newasm::ipc::ipc_file;
     while(true)

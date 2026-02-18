@@ -427,8 +427,10 @@ __say 0,"debug5"
     mov hea, [0] ; set hea to the first byte inside malloc
 
     ; floats take up 4 bytes
-    load *, 736.38 ; hea = something
-    load &, &testdecimal ; myvar = hea
+    mov imm, 1
+    load 736.38 ; hea = something
+    mov imm, 2
+    load &testdecimal ; myvar = hea
 
     free nil ; be responsible
 
@@ -440,8 +442,10 @@ __say 0,"debug5"
     ; Allocate more space:
     malloc 4
     mov hea, [0]
-    load *, 9821.38 ; hea : 63
-    load &, &testfloat2 ; myvar : hea
+    mov imm, 1
+    load 9821.38 ; hea : 63
+    mov imm, 2
+    load  &testfloat2 ; myvar : hea
     
     mov  tlr , testfloat2
     mov stl , 0c1
@@ -454,7 +458,8 @@ __say 0,"debug5"
     mov hea, [0]
     heap 4
     heap -4 ; for testing
-    load  & , &testfloat2 ; myvar : hea
+    mov imm, 2
+    load &testfloat2 ; myvar : hea
     free nil
     
     mov  tlr , testfloat2
@@ -465,7 +470,8 @@ __say 0,"debug5"
     ; ANOTHER BAD IDEA mov  hea , 1 ; manually access the second address
     malloc 4
     mov hea, [0]
-    load &, &testfloat2 ; myvar : hea
+    mov imm, 2
+    load &testfloat2 ; myvar : hea
     mov  tlr , testfloat2
     mov  stl , 0c1
     mov  fdx , 2
@@ -808,8 +814,10 @@ nop
 
     malloc 1
     mov hea, [0]
-    load *, 'p'
-    load &, &character
+    mov imm, 1
+    load 'p'
+    mov imm, 2
+    load &character
     free nil
 
     mov   tlr , character
@@ -1010,8 +1018,10 @@ sysenter "ios"
 .start
     malloc 12
     mov hea, [0]
-    load *, "OhMy\n"
-    load &, &testText
+    mov imm, 1
+    load "OhMy\n"
+    mov imm, 2
+    load &testText
     free nil
     mov tlr, testText
     db tlr
@@ -1597,7 +1607,8 @@ using "ios"
     del &funny::deletedintgber
     malloc 64
         mov hea, [0]
-        load *, "Hello from crazy var!"
+        mov imm, 1
+        load "Hello from crazy var!"
         ;load &, &toBeDeleted ; seg fault, we're writing to a memory block we marked as deleted
         movaddr &toBeDeleted, *hea ; correct
         mov tlr, toBeDeleted
@@ -1611,7 +1622,8 @@ using "ios"
         ; modify the variable before it,
         ; but we would not get any error
         ; since it is valid code
-        load *, 72345
+        mov imm, 1
+        load 72345
         movaddr &funny::deletedintgber, *hea
         mov tlr, funny::deletedintgber
         mov stl, 0c1
@@ -1716,7 +1728,8 @@ using "ios"
     malloc 38
     
     mov hea, [0]
-    load *, 738
+    mov imm, 1
+    load 738
     lea &tobemodified, 0
     del &tobemodified ; get rid of memory at index 0
     
@@ -1908,7 +1921,8 @@ using "ios"
     malloc 12
         mov &test::alloc, *tlr ; assign a pointer to a variable, so we can free it later
         mov hea, [0]
-        load *, 73837
+        mov imm, 1
+        load 73837
         del &test::var
         movaddr &test::var, *hea
 
@@ -2012,13 +2026,15 @@ using "ios"
     malloc 55
     mov &alloc2, *tlr
     mov hea, [0]
-    load *, 92873
+    mov imm, 1
+    load 92873
     sel alloc2 ; select the shi
     call std::ios::writeln
     mov hea, [0]
     mov tlr, *hea
     call std::ios::writeln
-    load &, &myInt2
+    mov imm, 2
+    load &myInt2
     mov tlr, myInt2
     call std::ios::writeln
     free alloc2

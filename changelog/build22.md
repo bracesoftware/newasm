@@ -19,6 +19,7 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 
 + Renamed the `usestd` command to `syscfg`.
 + Added the `cls` command to the shell.
++ You use the `imm` register to manipulate with the `load` instruction. Set `imm` to 1 to write to the heap, and to 2 to write to a reference!
 
 ## Fixed issues
 
