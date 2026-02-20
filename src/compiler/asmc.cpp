@@ -117,6 +117,7 @@ namespace newasm
                 if(it == newasm::core::lang_inf::attributes::ids.end())
                 {
                     lineCompiled.type = newasm::compiler::empty;
+                    newasm::compiler::abort(newasm::compiler::fail::unknown_attrib);
                     return lineCompiled;
                 }
                 lineCompiled.type = newasm::compiler::attribute;

@@ -2358,6 +2358,11 @@ jmp doneshit
 
     mov tlr, "HELLOOOOO\n"
     call std::ios::write
+.data
+    @final
+    intg ThisIsConst: 073
+.start
+    mov &ThisIsConst, 3 ; error
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     mov tlr, 223
     ret *tlr

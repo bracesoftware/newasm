@@ -15,7 +15,7 @@ namespace newasm
 {
     inline void enable_ansi() noexcept;
     inline constinit const int BUILD_NUMBER = 23;
-    inline constinit const int RUNTIME_VERSION = 7;
+    inline constinit const int RUNTIME_VERSION = 8;
     inline constinit const int KERNEL_VERSION = 3;
 }
 
@@ -64,6 +64,7 @@ link "runtime/common/arch";
 #include <concepts>
 link "runtime/common/chars";
 link "vm/impl";
+link "runtime/common/attrib";
 namespace newasm
 {
     std::string CONST__ = NIL_STR;
@@ -757,6 +758,9 @@ namespace newasm
 
             newasm::threads::functions::free_mem();
             newasm::core::env_vars::functions::save_env();
+
+            //reset attributes after each program
+            newasm::runtime::currentAttributes = 0;
          
             for(auto i = newasm::variables::ids.begin(); i != newasm::variables::ids.end(); ++i)
             {

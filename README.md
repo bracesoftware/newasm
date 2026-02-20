@@ -189,6 +189,7 @@ NewASM features different concepts such as decorators, namespaces, primitive cla
 4. [Environment variables](docs/concepts/env.md)
 5. [Events](docs/concepts/events.md)
 6. [Sealed labels](docs/concepts/sealed.md)
+7. [Attributes](docs/concepts/attrib.md)
 
 ## Other resources
 This is a list of extra resources that might help.

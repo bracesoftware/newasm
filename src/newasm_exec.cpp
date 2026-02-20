@@ -453,6 +453,8 @@ namespace newasm
                     newasm::variables::ids[name].type = newasm::datatypes::static_objz;
 
                     newasm::variables::ids.at(name).obj = new newasm::variables::staticObjectData;
+                    newasm::variables::ids.at(name).attrib = newasm::runtime::currentAttributes;
+                    newasm::runtime::currentAttributes = 0;
                  
                     newasm::brace_stack__.push_back(newasm::brace_stack::object_block);
                     return 1;
@@ -481,6 +483,8 @@ namespace newasm
                     newasm::variables::ids.at(name).addr = newasm::hardware::randAccessMem.write<int>(std::stoi(value));
                     newasm::variables::ids.at(name).locked = newasm::expcfg::lockbool;
                     newasm::variables::ids.at(name).transient__ = newasm::expcfg::transientbool;
+                    newasm::variables::ids.at(name).attrib = newasm::runtime::currentAttributes;
+                    newasm::runtime::currentAttributes = 0;
 
                     if(newasm::expcfg::transientbool)
                     {
@@ -512,6 +516,8 @@ namespace newasm
                     newasm::variables::ids.at(name).addr = newasm::hardware::randAccessMem.write<float>(std::stof(value));
                     newasm::variables::ids.at(name).locked = newasm::expcfg::lockbool;
                     newasm::variables::ids.at(name).transient__ = newasm::expcfg::transientbool;
+                    newasm::variables::ids.at(name).attrib = newasm::runtime::currentAttributes;
+                    newasm::runtime::currentAttributes = 0;
 
                     if(newasm::expcfg::transientbool)
                     {
@@ -541,6 +547,8 @@ namespace newasm
                     newasm::variables::ids.at(name).addr = newasm::hardware::randAccessMem.write<std::string>(newasm::header::functions::remq(value));
                     newasm::variables::ids.at(name).locked = newasm::expcfg::lockbool;
                     newasm::variables::ids.at(name).transient__ = newasm::expcfg::transientbool;
+                    newasm::variables::ids.at(name).attrib = newasm::runtime::currentAttributes;
+                    newasm::runtime::currentAttributes = 0;
 
                     if(newasm::expcfg::transientbool)
                     {
@@ -608,6 +616,9 @@ namespace newasm
                     newasm::variables::ids.at(name).locked = newasm::expcfg::lockbool;
                     newasm::variables::ids.at(name).transient__ = newasm::expcfg::transientbool;
 
+                    newasm::variables::ids.at(name).attrib = newasm::runtime::currentAttributes;
+                    newasm::runtime::currentAttributes = 0;
+
                     if(newasm::expcfg::transientbool)
                     {
                         newasm::garbage::FLAG = 1;
@@ -629,6 +640,8 @@ namespace newasm
                     newasm::variables::ids[name].type = newasm::datatypes::tuple;
 
                     newasm::variables::ids.at(name).tuple = new newasm::variables::tupleData;
+                    newasm::variables::ids.at(name).attrib = newasm::runtime::currentAttributes;
+                    newasm::runtime::currentAttributes = 0;
                     for(int i = 0; i < contents.size(); ++i)
                     {
                         int address;
@@ -688,6 +701,8 @@ namespace newasm
                     newasm::variables::ids[name].type = newasm::datatypes::mycontext;
 
                     newasm::variables::ids.at(name).context = new newasm::variables::contextData;
+                    newasm::variables::ids.at(name).attrib = newasm::runtime::currentAttributes;
+                    newasm::runtime::currentAttributes = 0;
 
                     //newasm::header::functions::info("Created context: " + name);
 
@@ -828,6 +843,9 @@ namespace newasm
                     newasm::header::data::blueprint_now = true;
                     newasm::header::data::blueprint_decl = name;
 
+                    newasm::variables::ids.at(name).attrib = newasm::runtime::currentAttributes;
+                    newasm::runtime::currentAttributes = 0;
+
                     newasm::brace_stack__.push_back(newasm::brace_stack::class_block);
                     return 1;
                 }
@@ -841,6 +859,8 @@ namespace newasm
 
                     newasm::variables::ids[name].type = newasm::datatypes::yunion;
                     newasm::variables::ids.at(name).yunion = new newasm::variables::unionData;
+                    newasm::variables::ids.at(name).attrib = newasm::runtime::currentAttributes;
+                    newasm::runtime::currentAttributes = 0;
 
                     if(value == NIL_STR)
                     {
@@ -2150,6 +2170,11 @@ namespace newasm
                     }
 
                     auto i = newasm::variables::ids.at(suf);
+                    if(i.attrib & newasm::core::lang_inf::attributes::CONST__)
+                    {
+                        newasm::terminate(newasm::exit_codes::constant_modif);
+                        return 1;
+                    }
                     if(i.type == newasm::datatypes::number)
                     {
                         if(!newasm::header::functions::isnumeric(opr))
@@ -6801,6 +6826,12 @@ namespace newasm
                 __newasmDBG_COMPLEX({
                     std::cout << "labelJumpPoint -> skip: `" << line.raw << '`' << std::endl;
                 });
+                return 1;
+            }
+            //ATTRIBUTES
+            case newasm::compiler::attribute:
+            {
+                newasm::runtime::currentAttributes |= line.attribute;
                 return 1;
             }
             // DIRECTIVES

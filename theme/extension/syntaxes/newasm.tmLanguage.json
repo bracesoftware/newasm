@@ -46,7 +46,7 @@
     },
     {
       "name": "labels.newasm",
-      "match": ":[\\s]*[A-Za-z_][A-Za-z0-9_]*"
+      "match": "\\:[\\s]*[A-Za-z_][A-Za-z0-9_]*"
     },
     {
       "name": "macro.call.newasm",
@@ -63,6 +63,10 @@
     {
       "name": "constant.numeric.newasm",
       "match": "0c\\w+"
+    },
+    {
+      "name": "namespace.newasm",
+      "match": "\\b(final)\\b"
     },
     {
       "name": "namespace.newasm",
@@ -124,7 +128,7 @@
     },
     {
     "name": "operator.newasm",
-    "match": "[->#?&*{}\\[\\]]"
+    "match": "[->#?&@*{}\\[\\]]"
     },
     {
       "name": "constant.numeric.newasm",
