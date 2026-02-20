@@ -291,7 +291,7 @@ namespace newasm
                 std::cout << "\n  Compiled with: C++" << __cplusplus << " on " << __DATE__ << " at " << __TIME__;
                 
                 std::cout << "\n\n  Runtime version: v" << newasm::runtime::version;
-                std::cout << "\tKernel version: v" << newasm::KERNEL_VERSION;
+                std::cout << "\t\tKernel version: v" << newasm::KERNEL_VERSION;
                 
                 std::cout << "\n  " << newasm::header::system_info::copyright_claim <<
                 newasm::header::col::reset << std::endl;
@@ -1851,6 +1851,26 @@ namespace newasm
                 }
 
                 return {true, str};
+            }
+            @nodiscard
+            inline std::pair<bool, std::string> parseAttribute(const std::string& line)
+            {
+                if(line.empty())
+                {
+                    return {false, ""};
+                }
+                if(line.at(0) != '@')
+                {
+                    return {false, ""};
+                }
+
+                std::string s = line.substr(1);
+                s = newasm::header::functions::trim(s);
+                if(newasm::header::functions::isalphanum(s))
+                {
+                    return {true, s};
+                }
+                return {false, ""};
             }
         }
     }

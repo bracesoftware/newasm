@@ -43,6 +43,15 @@ namespace newasm
         }
         namespace lang_inf
         {
+            namespace attributes
+            {
+                inline constinit const int CONST__ = 1 << 0;
+                inline constinit const int TEST__ = 1 << 1;//itd
+
+                inline const std::unordered_map<std::string, int> ids = {
+                    {"final", CONST__}
+                };
+            }
             const int load = 1;//
             const int stor = 2;//
             const int sysreq = 3;//-- WILL BE REWORKED
@@ -272,9 +281,13 @@ namespace newasm
             namespace directives
             {
                 const int using__ = 1;
+                const int def__ = 2;
+                const int link__ = 3;
 
                 const std::unordered_map<int, std::string> identifiers__ = {
-                    {using__, "using"}
+                    {using__, "using"},
+                    {def__, "def"},
+                    {link__, "link"}
                 };
             }
 

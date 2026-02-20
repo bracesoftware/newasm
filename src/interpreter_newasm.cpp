@@ -162,6 +162,7 @@ namespace newasm
         const int instruction = 13;
         const int classInstance = 14;
         const int labelJumpPoint = 15;//for optimization
+        const int attribute = 16;
     }
 
     namespace decorators
@@ -251,6 +252,7 @@ namespace newasm
             short whatCodeSection = INVALID_INS;
             int letsDecorateVariables = INVALID_INS; //kernel'z makeHash returns an int
             short whatTheFuckAreEvents = INVALID_INS;
+            int attribute = INVALID_INS;
         };
 
         std::string parse_def(std::string suf);
