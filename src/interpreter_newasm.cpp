@@ -67,6 +67,7 @@ link "vm/impl";
 link "runtime/common/attrib";
 namespace newasm
 {
+    int CYCLE_COUNT = 0;
     std::string CONST__ = NIL_STR;
     std::string& real_line = CONST__;
 
@@ -761,6 +762,7 @@ namespace newasm
 
             //reset attributes after each program
             newasm::runtime::currentAttributes = 0;
+            newasm::CYCLE_COUNT = 0;
          
             for(auto i = newasm::variables::ids.begin(); i != newasm::variables::ids.end(); ++i)
             {
@@ -1082,6 +1084,7 @@ namespace newasm
             std::cout << newasm::header::col::reset;
             std::cout << newasm::header::col::gray << "\t\t\tTotal: ";
             std::cout << (elapsed.count() - newasm::perf::inputWasteTimer.count() - wait_wasted.count() - network_wasted.count()) << " ms\n";
+            std::cout << newasm::header::col::gray << "\t\t\tCycle count: " << newasm::CYCLE_COUNT << '\n';
             std::cout << newasm::header::col::reset;
             return;
         };

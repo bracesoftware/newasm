@@ -3518,7 +3518,7 @@ namespace newasm
                 }
                 if(newasm::mem::regs::cpr != newasm::cmp_results::equal)
                 {
-                    //std::cout << "\nnewasm::mem::regs::cpr = " << newasm::mem::regs::cpr << std::endl;
+                    std::cout << "\nnewasm::mem::regs::cpr = " << newasm::mem::regs::cpr << std::endl;
                     return 1;
                 }
                 if(newasm::header::data::proc_now)
@@ -6809,6 +6809,7 @@ namespace newasm
         }
 
         newasm::real_line = line.raw;
+        ++newasm::CYCLE_COUNT;
 
         switch(line.type)
         {

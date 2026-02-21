@@ -699,6 +699,14 @@ namespace newasm
                 {
                     s = std::to_string(it->second.tuple->addr[0]);
                 }
+                if(it->second.type == newasm::datatypes::proc)
+                {
+                    s = std::to_string(it->second.addr);//procedures aren't saved in same ram segment as vars
+                }
+                if(it->second.type == newasm::datatypes::mycontext)
+                {
+                    s = std::to_string(it->second.context->addr[0]);
+                }
                 return;
             }
             
