@@ -534,5 +534,21 @@ namespace newasm
             newasm::compiler::abort(newasm::compiler::fail::unmatched_syntax);
             return lineCompiled;
         }
+
+        template<typename _Type>
+        concept _Compileable = (
+            std::is_same_v<_Type, std::string> or
+            std::is_same_v<_Type, char> or
+            std::is_same_v<_Type, const char*> or
+            std::is_same_v<_Type, char*> or
+            std::is_same_v<_Type, const std::string>
+        );
+
+        template<newasm::compiler::_Compileable T>
+        inline auto DO(T line)
+        {
+            std::string l = line;
+            return DO(l);
+        }
     }
 }
