@@ -121,6 +121,7 @@ namespace newasm
                 << "Option " << selected + 1 <<":  [" << newasm::header::col::lime_teal + newasm::header::style::bold
                 << toupper(v.at(selected)) << newasm::header::col::reset + newasm::header::col::gray << "]";
                 std::cout << empty_s << '\r';
+                std::cout << std::flush;
                 char c = newasm::_compat::getch();
                 if(c == 'A' or c == 'a')
                 {
