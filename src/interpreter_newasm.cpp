@@ -255,6 +255,7 @@ namespace newasm
             int letsDecorateVariables = INVALID_INS; //kernel'z makeHash returns an int
             short whatTheFuckAreEvents = INVALID_INS;
             int attribute = INVALID_INS;
+            int whatAreRegistersLol = INVALID_INS;
         };
 
         std::string parse_def(std::string suf);
@@ -762,7 +763,6 @@ namespace newasm
 
             //reset attributes after each program
             newasm::runtime::currentAttributes = 0;
-            newasm::CYCLE_COUNT = 0;
          
             for(auto i = newasm::variables::ids.begin(); i != newasm::variables::ids.end(); ++i)
             {

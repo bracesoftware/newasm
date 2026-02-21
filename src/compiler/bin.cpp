@@ -69,6 +69,7 @@ namespace newasm
                 write_bin(out, ld.letsDecorateVariables);
                 write_bin(out, ld.whatTheFuckAreEvents);
                 write_bin(out, ld.attribute);
+                write_bin(out, ld.whatAreRegistersLol);
                 return;
             }
             void load_lineData(std::ifstream& in, newasm::compiler::lineData& ld)
@@ -95,6 +96,7 @@ namespace newasm
                 read_bin(in, ld.letsDecorateVariables);
                 read_bin(in, ld.whatTheFuckAreEvents);
                 read_bin(in, ld.attribute);
+                read_bin(in, ld.whatAreRegistersLol);
                 return;
             }
             //label addresses

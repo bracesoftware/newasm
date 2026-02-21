@@ -281,6 +281,7 @@ namespace newasm
                         newasm::compiler::compiledCode.clear();
                         newasm::mem::labels.clear();
                         newasm::forLinker::lineData.clear();
+                        newasm::CYCLE_COUNT = 0;
 
                         newasm::Console::show("NewASM Application Window");
 

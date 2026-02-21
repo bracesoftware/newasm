@@ -1543,15 +1543,13 @@ namespace newasm
                     }
                 }
 
-                auto reg_ = newasm::mem::regs::identifiers.find(suf);
-
-                if(reg_ == newasm::mem::regs::identifiers.end())
+                if(lineInfo.whatAreRegistersLol == INVALID_INS)
                 {
                     newasm::terminate(newasm::exit_codes::bus_err);
                     return 1;
                 }
 
-                switch(reg_->second)
+                switch(lineInfo.whatAreRegistersLol)
                 {
                     case newasm::mem::regs::fdx__:
                     {
@@ -2159,7 +2157,7 @@ namespace newasm
                     opr = newasm::_virtual::readData(newasm::header::functions::isvmemref(opr).second);
                 }
 
-                if(newasm::header::functions::isref(suf))
+                if(lineInfo.whatAreRegistersLol == INVALID_INS)
                 {
                     newasm::runtime::functions::parse(suf); // for namespaces
                     suf = newasm::header::functions::trim(newasm::header::functions::remamp(suf));
@@ -2644,14 +2642,13 @@ namespace newasm
                     return 1;
                 }
 
-                auto reg = newasm::mem::regs::identifiers.find(suf);
-                if(reg == newasm::mem::regs::identifiers.end())
+                if(lineInfo.whatAreRegistersLol == INVALID_INS)
                 {
                     newasm::terminate(newasm::exit_codes::bus_err);
                     return 1;
                 }
 
-                switch(reg->second)
+                switch(lineInfo.whatAreRegistersLol)
                 {
                     case newasm::mem::regs::fdx__:
                     {
@@ -2898,16 +2895,15 @@ namespace newasm
 
                 //if(suf == newasm::mem::regs::fdx.identifier())
                 int intreg = newasm::header::constants::inv_ireg_val;
-                int floatreg = newasm::header::constants::inv_freg_val;
+                float floatreg = newasm::header::constants::inv_freg_val;
                 std::string strreg = newasm::header::constants::inv_reg_val;
 
-                auto _iter = newasm::mem::regs::identifiers.find(suf);
-                if(_iter == newasm::mem::regs::identifiers.end())
+                if(lineInfo.whatAreRegistersLol == INVALID_INS)
                 {
                     newasm::terminate(newasm::exit_codes::bus_err);
                     return 1;
                 }
-                switch(_iter->second)
+                switch(lineInfo.whatAreRegistersLol)
                 {
                     case newasm::mem::regs::fdx__:
                     {
@@ -3014,7 +3010,14 @@ namespace newasm
                         break;
                     }
                 }
-
+                
+                #if 0
+                $defer
+                    std::cout << "CPR FLAG RESULT: " << newasm::mem::regs::cpr << std::endl;
+                    std::cout << "FDX VALUE: " << newasm::mem::regs::fdx.get_value() << std::endl;
+                $
+                #endif
+                
                 if(intreg != newasm::header::constants::inv_ireg_val)
                 {
                     if(!newasm::header::functions::isnumeric(opr))
@@ -3518,7 +3521,7 @@ namespace newasm
                 }
                 if(newasm::mem::regs::cpr != newasm::cmp_results::equal)
                 {
-                    std::cout << "\nnewasm::mem::regs::cpr = " << newasm::mem::regs::cpr << std::endl;
+                    //std::cout << "\nnewasm::mem::regs::cpr = " << newasm::mem::regs::cpr << std::endl;
                     return 1;
                 }
                 if(newasm::header::data::proc_now)
@@ -5574,14 +5577,13 @@ namespace newasm
             //zero
             case newasm::core::lang_inf::zero:
             {
-                auto it_ = newasm::mem::regs::identifiers.find(suf);
-                if(it_ == newasm::mem::regs::identifiers.end())
+                if(lineInfo.whatAreRegistersLol == INVALID_INS)
                 {
                     newasm::terminate(newasm::exit_codes::bus_err);
                     return 1;
                 }
 
-                switch(it_->second)
+                switch(lineInfo.whatAreRegistersLol)
                 {
                     case newasm::mem::regs::fdx__: newasm::mem::regs::fdx.reset(); break;
                     case newasm::mem::regs::imm__: newasm::mem::regs::imm.reset(); break;
@@ -5619,15 +5621,14 @@ namespace newasm
             //inc
             case newasm::core::lang_inf::inc:
             {
-                auto it_ = newasm::mem::regs::identifiers.find(suf);
-                if(it_ == newasm::mem::regs::identifiers.end())
+                if(lineInfo.whatAreRegistersLol == INVALID_INS)
                 {
                     //std::cout << "THIS ACTUALLY HAPPENED NIGZ" << std::endl;
                     newasm::terminate(newasm::exit_codes::bus_err);
                     return 1;
                 }
 
-                switch(it_->second)
+                switch(lineInfo.whatAreRegistersLol)
                 {
                     case newasm::mem::regs::fdx__:
                     {
@@ -5813,28 +5814,27 @@ namespace newasm
             //dec
             case newasm::core::lang_inf::dec:
             {
-                auto it_ = newasm::mem::regs::identifiers.find(suf);
-                if(it_ == newasm::mem::regs::identifiers.end())
+                if(lineInfo.whatAreRegistersLol == INVALID_INS)
                 {
-                    newasm::terminate(newasm::exit_codes::bus_err);
+                    newasm::terminate(newasm::exit_codes::invalid_syntax);
                     return 1;
                 }
 
-                switch(it_->second)
+                switch(lineInfo.whatAreRegistersLol)
                 {
                     case newasm::mem::regs::fdx__:
                     {
-                        newasm::mem::regs::fdx --;
+                        --newasm::mem::regs::fdx;
                         return 1;
                     }
                     case newasm::mem::regs::imm__:
                     {
-                        newasm::mem::regs::imm --;
+                        --newasm::mem::regs::imm;
                         return 1;
                     }
                     case newasm::mem::regs::bos__:
                     {
-                        newasm::mem::regs::bos --;
+                        --newasm::mem::regs::bos;
                         return 1;
                     }
                     case newasm::mem::regs::stk__:

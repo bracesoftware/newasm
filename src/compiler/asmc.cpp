@@ -372,6 +372,12 @@ namespace newasm
                                 lineCompiled.whatAmIDoing = it->second;
                             }
 
+                            auto it_ = newasm::mem::regs::identifiers.find(otherShit);
+                            if(it_ != newasm::mem::regs::identifiers.end())
+                            {
+                                lineCompiled.whatAreRegistersLol = it_->second;
+                            }
+
                             if(it == newasm::inverted_ins.end())
                             if(newasm::mem::functions::datavalid(instruction, newasm::mem::instructions))
                             {
@@ -474,6 +480,11 @@ namespace newasm
                     // optimisation
                     if(i == 1)
                     {
+                        auto it_ = newasm::mem::regs::identifiers.find(lineCompiled.tokens.at(i));
+                        if(it_ != newasm::mem::regs::identifiers.end())
+                        {
+                            lineCompiled.whatAreRegistersLol = it_->second;
+                        }
                         if(newasm::header::functions::isnumeric(lineCompiled.tokens.at(i)))
                         {
                             lineCompiled.priArgType = newasm::datatypes::number;
