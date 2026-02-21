@@ -15,7 +15,7 @@ namespace newasm
 {
     inline void enable_ansi() noexcept;
     inline constinit const int BUILD_NUMBER = 23;
-    inline constinit const int RUNTIME_VERSION = 8;
+    inline constinit const int RUNTIME_VERSION = 9;
     inline constinit const int KERNEL_VERSION = 3;
 }
 
