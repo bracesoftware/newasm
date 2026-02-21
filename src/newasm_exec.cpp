@@ -7146,36 +7146,7 @@ namespace newasm
             {
                 newasm::handle_threads(0);
             }
-        }
-
-        if(newasm::system::section == newasm::code_stream::sections::start)
-        {
-            std::string libname = "";
-            if(line.tokens.size() > 0)
-            {
-                libname = line.tokens.at(0);
-            }
-            if(newasm::mem::functions::datavalid(libname, newasm::mem::instructions))
-            {
-                for(int i = 0; i < newasm::dynlib::mem::invalid_dynlibs.size(); ++i)
-                {
-                    if(libname == newasm::dynlib::mem::invalid_dynlibs.at(i))
-                    {
-                        newasm::terminate(newasm::exit_codes::improper_dynlib);
-                        return 1;
-                    }
-                }
-                for(int i = 0; i < newasm::mem::instructions[libname].size(); ++i)
-                {
-                    if(newasm::system::terminated)
-                    {
-                        return 1;
-                    }
-                    auto JIT_COMPILE = newasm::compiler::DO(newasm::mem::instructions[libname].at(i));
-                    newasm::procline(JIT_COMPILE);
-                }
-                return 1;
-            }
+            std::string libname;
             
             switch(line.type)
             {
@@ -7200,6 +7171,28 @@ namespace newasm
                 {
                     if(line.tokens.size() == 1)
                     {
+                        libname = line.tokens.at(0);
+                        if(newasm::mem::functions::datavalid(libname, newasm::mem::instructions))
+                        {
+                            for(int i = 0; i < newasm::dynlib::mem::invalid_dynlibs.size(); ++i)
+                            {
+                                if(libname == newasm::dynlib::mem::invalid_dynlibs.at(i))
+                                {
+                                    newasm::terminate(newasm::exit_codes::improper_dynlib);
+                                    return 1;
+                                }
+                            }
+                            for(int i = 0; i < newasm::mem::instructions[libname].size(); ++i)
+                            {
+                                if(newasm::system::terminated)
+                                {
+                                    return 1;
+                                }
+                                auto JIT_COMPILE = newasm::compiler::DO(newasm::mem::instructions[libname].at(i));
+                                newasm::procline(JIT_COMPILE);
+                            }
+                            return 1;
+                        }
                         newasm::process_i(line.raw, line.tokens.at(0), line);
                         return 1;
                     }
