@@ -7171,9 +7171,10 @@ namespace newasm
                 {
                     if(line.tokens.size() == 1)
                     {
-                        libname = line.tokens.at(0);
-                        if(newasm::mem::functions::datavalid(libname, newasm::mem::instructions))
+                        //if(newasm::mem::functions::datavalid(libname, newasm::mem::instructions))
+                        if(line.whatAmIDoing == INS_EXTERNAL)
                         {
+                            libname = line.tokens.at(0);
                             for(int i = 0; i < newasm::dynlib::mem::invalid_dynlibs.size(); ++i)
                             {
                                 if(libname == newasm::dynlib::mem::invalid_dynlibs.at(i))

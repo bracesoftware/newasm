@@ -2362,7 +2362,19 @@ jmp doneshit
     @final
     intg ThisIsConst: 073
 .start
+    jmp d787234
     mov &ThisIsConst, 3 ; error
+
+    :d787234
+    mov bos, 1000000
+    :loop___
+    cmp bos, 0
+    jz end____
+    dec bos
+    nop
+    nop
+    jmp loop___
+    :end____
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     mov tlr, 223
     ret *tlr

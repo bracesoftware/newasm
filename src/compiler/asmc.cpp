@@ -70,7 +70,7 @@ namespace newasm
 
         std::vector<newasm::compiler::lineData> compiledCode;
 
-        [[nodiscard]]
+        @nodiscard
         inline newasm::compiler::lineData DO(std::string& line)
         {
             newasm::compiler::data::line = line;

@@ -263,6 +263,8 @@ namespace newasm
         void process_comptiso(std::string ins, std::string arg1, std::string arg2);
         bool iscomptins(std::string ins);
     }
+
+    using execBytecode = newasm::compiler::lineData;
     
     int procline(newasm::compiler::lineData& line);
     int procline(std::string& text);
@@ -843,6 +845,7 @@ namespace newasm
         newasm::mem::regs::fdx.log_things(false);
         newasm::variables::ids.reserve(1000); // for funsies
         newasm::variables::ids.max_load_factor(0.5f);
+        newasm::execBytecode test = newasm::compiler::DO("mov tlr, 3");
         
         if constexpr(0) newasm::native_jit::print("Hello from JIT COMPILER!");
         newasm::forLinker__OLD::debug.reserve(100);
