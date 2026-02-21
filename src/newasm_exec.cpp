@@ -1210,7 +1210,11 @@ namespace newasm
         }
 
         //parse the operand before execution
-        newasm::runtime::functions::parse(opr);
+        if(lineInfo.altArgType == newasm::datatypes::symbol_name)
+        {
+            newasm::runtime::functions::parse(opr); //avoid all shi parsin if the
+                                                    //compiler already figured it out
+        }
         switch(lineInfo.whatAmIDoing)//switch(it->second)
         {
             case INVALID_INS:
@@ -1425,9 +1429,58 @@ namespace newasm
             //lea
             case newasm::core::lang_inf::lea:
             {
-                if(newasm::header::functions::isnumeric(opr))
+                if(lineInfo.altArgType == newasm::datatypes::symbol_name)
                 {
-                    if(std::stoi(opr) == -1)
+                    if(newasm::header::functions::isnumeric(opr))
+                    {
+                        if(std::stoi(opr) == -1)
+                        {
+                            if(suf == NIL_STR)
+                            {
+                                newasm::header::data::tupleIndex = -1;
+                                return 1;
+                            }
+                        }
+                    }
+                    if(!newasm::header::functions::isref(suf))
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    newasm::runtime::functions::parse(suf);
+                    //std::cout << "lea -> suf is :: " << suf << std::endl;
+                    
+                    suf = newasm::header::functions::remamp(suf);
+                    if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids))
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    if(!newasm::header::functions::isnumeric(opr))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    if(newasm::variables::ids.at(suf).tuple == nullptr)
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_tuple);
+                        return 1;
+                    }
+
+                    int localidx = std::stoi(opr);
+
+                    if(localidx >= newasm::variables::ids.at(suf).tuple->addr.size())
+                    {
+                        newasm::terminate(newasm::exit_codes::seg_fault);
+                        return 1;
+                    }
+
+                    newasm::header::data::tupleIndex = localidx;
+                    return 1;
+                }
+                if(lineInfo.altArgType == newasm::datatypes::number)
+                {
+                    if(lineInfo.altInt == -1)
                     {
                         if(suf == NIL_STR)
                         {
@@ -1450,7 +1503,7 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::invalid_memacc);
                     return 1;
                 }
-                if(!newasm::header::functions::isnumeric(opr))
+                if(lineInfo.altArgType != newasm::datatypes::number)
                 {
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                     return 1;
@@ -1461,7 +1514,7 @@ namespace newasm
                     return 1;
                 }
 
-                int localidx = std::stoi(opr);
+                int localidx = lineInfo.altInt;
 
                 if(localidx >= newasm::variables::ids.at(suf).tuple->addr.size())
                 {
@@ -2175,48 +2228,88 @@ namespace newasm
                     }
                     if(i.type == newasm::datatypes::number)
                     {
-                        if(!newasm::header::functions::isnumeric(opr))
+                        if(lineInfo.altArgType == newasm::datatypes::symbol_name)
                         {
-                            //std::cout << "opr is " << opr << std::endl;
+                            if(!newasm::header::functions::isnumeric(opr))
+                            {
+                                //std::cout << "opr is " << opr << std::endl;
+                                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                                return 1;
+                            }
+
+                            newasm::hardware::randAccessMem.overwrite<int>(i.addr, std::stoi(opr));
+                            return 1;
+                        }
+                        if(lineInfo.altArgType != i.type)
+                        {
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                             return 1;
                         }
-
-                        newasm::hardware::randAccessMem.overwrite<int>(i.addr, std::stoi(opr));
+                        newasm::hardware::randAccessMem.overwrite<int>(i.addr, lineInfo.altInt);
                         return 1;
                     }
                     if(i.type == newasm::datatypes::decimal)
                     {
-                        if(!newasm::header::functions::isfloat(opr))
+                        if(lineInfo.altArgType == newasm::datatypes::symbol_name)
+                        {
+                            if(!newasm::header::functions::isfloat(opr))
+                            {
+                                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                                return 1;
+                            }
+
+                            newasm::hardware::randAccessMem.overwrite<float>(i.addr, std::stof(opr));
+                            return 1;
+                        }
+                        if(lineInfo.altArgType != i.type)
                         {
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                             return 1;
                         }
-
-                        newasm::hardware::randAccessMem.overwrite<float>(i.addr, std::stof(opr));
+                        newasm::hardware::randAccessMem.overwrite<float>(i.addr, lineInfo.altFloat);
                         return 1;
                     }
                     if(i.type == newasm::datatypes::character)
                     {
-                        if(!newasm::header::functions::ischar(opr))
+                        if(lineInfo.altArgType == newasm::datatypes::symbol_name)
+                        {
+                            if(!newasm::header::functions::ischar(opr))
+                            {
+                                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                                return 1;
+                            }
+
+                            newasm::hardware::randAccessMem.overwrite<char>(i.addr, newasm::header::functions::remsq(opr).at(0));
+                            return 1;
+                        }
+                        if(lineInfo.altArgType != i.type)
                         {
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                             return 1;
                         }
-
-                        newasm::hardware::randAccessMem.overwrite<char>(i.addr, newasm::header::functions::remsq(opr).at(0));
+                        newasm::hardware::randAccessMem.overwrite<char>(i.addr, lineInfo.altChar);
                         return 1;
                     }
                     if(i.type == newasm::datatypes::text)
                     {
-                        if(!newasm::header::functions::istext(opr))
+                        if(lineInfo.altArgType == newasm::datatypes::symbol_name)
+                        {
+                            if(!newasm::header::functions::istext(opr))
+                            {
+                                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                                return 1;
+                            }
+
+                            // We have to change the pointer if the string gets reallocated
+                            newasm::variables::ids.at(suf).addr = newasm::hardware::randAccessMem.overwrite<std::string>(i.addr, newasm::header::functions::remq(opr));;
+                            return 1;
+                        }
+                        if(lineInfo.altArgType != i.type)
                         {
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                             return 1;
                         }
-
-                        // We have to change the pointer if the string gets reallocated
-                        newasm::variables::ids.at(suf).addr = newasm::hardware::randAccessMem.overwrite<std::string>(i.addr, newasm::header::functions::remq(opr));;
+                        newasm::variables::ids.at(suf).addr = newasm::hardware::randAccessMem.overwrite<std::string>(i.addr, lineInfo.altString);
                         return 1;
                     }
                     if(i.type == newasm::datatypes::yunion)

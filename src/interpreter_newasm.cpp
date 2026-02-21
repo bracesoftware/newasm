@@ -14,7 +14,7 @@
 namespace newasm
 {
     inline void enable_ansi() noexcept;
-    inline constinit const int BUILD_NUMBER = 23;
+    inline constinit const int BUILD_NUMBER = 24;
     inline constinit const int RUNTIME_VERSION = 9;
     inline constinit const int KERNEL_VERSION = 3;
 }
@@ -244,7 +244,12 @@ namespace newasm
             std::string other;
 
             int priArgType = 0;
+            
             int altArgType = 0;
+            int altInt = 0;
+            float altFloat = 0;
+            char altChar = 0;
+            std::string altString = "";
 
             //newasm::compiler::argumentData suffixLiteral;
             //newasm::compiler::argumentData operandLiteral;
@@ -845,7 +850,11 @@ namespace newasm
         newasm::mem::regs::fdx.log_things(false);
         newasm::variables::ids.reserve(1000); // for funsies
         newasm::variables::ids.max_load_factor(0.5f);
-        newasm::execBytecode test = newasm::compiler::DO("mov tlr, 3");
+        #if 0
+        {
+            newasm::execBytecode test = newasm::compiler::DO("mov tlr, 3");
+        }
+        #endif
         
         if constexpr(0) newasm::native_jit::print("Hello from JIT COMPILER!");
         newasm::forLinker__OLD::debug.reserve(100);
