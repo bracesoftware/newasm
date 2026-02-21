@@ -1668,6 +1668,7 @@ namespace newasm
                 }
                 return {0, {}};
             }
+            #if 0 //old func i modified from chatgpt in 2022, broke stuff
             static std::pair<int, std::vector<std::string>> parseDataMacroDecl_(const std::string& s)
             {
                 size_t n = s.size();
@@ -1701,15 +1702,21 @@ namespace newasm
                 while (i < n && s[i] != ':') i++;
                 if (i == n) return {0, {}}; // nema ':', invalid
                 std::string text2 = newasm::header::functions::trim(s.substr(start2, i - start2));
-                if (text2.empty()) return {0, {}};
-
+                if(text2.empty())
+                {
+                    return {0, {}};
+                }
                 i++; // preskoči ':'
                 skipSpaces(s, i);
                 std::string text3 = newasm::header::functions::trim(s.substr(i));
-                if (text3.empty()) return {0, {}};
+                if(text3.empty())
+                {
+                    return {0, {}};
+                }
 
                 return {2, {text1, text2, text3}};
             }
+            #endif
 
             std::pair<bool, std::string> parseContainerType(const std::string& s)
             {
