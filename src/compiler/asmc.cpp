@@ -488,18 +488,22 @@ namespace newasm
                         if(newasm::header::functions::isnumeric(lineCompiled.tokens.at(i)))
                         {
                             lineCompiled.priArgType = newasm::datatypes::number;
+                            lineCompiled.priInt = std::stoi(lineCompiled.tokens.at(i));
                         }
                         if(newasm::header::functions::isfloat(lineCompiled.tokens.at(i)))
                         {
                             lineCompiled.priArgType = newasm::datatypes::decimal;
+                            lineCompiled.priFloat = std::stof(lineCompiled.tokens.at(i));
                         }
                         if(newasm::header::functions::istext(lineCompiled.tokens.at(i)))
                         {
                             lineCompiled.priArgType = newasm::datatypes::text;
+                            lineCompiled.priString = newasm::header::functions::remq(lineCompiled.tokens.at(i));
                         }
                         if(newasm::header::functions::ischar(lineCompiled.tokens.at(i)))
                         {
                             lineCompiled.priArgType = newasm::datatypes::character;
+                            lineCompiled.priChar = newasm::header::functions::remsq(lineCompiled.tokens.at(i))[0];
                         }
                     }
                     if(i == 2)

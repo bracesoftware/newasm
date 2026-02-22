@@ -61,6 +61,10 @@ namespace newasm
                 write_string(out, ld.other);
 
                 write_bin(out, ld.priArgType);
+                write_bin(out, ld.priInt);
+                write_bin(out, ld.priFloat);
+                write_bin(out, ld.priChar);
+                write_string(out, ld.priString);
 
                 write_bin(out, ld.altArgType);
                 write_bin(out, ld.altInt);
@@ -93,6 +97,10 @@ namespace newasm
                 read_string(in, ld.other);
 
                 read_bin(in, ld.priArgType);
+                read_bin(in, ld.priInt);
+                read_bin(in, ld.priFloat);
+                read_bin(in, ld.priChar);
+                read_string(in, ld.priString);
 
                 read_bin(in, ld.altArgType);
                 read_bin(in, ld.altInt);

@@ -3333,6 +3333,7 @@ namespace newasm
                 //addr
                 if(newasm::mem::regs::imm == 1)//(suf == static_cast<std::string>("*"))
                 {
+                    newasm::runtime::functions::parse(opr);
                     #if 0
                     if(!newasm::header::functions::isnumeric(opr) && !newasm::header::functions::isfloat(opr) &&
                     !newasm::header::functions::istext(opr) && !newasm::header::functions::isref(opr) &&
@@ -3344,34 +3345,59 @@ namespace newasm
                     }
                     newasm::mem::program_memory[newasm::mem::regs::hea] = opr;
                     #endif
-                    if(newasm::header::functions::isnumeric(opr))
+                    if(lineInfo.priArgType == newasm::datatypes::symbol_name)
                     {
-                        auto value = std::stoi(opr);
-                        // write at heap pointer
-                        newasm::hardware::randAccessMem.write<int>(newasm::mem::regs::hea, value);
-                        return 0;
+                        if(newasm::header::functions::isnumeric(opr))
+                        {
+                            auto value = std::stoi(opr);
+                            // write at heap pointer
+                            newasm::hardware::randAccessMem.write<int>(newasm::mem::regs::hea, value);
+                            return 0;
+                        }
+                        if(newasm::header::functions::isfloat(opr))
+                        {
+                            auto value = std::stof(opr);
+                            // write at heap pointer
+                            newasm::hardware::randAccessMem.write<float>(newasm::mem::regs::hea, value);
+                            return 0;
+                        }
+                        if(newasm::header::functions::ischar(opr))
+                        {
+                            auto value = newasm::header::functions::remsq(opr).at(0);
+                            // write at heap pointer
+                            newasm::hardware::randAccessMem.write<char>(newasm::mem::regs::hea, value);
+                            return 0;
+                        }
+                        if(newasm::header::functions::istext(opr))
+                        {
+                            auto value = newasm::header::functions::remq(opr);
+                            // write at heap pointer
+                            //std::cout << "Writing text " << value << " into addr* " << newasm::mem::regs::hea << std::endl;
+                            newasm::hardware::randAccessMem.write<std::string>(newasm::mem::regs::hea, value);
+                            return 0;
+                        }
+                        newasm::terminate(newasm::exit_codes::invalid_syntax);
+                        return 1;
                     }
-                    if(newasm::header::functions::isfloat(opr))
+                    if(lineInfo.priArgType == newasm::datatypes::number)
                     {
-                        auto value = std::stof(opr);
-                        // write at heap pointer
-                        newasm::hardware::randAccessMem.write<float>(newasm::mem::regs::hea, value);
-                        return 0;
+                        newasm::RAM->write<int>(newasm::mem::regs::hea.get_value(), lineInfo.priInt);
+                        return 1;
                     }
-                    if(newasm::header::functions::ischar(opr))
+                    if(lineInfo.priArgType == newasm::datatypes::decimal)
                     {
-                        auto value = newasm::header::functions::remsq(opr).at(0);
-                        // write at heap pointer
-                        newasm::hardware::randAccessMem.write<char>(newasm::mem::regs::hea, value);
-                        return 0;
+                        newasm::RAM->write<float>(newasm::mem::regs::hea.get_value(), lineInfo.priFloat);
+                        return 1;
                     }
-                    if(newasm::header::functions::istext(opr))
+                    if(lineInfo.priArgType == newasm::datatypes::character)
                     {
-                        auto value = newasm::header::functions::remq(opr);
-                        // write at heap pointer
-                        //std::cout << "Writing text " << value << " into addr* " << newasm::mem::regs::hea << std::endl;
-                        newasm::hardware::randAccessMem.write<std::string>(newasm::mem::regs::hea, value);
-                        return 0;
+                        newasm::RAM->write<char>(newasm::mem::regs::hea.get_value(), lineInfo.priChar);
+                        return 1;
+                    }
+                    if(lineInfo.priArgType == newasm::datatypes::text)
+                    {
+                        newasm::RAM->write<std::string>(newasm::mem::regs::hea.get_value(), lineInfo.priString);
+                        return 1;
                     }
                     newasm::terminate(newasm::exit_codes::invalid_syntax);
                     return 1;

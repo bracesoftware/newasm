@@ -244,6 +244,10 @@ namespace newasm
             std::string other;
 
             int priArgType = 0;
+            int priInt = 0;
+            float priFloat = 0;
+            char priChar = 0;
+            std::string priString = "";
             
             int altArgType = 0;
             int altInt = 0;
