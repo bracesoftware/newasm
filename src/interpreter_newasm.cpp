@@ -383,8 +383,7 @@ namespace newasm
 
     class forLinker__OLD
     {
-        public:
-        static inline newasm::_std::linear_map<int, std::string> files;
+        public static inline newasm::_std::linear_map<int, std::string> files;
         static inline newasm::_std::linear_map<std::string, int> file_sizes;
         static inline int linked_size;
 
@@ -496,10 +495,9 @@ namespace newasm
 
     class forLinker
     {
-        public:
-        static inline std::vector<std::pair<std::string, int>> lineData;
+        public static inline std::vector<std::pair<std::string, int>> lineData;
 
-        static inline std::string getFile(int line)
+        public static inline std::string getFile(int line)
         {
             if(line < 0)
             {
@@ -508,7 +506,7 @@ namespace newasm
             return lineData.at(line).first;
         }
 
-        static inline int getLine(int lastlinedx)
+        public static inline int getLine(int lastlinedx)
         {
             if(lastlinedx < 0)
             {
