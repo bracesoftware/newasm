@@ -143,3 +143,16 @@ struct __ final{
     }
 };
 __ ___;
+
+//some compiler tweaks
+#if defined(__GNUC__) || defined(__clang__)//they best buddies
+    #define ATTR_HOT __attribute__((hot))
+    #define FORCE_INLINE __attribute__((always_inline))
+#elif defined(_MSC_VER)
+    // MSVC nema hot atribut, oslanja se na PGO
+    #define ATTR_HOT 
+    #define FORCE_INLINE __forceinline
+#else
+    #define ATTR_HOT
+    #define FORCE_INLINE
+#endif

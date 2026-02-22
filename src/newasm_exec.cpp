@@ -6899,7 +6899,7 @@ namespace newasm
         newasm::header::data::struct_now = false;
         return;
     }
-    inline int procline(newasm::compiler::lineData& line)
+    ATTR_HOT inline int procline(newasm::compiler::lineData& line)
     {
         //std::cout << "WHAT THE FUCK :: PROCESSING -> " << line.raw << std::endl;
         //std::cout << "\t\t\t LINE TYPE -> " << line.type << std::endl;
@@ -7377,13 +7377,13 @@ namespace newasm
         newasm::terminate(newasm::exit_codes::invalid_syntax);
         return 0;
     }
-    inline int procline(std::string& line)
+    ATTR_HOT inline int procline(std::string& line)
     {
         auto JIT_COMPILED = newasm::compiler::DO(line);
         newasm::procline(JIT_COMPILED);
         return 1;
     }
-    inline int procline(const char* line)
+    ATTR_HOT inline int procline(const char* line)
     {
         std::string buf(line);
         newasm::procline(buf);
