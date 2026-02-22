@@ -614,7 +614,7 @@ namespace newasm
 
 struct __global_newasm final
 {
-    explicit inline __global_newasm() noexcept
+    public explicit inline __global_newasm() noexcept
     {
         // THIS CODE IS CALLED BEFORE EVERYTHING ELSE!!!
         //std::ios::sync_with_stdio(false);
