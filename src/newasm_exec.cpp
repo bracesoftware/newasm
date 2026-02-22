@@ -6899,7 +6899,7 @@ namespace newasm
         newasm::header::data::struct_now = false;
         return;
     }
-    ATTR_HOT inline int procline(newasm::compiler::lineData& line)
+    inline int procline(newasm::compiler::lineData& line)
     {
         //std::cout << "WHAT THE FUCK :: PROCESSING -> " << line.raw << std::endl;
         //std::cout << "\t\t\t LINE TYPE -> " << line.type << std::endl;
