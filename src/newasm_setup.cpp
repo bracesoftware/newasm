@@ -716,11 +716,13 @@ namespace newasm
                 if(newasm::header::functions::trim(arg).at(0) == '*' && arg.find('/') == std::string::npos)
                 {
                     auto it = newasm::mem::regs::identifiers.find(newasm::header::functions::trim(arg.substr(1)));
+                    #if 0
                     if(it == newasm::mem::regs::identifiers.end())
                     {
                         newasm::terminate(newasm::exit_codes::bus_err);
                         return;
                     }
+                    #endif
 
                     switch(it->second)
                     {

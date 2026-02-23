@@ -500,7 +500,7 @@ namespace newasm
                                 }
                                 if(it__ != newasm::mem::regs::identifiers.end())
                                 {
-                                    lineCompiled.priArgType = newasm::datatypes::_regDeref;
+                                    lineCompiled.priArgType = newasm::datatypes::symbol_name;//newasm::datatypes::_regDeref;
                                     lineCompiled.priInt = it__->second;
                                 }
                             }
@@ -541,7 +541,7 @@ namespace newasm
                                 }
                                 if(it__ != newasm::mem::regs::identifiers.end())
                                 {
-                                    lineCompiled.altArgType = newasm::datatypes::_regDeref;
+                                    lineCompiled.altArgType = newasm::datatypes::symbol_name;//newasm::datatypes::_regDeref;
                                     lineCompiled.altInt = it__->second;
                                 }
                             }

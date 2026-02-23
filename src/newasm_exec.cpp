@@ -2253,6 +2253,7 @@ namespace newasm
                         }
                         if(lineInfo.altArgType != i.type)
                         {
+                            //std::cout << "opr 2 is " << opr << std::endl;
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                             return 1;
                         }
@@ -2307,6 +2308,7 @@ namespace newasm
                         {
                             if(!newasm::header::functions::istext(opr))
                             {
+                                //std::cout << "ovo se desilo->opr-> " << opr << std::endl;
                                 newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                                 return 1;
                             }
@@ -2317,6 +2319,7 @@ namespace newasm
                         }
                         if(lineInfo.altArgType != i.type)
                         {
+                            //std::cout << "ovo se desilo 2->opr-> " << opr << std::endl;
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                             return 1;
                         }
