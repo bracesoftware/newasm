@@ -2375,6 +2375,17 @@ jmp doneshit
     nop
     jmp loop___
     :end____
+    sysenter "mem"
+    syscall
+    mov tlr, *rax
+    call std::ios::writeln
+.data
+    string testStringMan: "This is absolutely crazy!"
+.start
+    sysenter "mem"
+    syscall
+    mov tlr, *rax
+    call std::ios::writeln
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     mov tlr, 223
     ret *tlr

@@ -16,7 +16,7 @@ namespace newasm
     inline void enable_ansi() noexcept;
     inline constinit const int BUILD_NUMBER = 24;
     inline constinit const int RUNTIME_VERSION = 9;
-    inline constinit const int KERNEL_VERSION = 3;
+    inline constinit const int KERNEL_VERSION = 4;
 }
 
 namespace SYS = newasm;
@@ -71,6 +71,8 @@ namespace newasm
     std::string CONST__ = NIL_STR;
     std::string& real_line = CONST__;
 
+    bool priRegDeref = false;
+
     namespace lambda
     {
         bool process = false; // if lambda contents is being processed
@@ -86,6 +88,24 @@ namespace newasm
     {
         std::string name = "";
         std::string version = "";
+    }
+    namespace datatypes
+    {
+        const int symbol_name = 0;
+        const int number = 1;
+        const int decimal = 2;
+        const int text = 3;
+        const int reference = 4;
+        const int character = 5;
+        const int tuple = 6;
+        const int blueprint = 7;
+        const int yunion = 8;
+        const int mycontext = 9;
+        const int proc = 10;
+        
+        const int static_objz = 11;
+        const int event = 100;
+        const int _regDeref = 101;
     }
 }
 link "sysext/scope_exit";
@@ -265,6 +285,13 @@ namespace newasm
             short whatTheFuckAreEvents = INVALID_INS;
             int attribute = INVALID_INS;
             int whatAreRegistersLol = INVALID_INS;
+
+            //stuff not included in the binary:
+            unsigned int resType = 0;
+            int resInt = 0;
+            float resFloat = 0;
+            char resChar = 0;
+            std::string resString = "";
         };
 
         std::string parse_def(std::string suf);
@@ -274,6 +301,7 @@ namespace newasm
     }
 
     using execBytecode = newasm::compiler::lineData;
+    newasm::kernel::thread_safe<newasm::compiler::lineData*> PRC;
     
     int procline(newasm::compiler::lineData& line);
     int procline(std::string& text);

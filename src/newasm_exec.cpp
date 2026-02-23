@@ -1624,6 +1624,16 @@ namespace newasm
                         newasm::mem::data[opr] = std::to_string(newasm::mem::regs::imm);
                         return 1;
                     }
+                    case newasm::mem::regs::rax__:
+                    {
+                        if(newasm::mem::datatypes[opr] != newasm::datatypes::number)
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                            return 1;
+                        }
+                        newasm::mem::data[opr] = std::to_string(newasm::mem::regs::rax);
+                        return 1;
+                    }
                     case newasm::mem::regs::bos__:
                     {
                         if(newasm::mem::datatypes[opr] != newasm::datatypes::number)
@@ -2216,6 +2226,7 @@ namespace newasm
                     suf = newasm::header::functions::trim(newasm::header::functions::remamp(suf));
                     if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids))
                     {
+                        //std::cout << "THIS HAPPENED!!!! -> "<< suf << std::endl;
                         newasm::terminate(newasm::exit_codes::invalid_memacc);
                         return 1;
                     }
@@ -2743,8 +2754,40 @@ namespace newasm
 
                 switch(lineInfo.whatAreRegistersLol)
                 {
+                    //crazy shi
+                    case newasm::mem::regs::ax__:
+                    {
+                        if(lineInfo.altArgType == newasm::datatypes::number)
+                        {
+                            newasm::mem::regs::ax.set_value<int>(lineInfo.altInt);
+                            return 1;
+                        }
+                        if(lineInfo.altArgType == newasm::datatypes::decimal)
+                        {
+                            newasm::mem::regs::ax.set_value<float>(lineInfo.altFloat);
+                            return 1;
+                        }
+                        if(lineInfo.altArgType == newasm::datatypes::character)
+                        {
+                            newasm::mem::regs::ax.set_value<char>(lineInfo.altChar);
+                            return 1;
+                        }
+                        if(lineInfo.altArgType == newasm::datatypes::text)
+                        {
+                            newasm::mem::regs::ax.set_value<std::string>(lineInfo.altString);
+                            return 1;
+                        }
+                        newasm::terminate(newasm::exit_codes::bus_err);
+                        return 1;
+                    }
+                    //literal shi
                     case newasm::mem::regs::fdx__:
                     {
+                        if(lineInfo.altArgType == newasm::datatypes::number)
+                        {
+                            newasm::mem::regs::fdx = lineInfo.altInt;
+                            return 1;
+                        }
                         if(!newasm::header::functions::isnumeric(opr))
                         {
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
@@ -2753,8 +2796,28 @@ namespace newasm
                         newasm::mem::regs::fdx = std::stoi(opr);
                         return 1;
                     }
+                    case newasm::mem::regs::rax__:
+                    {
+                        if(lineInfo.altArgType == newasm::datatypes::number)
+                        {
+                            newasm::mem::regs::rax = lineInfo.altInt;
+                            return 1;
+                        }
+                        if(!newasm::header::functions::isnumeric(opr))
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                            return 1;
+                        }
+                        newasm::mem::regs::rax = std::stoi(opr);
+                        return 1;
+                    }
                     case newasm::mem::regs::imm__:
                     {
+                        if(lineInfo.altArgType == newasm::datatypes::number)
+                        {
+                            newasm::mem::regs::imm = lineInfo.altInt;
+                            return 1;
+                        }
                         if(!newasm::header::functions::isnumeric(opr))
                         {
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
@@ -2765,6 +2828,11 @@ namespace newasm
                     }
                     case newasm::mem::regs::bos__:
                     {
+                        if(lineInfo.altArgType == newasm::datatypes::number)
+                        {
+                            newasm::mem::regs::bos = lineInfo.altInt;
+                            return 1;
+                        }
                         if(!newasm::header::functions::isnumeric(opr))
                         {
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
@@ -2811,6 +2879,11 @@ namespace newasm
                     }
                     case newasm::mem::regs::stk__:
                     {
+                        if(lineInfo.altArgType == newasm::datatypes::number)
+                        {
+                            newasm::mem::regs::stk = lineInfo.altInt;
+                            return 1;
+                        }
                         if(!newasm::header::functions::isnumeric(opr))
                         {
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
@@ -3006,6 +3079,11 @@ namespace newasm
                     case newasm::mem::regs::imm__:
                     {
                         intreg = newasm::mem::regs::imm;
+                        break;
+                    }
+                    case newasm::mem::regs::rax__:
+                    {
+                        intreg = newasm::mem::regs::rax;
                         break;
                     }
                     case newasm::mem::regs::bos__:
@@ -5706,6 +5784,7 @@ namespace newasm
                 {
                     case newasm::mem::regs::fdx__: newasm::mem::regs::fdx.reset(); break;
                     case newasm::mem::regs::imm__: newasm::mem::regs::imm.reset(); break;
+                    case newasm::mem::regs::rax__: newasm::mem::regs::rax.reset(); break;
                     case newasm::mem::regs::bos__: newasm::mem::regs::bos.reset(); break;
                     case newasm::mem::regs::tlr__: newasm::mem::regs::tlr.reset(); break;
                     case newasm::mem::regs::dlx__: newasm::mem::regs::dlx.reset(); break;
@@ -5757,6 +5836,11 @@ namespace newasm
                     case newasm::mem::regs::imm__:
                     {
                         newasm::mem::regs::imm ++;
+                        return 1;
+                    }
+                    case newasm::mem::regs::rax__:
+                    {
+                        ++newasm::mem::regs::rax;
                         return 1;
                     }
                     case newasm::mem::regs::bos__:
@@ -5949,6 +6033,11 @@ namespace newasm
                     case newasm::mem::regs::imm__:
                     {
                         --newasm::mem::regs::imm;
+                        return 1;
+                    }
+                    case newasm::mem::regs::rax__:
+                    {
+                        --newasm::mem::regs::rax;
                         return 1;
                     }
                     case newasm::mem::regs::bos__:
@@ -6929,6 +7018,7 @@ namespace newasm
 
         newasm::real_line = line.raw;
         ++newasm::CYCLE_COUNT;
+        newasm::PRC = &line;
 
         switch(line.type)
         {

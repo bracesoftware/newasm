@@ -24,13 +24,15 @@ namespace newasm
             const int invalid_krnlmod = 3;
             const int expected_token = 4;
             const int unknown_attrib = 5;
+            const int unknown_register = 6;
 
             const std::unordered_map<int, std::string> id = {
                 {unmatched_syntax, "UnmatchedSyntax"},
                 {constant_redef, "ConstValRedefinition"},
                 {invalid_krnlmod, "UnknownKernelModule"},
                 {expected_token, "ExpectedToken"},
-                {unknown_attrib, "UnknownAttribute"}
+                {unknown_attrib, "UnknownAttribute"},
+                {unknown_register, "UnknownRegister"}
             };
         }
 
@@ -485,6 +487,24 @@ namespace newasm
                         {
                             lineCompiled.whatAreRegistersLol = it_->second;
                         }
+                        if(lineCompiled.tokens.at(i).size() >= 3)
+                        {
+                            auto regName = newasm::header::functions::trim(lineCompiled.tokens.at(i).substr(1));
+                            if(lineCompiled.tokens.at(i).front() == '*' and newasm::header::functions::isalphanum(regName))
+                            {
+                                auto it__ = newasm::mem::regs::identifiers.find(regName);
+                                if(it__ == newasm::mem::regs::identifiers.end())
+                                {
+                                    newasm::compiler::abort(newasm::compiler::fail::unknown_register);
+                                    return lineCompiled;
+                                }
+                                if(it__ != newasm::mem::regs::identifiers.end())
+                                {
+                                    lineCompiled.priArgType = newasm::datatypes::_regDeref;
+                                    lineCompiled.priInt = it__->second;
+                                }
+                            }
+                        }
                         if(newasm::header::functions::isnumeric(lineCompiled.tokens.at(i)))
                         {
                             lineCompiled.priArgType = newasm::datatypes::number;
@@ -508,6 +528,24 @@ namespace newasm
                     }
                     if(i == 2)
                     {
+                        if(lineCompiled.tokens.at(i).size() >= 3)
+                        {
+                            auto regName = newasm::header::functions::trim(lineCompiled.tokens.at(i).substr(1));
+                            if(lineCompiled.tokens.at(i).front() == '*' and newasm::header::functions::isalphanum(regName))
+                            {
+                                auto it__ = newasm::mem::regs::identifiers.find(regName);
+                                if(it__ == newasm::mem::regs::identifiers.end())
+                                {
+                                    newasm::compiler::abort(newasm::compiler::fail::unknown_register);
+                                    return lineCompiled;
+                                }
+                                if(it__ != newasm::mem::regs::identifiers.end())
+                                {
+                                    lineCompiled.altArgType = newasm::datatypes::_regDeref;
+                                    lineCompiled.altInt = it__->second;
+                                }
+                            }
+                        }
                         if(newasm::header::functions::isnumeric(lineCompiled.tokens.at(i)))
                         {
                             lineCompiled.altArgType = newasm::datatypes::number;

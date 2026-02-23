@@ -51,7 +51,7 @@ namespace newasm
 
             {{newasm::core::lang_inf::refs::net, 1}, "sys_download"},
 
-            {{newasm::core::lang_inf::refs::mem, 1}, "sys_const"},
+            {{newasm::core::lang_inf::refs::mem, 1}, "sys_memory_used"},
 
             {{newasm::core::lang_inf::refs::txtop, 1}, "sys_txt_concat"},
             {{newasm::core::lang_inf::refs::txtop, 2}, "sys_txt_trim"},

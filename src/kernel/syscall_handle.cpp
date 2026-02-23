@@ -682,6 +682,7 @@ namespace newasm
                                                           \______/ */
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::mem, 1):
                 {
+                    #if 0
                     if(!newasm::header::functions::isref(newasm::mem::regs::tlr))
                     {
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
@@ -692,7 +693,21 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::invalid_memacc);
                         return 1;
                     }
-                    newasm::syscalls::mem::constvals.push_back(newasm::header::functions::remamp(newasm::mem::regs::tlr));
+                    #endif
+                    //newasm::syscalls::mem::constvals.push_back(newasm::header::functions::remamp(newasm::mem::regs::tlr));
+                    auto& mmap = newasm::hardware::randAccessMem.__memory_free__;
+                    unsigned int used_bytes = 0;
+                    for(unsigned int i = 0; i < mmap.get_size(); ++i)
+                    {
+                        if(mmap.get_at(i) == 1)
+                        {
+                            used_bytes++;
+                        }
+                    }
+                    #if 0
+                    newasm::mem::regs::ax.set_value<int>(used_bytes);
+                    #endif
+                    newasm::mem::regs::rax.set_value(used_bytes);
                     return 1;
                 }
 /*

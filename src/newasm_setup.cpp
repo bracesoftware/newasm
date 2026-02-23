@@ -151,24 +151,7 @@ namespace newasm
         const int less = 2;
         const int greater = 3;
     }
-    namespace datatypes
-    {
-        const int symbol_name = 0;
-        const int number = 1;
-        const int decimal = 2;
-        const int text = 3;
-        const int reference = 4;
-        const int character = 5;
-        const int tuple = 6;
-        const int blueprint = 7;
-        const int yunion = 8;
-        const int mycontext = 9;
-        const int proc = 10;
-        
-        const int event = 100;
-        const int static_objz = 11;
-
-    }
+    
     namespace constv
     {
         const std::string pxstr = "Program finished with exit code: ";
@@ -203,7 +186,10 @@ namespace newasm
             newasm::_register<int> stk("stk", 10 * 1024 * 1024 - 1);
             newasm::_register<int> hea("hea", 0);
             //NORMAL REGISTERS
-            
+            #define __AX_NAME ("ax_______________@@##??") //experimental
+            newasm::_register_FAST ax(__AX_NAME);
+
+            newasm::_register<int> rax("rax", 0); //lmao i've ran out of names
             newasm::_register<std::string> tlr("tlr", newasm::header::constants::inv_reg_val);
             newasm::_register<std::string> stl("stl", newasm::header::constants::inv_reg_val);
 
@@ -256,6 +242,9 @@ namespace newasm
             const int cr2__ = 18;
             const int cr3__ = 19;
 
+            const int ax__ = 20;
+            const int rax__ = 21;
+
             std::unordered_map<std::string, int> identifiers = {
                 {"tlr", tlr__},
                 {"stl", stl__},
@@ -276,7 +265,9 @@ namespace newasm
                 {"stk", stk__},
                 {"hea", hea__},
                 {"cr2", cr2__},
-                {"cr3", cr3__}
+                {"cr3", cr3__},
+                {__AX_NAME, ax__},
+                {"rax", rax__}
             };
 
             void resetRegisters()
@@ -308,6 +299,7 @@ namespace newasm
                 newasm::mem::regs::cr3.reset();
 
                 newasm::mem::regs::dlx.reset();
+                newasm::mem::regs::rax.reset();
 
                 //PRIVATE
                 newasm::mem::regs::lcx.reset();
@@ -338,6 +330,7 @@ namespace newasm
                 newasm::mem::regs::cr3.reset(thread_name);
 
                 newasm::mem::regs::dlx.reset(thread_name);
+                newasm::mem::regs::rax.reset(thread_name);
 
                 //PRIVATE
                 newasm::mem::regs::lcx.reset(thread_name);
@@ -540,22 +533,70 @@ namespace newasm
     {
         namespace functions
         {
-            void parseRegDeref(std::string& arg)
+            @maybe_unused
+            inline void parseRegDeref_EXPERIMENTAL(std::string& arg)
             {
-                if(newasm::header::functions::trim(arg).at(0) == '*' && arg.find('/') == std::string::npos)
+                std::cout << "Called parseRegDeref -> " << (*newasm::PRC)->tokens.size() << "; ";
+                std::cout << ((*newasm::PRC)->priArgType == newasm::datatypes::_regDeref) << "; " << ((*newasm::PRC)->altArgType == newasm::datatypes::_regDeref);
+                std::cout << std::endl;
+                bool priCheck = (priRegDeref && (*newasm::PRC)->tokens.size() == 2 && (*newasm::PRC)->priArgType == newasm::datatypes::_regDeref);
+                bool altCheck = (!priRegDeref && (*newasm::PRC)->tokens.size() == 3 && (*newasm::PRC)->altArgType == newasm::datatypes::_regDeref);
+                if(!(priCheck or altCheck))
                 {
-                    auto it = newasm::mem::regs::identifiers.find(newasm::header::functions::trim(arg.substr(1)));
-                    if(it == newasm::mem::regs::identifiers.end())
-                    {
-                        newasm::terminate(newasm::exit_codes::bus_err);
-                        return;
-                    }
+                    return;
+                }
+                std::cout << "priCheck = " << priCheck << "; altCheck = " << altCheck << std::endl;
+                unsigned int RID = (-1);
+                if(priCheck)
+                {
+                    RID = (*newasm::PRC)->priInt;
+                }
+                if(altCheck)
+                {
+                    RID = (*newasm::PRC)->altInt;
+                }
 
-                    switch(it->second)
+                static auto RID__ = RID;
+                static auto arg__ = arg;
+                $defer
+                    std::cout << "RID = " << RID__ << std::endl;
+                    std::cout << "arg = `" << arg__ << "`" << std::endl;
+                $
+
+                if(true)
+                {
+                    switch(RID)
                     {
+                        case newasm::mem::regs::ax__:
+                        {
+                            auto t = newasm::mem::regs::ax.get_type();
+                            (*newasm::PRC)->resType = t;
+                            if(t == newasm::datatypes::number)
+                            {
+                                (*newasm::PRC)->resInt = newasm::mem::regs::ax.get_value<int>();
+                                break;
+                            }
+                            if(t == newasm::datatypes::decimal)
+                            {
+                                (*newasm::PRC)->resFloat = newasm::mem::regs::ax.get_value<float>();
+                                break;
+                            }
+                            if(t == newasm::datatypes::character)
+                            {
+                                (*newasm::PRC)->resChar = newasm::mem::regs::ax.get_value<char>();
+                                break;
+                            }
+                            if(t == newasm::datatypes::text)
+                            {
+                                (*newasm::PRC)->resString = newasm::mem::regs::ax.get_value<std::string>();
+                                break;
+                            }
+                            break;
+                        }
                         case newasm::mem::regs::tlr__:
                         {
                             arg = newasm::mem::regs::tlr.get_value();
+                            //std::cout << "arg = `" << arg << "`" << std::endl;
                             break;
                         }
                         case newasm::mem::regs::stl__:
@@ -645,6 +686,11 @@ namespace newasm
                             arg = std::to_string(newasm::mem::regs::imm.get_value());
                             break;
                         }
+                        case newasm::mem::regs::rax__:
+                        {
+                            arg = std::to_string(newasm::mem::regs::rax.get_value());
+                            break;
+                        }
                         case newasm::mem::regs::stk__:
                         {
                             arg = std::to_string(newasm::mem::regs::stk.get_value());
@@ -662,6 +708,164 @@ namespace newasm
                         }
                     }
                 }
+                return;
+            }
+
+            ATTR_HOT inline void parseRegDeref(std::string& arg)
+            {
+                if(newasm::header::functions::trim(arg).at(0) == '*' && arg.find('/') == std::string::npos)
+                {
+                    auto it = newasm::mem::regs::identifiers.find(newasm::header::functions::trim(arg.substr(1)));
+                    if(it == newasm::mem::regs::identifiers.end())
+                    {
+                        newasm::terminate(newasm::exit_codes::bus_err);
+                        return;
+                    }
+
+                    switch(it->second)
+                    {
+                        case newasm::mem::regs::ax__:
+                        {
+                            auto t = newasm::mem::regs::ax.get_type();
+                            (*newasm::PRC)->resType = t;
+                            if(t == newasm::datatypes::number)
+                            {
+                                (*newasm::PRC)->resInt = newasm::mem::regs::ax.get_value<int>();
+                                break;
+                            }
+                            if(t == newasm::datatypes::decimal)
+                            {
+                                (*newasm::PRC)->resFloat = newasm::mem::regs::ax.get_value<float>();
+                                break;
+                            }
+                            if(t == newasm::datatypes::character)
+                            {
+                                (*newasm::PRC)->resChar = newasm::mem::regs::ax.get_value<char>();
+                                break;
+                            }
+                            if(t == newasm::datatypes::text)
+                            {
+                                (*newasm::PRC)->resString = newasm::mem::regs::ax.get_value<std::string>();
+                                break;
+                            }
+                            break;
+                        }
+                        case newasm::mem::regs::tlr__:
+                        {
+                            arg = newasm::mem::regs::tlr.get_value();
+                            //std::cout << "arg = `" << arg << "`" << std::endl;
+                            break;
+                        }
+                        case newasm::mem::regs::stl__:
+                        {
+                            arg = newasm::mem::regs::stl.get_value();
+                            break;
+                        }
+                        case newasm::mem::regs::psx__:
+                        {
+                            arg = newasm::mem::regs::psx.get_value();
+                            break;
+                        }
+                        #if 0
+                        case newasm::mem::regs::prp__:
+                        {
+                            arg = newasm::mem::regs::prp.get_value();
+                            break;
+                        }
+                        #endif
+                        case newasm::mem::regs::cpt__:
+                        {
+                            arg = newasm::mem::regs::cpt.get_value();
+                            break;
+                        }
+                        case newasm::mem::regs::tr0__:
+                        {
+                            arg = newasm::mem::regs::tr0.get_value();
+                            break;
+                        }
+                        case newasm::mem::regs::tr1__:
+                        {
+                            arg = newasm::mem::regs::tr1.get_value();
+                            break;
+                        }
+                        case newasm::mem::regs::dlx__:
+                        {
+                            arg = newasm::mem::regs::dlx.get_value();
+                            break;
+                        }
+                        case newasm::mem::regs::fdx__:
+                        {
+                            arg = std::to_string(newasm::mem::regs::fdx.get_value());
+                            break;
+                        }
+                        case newasm::mem::regs::cpr__:
+                        {
+                            arg = std::to_string(newasm::mem::regs::cpr.get_value());
+                            break;
+                        }
+                        case newasm::mem::regs::br0__:
+                        {
+                            arg = std::to_string(newasm::mem::regs::br0.get_value());
+                            break;
+                        }
+                        case newasm::mem::regs::br1__:
+                        {
+                            arg = std::to_string(newasm::mem::regs::br1.get_value());
+                            break;
+                        }
+                        case newasm::mem::regs::bos__:
+                        {
+                            arg = std::to_string(newasm::mem::regs::bos.get_value());
+                            break;
+                        }
+                        case newasm::mem::regs::cr0__:
+                        {
+                            arg = std::to_string(newasm::mem::regs::cr0.get_value());
+                            break;
+                        }
+                        case newasm::mem::regs::cr1__:
+                        {
+                            arg = std::to_string(newasm::mem::regs::cr1.get_value());
+                            break;
+                        }
+                        case newasm::mem::regs::cr2__:
+                        {
+                            arg = std::to_string(newasm::mem::regs::cr2.get_value());
+                            break;
+                        }
+                        case newasm::mem::regs::cr3__:
+                        {
+                            arg = std::to_string(newasm::mem::regs::cr3.get_value());
+                            break;
+                        }
+                        case newasm::mem::regs::imm__:
+                        {
+                            arg = std::to_string(newasm::mem::regs::imm.get_value());
+                            break;
+                        }
+                        case newasm::mem::regs::rax__:
+                        {
+                            arg = std::to_string(newasm::mem::regs::rax.get_value());
+                            break;
+                        }
+                        case newasm::mem::regs::stk__:
+                        {
+                            arg = std::to_string(newasm::mem::regs::stk.get_value());
+                            break;
+                        }
+                        case newasm::mem::regs::hea__:
+                        {
+                            arg = std::to_string(newasm::mem::regs::hea.get_value());
+                            break;
+                        }
+                        default:
+                        {
+                            newasm::terminate(newasm::exit_codes::os_error);
+                            break;
+                        }
+                    }
+                }
+                
                 return;
             }
 

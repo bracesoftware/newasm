@@ -149,7 +149,87 @@ namespace newasm
     {
         template<typename T>
         concept number = std::is_arithmetic_v<T>;
+
+        template<typename T>
+        concept _CanBeReg = (
+            std::is_same<T, int>::value or
+            std::is_same<T, float>::value or
+            std::is_same<T, char>::value or
+            std::is_same<T, std::string>::value
+        );
     }
+    class _register_FAST final
+    {
+        //main info
+        private std::string name;
+        private newasm::kernel::thread_safe<int> REG_TYPE__;
+        //for context switching
+        private newasm::kernel::thread_safe<int> regInt;
+        private newasm::kernel::thread_safe<float> regFloat;
+        private newasm::kernel::thread_safe<char> regChar;
+        private newasm::kernel::thread_safe<std::string> regString;
+
+        public explicit inline _register_FAST(std::string regname)
+            : name(regname)
+            {
+                __newasmDBG(std::cout << "REG CREATED" << std::endl;)
+            }
+
+        public inline int get_type()
+        {
+            return REG_TYPE__;
+        }
+
+        template<newasm::concepts::_CanBeReg T>
+        public inline void set_value(const T& val)
+        {
+            if constexpr(std::is_same_v<T, int>)
+            {
+                this->regInt = val;
+                this->REG_TYPE__ = newasm::datatypes::number;
+                return;
+            }
+            if constexpr(std::is_same_v<T, float>)
+            {
+                this->regFloat = val;
+                this->REG_TYPE__ = newasm::datatypes::decimal;
+                return;
+            }
+            if constexpr(std::is_same_v<T, char>)
+            {
+                this->regChar = val;
+                this->REG_TYPE__ = newasm::datatypes::character;
+                return;
+            }
+            if constexpr(std::is_same_v<T, std::string>)
+            {
+                this->regString = val;
+                this->REG_TYPE__ = newasm::datatypes::text;
+                return;
+            }
+        }
+
+        template<newasm::concepts::_CanBeReg T>
+        public inline T get_value()
+        {
+            if constexpr(std::is_same_v<T, int>)
+            {
+                return this->regInt;
+            }
+            if constexpr(std::is_same_v<T, float>)
+            {
+                return this->regFloat;
+            }
+            if constexpr(std::is_same_v<T, char>)
+            {
+                return this->regChar;
+            }
+            if constexpr(std::is_same_v<T, std::string>)
+            {
+                return this->regString;
+            }
+        }
+    };
     template<typename T>
     class _register final
     {

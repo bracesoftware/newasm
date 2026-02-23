@@ -13,15 +13,13 @@ namespace newasm
         newasm::core::constants::separator + newasm::core::constants::disk_file;
         class DISK_ final
         {
-            private:
-            std::string path;
+            private std::string path;
             int size;
             std::string volume_label;
             int sectors;
 
-            public:
-            std::string data;
-            explicit inline DISK_(std::string disk_file, int mb_size, std::string label)
+            public std::string data;
+            public explicit inline DISK_(std::string disk_file, int mb_size, std::string label)
             : path(disk_file), size(mb_size), volume_label(label)
             {
                 if(!std::filesystem::exists(path))
