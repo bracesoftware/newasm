@@ -462,20 +462,18 @@ namespace newasm
 
         class procedureData final
         {
-            private:
-            bool prepared = false;
-            public:
-            std::vector<newasm::compiler::lineData> contents;
+            private bool prepared = false;
+            public std::vector<newasm::compiler::lineData> contents;
             std::unordered_map<std::string, int> labels;
             int idx;
 
             std::string original_name;
             bool mangled = false;
 
-            explicit inline procedureData() noexcept {}
+            public explicit inline procedureData() noexcept {}
             inline ~procedureData() noexcept {}
 
-            inline void JIT_compile()
+            public inline void JIT_compile()
             {
                 if(this->prepared)
                 {

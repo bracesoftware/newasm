@@ -1816,7 +1816,8 @@ namespace newasm
                         {'\\', '\\'},
                         {'\'', '\''},
                         {'"', '\"'},
-                        {'0', '\0'}
+                        {'0', '\0'},
+                        {'?', '?'}
                     };
 
                     auto charry = escape_map.find(character);

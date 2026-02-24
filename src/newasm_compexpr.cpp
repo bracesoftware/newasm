@@ -18,15 +18,14 @@ namespace newasm
             {"@", struct_access}
         };
     }
-    class token
+    class token final
     {
-        public:
-        int type = 0;
+        public int type = 0;
         std::string symbol;
         int operator__ = 0;
 
-        token(){}
-        token(int T, std::string S, int O)
+        public explicit inline token() noexcept {}
+        public inline token(int T, std::string S, int O) noexcept
             : type(T), symbol(S), operator__(O) {}
     };
 

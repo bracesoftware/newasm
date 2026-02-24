@@ -1931,7 +1931,6 @@ using "ios"
     free test::alloc
 
     ; free 4 ; error
-
     malloc 1
     free nil
 
@@ -2212,7 +2211,7 @@ link "testfile.asm" ; link a file
     }
     ./!tredz
 ;jmp dsfdsfdsdssdf
-    mov tlr, "HERE IT CRASHES!!! 1"
+    mov tlr, "HERE\? IT CRASHES!!! 1"
     call std::ios::writeln
     sysreq & tredz::testThread -> thread
     mov tlr, "HERE IT CRASHES!!! 2"

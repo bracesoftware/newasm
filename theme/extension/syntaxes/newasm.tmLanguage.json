@@ -83,7 +83,7 @@
       "patterns": [
         {
           "name": "constant.character.escape.newasm",
-          "match": "\\\\[nrtvfab\\\\'\"]"
+          "match": "\\\\[nrtvfa?b\\\\'\"]"
         },
         {
           "name": "constant.character.escape.hex.newasm",
