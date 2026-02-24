@@ -39,8 +39,17 @@ extern "C"
     TTF_Font *font = NULL;
     int quit = 0;
 
-    SDL_Color white = {255, 255, 255, 255};
-    SDL_Color black = {0, 0, 0, 255};
+    SDL_Color white     = {255, 255, 255, 255};
+    SDL_Color black     = {0, 0, 0, 255};
+    SDL_Color red       = {255, 0, 0, 255};
+    SDL_Color yellow    = {255, 255, 0, 255};
+    SDL_Color green     = {0, 255, 0, 255};
+    SDL_Color blue      = {0, 0, 255, 255};
+    SDL_Color magenta   = {255, 0, 255, 255};
+    SDL_Color cyan      = {0, 255, 255, 255};
+    SDL_Color gray      = {128, 128, 128, 255};
+
+    SDL_Color current = white;
 
     SDL_Texture* glyphCache[256];
 
@@ -194,9 +203,21 @@ extern "C"
         renderScreen();
     }
 
+    extern void setCol(int colid)
+    {
+        if(colid == 1) current = red;
+        if(colid == 2) current = yellow;
+        if(colid == 3) current = green;
+        if(colid == 4) current = blue;
+        if(colid == 5) current = magenta;
+        if(colid == 6) current = cyan;
+        if(colid == 7) current = gray;
+        if(colid == 8) current = white;
+    }
+
     extern void printToConsole(const char* text)
     {
-        printTextToConsole(text, white, black);
+        printTextToConsole(text, current, black);
         return;
     }
 

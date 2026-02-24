@@ -29,41 +29,54 @@ class C__ extends A__ {};
 class D__ extends private C__, public B__ {};
 class E__ extends public D__ {};
 
-int main(int argc, char* argv[])
+namespace newasm::bootloader
 {
-    $defer //BC++ feature, $ blocks
-        newasm::GLOBAL::cleanup();
-    $// instead of {}, we use $..$
+    int __main__(int argc, char* argv[])
+    {
+        $defer //BC++ feature, $ blocks
+            newasm::GLOBAL::cleanup();
+        $// instead of {}, we use $..$
 
-    if constexpr(false)
-    {
-        auto prompt = newasm::utils::inlineMenu({"opcija 1", "opcija 2", "opcija 3", "opcija 4"});
-        std::cout << "odabrali ste " << prompt << std::endl;
-    }
-    if constexpr(0) std::ios::sync_with_stdio(false);
-
-    newasm::Experimental::entry();
-
-    try
-    {
-        newasm::entry(argc, argv);
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << "[NewASM] You got VERY ZAJEBAN -> " << e.what() << std::endl;
-        throw;
-    }
-    
-    if(false)
-    {
-        for(int i = 0; i < newasm::forLinker::lineData.size(); ++i)
+        if constexpr(false)
         {
-            std::cout << newasm::forLinker::lineData.at(i).first << " = " << newasm::forLinker::lineData.at(i).second << std::endl;
+            auto prompt = newasm::utils::inlineMenu({"opcija 1", "opcija 2", "opcija 3", "opcija 4"});
+            std::cout << "odabrali ste " << prompt << std::endl;
+        }
+        if constexpr(0) std::ios::sync_with_stdio(false);
+
+        newasm::Experimental::entry();
+
+        try
+        {
+            newasm::entry(argc, argv);
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << "[NewASM] You got VERY ZAJEBAN -> " << e.what() << std::endl;
+            throw;
+        }
+        
+        if(false)
+        {
+            for(int i = 0; i < newasm::forLinker::lineData.size(); ++i)
+            {
+                std::cout << newasm::forLinker::lineData.at(i).first << " = " << newasm::forLinker::lineData.at(i).second << std::endl;
+            }
+
+            std::cout << "newasm::forLinker::lineData.size(): " << newasm::forLinker::lineData.size() << std::endl;
+            std::cout << "newasm::forLinker__OLD::linked_size: " << newasm::forLinker__OLD::linked_size << std::endl;
         }
 
-        std::cout << "newasm::forLinker::lineData.size(): " << newasm::forLinker::lineData.size() << std::endl;
-        std::cout << "newasm::forLinker__OLD::linked_size: " << newasm::forLinker__OLD::linked_size << std::endl;
+        return 0;
     }
+}
+int main(int argc, char** argv)
+{
+    std::thread t1(newasm::bootloader::__main__, argc, argv);
 
+    if(t1.joinable())
+    {
+        t1.join();
+    }
     return 0;
 }

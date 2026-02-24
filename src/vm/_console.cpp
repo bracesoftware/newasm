@@ -37,6 +37,7 @@ extern "C"
     void printToConsole(const char* text);
     void closeConsoleWindow();
     void cls();
+    void setCol(int id);
 }
 #endif
 namespace newasm
@@ -169,6 +170,22 @@ namespace newasm
                 #endif
             #endif
             return;
+        }
+
+        inline static void col(int colid)
+        {
+            #if USING_SDL_FINALLY == 0
+            if(colid == 1) std::cout << newasm::header::col::red;
+            if(colid == 2) std::cout << newasm::header::col::yellow;
+            if(colid == 3) std::cout << newasm::header::col::green;
+            if(colid == 4) std::cout << newasm::header::col::blue;
+            if(colid == 5) std::cout << newasm::header::col::magenta;
+            if(colid == 6) std::cout << newasm::header::col::cyan;
+            if(colid == 7) std::cout << newasm::header::col::gray;
+            if(colid == 8) std::cout << newasm::header::col::reset;
+            #elif USING_SDL_FINALLY == 1
+            setCol(colid);
+            #endif
         }
     };
 }

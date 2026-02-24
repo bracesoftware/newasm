@@ -2177,6 +2177,9 @@ link "testfile.asm" ; link a file
     sysenter "ios"
     syscall
     syscall
+    
+    mov tlr, 3
+    out 1
 
     mov tlr, "hello black world\n"
     call std::ios::writeln

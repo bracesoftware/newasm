@@ -19,3 +19,7 @@ __newasm_LOAD_PACKAGE_MODULE(hostos_specific__UTILS, {
 #endif
 
 link "vm/_experimental";
+
+__newasm_LOAD_PACKAGE_MODULE(SDL_screen_emulator, {
+    //setup goes here
+});

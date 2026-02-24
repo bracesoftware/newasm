@@ -55,6 +55,7 @@ namespace newasm
                 }
                 int signal = std::stoi(newasm::mem::regs::tlr.get_value());
                 i.set_value(signal);
+                #if 0
                 if(i.get_value() == 1) std::cout << newasm::header::col::red;
                 if(i.get_value() == 2) std::cout << newasm::header::col::yellow;
                 if(i.get_value() == 3) std::cout << newasm::header::col::green;
@@ -63,6 +64,12 @@ namespace newasm
                 if(i.get_value() == 6) std::cout << newasm::header::col::cyan;
                 if(i.get_value() == 7) std::cout << newasm::header::col::gray;
                 if(i.get_value() == 8) std::cout << newasm::header::col::reset;
+                #endif
+                auto x = i.get_value();
+                if(1 <= x && x <= 8)
+                {
+                    newasm::Console::col(i.get_value());
+                }
                 else if(i.get_value() < 1 || i.get_value() > 8)
                 {
                     i.set_value(0); //invalid request
