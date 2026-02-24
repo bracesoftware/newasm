@@ -64,7 +64,7 @@ namespace newasm
             //with thread_safe<T> the same way
             inline void global_init()
             {
-                thread_values.max_load_factor(0.5f);
+                thread_values.max_load_factor(MAX_LOAD_FACTOR);
             }
             
             public inline thread_safe(T&& val)
@@ -245,7 +245,7 @@ namespace newasm
         public explicit inline _register(std::string regname, T val)
             : name(regname), value(val), initial_value(val)
             {
-                thread_values.max_load_factor(0.5f);
+                thread_values.max_load_factor(MAX_LOAD_FACTOR);
             }
 
 

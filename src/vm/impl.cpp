@@ -41,6 +41,7 @@ stock constexpr inline void _newasm_rem__24234() noexcept
 #define NIL_STR "nil"
 #define INVALID_INS (-1)
 #define INS_EXTERNAL (-2)
+#define MAX_LOAD_FACTOR (0.5f)
 
 static_assert(sizeof(int) == 4);
 static_assert(sizeof(float) == 4);

@@ -868,7 +868,7 @@ namespace newasm
 link "vm/utilities/procfile";
 
 __newasm_LOAD_PACKAGE_MODULE(main_module, {
-    newasm::mem::labels.max_load_factor(0.5f);
+    newasm::mem::labels.max_load_factor(MAX_LOAD_FACTOR);
     return;
 });
 namespace newasm
@@ -879,7 +879,7 @@ namespace newasm
         newasm::mem::regs::fdx.make_short(true);
         newasm::mem::regs::fdx.log_things(false);
         newasm::variables::ids.reserve(1000); // for funsies
-        newasm::variables::ids.max_load_factor(0.5f);
+        newasm::variables::ids.max_load_factor(MAX_LOAD_FACTOR);
         #if 0
         {
             newasm::execBytecode test = newasm::compiler::DO("mov tlr, 3");

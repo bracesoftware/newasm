@@ -48,6 +48,7 @@ namespace newasm
                 {
                     return;
                 }
+                this->labels.max_load_factor(MAX_LOAD_FACTOR);
 
                 for(int i = 0; i < this->contents.size(); ++i)
                 {
