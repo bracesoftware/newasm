@@ -1767,6 +1767,7 @@ using "ios"
 
         obj testagain:  instance    & namespace::testClass
         obj testagain2:     instance              & namespace::testClass
+
     ./!namespace
 .start
     mov tlr, number
@@ -2388,6 +2389,9 @@ jmp doneshit
     syscall
     mov tlr, *rax
     call std::ios::writeln
+
+    ;mov tlr, $-&testStringMan
+    ;call std::ios::writeln
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     mov tlr, 223
     ret *tlr

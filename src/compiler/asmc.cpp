@@ -270,6 +270,26 @@ namespace newasm
                 lineCompiled.tokens.push_back(name);
                 value = newasm::header::functions::parseBackslash(value);
                 lineCompiled.tokens.push_back(value);
+                if(newasm::header::functions::isnumeric(value))
+                {
+                    lineCompiled.priArgType = newasm::datatypes::number;
+                    lineCompiled.priInt = std::stoi(value);
+                }
+                if(newasm::header::functions::isfloat(value))
+                {
+                    lineCompiled.priArgType = newasm::datatypes::decimal;
+                    lineCompiled.priFloat = std::stof(value);
+                }
+                if(newasm::header::functions::ischar(value))
+                {
+                    lineCompiled.priArgType = newasm::datatypes::character;
+                    lineCompiled.priChar = newasm::header::functions::remsq(value)[0];
+                }
+                if(newasm::header::functions::istext(value))
+                {
+                    lineCompiled.priArgType = newasm::datatypes::text;
+                    lineCompiled.priString = newasm::header::functions::remq(value);
+                }
 
                 auto it = newasm::inverted_types.find(typ);
                 if(it != newasm::inverted_types.end())
@@ -484,6 +504,7 @@ namespace newasm
                     {
                         if(lineCompiled.whatAmIDoing == newasm::core::lang_inf::sysenter)
                         {
+                            auto suf = lineCompiled.tokens.at(i);
                             if(!newasm::header::functions::istext(suf))
                             {
                                 lineCompiled.krnlMod = INVALID_INS;
