@@ -16,6 +16,12 @@ namespace newasm
             bool aborted = false;
             std::string line;
             int lnidx = 0;
+
+            std::vector<std::string> symbol_map;
+            std::vector<std::string> namespace_stack;
+
+            bool objectDecl = false;
+            bool JIT_mode = false;
         }
         namespace fail
         {
@@ -25,6 +31,7 @@ namespace newasm
             const int expected_token = 4;
             const int unknown_attrib = 5;
             const int unknown_register = 6;
+            const int symbol_redecl = 7;
 
             const std::unordered_map<int, std::string> id = {
                 {unmatched_syntax, "UnmatchedSyntax"},
@@ -32,7 +39,8 @@ namespace newasm
                 {invalid_krnlmod, "UnknownKernelModule"},
                 {expected_token, "ExpectedToken"},
                 {unknown_attrib, "UnknownAttribute"},
-                {unknown_register, "UnknownRegister"}
+                {unknown_register, "UnknownRegister"},
+                {symbol_redecl, "SymbolRedeclaration"}
             };
         }
 
@@ -45,8 +53,17 @@ namespace newasm
             std::cout << "\" on line:\n";
             std::cout << newasm::header::col::gray << "\t\t";
 
-            if(!newasm::header::data::repl) std::cout << newasm::compiler::data::lnidx << " |  ";
-            if(newasm::header::data::repl) std::cout << ">>> ";
+            auto& idx = newasm::compiler::data::lnidx;
+            try
+            {
+                if(!newasm::header::data::repl) std::cout << newasm::forLinker::getFile(idx - 1) << ":" << newasm::forLinker::getLine(idx - 1) << " |  ";
+            }
+            catch(const std::exception& e)
+            {
+                if(!newasm::header::data::repl) std::cout << "JIT cache | ";
+            }
+            
+            if(newasm::header::data::repl) std::cout << "JIT buffer >>> ";
             
             std::cout << newasm::header::col::reset
             << newasm::compiler::data::line << newasm::header::col::red << std::endl;
@@ -186,13 +203,25 @@ namespace newasm
             if(newasm::header::functions::parseNamespace(line).first)
             {
                 lineCompiled.type = newasm::compiler::namespace__;
-                lineCompiled.tokens.push_back(newasm::header::functions::parseNamespace(line).second);
+                auto namespace_name = newasm::header::functions::parseNamespace(line).second;
+                lineCompiled.tokens.push_back(namespace_name);
+                if(namespace_name[0] == '!' && newasm::header::functions::trim(namespace_name.substr(1)) == newasm::compiler::data::namespace_stack.back())
+                {
+                    //else u gonna get a runtime exception,cuz namespace mangling is a runtime operation
+                    //tell me about an insane vm design
+                    newasm::compiler::data::namespace_stack.pop_back();
+                }
+                else
+                {
+                    newasm::compiler::data::namespace_stack.push_back(namespace_name);
+                }
                 return lineCompiled;
             }
             //closingbrace
             if(line == static_cast<std::string>("}"))
             {
                 lineCompiled.type = newasm::compiler::closingBrace;
+                newasm::compiler::data::objectDecl = false; //no namespace checking within classes or objects
                 return lineCompiled;
             }
             //macroterminator
@@ -258,12 +287,43 @@ namespace newasm
                 
                 return lineCompiled; 
             }
+            auto checkCollisions = [](std::string name) -> void {//error checking at compile time
+                if(!newasm::compiler::data::JIT_mode) if(newasm::compiler::data::objectDecl)
+                {
+                    return;
+                }
+                if(newasm::compiler::data::JIT_mode) if(newasm::header::data::struct_now)
+                {
+                    return;
+                }
+                std::string temp_name;
+                temp_name.append(name);
+                for(int i = 0; i < newasm::compiler::data::namespace_stack.size(); ++i)
+                {
+                    temp_name.append("--");
+                    temp_name.append(newasm::compiler::data::namespace_stack[i]);
+                }
+                auto& vec = newasm::compiler::data::symbol_map;
+                bool exists = std::find(vec.begin(), vec.end(), temp_name) != vec.end();
+                if(exists)
+                {
+                    newasm::compiler::abort(newasm::compiler::fail::symbol_redecl);
+                }
+                newasm::compiler::data::symbol_map.push_back(temp_name);
+            };
             // DATA DECL
             if(data_macroDecl.first == 2)
             {
                 auto typ = data_macroDecl.second.at(0);
                 auto name = data_macroDecl.second.at(1);
                 auto value = data_macroDecl.second.at(2);
+
+                if(!newasm::header::functions::isalphanum(name))
+                {
+                    newasm::compiler::abort(newasm::compiler::fail::unmatched_syntax);
+                }
+
+                checkCollisions(name);
 
                 lineCompiled.type = newasm::compiler::dataDecl;
                 lineCompiled.tokens.push_back(typ);
@@ -297,13 +357,19 @@ namespace newasm
                     lineCompiled.parsedType = it->second;
                 }
 
+                if(typ == "class")
+                {
+                    newasm::compiler::data::objectDecl = true;
+                }
                 if(typ == "obj")
                 {
+                    newasm::compiler::data::objectDecl = true;
                     auto t = newasm::header::functions::tokenize__2(value);
                     if(t.size() == 2)
                     {
                         if(newasm::core::lang_inf::utils::iskeyword(t.at(0), newasm::core::lang_inf::utils::instance))
                         {
+                            newasm::compiler::data::objectDecl = false;
                             lineCompiled.type = newasm::compiler::classInstance;
                             lineCompiled.tokens.pop_back();
                             lineCompiled.tokens.push_back(t.at(1));
@@ -414,6 +480,11 @@ namespace newasm
                                     lineCompiled.whatTheFuckAreEvents = it2->second;
                                 }
                             }
+                            //checking for thread names cuz SPEED
+                            if(lineCompiled.whatAmIDoing == newasm::core::lang_inf::thread__)
+                            {
+                                checkCollisions(otherShit);
+                            }
                             return lineCompiled;
                         }
                         if(linetokens_inline.size() == 1) // process_is(line, linetokens_inline.at(0), linetokens_inline.at(1))
@@ -502,6 +573,7 @@ namespace newasm
                     // optimisation
                     if(i == 1)
                     {
+                        //compiling krnl modules cuz SPEED
                         if(lineCompiled.whatAmIDoing == newasm::core::lang_inf::sysenter)
                         {
                             auto suf = lineCompiled.tokens.at(i);
@@ -519,6 +591,11 @@ namespace newasm
                                 return lineCompiled;
                             }
                             lineCompiled.krnlMod = kernel_module->second;
+                        }
+                        //compiling proc names CUZ SPEED
+                        if(lineCompiled.whatAmIDoing == newasm::core::lang_inf::proc)
+                        {
+                            checkCollisions(lineCompiled.tokens.at(i));
                         }
                         auto it_ = newasm::mem::regs::identifiers.find(lineCompiled.tokens.at(i));
                         if(it_ != newasm::mem::regs::identifiers.end())

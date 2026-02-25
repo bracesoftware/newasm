@@ -104,6 +104,7 @@ namespace newasm
         const int proc = 10;
         
         const int static_objz = 11;
+        const int threadz = 12;
         const int event = 100;
         const int _regDeref = 101;
     }

@@ -380,7 +380,7 @@ namespace newasm
             name = newasm::header::functions::mangleName(newasm::nms::stack, name);
             //std::cout << "mangled name: `" << name << "`" << std::endl;
         }
-        
+        #if 0
         if(!newasm::header::data::struct_now) if(newasm::mem::functions::datavalid(name, newasm::mem::data))
         {
             if(true)
@@ -421,633 +421,629 @@ namespace newasm
                 return 1;
             }
         }
-        
-        if(newasm::header::functions::isalphanum(name))
+        #endif
+        #if 0
+        auto it = newasm::inverted_types.find(dtyp);
+        if(it == newasm::inverted_types.end())
         {
-            #if 0
-            auto it = newasm::inverted_types.find(dtyp);
-            if(it == newasm::inverted_types.end())
+            newasm::terminate(newasm::exit_codes::invalid_syntax);
+            return 1;
+        }
+        #endif
+        switch(line.parsedType)
+        {
+            //objects
+            case newasm::core::lang_inf::typenames::obj:
             {
-                newasm::terminate(newasm::exit_codes::invalid_syntax);
+                if(!newasm::brace_stack__.empty())
+                {
+                    newasm::terminate(newasm::exit_codes::nested_object);
+                    return 1;
+                }
+                
+                if(value != static_cast<std::string>("{"))
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_syntax);
+                    return 1;
+                }
+
+                newasm::header::data::struct_now = true;
+                newasm::header::data::struct_decl = name;
+                newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
+
+                newasm::variables::ids[name].type = newasm::datatypes::static_objz;
+
+                newasm::variables::ids.at(name).obj = new newasm::variables::staticObjectData;
+                newasm::variables::ids.at(name).attrib = newasm::runtime::currentAttributes;
+                newasm::runtime::currentAttributes = 0;
+                
+                newasm::brace_stack__.push_back(newasm::brace_stack::object_block);
                 return 1;
             }
-            #endif
-            switch(line.parsedType)
+            // whole numbers
+            case newasm::core::lang_inf::typenames::num:
             {
-                //objects
-                case newasm::core::lang_inf::typenames::obj:
+                if(newasm::header::data::struct_now)
                 {
-                    if(!newasm::brace_stack__.empty())
+                    if(!newasm::header::functions::isnumeric(value))
                     {
-                        newasm::terminate(newasm::exit_codes::nested_object);
+                        //newasm::progwin::api::cout("IT HAS TO BE A NUMBER (ZajebucnuoSiSeException) -> " + value);
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                         return 1;
                     }
-                    
-                    if(value != static_cast<std::string>("{"))
+                    newasm::mem::structs[newasm::header::data::struct_decl].push_back({newasm::datatypes::number, name, value});
+                    return 1;
+                }
+
+                if(line.priArgType == newasm::datatypes::symbol_name) if(!newasm::header::functions::isnumeric(value))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                    return 1;
+                }
+                if(line.priArgType != newasm::datatypes::symbol_name) if(line.priArgType != newasm::datatypes::number)
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                    return 1;
+                }
+                
+                //newasm::mem::datatypes[name] = newasm::datatypes::number;
+                //newasm::mem::data[name] = value;
+                //newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
+                //_newasm_addnamespaces(name)
+
+                newasm::variables::ids[name].type = newasm::datatypes::number;
+                auto& mmap = newasm::variables::ids.at(name);
+                mmap.locked = newasm::expcfg::lockbool;
+                mmap.transient__ = newasm::expcfg::transientbool;
+                mmap.attrib = newasm::runtime::currentAttributes;
+                newasm::runtime::currentAttributes = 0;
+
+                if(newasm::expcfg::transientbool)
+                {
+                    newasm::garbage::FLAG = 1;
+                    newasm::garbage::addr__.push_back(name);
+                }
+
+                if(line.priArgType == newasm::datatypes::symbol_name)
+                {
+                    mmap.addr = newasm::hardware::randAccessMem.write<int>(std::stoi(value));
+                }
+                if(line.priArgType == newasm::datatypes::number)
+                {
+                    mmap.addr = newasm::hardware::randAccessMem.write<int>(line.priInt);
+                }
+                return 1;
+            }
+            //decimal numbers
+            case newasm::core::lang_inf::typenames::decm:
+            {
+                if(newasm::header::data::struct_now)
+                {
+                    if(!newasm::header::functions::isfloat(value))
+                    {
+                        //newasm::progwin::api::cout("IT HAS TO BE A NUMBER (ZajebucnuoSiSeException) -> " + value);
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    newasm::mem::structs[newasm::header::data::struct_decl].push_back({newasm::datatypes::decimal, name, value});
+                    return 1;
+                }
+                if(line.priArgType == newasm::datatypes::symbol_name) if(!newasm::header::functions::isfloat(value))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                    return 1;
+                }
+                if(line.priArgType != newasm::datatypes::symbol_name) if(line.priArgType != newasm::datatypes::decimal)
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                    return 1;
+                }
+                //newasm::mem::datatypes[name] = newasm::datatypes::decimal;
+                //newasm::mem::data[name] = value;
+                //newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
+                //_newasm_addnamespaces(name)
+
+                newasm::variables::ids[name].type = newasm::datatypes::decimal;
+                auto& mmap = newasm::variables::ids.at(name);
+                mmap.locked = newasm::expcfg::lockbool;
+                mmap.transient__ = newasm::expcfg::transientbool;
+                mmap.attrib = newasm::runtime::currentAttributes;
+                newasm::runtime::currentAttributes = 0;
+
+                if(newasm::expcfg::transientbool)
+                {
+                    newasm::garbage::FLAG = 1;
+                    newasm::garbage::addr__.push_back(name);
+                }
+
+                if(line.priArgType == newasm::datatypes::symbol_name)
+                {
+                    mmap.addr = newasm::hardware::randAccessMem.write<float>(std::stof(value));
+                }
+                if(line.priArgType == newasm::datatypes::decimal)
+                {
+                    mmap.addr = newasm::hardware::randAccessMem.write<float>(line.priFloat);
+                }
+                return 1;
+            }
+            // text
+            case newasm::core::lang_inf::typenames::txt:
+            {
+                if(newasm::header::data::struct_now)
+                {
+                    if(!newasm::header::functions::istext(value))
+                    {
+                        //newasm::progwin::api::cout("IT HAS TO BE A NUMBER (ZajebucnuoSiSeException) -> " + value);
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    newasm::mem::structs[newasm::header::data::struct_decl].push_back({newasm::datatypes::text, name, value});
+                    return 1;
+                }
+                if(line.priArgType == newasm::datatypes::symbol_name) if(!newasm::header::functions::istext(value))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                    return 1;
+                }
+                if(line.priArgType != newasm::datatypes::symbol_name) if(line.priArgType != newasm::datatypes::text)
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                    return 1;
+                }
+                //value = newasm::header::functions::parseBackslash(value);
+                //newasm::header::functions::remq(value);
+
+                newasm::variables::ids[name].type = newasm::datatypes::text;
+                auto& mmap = newasm::variables::ids.at(name);
+                mmap.locked = newasm::expcfg::lockbool;
+                mmap.transient__ = newasm::expcfg::transientbool;
+                mmap.attrib = newasm::runtime::currentAttributes;
+                newasm::runtime::currentAttributes = 0;
+
+                if(newasm::expcfg::transientbool)
+                {
+                    newasm::garbage::FLAG = 1;
+                    newasm::garbage::addr__.push_back(name);
+                }
+
+                if(line.priArgType == newasm::datatypes::symbol_name)
+                {
+                    mmap.addr = newasm::hardware::randAccessMem.write<std::string>(newasm::header::functions::remq(value));
+                }
+                if(line.priArgType == newasm::datatypes::text)
+                {
+                    mmap.addr = newasm::hardware::randAccessMem.write<std::string>(line.priString);
+                }
+
+                /*
+                std::cout << "_____________BACKTRACE_____________\n";
+                std::cout << "Writing a string......";
+                std::cout << "Variable name: " << name << std::endl;
+                std::cout << "Addess: " << newasm::variables::ids.at(name).addr << std::endl;
+                std::cout << "Value: " << newasm::hardware::randAccessMem.peek<std::string>(newasm::variables::ids.at(name).addr) << std::endl;
+                std::cout << "___________________________________\n";
+                */
+                return 1;
+            }
+            // references
+            case newasm::core::lang_inf::typenames::ref:
+            {
+                if(!newasm::header::functions::isref(value) && value != static_cast<std::string>(NIL_STR))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                    return 1;
+                }
+                if(!newasm::mem::functions::datavalid(
+                newasm::header::functions::remamp(value), newasm::mem::data)
+                && !newasm::mem::functions::datavalid(
+                newasm::header::functions::remamp(value), newasm::variables::ids)
+                && value != static_cast<std::string>(NIL_STR))
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_memacc);
+                    return 1;
+                }
+                if(newasm::header::data::struct_now)
+                {
+                    newasm::mem::structs[newasm::header::data::struct_decl].push_back({newasm::datatypes::reference, name, value});
+                    return 1;
+                }
+
+                newasm::mem::datatypes[name] = newasm::datatypes::reference;
+                newasm::mem::data[name] = value;
+                newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
+                return 1;
+            }
+            // characters
+            case newasm::core::lang_inf::typenames::char__:
+            {
+                if(newasm::header::data::struct_now)
+                {
+                    if(!newasm::header::functions::ischar(value))
+                    {
+                        //newasm::progwin::api::cout("IT HAS TO BE A NUMBER (ZajebucnuoSiSeException) -> " + value);
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    newasm::mem::structs[newasm::header::data::struct_decl].push_back({newasm::datatypes::character, name, value});
+                    return 1;
+                }
+                if(line.priArgType == newasm::datatypes::symbol_name) if(!newasm::header::functions::ischar(value))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                    return 1;
+                }
+                if(line.priArgType != newasm::datatypes::symbol_name) if(line.priArgType != newasm::datatypes::character)
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                    return 1;
+                }
+                //value = newasm::header::functions::parseBackslash(value);
+                //newasm::header::functions::remsq(value);
+                
+                
+                newasm::variables::ids[name].type = newasm::datatypes::character;
+                auto& mmap = newasm::variables::ids.at(name);
+                mmap.locked = newasm::expcfg::lockbool;
+                mmap.transient__ = newasm::expcfg::transientbool;
+                mmap.attrib = newasm::runtime::currentAttributes;
+                newasm::runtime::currentAttributes = 0;
+
+                if(newasm::expcfg::transientbool)
+                {
+                    newasm::garbage::FLAG = 1;
+                    newasm::garbage::addr__.push_back(name);
+                }
+
+                if(line.priArgType == newasm::datatypes::symbol_name)
+                {
+                    mmap.addr = newasm::hardware::randAccessMem.write<char>(newasm::header::functions::remsq(value).at(0));
+                }
+                if(line.priArgType == newasm::datatypes::character)
+                {
+                    mmap.addr = newasm::hardware::randAccessMem.write<char>(line.priChar);
+                }
+                return 1;
+            }
+            // tuples
+            case newasm::core::lang_inf::typenames::tuple:
+            {
+                if(!newasm::header::functions::istuple(value))
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    return 1;
+                }
+
+                auto contents = newasm::header::functions::parseTuple(value);
+
+                newasm::variables::ids[name].type = newasm::datatypes::tuple;
+                auto& mmap = newasm::variables::ids.at(name);
+
+                mmap.tuple = new newasm::variables::tupleData;
+                mmap.attrib = newasm::runtime::currentAttributes;
+                newasm::runtime::currentAttributes = 0;
+                for(int i = 0; i < contents.size(); ++i)
+                {
+                    int address;
+                    std::string value_buf = contents.at(i);
+                    newasm::runtime::functions::parse(value_buf);
+                    //integerz
+                    if(newasm::header::functions::isnumeric(value_buf))
+                    {
+                        address = newasm::hardware::randAccessMem.write<int>(std::stoi(value_buf));
+                        mmap.tuple->addr.push_back(address);
+                        mmap.tuple->type.push_back(newasm::datatypes::number);
+                        continue;
+                    }
+                    //floatz
+                    if(newasm::header::functions::isfloat(value_buf))
+                    {
+                        address = newasm::hardware::randAccessMem.write<float>(std::stof(value_buf));
+                        mmap.tuple->addr.push_back(address);
+                        mmap.tuple->type.push_back(newasm::datatypes::decimal);
+                        continue;
+                    }
+                    //charz
+                    if(newasm::header::functions::ischar(value_buf))
+                    {
+                        value_buf = newasm::header::functions::parseBackslash<true>(value_buf); //addin true means we're forcing backslash evaluation
+                        address = newasm::hardware::randAccessMem.write<char>(newasm::header::functions::remsq(value_buf).at(0));
+                        mmap.tuple->addr.push_back(address);
+                        mmap.tuple->type.push_back(newasm::datatypes::character);
+                        continue;
+                    }
+                    //stringz
+                    if(newasm::header::functions::istext(value_buf))
+                    {
+                        value_buf = newasm::header::functions::parseBackslash<true>(value_buf);
+                        address = newasm::hardware::randAccessMem.write<std::string>(newasm::header::functions::remq(value_buf));
+                        mmap.tuple->addr.push_back(address);
+                        mmap.tuple->type.push_back(newasm::datatypes::text);
+                        continue;
+                    }
+                    newasm::terminate(newasm::exit_codes::invalid_syntax);
+                    return 1;
+                }
+                //newasm::mem::tuple[name].contents = newasm::header::functions::parseTuple(value);
+                return 1;
+            }
+            // contexts
+            case newasm::core::lang_inf::typenames::context__:
+            {
+                if(!newasm::header::functions::isTupleOrContext(value))
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_init);
+                    return 1;
+                }
+
+                auto contents = newasm::header::functions::parseContext(value);
+
+                newasm::variables::ids[name].type = newasm::datatypes::mycontext;
+                auto& mmap = newasm::variables::ids.at(name);
+                mmap.context = new newasm::variables::contextData;
+                mmap.attrib = newasm::runtime::currentAttributes;
+                newasm::runtime::currentAttributes = 0;
+
+                //newasm::header::functions::info("Created context: " + name);
+
+                if(contents.size() == 0)
+                {
+                    return 1;
+                }
+                //std::string key, value;
+                std::vector<std::string> v;
+                int addr_temp = 0;
+                for(int i = 0; i < contents.size(); ++i)
+                {
+                    if(!contents.at(i).find(':'))
                     {
                         newasm::terminate(newasm::exit_codes::invalid_syntax);
                         return 1;
                     }
-
-                    newasm::header::data::struct_now = true;
-                    newasm::header::data::struct_decl = name;
-                    newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
-
-                    newasm::variables::ids[name].type = newasm::datatypes::static_objz;
-
-                    newasm::variables::ids.at(name).obj = new newasm::variables::staticObjectData;
-                    newasm::variables::ids.at(name).attrib = newasm::runtime::currentAttributes;
-                    newasm::runtime::currentAttributes = 0;
-                 
-                    newasm::brace_stack__.push_back(newasm::brace_stack::object_block);
-                    return 1;
-                }
-                // whole numbers
-                case newasm::core::lang_inf::typenames::num:
-                {
-                    if(newasm::header::data::struct_now)
+                    v.clear();
+                    v = newasm::header::functions::split(contents.at(i), ':');
+                    if(v.size() != 2)
                     {
-                        if(!newasm::header::functions::isnumeric(value))
-                        {
-                            //newasm::progwin::api::cout("IT HAS TO BE A NUMBER (ZajebucnuoSiSeException) -> " + value);
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                            return 1;
-                        }
-                        newasm::mem::structs[newasm::header::data::struct_decl].push_back({newasm::datatypes::number, name, value});
+                        newasm::terminate(newasm::exit_codes::invalid_syntax);
                         return 1;
                     }
+                    std::string& key = v.at(0), & value__ = v.at(1);
+                    key = newasm::header::functions::trim(key);
+                    value__ = newasm::header::functions::trim(value__);
+                    newasm::runtime::functions::parse(value__);
 
-                    if(line.priArgType == newasm::datatypes::symbol_name) if(!newasm::header::functions::isnumeric(value))
-                    {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                        return 1;
-                    }
-                    if(line.priArgType != newasm::datatypes::symbol_name) if(line.priArgType != newasm::datatypes::number)
-                    {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                        return 1;
-                    }
-                    
-                    //newasm::mem::datatypes[name] = newasm::datatypes::number;
-                    //newasm::mem::data[name] = value;
-                    //newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
-                    //_newasm_addnamespaces(name)
+                    //newasm::header::functions::info("Adding stuff to `" + name + "` = " + key + ":" + value__ + "---" + value);
 
-                    newasm::variables::ids[name].type = newasm::datatypes::number;
-                    auto& mmap = newasm::variables::ids.at(name);
-                    mmap.locked = newasm::expcfg::lockbool;
-                    mmap.transient__ = newasm::expcfg::transientbool;
-                    mmap.attrib = newasm::runtime::currentAttributes;
-                    newasm::runtime::currentAttributes = 0;
-
-                    if(newasm::expcfg::transientbool)
-                    {
-                        newasm::garbage::FLAG = 1;
-                        newasm::garbage::addr__.push_back(name);
-                    }
-
-                    if(line.priArgType == newasm::datatypes::symbol_name)
-                    {
-                        mmap.addr = newasm::hardware::randAccessMem.write<int>(std::stoi(value));
-                    }
-                    if(line.priArgType == newasm::datatypes::number)
-                    {
-                        mmap.addr = newasm::hardware::randAccessMem.write<int>(line.priInt);
-                    }
-                    return 1;
-                }
-                //decimal numbers
-                case newasm::core::lang_inf::typenames::decm:
-                {
-                    if(newasm::header::data::struct_now)
-                    {
-                        if(!newasm::header::functions::isfloat(value))
-                        {
-                            //newasm::progwin::api::cout("IT HAS TO BE A NUMBER (ZajebucnuoSiSeException) -> " + value);
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                            return 1;
-                        }
-                        newasm::mem::structs[newasm::header::data::struct_decl].push_back({newasm::datatypes::decimal, name, value});
-                        return 1;
-                    }
-                    if(line.priArgType == newasm::datatypes::symbol_name) if(!newasm::header::functions::isfloat(value))
-                    {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                        return 1;
-                    }
-                    if(line.priArgType != newasm::datatypes::symbol_name) if(line.priArgType != newasm::datatypes::decimal)
-                    {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                        return 1;
-                    }
-                    //newasm::mem::datatypes[name] = newasm::datatypes::decimal;
-                    //newasm::mem::data[name] = value;
-                    //newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
-                    //_newasm_addnamespaces(name)
-
-                    newasm::variables::ids[name].type = newasm::datatypes::decimal;
-                    auto& mmap = newasm::variables::ids.at(name);
-                    mmap.locked = newasm::expcfg::lockbool;
-                    mmap.transient__ = newasm::expcfg::transientbool;
-                    mmap.attrib = newasm::runtime::currentAttributes;
-                    newasm::runtime::currentAttributes = 0;
-
-                    if(newasm::expcfg::transientbool)
-                    {
-                        newasm::garbage::FLAG = 1;
-                        newasm::garbage::addr__.push_back(name);
-                    }
-
-                    if(line.priArgType == newasm::datatypes::symbol_name)
-                    {
-                        mmap.addr = newasm::hardware::randAccessMem.write<float>(std::stof(value));
-                    }
-                    if(line.priArgType == newasm::datatypes::decimal)
-                    {
-                        mmap.addr = newasm::hardware::randAccessMem.write<float>(line.priFloat);
-                    }
-                    return 1;
-                }
-                // text
-                case newasm::core::lang_inf::typenames::txt:
-                {
-                    if(newasm::header::data::struct_now)
-                    {
-                        if(!newasm::header::functions::istext(value))
-                        {
-                            //newasm::progwin::api::cout("IT HAS TO BE A NUMBER (ZajebucnuoSiSeException) -> " + value);
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                            return 1;
-                        }
-                        newasm::mem::structs[newasm::header::data::struct_decl].push_back({newasm::datatypes::text, name, value});
-                        return 1;
-                    }
-                    if(line.priArgType == newasm::datatypes::symbol_name) if(!newasm::header::functions::istext(value))
-                    {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                        return 1;
-                    }
-                    if(line.priArgType != newasm::datatypes::symbol_name) if(line.priArgType != newasm::datatypes::text)
-                    {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                        return 1;
-                    }
-                    //value = newasm::header::functions::parseBackslash(value);
-                    //newasm::header::functions::remq(value);
- 
-                    newasm::variables::ids[name].type = newasm::datatypes::text;
-                    auto& mmap = newasm::variables::ids.at(name);
-                    mmap.locked = newasm::expcfg::lockbool;
-                    mmap.transient__ = newasm::expcfg::transientbool;
-                    mmap.attrib = newasm::runtime::currentAttributes;
-                    newasm::runtime::currentAttributes = 0;
-
-                    if(newasm::expcfg::transientbool)
-                    {
-                        newasm::garbage::FLAG = 1;
-                        newasm::garbage::addr__.push_back(name);
-                    }
-
-                    if(line.priArgType == newasm::datatypes::symbol_name)
-                    {
-                        mmap.addr = newasm::hardware::randAccessMem.write<std::string>(newasm::header::functions::remq(value));
-                    }
-                    if(line.priArgType == newasm::datatypes::text)
-                    {
-                        mmap.addr = newasm::hardware::randAccessMem.write<std::string>(line.priString);
-                    }
-
-                    /*
-                    std::cout << "_____________BACKTRACE_____________\n";
-                    std::cout << "Writing a string......";
-                    std::cout << "Variable name: " << name << std::endl;
-                    std::cout << "Addess: " << newasm::variables::ids.at(name).addr << std::endl;
-                    std::cout << "Value: " << newasm::hardware::randAccessMem.peek<std::string>(newasm::variables::ids.at(name).addr) << std::endl;
-                    std::cout << "___________________________________\n";
-                    */
-                    return 1;
-                }
-                // references
-                case newasm::core::lang_inf::typenames::ref:
-                {
-                    if(!newasm::header::functions::isref(value) && value != static_cast<std::string>(NIL_STR))
-                    {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                        return 1;
-                    }
-                    if(!newasm::mem::functions::datavalid(
-                    newasm::header::functions::remamp(value), newasm::mem::data)
-                    && !newasm::mem::functions::datavalid(
-                    newasm::header::functions::remamp(value), newasm::variables::ids)
-                    && value != static_cast<std::string>(NIL_STR))
-                    {
-                        newasm::terminate(newasm::exit_codes::invalid_memacc);
-                        return 1;
-                    }
-                    if(newasm::header::data::struct_now)
-                    {
-                        newasm::mem::structs[newasm::header::data::struct_decl].push_back({newasm::datatypes::reference, name, value});
-                        return 1;
-                    }
-
-                    newasm::mem::datatypes[name] = newasm::datatypes::reference;
-                    newasm::mem::data[name] = value;
-                    newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
-                    return 1;
-                }
-                // characters
-                case newasm::core::lang_inf::typenames::char__:
-                {
-                    if(newasm::header::data::struct_now)
-                    {
-                        if(!newasm::header::functions::ischar(value))
-                        {
-                            //newasm::progwin::api::cout("IT HAS TO BE A NUMBER (ZajebucnuoSiSeException) -> " + value);
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                            return 1;
-                        }
-                        newasm::mem::structs[newasm::header::data::struct_decl].push_back({newasm::datatypes::character, name, value});
-                        return 1;
-                    }
-                    if(line.priArgType == newasm::datatypes::symbol_name) if(!newasm::header::functions::ischar(value))
-                    {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                        return 1;
-                    }
-                    if(line.priArgType != newasm::datatypes::symbol_name) if(line.priArgType != newasm::datatypes::character)
-                    {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
-                        return 1;
-                    }
-                    //value = newasm::header::functions::parseBackslash(value);
-                    //newasm::header::functions::remsq(value);
-                    
-                    
-                    newasm::variables::ids[name].type = newasm::datatypes::character;
-                    auto& mmap = newasm::variables::ids.at(name);
-                    mmap.locked = newasm::expcfg::lockbool;
-                    mmap.transient__ = newasm::expcfg::transientbool;
-                    mmap.attrib = newasm::runtime::currentAttributes;
-                    newasm::runtime::currentAttributes = 0;
-
-                    if(newasm::expcfg::transientbool)
-                    {
-                        newasm::garbage::FLAG = 1;
-                        newasm::garbage::addr__.push_back(name);
-                    }
-
-                    if(line.priArgType == newasm::datatypes::symbol_name)
-                    {
-                        mmap.addr = newasm::hardware::randAccessMem.write<char>(newasm::header::functions::remsq(value).at(0));
-                    }
-                    if(line.priArgType == newasm::datatypes::character)
-                    {
-                        mmap.addr = newasm::hardware::randAccessMem.write<char>(line.priChar);
-                    }
-                    return 1;
-                }
-                // tuples
-                case newasm::core::lang_inf::typenames::tuple:
-                {
-                    if(!newasm::header::functions::istuple(value))
+                    if(!newasm::header::functions::istext(key))
                     {
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                         return 1;
                     }
-
-                    auto contents = newasm::header::functions::parseTuple(value);
-
-                    newasm::variables::ids[name].type = newasm::datatypes::tuple;
-                    auto& mmap = newasm::variables::ids.at(name);
-
-                    mmap.tuple = new newasm::variables::tupleData;
-                    mmap.attrib = newasm::runtime::currentAttributes;
-                    newasm::runtime::currentAttributes = 0;
-                    for(int i = 0; i < contents.size(); ++i)
-                    {
-                        int address;
-                        std::string value_buf = contents.at(i);
-                        newasm::runtime::functions::parse(value_buf);
-                        //integerz
-                        if(newasm::header::functions::isnumeric(value_buf))
-                        {
-                            address = newasm::hardware::randAccessMem.write<int>(std::stoi(value_buf));
-                            mmap.tuple->addr.push_back(address);
-                            mmap.tuple->type.push_back(newasm::datatypes::number);
-                            continue;
-                        }
-                        //floatz
-                        if(newasm::header::functions::isfloat(value_buf))
-                        {
-                            address = newasm::hardware::randAccessMem.write<float>(std::stof(value_buf));
-                            mmap.tuple->addr.push_back(address);
-                            mmap.tuple->type.push_back(newasm::datatypes::decimal);
-                            continue;
-                        }
-                        //charz
-                        if(newasm::header::functions::ischar(value_buf))
-                        {
-                            value_buf = newasm::header::functions::parseBackslash<true>(value_buf); //addin true means we're forcing backslash evaluation
-                            address = newasm::hardware::randAccessMem.write<char>(newasm::header::functions::remsq(value_buf).at(0));
-                            mmap.tuple->addr.push_back(address);
-                            mmap.tuple->type.push_back(newasm::datatypes::character);
-                            continue;
-                        }
-                        //stringz
-                        if(newasm::header::functions::istext(value_buf))
-                        {
-                            value_buf = newasm::header::functions::parseBackslash<true>(value_buf);
-                            address = newasm::hardware::randAccessMem.write<std::string>(newasm::header::functions::remq(value_buf));
-                            mmap.tuple->addr.push_back(address);
-                            mmap.tuple->type.push_back(newasm::datatypes::text);
-                            continue;
-                        }
-                        newasm::terminate(newasm::exit_codes::invalid_syntax);
-                        return 1;
-                    }
-                    //newasm::mem::tuple[name].contents = newasm::header::functions::parseTuple(value);
-                    return 1;
-                }
-                // contexts
-                case newasm::core::lang_inf::typenames::context__:
-                {
-                    if(!newasm::header::functions::isTupleOrContext(value))
-                    {
-                        newasm::terminate(newasm::exit_codes::invalid_init);
-                        return 1;
-                    }
-
-                    auto contents = newasm::header::functions::parseContext(value);
-
-                    newasm::variables::ids[name].type = newasm::datatypes::mycontext;
-                    auto& mmap = newasm::variables::ids.at(name);
-                    mmap.context = new newasm::variables::contextData;
-                    mmap.attrib = newasm::runtime::currentAttributes;
-                    newasm::runtime::currentAttributes = 0;
-
-                    //newasm::header::functions::info("Created context: " + name);
-
-                    if(contents.size() == 0)
-                    {
-                        return 1;
-                    }
-                    //std::string key, value;
-                    std::vector<std::string> v;
-                    int addr_temp = 0;
-                    for(int i = 0; i < contents.size(); ++i)
-                    {
-                        if(!contents.at(i).find(':'))
-                        {
-                            newasm::terminate(newasm::exit_codes::invalid_syntax);
-                            return 1;
-                        }
-                        v.clear();
-                        v = newasm::header::functions::split(contents.at(i), ':');
-                        if(v.size() != 2)
-                        {
-                            newasm::terminate(newasm::exit_codes::invalid_syntax);
-                            return 1;
-                        }
-                        std::string& key = v.at(0), & value__ = v.at(1);
-                        key = newasm::header::functions::trim(key);
-                        value__ = newasm::header::functions::trim(value__);
-                        newasm::runtime::functions::parse(value__);
-
-                        //newasm::header::functions::info("Adding stuff to `" + name + "` = " + key + ":" + value__ + "---" + value);
-
-                        if(!newasm::header::functions::istext(key))
-                        {
-                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                            return 1;
-                        }
-                        
-                        key = newasm::header::functions::remq(key);
-                        if(newasm::header::functions::isnumeric(value__))
-                        {
-                            addr_temp = newasm::hardware::randAccessMem.write<int>(std::stoi(value__));
-                            mmap.context->addr.push_back(addr_temp);
-                            mmap.context->keys.push_back(key);
-                            mmap.context->type.push_back(newasm::datatypes::number);
-                            continue;
-                        }
-                        if(newasm::header::functions::isfloat(value__))
-                        {
-                            addr_temp = newasm::hardware::randAccessMem.write<float>(std::stof(value__));
-                            mmap.context->addr.push_back(addr_temp);
-                            mmap.context->keys.push_back(key);
-                            mmap.context->type.push_back(newasm::datatypes::decimal);
-                            continue;
-                        }
-                        if(newasm::header::functions::ischar(value__))
-                        {
-                            value__ = newasm::header::functions::parseBackslash<true>(value__);
-                            addr_temp = newasm::hardware::randAccessMem.write<char>(newasm::header::functions::remsq(value__).at(0));
-                            mmap.context->addr.push_back(addr_temp);
-                            mmap.context->keys.push_back(key);
-                            mmap.context->type.push_back(newasm::datatypes::character);
-                            continue;
-                        }
-                        if(newasm::header::functions::istext(value__))
-                        {
-                            value__ = newasm::header::functions::parseBackslash<true>(value__);
-                            addr_temp = newasm::hardware::randAccessMem.write<std::string>(newasm::header::functions::remq(value__));
-                            mmap.context->addr.push_back(addr_temp);
-                            mmap.context->keys.push_back(key);
-                            mmap.context->type.push_back(newasm::datatypes::text);
-                            continue;
-                        }
-                        newasm::terminate(newasm::exit_codes::invalid_init);
-                        return 1;
-                    }
-                    #if 0
-                    for(int i = 0; i < contents.size(); ++i)
-                    {
-                        int address;
-                        std::string value_buf = contents.at(i);
-                        newasm::runtime::functions::parse(value_buf);
-                        //integerz
-                        if(newasm::header::functions::isnumeric(value_buf))
-                        {
-                            address = newasm::hardware::randAccessMem.write<int>(std::stoi(value_buf));
-                            newasm::variables::ids.at(name).tuple->addr.push_back(address);
-                            newasm::variables::ids.at(name).tuple->type.push_back(newasm::datatypes::number);
-                            continue;
-                        }
-                        //floatz
-                        if(newasm::header::functions::isfloat(value_buf))
-                        {
-                            address = newasm::hardware::randAccessMem.write<float>(std::stof(value_buf));
-                            newasm::variables::ids.at(name).tuple->addr.push_back(address);
-                            newasm::variables::ids.at(name).tuple->type.push_back(newasm::datatypes::decimal);
-                            continue;
-                        }
-                        //charz
-                        if(newasm::header::functions::ischar(value_buf))
-                        {
-                            address = newasm::hardware::randAccessMem.write<char>(newasm::header::functions::remsq(value_buf).at(0));
-                            newasm::variables::ids.at(name).tuple->addr.push_back(address);
-                            newasm::variables::ids.at(name).tuple->type.push_back(newasm::datatypes::character);
-                            continue;
-                        }
-                        //stringz
-                        if(newasm::header::functions::istext(value_buf))
-                        {
-                            address = newasm::hardware::randAccessMem.write<std::string>(newasm::header::functions::remq(value_buf));
-                            newasm::variables::ids.at(name).tuple->addr.push_back(address);
-                            newasm::variables::ids.at(name).tuple->type.push_back(newasm::datatypes::text);
-                            continue;
-                        }
-                        newasm::terminate(newasm::exit_codes::invalid_syntax);
-                        return 1;
-                    }
-                    #endif
-                    return 1;
-                }
-                // class
-                case newasm::core::lang_inf::typenames::class__:
-                {
-                    if(!newasm::brace_stack__.empty())
-                    {
-                        newasm::terminate(newasm::exit_codes::nested_object);
-                        return 1;
-                    }
                     
-                    if(value != static_cast<std::string>("{"))
+                    key = newasm::header::functions::remq(key);
+                    if(newasm::header::functions::isnumeric(value__))
                     {
-                        newasm::terminate(newasm::exit_codes::invalid_syntax);
-                        return 1;
+                        addr_temp = newasm::hardware::randAccessMem.write<int>(std::stoi(value__));
+                        mmap.context->addr.push_back(addr_temp);
+                        mmap.context->keys.push_back(key);
+                        mmap.context->type.push_back(newasm::datatypes::number);
+                        continue;
                     }
-
-                    newasm::variables::ids[name].type = newasm::datatypes::blueprint;
-                    auto& mmap = newasm::variables::ids.at(name);
-                    mmap.blueprint = new newasm::variables::classData;
-
-                    newasm::header::data::blueprint_now = true;
-                    newasm::header::data::blueprint_decl = name;
-
-                    mmap.attrib = newasm::runtime::currentAttributes;
-                    newasm::runtime::currentAttributes = 0;
-
-                    newasm::brace_stack__.push_back(newasm::brace_stack::class_block);
+                    if(newasm::header::functions::isfloat(value__))
+                    {
+                        addr_temp = newasm::hardware::randAccessMem.write<float>(std::stof(value__));
+                        mmap.context->addr.push_back(addr_temp);
+                        mmap.context->keys.push_back(key);
+                        mmap.context->type.push_back(newasm::datatypes::decimal);
+                        continue;
+                    }
+                    if(newasm::header::functions::ischar(value__))
+                    {
+                        value__ = newasm::header::functions::parseBackslash<true>(value__);
+                        addr_temp = newasm::hardware::randAccessMem.write<char>(newasm::header::functions::remsq(value__).at(0));
+                        mmap.context->addr.push_back(addr_temp);
+                        mmap.context->keys.push_back(key);
+                        mmap.context->type.push_back(newasm::datatypes::character);
+                        continue;
+                    }
+                    if(newasm::header::functions::istext(value__))
+                    {
+                        value__ = newasm::header::functions::parseBackslash<true>(value__);
+                        addr_temp = newasm::hardware::randAccessMem.write<std::string>(newasm::header::functions::remq(value__));
+                        mmap.context->addr.push_back(addr_temp);
+                        mmap.context->keys.push_back(key);
+                        mmap.context->type.push_back(newasm::datatypes::text);
+                        continue;
+                    }
+                    newasm::terminate(newasm::exit_codes::invalid_init);
                     return 1;
                 }
-                case newasm::core::lang_inf::typenames::union__:
+                #if 0
+                for(int i = 0; i < contents.size(); ++i)
                 {
-                    if(!newasm::brace_stack__.empty())
+                    int address;
+                    std::string value_buf = contents.at(i);
+                    newasm::runtime::functions::parse(value_buf);
+                    //integerz
+                    if(newasm::header::functions::isnumeric(value_buf))
                     {
-                        newasm::terminate(newasm::exit_codes::nested_object);
-                        return 1;
+                        address = newasm::hardware::randAccessMem.write<int>(std::stoi(value_buf));
+                        newasm::variables::ids.at(name).tuple->addr.push_back(address);
+                        newasm::variables::ids.at(name).tuple->type.push_back(newasm::datatypes::number);
+                        continue;
                     }
-
-                    newasm::variables::ids[name].type = newasm::datatypes::yunion;
-                    auto& mmap = newasm::variables::ids.at(name);
-                    mmap.yunion = new newasm::variables::unionData;
-                    mmap.attrib = newasm::runtime::currentAttributes;
-                    newasm::runtime::currentAttributes = 0;
-
-                    if(value == NIL_STR)
+                    //floatz
+                    if(newasm::header::functions::isfloat(value_buf))
                     {
-                        mmap.yunion->addr = newasm::hardware::randAccessMem.write<int>(0);
-                        return 1;
+                        address = newasm::hardware::randAccessMem.write<float>(std::stof(value_buf));
+                        newasm::variables::ids.at(name).tuple->addr.push_back(address);
+                        newasm::variables::ids.at(name).tuple->type.push_back(newasm::datatypes::decimal);
+                        continue;
                     }
-
-                    if(newasm::header::functions::isnumeric(value))
+                    //charz
+                    if(newasm::header::functions::ischar(value_buf))
                     {
-                        mmap.yunion->addr = newasm::hardware::randAccessMem.write<int>(std::stoi(value));
-                        return 1;
+                        address = newasm::hardware::randAccessMem.write<char>(newasm::header::functions::remsq(value_buf).at(0));
+                        newasm::variables::ids.at(name).tuple->addr.push_back(address);
+                        newasm::variables::ids.at(name).tuple->type.push_back(newasm::datatypes::character);
+                        continue;
                     }
-                    if(newasm::header::functions::isfloat(value))
+                    //stringz
+                    if(newasm::header::functions::istext(value_buf))
                     {
-                        mmap.yunion->addr = newasm::hardware::randAccessMem.write<float>(std::stoi(value));
-                        return 1;
-                    }
-                    if(newasm::header::functions::ischar(value))
-                    {
-                        value = newasm::header::functions::parseBackslash<true>(value);
-                        char val = newasm::header::functions::remsq(value).at(0);
-                        mmap.yunion->addr = newasm::hardware::randAccessMem.write<char>(val);
-                        return 1;
-                    }
-                    if(newasm::header::functions::istext(value))
-                    {
-                        value = newasm::header::functions::parseBackslash<true>(value);
-                        std::string val = newasm::header::functions::remq(value);
-                        mmap.yunion->addr = newasm::hardware::randAccessMem.write<std::string>(val);
-                        return 1;
-                    }
-                    if(newasm::header::functions::isref(value))
-                    {
-                        mmap.yunion->addr = newasm::hardware::randAccessMem.write<int>(0);
-                        return 1;
+                        address = newasm::hardware::randAccessMem.write<std::string>(newasm::header::functions::remq(value_buf));
+                        newasm::variables::ids.at(name).tuple->addr.push_back(address);
+                        newasm::variables::ids.at(name).tuple->type.push_back(newasm::datatypes::text);
+                        continue;
                     }
                     newasm::terminate(newasm::exit_codes::invalid_syntax);
                     return 1;
                 }
-                // containers
-                case newasm::core::lang_inf::typenames::cont:
-                {
-                    auto parser = newasm::header::functions::parseContainerType(value);
-                    if(parser.first)
-                    {
-                        value = parser.second;
-                    }
-                    auto it2 = newasm::inverted_types.find(value);
-                    switch(it2->second)
-                    {
-                        // bit arrays
-                        case newasm::core::lang_inf::typenames::bit_arr:
-                        {
-                            if(newasm::mem::functions::datavalid(name, newasm::containers::bit_arrays))
-                            {
-                                newasm::terminate(newasm::exit_codes::datastruct_redef);
-                                return 1;
-                            }
-                    
-                            newasm::containers::bit_arrays[name] = new newasm::containers::bit_array<newasm::containers::default_size>();
-                            newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
-                            return 1;
-                        }
-                        // binary trees
-                        case newasm::core::lang_inf::typenames::bin_tree:
-                        {
-                            if(newasm::mem::functions::datavalid(name, newasm::containers::binary_trees))
-                            {
-                                newasm::terminate(newasm::exit_codes::datastruct_redef);
-                                return 1;
-                            }
-
-                            newasm::containers::binary_trees[name] = new newasm::containers::binary_tree<newasm::containers::default_size>();
-                            newasm::containers::binary_trees.at(name)->set_at__(0,0);
-                            newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
-                            return 1;
-                        }
-                        // thread channels
-                        case newasm::core::lang_inf::typenames::chan:
-                        {
-                            if(newasm::mem::functions::datavalid(name, newasm::containers::thread_channels))
-                            {
-                                newasm::terminate(newasm::exit_codes::datastruct_redef);
-                                return 1;
-                            }
-
-                            newasm::containers::thread_channels[name] = new newasm::containers::thread_channel__();
-                            newasm::containers::thread_channels.at(name)->empty = true;
-                            newasm::containers::thread_channels.at(name)->data = "??";
-                            return 1;
-                        }
-                    }
-                    return 1;
-                }
-                default:
-                {
-                    newasm::terminate(newasm::exit_codes::invalid_syntax);
-                    return 1;
-                }
+                #endif
+                return 1;
             }
-            
-            newasm::terminate(newasm::exit_codes::invalid_syntax);
-            return 1;
+            // class
+            case newasm::core::lang_inf::typenames::class__:
+            {
+                if(!newasm::brace_stack__.empty())
+                {
+                    newasm::terminate(newasm::exit_codes::nested_object);
+                    return 1;
+                }
+                
+                if(value != static_cast<std::string>("{"))
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_syntax);
+                    return 1;
+                }
+
+                newasm::variables::ids[name].type = newasm::datatypes::blueprint;
+                auto& mmap = newasm::variables::ids.at(name);
+                mmap.blueprint = new newasm::variables::classData;
+
+                newasm::header::data::blueprint_now = true;
+                newasm::header::data::blueprint_decl = name;
+
+                mmap.attrib = newasm::runtime::currentAttributes;
+                newasm::runtime::currentAttributes = 0;
+
+                newasm::brace_stack__.push_back(newasm::brace_stack::class_block);
+                return 1;
+            }
+            case newasm::core::lang_inf::typenames::union__:
+            {
+                if(!newasm::brace_stack__.empty())
+                {
+                    newasm::terminate(newasm::exit_codes::nested_object);
+                    return 1;
+                }
+
+                newasm::variables::ids[name].type = newasm::datatypes::yunion;
+                auto& mmap = newasm::variables::ids.at(name);
+                mmap.yunion = new newasm::variables::unionData;
+                mmap.attrib = newasm::runtime::currentAttributes;
+                newasm::runtime::currentAttributes = 0;
+
+                if(value == NIL_STR)
+                {
+                    mmap.yunion->addr = newasm::hardware::randAccessMem.write<int>(0);
+                    return 1;
+                }
+
+                if(newasm::header::functions::isnumeric(value))
+                {
+                    mmap.yunion->addr = newasm::hardware::randAccessMem.write<int>(std::stoi(value));
+                    return 1;
+                }
+                if(newasm::header::functions::isfloat(value))
+                {
+                    mmap.yunion->addr = newasm::hardware::randAccessMem.write<float>(std::stoi(value));
+                    return 1;
+                }
+                if(newasm::header::functions::ischar(value))
+                {
+                    value = newasm::header::functions::parseBackslash<true>(value);
+                    char val = newasm::header::functions::remsq(value).at(0);
+                    mmap.yunion->addr = newasm::hardware::randAccessMem.write<char>(val);
+                    return 1;
+                }
+                if(newasm::header::functions::istext(value))
+                {
+                    value = newasm::header::functions::parseBackslash<true>(value);
+                    std::string val = newasm::header::functions::remq(value);
+                    mmap.yunion->addr = newasm::hardware::randAccessMem.write<std::string>(val);
+                    return 1;
+                }
+                if(newasm::header::functions::isref(value))
+                {
+                    mmap.yunion->addr = newasm::hardware::randAccessMem.write<int>(0);
+                    return 1;
+                }
+                newasm::terminate(newasm::exit_codes::invalid_syntax);
+                return 1;
+            }
+            // containers
+            case newasm::core::lang_inf::typenames::cont:
+            {
+                auto parser = newasm::header::functions::parseContainerType(value);
+                if(parser.first)
+                {
+                    value = parser.second;
+                }
+                auto it2 = newasm::inverted_types.find(value);
+                switch(it2->second)
+                {
+                    // bit arrays
+                    case newasm::core::lang_inf::typenames::bit_arr:
+                    {
+                        if(newasm::mem::functions::datavalid(name, newasm::containers::bit_arrays))
+                        {
+                            newasm::terminate(newasm::exit_codes::datastruct_redef);
+                            return 1;
+                        }
+                
+                        newasm::containers::bit_arrays[name] = new newasm::containers::bit_array<newasm::containers::default_size>();
+                        newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
+                        return 1;
+                    }
+                    // binary trees
+                    case newasm::core::lang_inf::typenames::bin_tree:
+                    {
+                        if(newasm::mem::functions::datavalid(name, newasm::containers::binary_trees))
+                        {
+                            newasm::terminate(newasm::exit_codes::datastruct_redef);
+                            return 1;
+                        }
+
+                        newasm::containers::binary_trees[name] = new newasm::containers::binary_tree<newasm::containers::default_size>();
+                        newasm::containers::binary_trees.at(name)->set_at__(0,0);
+                        newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
+                        return 1;
+                    }
+                    // thread channels
+                    case newasm::core::lang_inf::typenames::chan:
+                    {
+                        if(newasm::mem::functions::datavalid(name, newasm::containers::thread_channels))
+                        {
+                            newasm::terminate(newasm::exit_codes::datastruct_redef);
+                            return 1;
+                        }
+
+                        newasm::containers::thread_channels[name] = new newasm::containers::thread_channel__();
+                        newasm::containers::thread_channels.at(name)->empty = true;
+                        newasm::containers::thread_channels.at(name)->data = "??";
+                        return 1;
+                    }
+                }
+                return 1;
+            }
+            default:
+            {
+                newasm::terminate(newasm::exit_codes::invalid_syntax);
+                return 1;
+            }
         }
+
+
         return 1;
     }
     int stor_structmem(const std::string &suf, const std::string &into)
@@ -4804,6 +4800,10 @@ namespace newasm
                     suf = newasm::header::functions::mangleName(newasm::nms::stack, suf);
                 }
 
+                newasm::variables::ids[suf].type = newasm::datatypes::threadz;
+                auto& mmap = newasm::variables::ids.at(suf);
+                mmap.thrd = new newasm::variables::threadData;
+                mmap.thrd->addr = newasm::RAM->write<int>(1);
                 newasm::threads::thread_now = true;
                 newasm::threads::thread_decl = suf;
                 newasm::threads::memory[suf] = new newasm::threads::object__();
@@ -5550,11 +5550,6 @@ namespace newasm
 
                 if(newasm::header::functions::isalphanum(suf))
                 {
-                    if(newasm::mem::functions::datavalid(suf,newasm::variables::ids))
-                    {
-                        newasm::terminate(newasm::exit_codes::proc_redef);
-                        return 1;
-                    }
                     newasm::system::stop = 1;
                     newasm::system::cproc = suf;
                     newasm::system::proclines = 0;
@@ -7799,6 +7794,9 @@ namespace newasm
         newasm::wasted_deduction.clear();
         newasm::network_deduction.clear();
         newasm::perf::inputWasteTimer.clear();
+        //clean up for jit
+        newasm::compiler::data::symbol_map.clear();
+        newasm::compiler::data::JIT_mode = true;
         
         if constexpr(what == true)
         {
@@ -7863,6 +7861,7 @@ namespace newasm
             newasm::terminate(newasm::exit_codes::noterm_point); // You got to end your programs.
         }
         newasm::perf::end = std::chrono::steady_clock::now();
+        newasm::compiler::data::JIT_mode = false;
         return;
     }
     #if 0 //this ain't comin

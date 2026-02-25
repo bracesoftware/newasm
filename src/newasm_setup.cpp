@@ -460,6 +460,11 @@ namespace newasm
             short addr = 0;
         };
 
+        class threadData final
+        {
+            public int addr = 0;
+        };
+
         class procedureData final
         {
             private bool prepared = false;
@@ -514,6 +519,8 @@ namespace newasm
             contextData* context = nullptr; // if it is a context, use this
             procedureData* proc = nullptr; //if it is a proc, use this
 
+            //just for checks
+            threadData* thrd = nullptr;
             eventData* event = nullptr;
             staticObjectData* obj = nullptr;
 

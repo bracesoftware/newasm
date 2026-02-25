@@ -1879,7 +1879,7 @@ using "ios"
     jmp lol24332243
 
     ./lol
-        proc writexd
+        proc writexd_
             mov tlr, <0>
             switch *tlr
             case intg -> mov fdx, 2
@@ -1894,7 +1894,7 @@ using "ios"
             halt 0
         end
     ./!lol
-    evt 0xff3 -> lol::writexd
+    evt 0xff3 -> lol::writexd_
 
     push 3
     push 0xff3
