@@ -4977,6 +4977,7 @@ namespace newasm
             //sysenter
             case newasm::core::lang_inf::sysenter:
             {
+                #if 0
                 if(!newasm::header::functions::istext(suf))
                 {
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);
@@ -4990,8 +4991,14 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::sysenter_fail);
                     return 1;
                 }
+                #endif
+                if(lineInfo.krnlMod == INVALID_INS)
+                {
+                    newasm::terminate(newasm::exit_codes::sysenter_fail);
+                    return 1;
+                }
 
-                switch(kernel_module->second)
+                switch(lineInfo.krnlMod)//switch(kernel_module->second)
                 {
                     case newasm::core::lang_inf::refs::ios:
                     {

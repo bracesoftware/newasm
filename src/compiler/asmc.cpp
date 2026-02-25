@@ -482,6 +482,23 @@ namespace newasm
                     // optimisation
                     if(i == 1)
                     {
+                        if(lineCompiled.whatAmIDoing == newasm::core::lang_inf::sysenter)
+                        {
+                            if(!newasm::header::functions::istext(suf))
+                            {
+                                lineCompiled.krnlMod = INVALID_INS;
+                                continue;
+                            }
+                            suf = newasm::header::functions::remq(suf);
+
+                            auto kernel_module = newasm::inverted_kernel.find(suf);
+                            if(kernel_module == newasm::inverted_kernel.end())
+                            {
+                                newasm::compiler::abort(newasm::compiler::fail::invalid_krnlmod);
+                                return lineCompiled;
+                            }
+                            lineCompiled.krnlMod = kernel_module->second;
+                        }
                         auto it_ = newasm::mem::regs::identifiers.find(lineCompiled.tokens.at(i));
                         if(it_ != newasm::mem::regs::identifiers.end())
                         {

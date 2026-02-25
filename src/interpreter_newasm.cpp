@@ -285,6 +285,7 @@ namespace newasm
             short whatTheFuckAreEvents = INVALID_INS;
             int attribute = INVALID_INS;
             int whatAreRegistersLol = INVALID_INS;
+            unsigned short krnlMod = INVALID_INS;
 
             //stuff not included in the binary:
             unsigned int resType = 0;
