@@ -19,6 +19,7 @@ namespace newasm
 
             std::vector<std::string> symbol_map;
             std::vector<std::string> namespace_stack;
+            std::vector<std::string> sealed_labels;
 
             bool objectDecl = false;
             bool JIT_mode = false;
@@ -32,6 +33,7 @@ namespace newasm
             const int unknown_attrib = 5;
             const int unknown_register = 6;
             const int symbol_redecl = 7;
+            const int unknown_label = 8;
 
             const std::unordered_map<int, std::string> id = {
                 {unmatched_syntax, "UnmatchedSyntax"},
@@ -40,7 +42,8 @@ namespace newasm
                 {expected_token, "ExpectedToken"},
                 {unknown_attrib, "UnknownAttribute"},
                 {unknown_register, "UnknownRegister"},
-                {symbol_redecl, "SymbolRedeclaration"}
+                {symbol_redecl, "SymbolRedeclaration"},
+                {unknown_label, "InvalidLabelAddress"}
             };
         }
 
@@ -164,6 +167,7 @@ namespace newasm
             {
                 lineCompiled.type = newasm::compiler::sealedLabel;
                 lineCompiled.other = sealedLabelData.second;
+                newasm::compiler::data::sealed_labels.push_back(sealedLabelData.second);
                 return lineCompiled;
             }
             //decorator

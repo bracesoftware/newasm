@@ -55,9 +55,35 @@ namespace newasm
                     if(this->contents.at(i).type == newasm::compiler::sealedLabel)
                     {
                         //std::cout << "Successfully added label: `" << this->contents.at(i).other << "`" << std::endl;
-                        this->labels[this->contents.at(i).other] = i;
+                        auto k = this->contents.at(i).other;
+                        this->labels[k] = i;
+                        newasm::sealedLabels->push_back(k);
                         this->contents.at(i).type = newasm::compiler::empty;
                         continue;
+                    }
+                }
+                for(int i = 0; i < this->contents.size(); ++i)
+                {
+                    auto& bytecode = this->contents.at(i);
+                    if(
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::jmp or
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::jz or
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::jnz or
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::je or
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::jne or
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::jl or
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::jle or
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::jg or
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::jge
+                    )
+                    {
+                        auto& label_name = bytecode.tokens[1];
+                        if(this->labels.find(label_name) == this->labels.end())
+                        {
+                            newasm::terminate(newasm::exit_codes::bus_err);
+                            break;
+                        }
+                        bytecode.jumpinTo = this->labels.at(label_name);
                     }
                 }
 

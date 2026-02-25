@@ -81,6 +81,7 @@ namespace newasm
                 write_bin(out, ld.whatAreRegistersLol);
 
                 write_bin(out, ld.krnlMod);
+                write_bin(out, ld.jumpinTo);
                 return;
             }
             void load_lineData(std::ifstream& in, newasm::compiler::lineData& ld)
@@ -119,6 +120,7 @@ namespace newasm
                 read_bin(in, ld.whatAreRegistersLol);
 
                 read_bin(in, ld.krnlMod);
+                read_bin(in, ld.jumpinTo);
                 return;
             }
             //label addresses

@@ -45,8 +45,7 @@ namespace newasm
     static bool consoleOpen = false;
     class Console
     {
-        public:
-        inline static void flush()
+        public inline static void flush()
         {
             #if USING_SDL_FINALLY == 1
             renderScreen();
@@ -62,6 +61,9 @@ namespace newasm
                 return;
             }
             newasm::consoleOpen = true;
+            #if USING_SDL_FINALLY == 76
+            newasm::__SCREEN_MGR::open();
+            #endif
 
             #if USING_SDL_FINALLY == 1
             openConsoleWindow(text.c_str());
@@ -88,6 +90,7 @@ namespace newasm
             #if USING_SDL_FINALLY == 0
             //std::cout << text;
             std::fputs(text.c_str(), stdout);
+            //newasm::__SCREEN_MGR::write(text);
             #endif
             return;
         }
@@ -113,6 +116,7 @@ namespace newasm
             std::string line;
             std::getline(std::cin, line);
             return line;
+            //return newasm::__SCREEN_MGR::read();
             #endif
         }
 
@@ -125,6 +129,9 @@ namespace newasm
             //close_console();
             newasm::consoleOpen = false;
 
+            #if USING_SDL_FINALLY == 2
+            newasm::__SCREEN_MGR::close();
+            #endif
             #if USING_SDL_FINALLY == 1
             closeConsoleWindow();
             #endif
@@ -175,14 +182,25 @@ namespace newasm
         inline static void col(int colid)
         {
             #if USING_SDL_FINALLY == 0
-            if(colid == 1) std::cout << newasm::header::col::red;
-            if(colid == 2) std::cout << newasm::header::col::yellow;
-            if(colid == 3) std::cout << newasm::header::col::green;
-            if(colid == 4) std::cout << newasm::header::col::blue;
-            if(colid == 5) std::cout << newasm::header::col::magenta;
-            if(colid == 6) std::cout << newasm::header::col::cyan;
-            if(colid == 7) std::cout << newasm::header::col::gray;
-            if(colid == 8) std::cout << newasm::header::col::reset;
+                #if 1
+                if(colid == 1) std::cout << newasm::header::col::red;
+                if(colid == 2) std::cout << newasm::header::col::yellow;
+                if(colid == 3) std::cout << newasm::header::col::green;
+                if(colid == 4) std::cout << newasm::header::col::blue;
+                if(colid == 5) std::cout << newasm::header::col::magenta;
+                if(colid == 6) std::cout << newasm::header::col::cyan;
+                if(colid == 7) std::cout << newasm::header::col::gray;
+                if(colid == 8) std::cout << newasm::header::col::reset;
+                #elif 1 == 2
+                if(colid == 1) newasm::__SCREEN_MGR::write(newasm::header::col::red);
+                if(colid == 2) newasm::__SCREEN_MGR::write(newasm::header::col::yellow);
+                if(colid == 3) newasm::__SCREEN_MGR::write(newasm::header::col::green);
+                if(colid == 4) newasm::__SCREEN_MGR::write(newasm::header::col::blue);
+                if(colid == 5) newasm::__SCREEN_MGR::write(newasm::header::col::magenta);
+                if(colid == 6) newasm::__SCREEN_MGR::write(newasm::header::col::cyan);
+                if(colid == 7) newasm::__SCREEN_MGR::write(newasm::header::col::gray);
+                if(colid == 8) newasm::__SCREEN_MGR::write(newasm::header::col::reset);
+                #endif
             #elif USING_SDL_FINALLY == 1
             setCol(colid);
             #endif

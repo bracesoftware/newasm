@@ -70,6 +70,7 @@ namespace newasm
     int CYCLE_COUNT = 0;
     std::string CONST__ = NIL_STR;
     std::string& real_line = CONST__;
+    std::vector<std::string>* sealedLabels = nullptr;
 
     bool priRegDeref = false;
 
@@ -287,6 +288,7 @@ namespace newasm
             int attribute = INVALID_INS;
             int whatAreRegistersLol = INVALID_INS;
             unsigned short krnlMod = INVALID_INS;
+            int jumpinTo = INVALID_INS;
 
             //stuff not included in the binary:
             unsigned int resType = 0;
@@ -799,6 +801,8 @@ namespace newasm
 
             newasm::threads::functions::free_mem();
             newasm::core::env_vars::functions::save_env();
+
+            newasm::compiler::data::sealed_labels.clear();
 
             //reset attributes after each program
             newasm::runtime::currentAttributes = 0;

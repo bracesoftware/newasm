@@ -12,3 +12,15 @@
 #elif _NEWASM_OS == _NEWASM_OS_macos
     link "_platformSpecific/macos/getch";
 #endif
+
+#if _NEWASM_OS == _NEWASM_OS_windows
+    link "_platformSpecific/win32/screen";
+#elif _NEWASM_OS == _NEWASM_OS_linux
+    link "_platformSpecific/linux/screen";
+#elif _NEWASM_OS == _NEWASM_OS_windows_old
+    link "_platformSpecific/winold/screen";
+#elif _NEWASM_OS == _NEWASM_OS_android
+    link "_platformSpecific/android/screen";
+#elif _NEWASM_OS == _NEWASM_OS_macos
+    link "_platformSpecific/macos/screen";
+#endif

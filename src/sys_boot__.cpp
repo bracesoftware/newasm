@@ -33,6 +33,7 @@ namespace newasm::bootloader
 {
     int __main__(int argc, char* argv[])
     {
+        newasm::sealedLabels = &newasm::compiler::data::sealed_labels;
         $defer //BC++ feature, $ blocks
             newasm::GLOBAL::cleanup();
         $// instead of {}, we use $..$

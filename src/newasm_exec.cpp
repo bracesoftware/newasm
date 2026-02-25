@@ -3771,7 +3771,7 @@ namespace newasm
             case newasm::core::lang_inf::je:
             {
                 __newasm_CHECK_JUMP_PROPERLY
-
+                #if 0
                 if(newasm::header::data::proc_now)
                 if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids.at(newasm::system::processing_proc).proc->labels))
                 {
@@ -3787,17 +3787,20 @@ namespace newasm
                 }
                 if(!newasm::header::data::proc_now)
                 {
+                    #if 0
                     if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
                     {
                         newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
                         return 1;
                     }
+                    #endif
                     if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
                     {
                         newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
                         return 1;
                     }
                 }
+                #endif
                 if(newasm::mem::regs::cpr != newasm::cmp_results::equal)
                 {
                     //std::cout << "\nnewasm::mem::regs::cpr = " << newasm::mem::regs::cpr << std::endl;
@@ -3806,19 +3809,19 @@ namespace newasm
                 if(newasm::header::data::proc_now)
                 {
                     auto& j = newasm::variables::ids.at(newasm::system::processing_proc);
-                    j.proc->idx = j.proc->labels.at(suf);
+                    j.proc->idx = lineInfo.jumpinTo;//j.proc->labels.at(suf);
                     //std::cout << "jumped to " << j.proc->idx << '\n';
                     return 1;
                 }
 
                 if(newasm::thread_line)
                 {
-                    newasm::threads::memory.at(newasm::threads::now)->lcx = newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
+                    newasm::threads::memory.at(newasm::threads::now)->lcx = lineInfo.jumpinTo;//newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
                     return 1;
                 }
 
                 newasm::code_stream::jump = 1;
-                newasm::code_stream::jumpto = newasm::mem::labels[suf];
+                newasm::code_stream::jumpto = lineInfo.jumpinTo;//newasm::mem::labels[suf];
                 return 1;
             }
             //jne //jnz
@@ -3826,7 +3829,7 @@ namespace newasm
             case newasm::core::lang_inf::jne:
             {
                 __newasm_CHECK_JUMP_PROPERLY
-
+                #if 0
                 if(newasm::header::data::proc_now)
                 if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids.at(newasm::system::processing_proc).proc->labels))
                 {
@@ -3835,17 +3838,20 @@ namespace newasm
                 }
                 if(!newasm::header::data::proc_now)
                 {
+                    #if 0
                     if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
                     {
                         newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
                         return 1;
                     }
+                    #endif
                     if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
                     {
                         newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
                         return 1;
                     }
                 }
+                #endif
                 if(newasm::mem::regs::cpr == newasm::cmp_results::equal)
                 {
                     return 1;
@@ -3853,25 +3859,25 @@ namespace newasm
                 if(newasm::header::data::proc_now)
                 {
                     auto& j = newasm::variables::ids.at(newasm::system::processing_proc);
-                    j.proc->idx = j.proc->labels.at(suf);
+                    j.proc->idx = lineInfo.jumpinTo;//j.proc->labels.at(suf);
                     return 1;
                 }
 
                 if(newasm::thread_line)
                 {
-                    newasm::threads::memory.at(newasm::threads::now)->lcx = newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
+                    newasm::threads::memory.at(newasm::threads::now)->lcx = lineInfo.jumpinTo;//newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
                     return 1;
                 }
 
                 newasm::code_stream::jump = 1;
-                newasm::code_stream::jumpto = newasm::mem::labels[suf];
+                newasm::code_stream::jumpto = lineInfo.jumpinTo;//newasm::mem::labels[suf];
                 return 1;
             }
             //jl
             case newasm::core::lang_inf::jl:
             {
                 __newasm_CHECK_JUMP_PROPERLY
-
+                #if 0
                 if(newasm::header::data::proc_now)
                 if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids.at(newasm::system::processing_proc).proc->labels))
                 {
@@ -3880,17 +3886,20 @@ namespace newasm
                 }
                 if(!newasm::header::data::proc_now)
                 {
+                    #if 0
                     if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
                     {
                         newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
                         return 1;
                     }
+                    #endif
                     if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
                     {
                         newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
                         return 1;
                     }
                 }
+                #endif
                 if(newasm::mem::regs::cpr != newasm::cmp_results::less)
                 {
                     return 1;
@@ -3899,17 +3908,17 @@ namespace newasm
                 if(newasm::header::data::proc_now)
                 {
                     auto& j = newasm::variables::ids.at(newasm::system::processing_proc);
-                    j.proc->idx = j.proc->labels.at(suf);
+                    j.proc->idx = lineInfo.jumpinTo;//j.proc->labels.at(suf);
                     return 1;
                 }
                 if(newasm::thread_line)
                 {
-                    newasm::threads::memory.at(newasm::threads::now)->lcx = newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
+                    newasm::threads::memory.at(newasm::threads::now)->lcx = lineInfo.jumpinTo;//newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
                     return 1;
                 }
 
                 newasm::code_stream::jump = 1;
-                newasm::code_stream::jumpto = newasm::mem::labels[suf];
+                newasm::code_stream::jumpto = lineInfo.jumpinTo;//newasm::mem::labels[suf];
                 return 1;
             }
             //jg
@@ -3917,6 +3926,7 @@ namespace newasm
             {
                 __newasm_CHECK_JUMP_PROPERLY
 
+                #if 0
                 if(newasm::header::data::proc_now)
                 if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids.at(newasm::system::processing_proc).proc->labels))
                 {
@@ -3925,17 +3935,20 @@ namespace newasm
                 }
                 if(!newasm::header::data::proc_now)
                 {
+                    #if 0
                     if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
                     {
                         newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
                         return 1;
                     }
+                    #endif
                     if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
                     {
                         newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
                         return 1;
                     }
                 }
+                #endif
                 if(newasm::mem::regs::cpr != newasm::cmp_results::greater)
                 {
                     return 1;
@@ -3944,23 +3957,23 @@ namespace newasm
                 if(newasm::header::data::proc_now)
                 {
                     auto& j = newasm::variables::ids.at(newasm::system::processing_proc);
-                    j.proc->idx = j.proc->labels.at(suf);
+                    j.proc->idx = lineInfo.jumpinTo;//j.proc->labels.at(suf);
                     return 1;
                 }
                 if(newasm::thread_line)
                 {
-                    newasm::threads::memory.at(newasm::threads::now)->lcx = newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
+                    newasm::threads::memory.at(newasm::threads::now)->lcx = lineInfo.jumpinTo;//newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
                     return 1;
                 }
                 newasm::code_stream::jump = 1;
-                newasm::code_stream::jumpto = newasm::mem::labels[suf];
+                newasm::code_stream::jumpto = lineInfo.jumpinTo;//newasm::mem::labels[suf];
                 return 1;
             }
             //jle
             case newasm::core::lang_inf::jle:
             {
                 __newasm_CHECK_JUMP_PROPERLY
-
+                #if 0
                 if(newasm::header::data::proc_now)
                 if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids.at(newasm::system::processing_proc).proc->labels))
                 {
@@ -3969,17 +3982,20 @@ namespace newasm
                 }
                 if(!newasm::header::data::proc_now)
                 {
+                    #if 0
                     if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
                     {
                         newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
                         return 1;
                     }
+                    #endif
                     if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
                     {
                         newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
                         return 1;
                     }
                 }
+                #endif
                 if(newasm::mem::regs::cpr != newasm::cmp_results::less && newasm::mem::regs::cpr != newasm::cmp_results::equal)
                 {
                     return 1;
@@ -3988,23 +4004,23 @@ namespace newasm
                 if(newasm::header::data::proc_now)
                 {
                     auto& j = newasm::variables::ids.at(newasm::system::processing_proc);
-                    j.proc->idx = j.proc->labels.at(suf);
+                    j.proc->idx = lineInfo.jumpinTo;//j.proc->labels.at(suf);
                     return 1;
                 }
                 if(newasm::thread_line)
                 {
-                    newasm::threads::memory.at(newasm::threads::now)->lcx = newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
+                    newasm::threads::memory.at(newasm::threads::now)->lcx = lineInfo.jumpinTo;//newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
                     return 1;
                 }
                 newasm::code_stream::jump = 1;
-                newasm::code_stream::jumpto = newasm::mem::labels[suf];
+                newasm::code_stream::jumpto = lineInfo.jumpinTo;//newasm::mem::labels[suf];
                 return 1;
             }
             //jge
             case newasm::core::lang_inf::jge:
             {
                 __newasm_CHECK_JUMP_PROPERLY
-
+                #if 0
                 if(newasm::header::data::proc_now)
                 if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids.at(newasm::system::processing_proc).proc->labels))
                 {
@@ -4024,7 +4040,7 @@ namespace newasm
                         return 1;
                     }
                 }
-
+                #endif
                 if(newasm::mem::regs::cpr != newasm::cmp_results::greater && newasm::mem::regs::cpr != newasm::cmp_results::equal)
                 {
                     return 1;
@@ -4033,25 +4049,25 @@ namespace newasm
                 if(newasm::header::data::proc_now)
                 {
                     auto& j = newasm::variables::ids.at(newasm::system::processing_proc);
-                    j.proc->idx = j.proc->labels.at(suf);
+                    j.proc->idx = lineInfo.jumpinTo;//j.proc->labels.at(suf);
                     return 1;
                 }
 
                 if(newasm::thread_line)
                 {
-                    newasm::threads::memory.at(newasm::threads::now)->lcx = newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
+                    newasm::threads::memory.at(newasm::threads::now)->lcx = lineInfo.jumpinTo;//newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
                     return 1;
                 }
 
                 newasm::code_stream::jump = 1;
-                newasm::code_stream::jumpto = newasm::mem::labels[suf];
+                newasm::code_stream::jumpto = lineInfo.jumpinTo;//newasm::mem::labels[suf];
                 return 1;
             }
             //jmp
             case newasm::core::lang_inf::jmp:
             {
                 __newasm_CHECK_JUMP_PROPERLY
-
+                #if 0
                 if(newasm::header::data::proc_now)
                 if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids.at(newasm::system::processing_proc).proc->labels))
                 {
@@ -4071,23 +4087,24 @@ namespace newasm
                         return 1;
                     }
                 }
+                #endif
 
                 if(newasm::header::data::proc_now)
                 {
                     auto& j = newasm::variables::ids.at(newasm::system::processing_proc);
-                    j.proc->idx = j.proc->labels.at(suf);
+                    j.proc->idx = lineInfo.jumpinTo;//j.proc->labels.at(suf);
                     //std::cout << "Zasto ne skaces pizda ti mater'na? -> " << j.proc->idx << std::endl;
                     return 1;
                 }
 
                 if(newasm::thread_line)
                 {
-                    newasm::threads::memory.at(newasm::threads::now)->lcx = newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
+                    newasm::threads::memory.at(newasm::threads::now)->lcx = lineInfo.jumpinTo;//newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
                     return 1;
                 }
 
                 newasm::code_stream::jump = 1;
-                newasm::code_stream::jumpto = newasm::mem::labels[suf];
+                newasm::code_stream::jumpto = lineInfo.jumpinTo;//newasm::mem::labels[suf];
                 //std::cout << "JUMPED TO " << newasm::mem::labels[suf];
                 return 1;
             }
@@ -8065,11 +8082,69 @@ namespace newasm
                 std::cout << "E JEBGA SAD KUME! -> " << e.what() << std::endl;
                 throw;
             }
+            //2nd compilation pass for labels
             for(int i = 0; i < newasm::compiler::compiledCode.size(); ++i)
             {
                 if(newasm::compiler::compiledCode.at(i).type == newasm::compiler::labelJumpPoint)
                 {
                     newasm::process_l(newasm::compiler::compiledCode.at(i).other, i);
+                }
+            }
+            newasm::compiler::data::lnidx = 1;
+            //thing above us was for this down here
+            for(int i = 0; i < newasm::compiler::compiledCode.size(); ++i)
+            {
+                auto& bytecode = newasm::compiler::compiledCode.at(i);
+                ++newasm::compiler::data::lnidx;
+                newasm::compiler::data::line = bytecode.raw;
+                if(
+                    bytecode.whatAmIDoing == newasm::core::lang_inf::jmp or
+                    bytecode.whatAmIDoing == newasm::core::lang_inf::jz or
+                    bytecode.whatAmIDoing == newasm::core::lang_inf::jnz or
+                    bytecode.whatAmIDoing == newasm::core::lang_inf::je or
+                    bytecode.whatAmIDoing == newasm::core::lang_inf::jne or
+                    bytecode.whatAmIDoing == newasm::core::lang_inf::jl or
+                    bytecode.whatAmIDoing == newasm::core::lang_inf::jle or
+                    bytecode.whatAmIDoing == newasm::core::lang_inf::jg or
+                    bytecode.whatAmIDoing == newasm::core::lang_inf::jge
+                )
+                {
+                    auto label_name = newasm::header::functions::trim(bytecode.tokens[1]);
+                    auto& sl = newasm::compiler::data::sealed_labels;
+                    if(
+                        newasm::mem::labels.find(label_name) == newasm::mem::labels.end() and
+                        ![&](const std::string& name) -> bool {
+                            for(int q = 0; q < sl.size(); ++q)
+                            {
+                                if(sl[q] == name)
+                                {
+                                    return true;
+                                }
+                            }
+                            return false;
+                        }(label_name)
+                    )
+                    {
+                        newasm::compiler::abort(newasm::compiler::fail::unknown_label);
+                        //std::cout << "Tried compiling -> `" << bytecode.raw << "` " << (std::find(sl.begin(), sl.end(), label_name) != sl.end()) << "\n";
+                        if(0) for(int j = 0; j < sl.size(); ++j)
+                        {
+                            std::cout << "sl[" << j << "] = `" << sl[j] << "`\n";
+                        }
+                        break;
+                    }
+                    try
+                    {
+                        bytecode.jumpinTo = newasm::mem::labels[label_name];
+                    }
+                    catch(std::exception& e)
+                    {
+                        for(auto p = newasm::mem::labels.begin(); p != newasm::mem::labels.end(); ++p)
+                        {
+                            std::cout << "labels[" << p->first << "] = `" << p->second << "`\n";
+                        }
+                        newasm::compiler::abort(newasm::compiler::fail::unknown_label);
+                    }
                 }
             }
 
