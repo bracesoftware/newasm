@@ -23,6 +23,7 @@ namespace SYS = newasm;
 
 link "runtime/common/os";
 link "runtime/common/arch";
+#pragma GCC optimize ("inline-functions,unroll-loops")
 #define EMPTYLINE std::cout<<"\n"
 #include <iostream>
 #include <initializer_list>
