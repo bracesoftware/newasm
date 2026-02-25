@@ -27,6 +27,7 @@ This instruction allows you to change values of registers and variables.
 | `fdx` | function index | Holds an index of a function `syscall` will call. |
 | `tlr` | typeless register | Typeless register (can hold any value, even code literals). Used as an output argument in some `syscall`s. |
 | `stl` | secondary typeless register | Typeless register as well; used as a helping register in `syscall`s. |
+| `rax` | general purpose register A | 32-bit general purpose register. Often used in `syscall`s. |
 | `bos` | byte output size | Specify the number of bytes you want to print out. Works only on `syscall` 1 in `"ios"`. |
 | `stk` | stack pointer | Points at the top of the stack. |
 | `hea` | heap pointer | Points at an address in the heap. |

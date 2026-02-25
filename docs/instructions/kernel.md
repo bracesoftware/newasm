@@ -45,7 +45,7 @@ You use `sysenter` to expose a specific kernel module to the program, and `sysca
 | `cmanip` | `8` | `cpt`, `tlr`, `stl` | Set-at-left child-of function, with `cpt` being a pointer holding the address of your binary tree, `tlr` being the index and `stl` the value. |
 | `cmanip` | `9` | `cpt`, `tlr`, `stl` | Get-at function, with `cpt` being a pointer holding the address of your binary tree and `tlr` being the index. After the `syscall`, the function will store the value in `tlr`.|
 | `net` | `1` | `tlr`, `stl` | Download a file, with `tlr` being a link to the file and `stl` being the output destination. |
-| `mem` | `1` | `tlr` | Marks a variable as a constant, with `tlr` being a pointer to the specific variable. Trying to modify a variable using `stor` afterwards will cause errors. |
+| `mem` | `1` | `tlr` | Gets memory usage in bytes and stores it inside the `rax` register. |
 | `txtop` | `1` | `tlr`, `stl` | Concatenate 2 textual values, with these registers holding the two values. |
 | `txtop` | `2` | `tlr` | Remove whitespaces from string ends. |
 | `txtop` | `3` | `tlr` | Tokenizes the string stored inside the `tlr` register. |
