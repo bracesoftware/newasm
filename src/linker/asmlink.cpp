@@ -3,6 +3,10 @@
 
 namespace newasm
 {
+    namespace linker
+    {
+        //const std::regex pattern_1("^\\s*link\\s+\"([^\"]+)\"\\s*$");
+    }
     class Linker
     {
         private static inline void writeFile(const std::string& filename, const std::vector<std::string>& lines)
@@ -99,16 +103,33 @@ namespace newasm
         }
         private static inline std::pair<bool, std::string> linkFile__A(const std::string& line_)
         {
+            #if 0
             std::string line = newasm::header::functions::remc(line_);
-            static const std::regex pattern("^\\s*link\\s+\"([^\"]+)\"\\s*$");
             std::smatch match;
-            if(std::regex_match(line, match, pattern))
+            if(std::regex_match(line, match, newasm::linker::pattern_1))
             {
                 //std::cout << "linkFile__A -> aj idi u pizd mat" << std::endl;
                 return {true, match[1].str()}; // matchan, vraća tekst
             }
 
             return {false, ""}; // nije match
+            #endif
+            std::string line = newasm::header::functions::remc(line_);
+            line = newasm::header::functions::trim(line);
+            auto v = newasm::common::tokenize(line);
+            if(v.size() != 2)
+            {
+                return {false, ""};
+            }
+            if(v.at(0) != "link")
+            {
+                return {false, ""};
+            }
+            if(!newasm::header::functions::istext(v.at(1)))
+            {
+                return {false, ""};
+            }
+            return {true, newasm::header::functions::remq(v.at(1))};
         }
 
         public static inline void link(const std::string& filename, const std::string& outputfilename)

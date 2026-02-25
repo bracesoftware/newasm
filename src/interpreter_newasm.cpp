@@ -23,7 +23,6 @@ namespace SYS = newasm;
 
 link "runtime/common/os";
 link "runtime/common/arch";
-
 #define EMPTYLINE std::cout<<"\n"
 #include <iostream>
 #include <initializer_list>

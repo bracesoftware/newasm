@@ -157,3 +157,11 @@ __ ___;
     #define ATTR_HOT
     #define FORCE_INLINE
 #endif
+
+#if defined(__GNUC__) || defined(__clang__)
+    #define ATTR_FLAT __attribute__((flatten))
+#elif defined(_MSC_VER)
+    #define ATTR_FLAT
+#else
+    #define ATTR_FLAT
+#endif
