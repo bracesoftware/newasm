@@ -1048,13 +1048,17 @@ sysenter "ios"
 
     push 1 ; push the sec arg
     push "call stack works" ; push the first arg
+    mov imm, 1 ; tell the virtual CPU that we're actually calling a function and not pushing the number
     push 0x827 ; call the procedure
+    zero imm ; reset the flag
     stack ;clear up the stack after the procedure call
     wait 3000
     db stk
     push 1 ; push the sec arg
     push "call stack works again!" ; push the first arg
+    mov imm, 1
     push 0x827 ; call the procedure
+    zero imm
     stack ;clear up the stack after the procedure call
 
 
@@ -1065,7 +1069,9 @@ sysenter "ios"
         halt 0
     end
     evt 0x00 -> thisisanerror
+    mov imm, 1
     push  0x00
+    zero imm
     stack
     db stk
 
@@ -1861,7 +1867,9 @@ using "ios"
     def testreallycool, &gg
     push "Hello from testproc"
     evt 0xff -> std::testproc
+    mov imm, 1
     push 0xff
+    zero imm
     stack
 
     mov tlr, (proc)
@@ -1897,11 +1905,15 @@ using "ios"
     evt 0xff3 -> lol::writexd_
 
     push 3
+    mov imm, 1
     push 0xff3
+    zero imm
     stack
 
     push "hello"
+    mov imm, 1
     push 0xff3
+    zero imm
     stack
 :lol24332243
     mov tlr, 1
@@ -2369,7 +2381,7 @@ jmp doneshit
     mov &ThisIsConst, 3 ; error
 
     :d787234
-    mov bos, 1000000
+    mov bos, 0b11110100001001000000;1000000
     :loop___
     cmp bos, 0
     jz end____

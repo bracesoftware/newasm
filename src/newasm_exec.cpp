@@ -4428,17 +4428,19 @@ namespace newasm
                 }
                 #endif
 
-                if(newasm::header::functions::ishex(suf))
+                if(newasm::mem::regs::imm == 1 && lineInfo.priArgType == newasm::datatypes::number)
                 {
                     newasm::hardware::randAccessMem.push__STACK<std::string>(suf);
                     newasm::header::data::callstkidx = newasm::mem::regs::stk;
-                    if(newasm::stack::events.find(suf) != newasm::stack::events.end())
+                    if(newasm::stack::events.find(lineInfo.priInt) != newasm::stack::events.end())
                     {
-                        newasm::header::data::temp_ = newasm::stack::events.at(suf);
+                        newasm::header::data::temp_ = newasm::stack::events.at(lineInfo.priInt);
                         newasm::runtime::functions::parse<true>(newasm::header::data::temp_);
                         newasm::callproc(newasm::header::data::temp_);
                         return 1;
                     }
+                    newasm::terminate(newasm::exit_codes::unknown_event);
+                    return 1;
                 }
 
                 if(newasm::header::functions::isnumeric(suf))
@@ -4604,7 +4606,7 @@ namespace newasm
                     }
                 }
                 #endif
-                if(newasm::header::functions::ishex(suf))
+                if(lineInfo.priArgType == newasm::datatypes::number)//if(newasm::header::functions::ishex(suf))
                 {
                     std::string proc_name = newasm::header::data::case_line;
                     if(newasm::header::functions::parseNamespaceSegments(newasm::header::data::case_line).first)
@@ -4617,7 +4619,7 @@ namespace newasm
                         
                         proc_name = newasm::header::functions::mangleName(vec, symbol_name);
                     }
-                    newasm::process_hndl(suf, proc_name);
+                    newasm::process_hndl(lineInfo.priInt, proc_name);
                     return 1;
                 }
                 if(newasm::header::data::case_line != static_cast<std::string>("{"))
@@ -5030,7 +5032,7 @@ namespace newasm
             //int
             case newasm::core::lang_inf::int__:
             {
-                if(suf == static_cast<std::string>("0x1")) // sys_memsize
+                if(lineInfo.priInt == 1) // sys_memsize
                 {
                     if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr))
                     {
@@ -5041,7 +5043,7 @@ namespace newasm
                     newasm::header::functions::wrn("0x1 system interrupt is deprecated.");
                     return 1;
                 }
-                if(suf == static_cast<std::string>("0x2")) // sys_lazy_evhndlr
+                if(lineInfo.priInt == 2) // sys_lazy_evhndlr
                 {
                     if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr))
                     {
@@ -5061,7 +5063,7 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::invalid_syntax);
                     return 1;
                 }
-                if(suf == static_cast<std::string>("0x3")) //sys_autobos
+                if(lineInfo.priInt == 3) //sys_autobos
                 {
                     if(newasm::header::flags::autobos)
                     {
@@ -6593,33 +6595,29 @@ namespace newasm
         return 1;
     }
     
-    inline int process_hndl(std::string tohandle, std::string procedure)
+    inline void process_hndl(int tohandle, const std::string& procedure)
     {
         if(!newasm::mem::functions::datavalid(procedure, newasm::variables::ids))
+        {
+            newasm::terminate(newasm::exit_codes::invalid_memacc);
+            return;
+        }
+        if(newasm::mem::functions::datavalid(procedure, newasm::variables::ids))
         {
             if(newasm::variables::ids.at(procedure).type != newasm::datatypes::proc)
             {
                 newasm::terminate(newasm::exit_codes::invalid_evhndlr);
-                return 1;
+                return;
             }
         }
-        if(tohandle == newasm::core::lang_inf::events::identifiers__.at(newasm::core::lang_inf::events::exit))
+
+        if(newasm::stack::events.find(tohandle) != newasm::stack::events.end())
         {
-            newasm::handlers::exit_handler = procedure;
-            return 1;
+            newasm::terminate(newasm::exit_codes::hndl_reassign);
+            return;
         }
-        if(newasm::header::functions::ishex(tohandle))
-        {
-            if(newasm::stack::events.find(tohandle) != newasm::stack::events.end())
-            {
-                newasm::terminate(newasm::exit_codes::hndl_reassign);
-                return 1;
-            }
-            newasm::stack::events[tohandle] = procedure;
-            return 1;
-        }
-        newasm::terminate(newasm::exit_codes::unknown_event);
-        return 1;
+        newasm::stack::events[tohandle] = procedure;
+        return;
     }
     int process_text(std::string macroname, std::string symbol)
     {

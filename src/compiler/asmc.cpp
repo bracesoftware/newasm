@@ -483,6 +483,20 @@ namespace newasm
                                 {
                                     lineCompiled.whatTheFuckAreEvents = it2->second;
                                 }
+                                //parse numbers
+                                if(newasm::header::functions::ishex(otherShit))
+                                {
+                                    otherShit = std::to_string(newasm::header::functions::hextoi(otherShit));
+                                }
+                                if(newasm::header::functions::isbin(otherShit))
+                                {
+                                    otherShit = std::to_string(newasm::header::functions::bintoi(otherShit));
+                                }
+                                if(newasm::header::functions::isnumeric(otherShit))
+                                {
+                                    lineCompiled.priArgType = newasm::datatypes::number;
+                                    lineCompiled.priInt = std::stoi(otherShit);
+                                }
                             }
                             //checking for thread names cuz SPEED
                             if(lineCompiled.whatAmIDoing == newasm::core::lang_inf::thread__)
@@ -575,6 +589,14 @@ namespace newasm
 
                     lineCompiled.tokens.at(i) = newasm::header::functions::parseBackslash(lineCompiled.tokens.at(i));
                     // optimisation
+                    if(newasm::header::functions::ishex(lineCompiled.tokens.at(i)))
+                    {
+                        lineCompiled.tokens.at(i) = std::to_string(newasm::header::functions::hextoi(lineCompiled.tokens.at(i)));
+                    }
+                    if(newasm::header::functions::isbin(lineCompiled.tokens.at(i)))
+                    {
+                        lineCompiled.tokens.at(i) = std::to_string(newasm::header::functions::bintoi(lineCompiled.tokens.at(i)));
+                    }
                     if(i == 1)
                     {
                         //compiling krnl modules cuz SPEED

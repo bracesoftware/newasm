@@ -19,9 +19,7 @@ namespace newasm
     }
     namespace stack
     {
-        std::unordered_map<std::string, std::string> events = {
-            {"test","test2"}
-        };
+        std::unordered_map<int, std::string> events;
         class macro_data
         {
             public:

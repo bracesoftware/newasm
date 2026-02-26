@@ -139,6 +139,10 @@
       "match": "\\b0x[0-9a-fA-F]+\\b"
     },
     {
+      "name": "constant.hex.newasm",
+      "match": "\\b0b[0-1]+\\b"
+    },
+    {
       "name": "env.var.newasm",
       "match": "\\*\\s*/\\s*([A-Za-z_][A-Za-z0-9_]*)"
     }

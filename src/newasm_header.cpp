@@ -800,12 +800,12 @@ namespace newasm
                     return 0;
             }
 
+            //credits stackoverflow
             int hextoi(const std::string& hex_str)
             {
                 size_t start = 0;
                 int result = 0;
 
-                // Ako počinje s "0x" ili "0X", preskoči prefiks
                 if(hex_str.size() >= 2 && hex_str[0] == '0' && (hex_str[1] == 'x' || hex_str[1] == 'X'))
                 {
                     start = 2;
@@ -825,10 +825,10 @@ namespace newasm
             }
             bool ishex(const std::string &str)
             {
-                if (str.size() < 3) return false;
-                if (str.at(0) != '0' || str.at(1) != 'x') return false;
+                if(str.size() < 3) return false;
+                if(str.at(0) != '0' || str.at(1) != 'x') return false;
                 
-                for (int i = 2; i < str.size(); ++i)
+                for(int i = 2; i < str.size(); ++i)
                 {
                     char c = str.at(i);
                     if(!(('0' <= c && c <= '9') || ('a' <= c && c <= 'f') || ('A' <= c && c <= 'F')))
@@ -838,12 +838,18 @@ namespace newasm
                 }
                 return true;
             }
-            bool isbin(const std::string &str)
+            bool isbin(const std::string& str)
             {
-                if (str.size() < 3) return false;
-                if (str.at(0) != '0' || str.at(1) != 'b') return false;
+                if(str.size() < 3)
+                {
+                    return false;
+                }
+                if(str.at(0) != '0' || str.at(1) != 'b')
+                {
+                    return false;
+                }
                 
-                for (int i = 2; i < str.size(); ++i)
+                for(int i = 2; i < str.size(); ++i)
                 {
                     char c = str.at(i);
                     if(c != '0' && c != '1')
@@ -853,13 +859,22 @@ namespace newasm
                 }
                 return true;
             }
+            int bintoi(const std::string& str)
+            {
+                std::string s = str;
+                if(s.substr(0, 2) == "0b")
+                {
+                    s = s.substr(2);
+                }
+                return std::stoi(s, nullptr, 2);
+            }
             bool hasnull(std::string str, char &delim, int &pos)
             {
                 for(int i = 0; i < str.size(); ++i)
                 {
                     if(
                         (str.at(i) == '\t') ||
-                        (str.at(i) == 32)
+                        (str.at(i) == (char)32)
                     )
                     {
                         pos = i;

@@ -55,6 +55,7 @@ Special characters supported by the virtual machine are listed below.
 | `\v` | vertical tab |
 | `\f` | form feed |
 | `\0` | null terminator |
+| `\?` | question mark |
 
 ## `stor`
 > [!WARNING]
@@ -92,8 +93,10 @@ The `load` instruction allows us to store and load data on the heap. This depend
     ; store the value in the address heap pointer is pointing to
     ; into some variable in `.data`.
 
-    load *, 736.38 ; hea = something, in this case 736.38
-    load &, &testdecimal ; myvar = hea
+    mov imm, 1
+    load 736.38 ; hea = something, in this case 736.38
+    mov imm, 2
+    load &testdecimal ; myvar = hea
 
     mov tlr, testdecimal
     mov stl, 0c1
@@ -159,12 +162,16 @@ This instruction is used to clear the call stack information from the stack memo
 
     push 1 ; push the sec arg
     push "call stack works" ; push the first arg
+    mov imm, 1 ; tell the virtual cpu that we're gonna call a function
     push 0x827 ; call the procedure
+    zero imm
     stack ; clear up the stack after the procedure call
     wait 3000
     db stk
     push 1 ; push the sec arg
     push "call stack works again!" ; push the first arg
+    mov imm, 1
     push 0x827 ; call the procedure
+    zero imm
     stack ; clear up the stack after the procedure call
 ```
