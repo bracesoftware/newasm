@@ -17,10 +17,14 @@ namespace newasm
             public newasm::containers::bit_array<MEM_SIZE> __memory_free__;
             private int last_used_pos = 0;
             private int smallObjectThreshold = sizeof(int);
+            private std::vector<std::pair<int, int>> free_blocks;
+            private int __free_blocks__;
             
             public explicit inline randAccessMem__() noexcept
             {
                 this->last_used_pos = 0;
+                this->free_blocks.reserve(500);
+                __free_blocks__ = 0;
             }
 
             protected inline int get_size() noexcept
@@ -28,7 +32,7 @@ namespace newasm
                 return MEM_SIZE;
             }
 
-            public inline void set_sot(int bytes)
+            public inline void set_sot(int bytes) noexcept
             {
                 this->smallObjectThreshold = bytes;
             }
@@ -56,9 +60,9 @@ namespace newasm
                 return !(__memory_free__.get_at(addr));
             }
 
-            inline int get_free_alloc(int bytes) noexcept
+            inline int __Bump(int bytes) noexcept
             {
-                for(int i = (bytes <= this->smallObjectThreshold ? last_used_pos : 0); i <= MEM_SIZE - bytes; ++i)
+                for(int i = last_used_pos; i <= MEM_SIZE - bytes; ++i)
                 {
                     if(i % newasm::header::data::alignment != 0)
                     {
@@ -78,10 +82,7 @@ namespace newasm
                         }
                         if(free_block)
                         {
-                            if(bytes <= this->smallObjectThreshold)
-                            {
-                                this->last_used_pos = i;
-                            }
+                            this->last_used_pos = i;
                             return i;
                         }
                     }
@@ -89,11 +90,32 @@ namespace newasm
                 return -1;
             }
 
+            ATTR_FLAT inline int get_free_alloc(int bytes)
+            {
+                if(__free_blocks__ == 0)
+                {
+                    return __Bump(bytes);
+                }
+                if(free_blocks.back().second >= bytes)
+                {
+                    int addr = free_blocks.back().first;
+                    free_blocks.pop_back();
+                    --__free_blocks__;
+                    return addr;
+                }
+                return __Bump(bytes);
+            }
+
             inline void delete__HEAP(int addr, int stopaddr) noexcept
             {
                 for(int i = addr; i < stopaddr; ++i)
                 {
                     __memory_free__.set_at(i, 0);
+                }
+                if(stopaddr - addr > this->smallObjectThreshold)
+                {
+                    this->free_blocks.push_back({addr, stopaddr - addr});
+                    ++__free_blocks__;
                 }
                 return;
             }
