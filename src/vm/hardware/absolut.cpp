@@ -106,7 +106,7 @@ namespace newasm
                 return __Bump(bytes);
             }
 
-            inline void delete__HEAP(int addr, int stopaddr) noexcept
+            FORCE_INLINE inline void delete__HEAP(int addr, int stopaddr) noexcept
             {
                 for(int i = addr; i < stopaddr; ++i)
                 {
@@ -149,7 +149,7 @@ namespace newasm
             }
             // for int, float, char
             template<typename T>
-            public inline int write(T value) noexcept
+            public FORCE_INLINE inline int write(T value) noexcept
             {
                 if constexpr(std::is_same<T, std::string>::value)
                 {
@@ -230,7 +230,7 @@ namespace newasm
             }
 
             template<typename T>
-            public inline int overwrite(int addr, T value) noexcept
+            public FORCE_INLINE inline int overwrite(int addr, T value) noexcept
             {
                 //newasm::progwin::api::cout("Overwriting address: " + std::to_string(addr));
                 if(__memory_free__.get_at(addr) == 0)
@@ -283,7 +283,7 @@ namespace newasm
             }
 
             template<typename T>
-            public inline T peek(int addr) noexcept
+            public FORCE_INLINE inline T peek(int addr) noexcept
             {
                 if constexpr(std::is_same<T, std::string>::value)
                 {
@@ -434,7 +434,7 @@ namespace newasm
             }
             //
 
-            public inline auto get__A(int addr) noexcept
+            public FORCE_INLINE inline auto get__A(int addr) noexcept
             {
                 return &this->__memory__[addr];
             }
