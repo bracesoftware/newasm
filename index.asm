@@ -2389,6 +2389,7 @@ jmp doneshit
     dec bos
     nop
     nop
+    mov rax, 2
     jmp loop___
     :end____
     sysenter "mem"
