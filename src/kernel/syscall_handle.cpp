@@ -290,6 +290,11 @@ namespace newasm
                                         */
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::http, 1): // get http
                 {
+                    if(newasm::header::data::offlineMode)
+                    {
+                        newasm::mem::regs::tlr.set_value("\"NULL\"");
+                        return 1;
+                    }
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
                     {
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
@@ -321,6 +326,11 @@ namespace newasm
                 }
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::http, 2): // post http
                 {
+                    if(newasm::header::data::offlineMode)
+                    {
+                        newasm::mem::regs::tlr.set_value("\"NULL\"");
+                        return 1;
+                    }
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
                     {
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
@@ -370,6 +380,12 @@ namespace newasm
                                                                                             */
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::tcp, 1): // send tcp
                 {
+                    if(newasm::header::data::offlineMode)
+                    {
+                        newasm::mem::regs::tlr.set_value("0");
+                        newasm::mem::regs::stl.set_value("\"NULL\"");
+                        return 1;
+                    }
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
                     {
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
@@ -396,6 +412,11 @@ namespace newasm
                 }
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::tcp, 2): // recv tcp
                 {
+                    if(newasm::header::data::offlineMode)
+                    {
+                        newasm::mem::regs::tlr.set_value("\"NULL\"");
+                        return 1;
+                    }
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
                     {
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
@@ -631,6 +652,10 @@ namespace newasm
                                                                           */
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::net, 1): //download files
                 {
+                    if(newasm::header::data::offlineMode)
+                    {
+                        return 1;
+                    }
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
                     {
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);

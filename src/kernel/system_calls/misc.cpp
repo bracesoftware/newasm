@@ -16,7 +16,7 @@ namespace newasm
             {
                 if(min > max)
                 {
-                    return min;
+                    std::swap(min, max);
                 }
                 static std::mt19937 rng(std::random_device{}());
                 std::uniform_int_distribution<int> dist(min, max);

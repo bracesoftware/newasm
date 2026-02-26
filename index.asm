@@ -5,6 +5,7 @@ link "test/g.asm"
     intg len2 : $ - PrintThisLaterLol
 .start
     align 3
+    int 0x4
     ;cls
 :startofprog
 using "ios"

@@ -757,6 +757,7 @@ namespace newasm
     {
         void cleanup()
         {
+            newasm::header::data::offlineMode = false;
             newasm::exit_handled = false;
             newasm::lambda::GLOBAL.reset_forKernel();
             newasm::header::flags::autobos = false;

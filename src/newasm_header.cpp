@@ -89,6 +89,8 @@ namespace newasm
             newasm::kernel::thread_safe<int> malloc_block_used = 0;
 
             int alignment = 1;
+            //offline mode (kernel module for networking,http,tcp is off)
+            bool offlineMode = false;
         }
         namespace constants
         {
