@@ -757,6 +757,7 @@ namespace newasm
     {
         void cleanup()
         {
+            newasm::RAM->set_sot(sizeof(int));
             newasm::header::data::offlineMode = false;
             newasm::exit_handled = false;
             newasm::lambda::GLOBAL.reset_forKernel();

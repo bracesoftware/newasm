@@ -19,6 +19,7 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 
 + Added the offline mode. Use `int 0x4` to enable it. The offline mode blocks system calls in TCP, HTTP and network module.
 + The `push` instruction now follows the `imm` convention. This change was made so it becomes faster. Use `mov imm, 1` when you are pushing a procedure onto the stack, and `zero imm` when you're pushing normal values.
++ More aggressive optimizations regarding the `evt` instruction.
 
 ## Fixed issues
 

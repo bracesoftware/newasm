@@ -15,12 +15,22 @@ namespace newasm
             public static constexpr int MEM_SIZE = memsize * 1024 * 1024;
             public unsigned char __memory__[MEM_SIZE];
             public newasm::containers::bit_array<MEM_SIZE> __memory_free__;
+            private int last_used_pos = 0;
+            private int smallObjectThreshold = sizeof(int);
             
-            public explicit inline randAccessMem__() noexcept {}
+            public explicit inline randAccessMem__() noexcept
+            {
+                this->last_used_pos = 0;
+            }
 
             protected inline int get_size() noexcept
             {
                 return MEM_SIZE;
+            }
+
+            public inline void set_sot(int bytes)
+            {
+                this->smallObjectThreshold = bytes;
             }
 
             // free = 0
@@ -48,7 +58,7 @@ namespace newasm
 
             inline int get_free_alloc(int bytes) noexcept
             {
-                for(int i = 0; i <= MEM_SIZE - bytes; ++i)
+                for(int i = (bytes <= this->smallObjectThreshold ? last_used_pos : 0); i <= MEM_SIZE - bytes; ++i)
                 {
                     if(i % newasm::header::data::alignment != 0)
                     {
@@ -68,6 +78,10 @@ namespace newasm
                         }
                         if(free_block)
                         {
+                            if(bytes <= this->smallObjectThreshold)
+                            {
+                                this->last_used_pos = i;
+                            }
                             return i;
                         }
                     }
