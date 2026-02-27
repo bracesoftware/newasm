@@ -1291,8 +1291,9 @@ namespace newasm
         //parse the operand before execution
         if(lineInfo.altArgType == newasm::datatypes::symbol_name)
         {
-            newasm::runtime::functions::parse(opr); //avoid all shi parsin if the
+            //newasm::runtime::functions::parse(opr); //avoid all shi parsin if the
                                                     //compiler already figured it out
+            newasm::runtime::functions::eval(opr, lineInfo.altEvalMode);
         }
         switch(lineInfo.whatAmIDoing)//switch(it->second)
         {

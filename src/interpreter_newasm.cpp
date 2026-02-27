@@ -109,6 +109,20 @@ namespace newasm
         const int event = 100;
         const int _regDeref = 101;
     }
+    namespace runtime
+    {
+        namespace evalModes
+        {
+            const short regDeref = 1;
+            const short addressOf = 2;
+            const short valueOfNamespacedVar = 3;//-> if(newasm::header::functions::parseNamespaceSegments(suf).first)
+            const short valueOfNamespacedTupleOrContext = 4; 
+            const short referenceOfNamespacedVar = 5;//-> isref
+            const short environmentVariable = 6;//-> check */ at the front of a string
+            const short valueOf = 7;
+
+        }
+    }
 }
 link "sysext/scope_exit";
 link "sysext/out";
@@ -245,6 +259,7 @@ namespace newasm
         namespace functions
         {
             void parse(std::string& suf);
+            inline void eval(std::string& s, int mode);
 
             template<bool _procNameParse>
             void parse(std::string& suf);
@@ -266,12 +281,14 @@ namespace newasm
             std::string other;
 
             int priArgType = 0;
+            int priEvalMode = 0;
             int priInt = 0;
             float priFloat = 0;
             char priChar = 0;
             std::string priString = "";
             
             int altArgType = 0;
+            int altEvalMode = 0;
             int altInt = 0;
             float altFloat = 0;
             char altChar = 0;

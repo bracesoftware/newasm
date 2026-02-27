@@ -21,6 +21,9 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 + The `push` instruction now follows the `imm` convention. This change was made so it becomes faster. Use `mov imm, 1` when you are pushing a procedure onto the stack, and `zero imm` when you're pushing normal values.
 + More aggressive optimizations regarding the `evt` instruction.
 + Introduced the hybrid allocator in the RAM emulator.
++ Optimized the `int` instruction.
++ Optimized the `align` instruction.
++ Heavily optimized the runtime lvalue parsing, register dereferenciation and .
 
 ## Fixed issues
 
