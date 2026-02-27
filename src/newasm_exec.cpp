@@ -5055,6 +5055,7 @@ namespace newasm
             //int
             case newasm::core::lang_inf::int__:
             {
+                #if 0
                 if(lineInfo.priInt == 1) // sys_memsize
                 {
                     if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr))
@@ -5086,20 +5087,19 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::invalid_syntax);
                     return 1;
                 }
-                if(lineInfo.priInt == 3) //sys_autobos
+                #endif
+                switch(lineInfo.priInt)
                 {
-                    if(newasm::header::flags::autobos)
+                    case 3:
                     {
-                        newasm::header::flags::autobos = false;
+                        newasm::header::flags::autobos = !newasm::header::flags::autobos;
                         return 1;
                     }
-                    newasm::header::flags::autobos = true;
-                    return 1;
-                }
-                if(lineInfo.priInt == 4)
-                {
-                    newasm::header::data::offlineMode = !newasm::header::data::offlineMode;
-                    return 1;
+                    case 4:
+                    {
+                        newasm::header::data::offlineMode = !newasm::header::data::offlineMode;
+                        return 1;
+                    }
                 }
                 newasm::terminate(newasm::exit_codes::invalid_sysint);
                 return 1;
@@ -5381,12 +5381,21 @@ namespace newasm
             //align
             case newasm::core::lang_inf::align:
             {
-                if(!newasm::header::functions::isnumeric(suf))
+                int alignment = 0;
+                if(lineInfo.priArgType == newasm::datatypes::number)
                 {
-                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                    return 1;
+                    alignment = lineInfo.priInt;
                 }
-                int alignment = std::stoi(suf);
+                if(lineInfo.priArgType == newasm::datatypes::symbol_name)
+                {
+                    if(!newasm::header::functions::isnumeric(suf))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    alignment = std::stoi(suf);
+                }
+
                 if(alignment <= 0)
                 {
                     newasm::terminate(newasm::exit_codes::seg_fault);

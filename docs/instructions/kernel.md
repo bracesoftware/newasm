@@ -82,7 +82,10 @@ This instruction is used to directly talk to the system.
 int 0x3 ; tells the system to manually calculate the `bos` size for output
 ```
 
-Currently, only `0x3` is available. Others are deprecated.
+| System interrupt | Description |
+| ---------------- | ----------- |
+| `0x3` | Toggles the automatic `bos` calculation when printing text. |
+| `0x4` | Toggles the offline mode. When offline mode is on, host service calls that require internet connection are blocked. |
 
 ## `sysreq`
 

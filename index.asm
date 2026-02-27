@@ -168,10 +168,11 @@ using "math"
     syscall 
 
     mov tlr, 87
-    int 0x1 ; realloc
-
+    ;int 0x1 ; realloc
+    nop
+    nop
     mov tlr, 1
-    int 0x2
+    ;int 0x2
 
     jmp label3543 ; skip diabolical error check below
     mov tlr, yes
