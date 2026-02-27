@@ -106,17 +106,22 @@ namespace newasm
                 return __Bump(bytes);
             }
 
+            FORCE_INLINE inline void MARK_DELETED_BLOCK(int addr, int bytes)
+            {
+                if(bytes > this->smallObjectThreshold)
+                {
+                    this->free_blocks.push_back({addr, bytes});
+                    ++__free_blocks__;
+                }
+            }
+
             FORCE_INLINE inline void delete__HEAP(int addr, int stopaddr) noexcept
             {
                 for(int i = addr; i < stopaddr; ++i)
                 {
                     __memory_free__.set_at(i, 0);
                 }
-                if(stopaddr - addr > this->smallObjectThreshold)
-                {
-                    this->free_blocks.push_back({addr, stopaddr - addr});
-                    ++__free_blocks__;
-                }
+                MARK_DELETED_BLOCK(addr, stopaddr - addr);
                 return;
             }
 
@@ -340,7 +345,7 @@ namespace newasm
                     // just free
                     __memory_free__.set_at(i, 0);
                 }
-
+                MARK_DELETED_BLOCK(addr, sizeof(int) + bytes);
                 //newasm::mem::regs::hea.set_value(get_heap_end());
                 return;
             }

@@ -2387,7 +2387,7 @@ jmp doneshit
     cmp bos, 0
     jz end____
     dec bos
-    nop
+    ;nop
     nop
     mov rax, 2
     jmp loop___
