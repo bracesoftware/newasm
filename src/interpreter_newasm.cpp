@@ -120,7 +120,7 @@ namespace newasm
             const short referenceOfNamespacedVar = 5;//-> isref
             const short environmentVariable = 6;//-> check */ at the front of a string
             const short valueOf = 7;
-
+            const short sizeOf = 8;
         }
     }
 }

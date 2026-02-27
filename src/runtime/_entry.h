@@ -21,6 +21,12 @@ namespace newasm
 			{
 				switch(mode)
 				{
+					case newasm::runtime::evalModes::sizeOf:
+					{
+						int size = newasm::header::functions::issizeof(s).second;
+						s = std::to_string(size);
+						return;
+					}
 					case newasm::runtime::evalModes::regDeref:
 					{
 						newasm::header::functions::parseRegDeref(s);
@@ -243,17 +249,20 @@ namespace newasm
 							return;
 						};
 						parseFromRAM(s);
+						newasm::header::functions::parseopr(s, newasm::mem::data);
+						newasm::parseopr_struct(s);
 						return;
 					}
 					case newasm::runtime::evalModes::environmentVariable:
 					{
-						std::vector<std::string> tokens;
+						//std::cout << "Is this called? -> " << s << std::endl;
+						s = s.substr(2);
 						for(std::vector<std::pair<std::string,std::string>>::iterator i = newasm::env_vars->begin(); i < newasm::env_vars->end(); ++i)
 						{
-							s = s.substr(2);
 							if(s == i->first)
 							{
 								s = i->second;
+								break;
 							}
 						}
 						return;
@@ -507,29 +516,38 @@ namespace newasm
 						};
 						newasm::progwin::api::cout("Yes NMS -> " + s);
 						auto i = newasm::header::functions::parseNamespaceSegments(s);
-						std::string symbol_name = i.second.back();
-						auto vec = i.second;
-						vec.pop_back(); // namespace list
-						
-						s = newasm::header::functions::mangleName(vec, symbol_name);
+						if(i.first)
+						{
+							std::string symbol_name = i.second.back();
+							auto vec = i.second;
+							vec.pop_back(); // namespace list
+							
+							s = newasm::header::functions::mangleName(vec, symbol_name);
+						}
 						parseFromRAM(s);
+						newasm::header::functions::parseopr(s, newasm::mem::data);
+						newasm::parseopr_struct(s);
 						return;
 					}
 					case newasm::runtime::evalModes::valueOfNamespacedTupleOrContext:
 					{
 						//std::cout << "IF TUPLE x2 << " << suf << "\n";
 						std::string& suf = s;
-						auto i = newasm::header::functions::parseNamespaceSegments(s);
-						std::string symbol_name = i.second.back();
-						auto vec = i.second;
-						vec.pop_back(); // namespace list
 						
-						s = newasm::header::functions::mangleName(vec, symbol_name);
 						auto tupleName = newasm::header::functions::trim(newasm::header::functions::checkTupleFormat(suf).second.first);
 						auto tupleIndex = newasm::header::functions::trim(newasm::header::functions::checkTupleFormat(suf).second.second);
 						auto& tupleOrContextName = tupleName;
 						auto& tupleOrContextIndex = tupleIndex;
 
+						auto i = newasm::header::functions::parseNamespaceSegments(tupleName);
+						if(i.first)
+						{
+							std::string symbol_name = i.second.back();
+							auto vec = i.second;
+							vec.pop_back(); // namespace list
+							
+							tupleName = newasm::header::functions::mangleName(vec, symbol_name);
+						}
 						parse(tupleIndex);
 						bool indexNumeric = newasm::header::functions::isnumeric(tupleIndex);
 						if(!indexNumeric)

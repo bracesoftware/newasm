@@ -133,7 +133,7 @@ namespace newasm
 				while(i < s.size() && std::isspace((unsigned char)s[i])) i++;
 
 				std::string text = s.substr(i);
-				return a + b + text;
+				return std::string(1, a) + std::string(1, b) + text;
 			}
 
             FORCE_INLINE inline void fixString(std::string& s)
@@ -147,7 +147,7 @@ namespace newasm
 
             inline int getEvalMode(const std::string& s)
             {
-                if(s.front() == '*')
+                if(s.at(0) == '*' and s.at(1) != '/')
                 {
                     return newasm::runtime::evalModes::regDeref;
                 }
@@ -157,10 +157,16 @@ namespace newasm
                 }
                 if(s.at(0) == '*' and s.at(1) == '/')
                 {
+                    //std::cout << "Ovo je bajo env -> " << s << std::endl;
                     return newasm::runtime::evalModes::environmentVariable;
+                }
+                if(s.at(0) == '$' and s.at(1) == '-')//if(newasm::header::functions::issizeof(s).first)
+                {
+                    return newasm::runtime::evalModes::sizeOf;
                 }
                 if(newasm::header::functions::isalphanum(s))
                 {
+                    //std::cout << "Ovo je bajo alfanumerično -> " << s << std::endl;
                     return newasm::runtime::evalModes::valueOf;
                 }
                 if(newasm::header::functions::parseNamespaceSegments(s).first)

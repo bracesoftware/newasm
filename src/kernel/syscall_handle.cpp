@@ -1087,6 +1087,7 @@ namespace newasm
                     //newasm::syscalls::iostream::out_bopr(newasm::mem::regs::tlr);
                     newasm::kernel::write_tlr();
                     #endif
+                    //newasm::header::functions::krnl("This host service is deprecated.");
                     return 1;
                 }
                 //print references
@@ -1095,6 +1096,7 @@ namespace newasm
                     if(!newasm::header::functions::isref(newasm::mem::regs::tlr))
                     {
                         //std::cout << "tlr is " << newasm::mem::regs::tlr << std::endl;
+                        newasm::header::functions::krnl("`tlr` ("+newasm::mem::regs::tlr.get_value()+") is not a valid value. Must be a reference.");
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                         return 1;
                     }

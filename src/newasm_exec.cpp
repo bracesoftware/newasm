@@ -54,6 +54,10 @@ namespace newasm
             }
         }
         newasm::terminate_(exit_code);
+        if constexpr(0) if(newasm::header::functions::trim(newasm::real_line) == std::string("syscall"))
+        {
+            newasm::header::functions::krnl("Kernel crashed.");
+        }
         return 1;
     }
     //int redirect_exec(std::string filename);
@@ -365,12 +369,7 @@ namespace newasm
     {
         if(line.priArgType == newasm::datatypes::symbol_name)
         {
-            newasm::runtime::functions::parse(value);
-            if(newasm::header::functions::issizeof(value).first)
-            {
-                value = std::to_string(newasm::header::functions::issizeof(value).second);
-                //std::cout << "SIZEOF OPERATOR DETECTED :: " << value << std::endl;
-            }
+            newasm::runtime::functions::eval(value, line.priEvalMode);
         }
         //std::cout << dtyp << ":" << name << ":" << value << std::endl;
         std::string name = _name;
@@ -477,6 +476,7 @@ namespace newasm
 
                 if(line.priArgType == newasm::datatypes::symbol_name) if(!newasm::header::functions::isnumeric(value))
                 {
+                    std::cout << "Imamo error -> `" << value << "`->" << line.priEvalMode << "\n";
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                     return 1;
                 }
@@ -3495,7 +3495,7 @@ namespace newasm
                 //addr
                 if(newasm::mem::regs::imm == 1)//(suf == static_cast<std::string>("*"))
                 {
-                    newasm::runtime::functions::parse(opr);
+                    newasm::runtime::functions::eval(opr, lineInfo.priEvalMode);
                     #if 0
                     if(!newasm::header::functions::isnumeric(opr) && !newasm::header::functions::isfloat(opr) &&
                     !newasm::header::functions::istext(opr) && !newasm::header::functions::isref(opr) &&
