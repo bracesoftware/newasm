@@ -3134,7 +3134,8 @@ namespace newasm
             //rem
             case newasm::core::lang_inf::rem:
             {
-                //idk
+                //idk,lets do some stupidity
+                //i have no idea tbh
                 return 1;
             }
 
@@ -3275,45 +3276,106 @@ namespace newasm
                 
                 if(intreg != newasm::header::constants::inv_ireg_val)
                 {
-                    if(!newasm::header::functions::isnumeric(opr))
+                    if(lineInfo.altArgType == newasm::datatypes::symbol_name)
+                    {
+                        if(!newasm::header::functions::isnumeric(opr))
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                            return 1;
+                        }
+                        //proceed to comparsion
+                        if((intreg) == std::stoi(opr))
+                        {
+                            newasm::mem::regs::cpr = newasm::cmp_results::equal;
+                        }
+                        if((intreg) < std::stoi(opr))
+                        {
+                            newasm::mem::regs::cpr = newasm::cmp_results::less;
+                        }
+                        if((intreg) > std::stoi(opr))
+                        {
+                            newasm::mem::regs::cpr = newasm::cmp_results::greater;
+                        }
+                    }
+                    else if(lineInfo.altArgType == newasm::datatypes::number)
+                    {
+                        if((intreg) == lineInfo.altInt)
+                        {
+                            newasm::mem::regs::cpr = newasm::cmp_results::equal;
+                        }
+                        if((intreg) < lineInfo.altInt)
+                        {
+                            newasm::mem::regs::cpr = newasm::cmp_results::less;
+                        }
+                        if((intreg) > lineInfo.altInt)
+                        {
+                            newasm::mem::regs::cpr = newasm::cmp_results::greater;
+                        }
+                    }
+                    else
                     {
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                         return 1;
-                    }
-                    //proceed to comparsion
-                    if((intreg) == std::stoi(opr))
-                    {
-                        newasm::mem::regs::cpr = newasm::cmp_results::equal;
-                    }
-                    if((intreg) < std::stoi(opr))
-                    {
-                        newasm::mem::regs::cpr = newasm::cmp_results::less;
-                    }
-                    if((intreg) > std::stoi(opr))
-                    {
-                        newasm::mem::regs::cpr = newasm::cmp_results::greater;
                     }
                     return 1;
                 }
                 if(floatreg != newasm::header::constants::inv_ireg_val)
                 {
-                    if(!newasm::header::functions::isfloat(opr) && !newasm::header::functions::isnumeric(opr))
+                    if(lineInfo.altArgType == newasm::datatypes::symbol_name)
+                    {
+                        if(!newasm::header::functions::isfloat(opr) && !newasm::header::functions::isnumeric(opr))
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                            return 1;
+                        }
+                        //proceed to comparsion
+                        if((floatreg) == std::stof(opr))
+                        {
+                            newasm::mem::regs::cpr = newasm::cmp_results::equal;
+                        }
+                        if((floatreg) < std::stof(opr))
+                        {
+                            newasm::mem::regs::cpr = newasm::cmp_results::less;
+                        }
+                        if((floatreg) > std::stof(opr))
+                        {
+                            newasm::mem::regs::cpr = newasm::cmp_results::greater;
+                        }
+                    }
+                    else if(lineInfo.altArgType == newasm::datatypes::decimal)
+                    {
+                        if((floatreg) == lineInfo.altFloat)
+                        {
+                            newasm::mem::regs::cpr = newasm::cmp_results::equal;
+                        }
+                        if((floatreg) < lineInfo.altFloat)
+                        {
+                            newasm::mem::regs::cpr = newasm::cmp_results::less;
+                        }
+                        if((floatreg) > lineInfo.altFloat)
+                        {
+                            newasm::mem::regs::cpr = newasm::cmp_results::greater;
+                        }
+                    }
+                    else if(lineInfo.altArgType == newasm::datatypes::number)
+                    {
+                        if((floatreg) == lineInfo.altInt)
+                        {
+                            newasm::mem::regs::cpr = newasm::cmp_results::equal;
+                        }
+                        if((floatreg) < lineInfo.altInt)
+                        {
+                            newasm::mem::regs::cpr = newasm::cmp_results::less;
+                        }
+                        if((floatreg) > lineInfo.altInt)
+                        {
+                            newasm::mem::regs::cpr = newasm::cmp_results::greater;
+                        }
+                    }
+                    else
                     {
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                         return 1;
-                    }
-                    //proceed to comparsion
-                    if((floatreg) == std::stof(opr))
-                    {
-                        newasm::mem::regs::cpr = newasm::cmp_results::equal;
-                    }
-                    if((floatreg) < std::stof(opr))
-                    {
-                        newasm::mem::regs::cpr = newasm::cmp_results::less;
-                    }
-                    if((floatreg) > std::stof(opr))
-                    {
-                        newasm::mem::regs::cpr = newasm::cmp_results::greater;
                     }
                     return 1;
                 }
@@ -4113,8 +4175,9 @@ namespace newasm
             //del
             case newasm::core::lang_inf::del:
             {
-                newasm::runtime::functions::parse(suf);
+                //newasm::runtime::functions::parse(suf);
                 //newasm::progwin::api::cout("Processin' del");
+                newasm::runtime::functions::eval(suf, lineInfo.priEvalMode);
                 if(!newasm::header::functions::isref(suf))
                 {
                     newasm::terminate(newasm::exit_codes::invalid_memacc);
@@ -4528,7 +4591,7 @@ namespace newasm
             //out
             case newasm::core::lang_inf::out__:
             {
-                newasm::runtime::functions::parse(suf);
+                newasm::runtime::functions::eval(suf, lineInfo.priEvalMode);
                 if(!newasm::header::functions::isnumeric(suf))
                 {
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);
@@ -4541,7 +4604,7 @@ namespace newasm
             //in
             case newasm::core::lang_inf::in__:
             {
-                newasm::runtime::functions::parse(suf);
+                newasm::runtime::functions::eval(suf, lineInfo.priEvalMode);
                 if(!newasm::header::functions::isnumeric(suf))
                 {
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);
@@ -4554,7 +4617,7 @@ namespace newasm
             //switch
             case newasm::core::lang_inf::switch__:
             {
-                newasm::runtime::functions::parse(suf);
+                newasm::runtime::functions::eval(suf, lineInfo.priEvalMode);
 
                 newasm::header::data::switched_value = suf;
                 newasm::header::data::case_matched = false;
@@ -7197,7 +7260,7 @@ namespace newasm
                         return 1;
                     }
                 }
-                newasm::pp::impl::processDirectives(line.tokens.at(0), line.tokens.at(1));
+                newasm::pp::impl::processDirectives(line.priInt, line.tokens.at(1));
                 return 1;
             }
             // DECORATORS

@@ -23,7 +23,10 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 + Introduced the hybrid allocator in the RAM emulator.
 + Optimized the `int` instruction.
 + Optimized the `align` instruction.
-+ Heavily optimized the runtime lvalue parsing, register dereferenciation and .
++ Heavily optimized the runtime lvalue parsing, register dereferenciation and variable lookup.
++ Heavily optimized the `cmp` instruction (tests show `100ms` overhead fix!).
++ Optimized the standard library procedures (tests show they're `50ms` to `70ms` faster).
++ Added the `pragma` compile-time instruction that tells the compiler and the runtime how to behave at certain occurences.
 
 ## Fixed issues
 

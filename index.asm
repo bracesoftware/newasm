@@ -2399,6 +2399,7 @@ jmp doneshit
     call std::ios::writeln
 .data
     string testStringMan: "This is absolutely crazy!"
+pragma errtest
 .start
     sysenter "mem"
     syscall

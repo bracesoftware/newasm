@@ -541,18 +541,18 @@ namespace newasm
             inline bool isnumeric(const std::string& str)
             {
                 bool first = true;
-                for (char c : str)
+                for(char c : str)
                 {
-                    if (std::isspace(static_cast<unsigned char>(c))) continue;
-                    if (first)
+                    if(std::isspace(static_cast<unsigned char>(c))) continue;
+                    if(first)
                     {
-                        if (c != '-' && !std::isdigit(static_cast<unsigned char>(c)))
+                        if(c != '-' && !std::isdigit(static_cast<unsigned char>(c)))
                         {
                             return false;
                         }
                         first = false;
                     }
-                    else if (!std::isdigit(static_cast<unsigned char>(c)))
+                    else if(!std::isdigit(static_cast<unsigned char>(c)))
                     {
                         return false;
                     }

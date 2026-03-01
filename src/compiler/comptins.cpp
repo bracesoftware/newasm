@@ -13,10 +13,14 @@ namespace newasm
     {
         static const int def = 1;
         static const int using__ = 2;
+        static const int link__ = 3;
+        static const int pragma__ = 4;
 
         static const std::unordered_map<std::string, int> instructions = {
             {"def", def},
-            {"using", using__}
+            {"using", using__},
+            {"link", link__},
+            {"pragma", pragma__}
         };
 
         namespace meta
@@ -34,7 +38,7 @@ namespace newasm
             return false;
         }
 
-        std::string parse_def(std::string suf)
+        inline std::string parse_def(std::string suf)
         {
             std::string tobeparsed = newasm::header::functions::trim(suf);
             auto it = newasm::compiler::meta::defines.find(tobeparsed);
@@ -44,7 +48,7 @@ namespace newasm
             }
             return tobeparsed;
         }
-        void process_comptis(std::string ins, std::string arg1)
+        inline void process_comptis(std::string ins, std::string arg1)
         {
             ins = newasm::header::functions::trim(ins);
             arg1 = newasm::header::functions::trim(arg1);
@@ -56,6 +60,15 @@ namespace newasm
             }
             switch(it->second)
             {
+                case newasm::compiler::pragma__:
+                {
+                    if(arg1 == "errtest")
+                    {
+                        newasm::header::functions::err("Test error pragma detected.");
+                        return;
+                    }
+                    return;
+                }
                 case newasm::compiler::using__:
                 {
                     auto arg = arg1;

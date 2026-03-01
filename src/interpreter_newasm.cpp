@@ -772,7 +772,7 @@ namespace newasm
 {
     namespace GLOBAL
     {
-        void cleanup()
+        inline void cleanup()
         {
             newasm::RAM->set_sot(sizeof(int));
             newasm::header::data::offlineMode = false;

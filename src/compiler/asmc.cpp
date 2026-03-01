@@ -252,6 +252,13 @@ namespace newasm
                 {
                     newasm::compiler::abort(newasm::compiler::fail::unmatched_syntax);
                 }
+                auto p = newasm::pp::impl::runtimeDirectives.find(it.second.first);
+                if(p == newasm::pp::impl::runtimeDirectives.end())
+                {
+                    newasm::compiler::abort(newasm::compiler::fail::unmatched_syntax);
+                    return lineCompiled;
+                }
+                lineCompiled.priInt = p->second;
                 return lineCompiled;
             }
             //sealed label
