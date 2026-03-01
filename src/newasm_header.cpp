@@ -534,8 +534,14 @@ namespace newasm
                         copy = copy + i;
                     }
                 }
-                if (copy.empty()) return false;
-                if (copy[0] != '-' && !std::isdigit(copy[0])) return false;
+                if(copy.empty())
+                {
+                    return false;
+                }
+                if(copy[0] != '-' && !std::isdigit(copy[0]))
+                {
+                    return false;
+                }
                 return std::all_of(copy.begin() + 1, copy.end(), ::isdigit);
             }
             inline bool isnumeric(const std::string& str)
