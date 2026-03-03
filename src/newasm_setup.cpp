@@ -520,6 +520,10 @@ namespace newasm
                         bytecode.whatAmIDoing == newasm::core::lang_inf::jge
                     )
                     {
+                        if(bytecode.tokens.size() != 2)
+                        {
+                            continue;
+                        }
                         auto& label_name = bytecode.tokens[1];
                         if(this->labels.find(label_name) == this->labels.end())
                         {
@@ -527,6 +531,24 @@ namespace newasm
                             break;
                         }
                         bytecode.jumpinTo = this->labels.at(label_name);
+                        continue;
+                    }
+                    if(
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::loop
+                    )
+                    {
+                        if(bytecode.tokens.size() != 3)
+                        {
+                            continue;
+                        }
+                        auto& label_name = bytecode.tokens[2];
+                        if(this->labels.find(label_name) == this->labels.end())
+                        {
+                            newasm::terminate(newasm::exit_codes::bus_err);
+                            break;
+                        }
+                        bytecode.jumpinTo = this->labels.at(label_name);
+                        continue;
                     }
                 }
 

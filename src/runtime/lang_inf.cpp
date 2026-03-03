@@ -141,6 +141,7 @@ namespace newasm
             const int evt = 73;//
 
             const int mod__ = 74;//
+            const int loop = 75;//
 
             /// @brief //////
             const int Link___ = 99;
@@ -235,6 +236,7 @@ namespace newasm
                 {evt, "evt"},
 
                 {mod__, "mod"},
+                {loop, "loop"},
 
                 {__say, "__say"},
                 {Link___, "link"}

@@ -2293,6 +2293,55 @@ namespace newasm
                 it->second.addr = std::stoi(opr);
                 return 1;
             }
+            //loop
+            case newasm::core::lang_inf::loop:
+            {
+                switch(lineInfo.whatAreRegistersLol)
+                {
+                    case newasm::mem::regs::rax__:
+                    {
+                        --newasm::mem::regs::rax;
+                        if(newasm::mem::regs::rax.get_value() == 0)
+                        {
+                            return 1;
+                        }
+                        break;
+                    }
+                    case newasm::mem::regs::imm__:
+                    {
+                        --newasm::mem::regs::imm;
+                        if(newasm::mem::regs::imm.get_value() == 0)
+                        {
+                            return 1;
+                        }
+                        break;
+                    }
+                    default:
+                    {
+                        newasm::terminate(newasm::exit_codes::bus_err);
+                        return 1;
+                    }
+                }
+                
+                if(newasm::header::data::proc_now)
+                {
+                    auto& j = newasm::variables::ids.at(newasm::system::processing_proc);
+                    j.proc->idx = lineInfo.jumpinTo;//j.proc->labels.at(suf);
+                    //std::cout << "Zasto ne skaces pizda ti mater'na? -> " << j.proc->idx << std::endl;
+                    return 1;
+                }
+
+                if(newasm::thread_line)
+                {
+                    newasm::threads::memory.at(newasm::threads::now)->lcx = lineInfo.jumpinTo;//newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
+                    return 1;
+                }
+
+                newasm::code_stream::jump = 1;
+                newasm::code_stream::jumpto = lineInfo.jumpinTo;//newasm::mem::labels[suf];
+                return 1;
+            }
+            //mov
             case newasm::core::lang_inf::mov:
             {
                 if(newasm::header::functions::isvmemref(opr).first)
@@ -8197,6 +8246,51 @@ namespace newasm
                 ++newasm::compiler::data::lnidx;
                 newasm::compiler::data::line = bytecode.raw;
                 if(
+                    bytecode.whatAmIDoing == newasm::core::lang_inf::loop
+                )
+                {
+                    if(bytecode.tokens.size() != 3)
+                    {
+                        continue;
+                    }
+                    auto label_name = newasm::header::functions::trim(bytecode.tokens[2]);
+                    auto& sl = newasm::compiler::data::sealed_labels;
+                    if(
+                        newasm::mem::labels.find(label_name) == newasm::mem::labels.end() and
+                        ![&](const std::string& name) -> bool {
+                            for(int q = 0; q < sl.size(); ++q)
+                            {
+                                if(sl[q] == name)
+                                {
+                                    return true;
+                                }
+                            }
+                            return false;
+                        }(label_name)
+                    )
+                    {
+                        newasm::compiler::abort(newasm::compiler::fail::unknown_label);
+                        //std::cout << "Tried compiling -> `" << bytecode.raw << "` " << (std::find(sl.begin(), sl.end(), label_name) != sl.end()) << "\n";
+                        if(0) for(int j = 0; j < sl.size(); ++j)
+                        {
+                            std::cout << "sl[" << j << "] = `" << sl[j] << "`\n";
+                        }
+                        break;
+                    }
+                    try
+                    {
+                        bytecode.jumpinTo = newasm::mem::labels[label_name];
+                    }
+                    catch(std::exception& e)
+                    {
+                        for(auto p = newasm::mem::labels.begin(); p != newasm::mem::labels.end(); ++p)
+                        {
+                            std::cout << "labels[" << p->first << "] = `" << p->second << "`\n";
+                        }
+                        newasm::compiler::abort(newasm::compiler::fail::unknown_label);
+                    }
+                }
+                if(
                     bytecode.whatAmIDoing == newasm::core::lang_inf::jmp or
                     bytecode.whatAmIDoing == newasm::core::lang_inf::jz or
                     bytecode.whatAmIDoing == newasm::core::lang_inf::jnz or
@@ -8208,6 +8302,10 @@ namespace newasm
                     bytecode.whatAmIDoing == newasm::core::lang_inf::jge
                 )
                 {
+                    if(bytecode.tokens.size() != 2)
+                    {
+                        continue;
+                    }
                     auto label_name = newasm::header::functions::trim(bytecode.tokens[1]);
                     auto& sl = newasm::compiler::data::sealed_labels;
                     if(

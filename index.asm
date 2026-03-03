@@ -2406,6 +2406,12 @@ pragma errtest
     mov tlr, *rax
     call std::ios::writeln
 
+    mov tlr, "Hello world\n"
+    mov rax, 4
+    :test4
+    call std::ios::write
+    loop rax, test4
+
     ;mov tlr, $-&testStringMan
     ;call std::ios::writeln
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

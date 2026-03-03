@@ -27,6 +27,16 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 + Heavily optimized the `cmp` instruction (tests show `100ms` overhead fix!).
 + Optimized the standard library procedures (tests show they're `50ms` to `70ms` faster).
 + Added the `pragma` compile-time instruction that tells the compiler and the runtime how to behave at certain occurences.
++ Fixed crashing on label checking on compile-time.
++ Added a new `loop` instruction:
+```asm
+    mov tlr, "Hello world\n"
+    mov rax, 4
+    :test4
+    call std::ios::write
+    loop rax, test4
+```
+This code prints `Hello world` 4 times.
 
 ## Fixed issues
 
