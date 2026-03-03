@@ -6179,7 +6179,7 @@ namespace newasm
                         newasm::mem::regs::cr1 ++;
                         return 1;
                     }
-                    case newasm::mem::regs::rbx:
+                    case newasm::mem::regs::rbx__:
                     {
                         ++newasm::mem::regs::rbx;
                         return 1;
