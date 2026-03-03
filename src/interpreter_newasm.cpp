@@ -47,6 +47,7 @@ link "runtime/common/arch";
 #include <map>
 #include <cstring>
 #include <regex>
+#include <optional>
 //LOl
 #include <limits>
 #include <cstdlib> //memcpy, rand
