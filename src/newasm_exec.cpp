@@ -8018,6 +8018,7 @@ namespace newasm
         newasm::wasted_deduction.clear();
         newasm::network_deduction.clear();
         newasm::perf::inputWasteTimer.clear();
+        newasm::perf::heavyHostServices.clear();
         //clean up for jit
         newasm::compiler::data::symbol_map.clear();
         newasm::compiler::data::JIT_mode = true;

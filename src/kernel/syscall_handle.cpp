@@ -799,6 +799,10 @@ namespace newasm
                 }
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::txtop, 4)://format
                 {
+                    newasm::perf::heavyHostServices.start();
+                    $defer
+                        newasm::perf::heavyHostServices.stop();
+                    $
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr.get_value()))
                     {
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
@@ -812,16 +816,24 @@ namespace newasm
                 }
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::txtop, 5)://stoi
                 {
+                    newasm::perf::heavyHostServices.start();
                     newasm::syscalls::txtop::impl::stoi();
+                    newasm::perf::heavyHostServices.stop();
                     return 1;
                 }
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::txtop, 6)://stof
                 {
+                    newasm::perf::heavyHostServices.start();
                     newasm::syscalls::txtop::impl::stof();
+                    newasm::perf::heavyHostServices.stop();
                     return 1;
                 }
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::txtop, 7)://at
                 {
+                    newasm::perf::heavyHostServices.start();
+                    $defer
+                        newasm::perf::heavyHostServices.stop();
+                    $
                     if(!newasm::header::functions::istext(newasm::mem::regs::tlr.get_value()))
                     {
                         newasm::header::functions::krnl("`tlr` ("+newasm::mem::regs::tlr.get_value()+") is not a valid value. Must be a string.");

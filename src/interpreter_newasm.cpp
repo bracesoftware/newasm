@@ -431,6 +431,7 @@ namespace newasm
         auto end = std::chrono::steady_clock::now();
 
         newasm::timer inputWasteTimer;
+        newasm::timer heavyHostServices;
     }
 
     void* test = nullptr;
@@ -1153,13 +1154,14 @@ namespace newasm
             std::cout << newasm::header::col::gray << "  Profiler info for: " << newasm::header::col::yellow << newasm::project_data::name << " " << newasm::project_data::version << std::endl;
             std::cout << newasm::header::col::gray << "\t\tTime elapsed: " << elapsed.count() << " ms\n";
             std::cout << newasm::header::col::gray << "\t\t\t" << newasm::perf::inputWasteTimer.count() << " ms wasted on user input\n";
+            std::cout << newasm::header::col::gray << "\t\t\t" << newasm::perf::heavyHostServices.count() << " ms used on heavy host services\n";
             std::cout << newasm::header::col::gray << "\t\t\t" << network_wasted.count() << " ms wasted on network latency\n";
             //
             std::cout << newasm::header::style::underline;
             std::cout << newasm::header::col::gray << "\t\t\t" << wait_wasted.count() << " ms wasted on `wait`\n";
             std::cout << newasm::header::col::reset;
             std::cout << newasm::header::col::gray << "\t\t\tTotal: ";
-            std::cout << (elapsed.count() - newasm::perf::inputWasteTimer.count() - wait_wasted.count() - network_wasted.count()) << " ms\n";
+            std::cout << (elapsed.count() - newasm::perf::heavyHostServices.count() - newasm::perf::inputWasteTimer.count() - wait_wasted.count() - network_wasted.count()) << " ms\n";
             std::cout << newasm::header::col::gray << "\t\t\tCycle count: " << newasm::CYCLE_COUNT << '\n';
             std::cout << newasm::header::col::reset;
             return;
