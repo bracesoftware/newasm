@@ -18,8 +18,7 @@ namespace newasm
     }
     class garbageCollector
     {
-        public:
-        inline static void DO()
+        public inline static void DO()
         {
             if(newasm::garbage::FLAG == 0)
             {
