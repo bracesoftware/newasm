@@ -2412,6 +2412,13 @@ pragma errtest
     call std::ios::write
     loop rax, test4
 
+    mov tlr, "Hello"
+    mov rax, 2
+    mov fdx, 7
+    sysenter "txtop"
+    syscall
+    call std::ios::writeln ; should print 'l'
+
     ;mov tlr, $-&testStringMan
     ;call std::ios::writeln
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -19,19 +19,79 @@ namespace newasm
             namespace impl
             {
                 std::string quotes = static_cast<std::string>("\"");
-                int concat()
+                inline int concat()
                 {
                     newasm::mem::regs::tlr = quotes+newasm::header::functions::remq(newasm::mem::regs::tlr) + 
                     newasm::header::functions::remq(newasm::mem::regs::stl)+quotes;
                     return 1;
                 }
-                int trim()
+                inline int trim()
                 {
                     newasm::mem::regs::tlr = quotes + newasm::header::functions::trim(newasm::header::functions::remq(newasm::mem::regs::tlr)) + quotes;
                     return 1;
                 }
 
-                void tokenize()
+                inline void stoi()
+                {
+                    std::string str;
+                    if(newasm::header::functions::isnumeric(newasm::mem::regs::tlr.get_value()))
+                    {
+                        newasm::mem::regs::rax.set_value(std::stoi(newasm::mem::regs::tlr.get_value()));
+                        return;
+                    }
+                    if(newasm::header::functions::istext(newasm::mem::regs::tlr.get_value()))
+                    {
+                        str = newasm::header::functions::remq(newasm::mem::regs::tlr.get_value());
+                        if(!newasm::header::functions::isnumeric(str))
+                        {
+                            //newasm::mem::regs::tlr.set_value("0");
+                            newasm::mem::regs::rax.set_value(0);
+                            return;
+                        }
+                        newasm::mem::regs::rax.set_value(std::stoi(str));
+                        return;
+                    }
+                    return;
+                }
+                inline void stof()
+                {
+                    std::string str;
+                    if(newasm::header::functions::isfloat(newasm::mem::regs::tlr.get_value()))
+                    {
+                        newasm::mem::regs::rbx.set_value(std::stof(newasm::mem::regs::tlr.get_value()));
+                        return;
+                    }
+                    if(newasm::header::functions::istext(newasm::mem::regs::tlr.get_value()))
+                    {
+                        str = newasm::header::functions::remq(newasm::mem::regs::tlr.get_value());
+                        if(!newasm::header::functions::isfloat(str))
+                        {
+                            //newasm::mem::regs::tlr.set_value("0");
+                            newasm::mem::regs::rbx.set_value(0);
+                            return;
+                        }
+                        newasm::mem::regs::rbx.set_value(std::stof(str));
+                        return;
+                    }
+                    return;
+                }
+                inline void at()
+                {
+                    std::string str = newasm::header::functions::remq(newasm::mem::regs::tlr.get_value());
+                    int idx = newasm::mem::regs::rax.get_value();
+                    if(idx < 0 or idx >= str.size())
+                    {
+                        newasm::terminate(newasm::exit_codes::seg_fault);
+                        return;
+                    }
+                    char c = str[idx];
+                    std::stringstream ss;
+                    ss << "'" << c << "'";
+                    newasm::mem::regs::tlr.set_value(ss.str());
+                    return;
+                }
+
+                inline void tokenize()
                 {
                     auto addq = [](std::string& str) -> std::string {
                         str = quotes + str + quotes;

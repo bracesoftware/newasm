@@ -190,6 +190,7 @@ namespace newasm
             newasm::_register_FAST ax(__AX_NAME);
 
             newasm::_register<int> rax("rax", 0); //lmao i've ran out of names
+            newasm::_register<float> rbx("rbx", 0);
             newasm::_register<std::string> tlr("tlr", newasm::header::constants::inv_reg_val);
             newasm::_register<std::string> stl("stl", newasm::header::constants::inv_reg_val);
 
@@ -244,6 +245,7 @@ namespace newasm
 
             const int ax__ = 20;
             const int rax__ = 21;
+            const int rbx__ = 22;
 
             std::unordered_map<std::string, int> identifiers = {
                 {"tlr", tlr__},
@@ -267,7 +269,8 @@ namespace newasm
                 {"cr2", cr2__},
                 {"cr3", cr3__},
                 {__AX_NAME, ax__},
-                {"rax", rax__}
+                {"rax", rax__},
+                {"rbx", rbx__}
             };
 
             void resetRegisters()

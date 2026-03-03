@@ -1704,6 +1704,16 @@ namespace newasm
                         newasm::mem::data[opr] = std::to_string(newasm::mem::regs::imm);
                         return 1;
                     }
+                    case newasm::mem::regs::rbx__:
+                    {
+                        if(newasm::mem::datatypes[opr] != newasm::datatypes::decimal)
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                            return 1;
+                        }
+                        newasm::mem::data[opr] = std::to_string(newasm::mem::regs::rbx);
+                        return 1;
+                    }
                     case newasm::mem::regs::rax__:
                     {
                         if(newasm::mem::datatypes[opr] != newasm::datatypes::number)
@@ -2977,6 +2987,21 @@ namespace newasm
                         newasm::mem::regs::imm = std::stoi(opr);
                         return 1;
                     }
+                    case newasm::mem::regs::rbx__:
+                    {
+                        if(lineInfo.altArgType == newasm::datatypes::decimal)
+                        {
+                            newasm::mem::regs::rbx = lineInfo.altFloat;
+                            return 1;
+                        }
+                        if(!newasm::header::functions::isfloat(opr))
+                        {
+                            newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                            return 1;
+                        }
+                        newasm::mem::regs::rbx = std::stof(opr);
+                        return 1;
+                    }
                     case newasm::mem::regs::bos__:
                     {
                         if(lineInfo.altArgType == newasm::datatypes::number)
@@ -3272,6 +3297,11 @@ namespace newasm
                     case newasm::mem::regs::cr0__:
                     {
                         floatreg = newasm::mem::regs::cr0;
+                        break;
+                    }
+                    case newasm::mem::regs::rbx__:
+                    {
+                        floatreg = newasm::mem::regs::rbx.get_value();
                         break;
                     }
                     case newasm::mem::regs::cr1__:
@@ -6060,6 +6090,7 @@ namespace newasm
                     case newasm::mem::regs::fdx__: newasm::mem::regs::fdx.reset(); break;
                     case newasm::mem::regs::imm__: newasm::mem::regs::imm.reset(); break;
                     case newasm::mem::regs::rax__: newasm::mem::regs::rax.reset(); break;
+                    case newasm::mem::regs::rbx__: newasm::mem::regs::rbx.reset(); break;
                     case newasm::mem::regs::bos__: newasm::mem::regs::bos.reset(); break;
                     case newasm::mem::regs::tlr__: newasm::mem::regs::tlr.reset(); break;
                     case newasm::mem::regs::dlx__: newasm::mem::regs::dlx.reset(); break;
@@ -6146,6 +6177,11 @@ namespace newasm
                     case newasm::mem::regs::cr1__:
                     {
                         newasm::mem::regs::cr1 ++;
+                        return 1;
+                    }
+                    case newasm::mem::regs::rbx:
+                    {
+                        ++newasm::mem::regs::rbx;
                         return 1;
                     }
                     case newasm::mem::regs::cr2__:
@@ -6313,6 +6349,11 @@ namespace newasm
                     case newasm::mem::regs::rax__:
                     {
                         --newasm::mem::regs::rax;
+                        return 1;
+                    }
+                    case newasm::mem::regs::rbx__:
+                    {
+                        --newasm::mem::regs::rbx;
                         return 1;
                     }
                     case newasm::mem::regs::bos__:

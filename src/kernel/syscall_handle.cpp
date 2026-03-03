@@ -810,6 +810,27 @@ namespace newasm
                     newasm::mem::regs::tlr.add_end_("\"");
                     return 1;
                 }
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::txtop, 5)://stoi
+                {
+                    newasm::syscalls::txtop::impl::stoi();
+                    return 1;
+                }
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::txtop, 6)://stof
+                {
+                    newasm::syscalls::txtop::impl::stof();
+                    return 1;
+                }
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::txtop, 7)://at
+                {
+                    if(!newasm::header::functions::istext(newasm::mem::regs::tlr.get_value()))
+                    {
+                        newasm::header::functions::krnl("`tlr` ("+newasm::mem::regs::tlr.get_value()+") is not a valid value. Must be a string.");
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    newasm::syscalls::txtop::impl::at();
+                    return 1;
+                }
 /*
   /$$$$$$                        /$$               /$$                               /$$      /$$                     /$$          
  /$$__  $$                      | $$              |__/                              | $$$    /$$$                    |__/          

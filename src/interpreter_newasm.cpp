@@ -16,7 +16,7 @@ namespace newasm
     inline void enable_ansi() noexcept;
     inline constinit const int BUILD_NUMBER = 25;
     inline constinit const int RUNTIME_VERSION = 10;
-    inline constinit const int KERNEL_VERSION = 4;
+    inline constinit const int KERNEL_VERSION = 5;
 }
 
 namespace SYS = newasm;

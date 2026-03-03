@@ -7,7 +7,7 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 
 * Version: `build 25`
 * Version of the runtime: `10`
-* Kernel version: `4`
+* Kernel version: `5`
 
 > [!NOTE]
 > This is a pre-release which means that this product version doesn't represent the final quality of the product - it may contain bugs and problems that aren't yet discovered.
@@ -37,6 +37,8 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
     loop rax, test4
 ```
 This code prints `Hello world` 4 times.
++ Added many new system calls regarding text operations. View more in `syscall` docs.
++ Added new `rbx` register that holds 32 bits, used as a float value.
 
 ## Fixed issues
 

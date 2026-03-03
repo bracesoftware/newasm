@@ -55,6 +55,11 @@ namespace newasm
 
             {{newasm::core::lang_inf::refs::txtop, 1}, "sys_txt_concat"},
             {{newasm::core::lang_inf::refs::txtop, 2}, "sys_txt_trim"},
+            {{newasm::core::lang_inf::refs::txtop, 3}, "sys_txt_tok"},
+            {{newasm::core::lang_inf::refs::txtop, 4}, "sys_txt_fmat"},
+            {{newasm::core::lang_inf::refs::txtop, 5}, "sys_txt_stoi"},
+            {{newasm::core::lang_inf::refs::txtop, 6}, "sys_txt_stof"},
+            {{newasm::core::lang_inf::refs::txtop, 7}, "sys_txt_at"},
 
             {{newasm::core::lang_inf::refs::cmanip, 1}, "sys_bitarr_clear"},
             {{newasm::core::lang_inf::refs::cmanip, 2}, "sys_bitarr_flip"},
@@ -67,6 +72,8 @@ namespace newasm
             {{newasm::core::lang_inf::refs::cmanip, 9}, "sys_bintree_getat"},
 
             {{newasm::core::lang_inf::refs::tuple, 1}, "sys_tuple_size"},
+            
+            {{newasm::core::lang_inf::refs::ctx, 1}, "sys_ctx_size"},
 
             {{newasm::core::lang_inf::refs::tcp, 1}, "sys_tcp_send"},
             {{newasm::core::lang_inf::refs::tcp, 2}, "sys_tcp_recv"},

@@ -49,6 +49,10 @@ You use `sysenter` to expose a specific kernel module to the program, and `sysca
 | `txtop` | `1` | `tlr`, `stl` | Concatenate 2 textual values, with these registers holding the two values. |
 | `txtop` | `2` | `tlr` | Remove whitespaces from string ends. |
 | `txtop` | `3` | `tlr` | Tokenizes the string stored inside the `tlr` register. |
+| `txtop` | `4` | `tlr` | Formats the string stored inside the `tlr` register. |
+| `txtop` | `5` | `tlr` | Turns a string stored in `tlr` into an integer and stores it in `rax`. |
+| `txtop` | `6` | `tlr` | Turns a string stored in `tlr` into a float and stores it in `rbx`. |
+| `txtop` | `7` | `tlr`, `rax` | Gets a character stored in string stored in `tlr` at index `rax` and stores it into `tlr`. |
 | `chrono` | `1` | `/` | Gets the current year and stores it in `tlr`. |
 | `chrono` | `2` | `/` | Gets the current month and stores it in `tlr`. |
 | `chrono` | `3` | `/` | Gets the current day in a month and stores it in `tlr`. |
