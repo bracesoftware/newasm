@@ -5,6 +5,7 @@ Following instructions are covered by this article:
 2. [`proc`, `end` and `call`](#proc-end-and-call)
 3. [`cmp`, `jmp` and other `jmp` variants](#cmp-jmp-and-other-jmp-variants)
 4. [`evt`](#evt)
+5. [`loop`](#loop)
 
 ## `ret` and its variants
 There are 4 variants:
@@ -73,3 +74,34 @@ The `jmp` instruction is used as an unconditional jump.
 
 ## `evt`
 Allows you to have events, read more about this instruction inside the concepts docs.
+
+## `loop`
+
+> [!NOTE]
+> This instruction was added in build 25.
+
+This instruction allows you to write more efficient loops.
+The syntax is:
+```asm
+loop register, label
+```
+Registers that work with this instruction are `imm`, `rax`, `cr2` and `cr3`.
+
+Example:
+```asm
+.start
+    mov tlr, "Hello world\n"
+    mov rax, 4
+    :test4
+    call std::ios::write
+    loop rax, test4
+```
+
+Output:
+```
+Hello world
+Hello world
+Hello world
+Hello world
+
+```

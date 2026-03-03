@@ -2316,6 +2316,24 @@ namespace newasm
                         }
                         break;
                     }
+                    case newasm::mem::regs::cr2__:
+                    {
+                        --newasm::mem::regs::cr2;
+                        if(newasm::mem::regs::cr2.get_value() == 0)
+                        {
+                            return 1;
+                        }
+                        break;
+                    }
+                    case newasm::mem::regs::cr3__:
+                    {
+                        --newasm::mem::regs::cr3;
+                        if(newasm::mem::regs::cr3.get_value() == 0)
+                        {
+                            return 1;
+                        }
+                        break;
+                    }
                     default:
                     {
                         newasm::terminate(newasm::exit_codes::bus_err);
