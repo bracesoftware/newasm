@@ -711,7 +711,7 @@ namespace newasm
 
             inline bool ischar(const std::string& s)
             {
-                return s.size() == 3 && s.front() == '\'' && s.back() == '\'';
+                return (s.size() == 3 or (s.size() == 4 && s.at(1) == '\\')) && s.front() == '\'' && s.back() == '\'';
             }
 
             inline bool ischar_(const std::string &str)

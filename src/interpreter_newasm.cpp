@@ -372,13 +372,13 @@ namespace newasm
     }
     std::vector<int> brace_stack__;
     //------------------------------------------------------
-    class timer
+    class TIMER__
     {
         private std::atomic<bool> running;
         private std::atomic<double> elapsed_ms;
         private std::thread t;
 
-        public explicit inline timer() : running(false), elapsed_ms(0.0) {}
+        public explicit inline TIMER__() : running(false), elapsed_ms(0.0) {}
 
         public inline void start()
         {
@@ -422,6 +422,51 @@ namespace newasm
         {
             elapsed_ms = 0.0;
             return;
+        }
+    };
+
+    class timer
+    {
+        using clock = std::chrono::steady_clock;
+        private clock::time_point start_time;
+        private double accumulated_ms = 0.0;
+        private bool running = false;
+
+        public void start()
+        {
+            if(!running) 
+            {
+                start_time = clock::now();
+                running = true;
+            }
+        }
+
+        public void stop()
+        {
+            if(running)
+            {
+                auto end_time = clock::now();
+                accumulated_ms += std::chrono::duration<double, std::milli>(end_time - start_time).count();
+                running = false;
+            }
+        }
+
+        public double count() const
+        {
+            if(!running) return accumulated_ms;
+            
+            auto current_duration = std::chrono::duration<double, std::milli>(clock::now() - start_time).count();
+            return accumulated_ms + current_duration;
+        }
+
+        public void clear()
+        {
+            accumulated_ms = 0.0;
+            if(running)
+            {
+                start_time = clock::now();
+                return;
+            }
         }
     };
 

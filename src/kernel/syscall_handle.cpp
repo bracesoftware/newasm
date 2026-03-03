@@ -203,6 +203,19 @@ namespace newasm
                     newasm::mem::regs::tlr.set_value(std::to_string(result));
                     return 1;
                 }
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::misc, 2): // sys_misc_ctoi
+                {
+                    if(!newasm::header::functions::ischar(newasm::mem::regs::tlr.get_value()))
+                    {
+                        newasm::header::functions::krnl("`tlr` (" + newasm::mem::regs::tlr.get_value() + ") isn't a valid value. Must be a character.");
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+
+                    int result = newasm::header::functions::remsq(newasm::mem::regs::tlr.get_value())[0];
+                    newasm::mem::regs::rax.set_value(result);
+                    return 1;
+                }
 /*
   /$$$$$$                                  /$$              
  /$$__  $$                                | $$              

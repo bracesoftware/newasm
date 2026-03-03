@@ -908,6 +908,11 @@ namespace newasm
                             arg = std::to_string(newasm::mem::regs::rax.get_value());
                             break;
                         }
+                        case newasm::mem::regs::rbx__:
+                        {
+                            arg = std::to_string(newasm::mem::regs::rbx.get_value());
+                            break;
+                        }
                         case newasm::mem::regs::stk__:
                         {
                             arg = std::to_string(newasm::mem::regs::stk.get_value());

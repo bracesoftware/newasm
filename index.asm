@@ -2419,6 +2419,13 @@ pragma errtest
     syscall
     call std::ios::writeln ; should print 'l'
 
+    mov tlr, '\n'
+    sysenter "misc"
+    mov fdx, 2
+    syscall
+    mov tlr, *rax
+    call std::ios::writeln
+
     ;mov tlr, $-&testStringMan
     ;call std::ios::writeln
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

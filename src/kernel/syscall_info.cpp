@@ -89,6 +89,7 @@ namespace newasm
             {{newasm::core::lang_inf::refs::math, 6}, "sys_math_cbrt"},
 
             {{newasm::core::lang_inf::refs::misc, 1}, "sys_misc_rand"},
+            {{newasm::core::lang_inf::refs::misc, 2}, "sys_misc_ctoi"},
 
             {{newasm::core::lang_inf::refs::crypto, 1}, "sys_crypto_sha256"},
             {{newasm::core::lang_inf::refs::crypto, 2}, "sys_crypto_xor_enc"},
