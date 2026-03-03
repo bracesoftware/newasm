@@ -2,3 +2,4 @@ compress.bat
 compile.bat
 bcxx.exe
 __.cpp
+gmon.out
