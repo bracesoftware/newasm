@@ -5,6 +5,10 @@
     #error [New-ASM] Cannot compile.
 #endif
 
+__newasm_LOAD_PACKAGE_MODULE(compexpr_deprecated, {
+    return;
+});
+
 namespace newasm
 {
     const int operator_T = 1;
