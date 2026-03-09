@@ -265,6 +265,16 @@ namespace newasm
             template<bool _procNameParse>
             void parse(std::string& suf);
         }
+        class dataObject final
+        {
+            using string = std::string;
+
+            public int type = 0;
+            int objInt = 0;
+            float objFloat = 0;
+            char objChar = 0;
+            string objString = "";
+        };
     }
     namespace compiler
     {
@@ -272,17 +282,6 @@ namespace newasm
         {
             int type;
             int addr;
-        };
-
-        class runtimeObject final
-        {
-            using std::string;
-
-            public int type = INVALID_INS;
-            int objInt = 0;
-            float objFloat = 0;
-            char objChar = 0;
-            string objString = "";
         };
 
         struct lineData final
