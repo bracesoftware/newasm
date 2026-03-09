@@ -274,6 +274,17 @@ namespace newasm
             int addr;
         };
 
+        class runtimeObject final
+        {
+            using std::string;
+
+            public int type = INVALID_INS;
+            int objInt = 0;
+            float objFloat = 0;
+            char objChar = 0;
+            string objString = "";
+        };
+
         struct lineData final
         {
             std::string raw;
