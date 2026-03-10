@@ -269,11 +269,33 @@ namespace newasm
         {
             using string = std::string;
 
-            public int type = 0;
-            int objInt = 0;
-            float objFloat = 0;
-            char objChar = 0;
-            string objString = "";
+            private int type = 0;
+            private int objInt = 0;
+            private float objFloat = 0;
+            private char objChar = 0;
+            private string objString = "";
+
+            //funcs
+            public inline std::variant<int, float, char, std::string> get()
+            {
+                if(this->type == newasm::datatypes::number)
+                {
+                    return this->objInt;
+                }
+                if(this->type == newasm::datatypes::decimal)
+                {
+                    return this->objFloat;
+                }
+                if(this->type == newasm::datatypes::character)
+                {
+                    return this->objChar;
+                }
+                if(this->type == newasm::datatypes::text)
+                {
+                    return this->objString;
+                }
+                return 0;
+            }
         };
     }
     namespace compiler
