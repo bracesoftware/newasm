@@ -50,6 +50,7 @@ link "runtime/common/arch";
 #include <optional>
 //LOl
 #include <limits>
+#include <variant>
 #include <cstdlib> //memcpy, rand
 #include <iomanip>
 #include <cstdio>
