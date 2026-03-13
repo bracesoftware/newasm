@@ -15,12 +15,14 @@ namespace newasm
         static const int using__ = 2;
         static const int link__ = 3;
         static const int pragma__ = 4;
+        static const int undef__ = 5;
 
         static const std::unordered_map<std::string, int> instructions = {
             {"def", def},
             {"using", using__},
             {"link", link__},
-            {"pragma", pragma__}
+            {"pragma", pragma__},
+            {"undef", undef__}
         };
 
         namespace meta
@@ -67,6 +69,18 @@ namespace newasm
                         newasm::header::functions::err("Test error pragma detected.");
                         return;
                     }
+                    return;
+                }
+                case newasm::compiler::undef__:
+                {
+                    auto p = newasm::compiler::meta::defines.find(arg1);
+                    if(p == newasm::compiler::meta::defines.end())
+                    {
+                        newasm::compiler::abort(newasm::compiler::fail::invalid_symbol);
+                        return;
+                    }
+                    
+                    newasm::compiler::meta::defines.erase(arg1);
                     return;
                 }
                 case newasm::compiler::using__:
@@ -178,8 +192,8 @@ namespace newasm
             {
                 case newasm::compiler::def:
                 {
-                    auto it = newasm::compiler::meta::defines.find(arg1);
-                    if(it != newasm::compiler::meta::defines.end())
+                    auto p = newasm::compiler::meta::defines.find(arg1);
+                    if(p != newasm::compiler::meta::defines.end())
                     {
                         newasm::compiler::abort(newasm::compiler::fail::constant_redef);
                         return;

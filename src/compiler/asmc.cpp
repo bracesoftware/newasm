@@ -34,6 +34,7 @@ namespace newasm
             const int unknown_register = 6;
             const int symbol_redecl = 7;
             const int unknown_label = 8;
+            const int invalid_symbol = 9;
 
             const std::unordered_map<int, std::string> id = {
                 {unmatched_syntax, "UnmatchedSyntax"},
@@ -43,7 +44,8 @@ namespace newasm
                 {unknown_attrib, "UnknownAttribute"},
                 {unknown_register, "UnknownRegister"},
                 {symbol_redecl, "SymbolRedeclaration"},
-                {unknown_label, "InvalidLabelAddress"}
+                {unknown_label, "InvalidLabelAddress"},
+                {invalid_symbol, "InvalidSymbol"}
             };
         }
 
