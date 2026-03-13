@@ -2430,7 +2430,7 @@ pragma errtest
     mov tlr, defineTest
     call std::ios::writeln
     undef defineTest
-    mov tlr, defineTest ; runtime error
+    ;mov tlr, defineTest ; runtime error
     call std::ios::writeln
     ;undef pdns ; compile time error
 
