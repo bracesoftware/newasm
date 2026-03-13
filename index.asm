@@ -2426,6 +2426,14 @@ pragma errtest
     mov tlr, *rax
     call std::ios::writeln
 
+    def defineTest, "Hi\tbro\n"
+    mov tlr, defineTest
+    call std::ios::writeln
+    undef defineTest
+    mov tlr, defineTest ; runtime error
+    call std::ios::writeln
+    ;undef pdns ; compile time error
+
     ;mov tlr, $-&testStringMan
     ;call std::ios::writeln
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
