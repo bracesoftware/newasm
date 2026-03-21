@@ -240,25 +240,25 @@ namespace newasm
             {
                 std::cout << newasm::header::col::light_blue << " info: " << newasm::header::col::gray << text << newasm::header::col::reset << std::endl;
             }
+            //formatted info overloads
             inline void f__(const char* format)
             {
                 std::cout << format;
             }
-
             template<typename T, typename... A>
             void f__(const char* format, T value, A... a)
             {
                 for(; *format != '\0'; format++)
                 {
-                    if(*format == '%')
+                    if(*format == '%' && *(format + 1) != '\0')
                     {
-                        if (*(format + 1) == '%')
+                        if(*(format + 1) == '%')
                         {
                             std::cout << '%';
                             format++;
                             continue;
                         }
-                        std::cout << value; 
+                        std::cout << value;
                         f__(format + 2, a...); 
                         return;
                     }
@@ -266,13 +266,20 @@ namespace newasm
                 }
             }
             template<typename... A>
-            inline void finfo(A... a)
+            inline void f__(const std::string& format, A... a)
+            {
+                f__(format.c_str(), a...);
+            }
+
+            template<typename... A>
+            inline void finfo(A... a)//main func used
             {
                 std::cout << newasm::header::col::light_blue << " info: " << newasm::header::col::gray;
                 //formatting:
                 f__(a...);
                 std::cout << newasm::header::col::reset << std::endl;
             }
+            //other stuff
             inline void dbg(const std::string& text)
             {
                 if(newasm::header::settings::debug == 1)

@@ -116,7 +116,7 @@ namespace newasm
                 if(!file) return 0;
 
                 int start = pos;
-                int end = pos;
+                int end = pos + 1;
                 char ret;
 
                 std::streamsize size = end - start;
