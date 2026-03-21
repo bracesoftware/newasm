@@ -1354,9 +1354,148 @@ namespace newasm
          `*´‘                                               '`*'´‘                 ¯          ¯'         
 
 */
-                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::fs_vdsk, 1):
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::fs_vdsk, 1): //make file
                 {
-                    NewASM::header::functions::krnl("Not implemented yet...");
+                    newasm::perf::heavyHostServices.start();
+                    $defer
+                        newasm::perf::heavyHostServices.stop();
+                    $
+                    if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    if(!newasm::header::functions::istext(newasm::mem::regs::stl))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    auto TLR = NewASM::header::functions::remq(newasm::mem::regs::tlr);
+                    if(!NewASM::header::functions::isalphanum(TLR))
+                    {
+                        NewASM::header::functions::err("Permission denied. File names have to be alphanumeric!");
+                        return 1;
+                    }
+                    if(newasm::ctl::data::path.size() > 1)
+                    {
+                        auto format_path = [&](const std::vector<std::string>& path) -> std::string {
+                            std::stringstream p;
+                            for(int i = 0; i < path.size(); ++i)
+                            {
+                                p << path[i];
+                                if(i + 1 == path.size())
+                                {
+                                    continue;
+                                }
+                                p << '/';
+                            }
+                            return p.str();
+                        };
+                        TLR = format_path(newasm::ctl::data::path) + TLR;
+                    }
+                    auto STL = NewASM::header::functions::remq(newasm::mem::regs::stl);
+                    using namespace NewASM::Drivers::FileSystem_V;
+                    if(EXISTS(NewASM::hardware::Disk, TLR))
+                    {
+                        NewASM::header::functions::err("File already exists.");
+                        return 1;
+                    }
+                    MKFILE(NewASM::hardware::Disk, TLR, STL);
+                    return 1;
+                }
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::fs_vdsk, 2): //remove file
+                {
+                    newasm::perf::heavyHostServices.start();
+                    $defer
+                        newasm::perf::heavyHostServices.stop();
+                    $
+                    if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    auto TLR = NewASM::header::functions::remq(newasm::mem::regs::tlr);
+                    if(newasm::ctl::data::path.size() > 1)
+                    {
+                        auto format_path = [&](const std::vector<std::string>& path) -> std::string {
+                            std::stringstream p;
+                            for(int i = 0; i < path.size(); ++i)
+                            {
+                                p << path[i];
+                                if(i + 1 == path.size())
+                                {
+                                    continue;
+                                }
+                                p << '/';
+                            }
+                            return p.str();
+                        };
+                        TLR = format_path(newasm::ctl::data::path) + TLR;
+                    }
+                    using namespace NewASM::Drivers::FileSystem_V;
+                    if(!EXISTS(NewASM::hardware::Disk, TLR))
+                    {
+                        NewASM::header::functions::err("File does not exist.");
+                        return 1;
+                    }
+                    RMFILE(NewASM::hardware::Disk, TLR);
+                    return 1;
+                }
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::fs_vdsk, 3): //check if file exists
+                {
+                    newasm::perf::heavyHostServices.start();
+                    $defer
+                        newasm::perf::heavyHostServices.stop();
+                    $
+                    if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    auto TLR = NewASM::header::functions::remq(newasm::mem::regs::tlr);
+                    if(newasm::ctl::data::path.size() > 1)
+                    {
+                        auto format_path = [&](const std::vector<std::string>& path) -> std::string {
+                            std::stringstream p;
+                            for(int i = 0; i < path.size(); ++i)
+                            {
+                                p << path[i];
+                                if(i + 1 == path.size())
+                                {
+                                    continue;
+                                }
+                                p << '/';
+                            }
+                            return p.str();
+                        };
+                        TLR = format_path(newasm::ctl::data::path) + TLR;
+                    }
+                    using namespace NewASM::Drivers::FileSystem_V;
+                    if(!EXISTS(NewASM::hardware::Disk, TLR))
+                    {
+                        NewASM::mem::regs::rax = 0;
+                        return 1;
+                    }
+                  
+                    NewASM::mem::regs::rax = 1;
+                    return 1;
+                }
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::fs_vdsk, 4)://cd
+                {
+                    if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+            
+                    auto TLR = NewASM::header::functions::remq(newasm::mem::regs::tlr);
+                    if(!NewASM::header::functions::isalphanum(TLR))
+                    {
+                        NewASM::header::functions::err("Permission denied. File names have to be alphanumeric!");
+                        return 1;
+                    }
+
+                    NewASM::files::CD(TLR);
                     return 1;
                 }
                 default:

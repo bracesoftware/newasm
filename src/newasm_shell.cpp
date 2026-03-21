@@ -73,8 +73,6 @@ namespace newasm
             std::string cmd;
             bool finish = false;
             bool progwin = false;
-
-            std::vector<std::string> path;
         }
 
         namespace install
@@ -197,6 +195,7 @@ namespace newasm
                     */
                     if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::list__))
                     {
+                        _newasm_CHECKLOGIN;
                         NewASM::files::ListFiles(newasm::ctl::data::path);
                         return 1;
                     }
@@ -321,22 +320,7 @@ namespace newasm
                     }
                     if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::cd__))
                     {
-                        std::string dir = tokens[1];
-                        if(dir == "..") //go back
-                        {
-                            if(newasm::ctl::data::path.size() == 1)
-                            {
-                                return 1;
-                            }
-                            newasm::ctl::data::path.pop_back();
-                            return 1;
-                        }
-                        if(!NewASM::header::functions::isalphanum(dir))
-                        {
-                            NewASM::header::functions::err("Name of the directory has to be alphanumeric.");
-                            return 1;
-                        }
-                        NewASM::ctl::data::path.push_back(dir);
+                        NewASM::files::CD(tokens[1]);
                         return 1;
                     }
                     if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::mount__))

@@ -157,6 +157,17 @@ link "vm/hardware/cpu_register";
 // Resources (assets) used in the program
 namespace newasm
 {
+    namespace files
+    {
+        inline void CD(const std::string& dir);
+    }
+    namespace ctl
+    {
+        namespace data
+        {
+            std::vector<std::string> path;
+        }
+    }
     namespace flags
     {
         bool loaded_std = false;

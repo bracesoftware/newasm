@@ -19,6 +19,13 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 
 + Added the `undef` compile-time instruction used to undefine symbols declared with `def`.
 + Divided the `fs` kernel/host services module into two submodules; `fs/host`, used for interacting with the host machine's files and `fs/vdsk`, used for interacting with the virtual disk.
++ Added following system calls for `fs/vdsk`:
+| `Module`  | ID  | Arguments    |        Description                                |
+|-----------|-----|--------------|---------------------------------------------------|
+| `fs/vdsk` | `1` | `tlr`, `stl` | Create a file named `tlr`, with content in `stl`. |
+| `fs/vdsk` | `2` | `tlr` | Remove a file named `tlr`. |
+| `fs/vdsk` | `3` | `tlr` | Check if a file named `tlr` exists. |
+| `fs/vdsk` | `4` | `tlr`| Create a directory or advance into that directory, go back with `..`. |
 
 ## Fixed issues
 

@@ -45,6 +45,7 @@ namespace newasm
                 return;
             }
 
+
             inline void format(int size_)
             {
                 std::ofstream file(path, std::ios::binary);
@@ -64,7 +65,10 @@ namespace newasm
                 file.close();
                 this->size = size_;
             }
-
+            inline void ERASE_DSK()
+            {
+                this->format(this->size);
+            }
             inline void format()
             {
                 this->format(this->size);

@@ -62,6 +62,7 @@ namespace newasm::Drivers::FileSystem_V
     }
     inline void FormatDisk(DISK& disk)
     {
+        disk.ERASE_DSK();
         unsigned const int files = NewASM::Drivers::FileSystem_V::GetMaxFiles();
         FILE_TABLE table(files);
         for(int i = 0; i < files; ++i) //just to be sure lmao
