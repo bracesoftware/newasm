@@ -33,6 +33,15 @@ namespace newasm::bootloader
 {
     int __main__(int argc, char* argv[])
     {
+        auto& dsk = NewASM::hardware::Disk;
+        if(!NewASM::Drivers::FileSystem_V::EXISTS(dsk, "hi.txt"))
+        {
+            NewASM::Drivers::FileSystem_V::MAKEFILE(dsk, "hi.txt");
+        }
+        NewASM::Drivers::FileSystem_V::APPTOFILE(dsk, "hi.txt", "Hello!\n");
+        auto content = NewASM::Drivers::FileSystem_V::READFILE(dsk, "hi.txt");
+        std::cout << content;
+
         newasm::sealedLabels = &newasm::compiler::data::sealed_labels;
         $defer //BC++ feature, $ blocks
             newasm::GLOBAL::cleanup();

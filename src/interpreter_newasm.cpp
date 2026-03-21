@@ -727,6 +727,7 @@ link "runtime/lambda/_entry";
 link "kernel/syscall_info";
 
 link "vm/hardware/disk";
+link "kernel/drivers/vmfs";
 link "vm/hardware/io_ports";
 //
 link "kernel/dynamic/commonlibs";

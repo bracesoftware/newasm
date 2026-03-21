@@ -1,6 +1,10 @@
 // Copyright (c) 2026 Brace Software Co.
 // NewASM Virtual Machine and Toolchain
 
+__newasm_LOAD_PACKAGE_MODULE(VirtualDiskDriver, {
+    //empty
+});
+
 namespace newasm::Drivers::FileSystem_V
 {
     const int MAX_FILES = 64;
@@ -122,8 +126,8 @@ namespace newasm::Drivers::FileSystem_V
                 }
                 else
                 {
-                    deleteFile(disk, name);
-                    makeFile(disk, name, new_content);
+                    RMFILE(disk, name);
+                    MKFILE(disk, name, new_content);
                     return;
                 }
             }
