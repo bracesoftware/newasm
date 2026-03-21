@@ -102,7 +102,7 @@ namespace newasm
         
         namespace impl
         {
-            int process_c(std::string cmd)
+            inline int process_c(std::string cmd)
             {
                 auto tokenize = [](std::string str) -> std::vector<std::string> {
                     std::vector<std::string> tokens;

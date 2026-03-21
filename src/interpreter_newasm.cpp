@@ -20,6 +20,7 @@ namespace newasm
 }
 
 namespace SYS = newasm;
+namespace NewASM = newasm;
 
 link "runtime/common/os";
 link "runtime/common/arch";
@@ -482,11 +483,15 @@ namespace newasm
                 accumulated_ms += std::chrono::duration<double, std::milli>(end_time - start_time).count();
                 running = false;
             }
+            return;
         }
 
         public double count() const
         {
-            if(!running) return accumulated_ms;
+            if(!running)
+            {
+                return accumulated_ms;
+            }
             
             auto current_duration = std::chrono::duration<double, std::milli>(clock::now() - start_time).count();
             return accumulated_ms + current_duration;
