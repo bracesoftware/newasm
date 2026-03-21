@@ -27,14 +27,14 @@ You use `sysenter` to expose a specific kernel module to the program, and `sysca
 | `ios` | `6` | `tlr` | Prints the name of a symbol a reference is pointing to. |
 | `ios` | `7` | `tlr` | Prints a single character. |
 | `ios` | `8` | - | Requests a single character input from the user and stores the value in `tlr`. |
-| `fs` | `1` | `tlr` | Create a directory; with `tlr` being a string containing the directory name. |
-| `fs` | `2` | `tlr` | Remove a directory; with `tlr` being a string containing the directory name. |
-| `fs` | `3` | `tlr` | Create a file; with `tlr` being a string containing the file name. |
-| `fs` | `4` | `tlr` | Remove a file; with `tlr` being a string containing the file name. |
-| `fs` | `5` | `tlr`, `stl` | Overwrite file content; with `tlr` being a string containing the file name, and `stl` being a string containing the new content. |
-| `fs` | `6` | `tlr`, `stl` | Append content to file; with `tlr` being a string containing the file name, and `stl` being a string containing the content to append. |
-| `fs` | `7` | `tlr` | Remove all file content; with `tlr` being a string containing the file name. |
-| `fs` | `8` | `tlr`, `stl` | Read a file line; with `tlr` being a string containing the file name, and `stl` being the line number. Read content is subsequently stored in `tlr`. |
+| `fs/host` | `1` | `tlr` | Create a directory; with `tlr` being a string containing the directory name. |
+| `fs/host` | `2` | `tlr` | Remove a directory; with `tlr` being a string containing the directory name. |
+| `fs/host` | `3` | `tlr` | Create a file; with `tlr` being a string containing the file name. |
+| `fs/host` | `4` | `tlr` | Remove a file; with `tlr` being a string containing the file name. |
+| `fs/host` | `5` | `tlr`, `stl` | Overwrite file content; with `tlr` being a string containing the file name, and `stl` being a string containing the new content. |
+| `fs/host` | `6` | `tlr`, `stl` | Append content to file; with `tlr` being a string containing the file name, and `stl` being a string containing the content to append. |
+| `fs/host` | `7` | `tlr` | Remove all file content; with `tlr` being a string containing the file name. |
+| `fs/host` | `8` | `tlr`, `stl` | Read a file line; with `tlr` being a string containing the file name, and `stl` being the line number. Read content is subsequently stored in `tlr`. |
 | `cmanip` | `1` | `cpt` | Clear the bit array, with `cpt` being a pointer holding the address of your bit array. |
 | `cmanip` | `2` | `cpt` | Flip the bit array, with `cpt` being a pointer holding the address of your bit array. |
 | `cmanip` | `3` | `cpt` | Reverse the bit array, with `cpt` being a pointer holding the address of your bit array. |
