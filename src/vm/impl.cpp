@@ -209,7 +209,7 @@ concept NumbersHasMethod = requires(T v)
 template<class T>
 concept ValidNumber = Numbers<T> and NumbersHasMethod<T>;
 
-template<Numbers T> //works if we just do "typename T"
+template<ValidNumber T> //works if we just do "typename T" or "Number T"
 class ConstructorTest
 {
     public T obj;
