@@ -46,6 +46,7 @@ namespace newasm
             newasm::__CRASH__();
             return 1;
         }
+        NewASM::perf::heavyHostServices.start();
         if(!newasm::header::data::repl)
         {
             if(!newasm::header::data::exception)
@@ -58,6 +59,7 @@ namespace newasm
         {
             newasm::header::functions::krnl("Kernel crashed.");
         }
+        NewASM::perf::heavyHostServices.stop();
         return 1;
     }
     //int redirect_exec(std::string filename);
