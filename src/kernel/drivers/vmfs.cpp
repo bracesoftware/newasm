@@ -16,24 +16,30 @@ __newasm_LOAD_PACKAGE_MODULE(VirtualDiskDriver, {
 namespace newasm::Drivers::FileSystem_V
 {
     constinit const unsigned int FILE_TABLE_POS = 0;
-    ALWAYS_INLINE constexpr inline void GetMaxFiles()
+    using DISK_POS = unsigned long;
+    constexpr inline unsigned int GetMaxFiles()
     {
         return __newasm_MAX_FILES;
     }
-    ALWAYS_INLINE constexpr inline void GetMaxFileNameLen()
+    constexpr inline unsigned int GetMaxFileNameLen()
     {
         return __newasm_MAX_FILENAME_LEN;
     }
     struct FILE final
     {
         char name[__newasm_MAX_FILENAME_LEN];
-        unsigned int start_pos; //we don't use bool exists, but 0 as a start pos if it doesnt exist
+        DISK_POS pos; //we don't use bool exists, but 0 as a start pos if it doesnt exist
                                 //cuz 0 is a position for file table,so no file can be on 0
-        unsigned int size; //size can't be < 0
+        DISK_POS size; //size can't be < 0
+    };
+    constexpr inline unsigned int GetFileTableEnd()
+    {
+        return (sizeof(FILE) * NewASM::Drivers::FileSystem_V::GetMaxFiles());
     }
     using FILE_TABLE = std::vector<FILE>;
+    using FILE_NAME = const std::string&;
     using DISK = NewASM::hardware::DISK_;
-    inline FILE_TABLE GetFileTable(DISK& disk)
+    FORCE_INLINE inline FILE_TABLE GetFileTable(DISK& disk)
     {
         FILE_TABLE table(NewASM::Drivers::FileSystem_V::GetMaxFiles());
         std::string DATA = disk.READ_DSK(FILE_TABLE_POS, sizeof(FILE) * NewASM::Drivers::FileSystem_V::GetMaxFiles());
@@ -43,14 +49,188 @@ namespace newasm::Drivers::FileSystem_V
         }
         return table;
     }
-    inline void SaveFileTable(DISK& disk, const FILE_TABLE& table)
+    FORCE_INLINE inline void SaveFileTable(DISK& disk, const FILE_TABLE& table)
     {
+        auto t = table;
+        std::sort(t.begin(), t.end(), [](const auto& a, const auto& b) -> bool {
+            return a.pos < b.pos;
+        });
         std::string buf(sizeof(FILE) * NewASM::Drivers::FileSystem_V::GetMaxFiles(), '\0');
-        std::memcpy(&buf[0], table.data(), buf.size());
+        std::memcpy(&buf[0], t.data(), buf.size());
         disk.WRITE_DSK(0, buf);
         return;
     }
-
+    inline void FormatDisk(DISK& disk)
+    {
+        unsigned const int files = NewASM::Drivers::FileSystem_V::GetMaxFiles();
+        FILE_TABLE table(files);
+        for(int i = 0; i < files; ++i) //just to be sure lmao
+        {
+            table[i].pos = FILE_TABLE_POS;
+            table[i].size = FILE_TABLE_POS;
+        }
+        NewASM::Drivers::FileSystem_V::SaveFileTable(disk, table);
+        return;
+    }
+    inline DISK_POS GetFreePos(DISK& disk, DISK_POS size)
+    {
+        using namespace NewASM::Drivers::FileSystem_V;
+        auto GetFiles__L = [&](DISK& dsk) -> DISK_POS {
+            DISK_POS files = 0;
+            FILE_TABLE table = GetFileTable(dsk);
+            for(int i = 0; i < table.size(); ++i) //just to be sure lmao
+            {
+                if(table[i].pos != FILE_TABLE_POS)
+                {
+                    ++files;
+                }
+            }
+            return files;
+        };
+        if(GetFiles__L(disk) == 0)
+        {
+            return NewASM::Drivers::FileSystem_V::GetFileTableEnd();
+        }
+        DISK_POS files = GetFiles__L(disk);
+        if(files > 0)
+        {
+            std::vector<std::pair<DISK_POS, DISK_POS>> pairs;
+            auto table = GetFileTable(disk);
+            std::sort(table.begin(), table.end(), [](const auto& a, const auto& b) -> bool {
+                return a.pos < b.pos;
+            });
+            for(int i = 0; i < table.size(); ++i)
+            {
+                pairs.push_back({table[i].pos, table[i].pos + table[i].size});
+            }
+            if(pairs.size() == 1)
+            {
+                return pairs.front().second + 1;
+            }
+            int PairSize = pairs.size();
+            for(int i = 0; i < PairSize; ++i)
+            {
+                if(i == 0)
+                {
+                    if(pairs.front().first - NewASM::Drivers::FileSystem_V::GetFileTableEnd() >= size)
+                    {
+                        return NewASM::Drivers::FileSystem_V::GetFileTableEnd() + 1;
+                    }
+                    continue;
+                }
+                if(i == PairSize - 1)
+                {
+                    if((__newasm_DISK_SIZE * 1024 * 1024 - 1) - pairs.back().second >= size)
+                    {
+                        return pairs.back().second + 1;
+                    }
+                    continue;
+                }
+                if(pairs.at(i + 1).first - pairs.at(i).second >= size)
+                {
+                    return pairs.at(i).second + 1;
+                }
+                continue;
+            }
+        }
+        return FILE_TABLE_POS;
+    }
+    inline bool EXISTS(DISK& disk, FILE_NAME name)
+    {
+        using namespace NewASM::Drivers::FileSystem_V;
+        FILE_TABLE table = GetFileTable(disk);
+        for(int i = 0; i < table.size(); ++i)
+        {
+            if(table[i].pos != FILE_TABLE_POS && std::string(table[i].name) == name)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    inline void MKFILE(DISK& disk, FILE_NAME name, const std::string& content)
+    {
+        using namespace NewASM::Drivers::FileSystem_V;
+        FILE_TABLE table = GetFileTable(disk);
+        for(int i = 0; i < table.size(); ++i)
+        {
+            if(table[i].pos == FILE_TABLE_POS)//it does NOT exist
+            {
+                std::memcpy(table[i].name, name.data(), name.size());
+                table[i].size = content.size();
+                table[i].pos = NewASM::Drivers::FileSystem_V::GetFreePos(disk, content.size());
+                disk.WRITE_DSK(table[i].pos, content);
+                break;
+            }
+        }
+        SaveFileTable(disk, table);
+        return;
+    }
+    inline void RMFILE(DISK& disk, FILE_NAME name)
+    {
+        using namespace NewASM::Drivers::FileSystem_V;
+        FILE_TABLE table = GetFileTable(disk);
+        for(int i = 0; i < table.size(); ++i)
+        {
+            if(std::string(table[i].name) == name && table[i].pos != FILE_TABLE_POS)
+            {
+                table[i].pos = FILE_TABLE_POS;
+                table[i].size = FILE_TABLE_POS;
+                break;
+            }
+        }
+        SaveFileTable(disk, table);
+        return;
+    }
+    inline std::string READFILE(DISK& disk, FILE_NAME name)
+    {
+        using namespace NewASM::Drivers::FileSystem_V;
+        FILE_TABLE table = GetFileTable(disk);
+        std::string buf("");
+        for(int i = 0; i < table.size(); ++i)
+        {
+            if(std::string(table[i].name) == name && table[i].pos != FILE_TABLE_POS)
+            {
+                buf = disk.READ_DSK(table[i].pos, table[i].size);
+                break;
+            }
+        }
+        return buf;
+    }
+    inline void MODFILE(DISK& disk, FILE_NAME name, const std::string& content)
+    {
+        using namespace NewASM::Drivers::FileSystem_V;
+        FILE_TABLE table = GetFileTable(disk);
+        std::string buf("");
+        for(int i = 0; i < table.size(); ++i)
+        {
+            if(std::string(table[i].name) == name && table[i].pos != FILE_TABLE_POS)
+            {
+                if(content.size() <= table[i].size)
+                {
+                    disk.WRITE_DSK(table[i].pos, content);
+                    table[i].size = content.size();
+                    break;
+                }
+                RMFILE(disk, name);
+                MKFILE(disk, name, content);
+                return;
+            }
+        }
+        SaveFileTable(disk, table);
+        return;
+    }
+    inline void APPTOFILE(DISK& disk, FILE_NAME name, const std::string& content)
+    {
+        using namespace NewASM::Drivers::FileSystem_V;
+        std::string old = READFILE(disk, name);
+        MODFILE(disk, name, old + content);
+        return;
+    }
+    inline void DEFRAG(DISK& disk)
+    {
+        return;
+    }
 }
 #elif __newasm_VMFS == __newasm_VMFS_VER_COMMUNITY
 namespace newasm::Drivers::FileSystem_V

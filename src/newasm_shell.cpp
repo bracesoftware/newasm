@@ -37,7 +37,8 @@ namespace newasm
             {"run",         {"<binary name>",   "Run a compiled NewASM application."}},
             {"perf",        {"/",               "Show profiler statistics for the last app you ran."}},
             {"syscfg",      {"/",               "Open up the system configuration menu."}},
-            {"cls",         {"/",               "Clear your screen."}}
+            {"cls",         {"/",               "Clear your screen."}},
+            {"list",        {"/",               "List files on the virtual disk."}}
         };
         void help_info()
         {
@@ -194,6 +195,11 @@ namespace newasm
                     /*
                         NEED LOGIN
                     */
+                    if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::list__))
+                    {
+                        NewASM::files::ListFiles(newasm::ctl::data::path);
+                        return 1;
+                    }
                     if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::repl__))
                     {
                         _newasm_CHECKLOGIN;
@@ -311,6 +317,26 @@ namespace newasm
                         }
                         
                         newasm::Console::close();
+                        return 1;
+                    }
+                    if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::cd__))
+                    {
+                        std::string dir = tokens[1];
+                        if(dir == "..") //go back
+                        {
+                            if(newasm::ctl::data::path.size() == 1)
+                            {
+                                return 1;
+                            }
+                            newasm::ctl::data::path.pop_back();
+                            return 1;
+                        }
+                        if(!NewASM::header::functions::isalphanum(dir))
+                        {
+                            NewASM::header::functions::err("Name of the directory has to be alphanumeric.");
+                            return 1;
+                        }
+                        NewASM::ctl::data::path.push_back(dir);
                         return 1;
                     }
                     if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::mount__))

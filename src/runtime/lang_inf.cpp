@@ -360,6 +360,8 @@ namespace newasm
                 const int syscfg__ = 17;
                 const int cls__ = 18;
                 const int compile__ = 19;
+                const int list__ = 20;
+                const int cd__ = 21;
 
                 const std::unordered_map<int, std::string> identifiers__ = {
                     {exit__, "exit"},
@@ -380,7 +382,9 @@ namespace newasm
                     {perf__, "perf"},
                     {syscfg__, "syscfg"},
                     {cls__, "cls"},
-                    {compile__, "compile"}
+                    {compile__, "compile"},
+                    {list__, "list"},
+                    {cd__, "cd"}
                 };
             }
 

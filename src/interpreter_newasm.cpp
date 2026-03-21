@@ -775,6 +775,7 @@ link "shell_tools/prompt";
 link "shell_tools/user";
 link "shell_tools/env_control";
 link "shell_tools/mount";
+link "shell_tools/files";
 link "newasm_shell";
 
 link "runtime/_entry";

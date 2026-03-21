@@ -1408,7 +1408,7 @@ using "ios"
     mov fdx, 1
     mov tlr, &mythread
     syscall ; display the thread output
-
+jmp kjhdfhdkjs
 .data
 	./std
     	./disk
@@ -1448,7 +1448,11 @@ using "ios"
     mov tlr, std::testObj{hi}
     mov fdx, 1
     syscall
-
+:kjhdfhdkjs
+    mov rax, 100
+    :lol__
+    nop
+    loop rax, lol__
 .data
     ./tests
         tuple mytuple: ("hi from tuple", 9876, 12.4)
