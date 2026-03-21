@@ -20,6 +20,7 @@ namespace newasm
             bool TextOperations = false;
             bool ContainerManipulation = false;
             bool FileStream = false;
+            bool FileStream_VDSK = false;
             bool Tuple = false;
             bool TCProtocol = false;
             bool HTTP = false;
