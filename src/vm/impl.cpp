@@ -5,6 +5,9 @@
 #define __newasm_DISK_SIZE 20 // MiB
 #define __newasm_CACHE_LINES 1024 //8KiB since line is 8bytes
 
+#define __newasm_MAX_FILES 64
+#define __newasm_MAX_FILENAME_LEN 128
+
 // funcs
 #define __newasm_B_TO_KB(val)   ((val) / 1024.0)
 #define __newasm_B_TO_MB(val)   ((val) / (1024.0 * 1024.0))

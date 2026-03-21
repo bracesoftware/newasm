@@ -5,6 +5,54 @@ __newasm_LOAD_PACKAGE_MODULE(VirtualDiskDriver, {
     //empty
 });
 
+#define __newasm_VMFS_VER_ORIGINAL 1
+#define __newasm_VMFS_VER_COMMUNITY 2 //version made by collecting resources available online, WAS NOT WORKING
+
+#define __newasm_VMFS __newasm_VMFS_VER_ORIGINAL
+
+#if __newasm_VMFS == __newasm_VMFS_VER_ORIGINAL
+//stackoverflow file system did not work
+//so i had to improvise..and reinvent the wheel...
+namespace newasm::Drivers::FileSystem_V
+{
+    constinit const unsigned int FILE_TABLE_POS = 0;
+    ALWAYS_INLINE constexpr inline void GetMaxFiles()
+    {
+        return __newasm_MAX_FILES;
+    }
+    ALWAYS_INLINE constexpr inline void GetMaxFileNameLen()
+    {
+        return __newasm_MAX_FILENAME_LEN;
+    }
+    struct FILE final
+    {
+        char name[__newasm_MAX_FILENAME_LEN];
+        unsigned int start_pos; //we don't use bool exists, but 0 as a start pos if it doesnt exist
+                                //cuz 0 is a position for file table,so no file can be on 0
+        unsigned int size; //size can't be < 0
+    }
+    using FILE_TABLE = std::vector<FILE>;
+    using DISK = NewASM::hardware::DISK_;
+    inline FILE_TABLE GetFileTable(DISK& disk)
+    {
+        FILE_TABLE table(NewASM::Drivers::FileSystem_V::GetMaxFiles());
+        std::string DATA = disk.READ_DSK(FILE_TABLE_POS, sizeof(FILE) * NewASM::Drivers::FileSystem_V::GetMaxFiles());
+        if(!DATA.empty())
+        {
+            std::memcpy(table.data(), DATA.data(), DATA.size());
+        }
+        return table;
+    }
+    inline void SaveFileTable(DISK& disk, const FILE_TABLE& table)
+    {
+        std::string buf(sizeof(FILE) * NewASM::Drivers::FileSystem_V::GetMaxFiles(), '\0');
+        std::memcpy(&buf[0], table.data(), buf.size());
+        disk.WRITE_DSK(0, buf);
+        return;
+    }
+
+}
+#elif __newasm_VMFS == __newasm_VMFS_VER_COMMUNITY
 namespace newasm::Drivers::FileSystem_V
 {
     const int MAX_FILES = 64;
@@ -47,7 +95,7 @@ namespace newasm::Drivers::FileSystem_V
         }
         return false;
     }
-    inline void MKFILE(newasm::hardware::DISK_& disk, const std::string& name, const std::string& content)//creditz stackoverflow
+    inline void MKFILE_OLD(newasm::hardware::DISK_& disk, const std::string& name, const std::string& content)//creditz stackoverflow
     {
         auto table = get_file_table(disk);
         int table_size_bytes = sizeof(FileEntry) * newasm::Drivers::FileSystem_V::MAX_FILES;
@@ -81,7 +129,38 @@ namespace newasm::Drivers::FileSystem_V
         }
         return;
     }
-    void RMFILE(newasm::hardware::DISK_& disk, const std::string& name)
+    //DO NOT search free filesystems on stackoverflow
+    inline void MKFILE(newasm::hardware::DISK_& disk, const std::string& name, const std::string& content)
+    {
+        auto table = get_file_table(disk);
+        int table_size_bytes = sizeof(FileEntry) * newasm::Drivers::FileSystem_V::MAX_FILES;
+        
+        for(int i = 0; i < newasm::Drivers::FileSystem_V::MAX_FILES; ++i)
+        {
+            if(!table[i].exists)
+            {
+                int start_offset = table_size_bytes;
+                
+                for(int j = 0; j < newasm::Drivers::FileSystem_V::MAX_FILES; j++)
+                {
+                    if(table[j].exists)
+                    {
+                        start_offset = std::max(start_offset, table[j].start_pos + table[j].size);
+                    }
+                }
+
+                table[i].exists = true;
+                table[i].size = content.size();
+                table[i].start_pos = start_offset;
+                std::strncpy(table[i].name, name.c_str(), MAX_FILENAME - 1);
+
+                disk.writeToDisk(table[i].start_pos, table[i].start_pos + table[i].size, content);
+                save_file_table(disk, table);
+                return;
+            }
+        }
+    }
+    inline void RMFILE(newasm::hardware::DISK_& disk, const std::string& name)
     {
         auto table = get_file_table(disk);
         for(int i = 0; i < newasm::Drivers::FileSystem_V::MAX_FILES; ++i)
@@ -140,7 +219,45 @@ namespace newasm::Drivers::FileSystem_V
         MODFILE(disk, name, old + content);
         return;
     }
+    //I FOUND DEFRAGMENTATION ON STACKOVERFLOW;LETS TEST IT
+    inline void DEFRAG(newasm::hardware::DISK_& disk)
+    {
+        auto table = get_file_table(disk);
+        int table_size_bytes = sizeof(FileEntry) * MAX_FILES;
+        
+        struct TempEntry final
+        {
+            int original_index;
+            FileEntry data;
+        };
+        std::vector<TempEntry> active_files;
+        
+        for(int i = 0; i < MAX_FILES; ++i)
+        {
+            if(table[i].exists && table[i].size > 0)
+            {
+                active_files.push_back({i, table[i]});
+            }
+        }
+
+        std::sort(active_files.begin(), active_files.end(), [](const TempEntry& a, const TempEntry& b) {
+            return a.data.start_pos < b.data.start_pos;
+        });
+
+        int current_offset = table_size_bytes;
+
+        for(auto& temp : active_files)
+        {
+            std::string content = disk.readDisk_(temp.data.start_pos, temp.data.start_pos + temp.data.size);
+            disk.writeToDisk(current_offset, current_offset + temp.data.size, content);
+            table[temp.original_index].start_pos = current_offset;
+            current_offset += temp.data.size;
+        }
+
+        save_file_table(disk, table);
+    }
 }
+#endif
 
 #if 0
 namespace newasm

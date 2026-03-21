@@ -100,6 +100,11 @@ namespace newasm
                 this->data = this->readDisk_(start, end);
             }
 
+            inline std::string READ_DSK(int addr, int size)//wrapper for vmfs
+            {
+                return this->readDisk_(addr, addr + size);
+            }
+
             inline void writeToDisk(std::streampos start, std::streampos end, const std::string& content)
             {
                 std::fstream file(this->path, std::ios::in | std::ios::out | std::ios::binary);
@@ -108,6 +113,12 @@ namespace newasm
                 file.seekp(start);
                 file.write(content.data(), size);
                 file.close();
+            }
+
+            inline void WRITE_DSK(int addr, const std::string& content)//wrapper for vmfs
+            {
+                this->writeToDisk(addr, addr + content.size(), content);
+                return;
             }
 
             inline char read_raw(int pos)

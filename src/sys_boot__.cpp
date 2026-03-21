@@ -34,9 +34,10 @@ namespace newasm::bootloader
     int __main__(int argc, char* argv[])
     {
         auto& dsk = NewASM::hardware::Disk;
+        NewASM::Drivers::FileSystem_V::DEFRAG(dsk);
         if(!NewASM::Drivers::FileSystem_V::EXISTS(dsk, "hi.txt"))
         {
-            NewASM::Drivers::FileSystem_V::MKFILE(dsk, "hi.txt", "");
+            NewASM::Drivers::FileSystem_V::MKFILE(dsk, "hi.txt", "Lmao");
         }
         NewASM::Drivers::FileSystem_V::APPTOFILE(dsk, "hi.txt", "Hello!\n");
         auto content = NewASM::Drivers::FileSystem_V::READFILE(dsk, "hi.txt");
