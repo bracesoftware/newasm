@@ -165,3 +165,69 @@ __ ___;
 #else
     #define ATTR_FLAT
 #endif
+
+class One
+{
+    public inline void hi() noexcept
+    {
+        std::cout << "One::hi() called" << std::endl;
+        return;
+    }
+};
+
+class Two
+{
+    public inline void hi() noexcept
+    {
+        std::cout << "Two::hi() called" << std::endl;
+        return;
+    }
+};
+
+class Three
+{
+    public inline void bye() noexcept
+    {
+        return;
+    }
+};
+
+template<class T>
+concept Numbers = (
+    std::is_same_v<T, One> or
+    std::is_same_v<T, Two>
+);
+
+template<class T>
+concept NumbersHasMethod = requires(T v)
+{
+    {
+        v.hi() //we check if T has T::hi()
+    } noexcept;
+};
+
+template<class T>
+concept ValidNumber = Numbers<T> and NumbersHasMethod<T>;
+
+template<Numbers T> //works if we just do "typename T"
+class ConstructorTest
+{
+    public T obj;
+    explicit inline ConstructorTest() noexcept
+    {
+        obj.hi();//<-without ValidNumber concept, it just ASSUMES the class has the hi method
+                //without the compiler warning us whatsoever
+    }
+};
+namespace newasm
+{
+    namespace __
+    {
+        int main()
+        {
+            //C++ HAS TO BE JOKEEEE
+            ConstructorTest<Two> omg;
+            return 0;
+        }
+    }
+}
