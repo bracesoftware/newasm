@@ -16,8 +16,8 @@ namespace newasm::Drivers::FileSystem_V
 
     inline std::vector<FileEntry> get_file_table(newasm::hardware::DISK_& disk)
     {
-        std::vector<FileEntry> table(MAX_FILES);
-        std::string raw = disk.readDisk_(0, sizeof(FileEntry) * MAX_FILES);
+        std::vector<FileEntry> table(newasm::Drivers::FileSystem_V::MAX_FILES);
+        std::string raw = disk.readDisk_(0, sizeof(FileEntry) * newasm::Drivers::FileSystem_V::MAX_FILES);
         if(!raw.empty())
         {
             std::memcpy(table.data(), raw.data(), raw.size());
@@ -26,12 +26,11 @@ namespace newasm::Drivers::FileSystem_V
     }
     inline void save_file_table(newasm::hardware::DISK_& disk, const std::vector<FileEntry>& table)
     {
-        std::string buffer(sizeof(FileEntry) * MAX_FILES, '\0');
+        std::string buffer(sizeof(FileEntry) * newasm::Drivers::FileSystem_V::MAX_FILES, '\0');
         std::memcpy(&buffer[0], table.data(), buffer.size());
         disk.writeToDisk(0, buffer.size(), buffer);
         return;
     }
-
     inline bool EXISTS(newasm::hardware::DISK_& disk, const std::string& name)
     {
         auto table = get_file_table(disk);
@@ -44,7 +43,6 @@ namespace newasm::Drivers::FileSystem_V
         }
         return false;
     }
-
     inline void MKFILE(newasm::hardware::DISK_& disk, const std::string& name, const std::string& content)
     {
         auto table = get_file_table(disk);
@@ -79,11 +77,10 @@ namespace newasm::Drivers::FileSystem_V
         }
         return;
     }
-
     void RMFILE(newasm::hardware::DISK_& disk, const std::string& name)
     {
         auto table = get_file_table(disk);
-        for(int i = 0; i < MAX_FILES; ++i)
+        for(int i = 0; i < newasm::Drivers::FileSystem_V::MAX_FILES; ++i)
         {
             if(table[i].exists && std::string(table[i].name) == name)
             {
@@ -93,7 +90,6 @@ namespace newasm::Drivers::FileSystem_V
             }
         }
     }
-
     inline std::string READFILE(newasm::hardware::DISK_& disk, const std::string& name)
     {
         auto table = get_file_table(disk);
@@ -108,12 +104,11 @@ namespace newasm::Drivers::FileSystem_V
         
         return "";
     }
-
     inline void MODFILE(newasm::hardware::DISK_& disk, const std::string& name, const std::string& content)
     {
         auto table = get_file_table(disk);
         
-        for(int i = 0; i < MAX_FILES; ++i)
+        for(int i = 0; i < newasm::Drivers::FileSystem_V::MAX_FILES; ++i)
         {
             if(table[i].exists && std::string(table[i].name) == name)
             {
@@ -138,7 +133,7 @@ namespace newasm::Drivers::FileSystem_V
     inline void APPTOFILE(newasm::hardware::DISK_& disk, const std::string& name, const std::string& content)
     {
         std::string old = READFILE(disk, name);
-        MODFILE(disk, name, old + content)
+        MODFILE(disk, name, old + content);
         return;
     }
 }
