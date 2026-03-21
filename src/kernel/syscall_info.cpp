@@ -28,14 +28,14 @@ namespace newasm
             {{newasm::core::lang_inf::refs::ios, 7}, "sys_write_char"},
             {{newasm::core::lang_inf::refs::ios, 8}, "sys_input_char"},
 
-            {{newasm::core::lang_inf::refs::fs, 1}, "sys_mkdir"},
-            {{newasm::core::lang_inf::refs::fs, 2}, "sys_rmdir"},
-            {{newasm::core::lang_inf::refs::fs, 3}, "sys_mkfile"},
-            {{newasm::core::lang_inf::refs::fs, 4}, "sys_rmfile"},
-            {{newasm::core::lang_inf::refs::fs, 5}, "sys_overwrite"},
-            {{newasm::core::lang_inf::refs::fs, 6}, "sys_append"},
-            {{newasm::core::lang_inf::refs::fs, 7}, "sys_clear"},
-            {{newasm::core::lang_inf::refs::fs, 8}, "sys_readline"},
+            {{newasm::core::lang_inf::refs::fs, 1}, "sys_host_mkdir"},
+            {{newasm::core::lang_inf::refs::fs, 2}, "sys_host_rmdir"},
+            {{newasm::core::lang_inf::refs::fs, 3}, "sys_host_mkfile"},
+            {{newasm::core::lang_inf::refs::fs, 4}, "sys_host_rmfile"},
+            {{newasm::core::lang_inf::refs::fs, 5}, "sys_host_overwrite"},
+            {{newasm::core::lang_inf::refs::fs, 6}, "sys_host_append"},
+            {{newasm::core::lang_inf::refs::fs, 7}, "sys_host_clear"},
+            {{newasm::core::lang_inf::refs::fs, 8}, "sys_host_readline"},
 
             {{newasm::core::lang_inf::refs::thread, 1}, "sys_cout_thread"},
             {{newasm::core::lang_inf::refs::thread, 2}, "sys_fetch_retf"},
@@ -93,7 +93,9 @@ namespace newasm
 
             {{newasm::core::lang_inf::refs::crypto, 1}, "sys_crypto_sha256"},
             {{newasm::core::lang_inf::refs::crypto, 2}, "sys_crypto_xor_enc"},
-            {{newasm::core::lang_inf::refs::crypto, 3}, "sys_crypto_xor_dec"}
+            {{newasm::core::lang_inf::refs::crypto, 3}, "sys_crypto_xor_dec"},
+
+            {{NewASM::core::lang_inf::refs::fs_vdsk, 1}, "sys_vdsk__"}
         };
     }
 }
