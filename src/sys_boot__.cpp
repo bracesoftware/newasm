@@ -36,7 +36,7 @@ namespace newasm::bootloader
         auto& dsk = NewASM::hardware::Disk;
         if(!NewASM::Drivers::FileSystem_V::EXISTS(dsk, "hi.txt"))
         {
-            NewASM::Drivers::FileSystem_V::MAKEFILE(dsk, "hi.txt");
+            NewASM::Drivers::FileSystem_V::MKFILE(dsk, "hi.txt");
         }
         NewASM::Drivers::FileSystem_V::APPTOFILE(dsk, "hi.txt", "Hello!\n");
         auto content = NewASM::Drivers::FileSystem_V::READFILE(dsk, "hi.txt");

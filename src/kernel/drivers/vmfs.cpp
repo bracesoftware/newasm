@@ -47,7 +47,7 @@ namespace newasm::Drivers::FileSystem_V
         }
         return false;
     }
-    inline void MKFILE(newasm::hardware::DISK_& disk, const std::string& name, const std::string& content)
+    inline void MKFILE(newasm::hardware::DISK_& disk, const std::string& name, const std::string& content)//creditz stackoverflow
     {
         auto table = get_file_table(disk);
         int table_size_bytes = sizeof(FileEntry) * newasm::Drivers::FileSystem_V::MAX_FILES;
@@ -108,7 +108,7 @@ namespace newasm::Drivers::FileSystem_V
         
         return "";
     }
-    inline void MODFILE(newasm::hardware::DISK_& disk, const std::string& name, const std::string& content)
+    inline void MODFILE(newasm::hardware::DISK_& disk, const std::string& name, const std::string& content)//credits stackoverflow
     {
         auto table = get_file_table(disk);
         
@@ -116,18 +116,18 @@ namespace newasm::Drivers::FileSystem_V
         {
             if(table[i].exists && std::string(table[i].name) == name)
             {
-                if(new_content.size() <= (size_t)table[i].size)
+                if(content.size() <= (size_t)table[i].size)
                 {
-                    disk.writeToDisk(table[i].start_pos, table[i].start_pos + new_content.size(), new_content);
+                    disk.writeToDisk(table[i].start_pos, table[i].start_pos + content.size(), content);
                     
-                    table[i].size = new_content.size();
+                    table[i].size = content.size();
                     save_file_table(disk, table);
                     return;
                 }
                 else
                 {
                     RMFILE(disk, name);
-                    MKFILE(disk, name, new_content);
+                    MKFILE(disk, name, content);
                     return;
                 }
             }
