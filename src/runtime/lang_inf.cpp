@@ -260,12 +260,14 @@ namespace newasm
                 constinit const int misc = 14;
                 constinit const int crypto = 15;
                 constinit const int ctx = 16;
+                constinit const int fs_vdsk = 17;
 
                 const std::unordered_map<int, std::string> identifiers__ = {
                     {ios, "ios"},
                     {ext, "ext"},
                     {cmanip, "cmanip"},
-                    {fs, "fs"},
+                    {fs, "fs/host"},
+                    {fs_vdsk, "fs/vdsk"},
                     {txtop, "txtop"},
                     {net, "net"},
                     {mem, "mem"},
@@ -285,11 +287,15 @@ namespace newasm
                 const int using__ = 1;
                 const int def__ = 2;
                 const int link__ = 3;
+                const int pragma__ = 4;
+                const int undef__ = 5;
 
                 const std::unordered_map<int, std::string> identifiers__ = {
                     {using__, "using"},
                     {def__, "def"},
-                    {link__, "link"}
+                    {link__, "link"},
+                    {pragma__, "pragma"},
+                    {undef__, "undef"}
                 };
             }
 

@@ -5531,6 +5531,21 @@ namespace newasm
                         newasm::header::data::module = newasm::core::lang_inf::refs::ctx;
                         return 1;
                     }
+                    case newasm::core::lang_inf::refs::fs_vdsk:
+                    {
+                        if(!newasm::kernel::cfg::FileStream_VDSK)
+                        {
+                            newasm::terminate(newasm::exit_codes::sysenter_fail);
+                            return 1;
+                        }
+                        if(newasm::thread_line)
+                        {
+                            newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::fs_vdsk;
+                            return 1;
+                        }
+                        newasm::header::data::module = newasm::core::lang_inf::refs::fs_vdsk;
+                        return 1;
+                    }
                     default:
                     {
                         newasm::terminate(newasm::exit_codes::os_error);

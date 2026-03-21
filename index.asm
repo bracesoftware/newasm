@@ -9,7 +9,7 @@ link "test/g.asm"
     ;cls
 :startofprog
 using "ios"
-using "fs"
+using "fs/host"
 using "chrono"
 using "cmanip"
 using "mem"
@@ -748,7 +748,7 @@ nop
     mov   stl , 0c1
     syscall   
 
-    sysenter "fs"
+    sysenter "fs/host"
     mov   tlr , "unique_ptrtest"
     mov   fdx , 1
     syscall 
@@ -2436,6 +2436,10 @@ pragma errtest
 
     ;mov tlr, $-&testStringMan
     ;call std::ios::writeln
+    using "fs/vdsk"
+    mov fdx, 1
+    sysenter "fs/vdsk"
+    syscall
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     mov tlr, 223
     ret *tlr

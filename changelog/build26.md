@@ -18,6 +18,7 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 ## What's new or changed?
 
 + Added the `undef` compile-time instruction used to undefine symbols declared with `def`.
++ Divided the `fs` kernel/host services module into two submodules; `fs/host`, used for interacting with the host machine's files and `fs/vdsk`, used for interacting with the virtual disk.
 
 ## Fixed issues
 
