@@ -1,9 +1,9 @@
 // Copyright (c) 2026 Brace Software Co.
 // NewASM Virtual Machine and Toolchain
 
-#define __newasm_MEMORY_SIZE 10 // mb
-#define __newasm_DISK_SIZE 20 // mb
-#define __newasm_CACHE_LINES 1024 //8KB since line is 8bytes
+#define __newasm_MEMORY_SIZE 10 // MiB
+#define __newasm_DISK_SIZE 20 // MiB
+#define __newasm_CACHE_LINES 1024 //8KiB since line is 8bytes
 
 // funcs
 #define __newasm_B_TO_KB(val)   ((val) / 1024.0)
