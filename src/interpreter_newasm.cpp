@@ -1311,7 +1311,9 @@ namespace newasm
         newasm::project_data::impl::setup_proj(newasm::header::settings::script_file);
         newasm::hardware::randAccessMem.init();
         EMPTYLINE;
-        newasm::header::functions::info("Sucessfully allocated 10 MiB of random access memory.");
+        newasm::header::functions::finfo("Sucessfully allocated %i MiB of random access memory.", __newasm_MEMORY_SIZE);
+        NewASM::hardware::Disk.init();
+        newasm::header::functions::finfo("Sucessfully allocated %i MiB of virtual disk space.", __newasm_DISK_SIZE);
         newasm::header::functions::info(
             static_cast<std::string>("Preparing to execute: ") + newasm::header::col::yellow +
             newasm::project_data::name + static_cast<std::string>(" ") + newasm::project_data::version

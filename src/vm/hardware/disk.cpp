@@ -13,6 +13,7 @@ namespace newasm
         newasm::core::constants::separator + newasm::core::constants::disk_file;
         class DISK_ final
         {
+            using string = std::string;
             private std::string path;
             int size;
             std::string volume_label;
@@ -33,9 +34,15 @@ namespace newasm
                 }
             }
 
-            std::string get_label()
+            public string get_label()
             {
                 return this->volume_label;
+            }
+
+            public inline void init()
+            {
+                //just for idk
+                return;
             }
 
             inline void format(int size_)
