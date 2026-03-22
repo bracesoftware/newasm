@@ -1408,6 +1408,12 @@ namespace newasm
                         NewASM::terminate(NewASM::exit_codes::kernel_panic);
                         return 1;
                     }
+                    if(GetFreePos(NewASM::hardware::Disk, STL.size()) == FILE_TABLE_POS)
+                    {
+                        NewASM::header::functions::err("Permission denied. Not enough space on disk.");
+                        NewASM::terminate(NewASM::exit_codes::kernel_panic);
+                        return 1;
+                    }
                     MKFILE(NewASM::hardware::Disk, TLR, STL);
                     return 1;
                 }
