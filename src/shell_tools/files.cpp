@@ -68,6 +68,7 @@ namespace newasm
                 unsigned int file_usage = 0;
                 for(int i = 0; i < table.size(); ++i)
                 {
+                    if(table[i].pos == FILE_TABLE_POS) continue;
                     file_usage += table[i].size;
                 }
                 file_usage += GetMaxFiles() * sizeof(FILE);

@@ -158,6 +158,7 @@ namespace newasm::Drivers::FileSystem_V
         {
             if(table[i].pos == FILE_TABLE_POS)//it does NOT exist
             {
+                std::memset(table[i].name, 0, __newasm_MAX_FILENAME_LEN);
                 std::memcpy(table[i].name, name.data(), name.size());
                 table[i].size = content.size();
                 table[i].pos = NewASM::Drivers::FileSystem_V::GetFreePos(disk, content.size());
