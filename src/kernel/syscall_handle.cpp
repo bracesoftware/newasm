@@ -1374,6 +1374,7 @@ namespace newasm
                     if(!NewASM::header::functions::isalphanum(TLR))
                     {
                         NewASM::header::functions::err("Permission denied. File names have to be alphanumeric!");
+                        NewASM::terminate(NewASM::exit_codes::kernel_panic);
                         return 1;
                     }
                     if(newasm::ctl::data::path.size() > 1)
@@ -1398,6 +1399,13 @@ namespace newasm
                     if(EXISTS(NewASM::hardware::Disk, TLR))
                     {
                         NewASM::header::functions::err("File already exists.");
+                        NewASM::terminate(NewASM::exit_codes::kernel_panic);
+                        return 1;
+                    }
+                    if(TLR.size() >= __newasm_MAX_FILENAME_LEN)
+                    {
+                        NewASM::header::functions::err("Permission denied. File name exceeds a limit of 128 characters!");
+                        NewASM::terminate(NewASM::exit_codes::kernel_panic);
                         return 1;
                     }
                     MKFILE(NewASM::hardware::Disk, TLR, STL);
@@ -1436,6 +1444,7 @@ namespace newasm
                     if(!EXISTS(NewASM::hardware::Disk, TLR))
                     {
                         NewASM::header::functions::err("File does not exist.");
+                        NewASM::terminate(NewASM::exit_codes::kernel_panic);
                         return 1;
                     }
                     RMFILE(NewASM::hardware::Disk, TLR);
@@ -1492,6 +1501,7 @@ namespace newasm
                     if(!NewASM::header::functions::isalphanum(TLR))
                     {
                         NewASM::header::functions::err("Permission denied. File names have to be alphanumeric!");
+                        NewASM::terminate(NewASM::exit_codes::kernel_panic);
                         return 1;
                     }
 

@@ -51,10 +51,6 @@ namespace newasm::Drivers::FileSystem_V
     }
     FORCE_INLINE inline void SaveFileTable(DISK& disk, const FILE_TABLE& table)
     {
-        auto t = table;
-        std::sort(t.begin(), t.end(), [](const auto& a, const auto& b) -> bool {
-            return a.pos < b.pos;
-        });
         std::string buf(sizeof(FILE) * NewASM::Drivers::FileSystem_V::GetMaxFiles(), '\0');
         std::memcpy(&buf[0], t.data(), buf.size());
         disk.WRITE_DSK(0, buf);
@@ -97,13 +93,13 @@ namespace newasm::Drivers::FileSystem_V
         {
             std::vector<std::pair<DISK_POS, DISK_POS>> pairs;
             auto table = GetFileTable(disk);
-            std::sort(table.begin(), table.end(), [](const auto& a, const auto& b) -> bool {
-                return a.pos < b.pos;
-            });
             for(int i = 0; i < table.size(); ++i)
             {
                 pairs.push_back({table[i].pos, table[i].pos + table[i].size});
             }
+            std::sort(pairs.begin(), pairs.end(), [](const auto& a, const auto& b) -> bool {
+                return a.first < b.first;
+            });
             if(pairs.size() == 1)
             {
                 return pairs.front().second + 1;
@@ -152,6 +148,10 @@ namespace newasm::Drivers::FileSystem_V
     inline void MKFILE(DISK& disk, FILE_NAME name, const std::string& content)
     {
         using namespace NewASM::Drivers::FileSystem_V;
+        if(name.size() >= __newasm_MAX_FILENAME_LEN)
+        {
+            return;
+        }
         FILE_TABLE table = GetFileTable(disk);
         for(int i = 0; i < table.size(); ++i)
         {

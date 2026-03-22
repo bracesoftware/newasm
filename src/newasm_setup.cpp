@@ -83,6 +83,7 @@ namespace newasm
         const int invalid_init = 55;
         const int linker_err = 56;
         const int jit_fail = 57;
+        const int kernel_panic = 58;
 
         const std::unordered_map<int, std::string> identifier = {
             {noterm_point, "NoTerminationPoint"},
@@ -142,7 +143,8 @@ namespace newasm
             {invalid_alloc, "InvalidAlloc"},
             {invalid_init, "InvalidVarInitializer"},
             {linker_err, "LinkerError"},
-            {jit_fail, "JITCompilerFailure"}
+            {jit_fail, "JITCompilerFailure"},
+            {kernel_panic, "KernelPanicOrSysCrash"}
         };
     }
     namespace cmp_results
