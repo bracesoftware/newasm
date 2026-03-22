@@ -33,7 +33,7 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 
 ## Fixed issues
 
-- No issues were found.
++ Fixed issue #25: the `repl` command could not be executed more than once due to garbage compiler data.
 
 ## Important notes
 
