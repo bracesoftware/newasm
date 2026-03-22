@@ -2437,13 +2437,15 @@ pragma errtest
     ;mov tlr, defineTest ; runtime error
     call std::ios::writeln
     ;undef pdns ; compile time error
-
+jmp 2349083l
     ;mov tlr, $-&testStringMan
     ;call std::ios::writeln
     using "fs/vdsk"
     mov fdx, 1
+    mov tlr, "file1"
     sysenter "fs/vdsk"
     syscall
+    :2349083l
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     mov tlr, 223
     ret *tlr

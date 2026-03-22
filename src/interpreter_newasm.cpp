@@ -15,8 +15,8 @@ namespace newasm
 {
     inline void enable_ansi() noexcept;
     inline constinit const int BUILD_NUMBER = 26;
-    inline constinit const int RUNTIME_VERSION = 10;
-    inline constinit const int KERNEL_VERSION = 5;
+    inline constinit const int RUNTIME_VERSION = 11;
+    inline constinit const int KERNEL_VERSION = 6;
 }
 
 namespace SYS = newasm;
@@ -990,6 +990,11 @@ namespace newasm
             newasm::expcfg::transientbool = false;
             newasm::expcfg::volatilebool = false;
             newasm::expcfg::lockbool = false;
+
+            //cleanup compiler data for REPL in shell
+            newasm::compiler::data::symbol_map.clear();
+            newasm::compiler::data::namespace_stack.clear();
+            newasm::compiler::data::sealed_labels.clear();
             return;
         }
     }
