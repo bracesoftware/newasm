@@ -81,8 +81,9 @@ namespace newasm
                 {
                     return std::string("");
                 }
-
+                if(end <= start) return "";
                 std::streamsize size = end - start;
+
                 file.seekg(start);
                 if(!file)
                 {
@@ -121,7 +122,11 @@ namespace newasm
 
             inline void WRITE_DSK(int addr, const std::string& content)//wrapper for vmfs
             {
-                this->writeToDisk(addr, addr + content.size(), content);
+                std::fstream file(this->path, std::ios::in | std::ios::out | std::ios::binary);
+
+                file.seekp(addr);
+                file.write(content.data(), content.size());
+                file.close();
                 return;
             }
 
@@ -133,6 +138,7 @@ namespace newasm
                 int start = pos;
                 int end = pos + 1;
                 char ret;
+                if(end <= start) return '\0';
 
                 std::streamsize size = end - start;
                 file.seekg(start);

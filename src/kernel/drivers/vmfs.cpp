@@ -52,7 +52,7 @@ namespace newasm::Drivers::FileSystem_V
     FORCE_INLINE inline void SaveFileTable(DISK& disk, const FILE_TABLE& table)
     {
         std::string buf(sizeof(FILE) * NewASM::Drivers::FileSystem_V::GetMaxFiles(), '\0');
-        std::memcpy(&buf[0], t.data(), buf.size());
+        std::memcpy(&buf[0], table.data(), buf.size());
         disk.WRITE_DSK(0, buf);
         return;
     }
@@ -84,17 +84,18 @@ namespace newasm::Drivers::FileSystem_V
             }
             return files;
         };
-        if(GetFiles__L(disk) == 0)
+        DISK_POS files = GetFiles__L(disk);
+        if(files == 0)
         {
             return NewASM::Drivers::FileSystem_V::GetFileTableEnd();
         }
-        DISK_POS files = GetFiles__L(disk);
         if(files > 0)
         {
             std::vector<std::pair<DISK_POS, DISK_POS>> pairs;
             auto table = GetFileTable(disk);
             for(int i = 0; i < table.size(); ++i)
             {
+                if(table[i].pos == FILE_TABLE_POS) continue;
                 pairs.push_back({table[i].pos, table[i].pos + table[i].size});
             }
             std::sort(pairs.begin(), pairs.end(), [](const auto& a, const auto& b) -> bool {
@@ -102,7 +103,7 @@ namespace newasm::Drivers::FileSystem_V
             });
             if(pairs.size() == 1)
             {
-                return pairs.front().second + 1;
+                return pairs.front().second;
             }
             int PairSize = pairs.size();
             for(int i = 0; i < PairSize; ++i)
@@ -111,21 +112,21 @@ namespace newasm::Drivers::FileSystem_V
                 {
                     if(pairs.front().first - NewASM::Drivers::FileSystem_V::GetFileTableEnd() >= size)
                     {
-                        return NewASM::Drivers::FileSystem_V::GetFileTableEnd() + 1;
+                        return NewASM::Drivers::FileSystem_V::GetFileTableEnd();
                     }
                     continue;
                 }
                 if(i == PairSize - 1)
                 {
-                    if((__newasm_DISK_SIZE * 1024 * 1024 - 1) - pairs.back().second >= size)
+                    if((__newasm_DISK_SIZE * 1024 * 1024) - pairs.back().second >= size)
                     {
-                        return pairs.back().second + 1;
+                        return pairs.back().second;
                     }
                     continue;
                 }
                 if(pairs.at(i + 1).first - pairs.at(i).second >= size)
                 {
-                    return pairs.at(i).second + 1;
+                    return pairs.at(i).second;
                 }
                 continue;
             }

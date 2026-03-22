@@ -37,6 +37,24 @@ namespace newasm
                 }
                 return files;
             };
+            auto GetTotalDiskUsage__L = [&]() -> DISK_POS {
+                auto& disk = NewASM::hardware::Disk;
+                std::vector<std::pair<DISK_POS, DISK_POS>> pairs;
+                auto table = GetFileTable(disk);
+                for(int i = 0; i < table.size(); ++i)
+                {
+                    if(table[i].pos == FILE_TABLE_POS) continue;
+                    pairs.push_back({table[i].pos, table[i].pos + table[i].size});
+                }
+                std::sort(pairs.begin(), pairs.end(), [](const auto& a, const auto& b) -> bool {
+                    return a.first < b.first;
+                });
+                if(pairs.empty())
+                {
+                    return FILE_TABLE_POS;
+                }
+                return pairs.back().second;
+            };
             auto PATH = format_path();
             unsigned int found_files = 0;
             FILE_TABLE table = GetFileTable(NewASM::hardware::Disk);
@@ -47,14 +65,18 @@ namespace newasm
             }
             if(GetFiles__L(NewASM::hardware::Disk) > 0) if(path.size() == 1)
             {
-                unsigned int usage = 0;
+                unsigned int file_usage = 0;
                 for(int i = 0; i < table.size(); ++i)
                 {
-                    usage += table[i].size;
+                    file_usage += table[i].size;
                 }
-                usage += GetMaxFiles() * sizeof(FILE);
+                file_usage += GetMaxFiles() * sizeof(FILE);
+                static unsigned int table_size = GetMaxFiles() * sizeof(FILE);
                 std::cout << NewASM::header::col::gray;
-                std::cout << "\t" << NewASM::header::style::underline << "Total disk usage: " << usage << " B" << std::endl;
+                std::cout << "\t" << "Files: " << file_usage - table_size << " B" << std::endl;
+                std::cout << "\t" << "FT size: " << table_size << " B" << std::endl;
+                std::cout << "\t" << "Fragmentation waste: " << GetTotalDiskUsage__L() - file_usage << " B" << std::endl;
+                std::cout << "\t" << NewASM::header::style::underline << "Total disk usage: " << GetTotalDiskUsage__L() << " B" << std::endl;
                 std::cout << NewASM::header::col::reset;
             }
             if(GetFiles__L(NewASM::hardware::Disk) > 0) for(int i = 0; i < table.size(); ++i)
