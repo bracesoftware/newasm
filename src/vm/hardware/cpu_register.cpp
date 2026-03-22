@@ -341,6 +341,7 @@ namespace newasm
             this->value = new_val;
             return;
         }
+        
         inline T& ref_value()
         {
             if(newasm::thread_line)
@@ -464,7 +465,15 @@ namespace newasm
             value = ss.str();
             return;
         }
-
+        inline void SetStringValue(const std::string& value)
+        {
+            if constexpr(std::is_same_v<T, std::string>)
+            {
+                this->set_value(value);
+                this->add_end_("\"");
+            }
+            return;
+        }
     };
 
 /*

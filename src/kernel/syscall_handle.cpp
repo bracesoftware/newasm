@@ -1514,6 +1514,101 @@ namespace newasm
                     NewASM::files::CD(TLR);
                     return 1;
                 }
+                case NewASM::kernel::makeHash(NewASM::core::lang_inf::refs::fs_vdsk, 5): //read file
+                {
+                    if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+            
+                    auto TLR = NewASM::header::functions::remq(newasm::mem::regs::tlr);
+                    using namespace NewASM::Drivers::FileSystem_V;
+                    if(!EXISTS(NewASM::hardware::Disk, TLR))
+                    {
+                        NewASM::header::functions::err("No such file was found for reading!");
+                        NewASM::terminate(NewASM::exit_codes::kernel_panic);
+                        return 1;
+                    }
+                    std::string contents = READFILE(NewASM::hardware::Disk, TLR);
+                    newasm::mem::regs::tlr.SetStringValue(contents);
+                    return 1;
+                }
+                case NewASM::kernel::makeHash(NewASM::core::lang_inf::refs::fs_vdsk, 6): //modify file
+                {
+                    if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    if(!newasm::header::functions::istext(newasm::mem::regs::stl))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+            
+                    auto TLR = NewASM::header::functions::remq(newasm::mem::regs::tlr);
+                    auto STL = NewASM::header::functions::remq(newasm::mem::regs::stl);
+                    using namespace NewASM::Drivers::FileSystem_V;
+                    if(!EXISTS(NewASM::hardware::Disk, TLR))
+                    {
+                        NewASM::header::functions::err("No such file was found for modifying!");
+                        NewASM::terminate(NewASM::exit_codes::kernel_panic);
+                        return 1;
+                    }
+                    MODFILE(NewASM::hardware::Disk, TLR, STL);
+                    return 1;
+                }
+                case NewASM::kernel::makeHash(NewASM::core::lang_inf::refs::fs_vdsk, 7): //append to file
+                {
+                    if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+                    if(!newasm::header::functions::istext(newasm::mem::regs::stl))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+            
+                    auto TLR = NewASM::header::functions::remq(newasm::mem::regs::tlr);
+                    auto STL = NewASM::header::functions::remq(newasm::mem::regs::stl);
+                    using namespace NewASM::Drivers::FileSystem_V;
+                    if(!EXISTS(NewASM::hardware::Disk, TLR))
+                    {
+                        NewASM::header::functions::err("No such file was found for appending to!");
+                        NewASM::terminate(NewASM::exit_codes::kernel_panic);
+                        return 1;
+                    }
+                    APPTOFILE(NewASM::hardware::Disk, TLR, STL);
+                    return 1;
+                }
+                case NewASM::kernel::makeHash(NewASM::core::lang_inf::refs::fs_vdsk, 8): //print file contents
+                {
+                    if(!newasm::header::functions::istext(newasm::mem::regs::tlr))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
+                        return 1;
+                    }
+            
+                    auto TLR = NewASM::header::functions::remq(newasm::mem::regs::tlr);
+                    using namespace NewASM::Drivers::FileSystem_V;
+                    if(!EXISTS(NewASM::hardware::Disk, TLR))
+                    {
+                        NewASM::header::functions::err("No such file was found for reading!");
+                        NewASM::terminate(NewASM::exit_codes::kernel_panic);
+                        return 1;
+                    }
+                    std::string contents = READFILE(NewASM::hardware::Disk, TLR);
+                    if(newasm::thread_line)
+                    {
+                        newasm::threads::memory.at(newasm::threads::now)->output << contents;
+                        return 1;
+                    }
+                    NewASM::Console::out(contents);
+                    return 1;
+                }
                 default:
                 {
                     newasm::terminate(newasm::exit_codes::unknown_fdx);
