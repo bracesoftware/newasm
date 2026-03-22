@@ -25,7 +25,11 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 | `fs/vdsk` | `1` | `tlr`, `stl` | Create a file named `tlr`, with content in `stl`. |
 | `fs/vdsk` | `2` | `tlr` | Remove a file named `tlr`. |
 | `fs/vdsk` | `3` | `tlr` | Check if a file named `tlr` exists. |
-| `fs/vdsk` | `4` | `tlr`| Create a directory or advance into that directory, go back with `..`. |
+| `fs/vdsk` | `4` | `tlr` | Create a directory or advance into that directory, go back with `..`. |
+| `fs/vdsk` | `5` | `tlr` | Reads a file named in `tlr` and stores the data in `tlr`. |
+| `fs/vdsk` | `6` | `tlr`, `stl` | Opens a file named in `tlr` and stores the data stored in `stl` into the file. |
+| `fs/vdsk` | `7` | `tlr`, `stl` | Reads a file named in `tlr` and appends the data stored in `stl` into the file. |
+| `fs/vdsk` | `8` | `tlr` | Reads a file named in `tlr` and prints the contents of the file. |
 
 ## Fixed issues
 
