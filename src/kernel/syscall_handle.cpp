@@ -1373,7 +1373,7 @@ namespace newasm
                     auto TLR = NewASM::header::functions::remq(newasm::mem::regs::tlr);
                     if(!NewASM::header::functions::isalphanum(TLR))
                     {
-                        NewASM::header::functions::err("Permission denied. File names have to be alphanumeric!");
+                        NewASM::header::functions::krnl("Permission denied. File names have to be alphanumeric!");
                         NewASM::terminate(NewASM::exit_codes::kernel_panic);
                         return 1;
                     }
@@ -1382,19 +1382,19 @@ namespace newasm
                     TLR = NewASM::files::ResolveName(TLR);
                     if(EXISTS(NewASM::hardware::Disk, TLR))
                     {
-                        NewASM::header::functions::err("File already exists.");
+                        NewASM::header::functions::krnl("File already exists.");
                         NewASM::terminate(NewASM::exit_codes::kernel_panic);
                         return 1;
                     }
                     if(TLR.size() >= __newasm_MAX_FILENAME_LEN)
                     {
-                        NewASM::header::functions::err("Permission denied. File name exceeds a limit of 128 characters!");
+                        NewASM::header::functions::krnl("Permission denied. File name exceeds a limit of 128 characters!");
                         NewASM::terminate(NewASM::exit_codes::kernel_panic);
                         return 1;
                     }
                     if(GetFreePos(NewASM::hardware::Disk, STL.size()) == FILE_TABLE_POS)
                     {
-                        NewASM::header::functions::err("Permission denied. Not enough space on disk.");
+                        NewASM::header::functions::krnl("Permission denied. Not enough space on disk.");
                         NewASM::terminate(NewASM::exit_codes::kernel_panic);
                         return 1;
                     }
@@ -1417,7 +1417,7 @@ namespace newasm
                     TLR = NewASM::files::ResolveName(TLR);
                     if(!EXISTS(NewASM::hardware::Disk, TLR))
                     {
-                        NewASM::header::functions::err("File does not exist.");
+                        NewASM::header::functions::krnl("File does not exist.");
                         NewASM::terminate(NewASM::exit_codes::kernel_panic);
                         return 1;
                     }
@@ -1458,7 +1458,7 @@ namespace newasm
                     auto TLR = NewASM::header::functions::remq(newasm::mem::regs::tlr);
                     if(!NewASM::header::functions::isalphanum(TLR))
                     {
-                        NewASM::header::functions::err("Permission denied. File names have to be alphanumeric!");
+                        NewASM::header::functions::krnl("Permission denied. File names have to be alphanumeric!");
                         NewASM::terminate(NewASM::exit_codes::kernel_panic);
                         return 1;
                     }
@@ -1479,7 +1479,7 @@ namespace newasm
                     TLR = NewASM::files::ResolveName(TLR);
                     if(!EXISTS(NewASM::hardware::Disk, TLR))
                     {
-                        NewASM::header::functions::err("No such file was found for reading!");
+                        NewASM::header::functions::krnl("No such file was found for reading!");
                         NewASM::terminate(NewASM::exit_codes::kernel_panic);
                         return 1;
                     }
@@ -1506,7 +1506,7 @@ namespace newasm
                     TLR = NewASM::files::ResolveName(TLR);
                     if(!EXISTS(NewASM::hardware::Disk, TLR))
                     {
-                        NewASM::header::functions::err("No such file was found for modifying!");
+                        NewASM::header::functions::krnl("No such file was found for modifying!");
                         NewASM::terminate(NewASM::exit_codes::kernel_panic);
                         return 1;
                     }
@@ -1532,7 +1532,7 @@ namespace newasm
                     TLR = NewASM::files::ResolveName(TLR);
                     if(!EXISTS(NewASM::hardware::Disk, TLR))
                     {
-                        NewASM::header::functions::err("No such file was found for appending to!");
+                        NewASM::header::functions::krnl("No such file was found for appending to!");
                         NewASM::terminate(NewASM::exit_codes::kernel_panic);
                         return 1;
                     }
@@ -1552,7 +1552,7 @@ namespace newasm
                     TLR = NewASM::files::ResolveName(TLR);
                     if(!EXISTS(NewASM::hardware::Disk, TLR))
                     {
-                        NewASM::header::functions::err("No such file was found for reading!");
+                        NewASM::header::functions::krnl("No such file was found for reading!");
                         NewASM::terminate(NewASM::exit_codes::kernel_panic);
                         return 1;
                     }
