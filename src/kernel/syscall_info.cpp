@@ -95,7 +95,14 @@ namespace newasm
             {{newasm::core::lang_inf::refs::crypto, 2}, "sys_crypto_xor_enc"},
             {{newasm::core::lang_inf::refs::crypto, 3}, "sys_crypto_xor_dec"},
 
-            {{NewASM::core::lang_inf::refs::fs_vdsk, 1}, "sys_vdsk__"}
+            {{NewASM::core::lang_inf::refs::fs_vdsk, 1}, "sys_vdsk_mkfile"},
+            {{NewASM::core::lang_inf::refs::fs_vdsk, 2}, "sys_vdsk_rmfile"},
+            {{NewASM::core::lang_inf::refs::fs_vdsk, 3}, "sys_vdsk_fexist"},
+            {{NewASM::core::lang_inf::refs::fs_vdsk, 4}, "sys_vdsk_cd"},
+            {{NewASM::core::lang_inf::refs::fs_vdsk, 5}, "sys_vdsk_readfile"},
+            {{NewASM::core::lang_inf::refs::fs_vdsk, 6}, "sys_vdsk_modfile"},
+            {{NewASM::core::lang_inf::refs::fs_vdsk, 7}, "sys_vdsk_append"},
+            {{NewASM::core::lang_inf::refs::fs_vdsk, 8}, "sys_vdsk_typefile"}
         };
     }
 }
