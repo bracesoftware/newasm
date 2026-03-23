@@ -1377,25 +1377,9 @@ namespace newasm
                         NewASM::terminate(NewASM::exit_codes::kernel_panic);
                         return 1;
                     }
-                    if(newasm::ctl::data::path.size() > 1)
-                    {
-                        auto format_path = [&](const std::vector<std::string>& path) -> std::string {
-                            std::stringstream p;
-                            for(int i = 0; i < path.size(); ++i)
-                            {
-                                p << path[i];
-                                if(i + 1 == path.size())
-                                {
-                                    continue;
-                                }
-                                p << '/';
-                            }
-                            return p.str();
-                        };
-                        TLR = format_path(newasm::ctl::data::path) + TLR;
-                    }
                     auto STL = NewASM::header::functions::remq(newasm::mem::regs::stl);
                     using namespace NewASM::Drivers::FileSystem_V;
+                    TLR = NewASM::files::ResolveName(TLR);
                     if(EXISTS(NewASM::hardware::Disk, TLR))
                     {
                         NewASM::header::functions::err("File already exists.");
@@ -1429,24 +1413,8 @@ namespace newasm
                         return 1;
                     }
                     auto TLR = NewASM::header::functions::remq(newasm::mem::regs::tlr);
-                    if(newasm::ctl::data::path.size() > 1)
-                    {
-                        auto format_path = [&](const std::vector<std::string>& path) -> std::string {
-                            std::stringstream p;
-                            for(int i = 0; i < path.size(); ++i)
-                            {
-                                p << path[i];
-                                if(i + 1 == path.size())
-                                {
-                                    continue;
-                                }
-                                p << '/';
-                            }
-                            return p.str();
-                        };
-                        TLR = format_path(newasm::ctl::data::path) + TLR;
-                    }
                     using namespace NewASM::Drivers::FileSystem_V;
+                    TLR = NewASM::files::ResolveName(TLR);
                     if(!EXISTS(NewASM::hardware::Disk, TLR))
                     {
                         NewASM::header::functions::err("File does not exist.");
@@ -1468,24 +1436,8 @@ namespace newasm
                         return 1;
                     }
                     auto TLR = NewASM::header::functions::remq(newasm::mem::regs::tlr);
-                    if(newasm::ctl::data::path.size() > 1)
-                    {
-                        auto format_path = [&](const std::vector<std::string>& path) -> std::string {
-                            std::stringstream p;
-                            for(int i = 0; i < path.size(); ++i)
-                            {
-                                p << path[i];
-                                if(i + 1 == path.size())
-                                {
-                                    continue;
-                                }
-                                p << '/';
-                            }
-                            return p.str();
-                        };
-                        TLR = format_path(newasm::ctl::data::path) + TLR;
-                    }
                     using namespace NewASM::Drivers::FileSystem_V;
+                    TLR = NewASM::files::ResolveName(TLR);
                     if(!EXISTS(NewASM::hardware::Disk, TLR))
                     {
                         NewASM::mem::regs::rax = 0;
@@ -1524,6 +1476,7 @@ namespace newasm
             
                     auto TLR = NewASM::header::functions::remq(newasm::mem::regs::tlr);
                     using namespace NewASM::Drivers::FileSystem_V;
+                    TLR = NewASM::files::ResolveName(TLR);
                     if(!EXISTS(NewASM::hardware::Disk, TLR))
                     {
                         NewASM::header::functions::err("No such file was found for reading!");
@@ -1550,6 +1503,7 @@ namespace newasm
                     auto TLR = NewASM::header::functions::remq(newasm::mem::regs::tlr);
                     auto STL = NewASM::header::functions::remq(newasm::mem::regs::stl);
                     using namespace NewASM::Drivers::FileSystem_V;
+                    TLR = NewASM::files::ResolveName(TLR);
                     if(!EXISTS(NewASM::hardware::Disk, TLR))
                     {
                         NewASM::header::functions::err("No such file was found for modifying!");
@@ -1575,6 +1529,7 @@ namespace newasm
                     auto TLR = NewASM::header::functions::remq(newasm::mem::regs::tlr);
                     auto STL = NewASM::header::functions::remq(newasm::mem::regs::stl);
                     using namespace NewASM::Drivers::FileSystem_V;
+                    TLR = NewASM::files::ResolveName(TLR);
                     if(!EXISTS(NewASM::hardware::Disk, TLR))
                     {
                         NewASM::header::functions::err("No such file was found for appending to!");
@@ -1594,6 +1549,7 @@ namespace newasm
             
                     auto TLR = NewASM::header::functions::remq(newasm::mem::regs::tlr);
                     using namespace NewASM::Drivers::FileSystem_V;
+                    TLR = NewASM::files::ResolveName(TLR);
                     if(!EXISTS(NewASM::hardware::Disk, TLR))
                     {
                         NewASM::header::functions::err("No such file was found for reading!");

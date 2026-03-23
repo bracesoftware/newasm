@@ -9,21 +9,23 @@ namespace newasm
 {
     namespace files
     {
+        inline std::string PathToString()
+        {
+            std::stringstream p;
+            auto& path = newasm::ctl::data::path;
+            for(int i = 0; i < path.size(); ++i)
+            {
+                p << path[i];
+                if(i + 1 == path.size())
+                {
+                    continue;
+                }
+                p << '/';
+            }
+            return p.str();
+        }
         inline void ListFiles(std::vector<std::string> path)//list all files for a specific path
         {
-            auto format_path = [&]() -> std::string {
-                std::stringstream p;
-                for(int i = 0; i < path.size(); ++i)
-                {
-                    p << path[i];
-                    if(i + 1 == path.size())
-                    {
-                        continue;
-                    }
-                    p << '/';
-                }
-                return p.str();
-            };
             using namespace NewASM::Drivers::FileSystem_V;
             auto GetFiles__L = [&](DISK& dsk) -> DISK_POS {
                 DISK_POS files = 0;
@@ -55,7 +57,7 @@ namespace newasm
                 }
                 return pairs.back().second;
             };
-            auto PATH = format_path();
+            auto PATH = PathToString();
             unsigned int found_files = 0;
             FILE_TABLE table = GetFileTable(NewASM::hardware::Disk);
             EMPTYLINE;
@@ -123,6 +125,26 @@ namespace newasm
             }
             NewASM::ctl::data::path.push_back(dir);
             return;
+        }
+
+        inline std::string ResolveName(const std::string& name)
+        {
+            using namespace NewASM::Drivers::FileSystem_V;
+            if(name.find('/') != std::string::npos)
+            {
+                return name;
+            }
+            auto& path = NewASM::ctl::data::path;
+            int size = path.size();
+            if(size == 1)
+            {
+                return name;
+            }
+            if(size > 1)
+            {
+                return PathToString() + name;
+            }
+            return name;
         }
     }
 }
