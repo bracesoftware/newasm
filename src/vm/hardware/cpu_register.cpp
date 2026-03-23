@@ -380,7 +380,7 @@ namespace newasm
             value = new_val;
             return *this;
         }
-        operator T&()
+        inline operator T&()
         {
             if(newasm::thread_line)
             {
@@ -389,7 +389,7 @@ namespace newasm
             return value;
         }
 
-        operator T() const
+        inline operator T() const
         {
             if(newasm::thread_line)
             {
@@ -397,7 +397,7 @@ namespace newasm
             }
             return value;
         }
-        operator const T&() const
+        inline operator const T&() const
         {
             if(newasm::thread_line)
             {
