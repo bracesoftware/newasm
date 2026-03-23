@@ -12,14 +12,29 @@ namespace newasm
         inline std::string PathToString()
         {
             std::stringstream p;
-            auto& path = newasm::ctl::data::path;
-            for(int i = 0; i < path.size(); ++i)
+            auto& raw_path = newasm::ctl::data::path;
+            std::vector<std::string> path;
+            for(int i = 0; i < raw_path.size(); ++i)
             {
-                p << path[i];
-                if(i + 1 == path.size())
+                if(raw_path[i] == GetEmptyDir__C)
                 {
+                    if(path.empty()) continue;
+                    path.pop_back();
                     continue;
                 }
+                path.push_back(raw_path[i]);
+            }
+            for(int i = 0; i < path.size(); ++i)
+            {
+                #if 0
+                if constexpr(false) if(path[i] == GetEmptyDir__C)
+                {
+                    if(i - 1 < 0) continue;
+                    p.seekp(-(path[i - 1].size() + 1), std::ios_base::end);
+                    continue;
+                }
+                #endif
+                p << path[i];
                 p << '/';
             }
             return p.str();
@@ -89,7 +104,7 @@ namespace newasm
                     if(table[i].pos == FILE_TABLE_POS) continue;
                     ++found_files;
                     std::cout << NewASM::header::col::gray;
-                    std::cout << "\t" << std::string(table[i].name).substr(PATH.size() + 1) << "\t\t" << NewASM::header::col::yellow << table[i].size << " B\n";
+                    std::cout << "\t" << std::string(table[i].name).substr(PATH.size()) << "\t\t" << NewASM::header::col::yellow << table[i].size << " B\n";
                 }
                 if(path.size() == 1)
                 {
@@ -109,7 +124,7 @@ namespace newasm
 
         inline void CD(const std::string& dir)
         {
-            if(dir == "..") //go back
+            if(dir == GetEmptyDir__C) //go back
             {
                 if(newasm::ctl::data::path.size() == 1)
                 {

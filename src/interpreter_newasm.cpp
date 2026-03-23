@@ -14,9 +14,9 @@
 namespace newasm
 {
     inline void enable_ansi() noexcept;
-    inline constinit const int BUILD_NUMBER = 26;
+    inline constinit const int BUILD_NUMBER = 27;
     inline constinit const int RUNTIME_VERSION = 11;
-    inline constinit const int KERNEL_VERSION = 6;
+    inline constinit const int KERNEL_VERSION = 7;
 }
 
 namespace SYS = newasm;
@@ -160,6 +160,8 @@ namespace newasm
     namespace files
     {
         inline void CD(const std::string& dir);
+        inline std::string ResolveName(const std::string& name);
+        constinit const std::string GetEmptyDir__C = "..";
     }
     namespace ctl
     {
