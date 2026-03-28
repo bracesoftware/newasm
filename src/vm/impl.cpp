@@ -125,20 +125,39 @@ namespace newasm
 #elif NEWASM_DEBUG == 0
     #define __newasmDBG_COMPLEX(f__)
 #endif
+namespace newasm
+{
+    struct NullBuffer__ : std::streambuf //so we can mute unnecessary printing in module loading 
+    {
+        int overflow(int c) override
+        {
+            //im actually not using ts
+            return c;
+        }
+    };
+}
 int __newasm__MODULEID = 1;
 #define __newasm_CHECK_JUMP_PROPERLY if(newasm::header::data::repl and not newasm::header::data::proc_now){newasm::unsins(ins);return 1;}
 #define __newasm_LOAD_PACKAGE_MODULE(name, func)        struct \
     __gMOD_INIT_##name final{\
     explicit inline __gMOD_INIT_##name() noexcept{\
-        using namespace std;bool __NEWASM_MODULE_ERR=false;std::string __NEWASM_ERRTEXT;auto __err__NEWASM = [&](const std::string& errtext)->\
-        void {__NEWASM_MODULE_ERR=true;__NEWASM_ERRTEXT=errtext;return;};NewASM::Modules::SetError=__err__NEWASM;\
+        using namespace std;vector<string> __NEWASM_BUFFER;\
+        bool __NEWASM_MODULE_ERR=false;std::string __NEWASM_ERRTEXT;NewASM::BasicFunction __NEWASM_DESTRUCTOR;auto __err__NEWASM = [&](const std::string& errtext)->\
+        void {__NEWASM_MODULE_ERR=true;__NEWASM_ERRTEXT=__NEWASM_ERRTEXT+std::string(" ")+errtext;return;};\
+        auto __printline_NEWASM = [&](const std::string& text)->void{__NEWASM_BUFFER.push_back(text);return;};\
+        auto __setdestruct_NEWASM = [&](NewASM::BasicFunction f)->void{__NEWASM_DESTRUCTOR=f;};\
+        NewASM::Modules::SetError=__err__NEWASM;NewASM::Modules::PrintLine=__printline_NEWASM;\
+        NewASM::Modules::SetDestructor=__setdestruct_NEWASM;\
         auto __##name = [&]() -> void {func};\
         std::cout << newasm::header::col::red << "[  Service " << __newasm__MODULEID << "  ]: " << newasm::header::col::gray << \
         "Virtual machine is setting up module `" << #name << "`... ";\
-        if(!__NEWASM_MODULE_ERR)cout << NewASM::header::col::green << "OK!";\
-        if(__NEWASM_MODULE_ERR)cout<<NewASM::header::col::magenta<< "ERROR!\n";\
-        if(__NEWASM_MODULE_ERR)cout<<NewASM::header::col::red<<"error message: "<<NewASM::header::col::gray<<__NEWASM_ERRTEXT;
-        cout<<endl<< newasm::header::col::reset;__newasm__MODULEID++;__##name();\
+        NewASM::NullBuffer__ nil;std::streambuf* old_buf = std::cout.rdbuf(&nil);\
+        __NEWASM_DESTRUCTOR=[]()->void{};__##name();std::cout.rdbuf(old_buf);\
+        if(!__NEWASM_MODULE_ERR)cout << NewASM::header::col::green << "OK!\n"<<flush;\
+        if(__NEWASM_MODULE_ERR)cout<<NewASM::header::col::magenta<< "ERROR!\n"<<flush;\
+        if(__NEWASM_MODULE_ERR)cout<<NewASM::header::col::red<<"\terror message: "<<NewASM::header::col::gray<<__NEWASM_ERRTEXT<<endl;\
+        for(int i=0; i < __NEWASM_BUFFER.size(); ++i)cout<<NewASM::header::col::light_red<<"\tlog: "<< NewASM::header::col::gray<<__NEWASM_BUFFER.at(i)<<endl;\
+        cout<<flush<< newasm::header::col::reset;__newasm__MODULEID++;__NEWASM_DESTRUCTOR();\
     }\
 };static __gMOD_INIT_##name NEWASM__MODULE__##name
 

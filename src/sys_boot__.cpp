@@ -1,9 +1,17 @@
 // Copyright (c) 2026 Brace Software Co.
 // NewASM Virtual Machine and Toolchain
 
+__newasm_LOAD_PACKAGE_MODULE(test_bootloader, {
+    NewASM::Modules::SetError("Test error message.");
+});
+
 __newasm_LOAD_PACKAGE_MODULE(bootloader, {
-    newasm::header::functions::wait(5000);
-    newasm::Console::cls_BARE_METAL__();
+    NewASM::Modules::PrintLine("Bootloader setup finished.");
+
+    NewASM::Modules::SetDestructor([]() -> void {
+        newasm::header::functions::wait(5000);
+        return;
+    });
     return;
 });
 
@@ -33,6 +41,7 @@ namespace newasm::bootloader
 {
     int __main__(int argc, char* argv[])
     {
+        NewASM::Console::cls_BARE_METAL__();
         if(false)
         {
             auto& dsk = NewASM::hardware::Disk;

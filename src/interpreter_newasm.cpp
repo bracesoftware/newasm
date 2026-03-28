@@ -69,9 +69,12 @@ link "runtime/common/arch";
 link "runtime/common/chars";
 namespace newasm
 {
+    using BasicFunction = std::function<void()>;
     namespace Modules
     {
-        void (*SetError)(const std::string& errtext) = nullptr;
+        inline std::function<void(const std::string&)> SetError;
+        inline std::function<void(const std::string&)> PrintLine;
+        inline std::function<void(NewASM::BasicFunction)> SetDestructor;
     }
 }
 link "vm/impl";
