@@ -125,18 +125,22 @@ namespace newasm
 #elif NEWASM_DEBUG == 0
     #define __newasmDBG_COMPLEX(f__)
 #endif
-
 int __newasm__MODULEID = 1;
 #define __newasm_CHECK_JUMP_PROPERLY if(newasm::header::data::repl and not newasm::header::data::proc_now){newasm::unsins(ins);return 1;}
 #define __newasm_LOAD_PACKAGE_MODULE(name, func)        struct \
-    __global_newasm##name final{\
-    explicit inline __global_newasm##name() noexcept{\
-        auto __##name = []() -> void {func};\
-        std::cout << newasm::header::col::red << "[  Service " << __newasm__MODULEID << "  ]:" << newasm::header::col::gray << \
-        " Virtual machine is setting up module `" << #name << "`..." << std::endl;__##name();\
-        std::cout << newasm::header::col::reset;__newasm__MODULEID++;\
+    __gMOD_INIT_##name final{\
+    explicit inline __gMOD_INIT_##name() noexcept{\
+        using namespace std;bool __NEWASM_MODULE_ERR=false;std::string __NEWASM_ERRTEXT;auto __err__NEWASM = [&](const std::string& errtext)->\
+        void {__NEWASM_MODULE_ERR=true;__NEWASM_ERRTEXT=errtext;return;};NewASM::Modules::SetError=__err__NEWASM;\
+        auto __##name = [&]() -> void {func};\
+        std::cout << newasm::header::col::red << "[  Service " << __newasm__MODULEID << "  ]: " << newasm::header::col::gray << \
+        "Virtual machine is setting up module `" << #name << "`... ";\
+        if(!__NEWASM_MODULE_ERR)cout << NewASM::header::col::green << "OK!";\
+        if(__NEWASM_MODULE_ERR)cout<<NewASM::header::col::magenta<< "ERROR!\n";\
+        if(__NEWASM_MODULE_ERR)cout<<NewASM::header::col::red<<"error message: "<<NewASM::header::col::gray<<__NEWASM_ERRTEXT;
+        cout<<endl<< newasm::header::col::reset;__newasm__MODULEID++;__##name();\
     }\
-};static __global_newasm##name NEWASM__MODULE__##name
+};static __gMOD_INIT_##name NEWASM__MODULE__##name
 
 #define __NEWASM_DUMMY 0
 #define NEWASM_JUMP_POINT "__NEWASM_COMPILER_JUMP_POINT"

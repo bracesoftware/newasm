@@ -67,6 +67,13 @@ link "runtime/common/arch";
 #include <type_traits>
 #include <concepts>
 link "runtime/common/chars";
+namespace newasm
+{
+    namespace Modules
+    {
+        void (*SetError)(const std::string& errtext) = nullptr;
+    }
+}
 link "vm/impl";
 link "runtime/common/attrib";
 namespace newasm
