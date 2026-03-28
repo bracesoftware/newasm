@@ -18,6 +18,7 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 ## What's new or changed?
 
 + Added the new `ResolveFileName` back-end function for better file name lookup.
++ Enhanced the bootloader system with error handling and generic API for banck-end system development.
 
 ## Fixed issues
 

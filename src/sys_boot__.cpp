@@ -8,7 +8,7 @@ __newasm_LOAD_PACKAGE_MODULE(test_bootloader, {
 __newasm_LOAD_PACKAGE_MODULE(bootloader, {
     NewASM::Modules::PrintLine("Bootloader setup finished.");
 
-    NewASM::Modules::SetDestructor([]() -> void {
+    NewASM::Modules::SetDestructor(NEWASM_BASIC_FUNCTION_SIG {
         newasm::header::functions::wait(5000);
         return;
     });

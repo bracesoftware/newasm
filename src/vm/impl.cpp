@@ -257,3 +257,4 @@ namespace newasm
         }
     }
 }
+#define NEWASM_BASIC_FUNCTION_SIG []()->void
