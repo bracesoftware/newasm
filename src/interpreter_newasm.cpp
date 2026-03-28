@@ -32,6 +32,7 @@ link "runtime/common/arch";
 #include <filesystem>
 #include <unordered_map>
 #include <string_view>
+#include <source_location>
 #include <stdexcept>
 #include <ostream>
 #include <string>
