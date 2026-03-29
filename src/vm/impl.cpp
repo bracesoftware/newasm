@@ -258,3 +258,5 @@ namespace newasm
     }
 }
 #define NEWASM_BASIC_FUNCTION_SIG []()->void
+namespace NewASM::Header = newasm::header;
+namespace NewASM::Header::Functions = newasm::header::functions;
