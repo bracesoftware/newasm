@@ -272,15 +272,15 @@ namespace newasm
             }
             inline void err(const std::string& text)
             {
-                std::cout << newasm::header::col::light_red << "! error: " << newasm::header::col::reset << text << std::endl;
+                std::cout << newasm::header::col::light_red << "! error:  " << newasm::header::col::reset << text << std::endl;
             }
             inline void wrn(const std::string& text)
             {
-                std::cout << newasm::header::col::yellow << "! warning: " << newasm::header::col::reset << text << std::endl;
+                std::cout << newasm::header::col::yellow << "! warning:  " << newasm::header::col::reset << text << std::endl;
             }
             inline void info(const std::string& text)
             {
-                std::cout << newasm::header::col::light_blue << " info: " << newasm::header::col::gray << text << newasm::header::col::reset << std::endl;
+                std::cout << newasm::header::col::light_blue << " info:  " << newasm::header::col::gray << text << newasm::header::col::reset << std::endl;
             }
             //formatted info overloads
             inline void f__(const char* format)
@@ -288,7 +288,7 @@ namespace newasm
                 std::cout << format;
             }
             template<typename T, typename... A>
-            void f__(const char* format, T value, A... a)
+            void f__(const char* format, T value, A... a) noexcept
             {
                 for(; *format != '\0'; format++)
                 {
@@ -314,27 +314,27 @@ namespace newasm
             }
 
             template<typename... A>
-            inline void finfo(A... a)//main func used
+            inline void finfo(A... a) noexcept //main func used
             {
-                std::cout << newasm::header::col::light_blue << " info: " << newasm::header::col::gray;
+                std::cout << newasm::header::col::light_blue << " info:  " << newasm::header::col::gray;
                 //formatting:
                 f__(a...);
                 std::cout << newasm::header::col::reset << std::endl;
             }
             //other stuff
-            inline void dbg(const std::string& text)
+            inline void dbg(const std::string& text) noexcept
             {
                 if(newasm::header::settings::debug == 1)
-                    std::cout << newasm::header::col::gray << " debug: " << newasm::header::col::reset << text << std::endl;
+                    std::cout << newasm::header::col::gray << " debug:  " << newasm::header::col::reset << text << std::endl;
             }
-            inline void linkinfo(const std::string& text)
+            inline void linkinfo(const std::string& text) noexcept
             {
-                std::cout << newasm::header::col::aqua << " linker: " << newasm::header::col::reset << text << std::endl;
+                std::cout << newasm::header::col::aqua << " linker:  " << newasm::header::col::reset << text << std::endl;
             }
 
-            inline void compilerinfo(const std::string& text)
+            inline void compilerinfo(const std::string& text) noexcept
             {
-                std::cout << newasm::header::col::aqua << " compiler: " << newasm::header::col::gray << text << std::endl;
+                std::cout << newasm::header::col::aqua << " compiler:  " << newasm::header::col::gray << text << std::endl;
             }
             
             /*void init()
