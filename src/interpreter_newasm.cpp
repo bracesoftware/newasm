@@ -1634,3 +1634,5 @@ namespace newasm
         #endif
     }
 }
+
+fetch link "";
