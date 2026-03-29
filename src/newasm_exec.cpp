@@ -18,18 +18,20 @@ namespace newasm
     inline void unsins(std::string ins)
     {
         newasm::header::functions::wrn(
-            static_cast<std::string>("Instruction `") +
-            newasm::header::style::underline+ins+newasm::header::col::reset
-            +static_cast<std::string>("` is not supported in the REPL mode.")
+            "Instruction `"_str +
+            newasm::header::style::underline +
+            ins + newasm::header::col::reset +
+            "` is not supported in the REPL mode."_str
         );
         return;
     }
     inline void unsins_repl(std::string ins)
     {
         newasm::header::functions::wrn(
-            static_cast<std::string>("Instruction `") +
-            newasm::header::style::underline+ins+newasm::header::col::reset
-            +static_cast<std::string>("` is not supported outside the REPL mode.")
+            "Instruction `"_str +
+            newasm::header::style::underline +
+            ins + newasm::header::col::reset +
+            "` is not supported outside the REPL mode."_str
         );
         return;
     }
@@ -442,7 +444,7 @@ namespace newasm
                     return 1;
                 }
                 
-                if(value != static_cast<std::string>("{"))
+                if(value != OPEN_BRACE_STR)
                 {
                     newasm::terminate(newasm::exit_codes::invalid_syntax);
                     return 1;
@@ -630,7 +632,7 @@ namespace newasm
             // references
             case newasm::core::lang_inf::typenames::ref:
             {
-                if(!newasm::header::functions::isref(value) && value != static_cast<std::string>(NIL_STR))
+                if(!newasm::header::functions::isref(value) && value != NIL_STR)
                 {
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                     return 1;
@@ -639,7 +641,7 @@ namespace newasm
                 newasm::header::functions::remamp(value), newasm::mem::data)
                 && !newasm::mem::functions::datavalid(
                 newasm::header::functions::remamp(value), newasm::variables::ids)
-                && value != static_cast<std::string>(NIL_STR))
+                && value != NIL_STR)
                 {
                     newasm::terminate(newasm::exit_codes::invalid_memacc);
                     return 1;
@@ -912,7 +914,7 @@ namespace newasm
                     return 1;
                 }
                 
-                if(value != static_cast<std::string>("{"))
+                if(value != OPEN_BRACE_STR)
                 {
                     newasm::terminate(newasm::exit_codes::invalid_syntax);
                     return 1;
@@ -1337,7 +1339,7 @@ namespace newasm
             //__say
             case newasm::core::lang_inf::__say:
             {
-                if(suf == static_cast<std::string>("0"))
+                if(suf == NULL_STR)
                 {
                     if(!newasm::header::functions::istext(opr))
                     {
@@ -2116,7 +2118,7 @@ namespace newasm
                     {
                         if(newasm::mem::datatypes[opr] == newasm::datatypes::number)
                         {
-                            newasm::mem::data[opr] = std::to_string(static_cast<int>(newasm::mem::regs::cr0));
+                            newasm::mem::data[opr] = std::to_string(newasm::mem::regs::cr0.get_value());
                             return 1;
                         }
                         if(newasm::mem::datatypes[opr] == newasm::datatypes::decimal)
@@ -2131,7 +2133,7 @@ namespace newasm
                     {
                         if(newasm::mem::datatypes[opr] == newasm::datatypes::number)
                         {
-                            newasm::mem::data[opr] = std::to_string(static_cast<int>(newasm::mem::regs::cr1));
+                            newasm::mem::data[opr] = std::to_string(newasm::mem::regs::cr1.get_value());
                             return 1;
                         }
                         if(newasm::mem::datatypes[opr] == newasm::datatypes::decimal)
@@ -2151,7 +2153,7 @@ namespace newasm
                         }
                         if(newasm::mem::datatypes[opr] == newasm::datatypes::decimal)
                         {
-                            newasm::mem::data[opr] = std::to_string(static_cast<float>(newasm::mem::regs::cr2));
+                            newasm::mem::data[opr] = std::to_string(newasm::mem::regs::cr2.get_value());
                             return 1;
                         }
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
@@ -2166,7 +2168,7 @@ namespace newasm
                         }
                         if(newasm::mem::datatypes[opr] == newasm::datatypes::decimal)
                         {
-                            newasm::mem::data[opr] = std::to_string(static_cast<float>(newasm::mem::regs::cr3));
+                            newasm::mem::data[opr] = std::to_string(newasm::mem::regs::cr3.get_value());
                             return 1;
                         }
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
@@ -4808,7 +4810,7 @@ namespace newasm
                     newasm::process_hndl(lineInfo.priInt, proc_name);
                     return 1;
                 }
-                if(newasm::header::data::case_line != static_cast<std::string>("{"))
+                if(newasm::header::data::case_line != OPEN_BRACE_STR)
                 {
                     newasm::terminate(newasm::exit_codes::invalid_syntax);
                     return 1;
@@ -4994,7 +4996,7 @@ namespace newasm
             //thread
             case newasm::core::lang_inf::thread__:
             {
-                if(newasm::header::data::case_line != static_cast<std::string>("{"))
+                if(newasm::header::data::case_line != OPEN_BRACE_STR)
                 {
                     newasm::terminate(newasm::exit_codes::invalid_syntax);
                     return 1;
@@ -5827,9 +5829,10 @@ namespace newasm
             {
                 auto debugRegister = [](const std::string& str1, const std::string& str2)
                 {
-                    newasm::progwin::api::cout(str1 + static_cast<std::string>(" = `") + 
+                    newasm::progwin::api::cout(str1 +
+                        " = `"_str + 
                         str2 + 
-                        static_cast<std::string>("`")
+                        "`"_str
                     );
                 };
                 if(suf == newasm::mem::regs::fdx.identifier())
@@ -6068,13 +6071,13 @@ namespace newasm
                 if(suf == newasm::mem::regs::cr0.identifier())
                 {
                     newasm::header::data::exception = false;
-                    newasm::terminate(static_cast<int>(newasm::mem::regs::cr0));//,wholeline);
+                    newasm::terminate(newasm::mem::regs::cr0.get_value());//,wholeline);
                     return 1;
                 }
                 if(suf == newasm::mem::regs::cr1.identifier())
                 {
                     newasm::header::data::exception = false;
-                    newasm::terminate(static_cast<int>(newasm::mem::regs::cr1));//,wholeline);
+                    newasm::terminate(newasm::mem::regs::cr1.get_value());//,wholeline);
                     return 1;
                 }
                 if(suf == newasm::mem::regs::br0.identifier())
@@ -6847,7 +6850,7 @@ namespace newasm
     }
     int process_text(std::string macroname, std::string symbol)
     {
-        if(symbol != static_cast<std::string>("#"))
+        if(symbol != "#"_str)
         {
             newasm::terminate(newasm::exit_codes::invalid_syntax);
             return 1;
@@ -7930,8 +7933,10 @@ namespace newasm
         else
         {
             newasm::header::functions::err(
-                static_cast<std::string>("Unable to open the file: ") + static_cast<std::string>("'") + 
-                /*newasm::header::constants::scripts_folder + */file + static_cast<std::string>("'"));
+                "Unable to open the file: `"_str +
+                file +
+                "`"_str
+            );
         }
         return 0;
     }
@@ -8459,8 +8464,9 @@ namespace newasm
         else
         {
             newasm::header::functions::err(
-                static_cast<std::string>("Unable to open the file: ") + static_cast<std::string>("`") + 
-                /*newasm::header::constants::scripts_folder +*/ file + static_cast<std::string>("`"));
+                "Unable to open the file: `"_str +
+                file + "`"_str
+            );
         }
         return 0;
     }

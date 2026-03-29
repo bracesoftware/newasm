@@ -2004,19 +2004,19 @@ namespace newasm::project_data
 
     namespace impl
     {
-        inline int parse_proj_settings(const std::string &key, const std::string &value)
+        inline int parse_proj_settings(const std::string& key, const std::string& value)
         {
-            if(key == static_cast<std::string>("name"))
+            if(key == "name"_str)
             {
                 newasm::project_data::name = value;
                 return 1;
             }
-            if(key == static_cast<std::string>("version"))
+            if(key == "version"_str)
             {
                 newasm::project_data::version = value;
                 return 1;
             }
-            if(key == static_cast<std::string>("dlibs"))
+            if(key == "dlibs"_str)
             {
                 if(value == NIL_STR)
                 {

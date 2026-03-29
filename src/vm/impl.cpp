@@ -1,6 +1,14 @@
 // Copyright (c) 2026 Brace Software Co.
 // NewASM Virtual Machine and Toolchain
 
+namespace newasm
+{
+    inline std::string operator ""_str(const char* str, std::size_t len)
+    {
+        return std::string(str, len);
+    }
+}
+
 #define __newasm_MEMORY_SIZE 10 // MiB
 #define __newasm_DISK_SIZE 20 // MiB
 #define __newasm_CACHE_LINES 1024 //8KiB since line is 8bytes
@@ -41,7 +49,9 @@ stock constexpr inline void _newasm_rem__24234() noexcept
 // other bs
 #define STR(x) #x
 #define CONCAT(a, b) a##b
-#define NIL_STR "nil"
+#define NIL_STR "nil"_str
+#define NULL_STR "0"_str
+#define OPEN_BRACE_STR "{"_str
 #define INVALID_INS (-1)
 #define INS_EXTERNAL (-2)
 #define MAX_LOAD_FACTOR (0.5f)

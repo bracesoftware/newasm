@@ -828,12 +828,12 @@ namespace newasm
             if(checkres)
             {
                 std::cout << newasm::header::col::gray;
-                newasm::header::functions::nullprint(newasm::tab + static_cast<std::string>("Accessed the update server..."));
+                newasm::header::functions::nullprint(newasm::tab + "Accessed the update server..."_str);
                 std::cout << newasm::header::col::reset;
                 std::ifstream file(output_path);
                 if(!file)
                 {
-                    std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + static_cast<std::string>("Error while checking the build version."));
+                    std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + "Error while checking the build version."_str);
                     std::cout << newasm::header::col::reset;
                     return 1;
                 }
@@ -841,17 +841,18 @@ namespace newasm
                 std::getline(file, vernumber);
                 if(newasm::BUILD_NUMBER < std::stoi(newasm::header::functions::trim((vernumber))))
                 {
-                    std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + static_cast<std::string>("Latest build ") + newasm::header::functions::trim((vernumber)) + " is available!");
+                    std::cout << newasm::header::col::gray;
+                    newasm::header::functions::nullprint(newasm::tab + "Latest build "_str + newasm::header::functions::trim((vernumber)) + " is available!"_str);
                     std::cout << newasm::header::col::reset;
                     return 1;
                 }
-                std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + static_cast<std::string>("Running the latest version of the system!"));
+                std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + "Running the latest version of the system!"_str);
                 std::cout << newasm::header::col::reset;
 
                 std::ifstream file2(output_path2);
                 if(!file2)
                 {
-                    std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + static_cast<std::string>("Error while checking the runtime version."));
+                    std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + "Error while checking the runtime version."_str);
                     std::cout << newasm::header::col::reset;
                     return 1;
                 }
@@ -859,15 +860,15 @@ namespace newasm
                 std::getline(file2, runtimenumber);
                 if(newasm::RUNTIME_VERSION < std::stoi(newasm::header::functions::trim((runtimenumber))))
                 {
-                    std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + static_cast<std::string>("NewASM Runtime ") + newasm::header::functions::trim((runtimenumber)) + " update is available!");
+                    std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + "NewASM Runtime "_str + newasm::header::functions::trim((runtimenumber)) + " update is available!"_str);
                     std::cout << newasm::header::col::reset;
                     return 1;
                 }
-                std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + static_cast<std::string>("The runtime is running on the latest version."));
+                std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + "The runtime is running on the latest version."_str);
                 std::cout << newasm::header::col::reset;
                 return 1;
             }
-            std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + static_cast<std::string>("Cannot access the update server!"));
+            std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + "Cannot access the update server!"_str);
             std::cout << newasm::header::col::reset;
             return 1;
         }
@@ -1316,41 +1317,36 @@ namespace newasm
         }
 
         //if the file is provided, do this
-        newasm::header::functions::log("System loading...");
+        NewASM::header::functions::log("System loading...");
 
         ver_check();
-        newasm::flags::perf_available = true;
+        NewASM::flags::perf_available = true;
 
         EMPTYLINE;
-        newasm::header::settings::script_file = argv[1];
-        newasm::header::functions::trim(newasm::header::settings::script_file);
-        newasm::header::settings::script_file_LINKED = linker_folder.string() + newasm::core::constants::separator + newasm::header::settings::script_file;
+        NewASM::header::settings::script_file = argv[1];
+        NewASM::header::functions::trim(NewASM::header::settings::script_file);
+        NewASM::header::settings::script_file_LINKED = linker_folder.string() + NewASM::core::constants::separator + NewASM::header::settings::script_file;
 
-        newasm::Linker::link(newasm::header::settings::script_file, newasm::header::settings::script_file_LINKED);
+        NewASM::Linker::link(NewASM::header::settings::script_file, NewASM::header::settings::script_file_LINKED);
 
-        newasm::header::functions::wait(4000);
+        NewASM::header::functions::wait(4000);
 
-        if(!std::filesystem::exists(newasm::header::settings::script_file_LINKED))
+        if(!std::filesystem::exists(NewASM::header::settings::script_file_LINKED))
         {
-            newasm::header::functions::err("Cannot open the file: `" + newasm::header::settings::script_file + "`");
+            NewASM::header::functions::err("Cannot open the file: `" + NewASM::header::settings::script_file + "`");
             return 1;
         }
         EMPTYLINE;
-        newasm::header::execution_flow::entry_exec = newasm::header::settings::script_file;
+        NewASM::header::execution_flow::entry_exec = NewASM::header::settings::script_file;
 
-        newasm::core::env_vars::functions::setup_env();
-        newasm::project_data::impl::setup_proj(newasm::header::settings::script_file);
-        newasm::hardware::randAccessMem.init();
+        NewASM::core::env_vars::functions::setup_env();
+        NewASM::project_data::impl::setup_proj(NewASM::header::settings::script_file);
+        NewASM::hardware::randAccessMem.init();
         EMPTYLINE;
-        newasm::header::functions::finfo("Sucessfully allocated %i MiB of random access memory.", __newasm_MEMORY_SIZE);
+        NewASM::header::functions::finfo("Sucessfully allocated %i MiB of random access memory.", __newasm_MEMORY_SIZE);
         NewASM::hardware::Disk.init();
-        newasm::header::functions::finfo("Sucessfully allocated %i MiB of virtual disk space.", __newasm_DISK_SIZE);
-        #if 0
-        newasm::header::functions::info(
-            static_cast<std::string>("Preparing to execute: ") + newasm::header::col::yellow +
-            newasm::project_data::name + static_cast<std::string>(" ") + newasm::project_data::version
-            + newasm::header::col::reset);
-        #endif
+        NewASM::header::functions::finfo("Sucessfully allocated %i MiB of virtual disk space.", __newasm_DISK_SIZE);
+ 
         NewASM::header::functions::finfo("Preparing to execute: %s%s %s%s",
             NewASM::header::col::yellow,
             NewASM::project_data::name,
