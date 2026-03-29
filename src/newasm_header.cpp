@@ -17,7 +17,7 @@ namespace newasm
 {
     namespace header
     {
-        namespace Definitions
+        namespace definitions
         {
             typedef std::vector<std::pair<std::string, std::pair<std::string, std::string>>> HelpTable;
         }
@@ -133,7 +133,7 @@ namespace newasm
         }
         namespace functions
         {
-            inline NewASM::header::Definitions::HelpTable DescriptionWordWrap(const NewASM::header::Definitions::HelpTable& vec)
+            inline NewASM::header::definitions::HelpTable DescriptionWordWrap(const NewASM::header::definitions::HelpTable& vec)
             {
                 auto v = vec;
                 for(size_t i = 0; i < v.size(); ++i)
@@ -193,7 +193,6 @@ namespace newasm
             }
             void getversion(std::string &dest)
             {
-
                 auto hash = [](const std::string& input) -> std::string {
                     std::hash<std::string> hasher;
                     size_t h = hasher(input);
@@ -388,7 +387,7 @@ namespace newasm
             const int second_column = 20;
             const int third_column = 20;
             const std::string tabs = "\t";
-            const NewASM::header::Definitions::HelpTable help_table_data = {
+            const NewASM::header::definitions::HelpTable help_table_data = {
                 {"h",           {"/",               "Displays the help panel."}},
                 {"l",           {"/",               "Enables the logging system."}},
                 {"nv",          {"/",               "Disables the version check feature."}},

@@ -18,7 +18,7 @@ namespace newasm
         const int second_column = 20;
         const int third_column = 50;
         const std::string tabs = "\t";
-        const std::vector<std::pair<std::string, std::pair<std::string,std::string>>> help_table_data = {
+        const NewASM::header::definitions::HelpTable help_table_data = {
             {"help",        {"/",               "Displays the help panel."}},
             {"exit",        {"/",               "Exits the application."}},
             {"repl",        {"/",               "Load the read-eval-print console."}},
@@ -43,17 +43,28 @@ namespace newasm
         
         inline void help_info()
         {
+            auto vec = NewASM::header::functions::DescriptionWordWrap(help_table_data);
+            int longest_text = 0;
+            for(int i = 0; i < vec.size(); ++i)
+            {
+                int l = vec.at(i).second.second.size();
+                if(l > longest_text)
+                {
+                    longest_text = l;
+                }
+            }
+
             std::cout << "\n" << newasm::header::col::reset;
             std::cout << newasm::header::col::light_blue + newasm::header::style::underline + newasm::header::style::bold + tabs << std::flush;
             std::cout
                     << std::setw(first_column) << std::left << "Command"
                     << std::setw(second_column) << std::left << "Arguments" 
-                    << std::setw(third_column) << std::left << "Description"
+                    << std::setw(longest_text) << std::left << "Description"
             << "\n" << newasm::header::col::reset;
 
             std::string argument, params, description;
 
-            for(auto i = help_table_data.begin(); i != help_table_data.end(); ++i)
+            for(auto i = vec.begin(); i != vec.end(); ++i)
             {
                 argument = i->first;
                 params = i->second.first;
