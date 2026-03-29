@@ -16,7 +16,7 @@ namespace newasm
         const std::string download_server = "https://bracesoftware.github.io/web/newasm_server/dynlibs/";
         const int first_column = 20;
         const int second_column = 20;
-        const int third_column = 20;
+        const int third_column = 50;
         const std::string tabs = "\t";
         const std::vector<std::pair<std::string, std::pair<std::string,std::string>>> help_table_data = {
             {"help",        {"/",               "Displays the help panel."}},
@@ -40,14 +40,15 @@ namespace newasm
             {"cls",         {"/",               "Clear your screen."}},
             {"list",        {"/",               "List files on the virtual disk."}}
         };
-        void help_info()
+        
+        inline void help_info()
         {
             std::cout << "\n" << newasm::header::col::reset;
-            std::cout << newasm::header::col::light_blue << std::endl;
+            std::cout << newasm::header::col::light_blue + newasm::header::style::underline + newasm::header::style::bold + tabs << std::flush;
             std::cout
-                    << std::setw(first_column) << std::left<<newasm::header::style::underline + newasm::header::style::bold+tabs+"Command"
-                    << std::setw(second_column) << std::left<<"Arguments" 
-                    << std::setw(third_column) << std::left<<"Description"
+                    << std::setw(first_column) << std::left << "Command"
+                    << std::setw(second_column) << std::left << "Arguments" 
+                    << std::setw(third_column) << std::left << "Description"
             << "\n" << newasm::header::col::reset;
 
             std::string argument, params, description;
@@ -57,10 +58,11 @@ namespace newasm
                 argument = i->first;
                 params = i->second.first;
                 description = i->second.second;
+                std::cout << tabs + newasm::header::col::reset;
                 std::cout 
-                        << std::setw(first_column) << std::left<<tabs+newasm::header::col::reset + argument
-                        << std::setw(second_column) << std::left<<params
-                        << std::setw(third_column) << std::left<<newasm::header::col::gray + description
+                        << std::setw(first_column) << std::left << argument
+                        << std::setw(second_column) << std::left << params              << newasm::header::col::gray
+                        << std::setw(third_column) << std::left << description
                 << "\n";
             }
 

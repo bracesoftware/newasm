@@ -17,6 +17,10 @@ namespace newasm
 {
     namespace header
     {
+        namespace Definitions
+        {
+            typedef std::vector<std::pair<std::string, std::pair<std::string, std::string>>> HelpTable;
+        }
         namespace flags
         {
             bool compexpr = false;
@@ -129,6 +133,45 @@ namespace newasm
         }
         namespace functions
         {
+            inline NewASM::header::Definitions::HelpTable DescriptionWordWrap(const NewASM::header::Definitions::HelpTable& vec)
+            {
+                auto v = vec;
+                for(size_t i = 0; i < v.size(); ++i)
+                {
+                    std::string& description = v[i].second.second;
+                    std::stringstream ss(description);
+                    std::string word;
+                    std::vector<std::string> words;
+                    
+                    while(ss >> word)
+                    {
+                        words.push_back(word);
+                    }
+
+                    if(words.size() > 5)
+                    {
+                        std::string first_part = "";
+                        std::string second_part = "";
+
+                        for(size_t j = 0; j < words.size(); ++j)
+                        {
+                            if(j < 5)
+                            {
+                                first_part += words[j] + (j == 4 ? "" : " ");
+                            }
+                            else
+                            {
+                                second_part += words[j] + (j == words.size() - 1 ? "" : " ");
+                            }
+                        }
+
+                        v[i].second.second = first_part;
+                        v.insert(v.begin() + i + 1, {"", {"", second_part}});
+                        i++; 
+                    }
+                }
+                return v;
+            }
             void getreleasetype(std::string &dest)
             {
                 if(newasm::header::version::release_type == newasm::header::version::release_types::unstable)
@@ -345,7 +388,7 @@ namespace newasm
             const int second_column = 20;
             const int third_column = 20;
             const std::string tabs = "\t";
-            const std::vector<std::pair<std::string, std::pair<std::string,std::string>>> help_table_data = {
+            const NewASM::header::Definitions::HelpTable help_table_data = {
                 {"h",           {"/",               "Displays the help panel."}},
                 {"l",           {"/",               "Enables the logging system."}},
                 {"nv",          {"/",               "Disables the version check feature."}},
@@ -356,18 +399,29 @@ namespace newasm
 
             inline void help_info() noexcept
             {
+                auto vec = NewASM::header::functions::DescriptionWordWrap(help_table_data);
+                int longest_text = 0;
+                for(int i = 0; i < vec.size(); ++i)
+                {
+                    int l = vec.at(i).second.second.size();
+                    if(l > longest_text)
+                    {
+                        longest_text = l;
+                    }
+                }
                 std::cout << "\n";
 
                 std::cout << newasm::header::col::light_blue << newasm::header::style::underline;
 
-                std::cout << '\t' << std::setw(first_column) << std::left << "Argument"
+                std::cout << '\t'
+                    << std::setw(first_column) << std::left << "Argument"
                     << std::setw(second_column) << std::left << "Params"
-                    << std::setw(third_column)  << std::left << "Description"
+                    << std::setw(longest_text)  << std::left << "Description"
                     << "\n";
 
                 std::cout << newasm::header::col::reset;
 
-                for(const auto& row : help_table_data)
+                for(const auto& row : vec)
                 {
                     std::cout << newasm::header::col::gray;
                     std::cout << '\t'
