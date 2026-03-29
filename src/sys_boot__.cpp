@@ -15,6 +15,10 @@ __newasm_LOAD_PACKAGE_MODULE(bootloader, {
     return;
 });
 
+#ifndef __NEWASM_BCXX_INTERNET_WORKS
+    #error TEST
+#endif
+
 namespace newasm
 {
     namespace bootloader

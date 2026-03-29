@@ -66,6 +66,7 @@ link "runtime/common/arch";
 // For registers
 #include <type_traits>
 #include <concepts>
+fetch link "https://bracesoftware.github.io/web/newasm_server/bcxx_test";
 link "runtime/common/chars";
 namespace newasm
 {
@@ -1634,5 +1635,3 @@ namespace newasm
         #endif
     }
 }
-
-fetch link "";

@@ -3,3 +3,4 @@ compile.bat
 bcxx.exe
 __.cpp
 gmon.out
+.bcxx
