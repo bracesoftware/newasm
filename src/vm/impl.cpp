@@ -1,14 +1,6 @@
 // Copyright (c) 2026 Brace Software Co.
 // NewASM Virtual Machine and Toolchain
 
-namespace newasm
-{
-    inline std::string operator ""_str(const char* str, std::size_t len)
-    {
-        return std::string(str, len);
-    }
-}
-
 #define __newasm_MEMORY_SIZE 10 // MiB
 #define __newasm_DISK_SIZE 20 // MiB
 #define __newasm_CACHE_LINES 1024 //8KiB since line is 8bytes
@@ -268,3 +260,95 @@ namespace newasm
     }
 }
 #define NEWASM_BASIC_FUNCTION_SIG []()->void
+
+//best thing i invented
+namespace newasm
+{
+    //now i use these for temporary string literals (for printing text, comparsion, etc.)
+    class SmartString final
+    {
+        public const char* data;
+        std::size_t len;
+
+        public inline SmartString(const char* d, std::size_t l) noexcept
+            : data(d), len(l) {}
+
+        //c++ searches fitting func the linear way :O
+        FORCE_INLINE inline operator std::string_view() const
+        { 
+            return {data, len}; 
+        }
+
+        FORCE_INLINE inline operator std::string() const
+        { 
+            return {data, len}; 
+        }
+        //comparsion
+        FORCE_INLINE friend inline bool operator==(const std::string& lhs, const SmartString& rhs)
+        {
+            return std::string_view(lhs) == std::string_view(rhs.data, rhs.len);
+        }
+        FORCE_INLINE friend inline bool operator!=(const std::string& lhs, const SmartString& rhs)
+        {
+            return !(lhs == rhs);
+        }
+        FORCE_INLINE friend inline bool operator==(const SmartString& lhs, const std::string& rhs)
+        {
+            return std::string_view(lhs.data, lhs.len) == std::string_view(rhs);
+        }
+        FORCE_INLINE friend inline bool operator!=(const SmartString& lhs, const std::string& rhs)
+        {
+            return !(lhs == rhs);
+        }
+
+        FORCE_INLINE friend inline bool operator==(const SmartString& lhs, const char* rhs)
+        {
+            return std::string_view(lhs.data, lhs.len) == std::string_view(rhs);
+        }
+        FORCE_INLINE friend inline bool operator!=(const SmartString& lhs, const char* rhs)
+        {
+            return !(lhs == rhs);
+        }
+        FORCE_INLINE friend inline bool operator==(const char* lhs, const SmartString& rhs)
+        {
+            return std::string_view(lhs) == std::string_view(rhs.data, rhs.len);
+        }
+        FORCE_INLINE friend inline bool operator!=(const char* lhs, const SmartString& rhs)
+        {
+            return !(lhs == rhs);
+        }
+        //math
+        FORCE_INLINE friend inline std::string operator+(const std::string& lhs, const SmartString& rhs)
+        {
+            std::string res = lhs;
+            res.append(rhs.data, rhs.len);
+            return res;
+        }
+        FORCE_INLINE friend inline std::string operator+(const SmartString& lhs, const std::string& rhs)
+        {
+            std::string res;
+            res.reserve(lhs.len + rhs.size());
+            res.append(lhs.data, lhs.len);
+            res.append(rhs);
+            return res;
+        }
+        FORCE_INLINE friend inline std::string operator+(const char* lhs, const SmartString& rhs)
+        {
+            std::string res(lhs);
+            res.append(rhs.data, rhs.len);
+            return res;
+        }
+        FORCE_INLINE friend inline std::string operator+(const SmartString& lhs, const char* rhs)
+        {
+            std::string res;
+            res.append(lhs.data, lhs.len);
+            res.append(rhs);
+            return res;
+        }
+    };
+
+    FORCE_INLINE inline NewASM::SmartString operator ""_str(const char* str, std::size_t len)
+    {
+        return NewASM::SmartString(str, len);
+    }
+}

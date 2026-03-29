@@ -289,7 +289,7 @@ namespace newasm
         {
             return name;
         }
-        inline void reset()
+        FORCE_INLINE inline void reset()
         {
             this->value = this->initial_value;
             for(auto i = this->thread_values.begin(); i != this->thread_values.end(); ++i)
@@ -297,11 +297,11 @@ namespace newasm
                 i->second = this->initial_value;
             }
         }
-        inline void reset(std::string thread_name)
+        FORCE_INLINE inline void reset(std::string thread_name)
         {
             thread_values[thread_name] = initial_value;
         }
-        T get_value() const
+        FORCE_INLINE inline T get_value() const
         {
             if(newasm::thread_line)
             {
@@ -309,7 +309,7 @@ namespace newasm
             }
             return this->value;
         }
-        inline void set_value(const T& new_val)
+        FORCE_INLINE inline void set_value(const T& new_val)
         {
             newasm::_std::scope_exit a([this]() {
                 this->log_change();

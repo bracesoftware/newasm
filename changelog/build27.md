@@ -19,10 +19,11 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 
 + Added the new `ResolveFileName` back-end function for better file name lookup.
 + Enhanced the bootloader system with error handling and generic API for banck-end system development.
++ Optimized the `retn` instruction.
 
 ## Fixed issues
 
-- No issues were reported.
++ Fixed the issue #26: now `retn` works for `rax`, `rbx`, `imm` and others.
 
 ## Important notes
 

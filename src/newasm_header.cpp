@@ -2037,9 +2037,8 @@ namespace newasm::project_data
                         std::string ins,suf,op;
                         //std::cout << "Debugging MEGA CRASH " << "2\n";
                         //std::vector<std::string> lines;
-                        std::cout << newasm::header::col::gray << "\tSuccessfully loaded dynamic library: " + 
-                            static_cast<std::string>(newasm::header::col::gray) + 
-                            dynamic_libs[i] << "\n";
+                        std::cout << newasm::header::col::gray << "\tSuccessfully loaded dynamic library: "_str +
+                            newasm::header::col::gray + dynamic_libs[i] << "\n";
 
                         std::string line;
                         newasm::dynlib::settings::analyzed_dynlib = dynamic_libs[i];
@@ -2128,8 +2127,8 @@ namespace newasm::project_data
                     }
                     if(!std::filesystem::exists(dynamic_libs[i] + newasm::core::constants::dynlib_ex))
                     {
-                        std::cout << newasm::header::col::red << " \tFailed to load dynamic library: " + 
-                            static_cast<std::string>(newasm::header::col::gray) + 
+                        std::cout << newasm::header::col::red << " \tFailed to load dynamic library: "_str + 
+                            newasm::header::col::gray + 
                             dynamic_libs[i] << "\n";
                             //std::cout << "Debugging MEGA CRASH " << "8\n";
                     }
@@ -2137,9 +2136,10 @@ namespace newasm::project_data
             }
             return 1;
         }
-        int setup_proj(const std::string& script_file)
+        inline int setup_proj(const std::string& script_file)
         {
-            std::ifstream internal_fileobject(script_file + static_cast<std::string>(".newasm_proj"));
+            static const auto PROJ_FILE_EXT = ".newasm_proj"_str;
+            std::ifstream internal_fileobject(script_file + PROJ_FILE_EXT);
             if(internal_fileobject.is_open())
             {
                 std::string line,key,value;
@@ -2164,7 +2164,7 @@ namespace newasm::project_data
                 newasm::project_data::version = "0.0.1";
                 if(newasm::header::settings::create_new_projfile)
                 {
-                    std::ofstream internal_fileobject(newasm::header::settings::script_file + static_cast<std::string>(".newasm_proj"), std::ios::app);
+                    std::ofstream internal_fileobject(newasm::header::settings::script_file + PROJ_FILE_EXT, std::ios::app);
 
                     if(internal_fileobject.is_open())
                     {
