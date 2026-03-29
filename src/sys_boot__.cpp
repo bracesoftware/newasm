@@ -54,8 +54,6 @@ namespace newasm::bootloader
             auto content = NewASM::Drivers::FileSystem_V::READFILE(dsk, "hi.txt");
             std::cout << content;
         }
-
-        NewASM::Header::Functions::err("test");
         
         newasm::sealedLabels = &newasm::compiler::data::sealed_labels;
         $defer //BC++ feature, $ blocks
