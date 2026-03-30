@@ -105,5 +105,7 @@ int main(int argc, char** argv)
     {
         t1.join();
     }
+
+    NewASM::BetterCPlusPlus::init();
     return 0;
 }
