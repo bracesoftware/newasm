@@ -388,16 +388,19 @@ namespace newasm
                         }
                         if(newasm::ctl::install::type == newasm::ctl::install::const_::SETUP) //if setup
                         {
-                            std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + "Accessed the download server..."_str);
+                            std::cout << newasm::header::col::gray;
+                            newasm::header::functions::nullprint(newasm::tab + "Accessed the download server..."_str);
                             std::cout << newasm::header::col::reset;
                             if(!std::filesystem::exists(output_path))
                             {
-                                std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + "Error while downloading the setup."_str);
+                                std::cout << newasm::header::col::gray;
+                                newasm::header::functions::nullprint(newasm::tab + "Error while downloading the setup."_str);
                                 std::cout << newasm::header::col::reset;
                                 return 1;
                             }
                            
-                            std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + "Successfully downloaded the setup."_str);
+                            std::cout << newasm::header::col::gray;
+                            newasm::header::functions::nullprint(newasm::tab + "Successfully downloaded the setup."_str);
                             std::cout << newasm::header::col::reset;
 
                             std::ifstream file(output_path);
@@ -407,7 +410,8 @@ namespace newasm
                             newasm::ctl::install::download_msg.clear();
                             if(file)
                             {
-                                std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + "Preparing to run the setup..."_str);
+                                std::cout << newasm::header::col::gray;
+                                newasm::header::functions::nullprint(newasm::tab + "Preparing to run the setup..."_str);
                                 std::cout << newasm::header::col::reset;
 
                                 newasm::ctl::install::setup = newasm::ctl::install::setup_::GARBAGE;
@@ -466,21 +470,24 @@ namespace newasm
 
                             if(!newasm::ctl::install::dynlib_name.empty())
                             {
-                                std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab +
+                                std::cout << newasm::header::col::gray;
+                                newasm::header::functions::nullprint(newasm::tab +
                                     "* Imported the dynamic library name..."_str
                                 );
                                 std::cout << newasm::header::col::reset;
                             }
                             if(!newasm::ctl::install::download_msg.empty())
                             {
-                                std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab +
+                                std::cout << newasm::header::col::gray;
+                                newasm::header::functions::nullprint(newasm::tab +
                                     "* Imported the dynamic library install message..."_str
                                 );
                                 std::cout << newasm::header::col::reset;
                             }
                             if(!newasm::ctl::install::dynlib_content.empty())
                             {
-                                std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab +
+                                std::cout << newasm::header::col::gray;
+                                newasm::header::functions::nullprint(newasm::tab +
                                     "* Imported the dynamic library implementation..."_str
                                 );
                                 std::cout << newasm::header::col::reset;
@@ -488,7 +495,8 @@ namespace newasm
 
                             if(!newasm::header::functions::isalphanum(newasm::ctl::install::dynlib_name))
                             {
-                                std::cout << newasm::header::col::red;newasm::header::functions::nullprint(newasm::tab +
+                                std::cout << newasm::header::col::red;
+                                newasm::header::functions::nullprint(newasm::tab +
                                     "Invalid dynamic library name: "_str + newasm::ctl::install::dynlib_name
                                 );
                                 std::cout << newasm::header::col::reset;
@@ -497,7 +505,8 @@ namespace newasm
                             }
                             if(newasm::ctl::install::dynlib_content.empty())
                             {
-                                std::cout << newasm::header::col::red;newasm::header::functions::nullprint(newasm::tab +
+                                std::cout << newasm::header::col::red;
+                                newasm::header::functions::nullprint(newasm::tab +
                                     "Dynamic library is empty."_str
                                 );
                                 std::cout << newasm::header::col::reset;
@@ -582,9 +591,10 @@ namespace newasm
                 }
                 std::string command;
                 std::string username = newasm::user::global::username;
+
                 std::cout << newasm::header::col::green << "\nshell@" << 
                 newasm::header::col::yellow<<username<<newasm::header::col::green
-                <<" " <<newasm::header::col::blue << format_path() << newasm::header::col::green <<"# "
+                <<" " <<newasm::header::col::light_blue << format_path() << newasm::header::col::green <<"# "
                 << newasm::header::col::reset;
                 
                 std::getline(std::cin, command);

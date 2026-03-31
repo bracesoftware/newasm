@@ -189,7 +189,7 @@ namespace newasm::header
                 dest = "beta";
             }
         }
-        void getversion(std::string &dest)
+        inline void getversion(std::string &dest)
         {
             std::function<std::string(const std::string&)> hash = [](const std::string& input) -> std::string {
                 std::hash<std::string> hasher;
@@ -232,7 +232,7 @@ namespace newasm::header
                     time  +
                     "-"_str + release__type;
         }
-        void getos(std::string &dest)
+        inline void getos(std::string &dest)
         {
             #if _NEWASM_OS == _NEWASM_OS_windows
                 dest = "windows";
@@ -244,7 +244,7 @@ namespace newasm::header
                 dest = "android";
             #endif
         }
-        void getarch(std::string &dest)
+        inline void getarch(std::string &dest)
         {
             #if defined(__x86_64__) || defined(__amd64__)
                 dest = "x86-64bit";//std::cout << "64-bit x86 architecture" << std::endl;
@@ -259,11 +259,11 @@ namespace newasm::header
             #endif
         }
 
-        void nullprint(std::string text)
+        inline void nullprint(std::string text) noexcept
         {
             std::cout << text << std::endl;
         }
-        int nullprint_wnm(std::string text)
+        inline int nullprint_wnm(std::string text) noexcept
         {
             std::cout << newasm::header::system_info::name << " " << text << std::endl;
             return 0;
