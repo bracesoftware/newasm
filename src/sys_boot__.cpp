@@ -71,11 +71,11 @@ namespace newasm::bootloader
         }
         if constexpr(0) std::ios::sync_with_stdio(false);
 
-        newasm::Experimental::entry();
+        NewASM::Experimental::entry();
 
         try
         {
-            newasm::entry(argc, argv);
+            NewASM::entry(argc, argv);
         }
         catch(const std::exception& e)
         {
@@ -83,7 +83,7 @@ namespace newasm::bootloader
             throw;
         }
         
-        if(false)
+        if constexpr(false)
         {
             for(int i = 0; i < newasm::forLinker::lineData.size(); ++i)
             {
@@ -97,6 +97,7 @@ namespace newasm::bootloader
         return 0;
     }
 }
+
 int main(int argc, char** argv)
 {
     std::thread t1(newasm::bootloader::__main__, argc, argv);

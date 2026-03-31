@@ -367,12 +367,15 @@ namespace newasm
             unsigned short krnlMod = INVALID_INS;
             int jumpinTo = INVALID_INS;
 
+            //---------------------------------------------
             //stuff not included in the binary:
             unsigned int resType = 0;
             int resInt = 0;
             float resFloat = 0;
             char resChar = 0;
             std::string resString = "";
+
+            inline lineData() noexcept {}
         };
 
         std::string parse_def(std::string suf);
@@ -388,7 +391,8 @@ namespace newasm
     int procline(std::string& text);
     int procline(const char* line);
 
-    void tokenize(std::string str);
+    typedef void (TokenizeFunc)(std::string str);
+    inline TokenizeFunc tokenize;
     namespace impl
     {
         std::string eval(std::string str);
@@ -1032,7 +1036,7 @@ namespace newasm
         newasm::variables::ids.max_load_factor(MAX_LOAD_FACTOR);
         #if 0
         {
-            newasm::execBytecode test = newasm::compiler::DO("mov tlr, 3");
+            newasm::execBytecode test = newasm::compiler::DO("mov tlr, 3"_str);
         }
         #endif
         
@@ -1043,9 +1047,9 @@ namespace newasm
             std::time_t t = std::chrono::system_clock::to_time_t(now);
 
             std::tm tm;
-            #ifdef _WIN32
+            #if _NEWASM_OS == _NEWASM_OS_windows or _NEWASM_OS == _NEWASM_OS_windows_old
                 localtime_s(&tm, &t);
-            #else
+            #elif _NEWASM_OS == _NEWASM_OS_linux
                 localtime_r(&t, &tm);
             #endif
 
