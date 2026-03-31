@@ -191,7 +191,7 @@ namespace newasm::header
         }
         void getversion(std::string &dest)
         {
-            auto hash = [](const std::string& input) -> std::string {
+            std::function<std::string(const std::string&)> hash = [](const std::string& input) -> std::string {
                 std::hash<std::string> hasher;
                 size_t h = hasher(input);
 
@@ -226,11 +226,11 @@ namespace newasm::header
             time = hash(time);
 
             dest.clear();
-            dest =  static_cast<std::string>("b") +
-                    std::to_string(newasm::BUILD_NUMBER)+static_cast<std::string>(".") +
-                    date +static_cast<std::string>(".") +
+            dest = "b"_str +
+                    std::to_string(newasm::BUILD_NUMBER) + "."_str +
+                    date + "."_str +
                     time  +
-                    static_cast<std::string>("-") + release__type;
+                    "-"_str + release__type;
         }
         void getos(std::string &dest)
         {
