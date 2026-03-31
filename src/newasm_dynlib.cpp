@@ -35,7 +35,7 @@ namespace newasm
         }
         namespace functions
         {
-            void abort(int error_code)
+            inline void abort(int error_code) noexcept
             {
                 newasm::dynlib::mem::invalid_dynlibs.push_back(newasm::dynlib::settings::analyzed_dynlib);
                 std::cout << newasm::header::col::reset
