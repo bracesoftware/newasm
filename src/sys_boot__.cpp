@@ -43,7 +43,7 @@ class E__ extends public D__ {};
 
 namespace newasm::bootloader
 {
-    int __main__(int argc, char* argv[])
+    inline int __main__(int argc, char* argv[])
     {
         NewASM::Console::cls_BARE_METAL__();
         if(false)
@@ -57,6 +57,7 @@ namespace newasm::bootloader
             NewASM::Drivers::FileSystem_V::APPTOFILE(dsk, "hi.txt", "Hello!\n");
             auto content = NewASM::Drivers::FileSystem_V::READFILE(dsk, "hi.txt");
             std::cout << content;
+            return 0;
         }
         
         newasm::sealedLabels = &newasm::compiler::data::sealed_labels;

@@ -14,7 +14,7 @@
 namespace newasm
 {
     inline void enable_ansi() noexcept;
-    inline constinit const int BUILD_NUMBER = 27;
+    inline constinit const int BUILD_NUMBER = 28;
     inline constinit const int RUNTIME_VERSION = 11;
     inline constinit const int KERNEL_VERSION = 7;
 }
@@ -195,7 +195,7 @@ namespace newasm
     
     namespace kernel
     {
-        constexpr uint32_t makeHash(int16_t a, int16_t b)
+        constexpr uint32_t makeHash(int16_t a, int16_t b) noexcept
         {
             return (uint32_t(uint16_t(a)) << 16) | uint32_t(uint16_t(b));
         }
@@ -203,9 +203,11 @@ namespace newasm
 
     namespace GLOBAL
     {
+        typedef bool (*__LOAD_STD)();
+        typedef void (*__SHOW_PERF)();
         inline void cleanup();
-        bool (*global_load_std)() = nullptr;
-        void (*global_showPerf)() = nullptr;
+        __LOAD_STD global_load_std = nullptr;
+        __SHOW_PERF global_showPerf = nullptr;
 
         bool showed_perf = false;
     }
