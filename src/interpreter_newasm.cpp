@@ -195,9 +195,10 @@ namespace newasm
     
     namespace kernel
     {
-        constexpr uint32_t makeHash(int16_t a, int16_t b) noexcept
+        constexpr unsigned int makeHash(unsigned short a, unsigned short b) noexcept
         {
-            return (uint32_t(uint16_t(a)) << 16) | uint32_t(uint16_t(b));
+            return (static_cast<unsigned int>(a) << 16) | b;
+            //return (uint32_t(uint16_t(a)) << 16) | uint32_t(uint16_t(b));
         }
     }
 
