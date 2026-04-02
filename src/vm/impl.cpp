@@ -162,6 +162,7 @@ int __newasm__MODULEID = 1;
         cout<<flush<< newasm::header::col::reset;__newasm__MODULEID++;__NEWASM_DESTRUCTOR();\
     }\
 };static __gMOD_INIT_##name NEWASM__MODULE__##name
+#define module __newasm_LOAD_PACKAGE_MODULE
 
 #define __NEWASM_DUMMY 0
 #define NEWASM_JUMP_POINT "__NEWASM_COMPILER_JUMP_POINT"

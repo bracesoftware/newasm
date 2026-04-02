@@ -1,11 +1,11 @@
 // Copyright (c) 2026 Brace Software Co.
 // NewASM Virtual Machine and Toolchain
 
-__newasm_LOAD_PACKAGE_MODULE(test_bootloader, {
+module(test_bootloader, {
     NewASM::Modules::SetError("Test error message.");
 });
 
-__newasm_LOAD_PACKAGE_MODULE(bootloader, {
+module(bootloader, {
     NewASM::Modules::PrintLine("Bootloader setup finished.");
 
     NewASM::Modules::SetDestructor(NEWASM_BASIC_FUNCTION_SIG {
