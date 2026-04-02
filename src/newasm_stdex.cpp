@@ -5,9 +5,6 @@ link "sysext/shared_mem";
 link "sysext/linear_map";
 link "sysext/range";
 
-__newasm_LOAD_PACKAGE_MODULE(stdex, {
-    //setup goes here
-});
 
 namespace newasm
 {
@@ -19,6 +16,43 @@ namespace newasm
         }
         void main(int argc, char** argv)
         {
+            return;
+        }
+    }
+}
+
+namespace newasm
+{
+    namespace malloc
+    {
+        std::vector<int> meta;
+        //int memory[10 * 1024 * 1024];
+        newasm::_std::linear_map<int, int> types;
+    }
+    namespace stack
+    {
+        std::unordered_map<int, std::string> events;
+        class macro_data
+        {
+            public:
+            std::vector<std::string> contents;
+        };
+        std::unordered_map<std::string, newasm::stack::macro_data*> macros;
+
+        inline void free_macro_mem()
+        {
+            if(macros.empty())
+            {
+                return;
+            }
+            for(
+                std::unordered_map<std::string, newasm::stack::macro_data*>::iterator i = newasm::stack::macros.begin();
+                i != newasm::stack::macros.end(); ++i
+            )
+            {
+                if(i->second != nullptr) delete i->second;
+            }
+            newasm::stack::macros.clear();
             return;
         }
     }

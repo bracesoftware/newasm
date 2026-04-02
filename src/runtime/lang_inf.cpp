@@ -22,13 +22,13 @@ namespace newasm
             const std::string virtual_mem = "vmem._sys";
             const std::string dynlib_ex = ".newasm_dl";
             const std::string setup_ex = ".newasm_set";
-            const std::string progwin = 
+            const std::string progwin = (
             #if _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
                 "nprogwin.exe"
             #elif _NEWASM_OS == _NEWASM_OS_linux || _NEWASM_OS == _NEWASM_OS_android
                 "nprogwin.a"
             #endif
-            ;
+            );
             const std::string cache_folder = "_cache";
             const std::string ipc_file = "ipc._sys";
             const std::string disk_file = "disk.bin";

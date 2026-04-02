@@ -139,6 +139,34 @@ namespace newasm
         }
     }
 }
+
+namespace newasm
+{
+    namespace kernel
+    {
+        namespace cfg
+        {
+            bool IOStream = false;
+            bool Extensions = false;
+            bool Thread = false;
+            bool Chrono = false;
+            bool Network = false;
+            bool Memory = false;
+            bool TextOperations = false;
+            bool ContainerManipulation = false;
+            bool FileStream = false;
+            bool FileStream_VDSK = false;
+            bool Tuple = false;
+            bool TCProtocol = false;
+            bool HTTP = false;
+            bool Math = false;
+            bool Misc = false;
+            bool Crypto = false;
+            bool Context = false;
+        }
+    }
+}
+
 link "sysext/scope_exit";
 link "sysext/out";
 link "vm/external";
@@ -716,9 +744,8 @@ Essential stuff needed to run
 is in the runtime
 */
 
-link "kernel/malloc";
-link "runtime/handlers";
 link "runtime/lang_inf";
+link "runtime/handlers";
 
 link "runtime/progwin_api";
 link "utils._platformSpecific";
@@ -765,7 +792,6 @@ link "vm/hardware/io_ports";
 link "kernel/dynamic/commonlibs";
 link "libs._platformSpecific";
 //
-link "kernel/krnlcfg";
 link "vm/hardware/cpu_cache";
 link "vm/hardware/absolut";
 link "kernel/syscall_handle";
@@ -797,8 +823,6 @@ static __global_newasm nG;
 link "runtime/garbage_collector";
 link "compiler/bin";
 link "newasm_exec";
-
-//link "runtime/procline_insert";
 link "runtime/repl_mode";
 
 link "newasm_compexpr";
