@@ -6,7 +6,7 @@
     #error [New-ASM] Cannot compile.
 #endif
 
-__newasm_LOAD_PACKAGE_MODULE(virtual_cpu, {
+module(virtual_cpu, {
     //setup goes here
 });
 

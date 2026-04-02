@@ -128,7 +128,7 @@ namespace newasm
                 return;
             }
 
-            inline int get_heap_end() noexcept
+            FORCE_INLINE inline int get_heap_end() noexcept
             {
                 for(int i = MEM_SIZE - 1; i >= 0; i--)
                 {
