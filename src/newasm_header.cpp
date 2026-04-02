@@ -229,8 +229,8 @@ namespace newasm::header
             dest = "b"_str +
                     std::to_string(newasm::BUILD_NUMBER) + "."_str +
                     date + "."_str +
-                    time  +
-                    "-"_str + release__type;
+                    time + "-"_str +
+                    release__type;
         }
         inline void getos(std::string &dest)
         {

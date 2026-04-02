@@ -1062,6 +1062,7 @@ namespace newasm
 {
     int entry(int argc, char* argv[])
     {
+        auto s = 69_str;
         //newasm::real_line.reserve(500);
         newasm::mem::regs::fdx.make_short(true);
         newasm::mem::regs::fdx.log_things(false);

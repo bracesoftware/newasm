@@ -351,4 +351,41 @@ namespace newasm
     {
         return NewASM::SmartString(str, len);
     }
+
+    FORCE_INLINE inline SmartString operator ""_str(char c)
+    {
+        static thread_local char buf[2] = {0, 0};
+        buf[0] = c;
+        return SmartString(buf, 1);
+    }
+
+    template<typename T>
+    concept _NonStringTypes = (
+        std::is_same_v<T, int> or
+        std::is_same_v<T, float> or
+        std::is_same_v<T, char> or
+        std::is_same_v<T, long> or
+        std::is_same_v<T, short> or
+        std::is_same_v<T, double> or
+        std::is_same_v<T, unsigned long long> or
+        std::is_same_v<T, long double>
+    );
+
+    template<_NonStringTypes T>
+    FORCE_INLINE inline SmartString ToSmart(T t)
+    {
+        static thread_local std::string static_t;
+        static_t = std::to_string(t);
+        return SmartString(static_t.c_str(), static_t.size());
+    }
+
+    FORCE_INLINE inline SmartString operator ""_str(unsigned long long n)
+    {
+        return ToSmart(n);
+    }
+
+    FORCE_INLINE inline SmartString operator ""_str(long double d)
+    {
+        return ToSmart(d);
+    }
 }
