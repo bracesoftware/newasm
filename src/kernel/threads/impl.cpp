@@ -17,10 +17,8 @@ namespace newasm
         std::string thread_decl = "?";
         class object__
         {
-            private:
-            bool prepared = false;
-            public:
-            std::vector<newasm::compiler::lineData> contents;
+            private bool prepared = false;
+            public std::vector<newasm::compiler::lineData> contents;
             std::stringstream output;
             std::string returned_val;
             bool returned = false;
