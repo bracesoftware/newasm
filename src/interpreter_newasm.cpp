@@ -687,7 +687,7 @@ namespace newasm
     };
 }
 
-link "vm/_console";
+link "vm/ConsoleEmu";
 
 namespace newasm
 {
@@ -798,7 +798,7 @@ link "runtime/garbage_collector";
 link "compiler/bin";
 link "newasm_exec";
 
-link "runtime/procline_insert";
+//link "runtime/procline_insert";
 link "runtime/repl_mode";
 
 link "newasm_compexpr";
@@ -841,7 +841,8 @@ namespace newasm
                 std::ifstream file(output_path);
                 if(!file)
                 {
-                    std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + "Error while checking the build version."_str);
+                    std::cout << newasm::header::col::gray;
+                    newasm::header::functions::nullprint(newasm::tab + "Error while checking the build version."_str);
                     std::cout << newasm::header::col::reset;
                     return 1;
                 }
@@ -854,13 +855,15 @@ namespace newasm
                     std::cout << newasm::header::col::reset;
                     return 1;
                 }
-                std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + "Running the latest version of the system!"_str);
+                std::cout << newasm::header::col::gray;
+                newasm::header::functions::nullprint(newasm::tab + "Running the latest version of the system!"_str);
                 std::cout << newasm::header::col::reset;
 
                 std::ifstream file2(output_path2);
                 if(!file2)
                 {
-                    std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + "Error while checking the runtime version."_str);
+                    std::cout << newasm::header::col::gray;
+                    newasm::header::functions::nullprint(newasm::tab + "Error while checking the runtime version."_str);
                     std::cout << newasm::header::col::reset;
                     return 1;
                 }
@@ -868,15 +871,18 @@ namespace newasm
                 std::getline(file2, runtimenumber);
                 if(newasm::RUNTIME_VERSION < std::stoi(newasm::header::functions::trim((runtimenumber))))
                 {
-                    std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + "NewASM Runtime "_str + newasm::header::functions::trim((runtimenumber)) + " update is available!"_str);
+                    std::cout << newasm::header::col::gray;
+                    newasm::header::functions::nullprint(newasm::tab + "NewASM Runtime "_str + newasm::header::functions::trim((runtimenumber)) + " update is available!"_str);
                     std::cout << newasm::header::col::reset;
                     return 1;
                 }
-                std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + "The runtime is running on the latest version."_str);
+                std::cout << newasm::header::col::gray;
+                newasm::header::functions::nullprint(newasm::tab + "The runtime is running on the latest version."_str);
                 std::cout << newasm::header::col::reset;
                 return 1;
             }
-            std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + "Cannot access the update server!"_str);
+            std::cout << newasm::header::col::gray;
+            newasm::header::functions::nullprint(newasm::tab + "Cannot access the update server!"_str);
             std::cout << newasm::header::col::reset;
             return 1;
         }
