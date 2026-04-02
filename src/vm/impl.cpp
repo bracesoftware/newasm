@@ -283,6 +283,10 @@ namespace newasm
         { 
             return {data, len}; 
         }
+        FORCE_INLINE inline std::string string() const
+        {
+            return std::string(data, len);
+        }
         //comparsion
         FORCE_INLINE friend inline bool operator==(const std::string& lhs, const SmartString& rhs)
         {
@@ -332,6 +336,13 @@ namespace newasm
             res.append(rhs);
             return res;
         }
+        FORCE_INLINE friend inline std::string operator+(const SmartString& lhs, const SmartString& rhs)
+        {
+            std::string res;
+            res.append(lhs.string());
+            res.append(rhs.string());
+            return res;
+        }
         FORCE_INLINE friend inline std::string operator+(const char* lhs, const SmartString& rhs)
         {
             std::string res(lhs);
@@ -371,6 +382,9 @@ namespace newasm
         std::is_same_v<T, long double>
     );
 
+    struct __str {};
+    inline constexpr __str _strV;
+
     template<_NonStringTypes T>
     FORCE_INLINE inline SmartString ToSmart(T t)
     {
@@ -387,5 +401,11 @@ namespace newasm
     FORCE_INLINE inline SmartString operator ""_str(long double d)
     {
         return ToSmart(d);
+    }
+
+    template<_NonStringTypes T>
+    FORCE_INLINE inline SmartString operator|(T t, __str)
+    {
+        return ToSmart(t);
     }
 }

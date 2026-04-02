@@ -227,12 +227,12 @@ namespace newasm::header
 
             dest.clear();
             dest = "b"_str +
-                    std::to_string(newasm::BUILD_NUMBER) + "."_str +
+                    (newasm::BUILD_NUMBER | _strV) + "."_str +
                     date + "."_str +
                     time + "-"_str +
                     release__type;
         }
-        inline void getos(std::string &dest)
+        inline void getos(std::string& dest)
         {
             #if _NEWASM_OS == _NEWASM_OS_windows
                 dest = "windows";
@@ -244,7 +244,7 @@ namespace newasm::header
                 dest = "android";
             #endif
         }
-        inline void getarch(std::string &dest)
+        inline void getarch(std::string& dest)
         {
             #if defined(__x86_64__) || defined(__amd64__)
                 dest = "x86-64bit";//std::cout << "64-bit x86 architecture" << std::endl;
