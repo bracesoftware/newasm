@@ -170,7 +170,7 @@ namespace newasm::header
             }
             return v;
         }
-        void getreleasetype(std::string &dest)
+        inline void getreleasetype(std::string& dest)
         {
             if(newasm::header::version::release_type == newasm::header::version::release_types::unstable)
             {
@@ -189,7 +189,7 @@ namespace newasm::header
                 dest = "beta";
             }
         }
-        inline void getversion(std::string &dest)
+        inline void getversion(std::string& dest)
         {
             std::function<std::string(const std::string&)> hash = [](const std::string& input) -> std::string {
                 std::hash<std::string> hasher;
