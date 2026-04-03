@@ -5,8 +5,8 @@
     #error [New-ASM] Cannot compile.
 #endif
 
-__newasm_LOAD_PACKAGE_MODULE(shell, {
-    //setup goes here
+module(shell, {
+    NewASM::Modules::PrintLine("Shell setup finished...");
 });
 
 namespace newasm

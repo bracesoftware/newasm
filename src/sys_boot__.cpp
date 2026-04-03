@@ -101,12 +101,17 @@ namespace newasm::bootloader
 
 int main(int argc, char** argv)
 {
-    std::thread t1(newasm::bootloader::__main__, argc, argv);
-
-    if(t1.joinable())
+    if constexpr(0)
     {
-        t1.join();
+        std::thread t1(newasm::bootloader::__main__, argc, argv);
+
+        if(t1.joinable())
+        {
+            t1.join();
+        }
     }
+
+    NewASM::bootloader::__main__(argc, argv);
 
     NewASM::BetterCPlusPlus::init();
     return 0;
