@@ -5666,7 +5666,7 @@ namespace newasm
                     return 1;
                 }
                 newasm::malloc::meta.push_back(i);
-                newasm::mem::regs::tlr.set_value(std::to_string(i));
+                newasm::mem::regs::rax.set_value(i);
 
                 newasm::header::data::malloc_block_used = newasm::malloc::meta.back();
                 
