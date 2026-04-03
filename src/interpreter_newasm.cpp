@@ -144,10 +144,7 @@ namespace newasm
             const short sizeOf = 8;
         }
     }
-}
 
-namespace newasm
-{
     namespace kernel
     {
         namespace cfg
@@ -179,16 +176,16 @@ link "vm/external";
 link "sysext/maps";
 
 link "sysext/csimple";
-#define __newasm_included
+#define __newasm_included "NEWASM"_str
 link "runtime/alpha";
 link "sys._platformSpecific";
 //<- UNDER THIS ALL MODULES CAN LOAD
-__newasm_LOAD_PACKAGE_MODULE(vm_impl, {
+module(vm_impl, {
     //empty
 });
 link "newasm_stdex";
 link "taster._platformSpecific";
-__newasm_LOAD_PACKAGE_MODULE(hostos_detect, {});
+module(hostos_detect, {});
 // thread init
 link "kernel/threads/_flags";
 link "vm/blueprint/class";
@@ -372,24 +369,30 @@ namespace newasm
 
         struct lineData final
         {
-            std::string raw;
+            //some definitions, typedef where we can, using where we must!
+            typedef std::string string;
+            template<typename T>
+            using vec = std::vector<T>;
+
+            //actual code
+            string raw;
             int type;
-            std::vector<std::string> tokens;
-            std::string other;
+            vec<string> tokens;
+            string other;
 
             int priArgType = 0;
             int priEvalMode = 0;
             int priInt = 0;
             float priFloat = 0;
             char priChar = 0;
-            std::string priString = "";
+            string priString = "";
             
             int altArgType = 0;
             int altEvalMode = 0;
             int altInt = 0;
             float altFloat = 0;
             char altChar = 0;
-            std::string altString = "";
+            string altString = "";
 
             //newasm::compiler::argumentData suffixLiteral;
             //newasm::compiler::argumentData operandLiteral;
@@ -410,15 +413,15 @@ namespace newasm
             int resInt = 0;
             float resFloat = 0;
             char resChar = 0;
-            std::string resString = "";
+            string resString = "";
 
             inline lineData() noexcept {}
         };
 
-        std::string parse_def(std::string suf);
-        void process_comptis(std::string ins, std::string arg1);
-        void process_comptiso(std::string ins, std::string arg1, std::string arg2);
-        bool iscomptins(std::string ins);
+        inline std::string parse_def(std::string suf);
+        inline void process_comptis(std::string ins, std::string arg1);
+        inline void process_comptiso(std::string ins, std::string arg1, std::string arg2);
+        inline bool iscomptins(std::string ins);
     }
 
     using execBytecode = newasm::compiler::lineData;
