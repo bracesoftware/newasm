@@ -88,6 +88,10 @@ link "vm/impl";
 link "runtime/common/attrib";
 namespace newasm
 {
+    namespace CapturedData
+    {
+        int* ExitCodeInvalidMemacc = nullptr;
+    }
     namespace RamChip
     {
         inline std::function<std::string(int)> PeekString = nullptr;
@@ -1106,6 +1110,7 @@ namespace newasm
 link "vm/utilities/procfile";
 
 __newasm_LOAD_PACKAGE_MODULE(main_module, {
+    NewASM::CapturedData::ExitCodeInvalidMemacc = const_cast<decltype(NewASM::CapturedData::ExitCodeInvalidMemacc)>(&newasm::exit_codes::invalid_memacc);
     newasm::mem::labels.max_load_factor(MAX_LOAD_FACTOR);
     return;
 });

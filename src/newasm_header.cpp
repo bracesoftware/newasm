@@ -1967,7 +1967,7 @@ namespace newasm::header
                     if(it == NewASM::VAR_TABLE_PTR->end())
                     {
                         //std::cout << "JEL SE RADI O OVOM? -----> " <<opr<< std::endl;
-                        //NewASM::terminate(NewASM::exit_codes::invalid_memacc);
+                        NewASM::terminate(*NewASM::CapturedData::ExitCodeInvalidMemacc);
                         return {false, 0};
                     }
                     if(it->second.type == newasm::datatypes::number) return {true, 4};
