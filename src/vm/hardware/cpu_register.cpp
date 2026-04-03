@@ -5,7 +5,7 @@
     #error [New-ASM] Cannot compile.
 #endif
 
-__newasm_LOAD_PACKAGE_MODULE(cpu_register_emulator, {
+module(cpu_register_emulator, {
     //setup goes here
 });
 

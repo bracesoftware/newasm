@@ -562,28 +562,7 @@ namespace newasm
             }
         };
 
-        struct varData
-        {
-            int addr; // address where it is stored
-            int type; // type
-            tupleData* tuple = nullptr; // if it is a tuple, we use this instead of addr
-            classData* blueprint = nullptr; // if it is a class, we use this
-            unionData* yunion = nullptr; // if it is an union, we use this
-            contextData* context = nullptr; // if it is a context, use this
-            procedureData* proc = nullptr; //if it is a proc, use this
-
-            //just for checks
-            threadData* thrd = nullptr;
-            eventData* event = nullptr;
-            staticObjectData* obj = nullptr;
-
-            //decorator data
-            bool locked = false;
-            bool transient__ = false;
-            //attrib
-            int attrib = 0;
-        };
-        std::unordered_map<std::string, newasm::variables::varData> ids;
+        VarTable ids;
     }
 }
 

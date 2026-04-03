@@ -1,7 +1,7 @@
 // Copyright (c) 2026 Brace Software Co.
 // NewASM Virtual Machine and Toolchain
 
-__newasm_LOAD_PACKAGE_MODULE(virtual_io_ports, {
+module(virtual_io_ports, {
     //setup goes here
 });
 

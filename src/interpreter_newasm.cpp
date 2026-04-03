@@ -88,16 +88,57 @@ link "vm/impl";
 link "runtime/common/attrib";
 namespace newasm
 {
-    int CYCLE_COUNT = 0;
+    namespace RamChip
+    {
+        inline std::function<std::string(int)> PeekString = nullptr;
+    }
+
+    namespace variables
+    {
+        struct tupleData;
+        struct classData;
+        struct unionData;
+        struct contextData;
+        class procedureData;
+        class threadData;
+        struct eventData;
+        struct staticObjectData;
+
+        struct varData final
+        {
+            int addr; // address where it is stored
+            int type; // type
+            tupleData* tuple = nullptr; // if it is a tuple, we use this instead of addr
+            classData* blueprint = nullptr; // if it is a class, we use this
+            unionData* yunion = nullptr; // if it is an union, we use this
+            contextData* context = nullptr; // if it is a context, use this
+            procedureData* proc = nullptr; //if it is a proc, use this
+
+            //just for checks
+            threadData* thrd = nullptr;
+            eventData* event = nullptr;
+            staticObjectData* obj = nullptr;
+
+            //decorator data
+            bool locked = false;
+            bool transient__ = false;
+            //attrib
+            int attrib = 0;
+        };
+    }
+    typedef std::unordered_map<std::string, newasm::variables::varData> VarTable;
+    VarTable* VAR_TABLE_PTR = nullptr;
+
+    constinit int CYCLE_COUNT = 0;
     std::string CONST__ = NIL_STR;
     std::string& real_line = CONST__;
     std::vector<std::string>* sealedLabels = nullptr;
 
-    bool priRegDeref = false;
+    constinit bool priRegDeref = false;
 
     namespace lambda
     {
-        bool process = false; // if lambda contents is being processed
+        constinit bool process = false; // if lambda contents is being processed
     }
     namespace header
     {
@@ -811,11 +852,12 @@ link "runtime/pp/directives";
 link "compiler/asmc";
 link "compiler/comptins";
 
-link "runtime/memory_impl";
+//link "runtime/memory_impl";
 
 namespace newasm
 {
     auto* RAM = &newasm::hardware::randAccessMem;
+    using RamPointer = decltype(RAM);
 }
 
 struct __global_newasm final
@@ -1071,6 +1113,10 @@ namespace newasm
 {
     int entry(int argc, char* argv[])
     {
+        NewASM::RamChip::PeekString = [](int addr) -> std::string {
+            return NewASM::RAM->peek<std::string>(addr);
+        };
+        NewASM::VAR_TABLE_PTR = &newasm::variables::ids;
         auto s = 69_str;
         //newasm::real_line.reserve(500);
         newasm::mem::regs::fdx.make_short(true);

@@ -1947,6 +1947,53 @@ namespace newasm::header
             //std::cout << "s: ``" << final_str << "`` is FULLY parsed!" << std::endl;
             return final_str;
         }
+        inline std::pair<bool, int> issizeof(const std::string& str)
+        {
+            std::string opr;
+            //std::cout << "\t" << "STR IN ISSIZEOF : `" << str << "`\n";
+            if(str.size() > 2 && str[0] == '$' && str[1] == '-')
+            {
+                opr = newasm::header::functions::trim(str.substr(2));
+
+                // dobijamo &lol
+                newasm::runtime::functions::parse(opr);
+
+                //newasm::progwin::api::cout("issizeof()::we_got .. -> " + opr);
+                if(newasm::header::functions::isref(opr))
+                {
+                    opr = newasm::header::functions::remamp(opr);
+                
+                    auto it = NewASM::VAR_TABLE_PTR->find(opr);
+                    if(it == NewASM::VAR_TABLE_PTR->end())
+                    {
+                        //std::cout << "JEL SE RADI O OVOM? -----> " <<opr<< std::endl;
+                        //NewASM::terminate(NewASM::exit_codes::invalid_memacc);
+                        return {false, 0};
+                    }
+                    if(it->second.type == newasm::datatypes::number) return {true, 4};
+                    if(it->second.type == newasm::datatypes::decimal) return {true, 4};
+                    if(it->second.type == newasm::datatypes::character) return {true, 1};
+                    if(it->second.type == newasm::datatypes::text)
+                    {
+                        std::string buf;
+                        buf = NewASM::RamChip::PeekString(it->second.addr);
+                        return {true, buf.size() + 4};
+                    }
+                }
+                else
+                {
+                    if(newasm::header::functions::istext(opr))
+                    {
+                        std::string buf;
+                        buf = newasm::header::functions::remq(opr);
+                        return {true, buf.size()};
+                    }
+                }
+
+            }
+            //std::cout << "\t" << "fail : `" << str << opr << "`\n";
+            return {false, 0};
+        }
         /////////////////////
 
         inline std::pair<bool, std::string> parseSealedLabel(const std::string& s)

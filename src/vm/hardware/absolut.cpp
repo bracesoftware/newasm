@@ -1,7 +1,7 @@
 // Copyright (c) 2026 Brace Software Co.
 // NewASM Virtual Machine and Toolchain
 
-__newasm_LOAD_PACKAGE_MODULE(absolut_exe, {
+module(absolut_exe, {
     //setup goes here
 });
 
@@ -12,7 +12,7 @@ namespace newasm
         template<int memsize>
         class randAccessMem__ final
         {
-            public static constexpr int MEM_SIZE = memsize * 1024 * 1024;
+            public static constexpr int MEM_SIZE = memsize * 1024 * 1024; //MiB
             public unsigned char __memory__[MEM_SIZE];
 
             public newasm::containers::bit_array<MEM_SIZE> __memory_free__;
