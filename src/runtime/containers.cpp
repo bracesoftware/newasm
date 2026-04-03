@@ -20,57 +20,55 @@ namespace newasm
         template<int t_bintreesize>
         class binary_tree final
         {
-            private:
-                int contents[t_bintreesize];
-            public:
-                int get_at(int index)
+            private int contents[t_bintreesize];
+            public inline int get_at(int index)
+            {
+                if(index >= t_bintreesize)
                 {
-                    if(index >= t_bintreesize)
-                    {
-                        return -1;
-                    }
-                    if(index == 0)
-                    {
-                        return -1;
-                    }
-                    return contents[index];
+                    return -1;
                 }
-                void set_at_parent_of(int index, int value)
+                if(index == 0)
                 {
-                    if(index == 0 || index == 1)
-                    {
-                        return;
-                    }
-                    if(index >= t_bintreesize)
-                    {
-                        return;
-                    }
-                    contents[index % 2 == 0 ? index / 2 : (index - 1) / 2] = value;
+                    return -1;
+                }
+                return contents[index];
+            }
+            inline void set_at_parent_of(int index, int value)
+            {
+                if(index == 0 || index == 1)
+                {
                     return;
                 }
-                void set_at_left_child_of(int index, int value)
+                if(index >= t_bintreesize)
                 {
-                    if(index * 2 >= t_bintreesize)
-                    {
-                        return;
-                    }
-                    contents[index * 2] = value;
                     return;
                 }
-                void set_at_right_child_of(int index, int value)
+                contents[index % 2 == 0 ? index / 2 : (index - 1) / 2] = value;
+                return;
+            }
+            inline void set_at_left_child_of(int index, int value)
+            {
+                if(index * 2 >= t_bintreesize)
                 {
-                    if(index * 2 + 1 >= t_bintreesize)
-                    {
-                        return;
-                    }
-                    contents[index * 2 + 1] = value;
                     return;
                 }
-                void set_at__(int index, int value)
+                contents[index * 2] = value;
+                return;
+            }
+            inline void set_at_right_child_of(int index, int value)
+            {
+                if(index * 2 + 1 >= t_bintreesize)
                 {
-                    this->contents[index] = value;
                     return;
                 }
+                contents[index * 2 + 1] = value;
+                return;
+            }
+            inline void set_at__(int index, int value)
+            {
+                this->contents[index] = value;
+                return;
+            }
         };
 
         template<int t_bitarraysize>
@@ -78,9 +76,8 @@ namespace newasm
         {
             private:
             int bitarraysize = t_bitarraysize;
-            int bitarrayvalue[(t_bitarraysize/(__newasm__integer_bits))+1];
-            public:
-            explicit inline bit_array()
+            int bitarrayvalue[(t_bitarraysize/(__newasm__integer_bits)) + 1];
+            public explicit inline bit_array()
             {
                 //std::cout << "Created a bitarray with a size of " << sizeof(bitarrayvalue)/sizeof(int) << std::endl;
                 if(!(0 < this->bitarraysize))
@@ -204,24 +201,30 @@ namespace newasm
                     return;
                 }
                 #endif
-                for(std::unordered_map<std::string, newasm::containers::bit_array<newasm::containers::default_size>*>::iterator i = newasm::containers::bit_arrays.begin();
-                i != newasm::containers::bit_arrays.end(); ++i)
+                for(
+                    std::unordered_map<std::string, newasm::containers::bit_array<newasm::containers::default_size>*>::iterator i = newasm::containers::bit_arrays.begin();
+                    i != newasm::containers::bit_arrays.end(); ++i
+                )
                 {
                     if(i->second != nullptr)
                     {
                         delete i->second;
                     }
                 }
-                for(std::unordered_map<std::string, newasm::containers::binary_tree<newasm::containers::default_size>*>::iterator i = newasm::containers::binary_trees.begin();
-                i != newasm::containers::binary_trees.end(); ++i)
+                for(
+                    std::unordered_map<std::string, newasm::containers::binary_tree<newasm::containers::default_size>*>::iterator i = newasm::containers::binary_trees.begin();
+                    i != newasm::containers::binary_trees.end(); ++i
+                )
                 {
                     if(i->second != nullptr)
                     {
                         delete i->second;
                     }
                 }
-                for(std::unordered_map<std::string, newasm::containers::thread_channel__*>::iterator i = newasm::containers::thread_channels.begin();
-                i != newasm::containers::thread_channels.end(); ++i)
+                for(
+                    std::unordered_map<std::string, newasm::containers::thread_channel__*>::iterator i = newasm::containers::thread_channels.begin();
+                    i != newasm::containers::thread_channels.end(); ++i
+                )
                 {
                     if(i->second != nullptr)
                     {

@@ -5,7 +5,7 @@ namespace newasm
 {
     namespace csimple
     {
-        void* memcpy(void* dest, const void* source, int bytes)
+        inline void* memcpy(void* dest, const void* source, int bytes)
         {
             if(bytes < 0)
             {
@@ -24,7 +24,7 @@ namespace newasm
             return dest;
         }
 
-        int ipow(int base, int exp)
+        inline int ipow(int base, int exp) noexcept
         {
             int r = 1;
             while(exp > 0)

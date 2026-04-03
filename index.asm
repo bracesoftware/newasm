@@ -1938,7 +1938,7 @@ jmp kjhdfhdkjs
     ./!test
 .start
     malloc 12
-        mov &test::alloc, *tlr ; assign a pointer to a variable, so we can free it later
+        mov &test::alloc, *rax ; assign a pointer to a variable, so we can free it later
         mov hea, [0]
         mov imm, 1
         load 73837
@@ -2042,7 +2042,7 @@ jmp kjhdfhdkjs
     call std::ios::writeln
 
     malloc 55
-    mov &alloc2, *tlr
+    mov &alloc2, *rax
     mov hea, [0]
     mov imm, 1
     load 92873
