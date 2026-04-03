@@ -139,10 +139,13 @@ namespace newasm
     };
 }
 int __newasm__MODULEID = 1;
+bool __newasm_GLOBAL_MODULE = true;
 #define __newasm_CHECK_JUMP_PROPERLY if(newasm::header::data::repl and not newasm::header::data::proc_now){newasm::unsins(ins);return 1;}
 #define __newasm_LOAD_PACKAGE_MODULE(name, func)        struct \
     __gMOD_INIT_##name final{\
+    inline ~__gMOD_INIT_##name(){if(!__newasm_GLOBAL_MODULE)NewASM::Modules::__LIST__.pop_back();--__newasm__MODULEID;}\
     explicit inline __gMOD_INIT_##name() noexcept{\
+        NewASM::Modules::__LIST__.push_back(std::string(#name));\
         using namespace std;vector<string> __NEWASM_BUFFER;\
         bool __NEWASM_MODULE_ERR=false;std::string __NEWASM_ERRTEXT;NewASM::BasicFunction __NEWASM_DESTRUCTOR;auto __err__NEWASM = [&](const std::string& errtext)->\
         void {__NEWASM_MODULE_ERR=true;__NEWASM_ERRTEXT=__NEWASM_ERRTEXT+std::string(" ")+errtext;return;};\
@@ -164,8 +167,20 @@ int __newasm__MODULEID = 1;
 };static __gMOD_INIT_##name NEWASM__MODULE__##name
 #define module __newasm_LOAD_PACKAGE_MODULE
 
+#define MAIN_FUNC_ARGS_SIG int argc, char** argv
+#define MAIN_FUNC_ARGS_CALL argc, argv
+int NEXT_MAIN_MODULES(MAIN_FUNC_ARGS_SIG);
+int main(MAIN_FUNC_ARGS_SIG)
+{
+    __newasm_GLOBAL_MODULE = false;
+    NEXT_MAIN_MODULES(MAIN_FUNC_ARGS_CALL);
+    return 0;
+}
+#undef main
+#define main NEXT_MAIN_MODULES
+
 #define __NEWASM_DUMMY 0
-#define NEWASM_JUMP_POINT "__NEWASM_COMPILER_JUMP_POINT"
+#define NEWASM_JUMP_POINT "__NEWASM_COMPILER_JUMP_POINT"_str
 
 struct __ final{
     public explicit inline __() {

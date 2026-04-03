@@ -76,6 +76,12 @@ namespace newasm
         inline std::function<void(const std::string&)> SetError;
         inline std::function<void(const std::string&)> PrintLine;
         inline std::function<void(NewASM::BasicFunction)> SetDestructor;
+        typedef std::vector<std::string> ModuleList;
+        ModuleList __LIST__;
+        inline ModuleList GetLoadedModules()
+        {
+            return __LIST__;
+        }
     }
 }
 link "vm/impl";
