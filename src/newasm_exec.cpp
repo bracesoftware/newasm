@@ -2393,6 +2393,206 @@ namespace newasm
                 newasm::code_stream::jumpto = lineInfo.jumpinTo;//newasm::mem::labels[suf];
                 return 1;
             }
+            //movx
+            case newasm::core::lang_inf::movx:
+            {
+                newasm::runtime::functions::parse(opr); // for namespaces
+                opr = newasm::header::functions::trim(newasm::header::functions::remamp(opr));
+                newasm::runtime::functions::parse(suf); // for namespaces
+                suf = newasm::header::functions::trim(newasm::header::functions::remamp(suf));
+
+                auto& NewLocation_ = newasm::variables::ids.find(opr);
+                auto& OldLocation_ = newasm::variables::ids.find(suf);
+
+                if(NewLocation_ == newasm::variables::ids.end() or OldLocation_ == newasm::variables::ids.end())
+                {
+                    NewASM::terminate(NewASM::exit_codes::invalid_memacc);
+                    return 1;
+                }
+
+                auto& newloc = NewLocation_->second;
+                auto& oldloc_s = OldLocation_;
+                auto& oldloc = oldloc_s->second;
+
+                if(newloc.type != oldloc.type)
+                {
+                    NewASM::terminate(NewASM::exit_codes::dtyp_mismatch);
+                    return 1;
+                }
+
+                // i like using `or` on end of lines cuz it looks better and || in the middle
+                if(
+                    (newloc.type == newasm::datatypes::proc || oldloc.type == newasm::datatypes::proc) or
+                    (newloc.type == newasm::datatypes::threadz || oldloc.type == newasm::datatypes::threadz) or
+                    (newloc.type == newasm::datatypes::event || oldloc.type == newasm::datatypes::event) or
+                    (newloc.type == newasm::datatypes::static_objz or oldloc.type == newasm::datatypes::static_objz) // OBJ CANNOT BE MOVED CUZ IT IS NOT IN MEMORY AT ALL
+                )
+                {
+                    NewASM::terminate(NewASM::exit_codes::immovable_type);
+                    return 1;
+                }
+
+                //firstly safely delete existing data in newloc
+                if(newloc.type == newasm::datatypes::number)
+                {
+                    newasm::hardware::randAccessMem.delete__HEAP(newloc.addr, newloc.addr + sizeof(int));
+                }
+                else if(newloc.type == newasm::datatypes::decimal)
+                {
+                    newasm::hardware::randAccessMem.delete__HEAP(newloc.addr, newloc.addr + sizeof(float));
+                }
+                else if(newloc.type == newasm::datatypes::character)
+                {
+                    newasm::hardware::randAccessMem.delete__HEAP(newloc.addr, newloc.addr + sizeof(char));
+                }
+                else if(newloc.type == newasm::datatypes::text)
+                {
+                    int buffer_len = newasm::hardware::randAccessMem.peek<int>(newloc.addr);
+                    newasm::hardware::randAccessMem.delete__HEAP(newloc.addr, newloc.addr + sizeof(int) + buffer_len);
+                }
+                else if(newloc.type == newasm::datatypes::tuple) if(newloc.tuple != nullptr)
+                {
+                    int size = newloc.tuple->addr.size();
+                    int addr;
+                    // firstly clean the whole tuple
+                    for(int idx = 0; idx < size; ++idx)
+                    {
+                        addr = newloc.tuple->addr[idx];
+                        if(newloc.tuple->type[idx] == newasm::datatypes::number)
+                        {
+                            newasm::hardware::randAccessMem.delete__HEAP(addr, addr + sizeof(int));
+                            continue;
+                        }
+                        if(newloc.tuple->type[idx] == newasm::datatypes::decimal)
+                        {
+                            newasm::hardware::randAccessMem.delete__HEAP(addr, addr + sizeof(float));
+                            continue;
+                        }
+                        if(newloc.tuple->type[idx] == newasm::datatypes::character)
+                        {
+                            newasm::hardware::randAccessMem.delete__HEAP(addr, addr + sizeof(char));
+                            continue;
+                        }
+                        if(newloc.tuple->type[idx] == newasm::datatypes::text)
+                        {
+                            int buffer_size;
+                            std::memcpy(&buffer_size, &newasm::hardware::randAccessMem.__memory__[addr], sizeof(int));
+                            int bytes = sizeof(int) + buffer_size;
+                            newasm::hardware::randAccessMem.delete__HEAP(addr, addr + bytes);
+                            continue;
+                        }
+                    }
+                    delete newloc.tuple;
+                }
+                else if(newloc.type == newasm::datatypes::blueprint) if(newloc.blueprint != nullptr)
+                {
+                    int size = newloc.blueprint->addr.size();
+                    for(int i = 0; i < size; ++i)
+                    {
+                        int addr = newloc.blueprint->addr.at(i);
+                        int buffer_size;
+                        std::memcpy(&buffer_size, &newasm::hardware::randAccessMem.__memory__[addr], sizeof(int));
+                        int bytes = sizeof(int) + buffer_size;
+                        newasm::hardware::randAccessMem.delete__HEAP(addr, addr + bytes);
+                        continue;
+                    }
+                    delete newloc.blueprint;
+                }
+                else if(newloc.type == newasm::datatypes::yunion) if(newloc.yunion != nullptr)
+                {
+                    int yunion_addr = newloc.yunion->addr;
+                    if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::num)
+                    {
+                        newasm::hardware::randAccessMem.delete__HEAP(yunion_addr, yunion_addr + sizeof(int));
+                    }
+                    else if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::decm)
+                    {
+                        newasm::hardware::randAccessMem.delete__HEAP(yunion_addr, yunion_addr + sizeof(float));
+                    }
+                    else if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::char__)
+                    {
+                        newasm::hardware::randAccessMem.delete__HEAP(yunion_addr, yunion_addr + sizeof(char));
+                    }
+                    else if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::txt)
+                    {
+                        int buffer_len = newasm::hardware::randAccessMem.peek<int>(yunion_addr);
+                        newasm::hardware::randAccessMem.delete__HEAP(yunion_addr, yunion_addr + sizeof(int) + buffer_len);
+                    }
+                    else
+                    {
+                        newasm::terminate(newasm::exit_codes::seg_fault);
+                    }
+                    delete newloc.yunion;
+                }
+                else if(newloc.type == newasm::datatypes::mycontext) if(newloc.context != nullptr)
+                {
+                    auto oldcontents_ = newloc.context->keys.size();
+                    int addr = 0;
+                    for(int idx = 0; idx < oldcontents_; ++idx)
+                    {
+                        addr = newloc.context->addr[idx];
+                        if(newloc.context->type[idx] == newasm::datatypes::number)
+                        {
+                            newasm::hardware::randAccessMem.delete__HEAP(addr, addr + sizeof(int));
+                            continue;
+                        }
+                        if(newloc.context->type[idx] == newasm::datatypes::decimal)
+                        {
+                            newasm::hardware::randAccessMem.delete__HEAP(addr, addr + sizeof(float));
+                            continue;
+                        }
+                        if(newloc.context->type[idx] == newasm::datatypes::character)
+                        {
+                            newasm::hardware::randAccessMem.delete__HEAP(addr, addr + sizeof(char));
+                            continue;
+                        }
+                        if(newloc.context->type[idx] == newasm::datatypes::text)
+                        {
+                            int buffer_len;
+                            std::memcpy(&buffer_len, &newasm::hardware::randAccessMem.__memory__[addr], sizeof(int));
+                            int bytes = sizeof(int) + buffer_len;
+                            newasm::hardware::randAccessMem.delete__HEAP(addr, addr + bytes);
+                            continue;
+                        }
+                    }
+                    delete newloc.context;
+                }
+                else if(newloc.proc != nullptr)// it will never reach this point
+                {
+                    delete newloc.proc;
+                }
+                else if(newloc.thrd != nullptr)
+                {
+                    delete newloc.thrd;
+                }
+                else if(newloc.event != nullptr)
+                {
+                    delete newloc.event;
+                }
+                else if(newloc.obj != nullptr)
+                {
+                    delete newloc.obj;
+                }
+                //then  move
+                newloc.addr = oldloc.addr;
+                newloc.type = oldloc.type;
+
+                newloc.tuple = oldloc.tuple;
+                newloc.blueprint = oldloc.blueprint;
+                newloc.yunion = oldloc.yunion;
+                newloc.context = oldloc.context;
+                newloc.proc = oldloc.proc;
+                newloc.thrd = oldloc.thrd;
+                newloc.event = oldloc.event;
+                newloc.obj = oldloc.obj;
+
+                newloc.locked = oldloc.locked;
+                newloc.transient__ = oldloc.transient__;
+                newloc.attrib = oldloc.attrib;
+
+                newasm::variables::ids.erase(oldloc_s);
+                return 1;
+            }
             //mov
             case newasm::core::lang_inf::mov:
             {
@@ -5822,7 +6022,8 @@ namespace newasm
                     newasm::system::proclines = 0;
                     //std::cout << "Creating proc: " << opr << std::endl;
                     newasm::variables::ids[newasm::system::cproc].proc = new newasm::variables::procedureData;
-                    newasm::variables::ids.at(newasm::system::cproc).type = newasm::datatypes::proc;
+                    auto& mmap = newasm::variables::ids.at(newasm::system::cproc);
+                    mmap.type = newasm::datatypes::proc;
                     return 1;
                 }
 

@@ -2381,7 +2381,7 @@ jmp doneshit
     call std::ios::write
 .data
     @final
-    intg ThisIsConst: 073
+    intg ThisIsConst: 456
 .start
     jmp d787234
     mov &ThisIsConst, 3 ; error
@@ -2446,6 +2446,19 @@ jmp 2349083l
     sysenter "fs/vdsk"
     syscall
     :2349083l
+.data
+    ctx old: ("key": "Absolute cinema")
+    ./lol
+        ctx new: ()
+    ./!lol
+.start
+    mov tlr, old("key")
+    call std::ios::writeln
+    movx &lol::new, &old
+    mov tlr, lol::new("key")
+    call std::ios::writeln
+    mov tlr, old("key")
+    call std::ios::writeln
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     mov tlr, 223
     ret *tlr

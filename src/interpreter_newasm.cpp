@@ -462,6 +462,7 @@ namespace newasm
             string resString = "";
 
             inline lineData() noexcept {}
+            ~lineData() noexcept {}
         };
 
         inline std::string parse_def(std::string suf);
