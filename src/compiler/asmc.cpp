@@ -21,8 +21,8 @@ namespace newasm
             std::vector<std::string> namespace_stack;
             std::vector<std::string> sealed_labels;
 
-            bool objectDecl = false;
-            bool JIT_mode = false;
+            constinit bool objectDecl = false;
+            constinit bool JIT_mode = false;
         }
         namespace fail
         {
@@ -78,7 +78,7 @@ namespace newasm
             newasm::compiler::data::aborted = true;
         }
 
-        void abort(int exc)
+        inline void abort(int exc)
         {
             try
             {
@@ -826,6 +826,22 @@ namespace newasm
                         {
                             lineCompiled.altArgType = newasm::datatypes::character;
                             lineCompiled.altChar = newasm::header::functions::remsq(lineCompiled.tokens.at(i))[0];
+                        }
+
+                        if(lineCompiled.whatAmIDoing == NewASM::core::lang_inf::mov)
+                        {
+                            auto& k = lineCompiled.tokens.at(i);
+                            if(k.front() == '{' && k.back() == '}' && k.size() >= 3)
+                            {
+                                std::string number_part = newasm::header::functions::trim(k.substr(1, k.size() - 2));
+                                k = "{"_str + newasm::compiler::parse_def(number_part) + "}"_str;
+                                lineCompiled.VirtualMemoryAccess = true;
+                            }
+                            if(k.front() == '[' && k.back() == ']' && k.size() >= 3)
+                            {
+                                std::string number_part = newasm::header::functions::trim(k.substr(1, k.size() - 2));
+                                k = "["_str + newasm::compiler::parse_def(number_part) + "]"_str;
+                            }
                         }
                     }
                 }

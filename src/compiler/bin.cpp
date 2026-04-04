@@ -84,6 +84,8 @@ namespace newasm
 
                 write_bin(out, ld.krnlMod);
                 write_bin(out, ld.jumpinTo);
+
+                write_bin(out, ld.VirtualMemoryAccess);
                 return;
             }
             void load_lineData(std::ifstream& in, newasm::compiler::lineData& ld)
@@ -125,6 +127,8 @@ namespace newasm
 
                 read_bin(in, ld.krnlMod);
                 read_bin(in, ld.jumpinTo);
+
+                read_bin(in, ld.VirtualMemoryAccess);
                 return;
             }
             //label addresses

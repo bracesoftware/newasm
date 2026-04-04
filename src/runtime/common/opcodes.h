@@ -82,6 +82,7 @@ namespace newasm
             {70, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::evt)},
             {71, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::mod__)},
             {72, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::loop)},
+            {73, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::movx)},
 
             {100, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::__say)}
         };

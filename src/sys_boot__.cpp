@@ -60,9 +60,11 @@ namespace newasm::bootloader
             return 0;
         }
 
+        #if 0
         module(test, {
             NewASM::Modules::PrintLine("Test.");
         });
+        #endif
         
         newasm::sealedLabels = &newasm::compiler::data::sealed_labels;
         $defer //BC++ feature, $ blocks

@@ -1567,6 +1567,7 @@ namespace newasm
                 }
                 default:
                 {
+                    //std::cout << "FDX IS " << NewASM::mem::regs::fdx.get_value() << std::endl;
                     newasm::terminate(newasm::exit_codes::unknown_fdx);
                     return 1;
                 }

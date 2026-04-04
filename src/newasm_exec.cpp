@@ -2396,9 +2396,20 @@ namespace newasm
             //mov
             case newasm::core::lang_inf::mov:
             {
+                /*
                 if(newasm::header::functions::isvmemref(opr).first)
                 {
                     opr = newasm::_virtual::readData(newasm::header::functions::isvmemref(opr).second);
+                }
+                */
+                if(lineInfo.VirtualMemoryAccess)
+                {
+                    //std::cout << "UAAAA\n";
+                    auto p = newasm::header::functions::isvmemref(opr);
+                    if(p.first)
+                    {
+                        opr = newasm::_virtual::readData(p.second);
+                    }
                 }
 
                 if(lineInfo.whatAreRegistersLol == INVALID_INS)

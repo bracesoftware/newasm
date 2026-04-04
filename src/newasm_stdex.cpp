@@ -10,11 +10,11 @@ namespace newasm
 {
     namespace tests
     {
-        void main()
+        inline void main()
         {
             return;
         }
-        void main(int argc, char** argv)
+        inline void main(int argc, char** argv)
         {
             return;
         }

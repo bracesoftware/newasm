@@ -451,6 +451,7 @@ namespace newasm
             int whatAreRegistersLol = INVALID_INS;
             unsigned short krnlMod = INVALID_INS;
             int jumpinTo = INVALID_INS;
+            bool VirtualMemoryAccess = false;
 
             //---------------------------------------------
             //stuff not included in the binary:
