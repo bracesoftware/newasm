@@ -7,6 +7,7 @@ This article includes the following instructions:
 3. [`heap` and `load`](#heap-and-load)
 4. [`pop` and `push`](#push-and-pop)
 5. [`stack`](#stack)
+6. [`movx`](#movx)
 
 ## `mov`
 This instruction allows you to change values of registers and variables.
@@ -176,3 +177,23 @@ This instruction is used to clear the call stack information from the stack memo
     zero imm
     stack ; clear up the stack after the procedure call
 ```
+
+## `movx`
+
+> [!WARNING]
+> This instruction was added in build 28.
+
+The `movx` instruction is an abbreviation of MOVe eXclusive, which basically tells the compiler to move all variable data into another and discard the old one.
+
+```asm
+.data
+    intg oldOne: 43
+    intg newOne: 84
+.start
+    movx &newOne, &oldOne
+    mov tlr, oldOne ; crash! what's oldOne?
+    // oldOne is now treated as if it was never even declared
+```
+
+> [!WARNING]
+> You can perform move semantics only on variables of the same type.
