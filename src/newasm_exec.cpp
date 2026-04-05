@@ -2401,8 +2401,8 @@ namespace newasm
                 newasm::runtime::functions::parse(suf); // for namespaces
                 suf = newasm::header::functions::trim(newasm::header::functions::remamp(suf));
 
-                auto NewLocation_ = newasm::variables::ids.find(opr);
-                auto OldLocation_ = newasm::variables::ids.find(suf);
+                auto NewLocation_ = newasm::variables::ids.find(suf);
+                auto OldLocation_ = newasm::variables::ids.find(opr);
 
                 if(NewLocation_ == newasm::variables::ids.end() or OldLocation_ == newasm::variables::ids.end())
                 {
@@ -2590,8 +2590,8 @@ namespace newasm
                 newloc.transient__ = oldloc.transient__;
                 newloc.attrib = oldloc.attrib;
 
-                return 1;
-                newasm::variables::ids.erase(oldloc_s);
+                std::cout << "tryn to delete: `" << opr << "`\n";
+                newasm::variables::ids.erase(opr);
                 return 1;
             }
             //mov
