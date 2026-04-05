@@ -93,6 +93,8 @@ namespace newasm::header
         int alignment = 1;
         //offline mode (kernel module for networking,http,tcp is off)
         bool offlineMode = false;
+
+        bool EnableThreads = true;
     }
     namespace constants
     {

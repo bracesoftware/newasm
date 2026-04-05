@@ -983,6 +983,7 @@ namespace newasm
         inline void cleanup()
         {
             newasm::RAM->set_sot(sizeof(int));
+            NewASM::header::data::EnableThreads = true;
             newasm::header::data::offlineMode = false;
             newasm::exit_handled = false;
             newasm::lambda::GLOBAL.reset_forKernel();

@@ -2396,6 +2396,7 @@ namespace newasm
             //movx
             case newasm::core::lang_inf::movx:
             {
+                return 1;
                 newasm::runtime::functions::parse(opr); // for namespaces
                 opr = newasm::header::functions::trim(newasm::header::functions::remamp(opr));
                 newasm::runtime::functions::parse(suf); // for namespaces
@@ -2591,7 +2592,7 @@ namespace newasm
                 newloc.attrib = oldloc.attrib;
 
                 std::cout << "tryn to delete: `" << opr << "`\n";
-                //newasm::variables::ids.erase(opr);
+                newasm::variables::ids.erase(opr);
                 return 1;
             }
             //mov
@@ -5497,6 +5498,11 @@ namespace newasm
                         newasm::header::data::offlineMode = !newasm::header::data::offlineMode;
                         return 1;
                     }
+                    case 5:
+                    {
+                        NewASM::header::data::EnableThreads = !NewASM::header::data::EnableThreads;
+                        return 1;
+                    }
                 }
                 newasm::terminate(newasm::exit_codes::invalid_sysint);
                 return 1;
@@ -7117,7 +7123,7 @@ namespace newasm
         newasm::terminate(newasm::exit_codes::invalid_syntax);
         return 1;
     }
-    void handle_threads(int method);
+    void handle_threads();
     #if 0
     int proclineUncompiled(std::string &line)
     {
@@ -7376,7 +7382,7 @@ namespace newasm
         {
             if(newasm::thread_line == false)
             {
-                newasm::handle_threads(0);
+                newasm::handle_threads();
             }
             if(newasm::mem::functions::datavalid(line, newasm::mem::instructions))
             {
@@ -7932,7 +7938,7 @@ namespace newasm
         {
             if(newasm::thread_line == false)
             {
-                newasm::handle_threads(0);
+                newasm::handle_threads();
             }
             std::string libname;
             
@@ -8717,41 +8723,45 @@ namespace newasm
         }
         return 0;
     }
-    inline void handle_threads(int method)
+    inline void handle_threads()
     {
+        if(!NewASM::header::data::EnableThreads)
+        {
+            return;
+        }
         if(newasm::header::data::proc_now)
         {
             return;
         }
-        if(method == 0)
-        for(auto i = newasm::threads::valid_threads.begin(); i != newasm::threads::valid_threads.end(); ++i)
+        for(int p = 0; p < newasm::threads::valid_threads.size(); ++p)
         {
+            auto& i = newasm::threads::valid_threads.at(p);
             //if(0) newasm::threads::memory.at(*i)->prepare_sys();
-            if(newasm::threads::memory.at(*i)->returned)
+            if(newasm::threads::memory.at(i)->returned)
             {
                 continue;
             }
-            if(newasm::threads::memory.at(*i)->contents.empty())
+            if(newasm::threads::memory.at(i)->contents.empty())
             {
                 continue;
             }
-            auto& IDX = newasm::threads::memory.at(*i)->lcx;
-            if(IDX == newasm::threads::memory.at(*i)->contents.size())
+            auto& IDX = newasm::threads::memory.at(i)->lcx;
+            if(IDX == newasm::threads::memory.at(i)->contents.size())
             {
-                newasm::threads::memory.at(*i)->returned = true;
-                newasm::threads::memory.at(*i)->returned_val = "0";
+                newasm::threads::memory.at(i)->returned = true;
+                newasm::threads::memory.at(i)->returned_val = "0";
                 continue;
             }
             newasm::thread_line = true;
-            newasm::threads::now = (*i); // thread name
-            newasm::procline(newasm::threads::memory.at(*i)->contents.at(IDX));
+            newasm::threads::now = (i); // thread name
+            newasm::procline(newasm::threads::memory.at(i)->contents.at(IDX));
             IDX++;
             newasm::thread_line = false;
-            if(newasm::threads::memory.at(*i)->paused)
+            if(newasm::threads::memory.at(i)->paused)
             {
                 IDX--;
                 //std::cout << "Thread paused by channel: " << newasm::threads::now << std::endl;
-                newasm::threads::memory.at(*i)->paused = false;
+                newasm::threads::memory.at(i)->paused = false;
                 continue;
             }
             //newasm::threads::memory.at(*i)->contents.pop_front();

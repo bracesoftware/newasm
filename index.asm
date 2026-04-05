@@ -2387,6 +2387,7 @@ jmp doneshit
     mov &ThisIsConst, 3 ; error
 
     :d787234
+    ;int 0x5
     mov bos, 0b11110100001001000000;1000000
     :loop___
     cmp bos, 0
