@@ -3322,7 +3322,7 @@ namespace newasm
                                 return 1;
                             }
 
-                            newasm::mem::regs::hea = addr + sizeof(int) + byte + 1;
+                            newasm::mem::regs::hea = addr + sizeof(int) + byte;
                             return 1;
                         }
 
