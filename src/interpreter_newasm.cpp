@@ -174,6 +174,7 @@ namespace newasm
         const int threadz = 12;
         const int event = 100;
         const int _regDeref = 101;
+        constinit const int NIL = 102;
     }
     namespace runtime
     {
@@ -1014,6 +1015,7 @@ namespace newasm
             newasm::kernel::cfg::Misc = false;
             newasm::kernel::cfg::Crypto = false;
             newasm::kernel::cfg::Context = false;
+            NewASM::kernel::cfg::FileStream_VDSK = false;
 
             newasm::mem::datatypes.clear();
             newasm::mem::data.clear();

@@ -20,10 +20,11 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 + The `malloc` stores a pointer of the newly allocated block into the `rax` register, instead of `tlr` - for performance purposes.
 + Added move semantics with the exclusive move, `movx`, instruction.
 + Improved performance of the `mov` instruction.
++ Improved performance of the `pop` and `free` instructions when they take `nil` as their parameter.
 
 ## Fixed issues
 
-- No issues were found.
++ Fixed issue #27: off-by-one when accessing addresses within newly allocated memory blocks.
 
 ## Important notes
 

@@ -2591,7 +2591,7 @@ namespace newasm
                 newloc.attrib = oldloc.attrib;
 
                 std::cout << "tryn to delete: `" << opr << "`\n";
-                newasm::variables::ids.erase(opr);
+                //newasm::variables::ids.erase(opr);
                 return 1;
             }
             //mov
@@ -4621,7 +4621,7 @@ namespace newasm
             //pop
             case newasm::core::lang_inf::pop:
             {
-                if(suf == NIL_STR)
+                if(lineInfo.priArgType == NewASM::datatypes::NIL)
                 {
                     int address = newasm::mem::regs::stk;
                     if(newasm::malloc::types[address] == newasm::datatypes::number)
@@ -5955,15 +5955,7 @@ namespace newasm
                 newasm::allocation_data = nullptr;
                 #endif
 
-                newasm::runtime::functions::parse(suf);
-
-                if(!newasm::header::functions::isnumeric(suf) && suf != NIL_STR)
-                {
-                    newasm::terminate(newasm::exit_codes::invalid_alloc);
-                    return 1;
-                }
-
-                if(suf == NIL_STR)
+                if(lineInfo.priArgType == NewASM::datatypes::NIL)
                 {
                     if(newasm::malloc::meta.size() == 0)
                     {
@@ -5975,6 +5967,14 @@ namespace newasm
                     newasm::malloc::meta.pop_back();
 
                     newasm::hardware::randAccessMem.free(addr);
+                    return 1;
+                }
+
+                newasm::runtime::functions::parse(suf);
+
+                if(!newasm::header::functions::isnumeric(suf) && suf != NIL_STR)
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_alloc);
                     return 1;
                 }
 

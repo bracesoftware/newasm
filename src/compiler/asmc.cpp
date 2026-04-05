@@ -785,6 +785,17 @@ namespace newasm
                             lineCompiled.priArgType = newasm::datatypes::character;
                             lineCompiled.priChar = newasm::header::functions::remsq(lineCompiled.tokens.at(i))[0];
                         }
+
+                        if(
+                            (lineCompiled.whatAmIDoing == NewASM::core::lang_inf::free__) or
+                            (lineCompiled.whatAmIDoing == NewASM::core::lang_inf::pop)
+                        )
+                        {
+                            if(lineCompiled.tokens.at(i) == NIL_STR)
+                            {
+                                lineCompiled.priArgType = NewASM::datatypes::NIL;
+                            }
+                        }
                     }
                     if(i == 2)
                     {
