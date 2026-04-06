@@ -14,9 +14,9 @@ namespace newasm
     namespace ctl
     {
         const std::string download_server = "https://bracesoftware.github.io/web/newasm_server/dynlibs/";
-        const int first_column = 20;
-        const int second_column = 20;
-        const int third_column = 50;
+        constinit const int first_column = 20;
+        constinit const int second_column = 20;
+        constinit const int third_column = 50;
         const std::string tabs = "\t";
         const NewASM::header::definitions::HelpTable help_table_data = {
             {"help",        {"/",               "Displays the help panel."}},
