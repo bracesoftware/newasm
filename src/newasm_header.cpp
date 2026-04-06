@@ -9,7 +9,7 @@
     #error WHAT
 #endif
 
-__newasm_LOAD_PACKAGE_MODULE(header, {
+module(header, {
     //setup goes here
 });
 

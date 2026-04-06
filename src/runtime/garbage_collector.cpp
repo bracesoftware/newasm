@@ -1,7 +1,7 @@
 // Copyright (c) 2026 Brace Software Co.
 // NewASM Virtual Machine and Toolchain
 
-__newasm_LOAD_PACKAGE_MODULE(primitive_garbage_collector, {
+module(primitive_garbage_collector, {
     //setup goes here
 });
 

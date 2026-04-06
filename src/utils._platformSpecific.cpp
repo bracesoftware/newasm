@@ -1,7 +1,7 @@
 // Copyright (c) 2026 Brace Software Co.
 // NewASM Virtual Machine and Toolchain
 
-__newasm_LOAD_PACKAGE_MODULE(hostos_specific__UTILS, {
+module(hostos_specific__UTILS, {
     //setup goes here
 });
 
@@ -20,6 +20,6 @@ __newasm_LOAD_PACKAGE_MODULE(hostos_specific__UTILS, {
 
 link "vm/Experimental";
 
-__newasm_LOAD_PACKAGE_MODULE(SDL_screen_emulator, {
+module(SDL_screen_emulator, {
     //setup goes here
 });

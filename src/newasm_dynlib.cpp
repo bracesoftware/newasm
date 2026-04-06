@@ -5,7 +5,7 @@
     #error [New-ASM] Cannot compile.
 #endif
 
-__newasm_LOAD_PACKAGE_MODULE(dynlib, {
+module(dynlib, {
     //setup goes here
 });
 

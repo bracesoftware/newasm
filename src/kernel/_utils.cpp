@@ -1,6 +1,10 @@
 // Copyright (c) 2026 Brace Software Co.
 // NewASM Virtual Machine and Toolchain
 
+module(kernel_utils, {
+    NewASM::Modules::PrintLine("Kernel utilities successfully loaded.");
+    return;
+});
 
 namespace newasm
 {

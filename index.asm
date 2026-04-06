@@ -2461,7 +2461,7 @@ jmp e2349083l
     movx &lol::new, &old
     mov tlr, lol::new("key")
     call std::ios::writeln
-    mov tlr, old("key")
+    ;mov tlr, old("key")
     call std::ios::writeln
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     mov tlr, 223

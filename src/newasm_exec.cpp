@@ -7,7 +7,7 @@
 #endif
 
 module(virtual_cpu, {
-    //setup goes here
+    NewASM::Modules::PrintLine("Virtual CPU successfully plugged in...");
 });
 
 namespace newasm
@@ -2593,7 +2593,7 @@ namespace newasm
                 newloc.transient__ = oldloc.transient__;
                 newloc.attrib = oldloc.attrib;
 
-                std::cout << "tryn to delete: `" << opr << "`\n";
+                //std::cout << "tryn to delete: `" << opr << "`\n";
                 newasm::variables::ids.erase(opr);
                 return 1;
             }

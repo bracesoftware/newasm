@@ -1,7 +1,6 @@
 // Copyright (c) 2026 Brace Software Co.
 // NewASM Virtual Machine and Toolchain
 
-
 #define _NEWASM_OS_windows 0
 #define _NEWASM_OS_linux 1
 #define _NEWASM_OS_windows_old 2

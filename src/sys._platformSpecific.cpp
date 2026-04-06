@@ -42,7 +42,7 @@
     link "_platformSpecific/macos/jit";
 #endif
 
-__newasm_LOAD_PACKAGE_MODULE(hostos_specific__SYS, {
+module(hostos_specific__SYS, {
     //setup goes here
 });
 
