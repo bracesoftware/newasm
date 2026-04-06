@@ -192,7 +192,7 @@ The `movx` instruction is an abbreviation of MOVe eXclusive, which basically tel
 .start
     movx &newOne, &oldOne
     mov tlr, oldOne ; crash! what's oldOne?
-    // oldOne is now treated as if it was never even declared
+    ; oldOne is now treated as if it was never even declared
 ```
 
 > [!WARNING]
