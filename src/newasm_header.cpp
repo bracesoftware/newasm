@@ -48,29 +48,29 @@ namespace newasm::header
     namespace data
     {
         std::string lastln = "";
-        int lastlndx = 0;
-        bool exception = true;
+        constinit int lastlndx = 0;
+        constinit bool exception = true;
         #if 0
             #ifndef newasm::header::data::repl
                 bool repl = false;
             #endif
         #endif
-        bool repl_end = false;
-        bool proc_now = false;
-        bool struct_now = false;
+        constinit bool repl_end = false;
+        constinit bool proc_now = false;
+        constinit bool struct_now = false;
         std::string struct_decl = "";
 
-        bool blueprint_now = false;
+        constinit bool blueprint_now = false;
         std::string blueprint_decl = "";
 
-        int argc = 0;
-        int callstkidx = 0;
+        constinit int argc = 0;
+        constinit int callstkidx = 0;
 
-        int module = 0;
+        constinit int module = 0;
 
         std::string temp = "temp";
         //macros
-        bool macro_now = false;
+        constinit bool macro_now = false;
         std::string macro_decl = "";
         //switch-case
         newasm::kernel::thread_safe<std::string> switched_value;
@@ -83,22 +83,22 @@ namespace newasm::header
         std::string temp_;
 
         //lol
-        bool std_now__ = false;
+        constinit bool std_now__ = false;
 
         //movas instruction
         newasm::kernel::thread_safe<int> movas_type = newasm::core::lang_inf::typenames::num;
         //malloc block
         newasm::kernel::thread_safe<int> malloc_block_used = 0;
 
-        int alignment = 1;
+        constinit int alignment = 1;
         //offline mode (kernel module for networking,http,tcp is off)
-        bool offlineMode = false;
+        constinit bool offlineMode = false;
 
-        bool EnableThreads = true;
+        constinit bool EnableThreads = true;
         #if NEWASM_BROKEN_ACTIVE_THREAD_COUNTER
         NewASM::kernel::ValueTracker<unsigned int> ActiveThreads = 0;
         #else
-        unsigned int ActiveThreads = 0;
+        constinit unsigned int ActiveThreads = 0;
         #endif
     }
     namespace constants

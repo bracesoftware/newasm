@@ -275,6 +275,7 @@ namespace newasm
         }
     }
 }
+
 #define NEWASM_BASIC_FUNCTION_SIG []()->void
 
 //best thing i invented
