@@ -74,6 +74,8 @@ namespace newasm
                 write_bin(out, ld.altChar);
                 write_string(out, ld.altString);
 
+                write_bin(out, ld.caseLineArgType);
+
                 write_bin(out, ld.whatAmIDoing);
                 write_bin(out, ld.parsedType);
                 write_bin(out, ld.whatCodeSection);
@@ -116,6 +118,8 @@ namespace newasm
                 read_bin(in, ld.altFloat);
                 read_bin(in, ld.altChar);
                 read_string(in, ld.altString);
+
+                read_bin(in, ld.caseLineArgType);
 
                 read_bin(in, ld.whatAmIDoing);
                 read_bin(in, ld.parsedType);

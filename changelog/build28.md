@@ -21,10 +21,12 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 + Added move semantics with the exclusive move, `movx`, instruction.
 + Improved performance of the `mov` instruction.
 + Improved performance of the `pop` and `free` instructions when they take `nil` as their parameter.
++ Optimized several instructions including `thread` and `evt`.
 
 ## Fixed issues
 
 + Fixed issue #27: off-by-one when accessing addresses within newly allocated memory blocks.
++ Fixed issue #28: crashing while evaluating contexts.
 
 ## Important notes
 

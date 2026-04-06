@@ -5045,7 +5045,7 @@ namespace newasm
                     newasm::process_hndl(lineInfo.priInt, proc_name);
                     return 1;
                 }
-                if(newasm::header::data::case_line != OPEN_BRACE_STR)
+                if(lineInfo.caseLineArgType != NewASM::datatypes::tokenOpenBrace)//if(newasm::header::data::case_line != OPEN_BRACE_STR)
                 {
                     newasm::terminate(newasm::exit_codes::invalid_syntax);
                     return 1;
@@ -5231,7 +5231,7 @@ namespace newasm
             //thread
             case newasm::core::lang_inf::thread__:
             {
-                if(newasm::header::data::case_line != OPEN_BRACE_STR)
+                if(lineInfo.caseLineArgType != NewASM::datatypes::tokenOpenBrace)//if(newasm::header::data::case_line != OPEN_BRACE_STR)
                 {
                     newasm::terminate(newasm::exit_codes::invalid_syntax);
                     return 1;

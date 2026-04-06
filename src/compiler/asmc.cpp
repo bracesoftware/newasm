@@ -551,13 +551,26 @@ namespace newasm
                 {
                     if(line.size() != idx__ + 2)
                     {
+                        auto CompileCaseLine = [&](decltype(lineCompiled)& l) -> void {
+                            if(l.other == OPEN_BRACE_STR)
+                            {
+                                l.caseLineArgType = NewASM::datatypes::tokenOpenBrace;
+                                return;
+                            }
+                            if(l.other == NIL_STR)
+                            {
+                                l.caseLineArgType = NewASM::datatypes::NIL;
+                                return;
+                            }
+                        };
                         std::vector<std::string> linetokens_inline = newasm::common::tokenize(line.substr(0, idx__));
                         if(linetokens_inline.size() == 2)
                         {
                             lineCompiled.type = newasm::compiler::conditional;
-                            lineCompiled.other = newasm::header::functions::trim(line.substr(idx__ + 2));
+                            lineCompiled.other = newasm::header::functions::trim(line.substr(idx__ + 2));//part after ->
                             lineCompiled.tokens.push_back(linetokens_inline.at(0));
                             lineCompiled.tokens.push_back(linetokens_inline.at(1));
+                            CompileCaseLine(lineCompiled);
 
                             std::string& instruction = linetokens_inline.at(0);
                             std::string& otherShit = linetokens_inline.at(1);
@@ -616,6 +629,8 @@ namespace newasm
                             lineCompiled.type = newasm::compiler::conditional;
                             lineCompiled.other = newasm::header::functions::trim(line.substr(idx__ + 2));
                             lineCompiled.tokens.push_back(linetokens_inline.at(0));
+
+                            CompileCaseLine(lineCompiled);
 
                             std::string& instruction = linetokens_inline.at(0);
 

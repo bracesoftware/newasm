@@ -175,6 +175,7 @@ namespace newasm
         const int event = 100;
         const int _regDeref = 101;
         constinit const int NIL = 102;
+        constinit const int tokenOpenBrace = 103;
     }
     namespace runtime
     {
@@ -439,6 +440,8 @@ namespace newasm
             float altFloat = 0;
             char altChar = 0;
             string altString = "";
+
+            int caseLineArgType = 0;
 
             //newasm::compiler::argumentData suffixLiteral;
             //newasm::compiler::argumentData operandLiteral;
