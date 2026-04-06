@@ -2423,6 +2423,24 @@ namespace newasm
                     return 1;
                 }
 
+                if(
+                    oldloc.attrib & newasm::core::lang_inf::attributes::CONST__ or
+                    newloc.attrib & newasm::core::lang_inf::attributes::CONST__
+                )
+                {
+                    newasm::terminate(newasm::exit_codes::constant_modif);
+                    return 1;
+                }
+
+                if(
+                    oldloc.attrib & newasm::core::lang_inf::attributes::STATIC__ or
+                    newloc.attrib & newasm::core::lang_inf::attributes::STATIC__
+                )
+                {
+                    newasm::terminate(newasm::exit_codes::immovable_type);
+                    return 1;
+                }
+
                 // i like using `or` on end of lines cuz it looks better and || in the middle
                 if(
                     (newloc.type == newasm::datatypes::proc || oldloc.type == newasm::datatypes::proc) or

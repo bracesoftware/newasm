@@ -230,15 +230,21 @@ namespace newasm
             auto h = newasm::header::functions::parseAttribute(line);
             if(h.first)
             {
-                auto it = newasm::core::lang_inf::attributes::ids.find(h.second);
-                if(it == newasm::core::lang_inf::attributes::ids.end())
-                {
-                    lineCompiled.type = newasm::compiler::empty;
-                    newasm::compiler::abort(newasm::compiler::fail::unknown_attrib);
-                    return lineCompiled;
-                }
+                auto& v = h.second;
+                lineCompiled.attribute = 0;
                 lineCompiled.type = newasm::compiler::attribute;
-                lineCompiled.attribute = newasm::core::lang_inf::attributes::ids.at(h.second);
+                for(int i = 0; i < v.size(); ++i)
+                {
+                    auto& attrib = v.at(i);
+                    auto it = newasm::core::lang_inf::attributes::ids.find(attrib);
+                    if(it == newasm::core::lang_inf::attributes::ids.end())
+                    {
+                        lineCompiled.type = newasm::compiler::empty;
+                        newasm::compiler::abort(newasm::compiler::fail::unknown_attrib);
+                        return lineCompiled;
+                    }
+                    lineCompiled.attribute |= it->second;
+                }
                 return lineCompiled;
             }
             //directive

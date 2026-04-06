@@ -2380,7 +2380,7 @@ jmp doneshit
     mov tlr, "HELLOOOOO\n"
     call std::ios::write
 .data
-    @final
+    @ final
     intg ThisIsConst: 456
 .start
     jmp d787234
@@ -2448,6 +2448,8 @@ jmp e2349083l
     syscall
     :e2349083l
 .data
+    @static, final
+    intg test: 0
     ctx old: ("key": "Absolute cinema")
     ./lol
         ctx new: ()

@@ -46,10 +46,11 @@ namespace newasm
             namespace attributes
             {
                 inline constinit const int CONST__ = 1 << 0;
-                inline constinit const int TEST__ = 1 << 1;//itd
+                inline constinit const int STATIC__ = 1 << 1;
 
                 inline const std::unordered_map<std::string, int> ids = {
-                    {"final", CONST__}
+                    {"final", CONST__},
+                    {"static", STATIC__}
                 };
             }
             const int load = 1;//

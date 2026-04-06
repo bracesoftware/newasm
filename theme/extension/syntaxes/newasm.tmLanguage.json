@@ -66,7 +66,7 @@
     },
     {
       "name": "namespace.newasm",
-      "match": "\\b(final)\\b"
+      "match": "\\b(final|static)\\b"
     },
     {
       "name": "namespace.newasm",

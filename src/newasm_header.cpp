@@ -2029,24 +2029,28 @@ namespace newasm::header
             return {true, str};
         }
         @nodiscard
-        inline std::pair<bool, std::string> parseAttribute(const std::string& line)
+        inline std::pair<bool, std::vector<std::string>> parseAttribute(const std::string& line)
         {
             if(line.empty())
             {
-                return {false, ""};
+                return {false, {}};
             }
             if(line.at(0) != '@')
             {
-                return {false, ""};
+                return {false, {}};
             }
 
             std::string s = line.substr(1);
-            s = newasm::header::functions::trim(s);
-            if(newasm::header::functions::isalphanum(s))
+            auto vec = NewASM::header::functions::split(s, ',');
+            for(int i = 0; i < vec.size(); ++i)
             {
-                return {true, s};
+                vec[i] = NewASM::header::functions::trim(vec[i]);
+                if(!NewASM::header::functions::isalphanum(vec[i]) || vec.at(i).empty())
+                {
+                    return {false, {}};
+                }
             }
-            return {false, ""};
+            return {true, vec};
         }
     }
     //------------------------------------------------------
