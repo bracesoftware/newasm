@@ -22,6 +22,7 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 + Improved performance of the `mov` instruction.
 + Improved performance of the `pop` and `free` instructions when they take `nil` as their parameter.
 + Optimized several instructions including `thread` and `evt`.
++ Added `static` attribute for data that cannot be affected with `movx`.
 
 ## Fixed issues
 
