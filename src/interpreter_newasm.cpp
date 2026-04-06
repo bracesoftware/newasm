@@ -901,11 +901,11 @@ namespace fs = std::filesystem;
 
 namespace newasm
 {
-    bool use_std = false;
+    constinit bool use_std = false;
 
     namespace vers
     {
-        int main()
+        inline int main()
         {
             // download test
             std::string url = "https://bracesoftware.github.io/web/newasm_server/vers.txt";
@@ -1119,14 +1119,14 @@ namespace newasm
 
 link "vm/utilities/procfile";
 
-__newasm_LOAD_PACKAGE_MODULE(main_module, {
+module(main_module, {
     NewASM::CapturedData::ExitCodeInvalidMemacc = const_cast<decltype(NewASM::CapturedData::ExitCodeInvalidMemacc)>(&newasm::exit_codes::invalid_memacc);
     newasm::mem::labels.max_load_factor(MAX_LOAD_FACTOR);
     return;
 });
 namespace newasm
 {
-    int entry(int argc, char* argv[])
+    inline int entry(int argc, char* argv[])
     {
         NewASM::RamChip::PeekString = [](int addr) -> std::string {
             return NewASM::RAM->peek<std::string>(addr);
@@ -1138,6 +1138,7 @@ namespace newasm
         newasm::mem::regs::fdx.log_things(false);
         newasm::variables::ids.reserve(1000); // for funsies
         newasm::variables::ids.max_load_factor(MAX_LOAD_FACTOR);
+        NewASM::stack::macros.max_load_factor(MAX_LOAD_FACTOR);
         
         newasm::execBytecode test = newasm::compiler::DO("mov tlr, 3"_str.string());
         
