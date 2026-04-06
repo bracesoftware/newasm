@@ -120,8 +120,8 @@ namespace newasm::header
         const std::string endl = "\n";
 
         const std::string inv_reg_val = "[newasm] __ptr -> Segmentation fault.";
-        const int inv_ireg_val = -99999;
-        const float inv_freg_val = static_cast<float>(-99999);
+        const int inv_ireg_val = -99'999;
+        const float inv_freg_val = static_cast<float>(-99'999);
 
         const std::string std_library = "std.newasm";
     }
