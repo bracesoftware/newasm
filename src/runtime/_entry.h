@@ -563,14 +563,19 @@ namespace newasm
 								if(it == newasm::variables::ids.end())
 								{
 									validContext = false;
+									newasm::terminate(newasm::exit_codes::invalid_memacc);
+									return;
 								}
 								if(it->second.type != newasm::datatypes::mycontext)
 								{
 									validContext = false;
+									newasm::terminate(newasm::exit_codes::invalid_memacc);
+									return;
 								}
 								if(!validContext)
 								{
 									newasm::terminate(newasm::exit_codes::invalid_memacc);
+									return;
 								}
 
 								tupleOrContextIndex = newasm::header::functions::remq(tupleOrContextIndex);
@@ -614,14 +619,19 @@ namespace newasm
 						if(it == newasm::variables::ids.end())
 						{
 							validTuple = false;
+							newasm::terminate(newasm::exit_codes::invalid_memacc);
+							return;
 						}
 						if(it->second.type != newasm::datatypes::tuple)
 						{
 							validTuple = false;
+							newasm::terminate(newasm::exit_codes::invalid_memacc);
+							return;
 						}
 						if(!validTuple)
 						{
 							newasm::terminate(newasm::exit_codes::invalid_memacc);
+							return;
 						}
 						if(validTuple && indexNumeric)
 						{
@@ -945,14 +955,19 @@ namespace newasm
 							if(it == newasm::variables::ids.end())
 							{
 								validContext = false;
+								newasm::terminate(newasm::exit_codes::invalid_memacc);
+								return;
 							}
 							if(it->second.type != newasm::datatypes::mycontext)
 							{
 								validContext = false;
+								newasm::terminate(newasm::exit_codes::invalid_memacc);
+								return;
 							}
 							if(!validContext)
 							{
 								newasm::terminate(newasm::exit_codes::invalid_memacc);
+								return;
 							}
 
 							tupleOrContextIndex = newasm::header::functions::remq(tupleOrContextIndex);
@@ -996,14 +1011,19 @@ namespace newasm
 					if(it == newasm::variables::ids.end())
 					{
 						validTuple = false;
+						newasm::terminate(newasm::exit_codes::invalid_memacc);
+						return;
 					}
 					if(it->second.type != newasm::datatypes::tuple)
 					{
+						newasm::terminate(newasm::exit_codes::invalid_memacc);
 						validTuple = false;
+						return;
 					}
 					if(!validTuple)
 					{
 						newasm::terminate(newasm::exit_codes::invalid_memacc);
+						return;
 					}
 					if(validTuple && indexNumeric)
 					{
@@ -1168,6 +1188,13 @@ namespace newasm
 						suf = parsed_contents;
 					}
 				}
+				#if 0
+				else
+				{
+					newasm::terminate(newasm::exit_codes::invalid_memacc);
+					return;
+				}
+				#endif
 				
                 ///////////////////
                 if(suf == newasm::header::constants::inv_reg_val)

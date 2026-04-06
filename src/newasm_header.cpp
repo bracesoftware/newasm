@@ -95,6 +95,11 @@ namespace newasm::header
         bool offlineMode = false;
 
         bool EnableThreads = true;
+        #if NEWASM_BROKEN_ACTIVE_THREAD_COUNTER
+        NewASM::kernel::ValueTracker<unsigned int> ActiveThreads = 0;
+        #else
+        unsigned int ActiveThreads = 0;
+        #endif
     }
     namespace constants
     {

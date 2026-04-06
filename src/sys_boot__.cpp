@@ -43,6 +43,31 @@ class E__ extends public D__ {};
 
 namespace newasm::bootloader
 {
+    #if NEWASM_BROKEN_ACTIVE_THREAD_COUNTER
+    unsigned int OldValue = 100;
+    bool StopActiveThreadCounter = false;
+    void CheckForActiveThreads()
+    {        
+        while(true)
+        {
+            if(StopActiveThreadCounter)
+            {
+                return;
+            }
+            unsigned int CurrentValue = NewASM::header::data::ActiveThreads();
+            if(OldValue != CurrentValue)
+            {
+                std::cout << NewASM::header::col::red;
+                std::cout << "=====================================================\n\n";
+                std::cout << "ACTIVE THREADZ: " << CurrentValue << '\n' << std::endl;
+                std::cout << "=====================================================\n";
+                std::cout << NewASM::header::col::reset;
+                OldValue = CurrentValue;
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
+    }
+    #endif
     inline int __main__(int argc, char* argv[])
     {
         NewASM::Console::cls_BARE_METAL__();
@@ -117,8 +142,21 @@ int main(int argc, char** argv)
         }
     }
 
+    #if NEWASM_BROKEN_ACTIVE_THREAD_COUNTER
+    std::thread p(NewASM::bootloader::CheckForActiveThreads);
+    #endif
+
     NewASM::bootloader::__main__(argc, argv);
 
     NewASM::BetterCPlusPlus::init();
+
+    #if NEWASM_BROKEN_ACTIVE_THREAD_COUNTER
+    NewASM::bootloader::StopActiveThreadCounter = true;
+
+    if(p.joinable())
+    {
+        p.join();
+    }
+    #endif
     return 0;
 }

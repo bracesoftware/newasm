@@ -14,6 +14,80 @@ namespace newasm
     namespace kernel
     {
         template<typename T>
+        class ValueTracker final
+        {
+            private T value;
+
+            inline void log(T v)
+            {
+                std::cout << NewASM::header::col::red;
+                std::cout << "\n=====================================================\n\n";
+                std::cout << "ValueTracker: " << v << '\n' << std::endl;
+                std::cout << "=====================================================\n";
+                std::cout << NewASM::header::col::reset;
+            }
+
+            inline T& get() { return value; }
+            inline const T& get() const { return value; }
+
+            public inline ValueTracker(T&& val) { this->value = std::move(val); }
+            public inline ValueTracker(const T& val) { this->value = val; }
+
+            inline ValueTracker<T>& operator=(const T& new_val)
+            {
+                get() = new_val;
+                this->log(new_val);
+                return *this;
+            }
+            inline ValueTracker<T>& operator=(T&& new_val)
+            {
+                get() = std::move(new_val);
+                this->log(new_val);
+                return *this;
+            }
+
+            inline operator T&()
+            {
+                return get();
+            }
+            inline operator const T&() const
+            {
+                return get();
+            }
+
+            inline T* operator->()
+            {
+                return &get();
+            }
+            inline const T* operator->() const
+            {
+                return &get();
+            }
+
+            inline T& operator*()
+            {
+                return get();
+            }
+            inline const T& operator*() const
+            {
+                return get();
+            }
+            inline ValueTracker<T>& operator++()
+            {
+                ++get();
+                this->log(get());
+                return *this;
+            }
+
+            inline T operator++(int)
+            {
+                T old = get();
+                ++get();
+                this->log(get());
+                return old;
+            }
+        };
+        template<typename T>
         class thread_safe final
         {
             #if 0

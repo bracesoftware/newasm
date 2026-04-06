@@ -1107,6 +1107,8 @@ namespace newasm
             newasm::compiler::data::symbol_map.clear();
             newasm::compiler::data::namespace_stack.clear();
             newasm::compiler::data::sealed_labels.clear();
+
+            NewASM::header::data::ActiveThreads = 0;
             return;
         }
     }

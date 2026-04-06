@@ -2453,6 +2453,9 @@ jmp e2349083l
         ctx new: ()
     ./!lol
 .start
+    ;mov tlr, pddsfdssd
+    ;mov tlr, jdhsf(3)
+    ;mov tlr, sdfoj("ksj")
     mov tlr, old("key")
     call std::ios::writeln
     movx &lol::new, &old

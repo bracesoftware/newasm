@@ -425,3 +425,5 @@ namespace newasm
         return ToSmart(t);
     }
 }
+
+#define NEWASM_BROKEN_ACTIVE_THREAD_COUNTER false
