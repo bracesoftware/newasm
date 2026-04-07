@@ -268,24 +268,24 @@ namespace newasm::header
 
         inline void nullprint(std::string text) noexcept
         {
-            std::cout << text << std::endl;
+            std::cout << text << '\n';
         }
         inline int nullprint_wnm(std::string text) noexcept
         {
-            std::cout << newasm::header::system_info::name << " " << text << std::endl;
+            std::cout << newasm::header::system_info::name << " " << text << '\n';
             return 0;
         }
         inline void err(const std::string& text)
         {
-            std::cout << newasm::header::col::light_red << "! error:  " << newasm::header::col::reset << text << std::endl;
+            std::cout << newasm::header::col::light_red << "! error:  " << newasm::header::col::reset << text << '\n';
         }
         inline void wrn(const std::string& text)
         {
-            std::cout << newasm::header::col::yellow << "! warning:  " << newasm::header::col::reset << text << std::endl;
+            std::cout << newasm::header::col::yellow << "! warning:  " << newasm::header::col::reset << text << '\n';
         }
         inline void info(const std::string& text)
         {
-            std::cout << newasm::header::col::light_blue << " info:  " << newasm::header::col::gray << text << newasm::header::col::reset << std::endl;
+            std::cout << newasm::header::col::light_blue << " info:  " << newasm::header::col::gray << text << newasm::header::col::reset << '\n';
         }
         //formatted info overloads
         inline void f__(const char* format)
@@ -559,7 +559,7 @@ namespace newasm::header
         }
 
         @nodiscard
-        inline std::vector<std::string> split(const std::string &str, char delimiter)
+        inline std::vector<std::string> split___(const std::string &str, char delimiter)//ORIDZINAL
         {
             std::vector<std::string> tokens;
             std::string token;
@@ -571,6 +571,23 @@ namespace newasm::header
                 tokens.push_back(token);
             }
 
+            return tokens;
+        }
+        ATTR_FLAT inline std::vector<std::string> split(const std::string &str, char delimiter)
+        {
+            std::vector<std::string> tokens;
+            size_t start = 0, end = 0;
+            while((end = str.find(delimiter, start)) != std::string::npos)
+            {
+                std::string token = str.substr(start, end - start);
+                if(!newasm::header::functions::trim(token).empty()) 
+                {
+                    tokens.push_back(token);
+                }
+                start = end + 1;
+            }
+            std::string last = str.substr(start);
+            if(!newasm::header::functions::trim(last).empty()) tokens.push_back(last);
             return tokens;
         }
 
@@ -598,7 +615,7 @@ namespace newasm::header
         }
 
         @nodiscard
-        inline std::string trim(const std::string &str)
+        inline std::string trim__(const std::string& str) //ORIDZINAL
         {
             auto start = str.begin();
             auto end = str.end();
@@ -622,7 +639,14 @@ namespace newasm::header
             //returns trimmed string
             return std::string(start, it + 1);
         }
-        inline bool isnumeric_(const std::string &str)
+        ATTR_FLAT inline std::string trim(const std::string& str)
+        {
+            const auto start = str.find_first_not_of(" \t\n\r\f\v");
+            if(start == std::string::npos) return "";
+            const auto end = str.find_last_not_of(" \t\n\r\f\v");
+            return str.substr(start, end - start + 1);
+        }
+        inline bool isnumeric_(const std::string& str)
         {
             std::string copy;
             for(char i : str)
@@ -642,7 +666,7 @@ namespace newasm::header
             }
             return std::all_of(copy.begin() + 1, copy.end(), ::isdigit);
         }
-        inline bool isnumeric(const std::string& str)
+        inline bool isnumeric(const std::string& str)//ORIDZINAL
         {
             bool first = true;
             for(char c : str)
@@ -663,7 +687,20 @@ namespace newasm::header
             }
             return !first; // barem jedan validan char
         }
-
+        //optimization
+        inline bool isnumeric__(const std::string& str)
+        {
+            if(str.empty()) return false;
+            size_t start = 0;
+            if(str[0] == '-')
+            {
+                if(str.size() == 1) return false;
+                start = 1;
+            }
+            return std::all_of(str.begin() + start, str.end(), [](unsigned char c) {
+                return std::isdigit(c);
+            });
+        }
         inline bool strfind(const std::string& str, const char c)
         {
             return str.find(c) != std::string::npos;
@@ -1352,7 +1389,7 @@ namespace newasm::header
             return ss.str();
         }
 
-        inline std::string mangleName(const std::vector<std::string>& namespaces, const std::string& symbol_name)
+        inline std::string mangleName__1(const std::vector<std::string>& namespaces, const std::string& symbol_name)
         {
             std::string fullpath;
 
@@ -1369,8 +1406,46 @@ namespace newasm::header
 
             return std::string("__newasm_symbol") + buffer;
         }
+        #define MAGIC_NUMBER__ 15
+        inline std::string mangleName(const std::vector<std::string>& namespaces, const std::string& symbol_name)
+        {
+            size_t total_size = symbol_name.size() + sizeof(__TIME__) - 1 + sizeof(__DATE__) - 1;
+            for(const auto& ns : namespaces)
+            {
+                total_size += ns.size() + 2; //"::" oper
+            }
+            std::string fullpath;
+            fullpath.reserve(total_size);
+
+            for(const auto& ns : namespaces)
+            {
+                fullpath += ns;
+                fullpath += "::";
+            }
+
+            fullpath += symbol_name;
+            fullpath += __TIME__;
+            fullpath += __DATE__;
+
+            size_t hash_val = std::hash<std::string>{}(fullpath);
+            char buffer[16];
+            static constexpr char hex[] = "0123456789abcdef";
+
+            for(int i = MAGIC_NUMBER__; i >= 0; --i)
+            {
+                buffer[i] = hex[hash_val & 0xF];
+                hash_val >>= 4;
+            }
+            std::string result;
+            result.reserve(2 * MAGIC_NUMBER__ + 3); // "__newasm_symbol" + hash
+
+            result += "__newasm_symbol";
+            result.append(buffer, MAGIC_NUMBER__ + 1);
+
+            return result;
+        }
         
-        bool istuple(std::string &str)
+        inline bool istuple(const std::string& str)
         {
             if(str.front() == '(' && str.back() == ')')
             {
@@ -1379,7 +1454,7 @@ namespace newasm::header
             return false;
         }
 
-        inline bool isTupleOrContext(std::string &str)
+        inline bool isTupleOrContext(const std::string& str)
         {
             return istuple(str);
         }
@@ -1432,7 +1507,7 @@ namespace newasm::header
             }
             return result;
         }
-        inline std::vector<std::string> parseTupleOrContext(const std::string &str)
+        inline std::vector<std::string> parseTupleOrContext(const std::string& str)
         {
             return parseTuple(str);
         }
