@@ -126,6 +126,13 @@ namespace newasm::bootloader
             std::cout << "newasm::forLinker__OLD::linked_size: " << newasm::forLinker__OLD::linked_size << std::endl;
         }
 
+        #if 0
+        auto v = newasm::common::tokenize("mov qword ptr lmao xd");
+        for(int i = 0; i < v.size(); ++i)
+        {
+            std::cout << v.at(i) << std::endl;
+        }
+        #endif
         return 0;
     }
 }
