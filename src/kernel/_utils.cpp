@@ -16,7 +16,7 @@ namespace newasm
             {
                 std::cout << newasm::header::col::kernel << "\nkernel note: `" << newasm::header::col::light_red
                 << newasm::kernel::syscalls.at({newasm::threads::functions::get_sysenter(),newasm::mem::regs::fdx.get_value()})
-                << newasm::header::col::kernel << "`: " << newasm::header::col::gray << text << newasm::header::col::reset << std::endl;
+                << newasm::header::col::kernel << "`: " << newasm::header::col::gray << text << newasm::header::col::reset << '\n';
             }
         }
     }

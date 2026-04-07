@@ -350,7 +350,7 @@ namespace newasm
     {
         namespace functions
         {
-            void krnl(std::string text);
+            inline void krnl(std::string text);
             //void parseRegDeref(std::string& arg);
             std::pair<bool, int> issizeof(const std::string& str);
 
