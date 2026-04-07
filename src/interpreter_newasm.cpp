@@ -505,12 +505,12 @@ namespace newasm
 
     namespace global
     {
-        const int MODE_INT = 0;
-        const int MODE_SHELL = 1;
-        int mode = newasm::global::MODE_INT;
+        constinit const int MODE_INT = 0;
+        constinit const int MODE_SHELL = 1;
+        constinit int mode = newasm::global::MODE_INT;
 
         std::deque<std::string> event_codeblock;
-        bool event_now = false;
+        constinit bool event_now = false;
     }
 
     std::unordered_map<std::string, int> inverted_ins;
