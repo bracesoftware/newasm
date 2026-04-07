@@ -465,7 +465,7 @@ namespace newasm
             char resChar = 0;
             string resString = "";
 
-            inline lineData() noexcept {}
+            explicit inline lineData() noexcept {}
             ~lineData() noexcept {}
         };
 
