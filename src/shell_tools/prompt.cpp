@@ -1,7 +1,7 @@
 // Copyright (c) 2026 Brace Software Co.
 // NewASM Virtual Machine and Toolchain
 
-__newasm_LOAD_PACKAGE_MODULE(shell_tools__PROMPT, {
+module(shell_tools__PROMPT, {
     //setup goes here
 });
 
