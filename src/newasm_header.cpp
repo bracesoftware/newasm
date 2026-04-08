@@ -791,7 +791,6 @@ namespace newasm::header
 
             return dotCount == 1;
         }
-
         inline bool istext_(const std::string& str)
         {
             int quocount = 0;
