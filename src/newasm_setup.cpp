@@ -401,7 +401,7 @@ namespace newasm
                 return true;
             }
             #endif
-            bool check_stkhea_col()
+            inline bool check_stkhea_col() noexcept
             {
                 return (!(newasm::mem::regs::hea < newasm::mem::regs::stk));
             }
@@ -418,7 +418,7 @@ namespace newasm
                 }
                 return false;*/
             }
-            bool islbln(int line)
+            inline bool islbln(int line)
             {
                 for(std::unordered_map<std::string, int>::iterator i = labels.begin(); i != labels.end(); ++i)
                 {

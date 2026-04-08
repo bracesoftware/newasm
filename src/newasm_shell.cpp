@@ -83,9 +83,9 @@ namespace newasm
 
         namespace data
         {
-            std::string cmd;
-            bool finish = false;
-            bool progwin = false;
+            constinit std::string cmd;
+            constinit bool finish = false;
+            constinit bool progwin = false;
         }
 
         namespace install
@@ -372,16 +372,19 @@ namespace newasm
                         
                         if(newasm::ctl::install::type == newasm::ctl::install::const_::DIRECT_DYN) //if dynamic lib
                         {
-                            std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + "Accessed the download server..."_str);
+                            std::cout << newasm::header::col::gray;
+                            newasm::header::functions::nullprint(newasm::tab + "Accessed the download server..."_str);
                             std::cout << newasm::header::col::reset;
                             if(!std::filesystem::exists(output_path))
                             {
-                                std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + "Error while downloading the library."_str);
+                                std::cout << newasm::header::col::gray;
+                                newasm::header::functions::nullprint(newasm::tab + "Error while downloading the library."_str);
                                 std::cout << newasm::header::col::reset;
                                 return 1;
                             }
                            
-                            std::cout << newasm::header::col::gray;newasm::header::functions::nullprint(newasm::tab + "Successfully downloaded the library!"_str);
+                            std::cout << newasm::header::col::gray;
+                            newasm::header::functions::nullprint(newasm::tab + "Successfully downloaded the library!"_str);
                             std::cout << newasm::header::col::reset;
 
                             return 1;

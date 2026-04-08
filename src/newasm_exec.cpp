@@ -1309,7 +1309,8 @@ namespace newasm
             newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo.raw);
             #endif
             newasm::system::proclines ++;
-            newasm::variables::ids.at(newasm::system::cproc).proc->contents.push_back(lineInfo);
+            //newasm::variables::ids.at(newasm::system::cproc).
+            NewASM::CurrentProc->proc->contents.push_back(lineInfo);
             //newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo);
             return 1;
         }
@@ -3878,7 +3879,8 @@ namespace newasm
             newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo.raw);
             #endif
             newasm::system::proclines ++;
-            newasm::variables::ids.at(newasm::system::cproc).proc->contents.push_back(lineInfo);
+            //newasm::variables::ids.at(newasm::system::cproc).
+            NewASM::CurrentProc->proc->contents.push_back(lineInfo);
             //newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo);
             return 1;
         }
@@ -6051,6 +6053,7 @@ namespace newasm
                     newasm::variables::ids[newasm::system::cproc].proc = new newasm::variables::procedureData;
                     auto& mmap = newasm::variables::ids.at(newasm::system::cproc);
                     mmap.type = newasm::datatypes::proc;
+                    NewASM::CurrentProc = &mmap;
                     return 1;
                 }
 
@@ -6867,10 +6870,10 @@ namespace newasm
                 //newasm::mem::funcs_data[newasm::system::cproc].mangled = newasm::system::mangled_proc;
                 //newasm::mem::funcs_data[newasm::system::cproc].original_name = newasm::system::original_proc;
 
-                auto& a = newasm::variables::ids.at(newasm::system::cproc);
-                a.proc->mangled = newasm::system::mangled_proc;
-                a.proc->original_name = newasm::system::original_proc;
-                a.proc->JIT_compile();
+                //auto& a = newasm::variables::ids.at(newasm::system::cproc);
+                NewASM::CurrentProc->proc->mangled = newasm::system::mangled_proc;
+                NewASM::CurrentProc->proc->original_name = newasm::system::original_proc;
+                NewASM::CurrentProc->proc->JIT_compile();
 
                 newasm::system::stop = 0;
                 //std::cout << "Finished proc: " << newasm::system::cproc << std::endl;
@@ -6886,7 +6889,8 @@ namespace newasm
             //std::cout << newasm::system::cproc << " : " << newline << std::endl;
             #endif
             newasm::system::proclines ++;
-            newasm::variables::ids.at(newasm::system::cproc).proc->contents.push_back(lineInfo);
+            //newasm::variables::ids.at(newasm::system::cproc).
+            NewASM::CurrentProc->proc->contents.push_back(lineInfo);
             //newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo);
             return 1;
         }
@@ -7655,7 +7659,7 @@ namespace newasm
                 {
                     if(newasm::system::stop == 1)
                     {
-                        newasm::variables::ids.at(newasm::system::cproc).proc->contents.push_back(line);
+                        NewASM::CurrentProc->proc->contents.push_back(line);
                         //newasm::mem::funcs[newasm::system::cproc].push_back(line);
                         return 1;
                     }
@@ -7866,7 +7870,8 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::invalid_ins);
                     return 1;
                 }
-                newasm::variables::ids.at(newasm::system::cproc).proc->contents.push_back(line);
+                //newasm::variables::ids.at(newasm::system::cproc).
+                NewASM::CurrentProc->proc->contents.push_back(line);
                 return 1;
             }
             // SECTION MODIFIERS

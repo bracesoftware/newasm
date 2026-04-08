@@ -14,9 +14,9 @@
 namespace newasm
 {
     inline void enable_ansi() noexcept;
-    inline constinit const int BUILD_NUMBER = 28;
-    inline constinit const int RUNTIME_VERSION = 11;
-    inline constinit const int KERNEL_VERSION = 7;
+    inline constinit const int BUILD_NUMBER = 29;
+    inline constinit const int RUNTIME_VERSION = 12;
+    inline constinit const int KERNEL_VERSION = 8;
 }
 
 namespace SYS = newasm;
@@ -132,6 +132,7 @@ namespace newasm
     }
     typedef std::unordered_map<std::string, newasm::variables::varData> VarTable;
     VarTable* VAR_TABLE_PTR = nullptr;
+    newasm::variables::varData* CurrentProc = nullptr;
 
     constinit int CYCLE_COUNT = 0;
     std::string CONST__ = NIL_STR;
