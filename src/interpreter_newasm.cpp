@@ -131,8 +131,10 @@ namespace newasm
         };
     }
     typedef std::unordered_map<std::string, newasm::variables::varData> VarTable;
+    typedef newasm::variables::varData* VarPtr;
     VarTable* VAR_TABLE_PTR = nullptr;
-    newasm::variables::varData* CurrentProc = nullptr;
+    VarPtr CurrentProc = nullptr;
+    VarPtr CurrentClass = nullptr;
 
     constinit int CYCLE_COUNT = 0;
     std::string CONST__ = NIL_STR;
@@ -1127,7 +1129,7 @@ module(main_module, {
 });
 namespace newasm
 {
-    inline int entry(int argc, char* argv[])
+    inline signed int entry(signed int argc, char* argv[])
     {
         NewASM::RamChip::PeekString = [](int addr) -> std::string {
             return NewASM::RAM->peek<std::string>(addr);

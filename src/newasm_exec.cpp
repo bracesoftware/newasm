@@ -477,9 +477,11 @@ namespace newasm
                 newasm::mem::data_attrib[name].locked = newasm::expcfg::lockbool;
 
                 newasm::variables::ids[name].type = newasm::datatypes::static_objz;
+                auto& mmap = newasm::variables::ids.at(name);
 
-                newasm::variables::ids.at(name).obj = new newasm::variables::staticObjectData;
-                newasm::variables::ids.at(name).attrib = newasm::runtime::currentAttributes;
+                mmap.obj = new newasm::variables::staticObjectData;
+                mmap.attrib = newasm::runtime::currentAttributes;
+
                 newasm::runtime::currentAttributes = 0;
                 
                 newasm::brace_stack__.push_back(newasm::brace_stack::object_block);
@@ -953,6 +955,8 @@ namespace newasm
                 newasm::runtime::currentAttributes = 0;
 
                 newasm::brace_stack__.push_back(newasm::brace_stack::class_block);
+                
+                NewASM::CurrentClass = &mmap;
                 return 1;
             }
             case newasm::core::lang_inf::typenames::union__:
@@ -7559,7 +7563,7 @@ namespace newasm
     }
     #endif
 
-    inline void process_cli(std::string name, std::string classname)
+    inline void process_cli(std::string name, decltype(name) classname)
     {
         newasm::runtime::functions::parse(classname);
         classname = newasm::header::functions::remamp(classname);
@@ -7701,7 +7705,7 @@ namespace newasm
                     return 1;
                 }
 
-                int brace_purpose = newasm::brace_stack__.back();
+                signed int brace_purpose = newasm::brace_stack__.back();
                 newasm::brace_stack__.pop_back();
 
                 if(brace_purpose == newasm::brace_stack::thread_block)
@@ -7816,10 +7820,8 @@ namespace newasm
 
         if(newasm::header::data::blueprint_now)
         {
-            auto it = newasm::variables::ids.at(newasm::header::data::blueprint_decl);
-
             int address = newasm::hardware::randAccessMem.write<std::string>(line.raw);
-            it.blueprint->addr.push_back(address);
+            NewASM::CurrentClass->blueprint->addr.push_back(address);
             return 1;
         }
 
