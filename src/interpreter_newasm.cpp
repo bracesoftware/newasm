@@ -1115,6 +1115,9 @@ namespace newasm
             newasm::compiler::data::sealed_labels.clear();
 
             NewASM::header::data::ActiveThreads = 0;
+
+            NewASM::CurrentProc = nullptr;
+            NewASM::CurrentClass = nullptr;
             return;
         }
     }
