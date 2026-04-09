@@ -8055,11 +8055,15 @@ namespace newasm
                                 if(newasm::malloc::types[argaddr] == newasm::datatypes::character)
                                 {
                                     std::string buf(1, newasm::hardware::randAccessMem.peek<char>(argaddr));
-                                    operand = "'" + buf + "'";
+                                    operand += "'";
+                                    operand += buf;
+                                    operand += "'";
                                 }
                                 if(newasm::malloc::types[argaddr] == newasm::datatypes::text)
                                 {
-                                    operand = "\"" + newasm::hardware::randAccessMem.peek<std::string>(argaddr) + "\"";
+                                    operand += "\"";
+                                    operand += newasm::hardware::randAccessMem.peek<std::string>(argaddr);
+                                    operand += "\"";
                                 }
                                 //std::cout << "operand is `" << operand << "`" << std::endl;
                                 //std::cout << "stk is " << newasm::mem::regs::stk.get_value() << std::endl;

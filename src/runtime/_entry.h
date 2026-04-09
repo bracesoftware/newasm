@@ -71,7 +71,7 @@ namespace newasm
 										return;
 									}
 									std::string buf(1, newasm::hardware::randAccessMem.peek<char>(i.addr));
-									suf = "'" + buf + "'";
+									suf += "'"; suf += buf; suf += "'";
 									return;
 								}
 								if(i.type == newasm::datatypes::text)
@@ -124,7 +124,7 @@ namespace newasm
 									if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::char__)
 									{
 										std::string buf(1, newasm::hardware::randAccessMem.peek<char>(i.yunion->addr));
-										suf = "'" + buf + "'";
+										suf += "'"; suf += buf; suf += "'";
 										return;
 									}
 									if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::txt)
@@ -158,14 +158,18 @@ namespace newasm
 										if(i.tuple->type[k] == newasm::datatypes::character)
 										{
 											std::string buf(1, newasm::hardware::randAccessMem.peek<char>(i.tuple->addr[k]));
-											temp = "'" + buf + "'";
+											temp += "'";
+											temp += buf;
+											temp += "'";
 											contents.push_back(temp);
 											continue;
 										}
 										if(i.tuple->type[k] == newasm::datatypes::text)
 										{
 											std::string buf = (newasm::hardware::randAccessMem.peek<std::string>(i.tuple->addr[k]));
-											temp = "\"" + buf + "\"";
+											temp += "\"";
+											temp += buf;
+											temp += "\"";
 											contents.push_back(temp);
 											continue;
 										}
@@ -337,7 +341,7 @@ namespace newasm
 										return;
 									}
 									std::string buf(1, newasm::hardware::randAccessMem.peek<char>(i.addr));
-									suf = "'" + buf + "'";
+									suf += "'"; suf += buf; suf += "'";
 									return;
 								}
 								if(i.type == newasm::datatypes::text)
@@ -390,7 +394,7 @@ namespace newasm
 									if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::char__)
 									{
 										std::string buf(1, newasm::hardware::randAccessMem.peek<char>(i.yunion->addr));
-										suf = "'" + buf + "'";
+										suf += "'"; suf += buf; suf += "'";
 										return;
 									}
 									if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::txt)
@@ -424,14 +428,18 @@ namespace newasm
 										if(i.tuple->type[k] == newasm::datatypes::character)
 										{
 											std::string buf(1, newasm::hardware::randAccessMem.peek<char>(i.tuple->addr[k]));
-											temp = "'" + buf + "'";
+											temp += "'";
+											temp += buf;
+											temp += "'";
 											contents.push_back(temp);
 											continue;
 										}
 										if(i.tuple->type[k] == newasm::datatypes::text)
 										{
 											std::string buf = (newasm::hardware::randAccessMem.peek<std::string>(i.tuple->addr[k]));
-											temp = "\"" + buf + "\"";
+											temp += "\"";
+											temp += buf;
+											temp += "\"";
 											contents.push_back(temp);
 											continue;
 										}
@@ -603,12 +611,12 @@ namespace newasm
 								if(it->second.context->type[idx] == newasm::datatypes::character)
 								{
 									std::string buf(1, newasm::hardware::randAccessMem.peek<char>(it->second.context->addr[idx]));
-									suf = "'" + buf + "'";
+									suf += "'"; suf += buf; suf += "'";
 								}
 								if(it->second.context->type[idx] == newasm::datatypes::text)
 								{
 									std::string buf = newasm::hardware::randAccessMem.peek<std::string>(it->second.context->addr[idx]);
-									suf = "\"" + buf + "\"";
+									suf += "\""; suf += buf; suf += "\"";
 								}
 								return;
 							}
@@ -667,7 +675,7 @@ namespace newasm
 									return;
 								}
 								std::string buf(1, newasm::hardware::randAccessMem.peek<char>(it->second.tuple->addr[index]));
-								suf = "'" + buf + "'";
+								suf += "'"; suf += buf; suf += "'";
 							}
 							if(it->second.tuple->type[index] == newasm::datatypes::text)
 							{
@@ -677,7 +685,7 @@ namespace newasm
 									return;
 								}
 								std::string buf = newasm::hardware::randAccessMem.peek<std::string>(it->second.tuple->addr[index]);
-								suf = "\"" + buf + "\"";
+								suf += "\""; suf += buf; suf += "\"";
 							}
 						}
 						return;
@@ -846,7 +854,7 @@ namespace newasm
 								return;
 							}
 							std::string buf(1, newasm::hardware::randAccessMem.peek<char>(i.addr));
-							suf = "'" + buf + "'";
+							suf += "'"; suf += buf; suf += "'";
 							return;
 						}
 						if(i.type == newasm::datatypes::text)
@@ -899,7 +907,7 @@ namespace newasm
 							if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::char__)
 							{
 								std::string buf(1, newasm::hardware::randAccessMem.peek<char>(i.yunion->addr));
-								suf = "'" + buf + "'";
+								suf += "'"; suf += buf; suf += "'";
 								return;
 							}
 							if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::txt)
@@ -995,12 +1003,12 @@ namespace newasm
 							if(it->second.context->type[idx] == newasm::datatypes::character)
 							{
 								std::string buf(1, newasm::hardware::randAccessMem.peek<char>(it->second.context->addr[idx]));
-								suf = "'" + buf + "'";
+								suf += "'"; suf += buf; suf += "'";
 							}
 							if(it->second.context->type[idx] == newasm::datatypes::text)
 							{
 								std::string buf = newasm::hardware::randAccessMem.peek<std::string>(it->second.context->addr[idx]);
-								suf = "\"" + buf + "\"";
+								suf += "\""; suf += buf; suf += "\"";
 							}
 							return;
 						}
@@ -1059,7 +1067,7 @@ namespace newasm
 								return;
 							}
 							std::string buf(1, newasm::hardware::randAccessMem.peek<char>(it->second.tuple->addr[index]));
-							suf = "'" + buf + "'";
+							suf += "'"; suf += buf; suf += "'";
 						}
 						if(it->second.tuple->type[index] == newasm::datatypes::text)
 						{
@@ -1069,7 +1077,7 @@ namespace newasm
 								return;
 							}
 							std::string buf = newasm::hardware::randAccessMem.peek<std::string>(it->second.tuple->addr[index]);
-							suf = "\"" + buf + "\"";
+							suf += "\""; suf += buf; suf += "\"";
 						}
 					}
 				}
@@ -1100,14 +1108,18 @@ namespace newasm
 							if(it->second.tuple->type[i] == newasm::datatypes::character)
 							{
 								std::string buf(1, newasm::hardware::randAccessMem.peek<char>(it->second.tuple->addr[i]));
-								temp = "'" + buf + "'";
+								temp += "'";
+								temp += buf;
+								temp += "'";
 								contents.push_back(temp);
 								continue;
 							}
 							if(it->second.tuple->type[i] == newasm::datatypes::text)
 							{
 								std::string buf = (newasm::hardware::randAccessMem.peek<std::string>(it->second.tuple->addr[i]));
-								temp = "\"" + buf + "\"";
+								temp += "\"";
+								temp += buf;
+								temp += "\"";
 								contents.push_back(temp);
 								continue;
 							}
