@@ -88,6 +88,7 @@ namespace newasm
                 write_bin(out, ld.jumpinTo);
 
                 write_bin(out, ld.VirtualMemoryAccess);
+                write_bin(out, ld.caseTableAddress);
                 return;
             }
             void load_lineData(std::ifstream& in, newasm::compiler::lineData& ld)
@@ -133,6 +134,7 @@ namespace newasm
                 read_bin(in, ld.jumpinTo);
 
                 read_bin(in, ld.VirtualMemoryAccess);
+                read_bin(in, ld.caseTableAddress);
                 return;
             }
             //label addresses
@@ -237,7 +239,8 @@ namespace newasm
                 const std::vector<newasm::compiler::lineData>& lines,
                 const std::unordered_map<std::string, int>& labels,
                 const std::vector<std::pair<std::string, int>>& files,
-                const std::unordered_map<std::string, std::vector<std::string>>& ins
+                const std::unordered_map<std::string, std::vector<std::string>>& ins,
+                const std::vector<newasm::compiler::lineData>& jumptable
             )
             {
                 std::ofstream out(path, std::ios::binary);
@@ -297,6 +300,14 @@ namespace newasm
                 //project data
                 write_string(out, newasm::project_data::name);
                 write_string(out, newasm::project_data::version);
+
+                //jump table
+                uint32_t jumpTableSize = jumptable.size();
+                write_bin(out, jumpTableSize);
+                for(auto& l : jumptable)
+                {
+                    save_lineData(out, l);
+                }
                 return true;
             }
 
@@ -328,7 +339,8 @@ namespace newasm
                 std::vector<lineData>& lines,
                 std::unordered_map<std::string, int>& labels,
                 std::vector<std::pair<std::string, int>>& files,
-                std::unordered_map<std::string, std::vector<std::string>>& ins
+                std::unordered_map<std::string, std::vector<std::string>>& ins,
+                std::vector<lineData>& jumptable
             )
             {
                 std::ifstream in(path, std::ios::binary);
@@ -404,6 +416,15 @@ namespace newasm
                 //project data
                 read_string(in, newasm::project_data::name);
                 read_string(in, newasm::project_data::version);
+
+                //jump table
+                uint32_t jumpTableSize;
+                read_bin(in, jumpTableSize);
+                jumptable.resize(jumpTableSize);
+                for(auto& l : jumptable)
+                {
+                    load_lineData(in, l);
+                }
                 return true;
             }
 

@@ -23,6 +23,8 @@ namespace newasm
 
             constinit bool objectDecl = false;
             constinit bool JIT_mode = false;
+
+            unsigned int ErrorCount = 0;
         }
         namespace fail
         {
@@ -51,6 +53,7 @@ namespace newasm
 
         void abort_(int exc)
         {
+            NewASM::compiler::data::ErrorCount++;
             std::cout << newasm::header::col::red; // << "\t";
             //std::cout << "Compilation aborted.\n";
             std::cout << "\tEncountered \"" << newasm::header::col::gray << newasm::header::style::underline;
@@ -65,10 +68,10 @@ namespace newasm
             }
             catch(const std::exception& e)
             {
-                if(!newasm::header::data::repl) std::cout << "JIT cache | ";
+                if(!newasm::header::data::repl) std::cout << "JIT cache |  ";
             }
             
-            if(newasm::header::data::repl) std::cout << "JIT buffer >>> ";
+            if(newasm::header::data::repl) std::cout << "JIT buffer >>>  ";
             
             std::cout << newasm::header::col::reset
             << newasm::compiler::data::line << newasm::header::col::red << std::endl;
@@ -93,6 +96,7 @@ namespace newasm
         }
 
         std::vector<newasm::compiler::lineData> compiledCode;
+        std::vector<newasm::compiler::lineData> caseJumpTable;
         namespace utils
         {
             template<char delim>
@@ -397,7 +401,7 @@ namespace newasm
                 lineCompiled.tokens.push_back(ev);
                 lineCompiled.tokens.push_back(pr);
                 
-                return lineCompiled; 
+                return lineCompiled;
             }
             auto checkCollisions = [](std::string name) -> void {//error checking at compile time
                 if(!newasm::compiler::data::JIT_mode) if(newasm::compiler::data::objectDecl)
@@ -627,6 +631,13 @@ namespace newasm
                             if(lineCompiled.whatAmIDoing == newasm::core::lang_inf::thread__)
                             {
                                 checkCollisions(otherShit);
+                            }
+                            //creating caseJumpTable
+                            if(lineCompiled.whatAmIDoing == newasm::core::lang_inf::case__)
+                            {
+                                auto cc = DO(lineCompiled.other);
+                                newasm::compiler::caseJumpTable.push_back(cc);
+                                lineCompiled.caseTableAddress = newasm::compiler::caseJumpTable.size() - 1;
                             }
                             return lineCompiled;
                         }

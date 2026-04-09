@@ -406,7 +406,7 @@ namespace newasm
                 return (!(newasm::mem::regs::hea < newasm::mem::regs::stk));
             }
             template<typename T>
-            inline bool datavalid(const std::string& dataname, T &dat)
+            inline bool datavalid(const std::string& dataname, const T& dat)
             {
                 return dat.find(dataname) != dat.end();
                 /*for(auto it = dat.begin(); it != dat.end(); ++it)

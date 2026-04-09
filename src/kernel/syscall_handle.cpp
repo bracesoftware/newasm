@@ -43,7 +43,7 @@ namespace newasm
 
         inline int handleSysCall()
         {
-            #if 1
+            #if 0
             __newasmDBG(std::cout << "\nSYSCALL: fdx = " << newasm::mem::regs::fdx.get_value() << std::endl)
             __newasmDBG(std::cout << "SYSCALL: tlr = " << newasm::mem::regs::tlr.get_value() << std::endl)
             __newasmDBG(std::cout << "SYSCALL: stl = " << newasm::mem::regs::stl.get_value() << std::endl)
@@ -1178,6 +1178,11 @@ namespace newasm
                     if(!newasm::header::functions::ischar(newasm::mem::regs::tlr))
                     {
                         //std::cout << "tlr is " << newasm::mem::regs::tlr << std::endl;
+                        NewASM::header::functions::krnl(
+                            "Register `tlr` isn't holding a valid value. Value: `"_str +
+                            NewASM::mem::regs::tlr.get_value() +
+                            "`"_str
+                        );
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                         return 1;
                     }
@@ -1567,7 +1572,11 @@ namespace newasm
                 }
                 default:
                 {
-                    //std::cout << "FDX IS " << NewASM::mem::regs::fdx.get_value() << std::endl;
+                    #if 0
+                    std::cout << "FDX IS " << NewASM::mem::regs::fdx.get_value() << std::endl;
+                    std::cout << "TLR IS " << NewASM::mem::regs::tlr.get_value() << std::endl;
+                    std::cout << "STL IS " << NewASM::mem::regs::stl.get_value() << std::endl;
+                    #endif
                     newasm::terminate(newasm::exit_codes::unknown_fdx);
                     return 1;
                 }

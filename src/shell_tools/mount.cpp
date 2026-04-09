@@ -12,7 +12,7 @@ static const std::string __stdlib_code = R"(
 ;
 .data
     ./std
-        intg version: 20
+        intg version: 29
 
         ./math
             float pi: 3.141

@@ -308,10 +308,11 @@ namespace newasm
                             newasm::compiler::compiledCode,
                             newasm::mem::labels,
                             newasm::forLinker::lineData,
-                            newasm::mem::instructions
+                            newasm::mem::instructions,
+                            newasm::compiler::caseJumpTable
                         );
 
-                        newasm::GLOBAL::global_load_std();
+                        //newasm::GLOBAL::global_load_std();
 
                         if(startExecution)
                         {

@@ -4951,6 +4951,11 @@ namespace newasm
             //out
             case newasm::core::lang_inf::out__:
             {
+                if(lineInfo.priArgType == newasm::datatypes::number)
+                {
+                    newasm::hardware::outIOPOrt(lineInfo.priInt);
+                    return 1;
+                }
                 newasm::runtime::functions::eval(suf, lineInfo.priEvalMode);
                 if(!newasm::header::functions::isnumeric(suf))
                 {
@@ -4964,6 +4969,11 @@ namespace newasm
             //in
             case newasm::core::lang_inf::in__:
             {
+                if(lineInfo.priArgType == newasm::datatypes::number)
+                {
+                    newasm::mem::regs::tlr.set_value(newasm::hardware::inIOPort(lineInfo.priInt));
+                    return 1;
+                }
                 newasm::runtime::functions::eval(suf, lineInfo.priEvalMode);
                 if(!newasm::header::functions::isnumeric(suf))
                 {
@@ -4982,7 +4992,7 @@ namespace newasm
                 newasm::header::data::switched_value = suf;
                 newasm::header::data::case_matched = false;
 
-                newasm::header::data::case_line = newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::nop);
+                //newasm::header::data::case_line = newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::nop);
                 return 1;
             }
             //case
@@ -4997,8 +5007,9 @@ namespace newasm
                 if(suf == newasm::header::data::switched_value)
                 {
                     newasm::header::data::case_matched = true;
-                    newasm::procline(newasm::header::data::case_line);
+                    //newasm::procline(newasm::header::data::case_line);
                     //newasm::header::data::case_line.clear();
+                    newasm::procline(newasm::compiler::caseJumpTable.at(lineInfo.caseTableAddress));
                     return 1;
                 }
                 if(newasm::header::functions::isnumeric(newasm::header::data::switched_value))
@@ -5013,7 +5024,7 @@ namespace newasm
                         if(isrange.second.first <= std::stoi(suf) || std::stoi(suf) <= isrange.second.second)
                         {
                             newasm::header::data::case_matched = true;
-                            newasm::procline(newasm::header::data::case_line);
+                            newasm::procline(newasm::compiler::caseJumpTable.at(lineInfo.caseTableAddress));//newasm::procline(newasm::header::data::case_line);
                             //newasm::header::data::case_line.clear()
                             return 1;
                         }
@@ -5026,7 +5037,7 @@ namespace newasm
                     ))
                     {
                         newasm::header::data::case_matched = true;
-                        newasm::procline(newasm::header::data::case_line);
+                        newasm::procline(newasm::compiler::caseJumpTable.at(lineInfo.caseTableAddress));//newasm::procline(newasm::header::data::case_line);
                         return 1;
                     }
                 }
@@ -8055,13 +8066,13 @@ namespace newasm
                                 if(newasm::malloc::types[argaddr] == newasm::datatypes::character)
                                 {
                                     std::string buf(1, newasm::hardware::randAccessMem.peek<char>(argaddr));
-                                    operand += "'";
+                                    operand = "'";
                                     operand += buf;
                                     operand += "'";
                                 }
                                 if(newasm::malloc::types[argaddr] == newasm::datatypes::text)
                                 {
-                                    operand += "\"";
+                                    operand = "\"";
                                     operand += newasm::hardware::randAccessMem.peek<std::string>(argaddr);
                                     operand += "\"";
                                 }
@@ -8336,6 +8347,13 @@ namespace newasm
             newasm::mem::regs::lcx.set_value(0);
         }
 
+        //now we load the standard lib after loading the case jump table
+        bool result = newasm::GLOBAL::global_load_std();
+        if(!result)
+        {
+            return;
+        }
+
         newasm::perf::start = std::chrono::steady_clock::now();
 
         while(!(newasm::mem::regs::lcx.get_value() == newasm::compiler::compiledCode.size()))
@@ -8606,110 +8624,118 @@ namespace newasm
             }
             newasm::compiler::data::lnidx = 1;
             //thing above us was for this down here
-            for(int i = 0; i < newasm::compiler::compiledCode.size(); ++i)
-            {
-                auto& bytecode = newasm::compiler::compiledCode.at(i);
-                ++newasm::compiler::data::lnidx;
-                newasm::compiler::data::line = bytecode.raw;
-                if(
-                    bytecode.whatAmIDoing == newasm::core::lang_inf::loop
-                )
+            auto AOTCompileBytecode = [&](auto& vec) -> void {
+                static bool already_processed = false;
+                for(int i = 0; i < vec.size(); ++i)
                 {
-                    if(bytecode.tokens.size() != 3)
-                    {
-                        continue;
-                    }
-                    auto label_name = newasm::header::functions::trim(bytecode.tokens[2]);
-                    auto& sl = newasm::compiler::data::sealed_labels;
+                    auto& bytecode = vec.at(i);
+                    if(!already_processed) ++newasm::compiler::data::lnidx;
+                    newasm::compiler::data::line = bytecode.raw;
                     if(
-                        newasm::mem::labels.find(label_name) == newasm::mem::labels.end() and
-                        ![&](const std::string& name) -> bool {
-                            for(int q = 0; q < sl.size(); ++q)
-                            {
-                                if(sl[q] == name)
-                                {
-                                    return true;
-                                }
-                            }
-                            return false;
-                        }(label_name)
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::loop
                     )
                     {
-                        newasm::compiler::abort(newasm::compiler::fail::unknown_label);
-                        //std::cout << "Tried compiling -> `" << bytecode.raw << "` " << (std::find(sl.begin(), sl.end(), label_name) != sl.end()) << "\n";
-                        if(0) for(int j = 0; j < sl.size(); ++j)
+                        if(bytecode.tokens.size() != 3)
                         {
-                            std::cout << "sl[" << j << "] = `" << sl[j] << "`\n";
+                            continue;
                         }
-                        break;
-                    }
-                    try
-                    {
-                        bytecode.jumpinTo = newasm::mem::labels[label_name];
-                    }
-                    catch(std::exception& e)
-                    {
-                        for(auto p = newasm::mem::labels.begin(); p != newasm::mem::labels.end(); ++p)
-                        {
-                            std::cout << "labels[" << p->first << "] = `" << p->second << "`\n";
-                        }
-                        newasm::compiler::abort(newasm::compiler::fail::unknown_label);
-                    }
-                }
-                if(
-                    bytecode.whatAmIDoing == newasm::core::lang_inf::jmp or
-                    bytecode.whatAmIDoing == newasm::core::lang_inf::jz or
-                    bytecode.whatAmIDoing == newasm::core::lang_inf::jnz or
-                    bytecode.whatAmIDoing == newasm::core::lang_inf::je or
-                    bytecode.whatAmIDoing == newasm::core::lang_inf::jne or
-                    bytecode.whatAmIDoing == newasm::core::lang_inf::jl or
-                    bytecode.whatAmIDoing == newasm::core::lang_inf::jle or
-                    bytecode.whatAmIDoing == newasm::core::lang_inf::jg or
-                    bytecode.whatAmIDoing == newasm::core::lang_inf::jge
-                )
-                {
-                    if(bytecode.tokens.size() != 2)
-                    {
-                        continue;
-                    }
-                    auto label_name = newasm::header::functions::trim(bytecode.tokens[1]);
-                    auto& sl = newasm::compiler::data::sealed_labels;
-                    if(
-                        newasm::mem::labels.find(label_name) == newasm::mem::labels.end() and
-                        ![&](const std::string& name) -> bool {
-                            for(int q = 0; q < sl.size(); ++q)
-                            {
-                                if(sl[q] == name)
+                        auto label_name = newasm::header::functions::trim(bytecode.tokens[2]);
+                        auto& sl = newasm::compiler::data::sealed_labels;
+                        if(
+                            newasm::mem::labels.find(label_name) == newasm::mem::labels.end() and
+                            ![&](const std::string& name) -> bool {
+                                for(int q = 0; q < sl.size(); ++q)
                                 {
-                                    return true;
+                                    if(sl[q] == name)
+                                    {
+                                        return true;
+                                    }
                                 }
+                                return false;
+                            }(label_name)
+                        )
+                        {
+                            newasm::compiler::abort(newasm::compiler::fail::unknown_label);
+                            //std::cout << "Tried compiling -> `" << bytecode.raw << "` " << (std::find(sl.begin(), sl.end(), label_name) != sl.end()) << "\n";
+                            if(0) for(int j = 0; j < sl.size(); ++j)
+                            {
+                                std::cout << "sl[" << j << "] = `" << sl[j] << "`\n";
                             }
-                            return false;
-                        }(label_name)
+                            break;
+                        }
+                        try
+                        {
+                            bytecode.jumpinTo = newasm::mem::labels[label_name];
+                        }
+                        catch(std::exception& e)
+                        {
+                            for(auto p = newasm::mem::labels.begin(); p != newasm::mem::labels.end(); ++p)
+                            {
+                                std::cout << "labels[" << p->first << "] = `" << p->second << "`\n";
+                            }
+                            newasm::compiler::abort(newasm::compiler::fail::unknown_label);
+                        }
+                    }
+                    if(
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::jmp or
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::jz or
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::jnz or
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::je or
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::jne or
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::jl or
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::jle or
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::jg or
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::jge
                     )
                     {
-                        newasm::compiler::abort(newasm::compiler::fail::unknown_label);
-                        //std::cout << "Tried compiling -> `" << bytecode.raw << "` " << (std::find(sl.begin(), sl.end(), label_name) != sl.end()) << "\n";
-                        if(0) for(int j = 0; j < sl.size(); ++j)
+                        if(bytecode.tokens.size() != 2)
                         {
-                            std::cout << "sl[" << j << "] = `" << sl[j] << "`\n";
+                            continue;
                         }
-                        break;
-                    }
-                    try
-                    {
-                        bytecode.jumpinTo = newasm::mem::labels[label_name];
-                    }
-                    catch(std::exception& e)
-                    {
-                        for(auto p = newasm::mem::labels.begin(); p != newasm::mem::labels.end(); ++p)
+                        auto label_name = newasm::header::functions::trim(bytecode.tokens[1]);
+                        auto& sl = newasm::compiler::data::sealed_labels;
+                        if(
+                            newasm::mem::labels.find(label_name) == newasm::mem::labels.end() and
+                            ![&](const std::string& name) -> bool {
+                                for(int q = 0; q < sl.size(); ++q)
+                                {
+                                    if(sl[q] == name)
+                                    {
+                                        return true;
+                                    }
+                                }
+                                return false;
+                            }(label_name)
+                        )
                         {
-                            std::cout << "labels[" << p->first << "] = `" << p->second << "`\n";
+                            newasm::compiler::abort(newasm::compiler::fail::unknown_label);
+                            //std::cout << "Tried compiling -> `" << bytecode.raw << "` " << (std::find(sl.begin(), sl.end(), label_name) != sl.end()) << "\n";
+                            if(0) for(int j = 0; j < sl.size(); ++j)
+                            {
+                                std::cout << "sl[" << j << "] = `" << sl[j] << "`\n";
+                            }
+                            break;
                         }
-                        newasm::compiler::abort(newasm::compiler::fail::unknown_label);
+                        try
+                        {
+                            bytecode.jumpinTo = newasm::mem::labels[label_name];
+                        }
+                        catch(std::exception& e)
+                        {
+                            for(auto p = newasm::mem::labels.begin(); p != newasm::mem::labels.end(); ++p)
+                            {
+                                std::cout << "labels[" << p->first << "] = `" << p->second << "`\n";
+                            }
+                            newasm::compiler::abort(newasm::compiler::fail::unknown_label);
+                        }
                     }
                 }
-            }
+                already_processed = true;
+                return;
+            };
+
+            AOTCompileBytecode(newasm::compiler::compiledCode);
+            AOTCompileBytecode(newasm::compiler::caseJumpTable);
 
             __newasmDBG_COMPLEX({
                 std::cout << "2: LINE DATA SIZE -> " << newasm::forLinker::lineData.size() << std::endl;
@@ -8725,6 +8751,7 @@ namespace newasm
             }
             if(newasm::compiler::data::aborted)
             {
+                std::cout << "  " << newasm::header::col::red << "\t" << NewASM::compiler::data::ErrorCount << " error(s).\n";
                 std::cout << "  " << newasm::header::col::red << "\tCompilation aborted.\n\n";
             }
             std::cout << newasm::header::col::reset;
@@ -8739,7 +8766,8 @@ namespace newasm
                 newasm::compiler::compiledCode,
                 newasm::mem::labels,
                 newasm::forLinker::lineData,
-                newasm::mem::instructions
+                newasm::mem::instructions,
+                newasm::compiler::caseJumpTable
             );
 
             newasm::header::functions::wait(1000);

@@ -459,6 +459,7 @@ namespace newasm
             unsigned short krnlMod = INVALID_INS;
             int jumpinTo = INVALID_INS;
             bool VirtualMemoryAccess = false;
+            unsigned int caseTableAddress = 0;
 
             //---------------------------------------------
             //stuff not included in the binary:
@@ -467,7 +468,7 @@ namespace newasm
             float resFloat = 0;
             char resChar = 0;
             string resString = "";
-
+            
             explicit inline lineData() noexcept {}
             ~lineData() noexcept {}
         };
@@ -477,6 +478,17 @@ namespace newasm
         inline void process_comptiso(std::string ins, std::string arg1, std::string arg2);
         inline bool iscomptins(std::string ins);
     }
+
+    struct rawData final
+    {
+        typedef std::string string;
+
+        unsigned int rawType = 0;
+        signed int rawInt = 0;
+        float rawFloat = 0;
+        char rawChar = 0;
+        string rawString = "";
+    };
 
     using execBytecode = newasm::compiler::lineData;
     newasm::kernel::thread_safe<newasm::compiler::lineData*> PRC;
@@ -998,6 +1010,8 @@ namespace newasm
             newasm::header::data::exception = true;
             newasm::stack::events.clear();
 
+            newasm::compiler::caseJumpTable.clear();
+
             newasm::events::exitHandler.addr.clear();
 
             newasm::mem::instructions.clear();
@@ -1489,13 +1503,6 @@ namespace newasm
         /*
             Executing
         */
-
-        bool result = load_std();
-        if(!result)
-        {
-            return 1;
-        }
-
         newasm::async_thread::entry();
 
         newasm::Console::show("NewASM Application Window");
