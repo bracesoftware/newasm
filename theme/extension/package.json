@@ -123,7 +123,8 @@
 					{
 						"scope": "namespace.newasm",
 						"settings": {
-							"foreground": "#BEB7FF"
+							"foreground": "#BEB7FF",
+							"fontStyle": "italic"
 						}
 					},
 					{

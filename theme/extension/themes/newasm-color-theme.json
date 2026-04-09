@@ -170,6 +170,7 @@
       "scope": "namespace.newasm",
       "settings": {
         "foreground": "#BEB7FF",
+        "fontStyle": "italic"
       }
     },
     {
