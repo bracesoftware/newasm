@@ -371,7 +371,7 @@ namespace newasm
         namespace functions
         {
             void parse(std::string& suf);
-            inline void eval(std::string& s, int mode);
+            inline void eval(std::string& s, newasm::compiler::EvalMode& mode);
 
             template<bool _procNameParse>
             void parse(std::string& suf);
