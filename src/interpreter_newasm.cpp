@@ -1163,6 +1163,7 @@ link "vm/utilities/procfile";
 module(main_module, {
     NewASM::CapturedData::ExitCodeInvalidMemacc = const_cast<decltype(NewASM::CapturedData::ExitCodeInvalidMemacc)>(&newasm::exit_codes::invalid_memacc);
     newasm::mem::labels.max_load_factor(MAX_LOAD_FACTOR);
+    NewASM::header::data::LogCompilerOptimizations = true;
     return;
 });
 namespace newasm
@@ -1336,6 +1337,11 @@ namespace newasm
             if(arguments[i] == newasm::args::nodbg) // disable progwin
             {
                 newasm::dwin = false;
+                continue;
+            }
+            if(arguments[i] == newasm::args::nolco) // disable logging of compiler optimizations
+            {
+                NewASM::header::data::LogCompilerOptimizations = false;
                 continue;
             }
             if(arguments[i] == newasm::args::out) // disable progwin

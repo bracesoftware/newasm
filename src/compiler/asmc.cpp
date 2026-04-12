@@ -191,8 +191,25 @@ namespace newasm
                 {
                     return newasm::runtime::evalModes::referenceOfNamespacedVar;
                 }
-                if(newasm::header::functions::checkTupleFormat(s).first)
+                auto n = newasm::header::functions::checkTupleFormat(s);
+                if(n.first)
                 {
+                    mode.argString2 = n.second.first;
+                    mode.argString = n.second.second;
+                    if(NewASM::header::functions::isnumeric(mode.argString))
+                    {
+                        mode.argType = NewASM::datatypes::number;
+                        mode.argInt = std::stoi(mode.argString);
+                    }
+                    else if(NewASM::header::functions::istext(mode.argString))
+                    {
+                        mode.argType = NewASM::datatypes::text;
+                        mode.argString = NewASM::header::functions::remq(mode.argString);
+                    }
+                    else
+                    {
+                        mode.argType = NewASM::datatypes::symbol_name;
+                    }
                     return newasm::runtime::evalModes::valueOfNamespacedTupleOrContext;
                 }
                 return 0;
@@ -918,7 +935,7 @@ namespace newasm
                     //logging the optimization
                     if(NewASM::header::data::LogCompilerOptimizations)
                     {
-                        std::cout << newasm::header::col::gray << "\t  ";
+                        std::cout << "\t  " << newasm::header::col::magenta;
                         try
                         {
                             std::cout << newasm::forLinker::getFile(idx - 1) << ":" << newasm::forLinker::getLine(idx - 1);
@@ -927,8 +944,8 @@ namespace newasm
                         {
                             std::cout << "cached code";
                         }
-                        
-                        std::cout << ": " << "peephole optimization, removed redundant code: " << line.raw;
+                        std::cout << newasm::header::col::gray;
+                        std::cout << ": " << "peephole optimization, removed redundant code: " << newasm::header::col::magenta << line.raw;
                         std::cout << '\n' << newasm::header::col::reset;
                     }
                     //actual optimization xd

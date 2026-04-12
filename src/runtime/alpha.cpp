@@ -15,5 +15,6 @@ namespace newasm
         inline constinit const char* use_std = "std";
         inline constinit const char* nodbg = "nodbg";
         inline constinit const char* out = "out";
+        inline constinit const char* nolco = "nolco";
     }
 }

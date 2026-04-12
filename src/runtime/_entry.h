@@ -556,8 +556,8 @@ namespace newasm
 						//std::cout << "IF TUPLE x2 << " << suf << "\n";
 						std::string& suf = s;
 						
-						auto tupleName = newasm::header::functions::trim(newasm::header::functions::checkTupleFormat(suf).second.first);
-						auto tupleIndex = newasm::header::functions::trim(newasm::header::functions::checkTupleFormat(suf).second.second);
+						auto tupleName = mode.argString2;
+						auto tupleIndex = mode.argString;
 						auto& tupleOrContextName = tupleName;
 						auto& tupleOrContextIndex = tupleIndex;
 
@@ -570,12 +570,13 @@ namespace newasm
 							
 							tupleName = newasm::header::functions::mangleName(vec, symbol_name);
 						}
-						parse(tupleIndex);
-						bool indexNumeric = newasm::header::functions::isnumeric(tupleIndex);
+						auto k = mode.argType == newasm::datatypes::symbol_name;
+						if(k) parse(tupleIndex);
+						bool indexNumeric = k ? newasm::header::functions::isnumeric(tupleOrContextIndex) : (mode.argType == newasm::datatypes::number);
 						if(!indexNumeric)
 						{
 							suf = newasm::header::constants::inv_reg_val;
-							bool indexText = newasm::header::functions::istext(tupleOrContextIndex);
+							bool indexText = k ? newasm::header::functions::istext(tupleOrContextIndex) : (mode.argType == newasm::datatypes::text);
 							if(indexText)
 							{
 								//newasm::header::functions::err("tupleOrContextName: `" + tupleOrContextName + "`");
@@ -600,7 +601,7 @@ namespace newasm
 									return;
 								}
 
-								tupleOrContextIndex = newasm::header::functions::remq(tupleOrContextIndex);
+								tupleOrContextIndex = k ? newasm::header::functions::remq(tupleOrContextIndex) : tupleOrContextIndex;
 								int idx = newasm::header::functions::getIndex<std::string>(it->second.context->keys, tupleOrContextIndex);
 								#if 0
 								if(idx != (-1))
@@ -657,7 +658,7 @@ namespace newasm
 						}
 						if(validTuple && indexNumeric)
 						{
-							int index = std::stoi(tupleIndex);
+							int index = k ? std::stoi(tupleIndex) : mode.argInt;
 							if(index >= it->second.tuple->addr.size() || index < 0)
 							{
 								newasm::terminate(newasm::exit_codes::seg_fault);

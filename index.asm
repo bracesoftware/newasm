@@ -2452,7 +2452,7 @@ jmp e2349083l
 .data
     @static, final
     intg test: 0
-    ctx old: ("key": "Absolute cinema")
+    ctx old: ("key": "Absolute cinema", "mjau": "meow")
     ./lol
         ctx new: ()
     ./!lol
@@ -2466,6 +2466,9 @@ jmp e2349083l
     mov tlr, lol::new("key")
     call std::ios::writeln
     ;mov tlr, old("key")
+    call std::ios::writeln
+
+    mov tlr, lol::new("mjau")
     call std::ios::writeln
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
