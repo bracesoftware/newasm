@@ -153,6 +153,11 @@ namespace newasm::header
                     words.push_back(word);
                 }
 
+                if(words.size() <= 5)
+                {
+                    continue;
+                }
+
                 if(words.size() > 5)
                 {
                     std::string first_part = "";
@@ -172,11 +177,12 @@ namespace newasm::header
 
                     v[i].second.second = first_part;
                     v.insert(v.begin() + i + 1, {"", {"", second_part}});
-                    i++; 
+                    //i++; 
                 }
             }
             return v;
         }
+        
         inline void getreleasetype(std::string& dest)
         {
             if(newasm::header::version::release_type == newasm::header::version::release_types::unstable)
