@@ -75,6 +75,7 @@ export newasm_args=arg1,arg2
 | `std` | - | Use the standard library. |
 | `nodbg` | - | Disable the debug window. |
 | `out` | `<binary name>` | Provide binary name for the compiler, default is `a.out`. This is argument is useful only in compiler/interpreter mode. |
+| `nolco` | - | Tells the compiler not to log any optimization information into the console. |
 
 Example:
 ```bat

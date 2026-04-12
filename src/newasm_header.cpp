@@ -405,7 +405,7 @@ namespace newasm::header
             {"std",         {"/",               "Load the standard library before staring the application."}},
             {"nodbg",       {"/",               "Disables the debugger window. May increase performance."}},
             {"out",         {"<binary name>",   "Provide binary name for the compiler, default is `a.out`."}},
-            {newasm::args::nolco,       {"/",               "Tells the compiler not to log any optimization information into the console."}}
+            {newasm::args::nolco,       {"/",   "Tells the compiler not to log any optimization information into the console."}}
         };
 
         inline void help_info() noexcept
