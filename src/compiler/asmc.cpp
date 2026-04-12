@@ -953,6 +953,28 @@ namespace newasm
                     return;
                 }
             }
+            if(line.whatAmIDoing == newasm::core::lang_inf::rem)
+            {
+                //logging the optimization
+                if(NewASM::header::data::LogCompilerOptimizations)
+                {
+                    std::cout << "\t  " << newasm::header::col::magenta;
+                    try
+                    {
+                        std::cout << newasm::forLinker::getFile(idx - 1) << ":" << newasm::forLinker::getLine(idx - 1);
+                    }
+                    catch(const std::exception& e)
+                    {
+                        std::cout << "cached code";
+                    }
+                    std::cout << newasm::header::col::gray;
+                    std::cout << ": " << "peephole optimization, removed dead code: " << newasm::header::col::magenta << line.raw;
+                    std::cout << '\n' << newasm::header::col::reset;
+                }
+                //actual optimization xd
+                line.type = newasm::compiler::empty;
+                return;
+            }
             return;
         }
 

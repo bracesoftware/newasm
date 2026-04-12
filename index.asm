@@ -2471,6 +2471,8 @@ jmp e2349083l
     mov tlr, lol::new("mjau")
     call std::ios::writeln
 
+    rem hi ; this is idiotic instruction, its gonna get removed by the compiler
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     mov tlr, 223
     ret *tlr

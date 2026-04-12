@@ -3490,6 +3490,8 @@ namespace newasm
             {
                 //idk,lets do some stupidity
                 //i have no idea tbh
+
+                //optimizer just removes it from the binary
                 return 1;
             }
 
