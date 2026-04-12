@@ -417,6 +417,18 @@ namespace newasm
             int addr;
         };
 
+        struct EvalMode final
+        {
+            typedef std::string string;
+
+            int type = 0;
+            signed int argInt = 0;
+            float argFloat = 0;
+            char argChar = 0;
+            string argString = "";
+            string argString2 = "";
+        };
+
         struct lineData final
         {
             //some definitions, typedef where we can, using where we must!
@@ -431,14 +443,14 @@ namespace newasm
             string other;
 
             int priArgType = 0;
-            int priEvalMode = 0;
+            EvalMode priEvalMode = 0;
             int priInt = 0;
             float priFloat = 0;
             char priChar = 0;
             string priString = "";
             
             int altArgType = 0;
-            int altEvalMode = 0;
+            EvalMode altEvalMode = 0;
             int altInt = 0;
             float altFloat = 0;
             char altChar = 0;

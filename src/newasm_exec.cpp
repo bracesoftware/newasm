@@ -504,7 +504,7 @@ namespace newasm
 
                 if(line.priArgType == newasm::datatypes::symbol_name) if(!newasm::header::functions::isnumeric(value))
                 {
-                    std::cout << "Imamo error -> `" << value << "`->" << line.priEvalMode << "\n";
+                    std::cout << "Imamo error -> `" << value << "`->" << line.priEvalMode.type << "\n";
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                     return 1;
                 }

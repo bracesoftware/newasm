@@ -24,9 +24,9 @@ namespace newasm
         namespace functions
         {
 			inline void parse(std::string& suf);
-			FORCE_INLINE inline void eval(std::string& s, int mode)
+			FORCE_INLINE inline void eval(std::string& s, newasm::compiler::EvalMode& mode)
 			{
-				switch(mode)
+				switch(mode.type)
 				{
 					case newasm::runtime::evalModes::sizeOf:
 					{

@@ -434,7 +434,7 @@ namespace newasm
                 auto name = data_macroDecl.second.at(1);
                 auto value = data_macroDecl.second.at(2);
                 newasm::compiler::utils::fixString(value);
-                lineCompiled.priEvalMode = newasm::compiler::utils::getEvalMode(value);
+                lineCompiled.priEvalMode.type = newasm::compiler::utils::getEvalMode(value);
 
                 if(!newasm::header::functions::isalphanum(name))
                 {
@@ -585,7 +585,7 @@ namespace newasm
                             std::string& instruction = linetokens_inline.at(0);
                             std::string& otherShit = linetokens_inline.at(1);
                             newasm::compiler::utils::fixString(otherShit);
-                            lineCompiled.priEvalMode = newasm::compiler::utils::getEvalMode(otherShit);
+                            lineCompiled.priEvalMode.type = newasm::compiler::utils::getEvalMode(otherShit);
 
                             auto it = newasm::inverted_ins.find(instruction);
                             if(it != newasm::inverted_ins.end())
@@ -679,11 +679,11 @@ namespace newasm
                 newasm::compiler::utils::fixString(linetokens[i]);
                 if(i == 1)
                 {
-                    lineCompiled.priEvalMode = newasm::compiler::utils::getEvalMode(linetokens[i]);
+                    lineCompiled.priEvalMode.type = newasm::compiler::utils::getEvalMode(linetokens[i]);
                 }
                 if(i == 2)
                 {
-                    lineCompiled.altEvalMode = newasm::compiler::utils::getEvalMode(linetokens[i]);
+                    lineCompiled.altEvalMode.type = newasm::compiler::utils::getEvalMode(linetokens[i]);
                 }
             }
             if(newasm::compiler::iscomptins(instruction))
@@ -749,7 +749,7 @@ namespace newasm
                     }
                     if(i == 1)
                     {
-                        lineCompiled.priEvalMode = newasm::compiler::utils::getEvalMode(lineCompiled.tokens.at(i));
+                        lineCompiled.priEvalMode.type = newasm::compiler::utils::getEvalMode(lineCompiled.tokens.at(i));
                         //compiling krnl modules cuz SPEED
                         if(lineCompiled.whatAmIDoing == newasm::core::lang_inf::sysenter)
                         {
@@ -831,7 +831,7 @@ namespace newasm
                     }
                     if(i == 2)
                     {
-                        lineCompiled.altEvalMode = newasm::compiler::utils::getEvalMode(lineCompiled.tokens.at(i));
+                        lineCompiled.altEvalMode.type = newasm::compiler::utils::getEvalMode(lineCompiled.tokens.at(i));
                         if(lineCompiled.tokens.at(i).size() >= 3)
                         {
                             auto regName = newasm::header::functions::trim(lineCompiled.tokens.at(i).substr(1));

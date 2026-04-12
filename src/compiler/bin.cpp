@@ -61,14 +61,28 @@ namespace newasm
                 write_string(out, ld.other);
 
                 write_bin(out, ld.priArgType);
-                write_bin(out, ld.priEvalMode);
+
+                write_bin(out, ld.priEvalMode.type);
+                write_bin(out, ld.priEvalMode.argInt);
+                write_bin(out, ld.priEvalMode.argFloat);
+                write_bin(out, ld.priEvalMode.argChar);
+                write_string(out, ld.priEvalMode.argString);
+                write_string(out, ld.priEvalMode.argString2);
+
                 write_bin(out, ld.priInt);
                 write_bin(out, ld.priFloat);
                 write_bin(out, ld.priChar);
                 write_string(out, ld.priString);
 
                 write_bin(out, ld.altArgType);
-                write_bin(out, ld.altEvalMode);
+
+                write_bin(out, ld.altEvalMode.type);
+                write_bin(out, ld.altEvalMode.argInt);
+                write_bin(out, ld.altEvalMode.argFloat);
+                write_bin(out, ld.altEvalMode.argChar);
+                write_string(out, ld.altEvalMode.argString);
+                write_string(out, ld.altEvalMode.argString2);
+
                 write_bin(out, ld.altInt);
                 write_bin(out, ld.altFloat);
                 write_bin(out, ld.altChar);
@@ -107,14 +121,28 @@ namespace newasm
                 read_string(in, ld.other);
 
                 read_bin(in, ld.priArgType);
-                read_bin(in, ld.priEvalMode);
+                
+                read_bin(in, ld.priEvalMode.type);
+                read_bin(in, ld.priEvalMode.argInt);
+                read_bin(in, ld.priEvalMode.argFloat);
+                read_bin(in, ld.priEvalMode.argChar);
+                read_string(in, ld.priEvalMode.argString);
+                read_string(in, ld.priEvalMode.argString2);
+
                 read_bin(in, ld.priInt);
                 read_bin(in, ld.priFloat);
                 read_bin(in, ld.priChar);
                 read_string(in, ld.priString);
 
                 read_bin(in, ld.altArgType);
-                read_bin(in, ld.altEvalMode);
+
+                read_bin(in, ld.altEvalMode.type);
+                read_bin(in, ld.altEvalMode.argInt);
+                read_bin(in, ld.altEvalMode.argFloat);
+                read_bin(in, ld.altEvalMode.argChar);
+                read_string(in, ld.altEvalMode.argString);
+                read_string(in, ld.altEvalMode.argString2);
+
                 read_bin(in, ld.altInt);
                 read_bin(in, ld.altFloat);
                 read_bin(in, ld.altChar);
