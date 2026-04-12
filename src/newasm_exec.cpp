@@ -8591,11 +8591,16 @@ namespace newasm
                 std::cout << "LINE DATA SIZE -> " << newasm::forLinker::lineData.size() << std::endl;
                 std::cout << "MEM COD SIZE -> " << newasm::mem::COD.size() << std::endl;
             });
+            if(NewASM::header::data::LogCompilerOptimizations)
+            {
+                NewASM::header::functions::compilerinfo("Performing code optimizations...");
+            }
             try
             {
                 for(int i = 0; i < newasm::mem::COD.size();)//for(auto i = newasm::mem::COD.begin(); i != newasm::mem::COD.end(); ++i)
                 {
                     auto g = newasm::compiler::DO(newasm::mem::COD.at(i));
+                    NewASM::compiler::Optimize(g, i);
                     if(g.type == newasm::compiler::empty) //VERY IMPORTANT OPTIMIZATIONZ!!
                     {
                         //empty lines are no more included in the binary!

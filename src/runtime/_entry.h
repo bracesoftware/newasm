@@ -37,7 +37,7 @@ namespace newasm
 					}
 					case newasm::runtime::evalModes::regDeref:
 					{
-						newasm::header::functions::parseRegDeref(s);
+						newasm::header::functions::parseRegDeref__2(s, mode.argInt);
 						return;
 					}
 					case newasm::runtime::evalModes::addressOf:

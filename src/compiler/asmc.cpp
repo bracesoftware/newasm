@@ -151,10 +151,18 @@ namespace newasm
                 s = lenofop<'*', '/'>(s); //for env
             }
 
-            inline int getEvalMode(const std::string& s)
+            inline int getEvalMode(const std::string& s, newasm::compiler::EvalMode& mode)
             {
                 if(s.at(0) == '*' and s.at(1) != '/')
                 {
+                    auto it = newasm::mem::regs::identifiers.find(newasm::header::functions::trim(s.substr(1)));
+                    if(it == newasm::mem::regs::identifiers.end())
+                    {
+                        newasm::compiler::abort(newasm::compiler::fail::unknown_register);
+                        return newasm::runtime::evalModes::regDeref;
+                    }
+                    mode.argType = newasm::datatypes::number;
+                    mode.argInt = it->second;
                     return newasm::runtime::evalModes::regDeref;
                 }
                 if(s.front() == '#')
@@ -434,7 +442,7 @@ namespace newasm
                 auto name = data_macroDecl.second.at(1);
                 auto value = data_macroDecl.second.at(2);
                 newasm::compiler::utils::fixString(value);
-                lineCompiled.priEvalMode.type = newasm::compiler::utils::getEvalMode(value);
+                lineCompiled.priEvalMode.type = newasm::compiler::utils::getEvalMode(value, lineCompiled.priEvalMode);
 
                 if(!newasm::header::functions::isalphanum(name))
                 {
@@ -585,7 +593,7 @@ namespace newasm
                             std::string& instruction = linetokens_inline.at(0);
                             std::string& otherShit = linetokens_inline.at(1);
                             newasm::compiler::utils::fixString(otherShit);
-                            lineCompiled.priEvalMode.type = newasm::compiler::utils::getEvalMode(otherShit);
+                            lineCompiled.priEvalMode.type = newasm::compiler::utils::getEvalMode(otherShit, lineCompiled.priEvalMode);
 
                             auto it = newasm::inverted_ins.find(instruction);
                             if(it != newasm::inverted_ins.end())
@@ -679,11 +687,11 @@ namespace newasm
                 newasm::compiler::utils::fixString(linetokens[i]);
                 if(i == 1)
                 {
-                    lineCompiled.priEvalMode.type = newasm::compiler::utils::getEvalMode(linetokens[i]);
+                    lineCompiled.priEvalMode.type = newasm::compiler::utils::getEvalMode(linetokens[i], lineCompiled.priEvalMode);
                 }
                 if(i == 2)
                 {
-                    lineCompiled.altEvalMode.type = newasm::compiler::utils::getEvalMode(linetokens[i]);
+                    lineCompiled.altEvalMode.type = newasm::compiler::utils::getEvalMode(linetokens[i], lineCompiled.altEvalMode);
                 }
             }
             if(newasm::compiler::iscomptins(instruction))
@@ -749,7 +757,7 @@ namespace newasm
                     }
                     if(i == 1)
                     {
-                        lineCompiled.priEvalMode.type = newasm::compiler::utils::getEvalMode(lineCompiled.tokens.at(i));
+                        lineCompiled.priEvalMode.type = newasm::compiler::utils::getEvalMode(lineCompiled.tokens.at(i), lineCompiled.priEvalMode);
                         //compiling krnl modules cuz SPEED
                         if(lineCompiled.whatAmIDoing == newasm::core::lang_inf::sysenter)
                         {
@@ -831,7 +839,7 @@ namespace newasm
                     }
                     if(i == 2)
                     {
-                        lineCompiled.altEvalMode.type = newasm::compiler::utils::getEvalMode(lineCompiled.tokens.at(i));
+                        lineCompiled.altEvalMode.type = newasm::compiler::utils::getEvalMode(lineCompiled.tokens.at(i), lineCompiled.altEvalMode);
                         if(lineCompiled.tokens.at(i).size() >= 3)
                         {
                             auto regName = newasm::header::functions::trim(lineCompiled.tokens.at(i).substr(1));
@@ -895,6 +903,40 @@ namespace newasm
             // failed to compile
             newasm::compiler::abort(newasm::compiler::fail::unmatched_syntax);
             return lineCompiled;
+        }
+
+        inline void Optimize(newasm::compiler::lineData& line, int idx)
+        {
+            if(line.whatAmIDoing == newasm::core::lang_inf::mov)
+            {
+                if(
+                    line.whatAreRegistersLol == line.altEvalMode.argInt and
+                    line.altEvalMode.type == newasm::runtime::evalModes::regDeref and
+                    line.altEvalMode.argType == newasm::datatypes::number
+                )
+                {
+                    //logging the optimization
+                    if(NewASM::header::data::LogCompilerOptimizations)
+                    {
+                        std::cout << newasm::header::col::gray << "\t  ";
+                        try
+                        {
+                            std::cout << newasm::forLinker::getFile(idx - 1) << ":" << newasm::forLinker::getLine(idx - 1);
+                        }
+                        catch(const std::exception& e)
+                        {
+                            std::cout << "cached code";
+                        }
+                        
+                        std::cout << ": " << "peephole optimization, removed redundant code: " << line.raw;
+                        std::cout << '\n' << newasm::header::col::reset;
+                    }
+                    //actual optimization xd
+                    line.type = newasm::compiler::empty;
+                    return;
+                }
+            }
+            return;
         }
 
         template<typename _Type>

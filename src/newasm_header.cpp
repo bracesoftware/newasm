@@ -339,7 +339,7 @@ namespace newasm::header
 
         inline void compilerinfo(const std::string& text) noexcept
         {
-            std::cout << newasm::header::col::aqua << " compiler:  " << newasm::header::col::gray << text << std::endl;
+            std::cout << newasm::header::col::aqua << " compiler:  " << newasm::header::col::reset << text << std::endl;
         }
         
         /*void init()

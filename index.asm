@@ -53,6 +53,7 @@ using "math"
     mov tlr, 24.234234.243
     sysenter "math"
     mov fdx, 1
+    mov tlr, *tlr
     syscall ; -> error
 :LMAOOOOOOOOOO
     thread  testthread -> {
@@ -2446,6 +2447,7 @@ jmp e2349083l
     mov tlr, "file1"
     sysenter "fs/vdsk"
     syscall
+    mov rax, *rax ; new feature, first type of optimization, this line is not included in the binary
     :e2349083l
 .data
     @static, final

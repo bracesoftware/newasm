@@ -152,6 +152,7 @@ namespace newasm
         namespace data
         {
             bool repl = false;
+            constinit bool LogCompilerOptimizations = true;
         }
     }
     namespace project_data
@@ -371,7 +372,6 @@ namespace newasm
         namespace functions
         {
             void parse(std::string& suf);
-            inline void eval(std::string& s, newasm::compiler::EvalMode& mode);
 
             template<bool _procNameParse>
             void parse(std::string& suf);
@@ -422,6 +422,7 @@ namespace newasm
             typedef std::string string;
 
             int type = 0;
+            int argType = INVALID_INS;
             signed int argInt = 0;
             float argFloat = 0;
             char argChar = 0;
@@ -443,14 +444,14 @@ namespace newasm
             string other;
 
             int priArgType = 0;
-            EvalMode priEvalMode = 0;
+            EvalMode priEvalMode;
             int priInt = 0;
             float priFloat = 0;
             char priChar = 0;
             string priString = "";
             
             int altArgType = 0;
-            EvalMode altEvalMode = 0;
+            EvalMode altEvalMode;
             int altInt = 0;
             float altFloat = 0;
             char altChar = 0;
@@ -489,6 +490,14 @@ namespace newasm
         inline void process_comptis(std::string ins, std::string arg1);
         inline void process_comptiso(std::string ins, std::string arg1, std::string arg2);
         inline bool iscomptins(std::string ins);
+    }
+
+    namespace runtime
+    {
+        namespace functions
+        {
+            inline void eval(std::string& s, newasm::compiler::EvalMode& mode);
+        }
     }
 
     struct rawData final

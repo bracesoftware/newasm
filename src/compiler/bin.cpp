@@ -103,6 +103,9 @@ namespace newasm
 
                 write_bin(out, ld.VirtualMemoryAccess);
                 write_bin(out, ld.caseTableAddress);
+
+                write_bin(out, ld.priEvalMode.argType);
+                write_bin(out, ld.altEvalMode.argType);
                 return;
             }
             void load_lineData(std::ifstream& in, newasm::compiler::lineData& ld)
@@ -163,6 +166,9 @@ namespace newasm
 
                 read_bin(in, ld.VirtualMemoryAccess);
                 read_bin(in, ld.caseTableAddress);
+
+                read_bin(in, ld.priEvalMode.argType);
+                read_bin(in, ld.altEvalMode.argType);
                 return;
             }
             //label addresses

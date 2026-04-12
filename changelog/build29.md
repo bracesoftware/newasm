@@ -19,6 +19,11 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 
 + Optimized the `in` and `out` instructions.
 + Added switch-case instruction table optimization, instead of compiling the case line runtime, it is compiled ahead of time and stored as a instruction jump table at the end of the binary file. Binaries are now just bigger, but faster!
++ Added compiler optimizations! Now the compiler will do basic peephole optimizations, remove redundant code such as:
+```asm
+.start
+    mov rax, *rax ; this will get removed immediatelly
+```
 
 ## Fixed issues
 
