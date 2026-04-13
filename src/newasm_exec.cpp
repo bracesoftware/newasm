@@ -7765,7 +7765,7 @@ namespace newasm
             // NAMESPACE
             case newasm::compiler::namespace__:
             {
-                if(
+                if constexpr(0) if(
                     newasm::system::section != newasm::code_stream::sections::data and
                     newasm::system::section != newasm::code_stream::sections::start
                 )
@@ -7773,7 +7773,7 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::invalid_syntax);
                     return 1;
                 }
-                newasm::nms::process_nms(line.tokens.at(0));
+                newasm::nms::ProcessNamespace(line);
                 return 1;
             }
             // CLOSING BRACE
@@ -8718,6 +8718,11 @@ namespace newasm
                             continue;
                         }
                         auto label_name = newasm::header::functions::trim(bytecode.tokens[2]);
+                        auto p = NewASM::header::functions::DetectNamespace(label_name);
+                        if(p.first)
+                        {
+                            label_name = NewASM::compiler::utils::MangleName(p.second.first, p.second.second);
+                        }
                         auto& sl = newasm::compiler::data::sealed_labels;
                         if(
                             newasm::mem::labels.find(label_name) == newasm::mem::labels.end() and
@@ -8772,6 +8777,11 @@ namespace newasm
                             continue;
                         }
                         auto label_name = newasm::header::functions::trim(bytecode.tokens[1]);
+                        auto p = NewASM::header::functions::DetectNamespace(label_name);
+                        if(p.first)
+                        {
+                            label_name = NewASM::compiler::utils::MangleName(p.second.first, p.second.second);
+                        }
                         auto& sl = newasm::compiler::data::sealed_labels;
                         if(bytecode.whatAmIDoing == newasm::core::lang_inf::callc)
                         {

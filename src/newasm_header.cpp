@@ -1452,6 +1452,53 @@ namespace newasm::header
 
             return result;
         }
+
+        typedef std::pair<bool, std::pair<std::vector<std::string>, std::string>> NamespaceDetectionResult;
+        inline NamespaceDetectionResult DetectNamespace(std::string str)
+        {
+            NamespaceDetectionResult result;
+            str = NewASM::header::functions::trim(str);
+            std::string temp;
+            result.first = true;
+            if(str.find("::") == std::string::npos)
+            {
+                result.first = false;
+                return result;
+            }
+            for(unsigned int i = 0; i < str.size(); ++i)
+            {
+                auto c = str.at(i);
+                auto next_c = i + 1 >= str.size() ? 0 : str.at(i + 1);
+                if(c == ':' and next_c == ':')
+                {
+                    result.second.first.push_back(temp);
+                    temp.clear();
+                    ++i;
+                    continue;
+                }
+                temp += c;
+                continue;
+            }
+            result.second.second = temp;
+
+            auto& l = result.second.second;
+            if(l.empty() or !newasm::header::functions::isalphanum(l))
+            {
+                result.first = false;
+            }
+
+            auto& k = result.second.first;
+            for(int i = 0; i < k.size(); ++i)
+            {
+                if(k.at(i).empty() or !newasm::header::functions::isalphanum(k.at(i)))
+                {
+                    result.first = false;
+                    break;
+                }
+            }
+
+            return result;
+        }
         
         inline bool istuple(const std::string& str)
         {

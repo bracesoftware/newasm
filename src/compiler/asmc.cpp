@@ -20,9 +20,11 @@ namespace newasm
             std::vector<std::string> symbol_map;
             std::vector<std::string> namespace_stack;
             std::vector<std::string> sealed_labels;
+            std::vector<std::string> NamespaceStackA;
 
             constinit bool objectDecl = false;
             constinit bool JIT_mode = false;
+            constinit bool CompileTimeMangle = false;
 
             unsigned int ErrorCount = 0;
         }
@@ -101,6 +103,24 @@ namespace newasm
         std::vector<newasm::compiler::lineData> caseJumpTable;
         namespace utils
         {
+            inline std::string MangleName(const std::vector<std::string>& data, const std::string& final_str)
+            {
+                auto vec = data;
+                vec.push_back(__DATE__);
+                vec.push_back(__TIME__);
+                int seed = 0;
+                std::hash<std::string> hasher;
+
+                for(const std::string& s : vec)
+                {
+                    seed ^= hasher(s) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+                }
+
+                std::string result = std::to_string(seed);
+                result = result + "NEWASM"_str + std::to_string(vec.size()) + final_str;
+                return result;
+            }
+
             template<char delim>
 			FORCE_INLINE inline bool fix_spaces(std::string& s)
 			{
@@ -254,6 +274,15 @@ namespace newasm
                 if(!newasm::header::functions::isalphanum(lineCompiled.other))
                 {
                     newasm::compiler::abort(newasm::compiler::fail::unmatched_syntax);
+                    return lineCompiled;
+                }
+                if(NewASM::compiler::data::CompileTimeMangle)
+                {
+                    NewASM::compiler::data::CompileTimeMangle = false;
+                    if(!NewASM::compiler::data::NamespaceStackA.empty())
+                    {
+                        lineCompiled.other = NewASM::compiler::utils::MangleName(newasm::compiler::data::NamespaceStackA, lineCompiled.other);
+                    }
                 }
                 return lineCompiled;
             }
@@ -273,6 +302,13 @@ namespace newasm
                         lineCompiled.type = newasm::compiler::empty;
                         newasm::compiler::abort(newasm::compiler::fail::unknown_attrib);
                         return lineCompiled;
+                    }
+                    //compile time attributes
+                    if(it->second == NewASM::core::lang_inf::attributes::MANGLE__)
+                    {
+                        NewASM::compiler::data::CompileTimeMangle = true;
+                        NewASM::compiler::data::NamespaceStackA.clear();
+                        continue;
                     }
                     lineCompiled.attribute |= it->second;
                 }
@@ -343,20 +379,39 @@ namespace newasm
                 return lineCompiled;
             }
             //namespace
-            if(newasm::header::functions::parseNamespace(line).first)
+            auto c = newasm::header::functions::parseNamespace(line);
+            if(c.first)
             {
                 lineCompiled.type = newasm::compiler::namespace__;
-                auto namespace_name = newasm::header::functions::parseNamespace(line).second;
+                auto namespace_name = c.second;
+                if(NewASM::compiler::data::CompileTimeMangle)
+                {
+                    lineCompiled.type = newasm::compiler::empty;
+                    newasm::compiler::data::NamespaceStackA.push_back(namespace_name);
+                    if(!NewASM::header::functions::isalphanum(namespace_name))
+                    {
+                        newasm::compiler::abort(newasm::compiler::fail::unmatched_syntax);
+                    }
+                    return lineCompiled;
+                }
                 lineCompiled.tokens.push_back(namespace_name);
                 if(namespace_name[0] == '!' && newasm::header::functions::trim(namespace_name.substr(1)) == newasm::compiler::data::namespace_stack.back())
                 {
                     //else u gonna get a runtime exception,cuz namespace mangling is a runtime operation
                     //tell me about an insane vm design
                     newasm::compiler::data::namespace_stack.pop_back();
+                    lineCompiled.priString = newasm::header::functions::trim(namespace_name.substr(1));
+                    lineCompiled.priInt = NewASM::Namespaces::Destruction;
                 }
                 else
                 {
                     newasm::compiler::data::namespace_stack.push_back(namespace_name);
+                    lineCompiled.priString = namespace_name;
+                    lineCompiled.priInt = NewASM::Namespaces::Construction;
+                }
+                if(!NewASM::header::functions::isalphanum(lineCompiled.priString))
+                {
+                    newasm::compiler::abort(newasm::compiler::fail::unmatched_syntax);
                 }
                 return lineCompiled;
             }

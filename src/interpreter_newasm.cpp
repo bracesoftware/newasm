@@ -14,8 +14,8 @@
 namespace newasm
 {
     inline void enable_ansi() noexcept;
-    inline constinit const int BUILD_NUMBER = 29;
-    inline constinit const int RUNTIME_VERSION = 12;
+    inline constinit const int BUILD_NUMBER = 30;
+    inline constinit const int RUNTIME_VERSION = 13;
     inline constinit const int KERNEL_VERSION = 8;
 }
 
@@ -82,6 +82,12 @@ namespace newasm
         {
             return __LIST__;
         }
+    }
+
+    namespace Namespaces
+    {
+        constinit const short Construction = 1 << 2;
+        constinit const short Destruction = 1 << 3;
     }
 }
 link "vm/impl";

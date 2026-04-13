@@ -2485,7 +2485,7 @@ jmp e2349083l
 
     rem hi ; this is idiotic instruction, its gonna get removed by the compiler
 
-    callc FkinFunction
+    callc std::FkinFunction
     mov tlr, "Hello from main"
     call std::ios::writeln
 
@@ -2512,18 +2512,25 @@ jmp e2349083l
     mov rax, 223 ; exit code
     ret *rax ; returns from the whole program to the host OS or newasm shell
 ; -------------------------- FUNCTIONS -------------------------- ;
+
+@mangle ; tell the compiler to do compile-time mangling of the label
+./std ; these namespace delcarations don't exist in the binary because they're under @mangle
 :FkinFunction
+; you don't have to use ./!std since it is not in the runtime, but pure compiler information
     mov tlr, "Hello from func"
     call std::ios::writeln
     retc ; returns from function
 
 :Loop
     cmp rax, 0
-    jz endLoop
+    jz newasm::lmao::endLoop
     dec rax
     mov tlr, "Hello from Loop"
     call std::ios::writeln
     callc Loop ; we got recursion in newasm finally!
+@mangle
+./newasm
+./lmao
 :endLoop
     retc
 
