@@ -926,38 +926,13 @@ namespace newasm
 
         inline void Optimize(newasm::compiler::lineData& line, int idx)
         {
-            if(line.whatAmIDoing == newasm::core::lang_inf::mov)
+            if(newasm::compiler::compiledCode.empty())
             {
-                if(
-                    line.whatAreRegistersLol == line.altEvalMode.argInt and
-                    line.altEvalMode.type == newasm::runtime::evalModes::regDeref and
-                    line.altEvalMode.argType == newasm::datatypes::number
-                )
-                {
-                    //logging the optimization
-                    if(NewASM::header::data::LogCompilerOptimizations)
-                    {
-                        std::cout << "\t  " << newasm::header::col::magenta;
-                        try
-                        {
-                            std::cout << newasm::forLinker::getFile(idx - 1) << ":" << newasm::forLinker::getLine(idx - 1);
-                        }
-                        catch(const std::exception& e)
-                        {
-                            std::cout << "cached code";
-                        }
-                        std::cout << newasm::header::col::gray;
-                        std::cout << ": " << "peephole optimization, removed redundant code: " << newasm::header::col::magenta << line.raw;
-                        std::cout << '\n' << newasm::header::col::reset;
-                    }
-                    //actual optimization xd
-                    line.type = newasm::compiler::empty;
-                    return;
-                }
+                return;
             }
-            if(line.whatAmIDoing == newasm::core::lang_inf::rem)
-            {
-                //logging the optimization
+            auto& lastLine = newasm::compiler::compiledCode.back();
+            //helper func
+            auto OptDescription = [&](const std::string& text) -> void {
                 if(NewASM::header::data::LogCompilerOptimizations)
                 {
                     std::cout << "\t  " << newasm::header::col::magenta;
@@ -970,9 +945,57 @@ namespace newasm
                         std::cout << "cached code";
                     }
                     std::cout << newasm::header::col::gray;
-                    std::cout << ": " << "peephole optimization, removed dead code: " << newasm::header::col::magenta << line.raw;
+                    std::cout << ": " << text << ": " << newasm::header::col::magenta << line.raw;
                     std::cout << '\n' << newasm::header::col::reset;
                 }
+                return;
+            };
+            //actual optimizations
+            if(
+                (line == lastLine) or
+                (line.whatAmIDoing == newasm::core::lang_inf::jmp and lastLine.whatAmIDoing == newasm::core::lang_inf::jmp)
+            ) //double code
+            {
+                bool IsRedundant = (//remove only specific instructions
+                    line.whatAmIDoing == newasm::core::lang_inf::mov or
+                    line.whatAmIDoing == newasm::core::lang_inf::nop or
+                    line.whatAmIDoing == newasm::core::lang_inf::zero or
+                    line.whatAmIDoing == newasm::core::lang_inf::jmp or
+                    line.whatAmIDoing == newasm::core::lang_inf::retc or
+                    line.whatAmIDoing == newasm::core::lang_inf::ret or
+                    line.whatAmIDoing == newasm::core::lang_inf::retn or
+                    line.whatAmIDoing == newasm::core::lang_inf::retf or
+                    line.whatAmIDoing == newasm::core::lang_inf::align or
+                    line.whatAmIDoing == newasm::core::lang_inf::sel or
+                    line.whatAmIDoing == newasm::core::lang_inf::lea or
+                    line.whatAmIDoing == newasm::core::lang_inf::switch__
+                );
+                if(IsRedundant)
+                {
+                    OptDescription("peephole optimization, removed redundant double code");
+                    line.type = newasm::compiler::empty;
+                }
+                return;
+            }
+            if(line.whatAmIDoing == newasm::core::lang_inf::mov)//mov rax, *rax
+            {
+                if(
+                    line.whatAreRegistersLol == line.altEvalMode.argInt and
+                    line.altEvalMode.type == newasm::runtime::evalModes::regDeref and
+                    line.altEvalMode.argType == newasm::datatypes::number
+                )
+                {
+                    //logging the optimization
+                    OptDescription("peephole optimization, removed redundant code");
+                    //actual optimization xd
+                    line.type = newasm::compiler::empty;
+                    return;
+                }
+            }
+            if(line.whatAmIDoing == newasm::core::lang_inf::rem)//useless instructions
+            {
+                //logging the optimization
+                OptDescription("peephole optimization, removed dead code");
                 //actual optimization xd
                 line.type = newasm::compiler::empty;
                 return;

@@ -2246,6 +2246,7 @@ link "testfile.asm" ; link a file
     mov tlr, "HERE IT CRASHES!!! 5"
     call std::ios::writeln
 jmp doneshit
+jmp lmao
 .data
     intg k: 0
 .start
@@ -2299,7 +2300,10 @@ jmp doneshit
                 mov imm, 1
                 mov &std::__::input, *tlr ; we take tlr as input lel
                 mov &std::__::result, std::__::input ; result = 5
-                mov &std::__::temp, std::__::input ; temp = 5
+                mov &   std::__::temp, std::__::input ; temp = 5
+                mov &std::__::temp, std::__::input ; testing compiler's optimization capabilities
+                mov rbx, 3.0
+                mov rbx, 3.0
                 {:funcBody}
                 mov cr2, std::__::temp
                 mov cr3, 1

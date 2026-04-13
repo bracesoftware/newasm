@@ -486,6 +486,37 @@ namespace newasm
             
             explicit inline lineData() noexcept {}
             ~lineData() noexcept {}
+
+            bool operator==(const lineData& rhs) const noexcept
+            {
+                return (
+                    this->tokens == rhs.tokens and
+                    this->type == rhs.type and
+                    this->whatAmIDoing == rhs.whatAmIDoing and
+                    this->whatAreRegistersLol == rhs.whatAreRegistersLol and
+
+                    this->priArgType == rhs.priArgType and
+                    this->priEvalMode.type == rhs.priEvalMode.type and
+                    this->priInt == rhs.priInt and
+                    this->priFloat == rhs.priFloat and
+                    this->priChar == rhs.priChar and
+                    this->priString == rhs.priString and
+
+                    this->altArgType == rhs.altArgType and
+                    this->altEvalMode.type == rhs.altEvalMode.type and
+                    this->altInt == rhs.altInt and
+                    this->altFloat == rhs.altFloat and
+                    this->altChar == rhs.altChar and
+                    this->altString == rhs.altString and
+
+                    this->VirtualMemoryAccess == rhs.VirtualMemoryAccess and
+                    this->attribute == rhs.attribute and
+                    this->whatCodeSection == rhs.whatCodeSection and
+                    this->krnlMod == rhs.krnlMod and
+                    this->letsDecorateVariables == rhs.letsDecorateVariables and
+                    this->whatTheFuckAreEvents == rhs.whatTheFuckAreEvents
+                );
+            }
         };
 
         inline std::string parse_def(std::string suf);
