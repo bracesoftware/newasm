@@ -24,6 +24,7 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 .start
     mov rax, *rax ; this will get removed immediatelly
 ```
++ Added instructions for calculated calls and returns, mimicking how real functions that C/C++ compiler generates.
 
 ## Fixed issues
 

@@ -159,7 +159,7 @@ NewASM features many instructions, around 70 of them. Here is a list:
 8. [Union-related instructions](docs/instructions/union.md)
 9. [Switch block instructions](docs/instructions/switch.md)
 10. [I/O port-related instructions](docs/instructions/ioports.md)
-
+11. [Calculated calls and returns](docs/instructions/calc.md)
 
 ***
 #### Language concepts

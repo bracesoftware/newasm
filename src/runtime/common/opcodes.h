@@ -83,8 +83,14 @@ namespace newasm
             {71, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::mod__)},
             {72, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::loop)},
             {73, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::movx)},
+            {74, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::callc)},
+            {75, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::retc)},
+            {76, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::xcgh)},
+            {77, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::retf)},
+            {78, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::await__)},
 
-            {100, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::__say)}
+            {99, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::__say)},
+            {100, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::Link___)}
         };
     }
 }
