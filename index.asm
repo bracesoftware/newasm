@@ -2501,14 +2501,26 @@ jmp e2349083l
     end
 
     call AbSoluteCinema
+    mov rax, 5
+    callc Loop
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     mov rax, 223
-    ret *rax
+    ret *rax ; returns from the whole program
 
 :FkinFunction
     mov tlr, "Hello from func"
     call std::ios::writeln
+    retc ; returns from function
+
+:Loop
+    cmp rax, 0
+    jz endLoop
+    dec rax
+    mov tlr, "Hello from Loop"
+    call std::ios::writeln
+    callc Loop ; we got recursion in newasm finally!
+:endLoop
     retc
 
     ;using "kuku"

@@ -4547,6 +4547,8 @@ namespace newasm
                 newasm::code_stream::jump = 1;
                 newasm::code_stream::jumpto = lineInfo.jumpinTo;
                 NewASM::header::data::CallCStack->push_back(lineInfo.returninTo);
+                std::cout << "CallCStack size = " << NewASM::header::data::CallCStack->size() << std::endl;
+                std::cout << "CallCStack pushed = " << NewASM::header::data::CallCStack->back() << std::endl;
                 return 1;
             }
             //del
@@ -6980,6 +6982,8 @@ namespace newasm
                 NewASM::header::data::CallCStack->pop_back();
                 newasm::code_stream::jump = 1;
                 newasm::code_stream::jumpto = address;
+                //std::cout << "CallCStack size = " << NewASM::header::data::CallCStack->size() << std::endl;
+                //std::cout << "CallCStack popped = " << address << std::endl;
                 return 1;
             }
 
