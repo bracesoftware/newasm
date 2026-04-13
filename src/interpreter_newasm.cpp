@@ -487,7 +487,7 @@ namespace newasm
             explicit inline lineData() noexcept {}
             ~lineData() noexcept {}
 
-            bool operator==(const lineData& rhs) const noexcept
+            inline bool operator==(const lineData& rhs) const noexcept
             {
                 return (
                     this->tokens == rhs.tokens and
