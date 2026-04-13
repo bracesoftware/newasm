@@ -47,7 +47,7 @@ namespace newasm::header
     }
     namespace data
     {
-        std::string lastln = "";
+        std::string& lastln = CONST__;
         constinit int lastlndx = 0;
         constinit bool exception = true;
         #if 0

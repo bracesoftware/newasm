@@ -2485,10 +2485,12 @@ jmp e2349083l
     mov tlr, "Hello from main"
     call std::ios::writeln
 
+    int 0x3
+
     proc AbSoluteCinema
         jmp main
         {:func}
-        mov tlr, "Hello from absolutecinema func\n"
+        mov tlr, "\tHello from absolutecinema func\n"
         sysenter "ios"
         mov fdx, 1
         syscall
@@ -2501,8 +2503,8 @@ jmp e2349083l
     call AbSoluteCinema
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    mov tlr, 223
-    ret *tlr
+    mov rax, 223
+    ret *rax
 
 :FkinFunction
     mov tlr, "Hello from func"

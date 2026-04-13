@@ -134,6 +134,7 @@ namespace newasm
     typedef newasm::variables::varData* VarPtr;
     VarTable* VAR_TABLE_PTR = nullptr;
     VarPtr CurrentProc = nullptr;
+    VarPtr CurrentProcA = nullptr;
     VarPtr CurrentClass = nullptr;
 
     constinit int CYCLE_COUNT = 0;
@@ -151,7 +152,7 @@ namespace newasm
     {
         namespace data
         {
-            bool repl = false;
+            constinit bool repl = false;
             constinit bool LogCompilerOptimizations = true;
         }
     }

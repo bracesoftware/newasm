@@ -203,7 +203,7 @@ namespace newasm
             std::cout << newasm::header::col::reset;
             if(temp_proc)
             {
-                auto& k = newasm::variables::ids.at(newasm::system::processing_proc).proc;
+                auto& k = NewASM::CurrentProcA->proc;
                 if(k->mangled)
                 {
                     std::cout << "\t\t\t" << newasm::header::col::reset << newasm::header::col::light_blue;
@@ -2384,8 +2384,7 @@ namespace newasm
                 
                 if(newasm::header::data::proc_now)
                 {
-                    auto& j = newasm::variables::ids.at(newasm::system::processing_proc);
-                    j.proc->idx = lineInfo.jumpinTo;//j.proc->labels.at(suf);
+                    NewASM::CurrentProcA->proc->idx = lineInfo.jumpinTo;//j.proc->labels.at(suf);
                     //std::cout << "Zasto ne skaces pizda ti mater'na? -> " << j.proc->idx << std::endl;
                     return 1;
                 }
@@ -4234,8 +4233,7 @@ namespace newasm
                 }
                 if(newasm::header::data::proc_now)
                 {
-                    auto& j = newasm::variables::ids.at(newasm::system::processing_proc);
-                    j.proc->idx = lineInfo.jumpinTo;//j.proc->labels.at(suf);
+                    NewASM::CurrentProcA->proc->idx = lineInfo.jumpinTo;//j.proc->labels.at(suf);
                     //std::cout << "jumped to " << j.proc->idx << '\n';
                     return 1;
                 }
@@ -4284,8 +4282,7 @@ namespace newasm
                 }
                 if(newasm::header::data::proc_now)
                 {
-                    auto& j = newasm::variables::ids.at(newasm::system::processing_proc);
-                    j.proc->idx = lineInfo.jumpinTo;//j.proc->labels.at(suf);
+                    NewASM::CurrentProcA->proc->idx = lineInfo.jumpinTo;//j.proc->labels.at(suf);
                     return 1;
                 }
 
@@ -4333,8 +4330,7 @@ namespace newasm
 
                 if(newasm::header::data::proc_now)
                 {
-                    auto& j = newasm::variables::ids.at(newasm::system::processing_proc);
-                    j.proc->idx = lineInfo.jumpinTo;//j.proc->labels.at(suf);
+                    NewASM::CurrentProcA->proc->idx = lineInfo.jumpinTo;//j.proc->labels.at(suf);
                     return 1;
                 }
                 if(newasm::thread_line)
@@ -4382,8 +4378,7 @@ namespace newasm
 
                 if(newasm::header::data::proc_now)
                 {
-                    auto& j = newasm::variables::ids.at(newasm::system::processing_proc);
-                    j.proc->idx = lineInfo.jumpinTo;//j.proc->labels.at(suf);
+                    NewASM::CurrentProcA->proc->idx = lineInfo.jumpinTo;
                     return 1;
                 }
                 if(newasm::thread_line)
@@ -4429,8 +4424,7 @@ namespace newasm
 
                 if(newasm::header::data::proc_now)
                 {
-                    auto& j = newasm::variables::ids.at(newasm::system::processing_proc);
-                    j.proc->idx = lineInfo.jumpinTo;//j.proc->labels.at(suf);
+                    NewASM::CurrentProcA->proc->idx = lineInfo.jumpinTo;//j.proc->labels.at(suf);
                     return 1;
                 }
                 if(newasm::thread_line)
@@ -4474,8 +4468,7 @@ namespace newasm
 
                 if(newasm::header::data::proc_now)
                 {
-                    auto& j = newasm::variables::ids.at(newasm::system::processing_proc);
-                    j.proc->idx = lineInfo.jumpinTo;//j.proc->labels.at(suf);
+                    NewASM::CurrentProcA->proc->idx = lineInfo.jumpinTo;//j.proc->labels.at(suf);
                     return 1;
                 }
 
@@ -4517,8 +4510,7 @@ namespace newasm
 
                 if(newasm::header::data::proc_now)
                 {
-                    auto& j = newasm::variables::ids.at(newasm::system::processing_proc);
-                    j.proc->idx = lineInfo.jumpinTo;//j.proc->labels.at(suf);
+                    NewASM::CurrentProcA->proc->idx = lineInfo.jumpinTo;//j.proc->labels.at(suf);
                     //std::cout << "Zasto ne skaces pizda ti mater'na? -> " << j.proc->idx << std::endl;
                     return 1;
                 }
@@ -4539,9 +4531,9 @@ namespace newasm
             {
                 if(newasm::header::data::proc_now)
                 {
-                    auto& j = newasm::variables::ids.at(newasm::system::processing_proc);
-                    j.proc->idx = lineInfo.jumpinTo;
-                    j.proc->CallCStack.push_back(lineInfo.returninTo);
+                    auto& j = NewASM::CurrentProcA;
+                    j->proc->idx = lineInfo.jumpinTo;
+                    j->proc->CallCStack.push_back(lineInfo.returninTo);
                     return 1;
                 }
 
@@ -5473,33 +5465,38 @@ namespace newasm
                         }
                         newasm::threads::memory.at(thread__)->contents.pop_front();
                         #endif
-                        if(newasm::threads::memory.at(thread__)->returned)
+                        auto& mmap = it->second;
+                        if(mmap->returned)
                         {
                             break;
                         }
-                        if(newasm::threads::memory.at(thread__)->contents.empty())
+                        if(mmap->contents.empty())
                         {
-                            newasm::threads::memory.at(thread__)->returned = true;
-                            newasm::threads::memory.at(thread__)->returned_val = "0";
+                            mmap->returned = true;
+                            mmap->returned_val = "0";
                             continue;
                         }
-                        auto& IDX = newasm::threads::memory.at(thread__)->lcx;
-                        if(IDX == newasm::threads::memory.at(thread__)->contents.size())
+                        auto& IDX = mmap->lcx;
+                        if(IDX == mmap->contents.size())
                         {
-                            newasm::threads::memory.at(thread__)->returned = true;
-                            newasm::threads::memory.at(thread__)->returned_val = "0";
+                            mmap->returned = true;
+                            mmap->returned_val = "0";
                             continue;
                         }
                         newasm::thread_line = true;
                         newasm::threads::now = (thread__); // thread name
-                        newasm::procline(newasm::threads::memory.at(thread__)->contents.at(IDX));
+                        if(IDX < 0 or IDX >= mmap->contents.size()) [[unlikely]]
+                        {
+                            mmap->returned = true;
+                        }
+                        else newasm::procline(mmap->contents.at(IDX));
                         IDX++;
                         newasm::thread_line = false;
-                        if(newasm::threads::memory.at(thread__)->paused)
+                        if(mmap->paused)
                         {
                             IDX--;
                             //std::cout << "Thread paused by channel: " << newasm::threads::now << std::endl;
-                            newasm::threads::memory.at(thread__)->paused = false;
+                            mmap->paused = false;
                             newasm::terminate(newasm::exit_codes::channel_deadlock);
                             return 1;
                         }
@@ -6947,15 +6944,15 @@ namespace newasm
             {
                 if(newasm::header::data::proc_now)
                 {
-                    auto& j = newasm::variables::ids.at(newasm::system::processing_proc);
-                    if(j.proc->CallCStack.empty())
+                    auto& j = NewASM::CurrentProcA;
+                    if(j->proc->CallCStack.empty())
                     {
                         newasm::terminate(newasm::exit_codes::invalid_memacc);
                         return 1;
                     }
-                    int address = j.proc->CallCStack.back() + 1;
-                    j.proc->CallCStack.pop_back();
-                    j.proc->idx = address;
+                    int address = j->proc->CallCStack.back() + 1;
+                    j->proc->CallCStack.pop_back();
+                    j->proc->idx = address;
                     return 1;
                 }
 
@@ -8209,6 +8206,7 @@ namespace newasm
         if(it != newasm::variables::ids.end())
         {
             newasm::system::processing_proc = name;
+            NewASM::CurrentProcA = &it->second;
             #if 0
             for(auto& line : it->second)
             {
