@@ -72,7 +72,8 @@ namespace newasm
                         bytecode.whatAmIDoing == newasm::core::lang_inf::jl or
                         bytecode.whatAmIDoing == newasm::core::lang_inf::jle or
                         bytecode.whatAmIDoing == newasm::core::lang_inf::jg or
-                        bytecode.whatAmIDoing == newasm::core::lang_inf::jge
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::jge or
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::callc
                     )
                     {
                         if(bytecode.tokens.size() != 2)
@@ -80,12 +81,18 @@ namespace newasm
                             continue;
                         }
                         auto& label_name = bytecode.tokens[1];
+
                         if(this->labels.find(label_name) == this->labels.end())
                         {
                             newasm::terminate(newasm::exit_codes::bus_err);
                             break;
                         }
                         bytecode.jumpinTo = this->labels.at(label_name);
+
+                        if(bytecode.whatAmIDoing == newasm::core::lang_inf::callc)
+                        {
+                            bytecode.returninTo = i;
+                        }
                         continue;
                     }
                     if(

@@ -478,6 +478,7 @@ namespace newasm
             public std::vector<newasm::compiler::lineData> contents;
             std::unordered_map<std::string, int> labels;
             int idx;
+            std::vector<int> CallCStack;
 
             std::string original_name;
             bool mangled = false;
@@ -497,6 +498,8 @@ namespace newasm
                 {
                     return;
                 }
+
+                //CallCStack.reserve(1000);
 
                 this->labels.max_load_factor(MAX_LOAD_FACTOR);
 
@@ -524,7 +527,8 @@ namespace newasm
                         bytecode.whatAmIDoing == newasm::core::lang_inf::jl or
                         bytecode.whatAmIDoing == newasm::core::lang_inf::jle or
                         bytecode.whatAmIDoing == newasm::core::lang_inf::jg or
-                        bytecode.whatAmIDoing == newasm::core::lang_inf::jge
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::jge or
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::callc
                     )
                     {
                         if(bytecode.tokens.size() != 2)
@@ -538,6 +542,11 @@ namespace newasm
                             break;
                         }
                         bytecode.jumpinTo = this->labels.at(label_name);
+
+                        if(bytecode.whatAmIDoing == newasm::core::lang_inf::callc)
+                        {
+                            bytecode.returninTo = i;
+                        }
                         continue;
                     }
                     if(

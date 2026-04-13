@@ -2325,6 +2325,12 @@ jmp doneshit
     ./!std
 
     thread TestFactorial -> {
+        jmp main
+        {:func}
+            mov tlr, "Hello from TestFactorial::func"
+            call std::ios::writeln
+        retc
+        {:main}
         mov tlr, "factorial of 5 is "
         call std::ios::write
         mov tlr, 5
@@ -2340,6 +2346,8 @@ jmp doneshit
         mov tlr, 2
         call std::math::factorial
         call std::ios::writeln
+        callc func
+        nop
     }
 
     await &TestFactorial
@@ -2473,9 +2481,34 @@ jmp e2349083l
 
     rem hi ; this is idiotic instruction, its gonna get removed by the compiler
 
+    callc FkinFunction
+    mov tlr, "Hello from main"
+    call std::ios::writeln
+
+    proc AbSoluteCinema
+        jmp main
+        {:func}
+        mov tlr, "Hello from absolutecinema func\n"
+        sysenter "ios"
+        mov fdx, 1
+        syscall
+        retc
+        {:main}
+        callc func
+        halt 0
+    end
+
+    call AbSoluteCinema
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     mov tlr, 223
     ret *tlr
+
+:FkinFunction
+    mov tlr, "Hello from func"
+    call std::ios::writeln
+    retc
+
     ;using "kuku"
 using "ios"
 .data

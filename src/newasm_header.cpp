@@ -100,6 +100,8 @@ namespace newasm::header
         #else
         constinit unsigned int ActiveThreads = 0;
         #endif
+
+        NewASM::kernel::thread_safe<std::vector<int>> CallCStack;
     }
     namespace constants
     {

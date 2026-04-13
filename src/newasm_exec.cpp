@@ -4534,6 +4534,29 @@ namespace newasm
                 //std::cout << "JUMPED TO " << newasm::mem::labels[suf];
                 return 1;
             }
+            //callc
+            case newasm::core::lang_inf::callc:
+            {
+                if(newasm::header::data::proc_now)
+                {
+                    auto& j = newasm::variables::ids.at(newasm::system::processing_proc);
+                    j.proc->idx = lineInfo.jumpinTo;
+                    j.proc->CallCStack.push_back(lineInfo.returninTo);
+                    return 1;
+                }
+
+                if(newasm::thread_line)
+                {
+                    newasm::threads::memory.at(newasm::threads::now)->lcx = lineInfo.jumpinTo;
+                    NewASM::header::data::CallCStack->push_back(lineInfo.returninTo);
+                    return 1;
+                }
+
+                newasm::code_stream::jump = 1;
+                newasm::code_stream::jumpto = lineInfo.jumpinTo;
+                NewASM::header::data::CallCStack->push_back(lineInfo.returninTo);
+                return 1;
+            }
             //del
             case newasm::core::lang_inf::del:
             {
@@ -6919,6 +6942,49 @@ namespace newasm
                 // do nothing
                 return 1;
             }
+            //retc
+            case newasm::core::lang_inf::retc:
+            {
+                if(newasm::header::data::proc_now)
+                {
+                    auto& j = newasm::variables::ids.at(newasm::system::processing_proc);
+                    if(j.proc->CallCStack.empty())
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    int address = j.proc->CallCStack.back() + 1;
+                    j.proc->CallCStack.pop_back();
+                    j.proc->idx = address;
+                    return 1;
+                }
+
+                if(newasm::thread_line)
+                {
+                    //CallCStack is thread_safe so we can do the same thing, the empty function will work for that specific virtual thread
+                    if(NewASM::header::data::CallCStack->empty())
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    int address = NewASM::header::data::CallCStack->back() + 1;
+                    NewASM::header::data::CallCStack->pop_back();
+                    newasm::threads::memory.at(newasm::threads::now)->lcx = address;
+                    return 1;
+                }
+
+                if(NewASM::header::data::CallCStack->empty())
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_memacc);
+                    return 1;
+                }
+
+                int address = NewASM::header::data::CallCStack->back() + 1;
+                NewASM::header::data::CallCStack->pop_back();
+                newasm::code_stream::jump = 1;
+                newasm::code_stream::jumpto = address;
+                return 1;
+            }
 
             //default
             case newasm::core::lang_inf::default__:
@@ -8168,7 +8234,10 @@ namespace newasm
                     newasm::header::data::proc_now = false;
                     break;
                 }
-                if(it->second.proc->idx == proc_contents.size())
+                if(
+                    it->second.proc->idx >= proc_contents.size() or
+                    it->second.proc->idx < 0
+                )
                 {
                     break;
                 }
@@ -8692,7 +8761,8 @@ namespace newasm
                         bytecode.whatAmIDoing == newasm::core::lang_inf::jl or
                         bytecode.whatAmIDoing == newasm::core::lang_inf::jle or
                         bytecode.whatAmIDoing == newasm::core::lang_inf::jg or
-                        bytecode.whatAmIDoing == newasm::core::lang_inf::jge
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::jge or
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::callc
                     )
                     {
                         if(bytecode.tokens.size() != 2)
@@ -8701,6 +8771,14 @@ namespace newasm
                         }
                         auto label_name = newasm::header::functions::trim(bytecode.tokens[1]);
                         auto& sl = newasm::compiler::data::sealed_labels;
+                        if(bytecode.whatAmIDoing == newasm::core::lang_inf::callc)
+                        {
+                            if(already_processed)
+                            {
+                                newasm::compiler::abort(newasm::compiler::fail::retc_fail);
+                                break;
+                            }
+                        }
                         if(
                             newasm::mem::labels.find(label_name) == newasm::mem::labels.end() and
                             ![&](const std::string& name) -> bool {
@@ -8725,6 +8803,10 @@ namespace newasm
                         }
                         try
                         {
+                            if(bytecode.whatAmIDoing == newasm::core::lang_inf::callc)
+                            {
+                                bytecode.returninTo = i;
+                            }
                             bytecode.jumpinTo = newasm::mem::labels[label_name];
                         }
                         catch(std::exception& e)
@@ -8823,7 +8905,13 @@ namespace newasm
             }
             newasm::thread_line = true;
             newasm::threads::now = (i); // thread name
-            newasm::procline(mmap->contents.at(IDX));
+            
+            if(IDX < 0 or IDX >= mmap->contents.size()) [[unlikely]]
+            {
+                mmap->returned = true;
+            }
+            else newasm::procline(mmap->contents.at(IDX));
+            
             ++IDX;
             newasm::thread_line = false;
             if(mmap->paused)

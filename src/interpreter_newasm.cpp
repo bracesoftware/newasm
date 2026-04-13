@@ -473,6 +473,7 @@ namespace newasm
             int jumpinTo = INVALID_INS;
             bool VirtualMemoryAccess = false;
             unsigned int caseTableAddress = 0;
+            int returninTo = INVALID_INS;
 
             //---------------------------------------------
             //stuff not included in the binary:
@@ -1021,6 +1022,7 @@ namespace newasm
     {
         inline void cleanup()
         {
+            NewASM::header::data::CallCStack->clear();
             newasm::RAM->set_sot(sizeof(int));
             NewASM::header::data::EnableThreads = true;
             newasm::header::data::offlineMode = false;
@@ -1164,6 +1166,7 @@ module(main_module, {
     NewASM::CapturedData::ExitCodeInvalidMemacc = const_cast<decltype(NewASM::CapturedData::ExitCodeInvalidMemacc)>(&newasm::exit_codes::invalid_memacc);
     newasm::mem::labels.max_load_factor(MAX_LOAD_FACTOR);
     NewASM::header::data::LogCompilerOptimizations = true;
+    NewASM::header::data::CallCStack->reserve(1000);
     return;
 });
 namespace newasm

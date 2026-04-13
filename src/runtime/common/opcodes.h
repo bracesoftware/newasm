@@ -85,7 +85,7 @@ namespace newasm
             {73, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::movx)},
             {74, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::callc)},
             {75, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::retc)},
-            {76, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::xcgh)},
+            {76, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::xchg)},
             {77, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::retf)},
             {78, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::await__)},
 
