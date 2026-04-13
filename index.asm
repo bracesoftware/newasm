@@ -2504,10 +2504,10 @@ jmp e2349083l
     mov rax, 5
     callc Loop
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    mov rax, 223
-    ret *rax ; returns from the whole program
-
+; -------------------------- END OF PROGRAM -------------------------- ;
+    mov rax, 223 ; exit code
+    ret *rax ; returns from the whole program to the host OS or newasm shell
+; -------------------------- FUNCTIONS -------------------------- ;
 :FkinFunction
     mov tlr, "Hello from func"
     call std::ios::writeln
