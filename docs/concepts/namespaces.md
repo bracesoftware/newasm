@@ -29,3 +29,21 @@ You can, of course, nest them:
 .start
 	mov tlr, nm1::nm2::nm3::data
 ```
+
+### Labels and namespaces
+
+> [!WARNING]
+> This feature was added in build 30.
+
+In order to tell the compiler to mangle a specific label, you have to use the `@mangle` attribute.
+
+```asm
+@mangle
+./nms1
+./lol
+:LabelName
+...
+
+```
+
+You don't have to specify `./!nms1`, or any other destructive operator since the compiler figures it out.
