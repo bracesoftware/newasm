@@ -979,7 +979,7 @@ namespace newasm
             return lineCompiled;
         }
 
-        inline void Optimize(newasm::compiler::lineData& line, int idx, std::optional<newasm::compiler::lineData>& nextLine)
+        inline void Optimize(newasm::compiler::lineData& line, int idx)
         {
             if(newasm::compiler::compiledCode.empty())
             {
@@ -987,20 +987,21 @@ namespace newasm
             }
             auto& lastLine = newasm::compiler::compiledCode.back();
             //helper func
-            auto OptDescription = [&](const std::string& text) -> void {
+            auto OptDescription = [&](const std::string& text, newasm::compiler::lineData* lptr = nullptr, signed int x = 0) -> void {
+                newasm::compiler::lineData& L = (lptr == nullptr) ? line : *lptr;
                 if(NewASM::header::data::LogCompilerOptimizations)
                 {
                     std::cout << "\t  " << newasm::header::col::magenta;
                     try
                     {
-                        std::cout << newasm::forLinker::getFile(idx - 1) << ":" << newasm::forLinker::getLine(idx - 1);
+                        std::cout << newasm::forLinker::getFile(idx - 1 + x) << ":" << newasm::forLinker::getLine(idx - 1 + x);
                     }
                     catch(const std::exception& e)
                     {
                         std::cout << "cached code";
                     }
                     std::cout << newasm::header::col::gray;
-                    std::cout << ": " << text << ": " << newasm::header::col::magenta << line.raw;
+                    std::cout << ": " << text << ": " << newasm::header::col::magenta << L.raw;
                     std::cout << '\n' << newasm::header::col::reset;
                 }
                 return;
@@ -1055,18 +1056,19 @@ namespace newasm
                 line.type = newasm::compiler::empty;
                 return;
             }
-            if(nextLine) if(
+            //remove redundant reassignments
+            if(
                 line.whatAmIDoing == newasm::core::lang_inf::mov and
-                nextLine->whatAmIDoing == newasm::core::lang_inf::mov
+                lastLine.whatAmIDoing == newasm::core::lang_inf::mov
             )
             {
-                bool SameRegisters = line.whatAreRegistersLol == nextLine->whatAreRegistersLol;
+                bool SameRegisters = line.whatAreRegistersLol == lastLine.whatAreRegistersLol;
                 bool ValidRegisters = line.whatAreRegistersLol != INVALID_INS;
 
                 if(SameRegisters and ValidRegisters)
                 {
-                    OptDescription("peephole optimization, redundant assignment before reassignment");
-                    line.type = newasm::compiler::empty;
+                    OptDescription("peephole optimization, redundant assignment before reassignment", &lastLine, -1);
+                    lastLine.type = newasm::compiler::empty;
                     return;
                 }
                 return;

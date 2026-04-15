@@ -8673,8 +8673,7 @@ namespace newasm
                 for(int i = 0; i < newasm::mem::COD.size();)//for(auto i = newasm::mem::COD.begin(); i != newasm::mem::COD.end(); ++i)
                 {
                     auto g = newasm::compiler::DO(newasm::mem::COD.at(i));
-                    std::optional<decltype(g)> h = i + 1 >= newasm::mem::COD.size() ? std::nullopt : newasm::compiler::DO(newasm::mem::COD.at(i + 1)); // for anaylsys of redundant reassignments
-                    NewASM::compiler::Optimize(g, i, h);
+                    NewASM::compiler::Optimize(g, i);
                     if(g.type == newasm::compiler::empty) //VERY IMPORTANT OPTIMIZATIONZ!!
                     {
                         //empty lines are no more included in the binary!
@@ -8693,6 +8692,9 @@ namespace newasm
                 std::cout << "E JEBGA SAD KUME! -> " << e.what() << std::endl;
                 throw;
             }
+            std::erase_if(newasm::compiler::compiledCode, [&](auto s) {
+                return s.type == newasm::compiler::empty;
+            });
             //2nd compilation pass for labels
             for(int i = 0; i < newasm::compiler::compiledCode.size(); ++i)
             {

@@ -2517,6 +2517,7 @@ jmp e2349083l
 ./std ; these namespace delcarations don't exist in the binary because they're under @mangle
 :FkinFunction
 ; you don't have to use ./!std since it is not in the runtime, but pure compiler information
+    mov tlr, 3 ; this is gonna get removed by the compiler
     mov tlr, "Hello from func"
     call std::ios::writeln
     retc ; returns from function
