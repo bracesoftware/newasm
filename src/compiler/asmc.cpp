@@ -979,7 +979,7 @@ namespace newasm
             return lineCompiled;
         }
 
-        inline void Optimize(newasm::compiler::lineData& line, int idx)
+        inline void Optimize(newasm::compiler::lineData& line, int idx, std::optional<newasm::compiler::lineData>& nextLine)
         {
             if(newasm::compiler::compiledCode.empty())
             {
@@ -1053,6 +1053,22 @@ namespace newasm
                 OptDescription("peephole optimization, removed dead code");
                 //actual optimization xd
                 line.type = newasm::compiler::empty;
+                return;
+            }
+            if(nextLine) if(
+                line.whatAmIDoing == newasm::core::lang_inf::mov and
+                nextLine->whatAmIDoing == newasm::core::lang_inf::mov
+            )
+            {
+                bool SameRegisters = line.whatAreRegistersLol == nextLine->whatAreRegistersLol;
+                bool ValidRegisters = line.whatAreRegistersLol != INVALID_INS;
+
+                if(SameRegisters and ValidRegisters)
+                {
+                    OptDescription("peephole optimization, redundant assignment before reassignment");
+                    line.type = newasm::compiler::empty;
+                    return;
+                }
                 return;
             }
             return;

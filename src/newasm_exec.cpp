@@ -8673,7 +8673,8 @@ namespace newasm
                 for(int i = 0; i < newasm::mem::COD.size();)//for(auto i = newasm::mem::COD.begin(); i != newasm::mem::COD.end(); ++i)
                 {
                     auto g = newasm::compiler::DO(newasm::mem::COD.at(i));
-                    NewASM::compiler::Optimize(g, i);
+                    std::optional<decltype(g)> h = i + 1 >= newasm::mem::COD.size() ? std::nullopt : newasm::compiler::DO(newasm::mem::COD.at(i + 1)); // for anaylsys of redundant reassignments
+                    NewASM::compiler::Optimize(g, i, h);
                     if(g.type == newasm::compiler::empty) //VERY IMPORTANT OPTIMIZATIONZ!!
                     {
                         //empty lines are no more included in the binary!
