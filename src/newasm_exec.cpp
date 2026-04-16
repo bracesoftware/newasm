@@ -8692,9 +8692,25 @@ namespace newasm
                 std::cout << "E JEBGA SAD KUME! -> " << e.what() << std::endl;
                 throw;
             }
-            std::erase_if(newasm::compiler::compiledCode, [&](auto s) {
-                return s.type == newasm::compiler::empty;
-            });
+            //newasm::compiler::compiledCode, newasm::forLinker::lineData
+            auto& v1 = newasm::compiler::compiledCode;
+            auto& v2 = newasm::forLinker::lineData;
+            if(v1.size() != v2.size())
+            {
+                newasm::header::functions::err("CC and LD sizes don't match!");
+            }
+            for(int i = 0; i < v1.size();)
+            {
+                if(v1[i].type == newasm::compiler::empty)
+                {
+                    v1.erase(v1.begin() + i);
+                    v2.erase(v2.begin() + i);
+                }
+                else
+                {
+                    ++i;
+                }
+            }
             //2nd compilation pass for labels
             for(int i = 0; i < newasm::compiler::compiledCode.size(); ++i)
             {
