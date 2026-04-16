@@ -362,9 +362,10 @@ namespace newasm
     #endif
     inline int process_l(std::string arg, int lineidx)
     {
-        if(newasm::mem::functions::datavalid(arg,newasm::mem::labels))
+        if(newasm::mem::functions::datavalid(arg, newasm::mem::labels))
         {
-            newasm::terminate(newasm::exit_codes::label_redef);//,wholeline);
+            //newasm::terminate(newasm::exit_codes::label_redef);//,wholeline);
+            newasm::compiler::abort(newasm::compiler::fail::label_redef);
             return 1;
         }
         newasm::mem::labels[arg] = lineidx;
@@ -8712,6 +8713,7 @@ namespace newasm
                 }
             }
             //2nd compilation pass for labels
+            newasm::compiler::data::lnidx = 1;
             for(int i = 0; i < newasm::compiler::compiledCode.size(); ++i)
             {
                 if(newasm::compiler::compiledCode.at(i).type == newasm::compiler::labelJumpPoint)

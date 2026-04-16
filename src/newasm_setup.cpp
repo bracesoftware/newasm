@@ -509,6 +509,10 @@ namespace newasm
                     {
                         //std::cout << "Successfully added label: `" << this->contents.at(i).other << "`" << std::endl;
                         auto k = this->contents.at(i).other;
+                        if(this->labels.find(k) != this->labels.end())
+                        {
+                            newasm::terminate(newasm::exit_codes::label_redef);
+                        }
                         this->labels[k] = i;
                         newasm::sealedLabels->push_back(k);
                         this->contents.at(i).type = newasm::compiler::empty;

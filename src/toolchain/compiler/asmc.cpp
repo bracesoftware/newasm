@@ -40,6 +40,7 @@ namespace newasm
             const int unknown_label = 8;
             const int invalid_symbol = 9;
             const int retc_fail = 10;
+            constinit const int label_redef = 11;
 
             const std::unordered_map<int, std::string> id = {
                 {unmatched_syntax, "UnmatchedSyntax"},
@@ -51,7 +52,8 @@ namespace newasm
                 {symbol_redecl, "SymbolRedeclaration"},
                 {unknown_label, "InvalidLabelAddress"},
                 {invalid_symbol, "InvalidSymbol"},
-                {retc_fail, "CannotReturnToCaseJumpTable"}
+                {retc_fail, "CannotReturnToCaseJumpTable"},
+                {label_redef, "LabelAlreadyExists"}
             };
         }
 
