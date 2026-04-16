@@ -8695,7 +8695,7 @@ namespace newasm
             //newasm::compiler::compiledCode, newasm::forLinker::lineData
             auto& v1 = newasm::compiler::compiledCode;
             auto& v2 = newasm::forLinker::lineData;
-            if(v1.size() != v2.size())
+            if(v1.size() != v2.size()) [[unlikely]]
             {
                 newasm::header::functions::err("CC and LD sizes don't match!");
             }
