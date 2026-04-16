@@ -890,8 +890,8 @@ link "runtime/common/opcodes";
 
 link "newasm_dynlib";
 link "newasm_header";
-link "compiler/native_jit";
-link "linker/asmlink";
+link "toolchain/compiler/native_jit";
+link "toolchain/linker/asmlink";
 
 link "runtime/common/tokenize";
 link "newasm_setup";
@@ -934,8 +934,8 @@ link "kernel/syscall_handle";
 link "runtime/namespaces";
 link "runtime/pp/directives";
 
-link "compiler/asmc";
-link "compiler/comptins";
+link "toolchain/compiler/asmc";
+link "toolchain/compiler/comptins";
 
 //link "runtime/memory_impl";
 
@@ -957,7 +957,7 @@ struct __global_newasm final
 static __global_newasm nG;
 
 link "runtime/garbage_collector";
-link "compiler/bin";
+link "toolchain/compiler/bin";
 link "newasm_exec";
 link "runtime/repl_mode";
 
