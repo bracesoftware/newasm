@@ -1058,8 +1058,13 @@ namespace newasm
             }
             //remove redundant reassignments
             if(
-                line.whatAmIDoing == newasm::core::lang_inf::mov and
-                lastLine.whatAmIDoing == newasm::core::lang_inf::mov
+                (
+                    line.whatAmIDoing == newasm::core::lang_inf::mov and
+                    lastLine.whatAmIDoing == newasm::core::lang_inf::mov
+                ) or (
+                    line.whatAmIDoing == newasm::core::lang_inf::mov and
+                    lastLine.whatAmIDoing == newasm::core::lang_inf::zero
+                )
             )
             {
                 bool SameRegisters = line.whatAreRegistersLol == lastLine.whatAreRegistersLol;
