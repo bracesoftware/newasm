@@ -2513,10 +2513,9 @@ jmp e2349083l
     mov rax, 223 ; exit code
     ret *rax ; returns from the whole program to the host OS or newasm shell
 ; -------------------------- FUNCTIONS -------------------------- ;
-
+:LMAOOOOOOOOOO
 @mangle ; tell the compiler to do compile-time mangling of the label
 ./std ; these namespace delcarations don't exist in the binary because they're under @mangle
-:FkinFunction
 :FkinFunction
 ; you don't have to use ./!std since it is not in the runtime, but pure compiler information
     zero tlr ; this is gonna get removed

@@ -364,6 +364,7 @@ namespace newasm
     {
         if(newasm::mem::functions::datavalid(arg, newasm::mem::labels))
         {
+            newasm::compiler::data::lnidx = lineidx + 1;
             //newasm::terminate(newasm::exit_codes::label_redef);//,wholeline);
             newasm::compiler::abort(newasm::compiler::fail::label_redef);
             return 1;
@@ -8713,12 +8714,13 @@ namespace newasm
                 }
             }
             //2nd compilation pass for labels
-            newasm::compiler::data::lnidx = 1;
             for(int i = 0; i < newasm::compiler::compiledCode.size(); ++i)
             {
-                if(newasm::compiler::compiledCode.at(i).type == newasm::compiler::labelJumpPoint)
+                auto& bytecode = newasm::compiler::compiledCode.at(i);
+                if(bytecode.type == newasm::compiler::labelJumpPoint)
                 {
-                    newasm::process_l(newasm::compiler::compiledCode.at(i).other, i);
+                    newasm::compiler::data::line = bytecode.raw;
+                    newasm::process_l(bytecode.other, i);
                 }
             }
             newasm::compiler::data::lnidx = 1;
