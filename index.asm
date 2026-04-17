@@ -2510,6 +2510,7 @@ jmp e2349083l
     callc Loop
 
 ; -------------------------- END OF PROGRAM -------------------------- ;
+    zero rax
     mov rax, 223 ; exit code
     ret *rax ; returns from the whole program to the host OS or newasm shell
 ; -------------------------- FUNCTIONS -------------------------- ;
