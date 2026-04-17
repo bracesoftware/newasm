@@ -364,7 +364,6 @@ namespace newasm
     {
         if(newasm::mem::functions::datavalid(arg, newasm::mem::labels))
         {
-            newasm::compiler::data::lnidx = lineidx + 1;
             //newasm::terminate(newasm::exit_codes::label_redef);//,wholeline);
             newasm::compiler::abort(newasm::compiler::fail::label_redef);
             return 1;
@@ -7965,7 +7964,7 @@ namespace newasm
                 if constexpr(0) newasm::process_s(line.tokens.at(0), line);
                 switch(line.whatCodeSection) // faster
                 {
-                    case INVALID_INS:
+                    case INVALID_INS: [[unlikely]]
                     {
                         newasm::terminate(newasm::exit_codes::invalid_section);
                         return 1;
@@ -8661,7 +8660,7 @@ namespace newasm
             _file.close();
 
             newasm::header::functions::compilerinfo("Compiling the project...");
-            newasm::compiler::data::lnidx = 1;
+            newasm::compiler::data::lnidx = 0;
             __newasmDBG_COMPLEX({
                 std::cout << "LINE DATA SIZE -> " << newasm::forLinker::lineData.size() << std::endl;
                 std::cout << "MEM COD SIZE -> " << newasm::mem::COD.size() << std::endl;
@@ -8672,21 +8671,14 @@ namespace newasm
             }
             try
             {
-                for(int i = 0; i < newasm::mem::COD.size();)//for(auto i = newasm::mem::COD.begin(); i != newasm::mem::COD.end(); ++i)
+                for(int i = 0; i < newasm::mem::COD.size(); ++i)//for(auto i = newasm::mem::COD.begin(); i != newasm::mem::COD.end(); ++i)
                 {
+                    newasm::compiler::data::lnidx = i;
+
                     auto g = newasm::compiler::DO(newasm::mem::COD.at(i));
                     NewASM::compiler::Optimize(g, i);
-                    if(g.type == newasm::compiler::empty) //VERY IMPORTANT OPTIMIZATIONZ!!
-                    {
-                        //empty lines are no more included in the binary!
-                        newasm::forLinker::lineData.erase(newasm::forLinker::lineData.begin() + i);
-                        newasm::mem::COD.erase(newasm::mem::COD.begin() + i);
-                        continue;
-                    }
 
                     newasm::compiler::compiledCode.push_back(g);
-                    ++newasm::compiler::data::lnidx;
-                    ++i;
                 }
             }
             catch(std::exception& e)
@@ -8701,8 +8693,9 @@ namespace newasm
             {
                 newasm::header::functions::err("CC and LD sizes don't match!");
             }
-            for(int i = 0; i < v1.size();)
+            for(int i = 0; i < v1.size();) // VERY IMPORTANT PART!
             {
+                //this loop ensures that all empty lines are not in the final binary
                 if(v1[i].type == newasm::compiler::empty)
                 {
                     v1.erase(v1.begin() + i);
@@ -8710,12 +8703,14 @@ namespace newasm
                 }
                 else
                 {
+                    // if it isnt empty go on
                     ++i;
                 }
             }
             //2nd compilation pass for labels
             for(int i = 0; i < newasm::compiler::compiledCode.size(); ++i)
             {
+                newasm::compiler::data::lnidx = i;
                 auto& bytecode = newasm::compiler::compiledCode.at(i);
                 if(bytecode.type == newasm::compiler::labelJumpPoint)
                 {
@@ -8723,14 +8718,14 @@ namespace newasm
                     newasm::process_l(bytecode.other, i);
                 }
             }
-            newasm::compiler::data::lnidx = 1;
+            //newasm::compiler::data::lnidx = 1;
             //thing above us was for this down here
             auto AOTCompileBytecode = [&](auto& vec) -> void {
                 static bool already_processed = false;
                 for(int i = 0; i < vec.size(); ++i)
                 {
                     auto& bytecode = vec.at(i);
-                    if(!already_processed) ++newasm::compiler::data::lnidx;
+                    if(!already_processed) newasm::compiler::data::lnidx = i;
                     newasm::compiler::data::line = bytecode.raw;
                     if(
                         bytecode.whatAmIDoing == newasm::core::lang_inf::loop

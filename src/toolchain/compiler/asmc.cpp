@@ -70,7 +70,7 @@ namespace newasm
             auto& idx = newasm::compiler::data::lnidx;
             try
             {
-                if(!newasm::header::data::repl) std::cout << newasm::forLinker::getFile(idx - 1) << ":" << newasm::forLinker::getLine(idx - 1) << " |  ";
+                if(!newasm::header::data::repl) std::cout << newasm::forLinker::getFile(idx) << ":" << newasm::forLinker::getLine(idx) << " |  ";
             }
             catch(const std::exception& e)
             {
@@ -438,7 +438,7 @@ namespace newasm
                 return lineCompiled;
             }
             // SECTION MODIFIER
-            if(line.at(0) == '.')
+            if(line.at(0) == '.' and line.size() > 1)
             {
                 lineCompiled.type = newasm::compiler::sectionModifier;
                 lineCompiled.tokens.push_back(newasm::header::functions::trim(line.substr(1)));
@@ -996,7 +996,7 @@ namespace newasm
                     std::cout << "\t  " << newasm::header::col::magenta;
                     try
                     {
-                        std::cout << newasm::forLinker::getFile(idx - 1 + x) << ":" << newasm::forLinker::getLine(idx - 1 + x);
+                        std::cout << newasm::forLinker::getFile(idx + x) << ":" << newasm::forLinker::getLine(idx + x);
                     }
                     catch(const std::exception& e)
                     {

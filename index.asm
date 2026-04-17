@@ -1,3 +1,4 @@
+
 link "test/p.asm"
 link "test/g.asm"
 .data
@@ -2499,7 +2500,7 @@ jmp e2349083l
         mov fdx, 1
         syscall
         retc
-        {:main}
+        ;{:main}
         {:main}
         callc func
         halt 0
@@ -2514,7 +2515,7 @@ jmp e2349083l
     mov rax, 223 ; exit code
     ret *rax ; returns from the whole program to the host OS or newasm shell
 ; -------------------------- FUNCTIONS -------------------------- ;
-:LMAOOOOOOOOOO
+
 @mangle ; tell the compiler to do compile-time mangling of the label
 ./std ; these namespace delcarations don't exist in the binary because they're under @mangle
 :FkinFunction
