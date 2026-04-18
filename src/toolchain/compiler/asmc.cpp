@@ -18,6 +18,7 @@ namespace newasm
             std::string DeclaringMacroName;
             constinit bool DeclaringMacro = false;
             int lnidx = 0;
+            constinit bool RecursionProtection = false;
 
             typedef std::vector<std::string> StringVec;
 
@@ -271,10 +272,12 @@ namespace newasm
                 newasm::compiler::data::DeclaringMacro = false;
                 return lineCompiled;
             }
-            if(newasm::compiler::data::DeclaringMacro)
+            if(!newasm::compiler::data::RecursionProtection) if(newasm::compiler::data::DeclaringMacro)
             {
                 lineCompiled.type = newasm::compiler::empty;
+                newasm::compiler::data::RecursionProtection = true;
                 auto _BYTECODE = DO(line);
+                newasm::compiler::data::RecursionProtection = false;
                 auto& n = newasm::compiler::data::DeclaringMacroName;
                 _BYTECODE.MacroComponent = true;
                 _BYTECODE.SourceMacroName = n;
