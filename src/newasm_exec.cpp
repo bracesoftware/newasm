@@ -401,8 +401,10 @@ namespace newasm
         return true;
     }
     #endif
-    int process_d(const std::string& wholeline, const std::string& dtyp, const std::string& _name,
-        std::string& value, newasm::compiler::lineData& line)
+    int process_d(
+        const std::string& wholeline, const std::string& dtyp, const std::string& _name,
+        std::string& value, newasm::compiler::lineData& line
+    )
     {
         if(line.priArgType == newasm::datatypes::symbol_name)
         {
