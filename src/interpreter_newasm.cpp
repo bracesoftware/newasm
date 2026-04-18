@@ -481,7 +481,7 @@ namespace newasm
             bool VirtualMemoryAccess = false;
             unsigned int caseTableAddress = 0;
             int returninTo = INVALID_INS;
-            //for runtime analysis
+            //for runtime analysis and better error messages
             bool MacroComponent = false;
             string SourceMacroName = "";
 
@@ -532,6 +532,11 @@ namespace newasm
         inline void process_comptis(std::string ins, std::string arg1);
         inline void process_comptiso(std::string ins, std::string arg1, std::string arg2);
         inline bool iscomptins(std::string ins);
+    }
+
+    namespace ExceptionHandling
+    {
+        newasm::compiler::lineData* Line = nullptr;
     }
 
     namespace runtime

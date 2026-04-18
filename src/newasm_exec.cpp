@@ -59,7 +59,7 @@ namespace newasm
             }
         }
         newasm::terminate_(exit_code);
-        if constexpr(0) if(newasm::header::functions::trim(newasm::real_line) == std::string("syscall"))
+        if constexpr(0) if(newasm::header::functions::trim(NewASM::ExceptionHandling::Line->raw) == std::string("syscall"))
         {
             newasm::header::functions::krnl("Kernel crashed.");
         }
@@ -206,8 +206,8 @@ namespace newasm
                 auto& k = NewASM::CurrentProcA->proc;
                 if(k->mangled)
                 {
-                    std::cout << "\t\t\t" << newasm::header::col::reset << newasm::header::col::light_blue;
-                    std::cout << "  ^ original procedure: \"" << newasm::header::col::gray << newasm::header::style::underline;
+                    std::cout << "\t\t\t  " << newasm::header::col::reset << newasm::header::col::light_blue;
+                    std::cout << "^ original procedure: \"" << newasm::header::col::gray << newasm::header::style::underline;
                     std::cout << k->original_name;
                     std::cout << newasm::header::col::reset << newasm::header::col::light_blue << "\"";
                     std::cout << std::endl;
@@ -215,11 +215,21 @@ namespace newasm
                 }
             }
 
+            if(NewASM::ExceptionHandling::Line->MacroComponent)
+            {
+                std::cout << "\t\t\t  " << newasm::header::col::reset << newasm::header::col::magenta;
+                std::cout << "^ after expanding macro: \"" << newasm::header::col::gray << newasm::header::style::underline;
+                std::cout << NewASM::ExceptionHandling::Line->SourceMacroName;
+                std::cout << newasm::header::col::reset << newasm::header::col::magenta << "\"";
+                std::cout << std::endl;
+                std::cout << newasm::header::col::reset;
+            }
+
             if(true)
             {
-                std::cout << "\t\t\t" << newasm::header::col::reset << newasm::header::col::yellow;
-                std::cout << "  ^ backtrace: \"" << newasm::header::col::gray << newasm::header::style::underline;
-                std::cout << newasm::real_line;
+                std::cout << "\t\t\t  " << newasm::header::col::reset << newasm::header::col::yellow;
+                std::cout << "^ backtrace: \"" << newasm::header::col::gray << newasm::header::style::underline;
+                std::cout << NewASM::ExceptionHandling::Line->raw;
                 std::cout << newasm::header::col::reset << newasm::header::col::yellow << "\"";
                 std::cout << std::endl;
                 std::cout << newasm::header::col::reset;
@@ -7709,7 +7719,7 @@ namespace newasm
             std::cout << std::endl;
         }
 
-        newasm::real_line = line.raw;
+        NewASM::ExceptionHandling::Line = &line;
         ++newasm::CYCLE_COUNT;
         newasm::PRC = &line;
 
@@ -8441,7 +8451,7 @@ namespace newasm
         {
             if(newasm::system::terminated)
             {
-                __newasmDBG(std::cout << "\nREAL_LINE: " << newasm::real_line << std::endl)
+                __newasmDBG(std::cout << "\nREAL_LINE: " << NewASM::ExceptionHandling::Line->raw << std::endl)
                 __newasmDBG(std::cout << "THIS HAPPENED WHIGGAZ" << std::endl)
                 break;
             }

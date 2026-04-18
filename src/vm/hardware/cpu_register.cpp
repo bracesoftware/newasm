@@ -331,7 +331,7 @@ namespace newasm
             }
             std::cout << newasm::header::col::aqua;
             std::cout << std::endl;
-            std::cout << "newasm::real_line -> `" << newasm::real_line << "`\n";
+            std::cout << "newasm::real_line -> `" << NewASM::ExceptionHandling::Line->raw << "`\n";
             std::cout << "newasm::lambda::process -> " << newasm::lambda::process << "\n";
             std::cout << "newasm::header::data::repl -> " << newasm::header::data::repl << "\n";
             std::cout << "newasm::thread_line -> " << newasm::thread_line << "\n";

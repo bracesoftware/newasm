@@ -2505,6 +2505,14 @@ jmp e2349083l
         callc func
         halt 0
     end
+    testmacroagain : #
+        ;:lmaoxd ; this is an compile time error, you can't cover labels with macros
+        mov tlr, "HEHE, macro inlining works!"
+        call std::ios::writeln
+        call myfunc
+    #
+    $sayhi
+    $testmacroagain
 
     call AbSoluteCinema
     mov rax, 5
