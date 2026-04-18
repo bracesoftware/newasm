@@ -9,6 +9,10 @@ module(compiler, {
 
 namespace newasm
 {
+    namespace OptimizerData
+    {
+        constinit signed int Section = -1;
+    }
     namespace compiler
     {
         namespace data
@@ -34,6 +38,7 @@ namespace newasm
 
             unsigned int ErrorCount = 0;
         }
+
         namespace fail
         {
             const int unmatched_syntax = 1;
@@ -1145,6 +1150,18 @@ namespace newasm
                     lastLine.type = newasm::compiler::empty;
                     return;
                 }
+                return;
+            }
+            //code section reassignments
+            if(line.type == newasm::compiler::sectionModifier)
+            {
+                if(line.whatCodeSection == NewASM::OptimizerData::Section)
+                {
+                    OptDescription("removed redundant code section reset");
+                    line.type = newasm::compiler::empty;
+                    return;
+                }
+                NewASM::OptimizerData::Section = line.whatCodeSection;
                 return;
             }
             return;
