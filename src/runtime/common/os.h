@@ -19,6 +19,13 @@
     #define _NEWASM_OS _NEWASM_OS_macos
 #endif
 
+#if defined(__x86_64__) || defined(_M_X64) || defined(__aarch64__)
+    #define _NEWASM_BITNESS 64
+#elif defined(__i386__) || defined(_M_IX86) || defined(__arm__)
+    #define _NEWASM_BITNESS 32
+#else
+    #define _NEWASM_BITNESS 0
+#endif
 
 namespace newasm
 {

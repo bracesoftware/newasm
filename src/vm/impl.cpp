@@ -428,3 +428,11 @@ namespace newasm
 }
 
 #define NEWASM_BROKEN_ACTIVE_THREAD_COUNTER false
+
+#if _NEWASM_BITNESS == 64
+    #warning [NewASM]: Compiling a 64-bit build!
+#elif _NEWASM_BITNESS == 32
+    #warning [NewASM]: Compiling a 32-bit build!
+#else
+    #error [NewASM]: Unknown bitness!
+#endif

@@ -1130,6 +1130,7 @@ sysenter "ios"
         syscall
     #
 .start
+.text
     zero stl
     mov tlr, "Date and time: "
     mov fdx, 1

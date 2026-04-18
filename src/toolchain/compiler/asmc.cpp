@@ -12,6 +12,7 @@ namespace newasm
     namespace OptimizerData
     {
         constinit signed int Section = -1;
+        constinit bool JmpUsed = false;
     }
     namespace compiler
     {
@@ -488,7 +489,7 @@ namespace newasm
                 static std::unordered_map<std::string, int> sections = {
                     {"start", newasm::code_stream::sections::start},
                     {"data", newasm::code_stream::sections::data},
-                    {"text", newasm::code_stream::sections::text}
+                    {"text", newasm::code_stream::sections::start}
                 };
 
                 auto it = sections.find(section);
@@ -1060,6 +1061,24 @@ namespace newasm
                 return;
             }
             auto& lastLine = newasm::compiler::compiledCode.back();
+            if(!newasm::OptimizerData::JmpUsed) [[unlikely]]
+            {
+                if(
+                    line.whatAmIDoing == newasm::core::lang_inf::jmp or
+                    line.whatAmIDoing == newasm::core::lang_inf::jz or
+                    line.whatAmIDoing == newasm::core::lang_inf::jnz or
+                    line.whatAmIDoing == newasm::core::lang_inf::je or
+                    line.whatAmIDoing == newasm::core::lang_inf::jne or
+                    line.whatAmIDoing == newasm::core::lang_inf::jl or
+                    line.whatAmIDoing == newasm::core::lang_inf::jle or
+                    line.whatAmIDoing == newasm::core::lang_inf::jg or
+                    line.whatAmIDoing == newasm::core::lang_inf::jge or
+                    line.whatAmIDoing == newasm::core::lang_inf::callc
+                )
+                {
+                    newasm::OptimizerData::JmpUsed = true;
+                }
+            }
             //helper func
             auto OptDescription = [&](const std::string& text, newasm::compiler::lineData* lptr = nullptr, signed int x = 0) -> void {
                 newasm::compiler::lineData& L = (lptr == nullptr) ? line : *lptr;
@@ -1081,10 +1100,11 @@ namespace newasm
                 return;
             };
             //actual optimizations
+            //------------------------------------------- double instructions -------------------------------------------
             if(
                 (line == lastLine) or
                 (line.whatAmIDoing == newasm::core::lang_inf::jmp and lastLine.whatAmIDoing == newasm::core::lang_inf::jmp)
-            ) //double code
+            )
             {
                 bool IsRedundant = (//remove only specific instructions
                     line.whatAmIDoing == newasm::core::lang_inf::mov or
@@ -1107,7 +1127,8 @@ namespace newasm
                 }
                 return;
             }
-            if(line.whatAmIDoing == newasm::core::lang_inf::mov)//mov rax, *rax
+            //------------------------------------------- assigning register value to itself -------------------------------------------
+            if(line.whatAmIDoing == newasm::core::lang_inf::mov)
             {
                 if(
                     line.whatAreRegistersLol == line.altEvalMode.argInt and
@@ -1122,7 +1143,8 @@ namespace newasm
                     return;
                 }
             }
-            if(line.whatAmIDoing == newasm::core::lang_inf::rem)//useless instructions
+            //------------------------------------------- useless ins -------------------------------------------
+            if(line.whatAmIDoing == newasm::core::lang_inf::rem)
             {
                 //logging the optimization
                 OptDescription("peephole optimization, removed dead code");
@@ -1130,7 +1152,7 @@ namespace newasm
                 line.type = newasm::compiler::empty;
                 return;
             }
-            //remove redundant reassignments
+            //------------------------------------------- remove redundant reassignments -------------------------------------------
             if(
                 (
                     line.whatAmIDoing == newasm::core::lang_inf::mov and
@@ -1152,8 +1174,8 @@ namespace newasm
                 }
                 return;
             }
-            //code section reassignments
-            if(line.type == newasm::compiler::sectionModifier)
+            //------------------------------------------- code section reassignments -------------------------------------------
+            if(line.type == newasm::compiler::sectionModifier and !newasm::OptimizerData::JmpUsed)
             {
                 if(line.whatCodeSection == NewASM::OptimizerData::Section)
                 {
@@ -1162,6 +1184,16 @@ namespace newasm
                     return;
                 }
                 NewASM::OptimizerData::Section = line.whatCodeSection;
+                return;
+            }
+            if(
+                line.whatCodeSection == lastLine.whatCodeSection and
+                ((line.whatCodeSection == newasm::code_stream::sections::data) or
+                (line.whatCodeSection == newasm::code_stream::sections::start))
+            )
+            {
+                OptDescription("removed redundant code section reset");
+                line.type = newasm::compiler::empty;
                 return;
             }
             return;

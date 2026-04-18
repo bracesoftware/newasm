@@ -18,7 +18,6 @@ namespace newasm
         const int invalid_lnidx = -1;
         namespace sections
         {
-            const int text = 1;
             const int data = 2;
             const int start = 3;
         }

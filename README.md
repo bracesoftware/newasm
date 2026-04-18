@@ -123,9 +123,8 @@ This section of the wiki provides a deep walkthrough of the language itself.
 #### Code sections
 NewASM code is, as in other assemblers, divided into different sections that have their own syntax.
 There are 4 different sections and each one has a different purpose:
-1. `.start` - this is the code section that contains functional code (instructions), can contain procedure (function) and thread definitions;
+1. `.start` or `.text` - this is the code section that contains functional code (instructions), can contain procedure (function) and thread definitions;
 2. `.data` - this is where you declare your variables, references, containers, and more;
-3. `.text` - this is where you declare macros.
 
 You change a section by doing:
 ```asm
@@ -135,7 +134,7 @@ You change a section by doing:
 For example:
 
 ```asm
-.start
+.start ; .text is same
     ; code
 .data
     ; declarations
@@ -171,6 +170,7 @@ NewASM features different concepts such as decorators, namespaces, primitive cla
 5. [Sealed labels](docs/concepts/sealed.md)
 6. [Attributes](docs/concepts/attrib.md)
 7. [Events](docs/concepts/events.md)
+8. [Macros](docs/concepts/macros.md)
 
 ## Other resources
 This is a list of extra resources that might help.
