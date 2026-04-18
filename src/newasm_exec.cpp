@@ -7994,12 +7994,14 @@ namespace newasm
             // MACRO DECL
             case newasm::compiler::macroDecl:
             {
+                #if 0
                 if(newasm::system::section != newasm::code_stream::sections::text)
                 {
                     newasm::terminate(newasm::exit_codes::invalid_syntax);
                     return 1;
                 }
                 newasm::process_text(line.tokens.at(0), line.tokens.at(1));
+                #endif
                 return 1;
             }
             // DATA DECL
@@ -8016,7 +8018,9 @@ namespace newasm
             // MACRO CALL
             case newasm::compiler::macroCall:
             {
-                auto it = newasm::stack::macros; if(it.find(line.tokens.at(0)) != it.end())
+                #if 0
+                auto& it = newasm::stack::macros;
+                if(it.find(line.tokens.at(0)) != it.end())
                 {
                     for(int i = 0; i < it.at(line.tokens.at(0))->contents.size(); ++i)
                     {
@@ -8026,6 +8030,7 @@ namespace newasm
                     return 1;
                 }
                 newasm::terminate(newasm::exit_codes::undefined_macro);
+                #endif
                 return 1;
             }
         }
@@ -8686,17 +8691,47 @@ namespace newasm
                 std::cout << "E JEBGA SAD KUME! -> " << e.what() << std::endl;
                 throw;
             }
-            //newasm::compiler::compiledCode, newasm::forLinker::lineData
+            // 2nd pass for macros, we need to tinker with the linker again //newasm::Linker::replaceVectorElement__NEW
             auto& v1 = newasm::compiler::compiledCode;
             auto& v2 = newasm::forLinker::lineData;
+            auto& f = newasm::compiler::data::MacroTable;
+            for(int i = 0; i < v1.size(); true)
+            {
+                if(v1[i].type == newasm::compiler::macroCall)
+                {
+                    auto& l = v1[i];
+                    if(f.find(l.other) == f.end())
+                    {
+                        newasm::compiler::abort(newasm::compiler::fail::unmatched_syntax);
+                        break;
+                    }
+                    std::vector<newasm::compiler::lineData>& v3 = f.at(l.other);
+                    newasm::Linker::replaceVectorElement__NEW(v1, v3, i);
+                    std::vector<NewASM::lineSource> v4;
+                    for(int j = 0; j < v3.size(); ++j)
+                    {
+                        v4.push_back(v2.at(i).first, v2.at(i).second);
+                    }
+                    newasm::Linker::replaceVectorElement__NEW(v2, v4, i);
+                }
+                else
+                {
+                    ++i;
+                }
+            }
+            //intermediary pass for eliminating dead code
             if(v1.size() != v2.size()) [[unlikely]]
             {
                 newasm::header::functions::err("CC and LD sizes don't match!");
             }
-            for(int i = 0; i < v1.size();) // VERY IMPORTANT PART!
+            for(int i = 0; i < v1.size(); true) // VERY IMPORTANT PART!
             {
                 //this loop ensures that all empty lines are not in the final binary
-                if(v1[i].type == newasm::compiler::empty)
+                if(
+                    v1[i].type == newasm::compiler::empty or
+                    v1[i].type == newasm::compiler::macroTerminator or
+                    v1[i].type == newasm::compiler::macroDecl
+                )
                 {
                     v1.erase(v1.begin() + i);
                     v2.erase(v2.begin() + i);
@@ -8707,7 +8742,7 @@ namespace newasm
                     ++i;
                 }
             }
-            //2nd compilation pass for labels
+            //3rd compilation pass for labels
             for(int i = 0; i < newasm::compiler::compiledCode.size(); ++i)
             {
                 newasm::compiler::data::lnidx = i;

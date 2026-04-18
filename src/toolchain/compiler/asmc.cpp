@@ -15,12 +15,17 @@ namespace newasm
         {
             bool aborted = false;
             std::string line;
+            std::string DeclaringMacroName;
+            constinit bool DeclaringMacro = false;
             int lnidx = 0;
 
-            std::vector<std::string> symbol_map;
-            std::vector<std::string> namespace_stack;
-            std::vector<std::string> sealed_labels;
-            std::vector<std::string> NamespaceStackA;
+            typedef std::vector<std::string> StringVec;
+
+            StringVec symbol_map;
+            StringVec namespace_stack;
+            StringVec sealed_labels;
+            StringVec NamespaceStackA;
+            std::unordered_map<std::string, std::vector<newasm::compiler::lineData>> MacroTable;
 
             constinit bool objectDecl = false;
             constinit bool JIT_mode = false;
@@ -41,6 +46,7 @@ namespace newasm
             const int invalid_symbol = 9;
             const int retc_fail = 10;
             constinit const int label_redef = 11;
+            constinit const int unexpected_term = 12;
 
             const std::unordered_map<int, std::string> id = {
                 {unmatched_syntax, "UnmatchedSyntax"},
@@ -53,7 +59,8 @@ namespace newasm
                 {unknown_label, "InvalidLabelAddress"},
                 {invalid_symbol, "InvalidSymbol"},
                 {retc_fail, "CannotReturnToCaseJumpTable"},
-                {label_redef, "LabelAlreadyExists"}
+                {label_redef, "LabelAlreadyExists"},
+                {unexpected_term, "UnexpectedMacroTerminator"}
             };
         }
 
@@ -252,6 +259,28 @@ namespace newasm
             line = newasm::header::functions::trim(line);
 
             // compiling here:
+            //macroterminator
+            if(line == static_cast<std::string>("#"))
+            {
+                lineCompiled.type = newasm::compiler::macroTerminator;
+                if(!newasm::compiler::data::DeclaringMacro)
+                {
+                    newasm::compiler::abort(newasm::compiler::fail::unexpected_term);
+                    return lineCompiled;
+                }
+                newasm::compiler::data::DeclaringMacro = false;
+                return lineCompiled;
+            }
+            if(newasm::compiler::data::DeclaringMacro)
+            {
+                lineCompiled.type = newasm::compiler::empty;
+                auto _BYTECODE = DO(line);
+                auto& n = newasm::compiler::data::DeclaringMacroName;
+                _BYTECODE.MacroComponent = true;
+                _BYTECODE.SourceMacroName = n;
+                newasm::compiler::data::MacroTable[n].push_back(_BYTECODE);
+                return lineCompiled;
+            }
             //empty
             if(line.empty())
             {
@@ -271,6 +300,12 @@ namespace newasm
             //if(line == NEWASM_JUMP_POINT)
             if(line.front() == ':')
             {
+                if(newasm::compiler::data::DeclaringMacro)
+                {
+                    newasm::compiler::abort(newasm::compiler::fail::unmatched_syntax);
+                    lineCompiled.type = newasm::compiler::empty;
+                    return lineCompiled;
+                }
                 lineCompiled.type = newasm::compiler::labelJumpPoint;
                 lineCompiled.other = newasm::header::functions::trim(line.substr(1));
                 if(!newasm::header::functions::isalphanum(lineCompiled.other))
@@ -424,12 +459,6 @@ namespace newasm
                 newasm::compiler::data::objectDecl = false; //no namespace checking within classes or objects
                 return lineCompiled;
             }
-            //macroterminator
-            if(line == static_cast<std::string>("#"))
-            {
-                lineCompiled.type = newasm::compiler::macroTerminator;
-                return lineCompiled;
-            }
             //LAMBDA TERMINATOR
             auto lambda = newasm::header::functions::is_lambda(line);
             if(lambda.first) if(lambda.second == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::end))
@@ -480,11 +509,31 @@ namespace newasm
             {
                 auto ev = data_macroDecl.second.at(0);
                 auto pr = data_macroDecl.second.at(1);
-
+                #if 0
                 lineCompiled.type = newasm::compiler::macroDecl;
                 lineCompiled.tokens.push_back(ev);
                 lineCompiled.tokens.push_back(pr);
-                
+                #endif
+                lineCompiled.type = newasm::compiler::macroDecl;
+                if(newasm::compiler::data::DeclaringMacro)
+                {
+                    lineCompiled.type = newasm::compiler::empty;
+                    newasm::compiler::abort(newasm::compiler::fail::unmatched_syntax);
+                    return lineCompiled;
+                }
+                if(pr != "#"_str)
+                {
+                    newasm::compiler::abort(newasm::compiler::fail::unmatched_syntax);
+                    return lineCompiled;
+                }
+
+                newasm::compiler::data::DeclaringMacro = true;
+                newasm::compiler::data::DeclaringMacroName = std::move(ev);
+                auto& t = newasm::compiler::data::MacroTable;
+                if(t.find(newasm::compiler::data::DeclaringMacroName) != t.end())
+                {
+                    newasm::compiler::abort(newasm::compiler::fail::symbol_redecl);
+                }
                 return lineCompiled;
             }
             auto checkCollisions = [](std::string name) -> void {//error checking at compile time
@@ -593,7 +642,7 @@ namespace newasm
             if(line.at(0) == '$')
             {
                 lineCompiled.type = newasm::compiler::macroCall;
-                lineCompiled.tokens.push_back(newasm::header::functions::trim(line.substr(1)));
+                lineCompiled.other = newasm::header::functions::trim(line.substr(1));
                 return lineCompiled;
             }
             // CONDITIONALS

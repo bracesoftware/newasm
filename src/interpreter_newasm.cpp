@@ -481,6 +481,9 @@ namespace newasm
             bool VirtualMemoryAccess = false;
             unsigned int caseTableAddress = 0;
             int returninTo = INVALID_INS;
+            //for runtime analysis
+            bool MacroComponent = false;
+            string SourceMacroName = "";
 
             //---------------------------------------------
             //stuff not included in the binary:
@@ -825,10 +828,10 @@ namespace newasm
             return files[0];
         }
     };
-
+    using lineSource = std::pair<std::string, int>;
     class forLinker
     {
-        public static inline std::vector<std::pair<std::string, int>> lineData;
+        public static inline std::vector<lineSource> lineData;
 
         public static inline std::string getFile(int line)
         {
