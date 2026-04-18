@@ -7837,6 +7837,10 @@ namespace newasm
                 }
                 newasm::terminate(newasm::exit_codes::unexpected_hash);
                 #endif
+                if(newasm::header::data::repl)
+                {
+                    newasm::terminate(newasm::exit_codes::jit_fail);
+                }
                 return 1;
             }
             // LAMBDA TERMINATOR
@@ -8014,6 +8018,10 @@ namespace newasm
                 }
                 newasm::process_text(line.tokens.at(0), line.tokens.at(1));
                 #endif
+                if(newasm::header::data::repl)
+                {
+                    newasm::terminate(newasm::exit_codes::jit_fail);
+                }
                 return 1;
             }
             // DATA DECL
@@ -8041,8 +8049,12 @@ namespace newasm
                     }
                     return 1;
                 }
-                newasm::terminate(newasm::exit_codes::undefined_macro);
                 #endif
+                if(newasm::header::data::repl)
+                {
+                    newasm::terminate(newasm::exit_codes::undefined_macro);
+                    newasm::terminate(newasm::exit_codes::jit_fail);
+                }
                 return 1;
             }
         }
@@ -8707,7 +8719,7 @@ namespace newasm
             auto& v1 = newasm::compiler::compiledCode;
             auto& v2 = newasm::forLinker::lineData;
             auto& f = newasm::compiler::data::MacroTable;
-            for(int i = 0; i < v1.size(); true)
+            for(int i = 0; i < v1.size(); ++i)
             {
                 if(v1[i].type == newasm::compiler::macroCall) //macro inlining
                 {
@@ -8725,10 +8737,6 @@ namespace newasm
                         v4.push_back({v2.at(i).first, v2.at(i).second});
                     }
                     newasm::Linker::replaceVectorElement__NEW(v2, v4, i);
-                }
-                else
-                {
-                    ++i;
                 }
             }
             //intermediary pass for eliminating dead code

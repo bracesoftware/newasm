@@ -264,6 +264,11 @@ namespace newasm
             if(line == static_cast<std::string>("#"))
             {
                 lineCompiled.type = newasm::compiler::macroTerminator;
+                if(newasm::header::data::repl)
+                {
+                    newasm::compiler::abort(newasm::compiler::fail::unexpected_term);
+                    return lineCompiled;
+                }
                 if(!newasm::compiler::data::DeclaringMacro)
                 {
                     newasm::compiler::abort(newasm::compiler::fail::unexpected_term);
@@ -518,6 +523,11 @@ namespace newasm
                 lineCompiled.tokens.push_back(pr);
                 #endif
                 lineCompiled.type = newasm::compiler::macroDecl;
+                if(newasm::header::data::repl)
+                {
+                    newasm::compiler::abort(newasm::compiler::fail::unexpected_term);
+                    return lineCompiled;
+                }
                 if(newasm::compiler::data::DeclaringMacro)
                 {
                     lineCompiled.type = newasm::compiler::empty;
@@ -646,6 +656,11 @@ namespace newasm
             {
                 lineCompiled.type = newasm::compiler::macroCall;
                 lineCompiled.other = newasm::header::functions::trim(line.substr(1));
+                if(newasm::header::data::repl)
+                {
+                    newasm::compiler::abort(newasm::compiler::fail::unexpected_term);
+                    return lineCompiled;
+                }
                 return lineCompiled;
             }
             // CONDITIONALS

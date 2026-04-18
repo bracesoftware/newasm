@@ -84,6 +84,15 @@ namespace newasm
         }
     }
 
+    namespace compiler
+    {
+        struct lineData;
+    }
+    namespace ExceptionHandling
+    {
+        newasm::compiler::lineData* Line = nullptr;
+    }
+
     namespace Namespaces
     {
         constinit const short Construction = 1 << 2;
@@ -532,11 +541,6 @@ namespace newasm
         inline void process_comptis(std::string ins, std::string arg1);
         inline void process_comptiso(std::string ins, std::string arg1, std::string arg2);
         inline bool iscomptins(std::string ins);
-    }
-
-    namespace ExceptionHandling
-    {
-        newasm::compiler::lineData* Line = nullptr;
     }
 
     namespace runtime
@@ -1068,6 +1072,7 @@ namespace newasm
     {
         inline void cleanup()
         {
+            NewASM::compiler::data::MacroTable.clear();
             NewASM::header::data::CallCStack->clear();
             newasm::RAM->set_sot(sizeof(int));
             NewASM::header::data::EnableThreads = true;

@@ -18,6 +18,8 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 ## What's new or changed?
 
 + Added compile-time label name mangling with temporary namespaces. Read more in namespace docs!
++ Removed the `.text` code section since the macros are now purely a compile-time thing.
++ Macros are now inlined at compile-time.
 
 ## Fixed issues
 

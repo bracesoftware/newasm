@@ -2506,13 +2506,23 @@ jmp e2349083l
         halt 0
     end
     testmacroagain : #
+        $print_colon
         ;:lmaoxd ; this is an compile time error, you can't cover labels with macros
-        mov tlr, "HEHE, macro inlining works!"
-        call std::ios::writeln
-        call myfunc
+        mov tlr, "HEHE, macro inlining works!\n"
+        ;call std::ios::writeln
+        mov fdx, 1
+        sysenter "ios"
+        syscall
+        $print_colon
+        ;call myfunc
     #
     $sayhi
     $testmacroagain
+
+    proc AbsoluteMacrotest
+        $testmacroagain
+    end
+    call AbsoluteMacrotest
 
     call AbSoluteCinema
     mov rax, 5
