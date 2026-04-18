@@ -55,7 +55,7 @@ namespace newasm
             return;
         }
         template<typename T>
-        private static inline void replaceVectorElement__NEW(std::vector<T>& v, const std::vector<T>& n, std::size_t index)
+        public static inline void replaceVectorElement__NEW(std::vector<T>& v, const std::vector<T>& n, std::size_t index)
         {
             if (index >= v.size()) return;
 

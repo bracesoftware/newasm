@@ -8697,7 +8697,7 @@ namespace newasm
             auto& f = newasm::compiler::data::MacroTable;
             for(int i = 0; i < v1.size(); true)
             {
-                if(v1[i].type == newasm::compiler::macroCall)
+                if(v1[i].type == newasm::compiler::macroCall) //macro inlining
                 {
                     auto& l = v1[i];
                     if(f.find(l.other) == f.end())
@@ -8710,7 +8710,7 @@ namespace newasm
                     std::vector<NewASM::lineSource> v4;
                     for(int j = 0; j < v3.size(); ++j)
                     {
-                        v4.push_back(v2.at(i).first, v2.at(i).second);
+                        v4.push_back({v2.at(i).first, v2.at(i).second});
                     }
                     newasm::Linker::replaceVectorElement__NEW(v2, v4, i);
                 }
