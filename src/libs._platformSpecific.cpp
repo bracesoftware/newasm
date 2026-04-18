@@ -12,3 +12,7 @@
 #elif _NEWASM_OS == _NEWASM_OS_macos
     link "_platformSpecific/macos/libs";
 #endif
+
+module(cxx_int, {
+    //setup
+});
