@@ -17,7 +17,7 @@
 
 <h3 align = "center">Interpreted Low-Level Language that Mimics Assembly</h3>
 
-**NewASM** is an interpreted low-level programming language which combines explicit memory and register control, giving it a breeze of assembly-like feel, with high-level functionalities such as objects, threads and more.
+**NewASM** is a low-level programming language which combines explicit memory and register control, giving it a breeze of assembly-like feel, with high-level functionalities such as objects, threads and more.
 
 > [!NOTE]
 > **NewASM** language runs inside a NewASM Virtual Machine.
