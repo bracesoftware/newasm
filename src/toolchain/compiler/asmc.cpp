@@ -528,7 +528,7 @@ namespace newasm
                 }
 
                 newasm::compiler::data::DeclaringMacro = true;
-                newasm::compiler::data::DeclaringMacroName = std::move(ev);
+                newasm::compiler::data::DeclaringMacroName = ev;
                 auto& t = newasm::compiler::data::MacroTable;
                 if(t.find(newasm::compiler::data::DeclaringMacroName) != t.end())
                 {

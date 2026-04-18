@@ -7819,12 +7819,14 @@ namespace newasm
             // MACRO TERMINATOR
             case newasm::compiler::macroTerminator:
             {
+                #if 0
                 if(newasm::header::data::macro_now)
                 {
                     newasm::header::data::macro_now = false;
                     return 1;
                 }
                 newasm::terminate(newasm::exit_codes::unexpected_hash);
+                #endif
                 return 1;
             }
             // LAMBDA TERMINATOR
