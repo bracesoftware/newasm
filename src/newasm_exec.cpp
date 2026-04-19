@@ -8710,11 +8710,6 @@ namespace newasm
                     NewASM::compiler::Optimize(g, i);
 
                     newasm::compiler::compiledCode.push_back(g);
-                    if(newasm::compiler::compiledCode.back().type != newasm::compiler::empty)
-                    {
-                        newasm::OptimizerData::LastLine = newasm::compiler::compiledCode.size() - 1;
-                        newasm::OptimizerData::LastLineIdx = i;
-                    }
                 }
             }
             catch(std::exception& e)

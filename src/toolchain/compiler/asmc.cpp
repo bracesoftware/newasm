@@ -13,7 +13,7 @@ namespace newasm
     {
         constinit signed int Section = -1;
         constinit bool JmpUsed = false;
-        constinit unsigned int LastLine = 0;
+        //constinit unsigned int LastLine = 0;
         constinit unsigned int LastLineIdx = 0;
     }
     namespace compiler
@@ -1062,6 +1062,24 @@ namespace newasm
             {
                 return;
             }
+            auto GetLastRelevantLine = <:&:>() noexcept -> unsigned int {
+                for(
+                    int i = newasm::compiler::compiledCode.size() - 1;
+                    i != 0; --i
+                )
+                {
+                    auto& z = newasm::compiler::compiledCode.at(i);
+                    if(
+                        z.whatAmIDoing != newasm::core::lang_inf::nop and
+                        z.type != newasm::compiler::empty
+                    )
+                    {
+                        return i;
+                    }
+                }
+                return 0;
+            };
+            newasm::OptimizerData::LastLineIdx = GetLastRelevantLine();
             auto& lastLine = newasm::compiler::compiledCode.at(newasm::OptimizerData::LastLineIdx);
             if(!newasm::OptimizerData::JmpUsed) [[unlikely]]
             {
