@@ -8707,7 +8707,7 @@ namespace newasm
                     newasm::compiler::data::lnidx = i;
 
                     auto g = newasm::compiler::DO(newasm::mem::COD.at(i));
-                    NewASM::compiler::Optimize(g, i);
+                    NewASM::compiler::Optimize<newasm::compiler::OPT_PEEPHOLE>(g, i);
 
                     newasm::compiler::compiledCode.push_back(g);
                 }

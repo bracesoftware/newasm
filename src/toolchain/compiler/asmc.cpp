@@ -1056,7 +1056,7 @@ namespace newasm
             return lineCompiled;
         }
 
-        inline void Optimize(newasm::compiler::lineData& line, int idx)
+        inline void OptimizeCodeA(newasm::compiler::lineData& line, int idx)
         {
             auto& cc = newasm::compiler::compiledCode;
             if(cc.empty())
@@ -1223,6 +1223,34 @@ namespace newasm
             {
                 OptDescription("removed redundant code section reset");
                 line.type = newasm::compiler::empty;
+                return;
+            }
+            return;
+        }
+
+        inline void OptimizeCodeB()
+        {
+            
+            return;
+        }
+
+        inline namespace OPTIMIZATION_LEVELS
+        {
+            constinit const signed int OPT_PEEPHOLE = 0;
+            constinit const signed int OPT_CODESEC = 1;
+        }
+
+        template<int _What, typename... Args>
+        inline void Optimize(Args&&... a)
+        {
+            if constexpr(_What == OPT_PEEPHOLE)
+            {
+                OptimizeCodeA(std::forward<Args>(a) ...);
+                return;
+            }
+            if constexpr(_What == OPT_CODESEC)
+            {
+                OptimizeCodeB(std::forward<Args>(a) ...);
                 return;
             }
             return;
