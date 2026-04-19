@@ -8837,18 +8837,7 @@ namespace newasm
                             newasm::compiler::abort(newasm::compiler::fail::unknown_label);
                         }
                     }
-                    if(
-                        bytecode.whatAmIDoing == newasm::core::lang_inf::jmp or
-                        bytecode.whatAmIDoing == newasm::core::lang_inf::jz or
-                        bytecode.whatAmIDoing == newasm::core::lang_inf::jnz or
-                        bytecode.whatAmIDoing == newasm::core::lang_inf::je or
-                        bytecode.whatAmIDoing == newasm::core::lang_inf::jne or
-                        bytecode.whatAmIDoing == newasm::core::lang_inf::jl or
-                        bytecode.whatAmIDoing == newasm::core::lang_inf::jle or
-                        bytecode.whatAmIDoing == newasm::core::lang_inf::jg or
-                        bytecode.whatAmIDoing == newasm::core::lang_inf::jge or
-                        bytecode.whatAmIDoing == newasm::core::lang_inf::callc
-                    )
+                    if(newasm::compiler::utils::IsJumpIns(bytecode))
                     {
                         if(bytecode.tokens.size() != 2)
                         {

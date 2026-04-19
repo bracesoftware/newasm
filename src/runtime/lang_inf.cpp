@@ -428,4 +428,29 @@ namespace newasm
             }
         }
     }
+    namespace compiler
+    {
+        namespace utils
+        {
+            FORCE_INLINE inline bool IsJumpIns(const newasm::compiler::lineData& line) noexcept
+            {
+                if(
+                    line.whatAmIDoing == newasm::core::lang_inf::jmp or
+                    line.whatAmIDoing == newasm::core::lang_inf::jz or
+                    line.whatAmIDoing == newasm::core::lang_inf::jnz or
+                    line.whatAmIDoing == newasm::core::lang_inf::je or
+                    line.whatAmIDoing == newasm::core::lang_inf::jne or
+                    line.whatAmIDoing == newasm::core::lang_inf::jl or
+                    line.whatAmIDoing == newasm::core::lang_inf::jle or
+                    line.whatAmIDoing == newasm::core::lang_inf::jg or
+                    line.whatAmIDoing == newasm::core::lang_inf::jge or
+                    line.whatAmIDoing == newasm::core::lang_inf::callc
+                )
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+    }
 }
