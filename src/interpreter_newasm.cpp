@@ -294,10 +294,10 @@ namespace newasm
     
     namespace kernel
     {
-        constexpr auto makeHash(unsigned short a, unsigned short b) noexcept -> unsigned int {
+        constexpr auto makeHash(unsigned short a, unsigned short b) noexcept -> unsigned int <%
             return (static_cast<unsigned int>(a) << 16) | b;
             //return (uint32_t(uint16_t(a)) << 16) | uint32_t(uint16_t(b));
-        }
+        %>
     }
 
     namespace GLOBAL
@@ -631,7 +631,7 @@ namespace newasm
             running = true;
             elapsed_ms = 0.0;
 
-            t = std::thread([this]()
+            t = std::thread(<:this:>()
             {
                 auto last = std::chrono::steady_clock::now();
                 while(running)

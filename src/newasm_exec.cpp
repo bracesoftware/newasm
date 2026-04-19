@@ -8702,7 +8702,7 @@ namespace newasm
             }
             try
             {
-                for(int i = 0; i < newasm::mem::COD.size(); ++i)//for(auto i = newasm::mem::COD.begin(); i != newasm::mem::COD.end(); ++i)
+                for(int i = 0; i < newasm::mem::COD.size(); true)//for(auto i = newasm::mem::COD.begin(); i != newasm::mem::COD.end(); ++i)
                 {
                     newasm::compiler::data::lnidx = i;
 
@@ -8710,6 +8710,12 @@ namespace newasm
                     NewASM::compiler::Optimize(g, i);
 
                     newasm::compiler::compiledCode.push_back(g);
+                    auto p = &newasm::compiler::compiledCode.back();
+                    if(p->type != newasm::compiler::empty)
+                    {
+                        newasm::OptimizerData::LastLine = p;
+                        newasm::OptimizerData::LastLineIdx = i;
+                    }
                 }
             }
             catch(std::exception& e)
@@ -8777,7 +8783,7 @@ namespace newasm
             }
             //newasm::compiler::data::lnidx = 1;
             //thing above us was for this down here
-            auto AOTCompileBytecode = [&](auto& vec) -> void {
+            auto AOTCompileBytecode = <:&:>(auto& vec) -> void {
                 static bool already_processed = false;
                 for(int i = 0; i < vec.size(); ++i)
                 {
