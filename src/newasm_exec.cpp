@@ -8702,7 +8702,7 @@ namespace newasm
             }
             try
             {
-                for(int i = 0; i < newasm::mem::COD.size(); true)//for(auto i = newasm::mem::COD.begin(); i != newasm::mem::COD.end(); ++i)
+                for(int i = 0; i < newasm::mem::COD.size(); ++i)//for(auto i = newasm::mem::COD.begin(); i != newasm::mem::COD.end(); ++i)
                 {
                     newasm::compiler::data::lnidx = i;
 

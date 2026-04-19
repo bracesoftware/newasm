@@ -1058,28 +1058,36 @@ namespace newasm
 
         inline void Optimize(newasm::compiler::lineData& line, int idx)
         {
-            if(newasm::compiler::compiledCode.empty())
+            auto& cc = newasm::compiler::compiledCode;
+            if(cc.empty())
             {
                 return;
             }
+            unsigned int invalidIndex = cc.size() + 1;
             auto GetLastRelevantLine = <:&:>() noexcept -> unsigned int {
                 for(
-                    int i = newasm::compiler::compiledCode.size() - 1;
-                    i != 0; --i
+                    int i = cc.size();
+                    i > 0; --i
                 )
                 {
-                    auto& z = newasm::compiler::compiledCode.at(i);
+                    int real_i = i - 1;
+                    auto& z = cc.at(real_i);
                     if(
-                        z.whatAmIDoing != newasm::core::lang_inf::nop and
                         z.type != newasm::compiler::empty
                     )
                     {
-                        return i;
+                        return real_i;
                     }
+                    continue;
                 }
-                return 0;
+                return invalidIndex;
             };
-            newasm::OptimizerData::LastLineIdx = GetLastRelevantLine();
+            auto _idx = GetLastRelevantLine();
+            if(_idx == invalidIndex)
+            {
+                return;
+            }
+            newasm::OptimizerData::LastLineIdx = _idx;
             auto& lastLine = newasm::compiler::compiledCode.at(newasm::OptimizerData::LastLineIdx);
             if(!newasm::OptimizerData::JmpUsed) [[unlikely]]
             {
