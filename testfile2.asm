@@ -6,7 +6,7 @@
     syscall
 
 .data
-    string lmao: "0398->hehe,nigga"
+    string lmao: "0398->hehe,hihi"
     ctx context2: ()
 .start
     mov &context2, ("key": lmao)
