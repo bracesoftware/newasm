@@ -8746,6 +8746,9 @@ namespace newasm
             {
                 newasm::header::functions::err("CC and LD sizes don't match!");
             }
+
+            NewASM::compiler::Optimize<newasm::compiler::OPT_CODESEC>();
+
             for(int i = 0; i < v1.size(); true) // VERY IMPORTANT PART!
             {
                 //this loop ensures that all empty lines are not in the final binary

@@ -1056,13 +1056,19 @@ namespace newasm
             return lineCompiled;
         }
 
-        inline void OptimizeCodeA(newasm::compiler::lineData& line, int idx)
+        using DescFunc = std::function<void(const std::string&, newasm::compiler::lineData*, int)>;
+
+        inline void OptimizeCodeA(
+            DescFunc _OptDescription,
+            newasm::compiler::lineData& line, int idx
+        )
         {
             auto& cc = newasm::compiler::compiledCode;
             if(cc.empty())
             {
                 return;
             }
+
             unsigned int invalidIndex = cc.size() + 1;
             auto GetLastRelevantLine = <:&:>() noexcept -> unsigned int {
                 for(
@@ -1089,6 +1095,14 @@ namespace newasm
             }
             newasm::OptimizerData::LastLineIdx = _idx;
             auto& lastLine = newasm::compiler::compiledCode.at(newasm::OptimizerData::LastLineIdx);
+            auto OptDescription = <:&:>(
+                const std::string& text, newasm::compiler::lineData* lptr = nullptr, int lidx = -1
+            ) -> void {
+                //we use the generic function we got
+                //and apply peephole optimizer's logic
+                _OptDescription(text, (lptr == nullptr) ? &line : lptr, (lidx == -1) ? idx : lidx);
+                return;
+            };
             if(!newasm::OptimizerData::JmpUsed) [[unlikely]]
             {
                 if(
@@ -1107,27 +1121,6 @@ namespace newasm
                     newasm::OptimizerData::JmpUsed = true;
                 }
             }
-            //helper func
-            auto OptDescription = [&](const std::string& text, newasm::compiler::lineData* lptr = nullptr) -> void {
-                newasm::compiler::lineData* L = (lptr == nullptr) ? &line : lptr;
-                if(NewASM::header::data::LogCompilerOptimizations)
-                {
-                    std::cout << "\t  " << newasm::header::col::magenta;
-                    try
-                    {
-                        std::cout << newasm::forLinker::getFile(lptr == nullptr ? idx : newasm::OptimizerData::LastLineIdx) << ":";
-                        std::cout << newasm::forLinker::getLine(lptr == nullptr ? idx : newasm::OptimizerData::LastLineIdx);
-                    }
-                    catch(const std::exception& e)
-                    {
-                        std::cout << "cached code";
-                    }
-                    std::cout << newasm::header::col::gray;
-                    std::cout << ": " << text << ": " << newasm::header::col::magenta << L->raw;
-                    std::cout << '\n' << newasm::header::col::reset;
-                }
-                return;
-            };
             //actual optimizations
             //------------------------------------------- double instructions -------------------------------------------
             if(
@@ -1197,7 +1190,7 @@ namespace newasm
 
                 if(SameRegisters and ValidRegisters)
                 {
-                    OptDescription("peephole optimization, redundant assignment before reassignment", &lastLine);
+                    OptDescription("peephole optimization, redundant assignment before reassignment", &lastLine, newasm::OptimizerData::LastLineIdx);
                     lastLine.type = newasm::compiler::empty;
                     return;
                 }
@@ -1228,9 +1221,65 @@ namespace newasm
             return;
         }
 
-        inline void OptimizeCodeB()
+        inline void OptimizeCodeB(DescFunc _OptDescription)
         {
-            
+            auto& k = newasm::compiler::compiledCode;
+            if(k.empty()) [[unlikely]]
+            {
+                return;
+            }
+            static constexpr signed int INVALID_LINE = -1;
+            int CodesecFound = INVALID_LINE;
+            for(int i = 0; i < k.size(); ++i)
+            {
+                auto& line = k.at(i);
+                //find section modifier and set the flag
+                if(CodesecFound == INVALID_LINE)
+                {
+                    if(line.type == newasm::compiler::sectionModifier)
+                    {
+                        CodesecFound = i;
+                        continue;
+                    }
+                }
+                //reset the flag if it isn't linear code
+                if(CodesecFound != INVALID_LINE)
+                {
+                    if(
+                        line.whatAmIDoing == newasm::core::lang_inf::jmp or
+                        line.whatAmIDoing == newasm::core::lang_inf::jz or
+                        line.whatAmIDoing == newasm::core::lang_inf::jnz or
+                        line.whatAmIDoing == newasm::core::lang_inf::je or
+                        line.whatAmIDoing == newasm::core::lang_inf::jne or
+                        line.whatAmIDoing == newasm::core::lang_inf::jl or
+                        line.whatAmIDoing == newasm::core::lang_inf::jle or
+                        line.whatAmIDoing == newasm::core::lang_inf::jg or
+                        line.whatAmIDoing == newasm::core::lang_inf::jge or
+                        line.whatAmIDoing == newasm::core::lang_inf::callc or
+                        line.type == newasm::compiler::labelJumpPoint
+                    )
+                    {
+                        CodesecFound = INVALID_LINE;
+                        continue;
+                    }
+                }
+                //if we reach another section modifier
+                //we check if it is the same one, and delete it
+                if(CodesecFound != INVALID_LINE) if(line.type == newasm::compiler::sectionModifier)
+                {
+                    if(line.whatCodeSection != k.at(CodesecFound).whatCodeSection)
+                    {
+                        CodesecFound = i;
+                        continue;
+                    }
+                    else if(line.whatCodeSection == k.at(CodesecFound).whatCodeSection)
+                    {
+                        _OptDescription("dead code elimination, removed redundant code section reset", &line, i);
+                        line.type = newasm::compiler::empty;
+                        continue;
+                    }
+                }
+            }
             return;
         }
 
@@ -1243,14 +1292,34 @@ namespace newasm
         template<int _What, typename... Args>
         inline void Optimize(Args&&... a)
         {
+            //helper func
+            auto __O_DESC_GENERIC__ = <::>(const std::string& text, newasm::compiler::lineData* L, int idx) -> void {
+                if(NewASM::header::data::LogCompilerOptimizations)
+                {
+                    std::cout << "\t  " << newasm::header::col::magenta;
+                    try
+                    {
+                        std::cout << newasm::forLinker::getFile(idx) << ":";
+                        std::cout << newasm::forLinker::getLine(idx);
+                    }
+                    catch(const std::exception& e)
+                    {
+                        std::cout << "cached code";
+                    }
+                    std::cout << newasm::header::col::gray;
+                    std::cout << ": " << text << ": " << newasm::header::col::magenta << L->raw;
+                    std::cout << '\n' << newasm::header::col::reset;
+                }
+                return;
+            };
             if constexpr(_What == OPT_PEEPHOLE)
             {
-                OptimizeCodeA(std::forward<Args>(a) ...);
+                OptimizeCodeA(__O_DESC_GENERIC__, std::forward<Args>(a) ...);
                 return;
             }
             if constexpr(_What == OPT_CODESEC)
             {
-                OptimizeCodeB(std::forward<Args>(a) ...);
+                OptimizeCodeB(__O_DESC_GENERIC__, std::forward<Args>(a) ...);
                 return;
             }
             return;
