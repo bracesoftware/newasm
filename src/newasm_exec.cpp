@@ -8710,10 +8710,9 @@ namespace newasm
                     NewASM::compiler::Optimize(g, i);
 
                     newasm::compiler::compiledCode.push_back(g);
-                    auto p = &newasm::compiler::compiledCode.back();
-                    if(p->type != newasm::compiler::empty)
+                    if(newasm::compiler::compiledCode.back().type != newasm::compiler::empty)
                     {
-                        newasm::OptimizerData::LastLine = p;
+                        newasm::OptimizerData::LastLine = newasm::compiler::compiledCode.size() - 1;
                         newasm::OptimizerData::LastLineIdx = i;
                     }
                 }

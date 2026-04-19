@@ -13,7 +13,7 @@ namespace newasm
     {
         constinit signed int Section = -1;
         constinit bool JmpUsed = false;
-        newasm::compiler::lineData* LastLine = nullptr;
+        constinit unsigned int LastLine = 0;
         constinit unsigned int LastLineIdx = 0;
     }
     namespace compiler
@@ -1062,7 +1062,7 @@ namespace newasm
             {
                 return;
             }
-            auto& lastLine = newasm::OptimizerData::LastLine;
+            auto& lastLine = newasm::compiler::compiledCode.at(newasm::OptimizerData::LastLineIdx);
             if(!newasm::OptimizerData::JmpUsed) [[unlikely]]
             {
                 if(
@@ -1104,9 +1104,9 @@ namespace newasm
             };
             //actual optimizations
             //------------------------------------------- double instructions -------------------------------------------
-            if(lastLine != nullptr) if(
-                (line == *lastLine) or
-                (line.whatAmIDoing == newasm::core::lang_inf::jmp and lastLine->whatAmIDoing == newasm::core::lang_inf::jmp)
+            if(
+                (line == lastLine) or
+                (line.whatAmIDoing == newasm::core::lang_inf::jmp and lastLine.whatAmIDoing == newasm::core::lang_inf::jmp)
             )
             {
                 bool IsRedundant = (//remove only specific instructions
@@ -1156,23 +1156,23 @@ namespace newasm
                 return;
             }
             //------------------------------------------- remove redundant reassignments -------------------------------------------
-            if(lastLine != nullptr) if(
+            if(
                 (
                     line.whatAmIDoing == newasm::core::lang_inf::mov and
-                    lastLine->whatAmIDoing == newasm::core::lang_inf::mov
+                    lastLine.whatAmIDoing == newasm::core::lang_inf::mov
                 ) or (
                     line.whatAmIDoing == newasm::core::lang_inf::mov and
-                    lastLine->whatAmIDoing == newasm::core::lang_inf::zero
+                    lastLine.whatAmIDoing == newasm::core::lang_inf::zero
                 )
             )
             {
-                bool SameRegisters = line.whatAreRegistersLol == lastLine->whatAreRegistersLol;
+                bool SameRegisters = line.whatAreRegistersLol == lastLine.whatAreRegistersLol;
                 bool ValidRegisters = line.whatAreRegistersLol != INVALID_INS;
 
                 if(SameRegisters and ValidRegisters)
                 {
-                    OptDescription("peephole optimization, redundant assignment before reassignment", lastLine);
-                    lastLine->type = newasm::compiler::empty;
+                    OptDescription("peephole optimization, redundant assignment before reassignment", &lastLine);
+                    lastLine.type = newasm::compiler::empty;
                     return;
                 }
                 return;
@@ -1189,8 +1189,8 @@ namespace newasm
                 NewASM::OptimizerData::Section = line.whatCodeSection;
                 return;
             }
-            if(lastLine != nullptr) if(
-                line.whatCodeSection == lastLine->whatCodeSection and
+            if(
+                line.whatCodeSection == lastLine.whatCodeSection and
                 ((line.whatCodeSection == newasm::code_stream::sections::data) or
                 (line.whatCodeSection == newasm::code_stream::sections::start))
             )

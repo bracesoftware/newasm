@@ -436,3 +436,27 @@ namespace newasm
 #else
     #error [NewASM]: Unknown bitness!
 #endif
+
+namespace newasm
+{
+    template<typename T, typename R>
+    class resolvable_ptr final
+    {
+        R _M_resolver;
+        T* _M_last_known;
+
+        public explicit inline resolvable_ptr(R r) noexcept
+        : _M_resolver(r), _M_last_known(r()) {}
+
+        T* operator->()
+        {
+            _M_last_known = _M_resolver();
+            return _M_last_known;
+        }
+
+        T& operator*()
+        {
+            return *operator->();
+        }
+    };
+}
