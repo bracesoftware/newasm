@@ -79,7 +79,7 @@ namespace newasm
         inline std::function<void(NewASM::BasicFunction)> SetDestructor;
         typedef std::vector<std::string> ModuleList;
         ModuleList __LIST__;
-        inline ModuleList GetLoadedModules()
+        inline ModuleList GetLoadedModules() noexcept
         {
             return __LIST__;
         }
@@ -294,8 +294,7 @@ namespace newasm
     
     namespace kernel
     {
-        constexpr unsigned int makeHash(unsigned short a, unsigned short b) noexcept
-        {
+        constexpr auto makeHash(unsigned short a, unsigned short b) noexcept -> unsigned int {
             return (static_cast<unsigned int>(a) << 16) | b;
             //return (uint32_t(uint16_t(a)) << 16) | uint32_t(uint16_t(b));
         }

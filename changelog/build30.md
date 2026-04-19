@@ -24,6 +24,7 @@ Welcome to **`NewASM`**: an interpreted low-level programming language which com
 ## Fixed issues
 
 + Fixed issue #30: compiler wasn't ever reporting any label redefinitions.
++ Fixed issue #31: compiler wasn't displaying correct code lines in error messages.
 
 ## Important notes
 
