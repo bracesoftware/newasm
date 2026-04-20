@@ -50,6 +50,10 @@ undef symbolName
 ```
 
 ## Compile-time logic
+
+> [!NOTE]
+> This was added in build 31.
+
 The NewASM compiler allows following compile-time instructions for implementing very simple logic:
 - `ifdef`: checks if a symbol/flag is defined;
 - `ifndef`: checks if a symbol/flag is not defined;
