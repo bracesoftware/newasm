@@ -5,14 +5,14 @@ module(shell_tools__MOUNT, {
     //setup goes here
 });
 
-static const std::string __stdlib_code = R"(
+static const std::string __NSTDLIB__ = R"(
 ;
 ; NewASM Standard Library
 ; 2025 (c) Brace Software Co.
 ;
 .data
     ./std
-        intg version: 29
+        intg version: %%--VER--%%
 
         ./math
             float pi: 3.141
@@ -318,6 +318,17 @@ namespace newasm
                 {
                     std::ofstream file(newasm::header::constants::std_library);
                     newasm::utils::loading("Please wait...", newasm::utils::load_speed);
+                    std::string placeholder = "\%\%--VER--\%\%";
+                    std::string __stdlib_code = __NSTDLIB__;
+                    unsigned int pos = __stdlib_code.find(placeholder);
+                    if(pos != std::string::npos)
+                    {
+                        __stdlib_code.replace(pos, placeholder.length(), std::to_string(newasm::BUILD_NUMBER));
+                    }
+                    else
+                    {
+                        newasm::header::functions::err("Cannot format library version.");
+                    }
                     file << __stdlib_code;
                     file.close();
                     return;

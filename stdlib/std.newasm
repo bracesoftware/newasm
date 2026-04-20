@@ -5,7 +5,7 @@
 ;
 .data
 ./std
-intg version: 20
+intg version: 31
 
 ./math
 float pi: 3.141
