@@ -7894,13 +7894,17 @@ namespace newasm
             // LAMBDA TERMINATOR
             case newasm::compiler::lambdaTerminator:
             {
-                if(newasm::LambdaDispatch::ThreadSafePtr->contents.empty())
+                if(
+                    newasm::LambdaDispatch::LambdaHalt or
+                    newasm::LambdaDispatch::ThreadSafePtr->contents.empty()
+                )
                 {
                     newasm::terminate(newasm::exit_codes::unexpected_end); // if the lambda func was empty
                     return 1;
                 }
                 newasm::LambdaDispatch::ThreadSafePtr->JIT_compile();
                 newasm::LambdaDispatch::LambdaNow = false;
+
                 newasm::LambdaDispatch::LambdaLine = true;
                 newasm::LambdaDispatch::ThreadSafePtr->idx = 0;
                 while(true)
@@ -7977,30 +7981,32 @@ namespace newasm
             newasm::threads::memory.at(newasm::threads::thread_decl)->contents.push_back(line);
             return 1;
         }
-        
+
+        /*
         if(newasm::thread_line)
         {
             if(newasm::threads::memory.at(newasm::threads::now)->returned)
             {
                 return 1;
             }
-        }
-
+        }*/
 
         switch(line.type)
         {
             // SEALED LABEL
             case newasm::compiler::sealedLabel:
             {
-                #if 0
-                if(newasm::system::stop == 0 or newasm::threads::now)
+                if(newasm::system::stop == 1)
                 {
-                    newasm::terminate(newasm::exit_codes::invalid_ins);
+                    NewASM::CurrentProc->proc->contents.push_back(line);
                     return 1;
                 }
-                //newasm::variables::ids.at(newasm::system::cproc).
-                NewASM::CurrentProc->proc->contents.push_back(line);
-                #endif
+                if(newasm::LambdaDispatch::LambdaLine)
+                {
+                    return 1;
+                }
+                //std::cout << "is this the error we're gettin" << std::endl;
+                newasm::terminate(newasm::exit_codes::invalid_ins);
                 return 1;
             }
             // SECTION MODIFIERS
