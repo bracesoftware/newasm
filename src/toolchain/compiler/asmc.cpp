@@ -58,6 +58,7 @@ namespace newasm
             const int retc_fail = 10;
             constinit const int label_redef = 11;
             constinit const int unexpected_term = 12;
+            constinit const int linker_err = 13;
 
             const std::unordered_map<int, std::string> id = {
                 {unmatched_syntax, "UnmatchedSyntax"},
@@ -71,7 +72,8 @@ namespace newasm
                 {invalid_symbol, "InvalidSymbol"},
                 {retc_fail, "CannotReturnToCaseJumpTable"},
                 {label_redef, "LabelAlreadyExists"},
-                {unexpected_term, "UnexpectedMacroTerminator"}
+                {unexpected_term, "UnexpectedMacroTerminator"},
+                {linker_err, "LinkerError"}
             };
         }
 
@@ -265,6 +267,7 @@ namespace newasm
             newasm::compiler::lineData lineCompiled;
 
             lineCompiled.raw = line;
+            auto& lc = lineCompiled;
 
             line = newasm::header::functions::remc(line);
             line = newasm::header::functions::trim(line);
@@ -274,6 +277,12 @@ namespace newasm
             if(!linetokens.empty())
             {
                 unsigned int id = newasm::compiler::iscomptins(linetokens.at(0));
+                if(id == newasm::compiler::link__)
+                {
+                    newasm::compiler::abort(newasm::compiler::fail::linker_err);
+                    lc.type = newasm::compiler::empty;
+                    return lineCompiled;
+                }
              
                 if(linetokens.size() == 1)
                 if(

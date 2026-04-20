@@ -1337,12 +1337,6 @@ namespace newasm
                 newasm::terminate(newasm::exit_codes::invalid_ins);
                 return 1;
             }
-            //link
-            case newasm::core::lang_inf::Link___:
-            {
-                newasm::terminate(newasm::exit_codes::linker_err);
-                return 1;
-            }
             //send
             case newasm::core::lang_inf::send:
             {
@@ -3914,12 +3908,6 @@ namespace newasm
                 return 1;
             }
             
-            //link
-            case newasm::core::lang_inf::Link___:
-            {
-                newasm::terminate(newasm::exit_codes::linker_err);
-                return 1;
-            }
             //LOAD.adr/ref
             case newasm::core::lang_inf::load:
             {
@@ -6926,12 +6914,6 @@ namespace newasm
                 newasm::terminate(newasm::exit_codes::invalid_ins);
                 return 1;
             }
-            //link
-            case newasm::core::lang_inf::Link___:
-            {
-                newasm::terminate(newasm::exit_codes::linker_err);
-                return 1;
-            }
             //exit
             case newasm::core::lang_inf::exit:
             {
@@ -7886,7 +7868,7 @@ namespace newasm
                 return 1;
             }
             // MACRO TERMINATOR
-            case newasm::compiler::macroTerminator:
+            case newasm::compiler::macroTerminator: [[unlikely]]
             {
                 #if 0
                 if(newasm::header::data::macro_now)
@@ -8060,7 +8042,7 @@ namespace newasm
             }
             #endif
             // MACRO DECL
-            case newasm::compiler::macroDecl:
+            case newasm::compiler::macroDecl: [[unlikely]]
             {
                 #if 0
                 if(newasm::system::section != newasm::code_stream::sections::text)
@@ -8088,7 +8070,7 @@ namespace newasm
                 return 1;
             }
             // MACRO CALL
-            case newasm::compiler::macroCall:
+            case newasm::compiler::macroCall: [[unlikely]]
             {
                 #if 0
                 auto& it = newasm::stack::macros;
