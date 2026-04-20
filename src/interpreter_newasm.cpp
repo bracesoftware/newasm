@@ -88,6 +88,25 @@ namespace newasm
     namespace compiler
     {
         struct lineData;
+        static const int def = 1;
+        static const int using__ = 2;
+        static const int link__ = 3;
+        static const int pragma__ = 4;
+        static const int undef__ = 5;
+        static constinit const int ifdef__ = 6;
+        static constinit const int ifndef__ = 7;
+        static constinit const int fi__ = 8;
+
+        static const std::unordered_map<std::string, int> instructions = {
+            {"def", def},
+            {"using", using__},
+            {"link", link__},
+            {"pragma", pragma__},
+            {"undef", undef__},
+            {"ifdef", ifdef__},
+            {"ifndef", ifndef__},
+            {"fi", fi__}
+        };
     }
     namespace ExceptionHandling
     {
@@ -539,9 +558,10 @@ namespace newasm
         };
 
         inline std::string parse_def(std::string suf);
+        inline void process_compti(std::string ins);
         inline void process_comptis(std::string ins, std::string arg1);
         inline void process_comptiso(std::string ins, std::string arg1, std::string arg2);
-        inline bool iscomptins(std::string ins);
+        inline unsigned int iscomptins(std::string ins);
     }
 
     namespace runtime

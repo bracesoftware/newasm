@@ -11,33 +11,19 @@ namespace newasm
 {
     namespace compiler
     {
-        static const int def = 1;
-        static const int using__ = 2;
-        static const int link__ = 3;
-        static const int pragma__ = 4;
-        static const int undef__ = 5;
-
-        static const std::unordered_map<std::string, int> instructions = {
-            {"def", def},
-            {"using", using__},
-            {"link", link__},
-            {"pragma", pragma__},
-            {"undef", undef__}
-        };
-
         namespace meta
         {
             std::unordered_map<std::string, std::string> defines;
         }
 
-        bool iscomptins(std::string ins)
+        inline unsigned int iscomptins(std::string ins)
         {
             auto it = newasm::compiler::instructions.find(ins);
             if(it != newasm::compiler::instructions.end())
             {
-                return true;
+                return it->second;
             }
-            return false;
+            return 0;
         }
 
         inline std::string parse_def(std::string suf)
@@ -49,6 +35,25 @@ namespace newasm
                 tobeparsed = newasm::compiler::meta::defines.at(tobeparsed);
             }
             return tobeparsed;
+        }
+        inline void process_compti(std::string ins)
+        {
+            ins = newasm::header::functions::trim(ins);
+
+            auto it = newasm::compiler::instructions.find(ins);
+            if(it == newasm::compiler::instructions.end())
+            {
+                return;
+            }
+            switch(it->second)
+            {
+                case newasm::compiler::fi__:
+                {
+                    newasm::compiler::data::IfResult = true;
+                    return;
+                }
+            }
+            return;
         }
         inline void process_comptis(std::string ins, std::string arg1)
         {
@@ -62,6 +67,28 @@ namespace newasm
             }
             switch(it->second)
             {
+                case newasm::compiler::ifdef__:
+                {
+                    auto p = newasm::compiler::meta::defines.find(arg1);
+                    if(p == newasm::compiler::meta::defines.end())
+                    {
+                        newasm::compiler::data::IfResult = false;
+                        return;
+                    }
+                    newasm::compiler::data::IfResult = true;
+                    return;
+                }
+                case newasm::compiler::ifndef__:
+                {
+                    auto p = newasm::compiler::meta::defines.find(arg1);
+                    if(p == newasm::compiler::meta::defines.end())
+                    {
+                        newasm::compiler::data::IfResult = true;
+                        return;
+                    }
+                    newasm::compiler::data::IfResult = false;
+                    return;
+                }
                 case newasm::compiler::pragma__:
                 {
                     if(arg1 == "errtest")

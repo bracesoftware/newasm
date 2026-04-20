@@ -40,6 +40,8 @@ namespace newasm
             constinit bool CompileTimeMangle = false;
 
             unsigned int ErrorCount = 0;
+
+            constinit bool IfResult = true;
         }
 
         namespace fail
@@ -268,6 +270,43 @@ namespace newasm
             line = newasm::header::functions::trim(line);
 
             // compiling here:
+            std::vector<std::string> linetokens = newasm::common::tokenize(line);
+            if(!linetokens.empty())
+            {
+                unsigned int id = newasm::compiler::iscomptins(linetokens.at(0));
+             
+                if(linetokens.size() == 1)
+                if(
+                    id == newasm::compiler::fi__
+                )
+                {
+                    newasm::compiler::process_compti(linetokens.at(0));
+                    lineCompiled.type = newasm::compiler::empty;
+                    return lineCompiled;
+                }
+            }
+
+            if(!newasm::compiler::data::IfResult)
+            {
+                lineCompiled.type = newasm::compiler::empty;
+                return lineCompiled;
+            }
+
+            if(!linetokens.empty())
+            {
+                unsigned int id = newasm::compiler::iscomptins(linetokens.at(0));
+                if(linetokens.size() == 2)
+                if(
+                    id == newasm::compiler::ifdef__ or
+                    id == newasm::compiler::ifndef__
+                )
+                {
+                    newasm::compiler::process_comptis(linetokens.at(0), linetokens.at(1));
+                    lineCompiled.type = newasm::compiler::empty;
+                    return lineCompiled;
+                }
+            }
+            
             //macroterminator
             if(line == static_cast<std::string>("#"))
             {
@@ -827,13 +866,14 @@ namespace newasm
                 }
             }
             //INSTRUCTION
-            std::vector<std::string> linetokens = newasm::common::tokenize(line);
             std::string instruction;
+            linetokens.clear();
+            linetokens = newasm::common::tokenize(line);
             if(!linetokens.empty())
             {
                 instruction = linetokens.at(0);
             }
-            for(int i = 0; i < linetokens.size(); ++i)
+            if(!linetokens.empty()) for(int i = 0; i < linetokens.size(); ++i)
             {
                 newasm::compiler::utils::fixString(linetokens[i]);
                 if(i == 1)
@@ -857,6 +897,12 @@ namespace newasm
                 {
                     lineCompiled.type = newasm::compiler::empty;
                     newasm::compiler::process_comptis(instruction, linetokens.at(1));
+                    return lineCompiled;
+                }
+                if(linetokens.size() == 1)
+                {
+                    lineCompiled.type = newasm::compiler::empty;
+                    newasm::compiler::process_compti(instruction);
                     return lineCompiled;
                 }
             }

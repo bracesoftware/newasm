@@ -1,6 +1,8 @@
-
-link "test/p.asm"
-link "test/g.asm"
+def ABSOLUTE_CINEMA, 0
+ifdef ABSOLUTE_CINEMA
+    link "test/p.asm"
+    link "test/g.asm"
+fi
 .data
     string PrintThisLaterLol: "Test string"
     intg len2 : $ - PrintThisLaterLol
@@ -2575,6 +2577,13 @@ jmp e2349083l
     mov rax, 5
     callc Loop
 
+    ifdef ABSOLUTE_CINEMA
+    mov tlr, "ABSOLUTE_CINAME IS DEFINED"
+    call std::ios::writeln
+    fi
+    ifdef dsjf
+    dsdsjf
+    fi
 ; -------------------------- END OF PROGRAM -------------------------- ;
     zero rax
     mov rax, 223 ; exit code
