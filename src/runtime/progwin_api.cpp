@@ -30,7 +30,7 @@ namespace newasm
         std::string buffer;
         namespace api
         {
-            ATTR_FLAT inline void cout(std::string text)
+            ATTR_FLAT inline void cout(const std::string& text)
             {
                 if(!newasm::dwin)
                 {

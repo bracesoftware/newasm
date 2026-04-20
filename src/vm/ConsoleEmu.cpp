@@ -53,7 +53,7 @@ namespace newasm
             return;
         }
 
-        inline static void show(const std::string& text)
+        ATTR_FLAT inline static void show(const std::string& text)
         {
             //show_console(const_cast<char*>(text.c_str()));
             if(newasm::consoleOpen)
@@ -70,7 +70,7 @@ namespace newasm
             #endif
             return;
         }
-        inline static void out(const std::string& text)
+        ATTR_FLAT inline static void out(const std::string& text)
         {
             if(newasm::header::data::repl)
             {
@@ -94,7 +94,7 @@ namespace newasm
             #endif
             return;
         }
-        inline static std::string in()
+        ATTR_FLAT inline static std::string in()
         {
             if(newasm::header::data::repl)
             {
@@ -120,7 +120,7 @@ namespace newasm
             #endif
         }
 
-        inline static void close()
+        ATTR_FLAT inline static void close()
         {
             if(!newasm::consoleOpen)
             {
@@ -138,7 +138,7 @@ namespace newasm
             return;
         }
 
-        inline static void cls_BARE_METAL__()
+        ATTR_FLAT inline static void cls_BARE_METAL__()
         {
             #if true
                 #if _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
@@ -152,7 +152,7 @@ namespace newasm
             return;
         }
 
-        inline static void cls()
+        ATTR_FLAT inline static void cls()
         {
             if(newasm::header::data::repl)
             {
@@ -179,7 +179,7 @@ namespace newasm
             return;
         }
 
-        inline static void col(int colid)
+        ATTR_FLAT inline static void col(int colid)
         {
             #if USING_SDL_FINALLY == 0
                 #if 1

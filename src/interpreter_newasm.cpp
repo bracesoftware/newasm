@@ -1107,6 +1107,7 @@ namespace newasm
     {
         inline void cleanup()
         {
+            NewASM::compiler::data::IfResult = true;
             NewASM::compiler::data::MacroTable.clear();
             NewASM::header::data::CallCStack->clear();
             newasm::RAM->set_sot(sizeof(int));
