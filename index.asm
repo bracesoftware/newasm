@@ -2364,6 +2364,8 @@ jmp lmao
     syscall
 
     thread thisisfun -> {
+        mov imm, 2
+        {:shee}
         mov tlr, "this is really fun"
         call std::ios::writeln
         mov tlr, 908
@@ -2398,6 +2400,7 @@ jmp lmao
             {:label3}
             halt 0
         (end)
+        loop imm, shee
     }
 :p
     mov tlr, (proc)

@@ -8485,12 +8485,8 @@ namespace newasm
     #endif
 
     template<bool what>
-    void execute()
+    inline void execute()
     {
-        newasm::wasted_deduction.clear();
-        newasm::network_deduction.clear();
-        newasm::perf::inputWasteTimer.clear();
-        newasm::perf::heavyHostServices.clear();
         //clean up for jit
         newasm::compiler::data::symbol_map.clear();
         newasm::compiler::data::JIT_mode = true;
@@ -8509,7 +8505,13 @@ namespace newasm
             return;
         }
 
-        newasm::perf::start = std::chrono::steady_clock::now();
+        newasm::CYCLE_COUNT = 0, newasm::perf::start = std::chrono::steady_clock::now();
+
+        //cleanup timers
+        newasm::wasted_deduction.clear();
+        newasm::network_deduction.clear();
+        newasm::perf::inputWasteTimer.clear();
+        newasm::perf::heavyHostServices.clear();
 
         while(!(newasm::mem::regs::lcx.get_value() == newasm::compiler::compiledCode.size()))
         {
