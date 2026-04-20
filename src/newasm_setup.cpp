@@ -485,6 +485,11 @@ namespace newasm
             public explicit inline procedureData() noexcept {}
             inline ~procedureData() noexcept {}
 
+            inline void sysResetLambda()
+            {
+                this->prepared = false;
+            }
+
             public inline void JIT_compile()
             {
                 if(this->prepared)

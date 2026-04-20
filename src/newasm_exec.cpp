@@ -225,12 +225,17 @@ namespace newasm
                 std::cout << newasm::header::col::reset;
             }
 
-            if(true)
+            std::cout << "\t\t\t  " << newasm::header::col::reset << newasm::header::col::yellow;
+            std::cout << "^ backtrace: \"" << newasm::header::col::gray << newasm::header::style::underline;
+            std::cout << NewASM::ExceptionHandling::Line->raw;
+            std::cout << newasm::header::col::reset << newasm::header::col::yellow << "\"";
+            std::cout << std::endl;
+            std::cout << newasm::header::col::reset;
+
+            if(newasm::LambdaDispatch::LambdaLine)
             {
-                std::cout << "\t\t\t  " << newasm::header::col::reset << newasm::header::col::yellow;
-                std::cout << "^ backtrace: \"" << newasm::header::col::gray << newasm::header::style::underline;
-                std::cout << NewASM::ExceptionHandling::Line->raw;
-                std::cout << newasm::header::col::reset << newasm::header::col::yellow << "\"";
+                std::cout << "\t\t\t  " << newasm::header::col::reset << newasm::header::col::magenta;
+                std::cout << "^ in lambda/anonymous procedure";
                 std::cout << std::endl;
                 std::cout << newasm::header::col::reset;
             }
@@ -1290,7 +1295,13 @@ namespace newasm
             newasm::LambdaDispatch::LambdaLine = false;
             newasm::LambdaDispatch::LambdaNow = true;
             newasm::LambdaDispatch::ThreadSafePtr->contents.clear();
+            newasm::LambdaDispatch::ThreadSafePtr->labels.clear();
+            newasm::LambdaDispatch::ThreadSafePtr->sysResetLambda();
+            newasm::LambdaDispatch::ThreadSafePtr->CallCStack.clear();
+
             newasm::LambdaDispatch::JitLine = newasm::header::functions::form_iso(ins,suf,"");
+            newasm::LambdaDispatch::ThreadSafePtr->mangled = false;
+            newasm::LambdaDispatch::ThreadSafePtr->idx = 0;
             return 1;
         }
 
@@ -7894,6 +7905,11 @@ namespace newasm
             // LAMBDA TERMINATOR
             case newasm::compiler::lambdaTerminator:
             {
+                if(newasm::threads::thread_now)
+                {
+                    newasm::threads::memory.at(newasm::threads::thread_decl)->contents.push_back(line);
+                    return 1;
+                }
                 if(
                     newasm::LambdaDispatch::LambdaHalt or
                     newasm::LambdaDispatch::ThreadSafePtr->contents.empty()

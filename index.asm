@@ -2372,34 +2372,34 @@ jmp lmao
         call std::ios::writeln
 
         mov tlr, (proc)
+            int 0x3
             mov rax, 4
-            mov tlr, "Hi from lambda in thread"
+            mov tlr, "Hi from lambda in thread\n"
             mov fdx, 1
             sysenter "ios"
             syscall
             {:lmao}
-            ;call std::ios::writeln ; LETS TRY CALLING A PROC IN A LAMBDA
-            ;edit:it didnt work
             syscall
             loop rax, lmao
+            int 0x3
             halt 0
         (end)
     }
 :p
     mov tlr, (proc)
-        ;int 0x3
-        mov rax, 5
+        int 0x3
+        
+        mov imm, 5
         mov tlr, "Hi from lambda in main thread\n"
         mov fdx, 1
         sysenter "ios"
         {:lmao}
-        ;call std::ios::writeln ; LETS TRY CALLING A PROC IN A LAMBDA
-        ;edit:it didnt work
         syscall
-        loop rax, lmao
-        ;int 0x3
+        loop imm, lmao
+        int 0x3
         halt 0
     (end)
+
     mov tlr, 763
     call std::ios::writeln
     mov tlr, "hellouzz"

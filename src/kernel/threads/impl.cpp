@@ -73,7 +73,8 @@ namespace newasm
                         FLAG1 = false;
                         continue;
                     }
-                    if(line.type == newasm::compiler::sealedLabel and !FLAG1)
+                    if(FLAG1) continue;
+                    if(line.type == newasm::compiler::sealedLabel)
                     {
                         //std::cout << "Successfully added label: `" << this->contents.at(i).other << "`" << std::endl;
                         auto k = line.other;

@@ -115,7 +115,7 @@ namespace newasm
             private T value;
             private newasm::_std::map<std::string, T> thread_values;
 
-            inline T& get()
+            ATTR_HOT inline T& get()
             {
                 if(newasm::thread_line)
                 {
@@ -124,7 +124,7 @@ namespace newasm
                 return value;
             }
 
-            inline const T& get() const
+            ATTR_HOT inline const T& get() const
             {
                 if(newasm::thread_line)
                 {
@@ -171,14 +171,14 @@ namespace newasm
                 return;
             }
 
-            inline thread_safe<T>& operator=(const T& new_val)
+            ATTR_HOT inline thread_safe<T>& operator=(const T& new_val)
             {
                 get() = new_val;
                 return *this;
             }
 
             //some mov semantics hihi
-            inline thread_safe<T>& operator=(T&& new_val)
+            ATTR_HOT inline thread_safe<T>& operator=(T&& new_val)
             {
                 get() = std::move(new_val);
                 return *this;
@@ -193,20 +193,20 @@ namespace newasm
                 return get();
             }
 
-            inline T* operator->()
+            ATTR_HOT inline T* operator->()
             {
                 return &get();
             }
-            inline const T* operator->() const
+            ATTR_HOT inline const T* operator->() const
             {
                 return &get();
             }
 
-            inline T& operator*()
+            ATTR_HOT inline T& operator*()
             {
                 return get();
             }
-            inline const T& operator*() const
+            ATTR_HOT inline const T& operator*() const
             {
                 return get();
             }
