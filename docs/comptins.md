@@ -5,7 +5,7 @@ There are a few compile-time directives:
 3. [`link`](#link)
 4. [`pragma`](#pragma)
 5. [`undef`](#undef)
-6. [`if ... variants` and `fi`]()
+6. [`if ... variants` and `fi`](#compile-time-logic)
 
 ## `using`
 With this directive, you include kernel modules you're going to use in your project.
