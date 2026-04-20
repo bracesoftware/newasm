@@ -493,6 +493,7 @@ namespace newasm
             //for runtime analysis and better error messages
             bool MacroComponent = false;
             string SourceMacroName = "";
+            bool AltArgLambda = false;
 
             //---------------------------------------------
             //stuff not included in the binary:

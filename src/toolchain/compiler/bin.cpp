@@ -108,6 +108,10 @@ namespace newasm
                 write_bin(out, ld.altEvalMode.argType);
 
                 write_bin(out, ld.returninTo);
+
+                write_bin(out, ld.MacroComponent);
+                write_string(out, ld.SourceMacroName);
+                write_bin(out, ld.AltArgLambda);
                 return;
             }
             void load_lineData(std::ifstream& in, newasm::compiler::lineData& ld)
@@ -173,6 +177,10 @@ namespace newasm
                 read_bin(in, ld.altEvalMode.argType);
 
                 read_bin(in, ld.returninTo);
+
+                read_bin(in, ld.MacroComponent);
+                read_string(in, ld.SourceMacroName);
+                read_bin(in, ld.AltArgLambda);
                 return;
             }
             //label addresses
