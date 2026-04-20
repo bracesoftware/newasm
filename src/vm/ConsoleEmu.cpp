@@ -43,7 +43,7 @@ extern "C"
 namespace newasm
 {
     static bool consoleOpen = false;
-    class Console
+    class Console final
     {
         public inline static void flush()
         {
