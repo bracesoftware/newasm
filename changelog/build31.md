@@ -19,6 +19,22 @@ Welcome to **`NewASM`**: a low-level programming language which combines explici
 
 + Anonymous functions have been severely improved regarding speed and functionality.
 
++ The NewASM compiler allows following compile-time instructions for implementing very simple logic:
+1. `ifdef`: checks if a symbol/flag is defined;
+2. `ifndef`: checks if a symbol/flag is not defined;
+3. `fi`: used for ending an `if` block. 
+
+If you want to combine if-statements, just nest them, you don't need to use `fi` more than once.
+
+```asm
+ifdef SMTH
+	ifndef SMTH_ELSE
+	; do something
+fi
+```
+
+There are no `else` variants, you have to end each if-block with `fi`.
+
 ## Fixed issues
 
 + Fixed issue #32.
