@@ -2580,7 +2580,8 @@ jmp e2349083l
     ifdef ABSOLUTE_CINEMA
     mov tlr, "ABSOLUTE_CINAME IS DEFINED"
     call std::ios::writeln
-    fi
+    fi ; the compiler doesn't really check for these, 
+        ; fi just resets the internal compiler flag
     ifdef dsjf
     dsdsjf
     fi
