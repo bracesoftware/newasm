@@ -2371,6 +2371,13 @@ jmp lmao
         mov tlr, 243.4
         call std::ios::writeln
 
+        jmp label2
+		{:label1}
+		jmp label3
+		{:label2}
+		jmp label1
+		{:label3}
+
         mov tlr, (proc)
             int 0x3
             mov rax, 4
@@ -2382,6 +2389,13 @@ jmp lmao
             syscall
             loop rax, lmao
             int 0x3
+
+            jmp label2
+            {:label1}
+            jmp label3
+            {:label2}
+            jmp label1
+            {:label3}
             halt 0
         (end)
     }

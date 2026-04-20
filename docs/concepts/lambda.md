@@ -1,5 +1,5 @@
 
-## Lambda procedures
+## Lambda/anonymous procedures
 Lambda procedures are procedures that are functioning as arguments in instructions.
 ```asm
 mov tlr, (proc)
@@ -11,7 +11,7 @@ Now `tlr` is set to 234.
 
 ### Logic in lambdas
 
-> [!INFO]
+> [!WARNING]
 > This feature was added in build 31.
 
 Anonymous functions can have their own sealed labels within them, which means you can perform logical operations inside lambdas such as `loop`, `callc`, `jmp` and more.
