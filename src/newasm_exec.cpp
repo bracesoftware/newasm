@@ -1279,40 +1279,20 @@ namespace newasm
     }
     FORCE_INLINE inline int process_iso(std::string& wholeline, std::string& ins, std::string suf, std::string opr, newasm::compiler::lineData& lineInfo)
     {
-        /*if(newasm::header::flags::compexpr)
+        if(lineInfo.AltArgLambda) [[unlikely]]
         {
-            newasm::impl::eval(opr);
-        }*/
-        auto lambda = newasm::header::functions::is_lambda(opr);
-        if(lambda.first)
-        {
-            if(lambda.second == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::proc))
+            if(newasm::header::data::proc_now)
             {
-                //std::cout << "Called (LAMBDA.INS) << proc" << std::endl;
-                newasm::lambda::lambda_now = true;
-                newasm::lambda::GLOBAL.thread = false;
-                if(newasm::thread_line)
-                {
-                    newasm::lambda::GLOBAL.thread = true;
-                }
-                if(!newasm::lambda::GLOBAL.contents.empty())
-                {
-                    newasm::lambda::GLOBAL.contents.clear();
-                }
-                newasm::lambda::GLOBAL.line = newasm::header::functions::form_iso(ins,suf,"");
+                newasm::terminate(newasm::exit_codes::jit_fail);
                 return 1;
             }
-            newasm::terminate(newasm::exit_codes::invalid_exp);
+            newasm::LambdaDispatch::LambdaHalt = false;
+            newasm::LambdaDispatch::LambdaLine = false;
+            newasm::LambdaDispatch::LambdaNow = true;
+            newasm::LambdaDispatch::ThreadSafePtr->contents.clear();
+            newasm::LambdaDispatch::JitLine = newasm::header::functions::form_iso(ins,suf,"");
             return 1;
         }
-       
-
-        /*auto it = newasm::inverted_ins.find(ins);
-        if(it == newasm::inverted_ins.end())
-        {
-            newasm::terminate(newasm::exit_codes::invalid_ins);
-            return 1;
-        }*/
 
         //we got this stop flag under the instruction checking
         //so we can easily check what instructions are being added to a function,etc
@@ -2399,6 +2379,11 @@ namespace newasm
                 {
                     NewASM::CurrentProcA->proc->idx = lineInfo.jumpinTo;//j.proc->labels.at(suf);
                     //std::cout << "Zasto ne skaces pizda ti mater'na? -> " << j.proc->idx << std::endl;
+                    return 1;
+                }
+                else if(newasm::LambdaDispatch::LambdaLine)
+                {
+                    newasm::LambdaDispatch::ThreadSafePtr->idx = lineInfo.jumpinTo;
                     return 1;
                 }
 
@@ -4189,15 +4174,15 @@ namespace newasm
             //halt
             case newasm::core::lang_inf::halt:
             {
-                if(not newasm::header::data::proc_now and not newasm::lambda::process)
+                if(not newasm::header::data::proc_now and not newasm::LambdaDispatch::LambdaLine)
                 {
                     newasm::terminate(newasm::exit_codes::unexpected_end);
                     return 1;
                 }
-                if(newasm::lambda::process)
+                if(newasm::LambdaDispatch::LambdaLine)
                 {
-                    newasm::lambda::GLOBAL.result = suf;
-                    newasm::lambda::GLOBAL.ret = true;
+                    newasm::LambdaDispatch::Result = suf;
+                    newasm::LambdaDispatch::LambdaHalt = true;
                     return 1;
                 }
                 newasm::system::stoproc = 1;
@@ -4250,6 +4235,11 @@ namespace newasm
                     //std::cout << "jumped to " << j.proc->idx << '\n';
                     return 1;
                 }
+                else if(newasm::LambdaDispatch::LambdaLine)
+                {
+                    newasm::LambdaDispatch::ThreadSafePtr->idx = lineInfo.jumpinTo;
+                    return 1;
+                }
 
                 if(newasm::thread_line)
                 {
@@ -4296,6 +4286,11 @@ namespace newasm
                 if(newasm::header::data::proc_now)
                 {
                     NewASM::CurrentProcA->proc->idx = lineInfo.jumpinTo;//j.proc->labels.at(suf);
+                    return 1;
+                }
+                else if(newasm::LambdaDispatch::LambdaLine)
+                {
+                    newasm::LambdaDispatch::ThreadSafePtr->idx = lineInfo.jumpinTo;
                     return 1;
                 }
 
@@ -4346,6 +4341,12 @@ namespace newasm
                     NewASM::CurrentProcA->proc->idx = lineInfo.jumpinTo;//j.proc->labels.at(suf);
                     return 1;
                 }
+                else if(newasm::LambdaDispatch::LambdaLine)
+                {
+                    newasm::LambdaDispatch::ThreadSafePtr->idx = lineInfo.jumpinTo;
+                    return 1;
+                }
+
                 if(newasm::thread_line)
                 {
                     newasm::threads::memory.at(newasm::threads::now)->lcx = lineInfo.jumpinTo;//newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
@@ -4394,6 +4395,12 @@ namespace newasm
                     NewASM::CurrentProcA->proc->idx = lineInfo.jumpinTo;
                     return 1;
                 }
+                else if(newasm::LambdaDispatch::LambdaLine)
+                {
+                    newasm::LambdaDispatch::ThreadSafePtr->idx = lineInfo.jumpinTo;
+                    return 1;
+                }
+                
                 if(newasm::thread_line)
                 {
                     newasm::threads::memory.at(newasm::threads::now)->lcx = lineInfo.jumpinTo;//newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
@@ -4440,6 +4447,12 @@ namespace newasm
                     NewASM::CurrentProcA->proc->idx = lineInfo.jumpinTo;//j.proc->labels.at(suf);
                     return 1;
                 }
+                else if(newasm::LambdaDispatch::LambdaLine)
+                {
+                    newasm::LambdaDispatch::ThreadSafePtr->idx = lineInfo.jumpinTo;
+                    return 1;
+                }
+
                 if(newasm::thread_line)
                 {
                     newasm::threads::memory.at(newasm::threads::now)->lcx = lineInfo.jumpinTo;//newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
@@ -4482,6 +4495,11 @@ namespace newasm
                 if(newasm::header::data::proc_now)
                 {
                     NewASM::CurrentProcA->proc->idx = lineInfo.jumpinTo;//j.proc->labels.at(suf);
+                    return 1;
+                }
+                else if(newasm::LambdaDispatch::LambdaLine)
+                {
+                    newasm::LambdaDispatch::ThreadSafePtr->idx = lineInfo.jumpinTo;
                     return 1;
                 }
 
@@ -4527,6 +4545,11 @@ namespace newasm
                     //std::cout << "Zasto ne skaces pizda ti mater'na? -> " << j.proc->idx << std::endl;
                     return 1;
                 }
+                else if(newasm::LambdaDispatch::LambdaLine)
+                {
+                    newasm::LambdaDispatch::ThreadSafePtr->idx = lineInfo.jumpinTo;
+                    return 1;
+                }
 
                 if(newasm::thread_line)
                 {
@@ -4547,6 +4570,13 @@ namespace newasm
                     auto& j = NewASM::CurrentProcA;
                     j->proc->idx = lineInfo.jumpinTo;
                     j->proc->CallCStack.push_back(lineInfo.returninTo);
+                    return 1;
+                }
+                else if(newasm::LambdaDispatch::LambdaLine)
+                {
+                    auto& j = newasm::LambdaDispatch::ThreadSafePtr;
+                    j->idx = lineInfo.jumpinTo;
+                    j->CallCStack.push_back(lineInfo.returninTo);
                     return 1;
                 }
 
@@ -5320,6 +5350,9 @@ namespace newasm
                 newasm::threads::memory.at(suf)->paused = false;
                 newasm::threads::sys_module[suf] = 0;
                 newasm::mem::regs::resetRegisters(suf);
+                newasm::LambdaDispatch::LambdaNow.setThreadValue(suf, false);
+                newasm::LambdaDispatch::LambdaHalt.setThreadValue(suf, false);
+                newasm::LambdaDispatch::LambdaLine.setThreadValue(suf, false);
 
                 newasm::brace_stack__.push_back(newasm::brace_stack::thread_block);
                 
@@ -6970,6 +7003,19 @@ namespace newasm
                     j->proc->idx = address;
                     return 1;
                 }
+                else if(newasm::LambdaDispatch::LambdaLine)
+                {
+                    auto& j = newasm::LambdaDispatch::ThreadSafePtr;
+                    if(j->CallCStack.empty())
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                    }
+
+                    int address = j->CallCStack.back() + 1;
+                    j->CallCStack.pop_back();
+                    j->idx = address;
+                    return 1;
+                }
 
                 if(newasm::thread_line)
                 {
@@ -7848,48 +7894,44 @@ namespace newasm
             // LAMBDA TERMINATOR
             case newasm::compiler::lambdaTerminator:
             {
-                if(newasm::lambda::GLOBAL.contents.empty())
+                if(newasm::LambdaDispatch::ThreadSafePtr->contents.empty())
                 {
                     newasm::terminate(newasm::exit_codes::unexpected_end); // if the lambda func was empty
                     return 1;
                 }
-                newasm::lambda::lambda_now = false;
-                newasm::lambda::process = true;
-                for(auto i = newasm::lambda::GLOBAL.contents.begin(); i != newasm::lambda::GLOBAL.contents.end(); ++i)
+                newasm::LambdaDispatch::ThreadSafePtr->JIT_compile();
+                newasm::LambdaDispatch::LambdaNow = false;
+                newasm::LambdaDispatch::LambdaLine = true;
+                newasm::LambdaDispatch::ThreadSafePtr->idx = 0;
+                while(true)
                 {
-                    //std::cout << "lambda line >> " << *i << std::endl;
-                    //std::cout << "vector size >> " << newasm::lambda::GLOBAL.contents.size() << std::endl;
-                    auto JIT_COMPILE = newasm::compiler::DO(*i);
-                    newasm::procline(JIT_COMPILE);
-                    if(newasm::lambda::GLOBAL.ret)
+                    if(newasm::LambdaDispatch::LambdaHalt)
                     {
                         break;
                     }
+                    if(
+                        newasm::LambdaDispatch::ThreadSafePtr->idx >= newasm::LambdaDispatch::ThreadSafePtr->contents.size() or
+                        newasm::LambdaDispatch::ThreadSafePtr->idx < 0
+                    )
+                    {
+                        break;
+                    }
+                    auto& lll = newasm::LambdaDispatch::ThreadSafePtr->contents.at(newasm::LambdaDispatch::ThreadSafePtr->idx);
+                    newasm::header::data::lastln = lll.raw;
+                    newasm::procline(lll);
+                    newasm::LambdaDispatch::ThreadSafePtr->idx++;
                 }
-                newasm::lambda::process = false;
-                if(!newasm::lambda::GLOBAL.ret)
+                newasm::LambdaDispatch::LambdaLine = false;
+                if(!newasm::LambdaDispatch::LambdaHalt)
                 {
                     // Must return a value inside a lambda procedure
                     newasm::terminate(newasm::exit_codes::invalid_exp);
                     return 1;
                 }
-                try
-                {
-                    //std::cout << "EVAL >> " << newasm::lambda::GLOBAL.line + newasm::lambda::GLOBAL.result << std::endl;
-                    std::string eval = newasm::lambda::GLOBAL.line + newasm::lambda::GLOBAL.result;
-                    auto JIT_COMPILE = newasm::compiler::DO(eval);
-                    //std::cout << "RETURNED >> " << newasm::lambda::GLOBAL.result << '\n';
-                    newasm::procline(JIT_COMPILE);
-                }
-                catch (const std::out_of_range& e) {
-                    std::cerr << "Out of range: " << e.what() << '\n';
-                }
-                catch (const std::invalid_argument& e) {
-                    std::cerr << "Invalid argument: " << e.what() << '\n';
-                }
-                catch (const std::exception& e) {
-                    std::cerr << "Standard exception: " << e.what() << '\n';
-                }
+               
+                std::string eval = *newasm::LambdaDispatch::JitLine + *newasm::LambdaDispatch::Result;
+                auto JIT_COMPILE = newasm::compiler::DO(eval);
+                newasm::procline(JIT_COMPILE);
                 
                 return 1;
             }
@@ -7924,21 +7966,9 @@ namespace newasm
             return 1;
         }
 
-        if(newasm::lambda::lambda_now)
+        if(newasm::LambdaDispatch::LambdaNow)
         {
-            if((newasm::thread_line && newasm::lambda::GLOBAL.thread) or (!newasm::thread_line && !newasm::lambda::GLOBAL.thread))
-            {
-                newasm::lambda::GLOBAL.contents.push_back(line.raw);
-            }
-            #if 0
-            if(!newasm::thread_line)
-            {
-                if(!newasm::lambda::GLOBAL.thread)
-                {
-                    newasm::lambda::GLOBAL.contents.push_back(line.raw);
-                }
-            }
-            #endif
+            newasm::LambdaDispatch::ThreadSafePtr->contents.push_back(line);
             return 1;
         }
 
@@ -7947,11 +7977,7 @@ namespace newasm
             newasm::threads::memory.at(newasm::threads::thread_decl)->contents.push_back(line);
             return 1;
         }
-        if(newasm::header::data::macro_now)
-        {
-            newasm::stack::macros.at(newasm::header::data::macro_decl)->contents.push_back(line.raw);
-            return 1;
-        }
+        
         if(newasm::thread_line)
         {
             if(newasm::threads::memory.at(newasm::threads::now)->returned)
@@ -7966,13 +7992,15 @@ namespace newasm
             // SEALED LABEL
             case newasm::compiler::sealedLabel:
             {
-                if(newasm::system::stop == 0)
+                #if 0
+                if(newasm::system::stop == 0 or newasm::threads::now)
                 {
                     newasm::terminate(newasm::exit_codes::invalid_ins);
                     return 1;
                 }
                 //newasm::variables::ids.at(newasm::system::cproc).
                 NewASM::CurrentProc->proc->contents.push_back(line);
+                #endif
                 return 1;
             }
             // SECTION MODIFIERS

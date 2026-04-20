@@ -48,25 +48,70 @@ namespace newasm
                 }
                 this->labels.max_load_factor(MAX_LOAD_FACTOR);
 
+                bool FLAG1 = false;
+
                 for(int i = 0; i < this->contents.size(); ++i)
                 {
-                    if(this->contents.at(i).type == newasm::compiler::sealedLabel)
+                    auto& line = this->contents.at(i);
+                    if(line.AltArgLambda) //allow lambdas inside threads to have their own labels
+                    {
+                        if(FLAG1) [[unlikely]]
+                        {
+                            newasm::terminate(newasm::exit_codes::jit_fail);
+                            break;
+                        }
+                        FLAG1 = true;
+                        continue;
+                    }
+                    if(line.type == newasm::compiler::lambdaTerminator)
+                    {
+                        if(!FLAG1) [[unlikely]]
+                        {
+                            newasm::terminate(newasm::exit_codes::jit_fail);
+                            break;
+                        }
+                        FLAG1 = false;
+                        continue;
+                    }
+                    if(line.type == newasm::compiler::sealedLabel and !FLAG1)
                     {
                         //std::cout << "Successfully added label: `" << this->contents.at(i).other << "`" << std::endl;
-                        auto k = this->contents.at(i).other;
+                        auto k = line.other;
                         if(this->labels.find(k) != this->labels.end())
                         {
                             newasm::terminate(newasm::exit_codes::label_redef);
                         }
                         this->labels[k] = i;
                         newasm::sealedLabels->push_back(k);
-                        this->contents.at(i).type = newasm::compiler::empty;
+                        line.type = newasm::compiler::empty;
                         continue;
                     }
                 }
-                for(int i = 0; i < this->contents.size(); ++i)
+
+                FLAG1 = false; for(int i = 0; i < this->contents.size(); ++i)
                 {
                     auto& bytecode = this->contents.at(i);
+                    if(bytecode.AltArgLambda) //allow lambdas inside threads to have their own labels
+                    {
+                        if(FLAG1) [[unlikely]]
+                        {
+                            newasm::terminate(newasm::exit_codes::jit_fail);
+                            break;
+                        }
+                        FLAG1 = true;
+                        continue;
+                    }
+                    if(bytecode.type == newasm::compiler::lambdaTerminator)
+                    {
+                        if(!FLAG1) [[unlikely]]
+                        {
+                            newasm::terminate(newasm::exit_codes::jit_fail);
+                            break;
+                        }
+                        FLAG1 = false;
+                        continue;
+                    }
+                    if(FLAG1) continue;
                     if(newasm::compiler::utils::IsJumpIns(bytecode))
                     {
                         if(bytecode.tokens.size() != 2)

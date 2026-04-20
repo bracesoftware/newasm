@@ -156,6 +156,21 @@ namespace newasm
                 global_init();
             }
 
+            inline T* getInlinePointer() const
+            {
+                if(newasm::thread_line)
+                {
+                    return &thread_values.at(newasm::threads::now);
+                }
+                return &value;
+            }
+
+            inline void setThreadValue(const std::string& s, T value)
+            {
+                thread_values.at(s) = value;
+                return;
+            }
+
             inline thread_safe<T>& operator=(const T& new_val)
             {
                 get() = new_val;

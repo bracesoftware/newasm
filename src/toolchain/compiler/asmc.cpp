@@ -990,6 +990,12 @@ namespace newasm
                     }
                     if(i == 2)
                     {
+                        auto lambda = newasm::header::functions::is_lambda(lineCompiled.tokens.at(i));
+                        if(lambda.first) if(lambda.second == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::proc))
+                        {
+                            lineCompiled.AltArgLambda = true;
+                            return lineCompiled;
+                        }
                         lineCompiled.altEvalMode.type = newasm::compiler::utils::getEvalMode(lineCompiled.tokens.at(i), lineCompiled.altEvalMode);
                         if(lineCompiled.tokens.at(i).size() >= 3)
                         {

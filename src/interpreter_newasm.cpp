@@ -908,6 +908,20 @@ link "toolchain/linker/asmlink";
 
 link "runtime/common/tokenize";
 link "newasm_setup";
+namespace newasm
+{
+    namespace LambdaDispatch
+    {
+        //thread safe lambda data
+        typedef std::string string;
+        newasm::kernel::thread_safe<newasm::variables::procedureData> ThreadSafePtr;
+        newasm::kernel::thread_safe<bool> LambdaNow = false;
+        newasm::kernel::thread_safe<bool> LambdaLine = false;
+        newasm::kernel::thread_safe<bool> LambdaHalt = false;
+        newasm::kernel::thread_safe<string> JitLine;
+        newasm::kernel::thread_safe<string> Result;
+    }
+}
 link "runtime/virtual";
 
 link "runtime/expcfg/decorators";
@@ -930,7 +944,7 @@ link "kernel/system_calls/crypto";
 link "runtime/containers";
 link "runtime/env_vars";
 
-link "runtime/lambda/_entry";
+//link "runtime/lambda/_entry";
 link "kernel/syscall_info";
 
 link "vm/hardware/disk";
@@ -1079,7 +1093,6 @@ namespace newasm
             NewASM::header::data::EnableThreads = true;
             newasm::header::data::offlineMode = false;
             newasm::exit_handled = false;
-            newasm::lambda::GLOBAL.reset_forKernel();
             newasm::header::flags::autobos = false;
             newasm::GLOBAL::showed_perf = false;
             newasm::header::data::exception = true;
