@@ -8419,6 +8419,7 @@ namespace newasm
             return;
         }
         newasm::exit_handled = true;
+        newasm::perf::heavyHostServices.start();
 
         std::string line;
         newasm::events::exitNow = true;
@@ -8428,6 +8429,7 @@ namespace newasm
             newasm::procline(line);
         }
         newasm::events::exitNow = false;
+        newasm::perf::heavyHostServices.stop();
         return;
     }
 
