@@ -2585,6 +2585,9 @@ jmp e2349083l
     ifdef dsjf
     dsdsjf
     fi
+    jmp 78927347
+    nop
+    :78927347
 ; -------------------------- END OF PROGRAM -------------------------- ;
     zero rax
     mov rax, 223 ; exit code
