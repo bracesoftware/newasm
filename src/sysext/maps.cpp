@@ -49,5 +49,72 @@ namespace newasm
                 return it->second;
             }
         };
+
+        template<typename T>
+        class vec final
+        {
+            using _T = typename std::conditional<std::is_same<T, bool>::value, unsigned char, T>::type;
+            public mutable std::vector<_T> v;
+
+            public explicit inline vec()
+            {
+                v.resize(100);
+            }
+
+            private ATTR_FLAT inline void ensure_capacity(unsigned int index)
+            {
+                if(index >= this->v.size())
+                {
+                    this->v.resize(index + 10);
+                }
+            }
+
+            private ATTR_FLAT inline void ensure_capacity(unsigned int index) const
+            {
+                if(index >= this->v.size())
+                {
+                    this->v.resize(index + 10);
+                }
+            }
+
+            public FORCE_INLINE inline unsigned int size()
+            {
+                return v.size();
+            }
+
+            public FORCE_INLINE inline T& operator[](unsigned int index)
+            {
+                ensure_capacity(index);
+                return reinterpret_cast<T&>(v[index]);
+            }
+
+            FORCE_INLINE inline T& at(unsigned int index)
+            {
+                ensure_capacity(index);
+                return reinterpret_cast<T&>(v.at(index));
+            }
+
+            FORCE_INLINE inline const T& operator[](unsigned int index) const
+            {
+                ensure_capacity(index);
+                return reinterpret_cast<const T&>(v[index]);
+            }
+
+            FORCE_INLINE inline const T& at(unsigned int index) const
+            {
+                ensure_capacity(index);
+                return reinterpret_cast<const T&>(v.at(index));
+            }
+
+            FORCE_INLINE inline auto begin()
+            {
+                return v.begin();
+            }
+
+            FORCE_INLINE inline auto end()
+            {
+                return v.end();
+            }
+        };
     }
 }

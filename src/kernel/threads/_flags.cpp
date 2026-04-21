@@ -16,6 +16,6 @@ namespace newasm
     {
         std::string now;
         unsigned int id_now = 0;
-        std::vector<int> sys_module;
+        newasm::_std::vec<int> sys_module;
     }
 }

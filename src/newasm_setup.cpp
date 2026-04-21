@@ -310,36 +310,36 @@ namespace newasm
                 //PRIVATE
                 newasm::mem::regs::lcx.reset();
             }
-            void resetRegisters(const std::string& thread_name)
+            void resetRegisters(int id)
             {
-                newasm::mem::regs::stk.reset(thread_name);
-                newasm::mem::regs::imm.reset(thread_name);
-                newasm::mem::regs::hea.reset(thread_name);
-                newasm::mem::regs::tlr.reset(thread_name);
-                newasm::mem::regs::stl.reset(thread_name);
+                newasm::mem::regs::stk.reset(id);
+                newasm::mem::regs::imm.reset(id);
+                newasm::mem::regs::hea.reset(id);
+                newasm::mem::regs::tlr.reset(id);
+                newasm::mem::regs::stl.reset(id);
 
-                newasm::mem::regs::psx.reset(thread_name);
+                newasm::mem::regs::psx.reset(id);
                 //newasm::mem::regs::prp.reset(thread_name);
-                newasm::mem::regs::cpt.reset(thread_name);
+                newasm::mem::regs::cpt.reset(id);
 
-                newasm::mem::regs::tr0.reset(thread_name);
-                newasm::mem::regs::tr1.reset(thread_name);
+                newasm::mem::regs::tr0.reset(id);
+                newasm::mem::regs::tr1.reset(id);
 
-                newasm::mem::regs::fdx.reset(thread_name);
-                newasm::mem::regs::cpr.reset(thread_name);
-                newasm::mem::regs::br0.reset(thread_name);
-                newasm::mem::regs::br1.reset(thread_name);
+                newasm::mem::regs::fdx.reset(id);
+                newasm::mem::regs::cpr.reset(id);
+                newasm::mem::regs::br0.reset(id);
+                newasm::mem::regs::br1.reset(id);
 
-                newasm::mem::regs::cr0.reset(thread_name);
-                newasm::mem::regs::cr1.reset(thread_name);
-                newasm::mem::regs::cr2.reset(thread_name);
-                newasm::mem::regs::cr3.reset(thread_name);
+                newasm::mem::regs::cr0.reset(id);
+                newasm::mem::regs::cr1.reset(id);
+                newasm::mem::regs::cr2.reset(id);
+                newasm::mem::regs::cr3.reset(id);
 
-                newasm::mem::regs::dlx.reset(thread_name);
-                newasm::mem::regs::rax.reset(thread_name);
+                newasm::mem::regs::dlx.reset(id);
+                newasm::mem::regs::rax.reset(id);
 
                 //PRIVATE
-                newasm::mem::regs::lcx.reset(thread_name);
+                newasm::mem::regs::lcx.reset(id);
             }
         }
 

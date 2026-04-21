@@ -5430,14 +5430,17 @@ namespace newasm
                 newasm::threads::thread_decl = suf;
                 newasm::threads::memory[suf] = new newasm::threads::object__();
                 newasm::threads::valid_threads.push_back(suf);
-                newasm::threads::memory.at(suf)->paused = false;
-                newasm::threads::sys_module[suf] = 0;
-                newasm::mem::regs::resetRegisters(suf);
+                auto& mmap2 = newasm::threads::memory.at(suf);
+                mmap2->paused = false;
+                mmap2->id = newasm::kernel::ThreadCount;
+                newasm::kernel::ThreadCount++;
+                newasm::threads::sys_module[mmap2->id] = 0;
+                newasm::mem::regs::resetRegisters(mmap2->id);
 
-                newasm::LambdaDispatch::LambdaNow.setThreadValue(suf, false);
-                newasm::LambdaDispatch::LambdaHalt.setThreadValue(suf, false);
-                newasm::LambdaDispatch::LambdaLine.setThreadValue(suf, false);
-                newasm::_this.setThreadValue(suf, nullptr);
+                newasm::LambdaDispatch::LambdaNow.setThreadValue(mmap2->id, false);
+                newasm::LambdaDispatch::LambdaHalt.setThreadValue(mmap2->id, false);
+                newasm::LambdaDispatch::LambdaLine.setThreadValue(mmap2->id, false);
+                newasm::_this.setThreadValue(mmap2->id, nullptr);
 
                 newasm::brace_stack__.push_back(newasm::brace_stack::thread_block);
                 
@@ -5601,7 +5604,7 @@ namespace newasm
                         auto& mmap = it->second;
                         if(mmap->returned)
                         {
-                            newasm::_this.setThreadValue(thread__, nullptr);
+                            newasm::_this.setThreadValue(mmap->id, nullptr);
                             break;
                         }
                         if(mmap->contents.empty())
@@ -5619,6 +5622,7 @@ namespace newasm
                         }
                         newasm::thread_line = true;
                         newasm::threads::now = (thread__); // thread name
+                        newasm::threads::id_now = mmap->id;
                         if(IDX < 0 or IDX >= mmap->contents.size()) [[unlikely]]
                         {
                             mmap->returned = true;
@@ -5703,7 +5707,7 @@ namespace newasm
                         }
                         if(newasm::thread_line)
                         {
-                            newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::ios;
+                            newasm::threads::sys_module.at(newasm::threads::id_now) = newasm::core::lang_inf::refs::ios;
                             return 1;
                         }
                         newasm::header::data::module = newasm::core::lang_inf::refs::ios;
@@ -5718,7 +5722,7 @@ namespace newasm
                         }
                         if(newasm::thread_line)
                         {
-                            newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::fs;
+                            newasm::threads::sys_module.at(newasm::threads::id_now) = newasm::core::lang_inf::refs::fs;
                             return 1;
                         }
                         newasm::header::data::module = newasm::core::lang_inf::refs::fs;
@@ -5733,7 +5737,7 @@ namespace newasm
                         }
                         if(newasm::thread_line)
                         {
-                            newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::ext;
+                            newasm::threads::sys_module.at(newasm::threads::id_now) = newasm::core::lang_inf::refs::ext;
                             return 1;
                         }
                         newasm::header::data::module = newasm::core::lang_inf::refs::ext;
@@ -5748,7 +5752,7 @@ namespace newasm
                         }
                         if(newasm::thread_line)
                         {
-                            newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::cmanip;
+                            newasm::threads::sys_module.at(newasm::threads::id_now) = newasm::core::lang_inf::refs::cmanip;
                             return 1;
                         }
                         newasm::header::data::module = newasm::core::lang_inf::refs::cmanip;
@@ -5763,7 +5767,7 @@ namespace newasm
                         }
                         if(newasm::thread_line)
                         {
-                            newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::txtop;
+                            newasm::threads::sys_module.at(newasm::threads::id_now) = newasm::core::lang_inf::refs::txtop;
                             return 1;
                         }
                         newasm::header::data::module = newasm::core::lang_inf::refs::txtop;
@@ -5778,7 +5782,7 @@ namespace newasm
                         }
                         if(newasm::thread_line)
                         {
-                            newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::net;
+                            newasm::threads::sys_module.at(newasm::threads::id_now) = newasm::core::lang_inf::refs::net;
                             return 1;
                         }
                         newasm::header::data::module = newasm::core::lang_inf::refs::net;
@@ -5793,7 +5797,7 @@ namespace newasm
                         }
                         if(newasm::thread_line)
                         {
-                            newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::mem;
+                            newasm::threads::sys_module.at(newasm::threads::id_now) = newasm::core::lang_inf::refs::mem;
                             return 1;
                         }
                         newasm::header::data::module = newasm::core::lang_inf::refs::mem;
@@ -5808,7 +5812,7 @@ namespace newasm
                         }
                         if(newasm::thread_line)
                         {
-                            newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::chrono;
+                            newasm::threads::sys_module.at(newasm::threads::id_now) = newasm::core::lang_inf::refs::chrono;
                             return 1;
                         }
                         newasm::header::data::module = newasm::core::lang_inf::refs::chrono;
@@ -5823,7 +5827,7 @@ namespace newasm
                         }
                         if(newasm::thread_line)
                         {
-                            newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::thread;
+                            newasm::threads::sys_module.at(newasm::threads::id_now) = newasm::core::lang_inf::refs::thread;
                             return 1;
                         }
                         newasm::header::data::module = newasm::core::lang_inf::refs::thread;
@@ -5838,7 +5842,7 @@ namespace newasm
                         }
                         if(newasm::thread_line)
                         {
-                            newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::tuple;
+                            newasm::threads::sys_module.at(newasm::threads::id_now) = newasm::core::lang_inf::refs::tuple;
                             return 1;
                         }
                         newasm::header::data::module = newasm::core::lang_inf::refs::tuple;
@@ -5853,7 +5857,7 @@ namespace newasm
                         }
                         if(newasm::thread_line)
                         {
-                            newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::tcp;
+                            newasm::threads::sys_module.at(newasm::threads::id_now) = newasm::core::lang_inf::refs::tcp;
                             return 1;
                         }
                         newasm::header::data::module = newasm::core::lang_inf::refs::tcp;
@@ -5868,7 +5872,7 @@ namespace newasm
                         }
                         if(newasm::thread_line)
                         {
-                            newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::http;
+                            newasm::threads::sys_module.at(newasm::threads::id_now) = newasm::core::lang_inf::refs::http;
                             return 1;
                         }
                         newasm::header::data::module = newasm::core::lang_inf::refs::http;
@@ -5883,7 +5887,7 @@ namespace newasm
                         }
                         if(newasm::thread_line)
                         {
-                            newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::math;
+                            newasm::threads::sys_module.at(newasm::threads::id_now) = newasm::core::lang_inf::refs::math;
                             return 1;
                         }
                         newasm::header::data::module = newasm::core::lang_inf::refs::math;
@@ -5898,7 +5902,7 @@ namespace newasm
                         }
                         if(newasm::thread_line)
                         {
-                            newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::misc;
+                            newasm::threads::sys_module.at(newasm::threads::id_now) = newasm::core::lang_inf::refs::misc;
                             return 1;
                         }
                         newasm::header::data::module = newasm::core::lang_inf::refs::misc;
@@ -5913,7 +5917,7 @@ namespace newasm
                         }
                         if(newasm::thread_line)
                         {
-                            newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::crypto;
+                            newasm::threads::sys_module.at(newasm::threads::id_now) = newasm::core::lang_inf::refs::crypto;
                             return 1;
                         }
                         newasm::header::data::module = newasm::core::lang_inf::refs::crypto;
@@ -5928,7 +5932,7 @@ namespace newasm
                         }
                         if(newasm::thread_line)
                         {
-                            newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::ctx;
+                            newasm::threads::sys_module.at(newasm::threads::id_now) = newasm::core::lang_inf::refs::ctx;
                             return 1;
                         }
                         newasm::header::data::module = newasm::core::lang_inf::refs::ctx;
@@ -5943,7 +5947,7 @@ namespace newasm
                         }
                         if(newasm::thread_line)
                         {
-                            newasm::threads::sys_module.at(newasm::threads::now) = newasm::core::lang_inf::refs::fs_vdsk;
+                            newasm::threads::sys_module.at(newasm::threads::id_now) = newasm::core::lang_inf::refs::fs_vdsk;
                             return 1;
                         }
                         newasm::header::data::module = newasm::core::lang_inf::refs::fs_vdsk;
@@ -7915,7 +7919,9 @@ namespace newasm
                 {
                     std::string& thread__ = newasm::threads::thread_decl;
                     newasm::threads::thread_now = false;
-                    newasm::threads::memory.at(thread__)->recompile_threadProc();
+                    auto& mmap = newasm::threads::memory.at(thread__);
+                    mmap->recompile_threadProc();
+                    
                     ++NewASM::header::data::ActiveThreads;
                     return 1;
                 }
@@ -9076,7 +9082,7 @@ namespace newasm
             //if(0) newasm::threads::memory.at(*i)->prepare_sys();
             if(mmap->returned)
             {
-                //newasm::_this.setThreadValue(i, nullptr);
+                //newasm::_this.setThreadValue(mmap->id, nullptr);
                 continue;
             }
             if(mmap->contents.empty())
@@ -9093,6 +9099,7 @@ namespace newasm
             }
             newasm::thread_line = true;
             newasm::threads::now = (i); // thread name
+            newasm::threads::id_now = mmap->id;
             
             if(IDX < 0 or IDX >= mmap->contents.size()) [[unlikely]]
             {

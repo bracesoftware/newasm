@@ -90,36 +90,14 @@ namespace newasm
         template<typename T>
         class thread_safe final
         {
-            #if 0
-            inline thread_safe<T>& operator=(const T& new_val)
-            {
-                if(newasm::thread_line)
-                {
-                    thread_values.at(newasm::threads::now) = new_val;
-                    return *this;
-                }
-                value = new_val;
-                return *this;
-            }
-
-            operator T&()
-            {
-                if(newasm::thread_line)
-                {
-                    return thread_values.at(newasm::threads::now);
-                }
-                return value;
-            }
-            #endif
-            
             private T value;
-            private newasm::_std::map<std::string, T> thread_values;
+            private newasm::_std::vec<T> thread_values;
 
             ATTR_HOT inline T& get()
             {
                 if(newasm::thread_line)
                 {
-                    return thread_values.at(newasm::threads::now);
+                    return thread_values.at(newasm::threads::id_now);
                 }
                 return value;
             }
@@ -128,7 +106,7 @@ namespace newasm
             {
                 if(newasm::thread_line)
                 {
-                    return thread_values.at(newasm::threads::now);
+                    return thread_values.at(newasm::threads::id_now);
                 }
                 return value;
             }
@@ -138,7 +116,7 @@ namespace newasm
             //with thread_safe<T> the same way
             inline void global_init()
             {
-                thread_values.max_load_factor(MAX_LOAD_FACTOR);
+                //thread_values.max_load_factor(MAX_LOAD_FACTOR);
             }
             
             public inline thread_safe(T&& val)
@@ -160,14 +138,14 @@ namespace newasm
             {
                 if(newasm::thread_line)
                 {
-                    return &thread_values.at(newasm::threads::now);
+                    return &thread_values.at(newasm::threads::id_now);
                 }
                 return &value;
             }
 
-            inline void setThreadValue(const std::string& s, T value)
+            inline void setThreadValue(unsigned int s, T value)
             {
-                thread_values.at(s) = value;
+                thread_values[s] = value;
                 return;
             }
 
@@ -178,9 +156,9 @@ namespace newasm
 
             inline bool isValueUsedAmongThreads(T val)
             {
-                for(auto i = thread_values.begin(); i != thread_values.end(); ++i)
+                for(int i = 0; i < thread_values.size(); ++i)
                 {
-                    if(i->second == val)
+                    if(thread_values[i] == val)
                     {
                         return true;
                     }
@@ -342,7 +320,7 @@ namespace newasm
         private std::string name;
         //char name_cexpr[cexpr_size];
         private T value;
-        newasm::_std::map<std::string, T> thread_values;
+        newasm::_std::vec<T> thread_values;
         T initial_value;
 
         bool short_int_value = false;
@@ -351,7 +329,7 @@ namespace newasm
         public explicit inline _register(std::string regname, T val)
             : name(regname), value(val), initial_value(val)
             {
-                thread_values.max_load_factor(MAX_LOAD_FACTOR);
+                //thread_values.max_load_factor(MAX_LOAD_FACTOR);
             }
 
 
@@ -371,7 +349,7 @@ namespace newasm
             if(newasm::thread_line)
             {
                 //this->thread_values.at(newasm::threads::now);
-                std::cout << "thread value -> " << this->thread_values.at(newasm::threads::now) << "\n";
+                std::cout << "thread value -> " << this->thread_values.at(newasm::threads::id_now) << "\n";
             }
             std::cout << newasm::header::col::reset;
             return;
@@ -398,20 +376,26 @@ namespace newasm
         FORCE_INLINE inline void reset()
         {
             this->value = this->initial_value;
+            #if 0
             for(auto i = this->thread_values.begin(); i != this->thread_values.end(); ++i)
             {
                 i->second = this->initial_value;
             }
+            #endif
+            for(int i = 0; i < this->thread_values.size(); ++i)
+            {
+                thread_values[i] = this->initial_value;
+            }
         }
-        FORCE_INLINE inline void reset(std::string thread_name)
+        FORCE_INLINE inline void reset(int id_now)
         {
-            thread_values[thread_name] = initial_value;
+            thread_values[id_now] = initial_value;
         }
         FORCE_INLINE inline T get_value() const
         {
             if(newasm::thread_line)
             {
-                return this->thread_values.at(newasm::threads::now);
+                return this->thread_values.at(newasm::threads::id_now);
             }
             return this->value;
         }
@@ -441,7 +425,7 @@ namespace newasm
                             std::cout << "==========================================" << std::endl;
                             std::cout << "THIS IS AN ERROR ! \n";
                             #endif
-                            this->thread_values.at(newasm::threads::now) = 0;
+                            this->thread_values.at(newasm::threads::id_now) = 0;
                             return;
                         }
                         this->value = 0;
@@ -452,7 +436,7 @@ namespace newasm
             if(newasm::thread_line)
             {
                 //std::cout << "THIS IS AN ERROR ! \n";
-                this->thread_values.at(newasm::threads::now) = new_val;
+                this->thread_values.at(newasm::threads::id_now) = new_val;
                 return;
             }
             this->value = new_val;
@@ -463,7 +447,7 @@ namespace newasm
         {
             if(newasm::thread_line)
             {
-                return this->thread_values.at(newasm::threads::now);
+                return this->thread_values.at(newasm::threads::id_now);
             }
             return value;
         }
@@ -481,7 +465,7 @@ namespace newasm
                     {
                         if(newasm::thread_line)
                         {
-                            thread_values.at(newasm::threads::now) = 0;
+                            thread_values.at(newasm::threads::id_now) = 0;
                             return *this;
                         }
                         value = 0;
@@ -491,7 +475,7 @@ namespace newasm
             }
             if(newasm::thread_line)
             {
-                thread_values.at(newasm::threads::now) = new_val;
+                thread_values.at(newasm::threads::id_now) = new_val;
                 return *this;
             }
             value = new_val;
@@ -501,7 +485,7 @@ namespace newasm
         {
             if(newasm::thread_line)
             {
-                return thread_values.at(newasm::threads::now);
+                return thread_values.at(newasm::threads::id_now);
             }
             return value;
         }
@@ -510,7 +494,7 @@ namespace newasm
         {
             if(newasm::thread_line)
             {
-                return thread_values.at(newasm::threads::now);
+                return thread_values.at(newasm::threads::id_now);
             }
             return value;
         }
@@ -518,7 +502,7 @@ namespace newasm
         {
             if(newasm::thread_line)
             {
-                return thread_values.at(newasm::threads::now);
+                return thread_values.at(newasm::threads::id_now);
             }
             return value;
         }
@@ -526,7 +510,7 @@ namespace newasm
         {
             if(newasm::thread_line)
             {
-                os << r.thread_values.at(newasm::threads::now);
+                os << r.thread_values.at(newasm::threads::id_now);
                 return os;
             }
             os << r.value;
@@ -536,7 +520,7 @@ namespace newasm
         {
             if(newasm::thread_line)
             {
-                is >> r.thread_values.at(newasm::threads::now);
+                is >> r.thread_values.at(newasm::threads::id_now);
                 return is;
             }
             is >> r.value;
@@ -547,7 +531,7 @@ namespace newasm
         {
             if(newasm::thread_line)
             {
-                return thread_values.at(newasm::threads::now) == other;
+                return thread_values.at(newasm::threads::id_now) == other;
             }
             return value == other;
         }
@@ -555,7 +539,7 @@ namespace newasm
         {
             if(newasm::thread_line)
             {
-                return lhs == rhs.thread_values.at(newasm::threads::now);
+                return lhs == rhs.thread_values.at(newasm::threads::id_now);
             }
             return lhs == rhs.value;
         }
@@ -570,9 +554,9 @@ namespace newasm
             {
                 std::stringstream ss;
                 ss << str__;
-                ss << thread_values.at(newasm::threads::now);
+                ss << thread_values.at(newasm::threads::id_now);
                 ss << str__;
-                thread_values.at(newasm::threads::now) = ss.str();
+                thread_values.at(newasm::threads::id_now) = ss.str();
                 return;
             }
             std::stringstream ss;
