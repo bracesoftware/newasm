@@ -2622,8 +2622,8 @@ jmp e2349083l
     :kkkkkk
     nop
     loop rax, kkkkkk
-    fetch ramdagadam
     await &interesting
+    fetch ramdagadam
 
     fetch interesting::lmao
     mov tlr, this(4)
