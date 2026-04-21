@@ -3970,7 +3970,7 @@ namespace newasm
                     return 1;
                 }
 
-                if(ptr->fetched)
+                if(ptr->fetched and ptr->type != newasm::datatypes::proc)
                 {
                     if(newasm::thread_line)
                     {
@@ -3983,6 +3983,7 @@ namespace newasm
                 }
 
                 newasm::_this = ptr;
+                ptr->fetched = true; //this shi prevents other threads from taking our pointer away
                 return 1;
             }
             //LOAD.adr/ref
@@ -5475,29 +5476,27 @@ namespace newasm
             //retf
             case newasm::core::lang_inf::retf:
             {
-                try
+                if(!newasm::thread_line)
                 {
-                    if(!newasm::thread_line)
-                    {
-                        //std::cout << "THIS IS FUCKD UP!!" << std::endl;
-                        newasm::terminate(newasm::exit_codes::invalid_syntax);
-                        return 1;
-                    }
-                    std::string retf__v = [suf]()->std::string
-                    {
-                        std::string result = suf;
-                        newasm::runtime::functions::parse(result);
-                        return result;
-                    }();
-                    //newasm::threads::memory.at(newasm::threads::now)->contents.clear();
-                    newasm::threads::memory.at(newasm::threads::now)->returned = true;
-                    newasm::threads::memory.at(newasm::threads::now)->returned_val = retf__v;
+                    //std::cout << "THIS IS FUCKD UP!!" << std::endl;
+                    newasm::terminate(newasm::exit_codes::invalid_syntax);
+                    return 1;
                 }
-                catch(const std::exception& e)
+                std::string retf__v = <:suf:>() -> std::string {
+                    std::string result = suf;
+                    newasm::runtime::functions::parse(result);
+                    return result;
+                }();
+
+                auto& mmap = newasm::threads::memory.at(newasm::threads::now);
+                mmap->returned = true;
+                mmap->returned_val = retf__v;
+                if(newasm::_this != nullptr)
                 {
-                    std::cerr << "Pravo si se zajebucnuo :: " << e.what() << '\n';
+                    (*newasm::_this)->fetched = false;
+                    newasm::_this = nullptr;
                 }
-                
+            
                 return 1;
             }
             //async
@@ -5599,18 +5598,19 @@ namespace newasm
                             continue;
                         }
                         auto& IDX = mmap->lcx;
-                        if(IDX == mmap->contents.size())
-                        {
-                            mmap->returned = true;
-                            mmap->returned_val = "0";
-                            continue;
-                        }
                         newasm::thread_line = true;
                         newasm::threads::now = (thread__); // thread name
                         newasm::threads::id_now = mmap->id;
-                        if(IDX < 0 or IDX >= mmap->contents.size()) [[unlikely]]
+                        if(IDX < 0 or IDX >= mmap->contents.size())
                         {
                             mmap->returned = true;
+                            mmap->returned_val = "0";
+                            auto ptr = newasm::_this.getThreadValue(mmap->id);
+                            if(ptr != nullptr)
+                            {
+                                ptr->fetched = false;
+                                newasm::_this.setThreadValue(mmap->id, nullptr);
+                            }
                         }
                         else newasm::procline(mmap->contents.at(IDX));
                         IDX++;
@@ -9011,7 +9011,6 @@ namespace newasm
             //if(0) newasm::threads::memory.at(*i)->prepare_sys();
             if(mmap->returned)
             {
-                //newasm::_this.setThreadValue(mmap->id, nullptr);
                 continue;
             }
             if(mmap->contents.empty())
@@ -9020,19 +9019,20 @@ namespace newasm
             }
             ++NewASM::header::data::ActiveThreads;
             auto& IDX = mmap->lcx;
-            if(IDX == mmap->contents.size())
-            {
-                mmap->returned = true;
-                mmap->returned_val = "0";
-                continue;
-            }
             newasm::thread_line = true;
             newasm::threads::now = (i); // thread name
             newasm::threads::id_now = mmap->id;
             
-            if(IDX < 0 or IDX >= mmap->contents.size()) [[unlikely]]
+            if(IDX < 0 or IDX >= mmap->contents.size())
             {
                 mmap->returned = true;
+                mmap->returned_val = "0";
+                auto ptr = newasm::_this.getThreadValue(mmap->id);
+                if(ptr != nullptr)
+                {
+                    ptr->fetched = false;
+                    newasm::_this.setThreadValue(mmap->id, nullptr);
+                }
             }
             else newasm::procline(mmap->contents.at(IDX));
             

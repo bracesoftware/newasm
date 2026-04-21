@@ -143,13 +143,18 @@ namespace newasm
                 return &value;
             }
 
+            inline T& getThreadValue(unsigned int id)
+            {
+                return thread_values.at(id);
+            }
+
             inline void setThreadValue(unsigned int s, T value)
             {
                 thread_values[s] = value;
                 return;
             }
 
-            inline T getMainThreadValue()
+            inline T& getMainThreadValue()
             {
                 return value;
             }
