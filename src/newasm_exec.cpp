@@ -8549,29 +8549,23 @@ namespace newasm
     template<bool what>
     void execute()
     {
-        std::cout << "Debug ex-1" << std::endl;
         //clean up for jit
         newasm::compiler::data::symbol_map.clear();
         newasm::compiler::data::JIT_mode = true;
         
         if constexpr(what == true)
         {
-            std::cout << "Debug ex-2" << std::endl;
             newasm::mem::regs::resetRegisters();
             newasm::mem::regs::hea = 0;
             newasm::mem::regs::lcx.set_value(0);
-            std::cout << "Debug ex-3" << std::endl;
         }
-        std::cout << "Debug ex-4" << std::endl;
 
         //now we load the standard lib after loading the case jump table
         bool result = newasm::GLOBAL::global_load_std();
         if(!result)
         {
-            std::cout << "Debug ex-4.1" << std::endl;
             return;
         }
-        std::cout << "Debug ex-5" << std::endl;
 
         newasm::CYCLE_COUNT = 0, newasm::perf::start = std::chrono::steady_clock::now();
 
@@ -8580,8 +8574,6 @@ namespace newasm
         newasm::network_deduction.clear();
         newasm::perf::inputWasteTimer.clear();
         newasm::perf::heavyHostServices.clear();
-
-        std::cout << "newasm::compiler::compiledCode.size() --> " << newasm::compiler::compiledCode.size() << std::endl;
 
         while(!(newasm::mem::regs::lcx.get_value() == newasm::compiler::compiledCode.size()))
         {
@@ -8640,7 +8632,6 @@ namespace newasm
         }
         newasm::perf::end = std::chrono::steady_clock::now();
         newasm::compiler::data::JIT_mode = false;
-        std::cout << "Debug ex-6" << std::endl;
         return;
     }
     #if 0 //this ain't comin
