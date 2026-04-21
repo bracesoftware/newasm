@@ -300,9 +300,12 @@ namespace newasm
                         newasm::mem::labels.clear();
                         newasm::forLinker::lineData.clear();
                         newasm::CYCLE_COUNT = 0;
+                        NewASM::kernel::ThreadCount = 0;
+                        NewASM::_this = nullptr;
+                        std::cout << "Debug 1" << std::endl;
 
                         newasm::Console::show("NewASM Application Window");
-
+                        std::cout << "Debug 2" << std::endl;
                         bool startExecution = newasm::compiler::bin::load_app( //load the binary format
                             tokens[1],
                             newasm::compiler::compiledCode,
@@ -311,23 +314,31 @@ namespace newasm
                             newasm::mem::instructions,
                             newasm::compiler::caseJumpTable
                         );
+                        std::cout << "Debug 3" << std::endl;
 
                         //newasm::GLOBAL::global_load_std();
 
                         if(startExecution)
                         {
+                            std::cout << "Debug 4" << std::endl;
                             newasm::execute<true>();
+                            std::cout << "Debug 4.1" << std::endl;
                             newasm::flags::perf_available = true;
+                            std::cout << "Debug 5" << std::endl;
                         }
                         
                         try
                         {
+                            std::cout << "Debug 6" << std::endl;
                             newasm::GLOBAL::cleanup();
                         }
                         catch(std::exception& e)
                         {
+                            std::cout << "Debug 7" << std::endl;
                             std::cout << "ZAJEBAO TE KLINAP BAJO!! -> " << e.what() << std::endl;
                         }
+                        
+                        std::cout << "Debug 8" << std::endl;
                         
                         newasm::Console::close();
                         return 1;

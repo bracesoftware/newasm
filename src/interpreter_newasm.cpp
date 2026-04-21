@@ -1549,11 +1549,13 @@ namespace newasm
             newasm::header::functions::info("Loading the shell mode...");
             newasm::core::env_vars::functions::setup_env();
 
+            #if 0
             bool result = load_std();
             if(!result)
             {
                 return 1;
             }
+            #endif
             EMPTYLINE;
 
             newasm::header::functions::wait(1500);

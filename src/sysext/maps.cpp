@@ -115,6 +115,11 @@ namespace newasm
             {
                 return v.end();
             }
+
+            FORCE_INLINE inline auto clear()
+            {
+                return v.clear();
+            }
         };
     }
 }
