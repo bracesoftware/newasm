@@ -2624,6 +2624,8 @@ jmp e2349083l
     mov tlr, this(4)
     call std::ios::writeln
 ; -------------------------- END OF PROGRAM -------------------------- ;
+    mov tlr, *rax
+    call std::ios::writeln
     zero rax
     mov rax, 223 ; exit code
     ret *rax ; returns from the whole program to the host OS or newasm shell

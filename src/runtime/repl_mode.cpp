@@ -3,11 +3,13 @@
 
 namespace newasm
 {
+    newasm::compiler::lineData ReplLine;
     int repl()
     {
         std::string line;
         std::cout << "\n";
         //std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        newasm::header::data::LastLine = &ReplLine;
         while(true)
         {
             line.clear();
@@ -15,11 +17,12 @@ namespace newasm
             std::cout << newasm::header::col::gray << ">> ";
             std::getline(std::cin,line);
             
-            newasm::header::data::lastln = line;
             std::cout << newasm::header::col::reset;
             
             newasm::header::data::lastlndx++;
-            newasm::process << line;
+            
+            ReplLine = newasm::compiler::DO(line);
+            newasm::procline(ReplLine);
 
             if(newasm::header::data::repl_end)
             {

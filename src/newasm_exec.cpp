@@ -51,13 +51,7 @@ namespace newasm
             return 1;
         }
         NewASM::perf::heavyHostServices.start();
-        if(!newasm::header::data::repl)
-        {
-            if(!newasm::header::data::exception)
-            {
-                newasm::handle_exit();
-            }
-        }
+        
         newasm::terminate_(exit_code);
         if constexpr(0) if(newasm::header::functions::trim(NewASM::ExceptionHandling::Line->raw) == std::string("syscall"))
         {
@@ -107,13 +101,12 @@ namespace newasm
                 newasm::header::col::reset<<
                 newasm::header::col::red << "\" occured >> "<<
                 newasm::header::col::gray<<
-                newasm::header::data::lastln << std::endl;
+                newasm::header::data::LastLine->raw << std::endl;
 
                 std::cout << newasm::header::col::reset << std::endl;
             }
             return 1;
         }
-        //newasm::header::data::lastln = line;
 
         if(!newasm::system::terminated)
         {
@@ -197,7 +190,7 @@ namespace newasm
             newasm::header::col::red <<
             " >> " <<
             newasm::header::col::gray <<
-            newasm::header::data::lastln << 
+            newasm::header::data::LastLine->raw << 
             std::endl;
 
             std::cout << newasm::header::col::reset;
@@ -7807,25 +7800,27 @@ namespace newasm
         newasm::header::data::struct_now = false;
         return;
     }
-    inline int procline(newasm::compiler::lineData& line)
+    
+    inline int procline(std::string& line)
     {
-        //std::cout << "WHAT THE FUCK :: PROCESSING -> " << line.raw << std::endl;
-        //std::cout << "\t\t\t LINE TYPE -> " << line.type << std::endl;
-        #if 0
-        std::cout << "\t\t\t";
-        for(int i = 0; i < line.tokens.size(); ++i)
-        {
-            std::cout << line.tokens.at(i);
-        }
-        std::cout << std::endl;
-        std::cout << "\t\t\t" << line.other << std::endl;
-        #endif
-        //if(!newasm::global::event_now)
-        if(newasm::system::terminated)
-        {
-            return 1;
-        }
+        auto JIT_COMPILED = newasm::compiler::DO(line);
+        newasm::procline(JIT_COMPILED);
+        return 1;
+    }
 
+    inline int procline(const char* line)
+    {
+        std::string buf(line);
+        newasm::procline(buf);
+        return 1;
+    }
+
+    inline int procline(newasm::execBytecode& line)
+    {
+        if(
+            newasm::system::terminated and
+            !newasm::events::exitNow
+        ) return 1;
         if constexpr(0)
         {
             std::cout << std::endl;
@@ -7996,7 +7991,7 @@ namespace newasm
                         break;
                     }
                     auto& lll = newasm::LambdaDispatch::ThreadSafePtr->contents.at(newasm::LambdaDispatch::ThreadSafePtr->idx);
-                    newasm::header::data::lastln = lll.raw;
+                    newasm::header::data::LastLine = &lll;
                     newasm::procline(lll);
                     newasm::LambdaDispatch::ThreadSafePtr->idx++;
                 }
@@ -8303,18 +8298,7 @@ namespace newasm
         newasm::terminate(newasm::exit_codes::invalid_syntax);
         return 0;
     }
-    ATTR_HOT inline int procline(std::string& line)
-    {
-        auto JIT_COMPILED = newasm::compiler::DO(line);
-        newasm::procline(JIT_COMPILED);
-        return 1;
-    }
-    ATTR_HOT inline int procline(const char* line)
-    {
-        std::string buf(line);
-        newasm::procline(buf);
-        return 1;
-    }
+  
     void analyzeline(std::string &line, int lineidx)
     {
         //using namespace std;
@@ -8347,21 +8331,7 @@ namespace newasm
         newasm::header::data::proc_now = true;
         newasm::system::processing_proc = ptr->proc->original_name;
         NewASM::CurrentProcA = ptr;
-        #if 0
-        for(auto& line : it->second)
-        {
-            if(newasm::system::stoproc == 1)
-            {
-                newasm::system::stoproc = 0;
-                newasm::header::data::proc_now = false;
-                break;
-            }
-            newasm::header::data::lastln = line.raw;
-            //auto JIT_COMPILED = newasm::compiler::DO(line);
-            newasm::procline(line);
-            //std::cout << "Executed : " << line << std::endl;
-        }
-        #endif
+      
         ptr->proc->idx = 0;
         auto& proc_contents = ptr->proc->contents;
         while(true)//for(int i = 0; i < proc_contents.size(); ++i)
@@ -8379,7 +8349,7 @@ namespace newasm
             {
                 break;
             }
-            newasm::header::data::lastln = proc_contents.at(ptr->proc->idx).raw;
+            newasm::header::data::LastLine = &proc_contents.at(ptr->proc->idx);
             newasm::procline(proc_contents.at(ptr->proc->idx));
             ptr->proc->idx++;
         }
@@ -8450,42 +8420,6 @@ namespace newasm
                 "`"_str
             );
         }
-        return 0;
-    }
-    int executechild()
-    {
-        if(true)
-        {
-            return 0;
-        }
-        #ifdef _______s
-        std::ifstream internal_fileobject(/*newasm::header::constants::scripts_folder + */newasm::header::execution_flow::file);
-        if(internal_fileobject.is_open())
-        {
-            std::string line;
-            int lineidx = 1;
-
-            while(std::getline(internal_fileobject, line))
-            {
-                if(newasm::system::terminated)
-                {
-                    newasm::header::execution_flow::exec_redirected = false;
-                    newasm::execute(newasm::header::settings::script_file, newasm::header::execution_flow::entry_start_line, 1);
-                    break;
-                }
-
-                newasm::header::data::lastln = line;
-                newasm::header::data::lastlndx = lineidx;
-                newasm::procline(line);
-                lineidx++;
-            }
-            internal_fileobject.close();
-            newasm::header::execution_flow::exec_redirected = false;
-            newasm::execute(newasm::header::settings::script_file, newasm::header::execution_flow::entry_start_line, 1);
-            return 1;
-        }
-        #endif
-        //else
         return 0;
     }
 
@@ -8575,39 +8509,28 @@ namespace newasm
         newasm::perf::inputWasteTimer.clear();
         newasm::perf::heavyHostServices.clear();
 
-        while(!(newasm::mem::regs::lcx.get_value() == newasm::compiler::compiledCode.size()))
+        auto size = newasm::compiler::compiledCode.size();
+
+        while(!(newasm::mem::regs::lcx.get_value() == size))
         {
             if(newasm::system::terminated)
             {
-                //__newasmDBG
-                //std::cout << "\nREAL_LINE: " << NewASM::ExceptionHandling::Line->raw << std::endl;
-                //std::cout << "THIS HAPPENED WHIGGAZ" << std::endl;
                 break;
             }
 
-            if(newasm::mem::regs::lcx.get_value() == newasm::compiler::compiledCode.size())
+            if(newasm::mem::regs::lcx.get_value() == size)
             {
-                //std::cout << "\nREAL_LINE: " << NewASM::ExceptionHandling::Line->raw << std::endl;
-                // prevent crash.
-                //std::cout << "THIS ACTUALLY HAPPENED WHIGGAZ" << std::endl;
                 break;
             }
 
-            newasm::header::data::lastln = newasm::compiler::compiledCode.at(newasm::mem::regs::lcx.get_value()).raw;
-            
+            auto& ll = newasm::compiler::compiledCode.at(newasm::mem::regs::lcx.get_value());
+
+            newasm::header::data::LastLine = &ll;
             newasm::header::data::lastlndx = newasm::mem::regs::lcx.get_value();
-    
-            //newasm::proclineUncompiled(newasm::mem::COD.at(newasm::mem::regs::lcx.get_value()));
-            
+                
             try
             {
-                newasm::procline(newasm::compiler::compiledCode.at(newasm::mem::regs::lcx.get_value()));
-                #if 0
-                if(newasm::mem::regs::lcx.get_value() == newasm::compiler::compiledCode.size() - 1)
-                {
-                    exec_exit_handle();
-                }
-                #endif
+                newasm::procline(ll);
             }
             catch(const std::exception& e)
             {
@@ -8620,10 +8543,17 @@ namespace newasm
             if(newasm::code_stream::jump)
             {
                 newasm::code_stream::jump = 0;
-                newasm::mem::regs::lcx.set_value(newasm::code_stream::jumpto - 1);
+                newasm::mem::regs::lcx.set_value(newasm::code_stream::jumpto);
             }
+            else newasm::mem::regs::lcx.set_value(newasm::mem::regs::lcx.get_value() + 1);
+        }
 
-            newasm::mem::regs::lcx.set_value(newasm::mem::regs::lcx.get_value() + 1);
+        if(
+            newasm::system::terminated and
+            !newasm::header::data::exception
+        )
+        {
+            newasm::handle_exit();
         }
 
         if(!newasm::system::terminated)

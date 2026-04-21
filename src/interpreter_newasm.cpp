@@ -114,6 +114,14 @@ namespace newasm
         newasm::compiler::lineData* Line = nullptr;
     }
 
+    namespace header
+    {
+        namespace data
+        {
+            newasm::compiler::lineData* LastLine = nullptr;
+        }
+    }
+
     namespace Namespaces
     {
         constinit const short Construction = 1 << 2;
@@ -602,7 +610,7 @@ namespace newasm
     newasm::kernel::thread_safe<VarPtr> _this = nullptr;
     
     int procline(newasm::compiler::lineData& line);
-    int procline(std::string& text);
+    int procline(std::string& line);
     int procline(const char* line);
 
     typedef void (TokenizeFunc)(std::string str);
