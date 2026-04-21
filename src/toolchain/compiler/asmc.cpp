@@ -244,6 +244,10 @@ namespace newasm
                 if(n.first)
                 {
                     mode.argString2 = n.second.first;
+                    if(mode.argString2 == THIS_STR)
+                    {
+                        mode.UsingThisPtr = true;
+                    }
                     mode.argString = n.second.second;
                     if(NewASM::header::functions::isnumeric(mode.argString))
                     {

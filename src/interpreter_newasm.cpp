@@ -474,6 +474,9 @@ namespace newasm
             char argChar = 0;
             string argString = "";
             string argString2 = "";
+
+            //config
+            bool UsingThisPtr = false;
         };
 
         struct lineData final

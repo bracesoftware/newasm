@@ -2605,6 +2605,9 @@ jmp e2349083l
     @safe
     float lol: 4.6
     intg ramdagadam : 47
+    ./interesting
+        tuple lmao: ("hello", 32, 5.3, 23, "this is insane", "lmao")
+    ./!interesting
 .text
     ;fetch lol ; crash, lol is labelled as @safe
     thread interesting -> {
@@ -2616,6 +2619,10 @@ jmp e2349083l
     }
     fetch ramdagadam
     await &interesting
+
+    fetch interesting::lmao
+    mov tlr, this(4)
+    call std::ios::writeln
 ; -------------------------- END OF PROGRAM -------------------------- ;
     zero rax
     mov rax, 223 ; exit code

@@ -778,153 +778,141 @@ namespace newasm
 						//std::cout << "IF TUPLE x2 << " << suf << "\n";
 						std::string& suf = s;
 						
-						auto tupleName = mode.argString2;
+						std::string tupleName;
+						VarPtr TupleOrContext = nullptr;
+						
 						auto tupleIndex = mode.argString;
 						auto& tupleOrContextName = tupleName;
 						auto& tupleOrContextIndex = tupleIndex;
 
-						auto i = newasm::header::functions::parseNamespaceSegments(tupleName);
-						if(i.first)
+						if(mode.UsingThisPtr)
 						{
-							std::string symbol_name = i.second.back();
-							auto vec = i.second;
-							vec.pop_back(); // namespace list
-							
-							tupleName = newasm::header::functions::mangleName(vec, symbol_name);
-						}
-						auto k = mode.argType == newasm::datatypes::symbol_name;
-						if(k) parse(tupleIndex);
-						bool indexNumeric = k ? newasm::header::functions::isnumeric(tupleOrContextIndex) : (mode.argType == newasm::datatypes::number);
-						if(!indexNumeric)
-						{
-							suf = newasm::header::constants::inv_reg_val;
-							bool indexText = k ? newasm::header::functions::istext(tupleOrContextIndex) : (mode.argType == newasm::datatypes::text);
-							if(indexText)
+							TupleOrContext = newasm::_this;
+							if(TupleOrContext == nullptr)
 							{
-								//newasm::header::functions::err("tupleOrContextName: `" + tupleOrContextName + "`");
-								//newasm::header::functions::err("tupleOrContextIndex: `" + tupleOrContextIndex + "`");
-								bool validContext = true;
-								auto it = newasm::variables::ids.find(tupleOrContextName);
-								if(it == newasm::variables::ids.end())
-								{
-									validContext = false;
-									newasm::terminate(newasm::exit_codes::invalid_memacc);
-									return;
-								}
-								if(it->second.type != newasm::datatypes::mycontext)
-								{
-									validContext = false;
-									newasm::terminate(newasm::exit_codes::invalid_memacc);
-									return;
-								}
-								if(!validContext)
-								{
-									newasm::terminate(newasm::exit_codes::invalid_memacc);
-									return;
-								}
-
-								tupleOrContextIndex = k ? newasm::header::functions::remq(tupleOrContextIndex) : tupleOrContextIndex;
-								int idx = newasm::header::functions::getIndex<std::string>(it->second.context->keys, tupleOrContextIndex);
-								#if 0
-								if(idx != (-1))
-								{
-									newasm::header::functions::wrn("Found key: `" + tupleOrContextIndex + "` at idx " + std::to_string(idx) + ", it->second.context->keys.at(idx): `" + it->second.context->keys.at(idx) + "`");
-								}
-								#endif
-								if(idx == (-1))
-								{
-									newasm::terminate(newasm::exit_codes::invalid_memacc);
-									return;
-								}
-
-								if(it->second.context->type[idx] == newasm::datatypes::number)
-								{
-									suf = std::to_string(newasm::hardware::randAccessMem.peek<int>(it->second.context->addr[idx]));
-								}
-								if(it->second.context->type[idx] == newasm::datatypes::decimal)
-								{
-									suf = std::to_string(newasm::hardware::randAccessMem.peek<float>(it->second.context->addr[idx]));
-								}
-								if(it->second.context->type[idx] == newasm::datatypes::character)
-								{
-									std::string buf(1, newasm::hardware::randAccessMem.peek<char>(it->second.context->addr[idx]));
-									suf = "'"; suf += buf; suf += "'";
-								}
-								if(it->second.context->type[idx] == newasm::datatypes::text)
-								{
-									std::string buf = newasm::hardware::randAccessMem.peek<std::string>(it->second.context->addr[idx]);
-									suf = "\""; suf += buf; suf += "\"";
-								}
+								newasm::terminate(newasm::exit_codes::invalid_memacc);
 								return;
 							}
 						}
-
-						bool validTuple = true;
-						auto it = newasm::variables::ids.find(tupleName);
-						if(it == newasm::variables::ids.end())
+						else if(!mode.UsingThisPtr)
 						{
-							validTuple = false;
-							newasm::terminate(newasm::exit_codes::invalid_memacc);
-							return;
+							tupleName = mode.argString2;
+							auto i = newasm::header::functions::parseNamespaceSegments(tupleName);
+							if(i.first)
+							{
+								std::string symbol_name = i.second.back();
+								auto vec = i.second;
+								vec.pop_back(); // namespace list
+								
+								tupleName = newasm::header::functions::mangleName(vec, symbol_name);
+							}
+							auto it = newasm::variables::ids.find(tupleName);
+							if(it == newasm::variables::ids.end())
+							{
+								newasm::terminate(newasm::exit_codes::invalid_memacc);
+								return;
+							}
+							TupleOrContext = &it->second;
 						}
-						if(it->second.type != newasm::datatypes::tuple)
+						auto k = (mode.argType == newasm::datatypes::symbol_name);
+						if(k) parse(tupleIndex);
+						bool indexText = k ? newasm::header::functions::istext(tupleOrContextIndex) : (mode.argType == newasm::datatypes::text);
+						bool indexNumeric = k ? newasm::header::functions::isnumeric(tupleOrContextIndex) : (mode.argType == newasm::datatypes::number);
+						//definitely a context/map
+						if(!indexNumeric && indexText)
 						{
-							validTuple = false;
-							newasm::terminate(newasm::exit_codes::invalid_memacc);
-							return;
-						}
-						if(!validTuple)
-						{
-							newasm::terminate(newasm::exit_codes::invalid_memacc);
-							return;
-						}
-						if(validTuple && indexNumeric)
-						{
-							int index = k ? std::stoi(tupleIndex) : mode.argInt;
-							if(index >= it->second.tuple->addr.size() || index < 0)
+							if(TupleOrContext->type != newasm::datatypes::mycontext)
 							{
 								newasm::terminate(newasm::exit_codes::seg_fault);
 								return;
 							}
-							if(it->second.tuple->type[index] == newasm::datatypes::number)
+
+							tupleOrContextIndex = k ? newasm::header::functions::remq(tupleOrContextIndex) : tupleOrContextIndex;
+							int idx = newasm::header::functions::getIndex<std::string>(TupleOrContext->context->keys, tupleOrContextIndex);
+			
+							if(idx == (-1))
 							{
-								if(it->second.locked)
+								newasm::terminate(newasm::exit_codes::seg_fault);
+								return;
+							}
+
+							if(TupleOrContext->context->type[idx] == newasm::datatypes::number)
+							{
+								suf = std::to_string(newasm::hardware::randAccessMem.peek<int>(TupleOrContext->context->addr[idx]));
+							}
+							else if(TupleOrContext->context->type[idx] == newasm::datatypes::decimal)
+							{
+								suf = std::to_string(newasm::hardware::randAccessMem.peek<float>(TupleOrContext->context->addr[idx]));
+							}
+							else if(TupleOrContext->context->type[idx] == newasm::datatypes::character)
+							{
+								std::string buf(1, newasm::hardware::randAccessMem.peek<char>(TupleOrContext->context->addr[idx]));
+								suf = "'"; suf += buf; suf += "'";
+							}
+							else if(TupleOrContext->context->type[idx] == newasm::datatypes::text)
+							{
+								std::string buf = newasm::hardware::randAccessMem.peek<std::string>(TupleOrContext->context->addr[idx]);
+								suf = "\""; suf += buf; suf += "\"";
+							}
+							return;
+						}
+						//then it is definitely a tuple
+						if(indexNumeric && !indexText)
+						{
+							if(TupleOrContext->type != newasm::datatypes::tuple)
+							{
+								newasm::terminate(newasm::exit_codes::seg_fault);
+								return;
+							}
+							int index = k ? std::stoi(tupleIndex) : mode.argInt;
+							if(index >= TupleOrContext->tuple->addr.size() || index < 0)
+							{
+								newasm::terminate(newasm::exit_codes::seg_fault);
+								return;
+							}
+							
+							if(TupleOrContext->tuple->type[index] == newasm::datatypes::number)
+							{
+								if(TupleOrContext->locked)
 								{
 									suf = "0";
 									return;
 								}
-								suf = std::to_string(newasm::hardware::randAccessMem.peek<int>(it->second.tuple->addr[index]));
+								suf = std::to_string(newasm::hardware::randAccessMem.peek<int>(TupleOrContext->tuple->addr[index]));
+								return;
 							}
-							if(it->second.tuple->type[index] == newasm::datatypes::decimal)
+							else if(TupleOrContext->tuple->type[index] == newasm::datatypes::decimal)
 							{
-								if(it->second.locked)
+								if(TupleOrContext->locked)
 								{
 									suf = "0.0";
 									return;
 								}
-								suf = std::to_string(newasm::hardware::randAccessMem.peek<float>(it->second.tuple->addr[index]));
+								suf = std::to_string(newasm::hardware::randAccessMem.peek<float>(TupleOrContext->tuple->addr[index]));
 							}
-							if(it->second.tuple->type[index] == newasm::datatypes::character)
+							else if(TupleOrContext->tuple->type[index] == newasm::datatypes::character)
 							{
-								if(it->second.locked)
+								if(TupleOrContext->locked)
 								{
 									suf = "'?'";
 									return;
 								}
-								std::string buf(1, newasm::hardware::randAccessMem.peek<char>(it->second.tuple->addr[index]));
+								std::string buf(1, newasm::hardware::randAccessMem.peek<char>(TupleOrContext->tuple->addr[index]));
 								suf = "'"; suf += buf; suf += "'";
 							}
-							if(it->second.tuple->type[index] == newasm::datatypes::text)
+							else if(TupleOrContext->tuple->type[index] == newasm::datatypes::text)
 							{
-								if(it->second.locked)
+								if(TupleOrContext->locked)
 								{
 									suf = "\"unknown??\"";
 									return;
 								}
-								std::string buf = newasm::hardware::randAccessMem.peek<std::string>(it->second.tuple->addr[index]);
+								std::string buf = newasm::hardware::randAccessMem.peek<std::string>(TupleOrContext->tuple->addr[index]);
 								suf = "\""; suf += buf; suf += "\"";
 							}
+							return;
 						}
+						newasm::terminate(newasm::exit_codes::dtyp_mismatch);
 						return;
 					}
 				}
