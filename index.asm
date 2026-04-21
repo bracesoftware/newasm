@@ -7,7 +7,7 @@ fi
     string PrintThisLaterLol: "Test string"
     intg len2 : $ - PrintThisLaterLol
 .start
-p
+
     align 3
     int 0x4
     ;cls
@@ -2618,6 +2618,10 @@ jmp e2349083l
         nop
         loop rax, f
     }
+    mov rax, 5
+    :kkkkkk
+    nop
+    loop rax, kkkkkk
     fetch ramdagadam
     await &interesting
 
