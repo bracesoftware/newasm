@@ -48,11 +48,13 @@ namespace newasm
                 inline constinit const int CONST__ = 1 << 0;
                 inline constinit const int STATIC__ = 1 << 1;
                 inline constinit const int MANGLE__ = 1 << 2;
+                inline constinit const int SAFE__ = 1 << 3;
 
                 inline const std::unordered_map<std::string, int> ids = {
                     {"final", CONST__},
                     {"static", STATIC__},
-                    {"mangle", MANGLE__}
+                    {"mangle", MANGLE__},
+                    {"safe", SAFE__}
                 };
             }
             const int load = 1;//

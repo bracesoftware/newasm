@@ -29,13 +29,235 @@ namespace newasm
 			{
 				switch(mode.type)
 				{
+					case newasm::runtime::evalModes::thisDeref: [[likely]]
+					{
+						if(newasm::_this == nullptr) [[unlikely]]
+						{
+							newasm::terminate(newasm::exit_codes::invalid_memacc);
+							return;
+						}
+						auto& i = *((newasm::variables::varData*)newasm::_this); //newasm::_this is a thread-safe wrapper so i need to de-ref it twice to access it as a raw ptr
+						auto& suf = s;
+						if(i.type == newasm::datatypes::number)
+						{
+							if(i.locked)
+							{
+								suf = std::to_string(0);
+								return;
+							}
+							suf = std::to_string(newasm::hardware::randAccessMem.peek<int>(i.addr));
+							return;
+						}
+						if(i.type == newasm::datatypes::decimal)
+						{
+							if(i.locked)
+							{
+								suf = std::to_string(0.0);
+								return;
+							}
+							suf = std::to_string(newasm::hardware::randAccessMem.peek<float>(i.addr));
+							return;
+						}
+						if(i.type == newasm::datatypes::character)
+						{
+							if(i.locked)
+							{
+								suf = ("'?'");
+								return;
+							}
+							std::string buf(1, newasm::hardware::randAccessMem.peek<char>(i.addr));
+							suf = "'"; suf += buf; suf += "'";
+							return;
+						}
+						if(i.type == newasm::datatypes::text)
+						{
+							if(i.locked)
+							{
+								suf = "\"unknown??\"";
+								return;
+							}
+							suf = "\"";
+							suf += newasm::hardware::randAccessMem.peek<std::string>(i.addr);
+							suf += "\"";
+							return;
+						}
+						if(i.type == newasm::datatypes::yunion)
+						{
+							if(i.locked)
+							{
+								if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::num)
+								{
+									suf = std::to_string(0);
+									return;
+								}
+								if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::decm)
+								{
+									suf = std::to_string(0.0);
+									return;
+								}
+								if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::char__)
+								{
+									suf = "'?'";
+									return;
+								}
+								if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::txt)
+								{
+									suf = "\"unknown??\"";
+									return;
+								}
+								return;
+							}
+
+							if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::num)
+							{
+								suf = std::to_string(newasm::hardware::randAccessMem.peek<int>(i.yunion->addr));
+								return;
+							}
+							if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::decm)
+							{
+								suf = std::to_string(newasm::hardware::randAccessMem.peek<float>(i.yunion->addr));
+								return;
+							}
+							if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::char__)
+							{
+								std::string buf(1, newasm::hardware::randAccessMem.peek<char>(i.yunion->addr));
+								suf = "'"; suf += buf; suf += "'";
+								return;
+							}
+							if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::txt)
+							{
+								suf = '"' + newasm::hardware::randAccessMem.peek<std::string>(i.yunion->addr) + '"';
+								return;
+							}
+							return;
+						}
+						//tuples and contexts
+						//TUPLES
+						if(i.type == newasm::datatypes::tuple)
+						{
+							std::vector<std::string> contents;
+							std::string temp, parsed_contents;
+							auto tuple_size = int(i.tuple->addr.size());
+							for(int k = 0; k < tuple_size; ++k)
+							{
+								if(i.tuple->type[k] == newasm::datatypes::number)
+								{
+									temp = std::to_string(newasm::hardware::randAccessMem.peek<int>(i.tuple->addr[k]));
+									contents.push_back(temp);
+									continue;
+								}
+								if(i.tuple->type[k] == newasm::datatypes::decimal)
+								{
+									temp = std::to_string(newasm::hardware::randAccessMem.peek<float>(i.tuple->addr[k]));
+									contents.push_back(temp);
+									continue;
+								}
+								if(i.tuple->type[k] == newasm::datatypes::character)
+								{
+									std::string buf(1, newasm::hardware::randAccessMem.peek<char>(i.tuple->addr[k]));
+									temp = "'";
+									temp += buf;
+									temp += "'";
+									contents.push_back(temp);
+									continue;
+								}
+								if(i.tuple->type[k] == newasm::datatypes::text)
+								{
+									std::string buf = (newasm::hardware::randAccessMem.peek<std::string>(i.tuple->addr[k]));
+									temp = "\"";
+									temp += buf;
+									temp += "\"";
+									contents.push_back(temp);
+									continue;
+								}
+							}
+							temp.clear();
+							parsed_contents = "(";
+							for(int k = 0; k < tuple_size; ++k)
+							{
+								temp = contents.at(k);
+								parsed_contents.append(temp);
+								if(k + 1 != tuple_size)
+								{
+									parsed_contents.append(",");
+								}
+								if(k + 1 == tuple_size)
+								{
+									parsed_contents.append(")");
+								}
+							}
+							suf = parsed_contents;
+							return;
+						}
+						/////////////CONTEXTDS
+						if(i.type == newasm::datatypes::mycontext)
+						{
+							std::vector<std::string> contents;
+							std::string temp, parsed_contents;
+							
+							int context_size = i.context->addr.size();
+
+							for(int idx = 0; idx < context_size; ++idx)
+							{
+								temp.clear();
+								temp.append("\"" + i.context->keys[idx] + "\":");
+								if(i.context->type[idx] == newasm::datatypes::number)
+								{
+									temp.append(std::to_string(newasm::hardware::randAccessMem.peek<int>(i.context->addr[idx])));
+									contents.push_back(temp);
+									continue;
+								}
+								if(i.context->type[idx] == newasm::datatypes::decimal)
+								{
+									temp.append(std::to_string(newasm::hardware::randAccessMem.peek<float>(i.context->addr[idx])));
+									contents.push_back(temp);
+									continue;
+								}
+								if(i.context->type[idx] == newasm::datatypes::character)
+								{
+									std::string buf(1, (newasm::hardware::randAccessMem.peek<char>(i.context->addr[idx])));
+									temp.append("'" + buf + "'");
+									contents.push_back(temp);
+									continue;
+								}
+								if(i.context->type[idx] == newasm::datatypes::text)
+								{
+									std::string buf = newasm::hardware::randAccessMem.peek<std::string>(i.context->addr[idx]);
+									temp.append("\"" + buf + "\"");
+									contents.push_back(temp);
+									continue;
+								}
+							}
+
+							temp.clear();
+							parsed_contents.clear();
+							parsed_contents = "(";
+							for(int u = 0; u < context_size; ++u)
+							{
+								temp = contents.at(u);
+								parsed_contents.append(temp);
+								if(u + 1 != context_size)
+								{
+									parsed_contents.append(",");
+								}
+								if(u + 1 == context_size)
+								{
+									parsed_contents.append(")");
+								}
+							}
+							suf = parsed_contents;
+							return;
+						}
+						newasm::terminate(newasm::exit_codes::seg_fault);
+						return;
+					}
 					case newasm::runtime::evalModes::sizeOf:
 					{
 						int size = newasm::header::functions::issizeof(s).second;
 						s = std::to_string(size);
 						return;
 					}
-					case newasm::runtime::evalModes::regDeref:
+					case newasm::runtime::evalModes::regDeref: [[likely]]
 					{
 						newasm::header::functions::parseRegDeref__2(s, mode.argInt);
 						return;
@@ -45,9 +267,9 @@ namespace newasm
 						newasm::header::functions::parseAddressOf(s);
 						return;
 					}
-					case newasm::runtime::evalModes::valueOf: //primitive types and unions,and whole tuples/contexts
+					case newasm::runtime::evalModes::valueOf: [[likely]] //primitive types and unions,and whole tuples/contexts
 					{
-						auto parseFromRAM = [](std::string& suf) -> void {
+						auto parseFromRAM = <::>(std::string& suf) -> void {
 							if(newasm::variables::ids.find(suf) != newasm::variables::ids.end())
 							{
 								auto i = newasm::variables::ids.at(suf);

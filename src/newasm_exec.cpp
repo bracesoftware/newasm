@@ -2618,6 +2618,12 @@ namespace newasm
                 newloc.transient__ = oldloc.transient__;
                 newloc.attrib = oldloc.attrib;
 
+                oldloc.deleted = true;
+                if((*newasm::_this)->deleted)
+                {
+                    newasm::_this = nullptr; //get rid of the pointer
+                }
+
                 //std::cout << "tryn to delete: `" << opr << "`\n";
                 newasm::variables::ids.erase(opr);
                 return 1;
@@ -2643,6 +2649,7 @@ namespace newasm
 
                 if(lineInfo.whatAreRegistersLol == INVALID_INS)
                 {
+                    NewASM::variables::varData* ptr = nullptr;
                     if(lineInfo.priArgType != newasm::datatypes::ThisPtr)
                     {
                         newasm::runtime::functions::parse(suf); // for namespaces
@@ -2653,6 +2660,7 @@ namespace newasm
                             newasm::terminate(newasm::exit_codes::invalid_memacc);
                             return 1;
                         }
+                        ptr = &newasm::variables::ids.at(suf);
                     }
                     else if(lineInfo.priArgType == newasm::datatypes::ThisPtr)
                     {
@@ -2674,17 +2682,10 @@ namespace newasm
                             newasm::terminate(newasm::exit_codes::seg_fault);
                             return 1;
                         }
-                    }
 
-                    NewASM::variables::varData* ptr = nullptr;
-                    if(lineInfo.priArgType != newasm::datatypes::ThisPtr)
-                    {
-                        ptr = &newasm::variables::ids.at(suf);
-                    }
-                    else if(lineInfo.priArgType == newasm::datatypes::ThisPtr)
-                    {
                         ptr = newasm::_this;
                     }
+
                     auto& i = *ptr;
                     if(i.attrib & newasm::core::lang_inf::attributes::CONST__) [[unlikely]]
                     {
@@ -3942,6 +3943,11 @@ namespace newasm
             }
             case newasm::core::lang_inf::fetch__:
             {
+                if(lineInfo.priArgType == NewASM::datatypes::NIL)
+                {
+                    newasm::_this = nullptr;
+                    return 1;
+                }
                 newasm::runtime::functions::parse<true>(suf);
                 auto it = newasm::variables::ids.find(suf);
                 if(it == newasm::variables::ids.end())
@@ -3958,7 +3964,33 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::seg_fault);
                     return 1;
                 }
-                newasm::_this = &it->second;
+                
+                VarPtr ptr = &it->second;
+
+                if(ptr->attrib & newasm::core::lang_inf::attributes::SAFE__) [[unlikely]]
+                {
+                    newasm::terminate(newasm::exit_codes::seg_fault);
+                    return 1;
+                }
+
+                if(newasm::header::data::ActiveThreads != 0)
+                {
+                    if(newasm::thread_line) if(ptr->type != newasm::datatypes::proc) if(
+                        newasm::_this.getMainThreadValue() == ptr or
+                        newasm::_this.isValueUsedAmongThreads(ptr)
+                    ) [[unlikely]]
+                    {
+                        //for await
+                        //thread channel deadlock cuz it is unsafe to point to same var in multiple threads
+                        newasm::threads::memory.at(newasm::threads::now)->paused = true;
+                        return 1;
+                    }
+                    else if(!newasm::thread_line) if(newasm::_this.isValueUsedAmongThreads(ptr)) [[unlikely]]
+                    {
+                        newasm::terminate(newasm::exit_codes::seg_fault);
+                    }
+                }
+                newasm::_this = ptr;
                 return 1;
             }
             //LOAD.adr/ref
@@ -5570,6 +5602,7 @@ namespace newasm
                         auto& mmap = it->second;
                         if(mmap->returned)
                         {
+                            newasm::_this.setThreadValue(thread__, nullptr);
                             break;
                         }
                         if(mmap->contents.empty())
@@ -5607,6 +5640,7 @@ namespace newasm
                 catch(const std::exception& e)
                 {
                     std::cerr << "Zajebucnuo si se thred->lmao :: " << thread__ << " -----> " << e.what() << '\n';
+                    std::cout << "last line --> " << newasm::real_line << std::endl;
                 }
                 
                 return 1;
@@ -5614,39 +5648,6 @@ namespace newasm
             //int
             case newasm::core::lang_inf::int__:
             {
-                #if 0
-                if(lineInfo.priInt == 1) // sys_memsize
-                {
-                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr))
-                    {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                        return 1;
-                    }
-                    //std::cout << "`sys_memsize` is deprecated.\n" << std::flush;
-                    newasm::header::functions::wrn("0x1 system interrupt is deprecated.");
-                    return 1;
-                }
-                if(lineInfo.priInt == 2) // sys_lazy_evhndlr
-                {
-                    if(!newasm::header::functions::isnumeric(newasm::mem::regs::tlr))
-                    {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                        return 1;
-                    }
-                    if(std::stoi(newasm::mem::regs::tlr) == 0)
-                    {
-                        newasm::header::settings::lazy_evhndlr = false;
-                        return 1;
-                    }
-                    if(std::stoi(newasm::mem::regs::tlr) == 1)
-                    {
-                        newasm::header::settings::lazy_evhndlr = true;
-                        return 1;
-                    }
-                    newasm::terminate(newasm::exit_codes::invalid_syntax);
-                    return 1;
-                }
-                #endif
                 switch(lineInfo.priInt)
                 {
                     case 3:
@@ -8026,8 +8027,7 @@ namespace newasm
         {
             if(newasm::events::current == newasm::events::exitId)
             {
-                int address = newasm::hardware::randAccessMem.write<std::string>(line.raw);
-                newasm::events::exitHandler.addr.push_back(address);
+                newasm::events::exitHandler.GetBytecode.push_back(line);
                 return 1;
             }
         }
@@ -8484,24 +8484,22 @@ namespace newasm
         return 0;
     }
 
-    // in order to make a good exit handler,
-    //we need to use our own memory allocator
-    //instead of C++ STL's BS
     inline void handle_exit()
     {
+        //std::cout << "newasm::events::exitHandler.GetBytecode.size() -> " << newasm::events::exitHandler.GetBytecode.size() << std::endl;
+        //std::cout << "newasm::exit_handled -> " << newasm::exit_handled << std::endl;
         if(newasm::exit_handled)
         {
+            newasm::header::functions::err("Exit handler called again.");
             return;
         }
         newasm::exit_handled = true;
         newasm::perf::heavyHostServices.start();
 
-        std::string line;
         newasm::events::exitNow = true;
-        for(int i = 0; i < newasm::events::exitHandler.addr.size(); ++i)
+        for(int i = 0; i < newasm::events::exitHandler.GetBytecode.size(); ++i)
         {
-            line = newasm::RAM->peek<std::string>(newasm::events::exitHandler.addr.at(i));
-            newasm::procline(line);
+            newasm::procline(newasm::events::exitHandler.GetBytecode.at(i));
         }
         newasm::events::exitNow = false;
         newasm::perf::heavyHostServices.stop();
@@ -9079,6 +9077,7 @@ namespace newasm
             //if(0) newasm::threads::memory.at(*i)->prepare_sys();
             if(mmap->returned)
             {
+                //newasm::_this.setThreadValue(i, nullptr);
                 continue;
             }
             if(mmap->contents.empty())

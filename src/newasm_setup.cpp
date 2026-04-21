@@ -80,7 +80,7 @@ namespace newasm
         const int channel_deadlock = 53;
         const int invalid_alloc = 54;
         const int invalid_init = 55;
-        //const int linker_err = 56;
+        const int dangling_this = 56;
         const int jit_fail = 57;
         const int kernel_panic = 58;
         const int immovable_type = 59;
@@ -142,7 +142,7 @@ namespace newasm
             {channel_deadlock, "ThreadChannelDeadlock"},
             {invalid_alloc, "InvalidAlloc"},
             {invalid_init, "InvalidVarInitializer"},
-            //{linker_err, "LinkerError"},
+            {dangling_this, "DanglingThisPointer"},
             {jit_fail, "JITCompilerFailure"},
             {kernel_panic, "KernelPanicOrSysCrash"},
             {immovable_type, "ImmovableType"}

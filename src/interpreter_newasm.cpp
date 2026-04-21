@@ -10,6 +10,7 @@
 #pragma GCC diagnostic ignored "-Wunused-result" // used gcc for ts
 #pragma unroll
 
+#define NEWASM_DBG_SOURCE_LOC false
 #define NEWASM_DEBUG 0
 namespace newasm
 {
@@ -157,6 +158,7 @@ namespace newasm
             threadData* thrd = nullptr;
             eventData* event = nullptr;
             staticObjectData* obj = nullptr;
+            bool deleted = false;
 
             //decorator data
             bool locked = false;
@@ -230,6 +232,7 @@ namespace newasm
             const short environmentVariable = 6;//-> check */ at the front of a string
             const short valueOf = 7;
             const short sizeOf = 8;
+            const short thisDeref = 9; //*this
         }
     }
 
@@ -896,7 +899,7 @@ namespace newasm
         int current = INVALID_INS;
         struct Handler final
         {
-            std::vector<int> addr;
+            std::vector<newasm::compiler::lineData> GetBytecode;
         };
         //exit event
         newasm::events::Handler exitHandler;
@@ -1124,7 +1127,7 @@ namespace newasm
 
             newasm::compiler::caseJumpTable.clear();
 
-            newasm::events::exitHandler.addr.clear();
+            newasm::events::exitHandler.GetBytecode.clear();
 
             newasm::mem::instructions.clear();
             newasm::flags::loaded_std = false;

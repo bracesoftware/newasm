@@ -171,6 +171,23 @@ namespace newasm
                 return;
             }
 
+            inline T getMainThreadValue()
+            {
+                return value;
+            }
+
+            inline bool isValueUsedAmongThreads(T val)
+            {
+                for(auto i = thread_values.begin(); i != thread_values.end(); ++i)
+                {
+                    if(i->second == val)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
             ATTR_HOT inline thread_safe<T>& operator=(const T& new_val)
             {
                 get() = new_val;
@@ -398,7 +415,11 @@ namespace newasm
             }
             return this->value;
         }
-        FORCE_INLINE inline void set_value(const T& new_val)
+        FORCE_INLINE inline void set_value(const T& new_val
+            #if NEWASM_DBG_SOURCE_LOC == true
+            ,const std::source_location loc = std::source_location::current()
+            #endif
+        )
         {
             newasm::_std::scope_exit a([this]() {
                 this->log_change();
@@ -412,7 +433,14 @@ namespace newasm
                     {
                         if(newasm::thread_line)
                         {
-                            //std::cout << "THIS IS AN ERROR ! \n";
+                            #if NEWASM_DBG_SOURCE_LOC == true
+                            std::cout << "==========================================" << std::endl;
+                            std::cout << "File: " << loc.file_name() << std::endl;
+                            std::cout << "Line: " << std::to_string(loc.line()) << std::endl;
+                            std::cout << "Func: " << loc.function_name() << std::endl;
+                            std::cout << "==========================================" << std::endl;
+                            std::cout << "THIS IS AN ERROR ! \n";
+                            #endif
                             this->thread_values.at(newasm::threads::now) = 0;
                             return;
                         }

@@ -26,6 +26,7 @@ using "http"
 using "math"
 
 .start
+fetch std::ios::writeln ; set the this ptr
     jmp skiplol
     ./std
         ./lol
@@ -936,7 +937,7 @@ sysenter "ios"
 jmp shjfjsdhfj
     proc  __exit_proc
         mov tlr, "Hiiii"
-        call std::ios::writeln
+        call this
         db tlr
         mov   tlr , "exit proc called"
         mov   stl , 0c1
@@ -1377,7 +1378,7 @@ nop
     sysenter "ext"
     syscall
 
-    call std::ios::writeln
+    call this
     
 using "ios"
 .data
@@ -1929,10 +1930,10 @@ jmp kjhdfhdkjs
     stack
 :lol24332243
     mov tlr, 1
-    call std::ios::writeln
+    call this
 
     mov tlr, "Hello from stdlib"
-    call std::ios::writeln
+    call this
 
     push "Hello"
     pop nil
@@ -1952,7 +1953,7 @@ jmp kjhdfhdkjs
         movaddr &test::var, *hea
 
         mov tlr, test::var
-        call std::ios::writeln
+        call this
     free test::alloc
 
     ; free 4 ; error
@@ -1968,11 +1969,11 @@ jmp kjhdfhdkjs
 
     int 0x3
     mov tlr, "Hello from std again and again"
-    call std::ios::writeln
+    call this
     int 0x3
 
     mov tlr, * hea
-    call std::ios::writeln
+    call this
 
 	;mov tlr, ui::29042384_w
 
@@ -1985,7 +1986,7 @@ jmp kjhdfhdkjs
     movas intg
 
     mov tlr, myUnion
-    call std::ios::writeln
+    call this
 
     movas string
 
@@ -2008,16 +2009,16 @@ jmp kjhdfhdkjs
     
     syscall
     mov &random, *tlr
-    call std::ios::writeln
+    call this
 
     mov tlr, #myUnion
-    call std::ios::writeln
+    call this
 
     mov tlr, #student
-    call std::ios::writeln
+    call this
 
     mov tlr, #testTupleOh
-    call std::ios::writeln
+    call this
 
 .data
     string testStringBro: "Hello"
@@ -2030,22 +2031,22 @@ jmp kjhdfhdkjs
     intg alloc2: 0
 .start
     mov tlr, "Address test:"
-    call std::ios::writeln
+    call this
 
     mov tlr, #testStringBro
-    call std::ios::writeln
+    call this
 
     mov tlr, #myInt
-    call std::ios::writeln
+    call this
 
     mov tlr, #testStringBro2
-    call std::ios::writeln
+    call this
 
     mov tlr, #myInt2
-    call std::ios::writeln
+    call this
 
     mov tlr, "Malloc test"
-    call std::ios::writeln
+    call this
 
     malloc 55
     mov &alloc2, *rax
@@ -2053,14 +2054,14 @@ jmp kjhdfhdkjs
     mov imm, 1
     load 92873
     sel alloc2 ; select the shi
-    call std::ios::writeln
+    call this
     mov hea, [0]
     mov tlr, *hea
-    call std::ios::writeln
+    call this
     mov imm, 2
     load &myInt2
     mov tlr, myInt2
-    call std::ios::writeln
+    call this
     free alloc2
 
     movas intg
@@ -2071,7 +2072,7 @@ jmp kjhdfhdkjs
     pop &TetsSTR
 
     mov tlr, TetsSTR
-    call std::ios::writeln
+    call this
 .data
     ctx myContext: () ; beta feature
     ./test
@@ -2080,57 +2081,57 @@ jmp kjhdfhdkjs
 .start
     mov &myContext, ("key": 1.67, "key2": 843, "lmfao": "ja sam degen")
     mov tlr, myContext("key")
-    call std::ios::writeln
+    call this
     mov tlr, myContext("lmfao")
-    call std::ios::writeln
+    call this
 
     mov &myContext, ("hehe":98)
 
     mov tlr, myContext("hehe")
-    call std::ios::writeln
+    call this
 
     mov &test::myContext2, ("yay":"yay called!")
     mov tlr, test::myContext2("yay")
-    call std::ios::writeln
+    call this
 
     mov &test::myContext2, ()
 
     merge &test::myContext2, ("yay": 23)
 
     mov tlr, test::myContext2("yay")
-    call std::ios::writeln
+    call this
 
     merge &myContext, ("hehe" : nil, "kjdhf": "VEOMA KORISNA STVAR JBG") ; hehe will be deleted cuz we set it to nil
     mov tlr, myContext("kjdhf")
-    call std::ios::writeln
+    call this
 
     merge &myContext, ("hehe": 387) ; fix invalid memacc -> we give it a new value
     mov tlr, myContext("hehe") ; <- invalid memory access error 
-    call std::ios::writeln
+    call this
 
     merge &test::myContext2, ("test" : 243)
     mov tlr, test::myContext2("test")
-    call std::ios::writeln
+    call this
 
     merge &test::myContext2, ("test": "very cool")
     mov tlr, test::myContext2("test")
-    call std::ios::writeln
+    call this
 
     merge &test::myContext2, ("test": nil, "test": "very cool again") ; this should work again!
     mov tlr, test::myContext2("test")
-    call std::ios::writeln
+    call this
 .data
     [transient]
         intg mynum: 43
     [!transient]
 .start
     mov tlr, mynum
-    call std::ios::writeln
+    call this
 .data
     intg mynum2: 29843
 .start
     mov tlr, mynum ; will display 29843
-    call std::ios::writeln
+    call this
 
     ;idk
     mov tlr, "Hey"
@@ -2144,25 +2145,25 @@ link "testfile.asm" ; link a file
     sysenter "ctx"
     syscall
 
-    call std::ios::writeln
+    call this
 
     link "testfile3.asm"
     jmp hehe
     :lel__________
     mov tlr, "labele rade fino Allaha mi\n"
-    call std::ios::writeln
+    call this
     ;LMFAO TEST
 :hehe
 
     mov tlr, 38356
     mov stl, -25
     call std::math::iadd
-    call std::ios::writeln
+    call this
 
     mov tlr, 38356
     mov stl, -25
     call std::math::isub
-    call std::ios::writeln
+    call this
 .data
     ./hi
         intg age: 19
@@ -2175,16 +2176,16 @@ link "testfile.asm" ; link a file
     mov fdx, 4
     syscall
 
-    call std::ios::writeln
+    call this
 
     mov tlr, "\tHello my people!"
     call std::ios::write
     mov tlr, "I love newasm\a"
-    call std::ios::writeln
+    call this
     mov tlr, "I am cool"
-    call std::ios::writeln
+    call this
     mov tlr, "I am cool 2"
-    call std::ios::writeln
+    call this
 
 .data
     string testToPrint: "Hello World\n"
@@ -2206,11 +2207,11 @@ link "testfile.asm" ; link a file
     out 1
 
     mov tlr, "hello black world\n"
-    call std::ios::writeln
+    call this
     
     evt 'termination' -> { ; this will automatically append to the event, so different files can use it
         mov tlr, "\nHello guyz! \n This code is lowk insane\t!"
-        call std::ios::writeln
+        call this
     }
 ;jmp skipallthishsit
     ./lol
@@ -2225,7 +2226,7 @@ link "testfile.asm" ; link a file
         mov fdx, 1
         sysenter "ios"
         syscall
-        ;call std::ios::writeln
+        ;call this
         mov tlr, i__
         inc tlr
         mov &i__, *tlr
@@ -2237,19 +2238,19 @@ link "testfile.asm" ; link a file
     ./!tredz
 ;jmp dsfdsfdsdssdf
     mov tlr, "HERE\? IT CRASHES!!! 1"
-    call std::ios::writeln
+    call this
     sysreq & tredz::testThread -> thread
     mov tlr, "HERE IT CRASHES!!! 2"
-    call std::ios::writeln
+    call this
     sysreq &lol::writexd -> proc
     mov tlr, "HERE IT CRASHES!!! 3"
-    call std::ios::writeln
+    call this
     sysreq &std::ios::writeln -> proc
     mov tlr, "HERE IT CRASHES!!! 4"
-    call std::ios::writeln
+    call this
     sysreq &namespace::lmao -> char
     mov tlr, "HERE IT CRASHES!!! 5"
-    call std::ios::writeln
+    call this
 jmp doneshit
 jmp lmao
 .data
@@ -2281,17 +2282,17 @@ jmp lmao
     call std::ios::write
     mov tlr, 5
     call std::math::ifac ; <- REAL STANDARD LIBRARY FUNC!
-    call std::ios::writeln
+    call this
     mov tlr, "::ifac->factorial of 0 is "
     call std::ios::write
     mov tlr, 0
     call std::math::ifac ; <- REAL STANDARD LIBRARY FUNC!
-    call std::ios::writeln
+    call this
     mov tlr, "::ifac->factorial of 1 is "
     call std::ios::write
     mov tlr, 1
     call std::math::ifac ; <- REAL STANDARD LIBRARY FUNC!
-    call std::ios::writeln
+    call this
 .data
     ./std
         ./__
@@ -2334,27 +2335,28 @@ jmp lmao
     ./!std
 
     thread TestFactorial -> {
+        fetch std::ios::writeln
         jmp main
         {:func}
             mov tlr, "Hello from TestFactorial::func"
-            call std::ios::writeln
+            call this
         retc
         {:main}
         mov tlr, "factorial of 5 is "
         call std::ios::write
         mov tlr, 5
         call std::math::factorial
-        call std::ios::writeln
+        call this
         mov tlr, "factorial of 10 is "
         call std::ios::write
         mov tlr, 10
         call std::math::factorial
-        call std::ios::writeln
+        call this
         mov tlr, "factorial of 2 is "
         call std::ios::write
         mov tlr, 2
         call std::math::factorial
-        call std::ios::writeln
+        call this
         callc func
         nop
     }
@@ -2366,14 +2368,15 @@ jmp lmao
     syscall
 
     thread thisisfun -> {
+        fetch std::ios::writeln
         mov imm, 2
         {:shee}
         mov tlr, "this is really fun"
-        call std::ios::writeln
+        call this
         mov tlr, 908
-        call std::ios::writeln
+        call this
         mov tlr, 243.4
-        call std::ios::writeln
+        call this
 
         jmp label2
 		{:label1}
@@ -2420,11 +2423,11 @@ jmp lmao
     (end)
 
     mov tlr, 763
-    call std::ios::writeln
+    call this
     mov tlr, "hellouzz"
-    call std::ios::writeln
+    call this
     mov tlr, 'o'
-    call std::ios::writeln
+    call this
 
     await &thisisfun
     mov tlr, &thisisfun
@@ -2464,7 +2467,7 @@ jmp lmao
     sysenter "mem"
     syscall
     mov tlr, *rax
-    call std::ios::writeln
+    call this
 .data
     string testStringMan: "This is absolutely crazy!"
 pragma errtest
@@ -2472,7 +2475,7 @@ pragma errtest
     sysenter "mem"
     syscall
     mov tlr, *rax
-    call std::ios::writeln
+    call this
 
     mov tlr, "Hello world\n"
     mov rax, 4
@@ -2485,25 +2488,25 @@ pragma errtest
     mov fdx, 7
     sysenter "txtop"
     syscall
-    call std::ios::writeln ; should print 'l'
+    call this ; should print 'l'
 
     mov tlr, '\n'
     sysenter "misc"
     mov fdx, 2
     syscall
     mov tlr, *rax
-    call std::ios::writeln
+    call this
 
     def defineTest, "Hi\tbro\n"
     mov tlr, defineTest
-    call std::ios::writeln
+    call this
     undef defineTest
     ;mov tlr, defineTest ; runtime error
-    call std::ios::writeln
+    call this
     ;undef pdns ; compile time error
 jmp e2349083l
     ;mov tlr, $-&testStringMan
-    ;call std::ios::writeln
+    ;call this
     using "fs/vdsk"
     mov fdx, 1
     mov tlr, "file1"
@@ -2524,8 +2527,6 @@ jmp e2349083l
     ;mov tlr, jdhsf(3)
     ;mov tlr, sdfoj("ksj")
 
-    fetch std::ios::writeln ; set the this ptr
-
     mov tlr, old("key")
     call this
     movx &lol::new, &old
@@ -2535,7 +2536,7 @@ jmp e2349083l
     call this
 
     mov tlr, lol::new("mjau")
-    call std::ios::writeln
+    call this
 
     rem hi ; this is idiotic instruction, its gonna get removed by the compiler
 
@@ -2562,7 +2563,7 @@ jmp e2349083l
         $print_colon
         ;:lmaoxd ; this is an compile time error, you can't cover labels with macros
         mov tlr, "HEHE, macro inlining works!\n"
-        ;call std::ios::writeln
+        ;call this
         mov fdx, 1
         sysenter "ios"
         syscall
@@ -2592,10 +2593,16 @@ jmp e2349083l
     jmp 78927347
     nop
     :78927347
+    fetch nil
     fetch lol::test2 ; lookup once
     mov this, 424312 ; use the same memory address twice
-    mov tlr, lol::test2
+    mov tlr, *this
     call std::ios::writeln
+.data
+    @safe
+    float lol: 4.6
+.text
+    ;fetch lol ; crash, lol is labelled as @safe
 ; -------------------------- END OF PROGRAM -------------------------- ;
     zero rax
     mov rax, 223 ; exit code
@@ -2610,7 +2617,7 @@ jmp e2349083l
     zero tlr ; this is gonna get removed
     mov tlr, 3 ; this is gonna get removed by the compiler as well
     mov tlr, "Hello from func"
-    call std::ios::writeln
+    call this
     retc ; returns from function
 
 :Loop
@@ -2618,7 +2625,7 @@ jmp e2349083l
     jz newasm::lmao::endLoop
     dec rax
     mov tlr, "Hello from Loop"
-    call std::ios::writeln
+    call this
     callc Loop ; we got recursion in newasm finally!
 @mangle
 ./newasm

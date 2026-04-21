@@ -199,7 +199,12 @@ namespace newasm
             {
                 if(s.at(0) == '*' and s.at(1) != '/')
                 {
-                    auto it = newasm::mem::regs::identifiers.find(newasm::header::functions::trim(s.substr(1)));
+                    auto DEREF_TEXT = newasm::header::functions::trim(s.substr(1));
+                    if(DEREF_TEXT == THIS_STR)
+                    {
+                        return newasm::runtime::evalModes::thisDeref;
+                    }
+                    auto it = newasm::mem::regs::identifiers.find(DEREF_TEXT);
                     if(it == newasm::mem::regs::identifiers.end())
                     {
                         newasm::compiler::abort(newasm::compiler::fail::unknown_register);
@@ -999,7 +1004,7 @@ namespace newasm
                             if(lineCompiled.tokens.at(i).front() == '*' and newasm::header::functions::isalphanum(regName))
                             {
                                 auto it__ = newasm::mem::regs::identifiers.find(regName);
-                                if(it__ == newasm::mem::regs::identifiers.end())
+                                if(it__ == newasm::mem::regs::identifiers.end() and regName != THIS_STR)
                                 {
                                     newasm::compiler::abort(newasm::compiler::fail::unknown_register);
                                     return lineCompiled;
@@ -1040,6 +1045,7 @@ namespace newasm
 
                         if(
                             (lineCompiled.whatAmIDoing == NewASM::core::lang_inf::free__) or
+                            (lineCompiled.whatAmIDoing == NewASM::core::lang_inf::fetch__) or
                             (lineCompiled.whatAmIDoing == NewASM::core::lang_inf::pop)
                         )
                         {
@@ -1064,7 +1070,7 @@ namespace newasm
                             if(lineCompiled.tokens.at(i).front() == '*' and newasm::header::functions::isalphanum(regName))
                             {
                                 auto it__ = newasm::mem::regs::identifiers.find(regName);
-                                if(it__ == newasm::mem::regs::identifiers.end())
+                                if(it__ == newasm::mem::regs::identifiers.end() and regName != THIS_STR)
                                 {
                                     newasm::compiler::abort(newasm::compiler::fail::unknown_register);
                                     return lineCompiled;
@@ -1181,7 +1187,8 @@ namespace newasm
             //------------------------------------------- double instructions -------------------------------------------
             if(
                 (line == lastLine) or
-                (line.whatAmIDoing == newasm::core::lang_inf::jmp and lastLine.whatAmIDoing == newasm::core::lang_inf::jmp)
+                (line.whatAmIDoing == newasm::core::lang_inf::jmp and lastLine.whatAmIDoing == newasm::core::lang_inf::jmp) or //two jumps in a row
+                (line.whatAmIDoing == newasm::core::lang_inf::fetch__ and lastLine.whatAmIDoing == newasm::core::lang_inf::fetch__) // two fetches in a row
             )
             {
                 bool IsRedundant = (//remove only specific instructions
@@ -1209,9 +1216,14 @@ namespace newasm
             if(line.whatAmIDoing == newasm::core::lang_inf::mov)
             {
                 if(
-                    line.whatAreRegistersLol == line.altEvalMode.argInt and
-                    line.altEvalMode.type == newasm::runtime::evalModes::regDeref and
-                    line.altEvalMode.argType == newasm::datatypes::number
+                    ( // mov rax, *rax
+                        line.whatAreRegistersLol == line.altEvalMode.argInt and
+                        line.altEvalMode.type == newasm::runtime::evalModes::regDeref and
+                        line.altEvalMode.argType == newasm::datatypes::number
+                    ) or ( // mov this, *this
+                        line.altEvalMode.type == newasm::runtime::evalModes::thisDeref and
+                        line.priArgType == newasm::datatypes::ThisPtr
+                    )
                 )
                 {
                     //logging the optimization
