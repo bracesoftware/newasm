@@ -2517,6 +2517,7 @@ jmp e2349083l
     ctx old: ("key": "Absolute cinema", "mjau": "meow")
     ./lol
         ctx new: ()
+        intg test2: -23
     ./!lol
 .start
     ;mov tlr, pddsfdssd
@@ -2591,6 +2592,10 @@ jmp e2349083l
     jmp 78927347
     nop
     :78927347
+    fetch lol::test2 ; lookup once
+    mov this, 424312 ; use the same memory address twice
+    mov tlr, lol::test2
+    call std::ios::writeln
 ; -------------------------- END OF PROGRAM -------------------------- ;
     zero rax
     mov rax, 223 ; exit code

@@ -2643,17 +2643,50 @@ namespace newasm
 
                 if(lineInfo.whatAreRegistersLol == INVALID_INS)
                 {
-                    newasm::runtime::functions::parse(suf); // for namespaces
-                    suf = newasm::header::functions::trim(newasm::header::functions::remamp(suf));
-                    if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids))
+                    if(lineInfo.priArgType != newasm::datatypes::ThisPtr)
                     {
-                        //std::cout << "THIS HAPPENED!!!! -> "<< suf << std::endl;
-                        newasm::terminate(newasm::exit_codes::invalid_memacc);
-                        return 1;
+                        newasm::runtime::functions::parse(suf); // for namespaces
+                        suf = newasm::header::functions::trim(newasm::header::functions::remamp(suf));
+                        if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids)) [[unlikely]]
+                        {
+                            //std::cout << "THIS HAPPENED!!!! -> "<< suf << std::endl;
+                            newasm::terminate(newasm::exit_codes::invalid_memacc);
+                            return 1;
+                        }
+                    }
+                    else if(lineInfo.priArgType == newasm::datatypes::ThisPtr)
+                    {
+                        if(newasm::_this == nullptr) [[unlikely]]
+                        {
+                            newasm::terminate(newasm::exit_codes::invalid_memacc);
+                            return 1;
+                        }
+                        if(
+                            (*newasm::_this)->type != newasm::datatypes::number and
+                            (*newasm::_this)->type != newasm::datatypes::decimal and
+                            (*newasm::_this)->type != newasm::datatypes::character and
+                            (*newasm::_this)->type != newasm::datatypes::text and
+                            (*newasm::_this)->type != newasm::datatypes::yunion and
+                            (*newasm::_this)->type != newasm::datatypes::mycontext and
+                            (*newasm::_this)->type != newasm::datatypes::tuple
+                        ) [[unlikely]]
+                        {
+                            newasm::terminate(newasm::exit_codes::seg_fault);
+                            return 1;
+                        }
                     }
 
-                    auto i = newasm::variables::ids.at(suf);
-                    if(i.attrib & newasm::core::lang_inf::attributes::CONST__)
+                    NewASM::variables::varData* ptr = nullptr;
+                    if(lineInfo.priArgType != newasm::datatypes::ThisPtr)
+                    {
+                        ptr = &newasm::variables::ids.at(suf);
+                    }
+                    else if(lineInfo.priArgType == newasm::datatypes::ThisPtr)
+                    {
+                        ptr = newasm::_this;
+                    }
+                    auto& i = *ptr;
+                    if(i.attrib & newasm::core::lang_inf::attributes::CONST__) [[unlikely]]
                     {
                         newasm::terminate(newasm::exit_codes::constant_modif);
                         return 1;
@@ -2662,7 +2695,7 @@ namespace newasm
                     {
                         if(lineInfo.altArgType == newasm::datatypes::symbol_name)
                         {
-                            if(!newasm::header::functions::isnumeric(opr))
+                            if(!newasm::header::functions::isnumeric(opr)) [[unlikely]]
                             {
                                 //std::cout << "opr is " << opr << std::endl;
                                 newasm::terminate(newasm::exit_codes::dtyp_mismatch);
@@ -2672,7 +2705,7 @@ namespace newasm
                             newasm::hardware::randAccessMem.overwrite<int>(i.addr, std::stoi(opr));
                             return 1;
                         }
-                        if(lineInfo.altArgType != i.type)
+                        if(lineInfo.altArgType != i.type) [[unlikely]]
                         {
                             //std::cout << "opr 2 is " << opr << std::endl;
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);
