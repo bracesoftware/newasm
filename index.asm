@@ -7,6 +7,7 @@ fi
     string PrintThisLaterLol: "Test string"
     intg len2 : $ - PrintThisLaterLol
 .start
+p
     align 3
     int 0x4
     ;cls
@@ -2625,6 +2626,7 @@ jmp e2349083l
     call std::ios::writeln
 ; -------------------------- END OF PROGRAM -------------------------- ;
     mov tlr, *rax
+    
     call std::ios::writeln
     zero rax
     mov rax, 223 ; exit code

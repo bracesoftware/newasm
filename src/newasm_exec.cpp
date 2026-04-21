@@ -139,9 +139,9 @@ namespace newasm
                 newasm::header::col::gray <<
                 newasm::header::style::bold <<
                 newasm::header::style::underline <<
-                newasm::forLinker::getFile(newasm::mem::regs::lcx.get_value() - 1) <<//(newasm::header::data::lastlndx) << //newasm::header::settings::script_file <<
+                newasm::forLinker::getFile(newasm::mem::regs::lcx.get_value()) <<//(newasm::header::data::lastlndx) << //newasm::header::settings::script_file <<
                 ":" <<
-                newasm::forLinker::getLine(newasm::mem::regs::lcx.get_value() - 1);//(newasm::header::data::lastlndx);
+                newasm::forLinker::getLine(newasm::mem::regs::lcx.get_value());//(newasm::header::data::lastlndx);
             }
             if(newasm::header::data::proc_now == true)
             {
