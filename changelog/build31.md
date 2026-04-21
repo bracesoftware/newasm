@@ -17,9 +17,49 @@ Welcome to **`NewASM`**: a low-level programming language which combines explici
 
 ## What's new or changed?
 
-+ Anonymous functions have been severely improved regarding speed and functionality.
++ Anonymous functions have been severely improved regarding speed and functionality. Now you can use `callc`, `retc`, `loop` and such!
+```asm
+.text
+    thread thisisfun -> {
+        mov tlr, "this is really fun"
+        call std::ios::writeln
+        mov tlr, 908
+        call std::ios::writeln
+        mov tlr, 243.4
+        call std::ios::writeln
 
-+ The NewASM compiler allows following compile-time instructions for implementing very simple logic:
+        mov tlr, (proc)
+            int 0x3
+            mov rax, 4
+            mov tlr, "Hi from lambda in thread\n"
+            mov fdx, 1
+            sysenter "ios"
+            syscall
+            {:lmao}
+            syscall
+            loop rax, lmao
+            int 0x3
+            halt 0
+        (end)
+    }
+```
+As you can see, lambdas in threads now have their own labels because the JIT compiler ignores the sealed labels within the `(proc)` block.
+
+Another stupid example would be:
+```asm
+.text
+	mov tlr, (proc)
+		jmp label2
+		{:label1}
+		jmp label3
+		{:label2}
+		jmp label1
+		{:label3}
+		halt 0
+	(end)
+```
+
++ The NewASM compiler now allows following compile-time instructions for implementing very simple logic:
 1. `ifdef`: checks if a symbol/flag is defined;
 2. `ifndef`: checks if a symbol/flag is not defined;
 3. `fi`: used for ending an `if` block. 
@@ -27,6 +67,7 @@ Welcome to **`NewASM`**: a low-level programming language which combines explici
 If you want to combine if-statements, just nest them, you don't need to use `fi` more than once.
 
 ```asm
+def SMTH, 0
 ifdef SMTH
 	ifndef SMTH_ELSE
 	; do something
@@ -34,6 +75,48 @@ fi
 ```
 
 There are no `else` variants, you have to end each if-block with `fi`.
+
++ Added a new concept of address fetching - a `fetch` instruction! This instruction is used to fetch a procedure or variable pointer, so we can use it with the `this` keyword. This is very important when optimizing your code because the compiler then can generate code that doesn't do any dictionary lookup.
+
+```asm
+.data
+    ./data
+        intg variable: 4
+    ./!data
+.text
+    fetch data::variable ; get variable's address
+    mov this, 6 ; give it a new value
+    mov tlr, *this ; dereference the this ptr
+    call std::ios::writeln ; prints 6
+```
+
+As you can see, we look for the variable only once, and then use the pointer, which means we get around 1.75x faster than using the variable's name twice.
+
+We can also fetch addresses of procedures:
+
+```asm
+.text
+    fetch std::ios::writeln
+    mov tlr, "Hello"
+    call this ; prints Hello
+    
+    mov tlr, 465
+    call this
+    ; .. etc
+    ; this is way faster than letting the dispatcher
+    ; look for the procedure every time you use call
+    ; callc is still faster tho
+```
+
+If you don't want a variable to be fetched, use the new `@safe` attribute.
+```asm
+.data
+    @safe
+    intg var: 0
+.text
+    fetch var ; segmentation fault
+```
+
 
 ## Fixed issues
 
