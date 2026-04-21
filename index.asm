@@ -2594,6 +2594,7 @@ jmp e2349083l
     nop
     :78927347
     fetch nil
+    mov this, *this
     fetch lol::test2 ; lookup once
     mov this, 424312 ; use the same memory address twice
     mov tlr, *this
@@ -2601,8 +2602,18 @@ jmp e2349083l
 .data
     @safe
     float lol: 4.6
+    intg ramdagadam : 47
 .text
     ;fetch lol ; crash, lol is labelled as @safe
+    thread interesting -> {
+        fetch ramdagadam
+        mov rax, 100
+        {:f}
+        nop
+        loop rax, f
+    }
+    fetch ramdagadam
+    await &interesting
 ; -------------------------- END OF PROGRAM -------------------------- ;
     zero rax
     mov rax, 223 ; exit code

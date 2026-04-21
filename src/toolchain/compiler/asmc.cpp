@@ -1203,7 +1203,8 @@ namespace newasm
                     line.whatAmIDoing == newasm::core::lang_inf::align or
                     line.whatAmIDoing == newasm::core::lang_inf::sel or
                     line.whatAmIDoing == newasm::core::lang_inf::lea or
-                    line.whatAmIDoing == newasm::core::lang_inf::switch__
+                    line.whatAmIDoing == newasm::core::lang_inf::switch__ or
+                    line.whatAmIDoing == newasm::core::lang_inf::fetch__
                 );
                 if(IsRedundant)
                 {

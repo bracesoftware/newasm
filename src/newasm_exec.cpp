@@ -3943,6 +3943,10 @@ namespace newasm
             }
             case newasm::core::lang_inf::fetch__:
             {
+                if(newasm::_this != nullptr)
+                {
+                    (*newasm::_this)->fetched = false;
+                }
                 if(lineInfo.priArgType == NewASM::datatypes::NIL)
                 {
                     newasm::_this = nullptr;
@@ -3973,23 +3977,18 @@ namespace newasm
                     return 1;
                 }
 
-                if(newasm::header::data::ActiveThreads != 0)
+                if(ptr->fetched)
                 {
-                    if(newasm::thread_line) if(ptr->type != newasm::datatypes::proc) if(
-                        newasm::_this.getMainThreadValue() == ptr or
-                        newasm::_this.isValueUsedAmongThreads(ptr)
-                    ) [[unlikely]]
+                    if(newasm::thread_line)
                     {
-                        //for await
-                        //thread channel deadlock cuz it is unsafe to point to same var in multiple threads
                         newasm::threads::memory.at(newasm::threads::now)->paused = true;
                         return 1;
                     }
-                    else if(!newasm::thread_line) if(newasm::_this.isValueUsedAmongThreads(ptr)) [[unlikely]]
-                    {
-                        newasm::terminate(newasm::exit_codes::seg_fault);
-                    }
+
+                    newasm::terminate(newasm::exit_codes::seg_fault);
+                    return 1;
                 }
+
                 newasm::_this = ptr;
                 return 1;
             }
@@ -8490,7 +8489,7 @@ namespace newasm
         //std::cout << "newasm::exit_handled -> " << newasm::exit_handled << std::endl;
         if(newasm::exit_handled)
         {
-            newasm::header::functions::err("Exit handler called again.");
+            //newasm::header::functions::err("Exit handler called again.");
             return;
         }
         newasm::exit_handled = true;

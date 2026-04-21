@@ -159,6 +159,7 @@ namespace newasm
             eventData* event = nullptr;
             staticObjectData* obj = nullptr;
             bool deleted = false;
+            bool fetched = false;
 
             //decorator data
             bool locked = false;
