@@ -2522,13 +2522,16 @@ jmp e2349083l
     ;mov tlr, pddsfdssd
     ;mov tlr, jdhsf(3)
     ;mov tlr, sdfoj("ksj")
+
+    fetch &std::ios::writeln ; set the this ptr
+
     mov tlr, old("key")
-    call std::ios::writeln
+    call this
     movx &lol::new, &old
     mov tlr, lol::new("key")
-    call std::ios::writeln
+    call this
     ;mov tlr, old("key")
-    call std::ios::writeln
+    call this
 
     mov tlr, lol::new("mjau")
     call std::ios::writeln

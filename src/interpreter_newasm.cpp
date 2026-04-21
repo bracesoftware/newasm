@@ -216,6 +216,7 @@ namespace newasm
         const int _regDeref = 101;
         constinit const int NIL = 102;
         constinit const int tokenOpenBrace = 103;
+        constinit const int ThisPtr = 104;
     }
     namespace runtime
     {
@@ -377,6 +378,7 @@ namespace newasm
 
     inline void process_hndl(int tohandle, const std::string& procedure);
     inline void callproc(const std::string& name);
+    inline void callproc(VarPtr ptr);
     int process_s_(bool &valid, std::string wholeline, std::string stat, std::string arg);
     int process_s(std::string& section);
     namespace user
@@ -585,6 +587,7 @@ namespace newasm
 
     using execBytecode = newasm::compiler::lineData;
     newasm::kernel::thread_safe<newasm::compiler::lineData*> PRC;
+    newasm::kernel::thread_safe<VarPtr> _this = nullptr;
     
     int procline(newasm::compiler::lineData& line);
     int procline(std::string& text);

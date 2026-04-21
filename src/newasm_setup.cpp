@@ -124,7 +124,7 @@ namespace newasm
             {constant_modif, "ConstValModification"},
             {os_error, "OSErr"},
             {malloc_err, "MallocErr"},
-            {seg_fault, "SegmentationFault"},
+            {seg_fault, "SegmentationFaultOrAccessViolation"},
             {invalid_call, "InvalidProcCall"},
             {hndl_reassign, "HexReassignment"},
             {sysenter_fail, "SysenterFail"},

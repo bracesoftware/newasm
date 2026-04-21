@@ -139,6 +139,7 @@ namespace newasm
             const int movx = 76;//
             const int callc = 77;//
             const int retc = 78;//
+            const int fetch__ = 79;//
 
             /// @brief //////
             const int Link___ = 99;
@@ -238,9 +239,9 @@ namespace newasm
                 {movx, "movx"},
                 {callc, "callc"},
                 {retc, "retc"},
+                {fetch__, "fetch"},
 
-                {__say, "__say"},
-                {Link___, "link"}
+                {__say, "__say"}
             };
 
             namespace refs

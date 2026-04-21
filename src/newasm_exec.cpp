@@ -3907,7 +3907,27 @@ namespace newasm
                 newasm::terminate(newasm::exit_codes::invalid_ins);
                 return 1;
             }
-            
+            case newasm::core::lang_inf::fetch__:
+            {
+                newasm::runtime::functions::parse<true>(suf);
+                auto it = newasm::variables::ids.find(suf);
+                if(it == newasm::variables::ids.end())
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_memacc);
+                    return 1;
+                }
+                if(
+                    it->second.type == newasm::datatypes::static_objz or
+                    it->second.type == newasm::datatypes::event or
+                    it->second.type == newasm::datatypes::threadz
+                )
+                {
+                    newasm::terminate(newasm::exit_codes::seg_fault);
+                    return 1;
+                }
+                newasm::_this = &it->second;
+                return 1;
+            }
             //LOAD.adr/ref
             case newasm::core::lang_inf::load:
             {
@@ -5349,9 +5369,11 @@ namespace newasm
                 newasm::threads::memory.at(suf)->paused = false;
                 newasm::threads::sys_module[suf] = 0;
                 newasm::mem::regs::resetRegisters(suf);
+
                 newasm::LambdaDispatch::LambdaNow.setThreadValue(suf, false);
                 newasm::LambdaDispatch::LambdaHalt.setThreadValue(suf, false);
                 newasm::LambdaDispatch::LambdaLine.setThreadValue(suf, false);
+                newasm::_this.setThreadValue(suf, nullptr);
 
                 newasm::brace_stack__.push_back(newasm::brace_stack::thread_block);
                 
@@ -6023,12 +6045,28 @@ namespace newasm
                     return 1;
                 }
 
+                if(lineInfo.priArgType == newasm::datatypes::ThisPtr)
+                {
+                    if(newasm::_this == nullptr) [[unlikely]]
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    if((*newasm::_this)->type != newasm::datatypes::proc) [[unlikely]]
+                    {
+                        newasm::terminate(newasm::exit_codes::seg_fault);
+                        return 1;
+                    }
+                    newasm::callproc(newasm::_this);
+                    return 1;
+                }
+
                 newasm::runtime::functions::parse<true>(suf);
 
                 if(newasm::header::functions::isalphanum(suf))
                 {
                     auto p = newasm::mem::functions::datavalid(suf,newasm::variables::ids);
-                    if(!p)
+                    if(!p) [[unlikely]]
                     {
                         newasm::terminate(newasm::exit_codes::invalid_proc);
                         return 1;
@@ -6036,7 +6074,7 @@ namespace newasm
 
                     if(p)
                     {
-                        if(newasm::variables::ids.at(suf).type != newasm::datatypes::proc)
+                        if(newasm::variables::ids.at(suf).type != newasm::datatypes::proc) [[unlikely]]
                         {
                             newasm::terminate(newasm::exit_codes::invalid_proc);
                             return 1;
@@ -8265,55 +8303,59 @@ namespace newasm
         }
         return;
     }
-    inline void callproc(const std::string& name)
+    FORCE_INLINE inline void callproc(VarPtr ptr)
     {
         newasm::system::stoproc = 0;
         newasm::header::data::proc_now = true;
-        //newasm::mem::regs::prp = static_cast<std::string>("&") + name;
+        newasm::system::processing_proc = ptr->proc->original_name;
+        NewASM::CurrentProcA = ptr;
+        #if 0
+        for(auto& line : it->second)
+        {
+            if(newasm::system::stoproc == 1)
+            {
+                newasm::system::stoproc = 0;
+                newasm::header::data::proc_now = false;
+                break;
+            }
+            newasm::header::data::lastln = line.raw;
+            //auto JIT_COMPILED = newasm::compiler::DO(line);
+            newasm::procline(line);
+            //std::cout << "Executed : " << line << std::endl;
+        }
+        #endif
+        ptr->proc->idx = 0;
+        auto& proc_contents = ptr->proc->contents;
+        while(true)//for(int i = 0; i < proc_contents.size(); ++i)
+        {
+            if(newasm::system::stoproc == 1)
+            {
+                newasm::system::stoproc = 0;
+                newasm::header::data::proc_now = false;
+                break;
+            }
+            if(
+                ptr->proc->idx >= proc_contents.size() or
+                ptr->proc->idx < 0
+            )
+            {
+                break;
+            }
+            newasm::header::data::lastln = proc_contents.at(ptr->proc->idx).raw;
+            newasm::procline(proc_contents.at(ptr->proc->idx));
+            ptr->proc->idx++;
+        }
+        //newasm::header::data::proc_now = false;
+        newasm::header::data::proc_now = false;
+        return;
+    }
+    inline void callproc(const std::string& name)
+    {
         auto it = newasm::variables::ids.find(name);
         if(it != newasm::variables::ids.end())
         {
-            newasm::system::processing_proc = name;
-            NewASM::CurrentProcA = &it->second;
-            #if 0
-            for(auto& line : it->second)
-            {
-                if(newasm::system::stoproc == 1)
-                {
-                    newasm::system::stoproc = 0;
-                    newasm::header::data::proc_now = false;
-                    break;
-                }
-                newasm::header::data::lastln = line.raw;
-                //auto JIT_COMPILED = newasm::compiler::DO(line);
-                newasm::procline(line);
-                //std::cout << "Executed : " << line << std::endl;
-            }
-            #endif
-            it->second.proc->idx = 0;
-            auto& proc_contents = it->second.proc->contents;
-            while(true)//for(int i = 0; i < proc_contents.size(); ++i)
-            {
-                if(newasm::system::stoproc == 1)
-                {
-                    newasm::system::stoproc = 0;
-                    newasm::header::data::proc_now = false;
-                    break;
-                }
-                if(
-                    it->second.proc->idx >= proc_contents.size() or
-                    it->second.proc->idx < 0
-                )
-                {
-                    break;
-                }
-                newasm::header::data::lastln = proc_contents.at(it->second.proc->idx).raw;
-                newasm::procline(proc_contents.at(it->second.proc->idx));
-                it->second.proc->idx++;
-            }
-            //newasm::header::data::proc_now = false;
+            callproc(&it->second);
         }
-        newasm::header::data::proc_now = false;
         return;
     }
 

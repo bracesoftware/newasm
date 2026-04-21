@@ -42,6 +42,7 @@ stock constexpr inline void _newasm_rem__24234() noexcept
 #define STR(x) #x
 #define CONCAT(a, b) a##b
 #define NIL_STR "nil"_str
+#define THIS_STR "this"_str
 #define NULL_STR "0"_str
 #define OPEN_BRACE_STR "{"_str
 #define INVALID_INS (-1)
