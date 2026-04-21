@@ -5270,24 +5270,7 @@ namespace newasm
                         }
                         return 1;
                     }
-                    if(typ == "proc")
-                    {
-                        if(newasm::variables::ids.find(suf) == newasm::variables::ids.end())
-                        {
-                            //std::cout << "cant find proc: `" << suf << "`" << std::endl;
-                            newasm::terminate(newasm::exit_codes::sysreq_fail);
-                            return 1;
-                        }
-                        if(newasm::variables::ids.find(suf) != newasm::variables::ids.end())
-                        {
-                            if(newasm::variables::ids.at(suf).type != newasm::datatypes::proc)
-                            {
-                                newasm::terminate(newasm::exit_codes::sysreq_fail);
-                                return 1;
-                            }
-                        }
-                        return 1;
-                    }
+                    
                     newasm::terminate(newasm::exit_codes::invalid_syntax);
                     return 1;
                 }
@@ -5306,6 +5289,15 @@ namespace newasm
 
                 switch(type)
                 {
+                    case newasm::core::lang_inf::typenames::proc__:
+                    {
+                        if(real_type != newasm::datatypes::proc)
+                        {
+                            newasm::terminate(newasm::exit_codes::sysreq_fail);
+                            return 1;
+                        }
+                        return 1;
+                    }
                     case newasm::core::lang_inf::typenames::num:
                     {
                         if(real_type != newasm::datatypes::number)

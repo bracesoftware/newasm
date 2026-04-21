@@ -2628,6 +2628,9 @@ jmp e2349083l
     fetch interesting::lmao
     mov tlr, this(4)
     call std::ios::writeln
+    fetch lol::new
+    mov tlr, this("mjau")
+    call std::ios::writeln
 ; -------------------------- END OF PROGRAM -------------------------- ;
     mov tlr, *rax
     

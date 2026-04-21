@@ -323,6 +323,8 @@ namespace newasm
                 const int union__ = 13;
                 const int context__ = 14;
 
+                const int proc__ = 15;
+
                 const std::unordered_map<int, std::string> identifiers__ = {
                     {num, "intg"},
                     {decm, "float"},
@@ -339,7 +341,8 @@ namespace newasm
 					
                     {bit_arr, "bit_arr"},
                     {bin_tree, "bin_tree"},
-                    {chan, "chan"}
+                    {chan, "chan"},
+                    {proc__, "proc"}
                 };
             }
 
