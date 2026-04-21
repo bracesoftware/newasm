@@ -2599,6 +2599,8 @@ jmp e2349083l
     mov this, 424312 ; use the same memory address twice
     mov tlr, *this
     call std::ios::writeln
+    mov tlr, "1"
+    mov tlr, 1
 .data
     @safe
     float lol: 4.6

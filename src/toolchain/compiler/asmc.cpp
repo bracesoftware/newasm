@@ -1187,8 +1187,7 @@ namespace newasm
             //------------------------------------------- double instructions -------------------------------------------
             if(
                 (line == lastLine) or
-                (line.whatAmIDoing == newasm::core::lang_inf::jmp and lastLine.whatAmIDoing == newasm::core::lang_inf::jmp) or //two jumps in a row
-                (line.whatAmIDoing == newasm::core::lang_inf::fetch__ and lastLine.whatAmIDoing == newasm::core::lang_inf::fetch__) // two fetches in a row
+                (line.whatAmIDoing == newasm::core::lang_inf::jmp and lastLine.whatAmIDoing == newasm::core::lang_inf::jmp)
             )
             {
                 bool IsRedundant = (//remove only specific instructions
@@ -1211,6 +1210,16 @@ namespace newasm
                     OptDescription("peephole optimization, removed redundant double code");
                     line.type = newasm::compiler::empty;
                 }
+                return;
+            }
+            //------------------------------------------- redundant refetch -------------------------------------------
+            if(
+                line.whatAmIDoing == newasm::core::lang_inf::fetch__ and
+                lastLine.whatAmIDoing == newasm::core::lang_inf::fetch__
+            )
+            {
+                OptDescription("peephole optimization, removed redundant refetch", &lastLine, newasm::OptimizerData::LastLineIdx);
+                lastLine.type = newasm::compiler::empty;
                 return;
             }
             //------------------------------------------- assigning register value to itself -------------------------------------------
