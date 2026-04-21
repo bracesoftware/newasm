@@ -2523,7 +2523,7 @@ jmp e2349083l
     ;mov tlr, jdhsf(3)
     ;mov tlr, sdfoj("ksj")
 
-    fetch &std::ios::writeln ; set the this ptr
+    fetch std::ios::writeln ; set the this ptr
 
     mov tlr, old("key")
     call this
@@ -2540,8 +2540,8 @@ jmp e2349083l
 
     callc std::345345::FkinFunction
     mov tlr, "Hello from main"
-    call std::ios::writeln
 
+    call this
     int 0x3
 
     proc AbSoluteCinema
@@ -2582,7 +2582,7 @@ jmp e2349083l
 
     ifdef ABSOLUTE_CINEMA
     mov tlr, "ABSOLUTE_CINAME IS DEFINED"
-    call std::ios::writeln
+    call this
     fi ; the compiler doesn't really check for these, 
         ; fi just resets the internal compiler flag
     ifdef dsjf

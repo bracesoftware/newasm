@@ -88,9 +88,9 @@ namespace newasm
             {76, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::xchg)},
             {77, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::retf)},
             {78, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::await__)},
+            {79, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::fetch__)},
 
-            {99, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::__say)},
-            {100, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::Link___)}
+            {99, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::__say)}
         };
     }
 }
