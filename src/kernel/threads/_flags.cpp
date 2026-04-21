@@ -15,6 +15,7 @@ namespace newasm
     namespace threads
     {
         std::string now;
-        newasm::_std::map<std::string, int> sys_module;
+        unsigned int id_now = 0;
+        std::vector<int> sys_module;
     }
 }

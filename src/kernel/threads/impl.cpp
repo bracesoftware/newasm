@@ -24,6 +24,7 @@ namespace newasm
             bool returned = false;
             bool paused = false;
             std::unordered_map<std::string, int> labels;
+            unsigned int id = 0;
 
             int lcx = 0;
 
@@ -185,7 +186,7 @@ namespace newasm
             {
                 if(newasm::thread_line)
                 {
-                    return newasm::threads::sys_module.at(newasm::threads::now);
+                    return newasm::threads::sys_module[newasm::threads::id_now];
                 }
                 return newasm::header::data::module;
             }

@@ -16,8 +16,8 @@ namespace newasm
 {
     inline void enable_ansi() noexcept;
     inline constinit const int BUILD_NUMBER = 31;
-    inline constinit const int RUNTIME_VERSION = 14;
-    inline constinit const int KERNEL_VERSION = 8;
+    inline constinit const int RUNTIME_VERSION = 15;
+    inline constinit const int KERNEL_VERSION = 9;
 }
 
 namespace SYS = newasm;
@@ -118,6 +118,11 @@ namespace newasm
     {
         constinit const short Construction = 1 << 2;
         constinit const short Destruction = 1 << 3;
+    }
+
+    namespace kernel
+    {
+        constinit unsigned int ThreadCount = 0;
     }
 }
 link "vm/impl";
@@ -1114,6 +1119,7 @@ namespace newasm
     {
         inline void cleanup()
         {
+            NewASM::kernel::ThreadCount = 0;
             NewASM::compiler::data::IfResult = true;
             NewASM::compiler::data::MacroTable.clear();
             NewASM::header::data::CallCStack->clear();
