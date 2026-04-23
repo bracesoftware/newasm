@@ -233,12 +233,17 @@ namespace newasm
                 std::cout << newasm::header::col::reset;
             }
 
-            std::cout << "\t\t\t  " << newasm::header::col::reset << newasm::header::col::gray;
-            std::cout << "^ src location: " << newasm::header::col::light_red << newasm::header::style::underline;
-            std::cout << loc.file_name() << ":" << loc.line() << ":" << loc.column() << " -> " << loc.function_name();
-            std::cout << newasm::header::col::reset << newasm::header::col::gray << "";
-            std::cout << std::endl;
-            std::cout << newasm::header::col::reset;
+            if(NewASM::MutableConfig::DisplaySourceInformation)
+            {
+                std::string Insomnia = "\t\t\t  ";
+                std::cout << Insomnia << newasm::header::col::reset << newasm::header::col::gray;
+                std::cout << "^ error source information -> " << newasm::header::col::light_red << newasm::header::style::underline;
+                std::cout << loc.file_name() << ":" << loc.line() << ":" << loc.column() << "\n\t";
+                std::cout << Insomnia << loc.function_name();
+                std::cout << newasm::header::col::reset << newasm::header::col::gray;
+                std::cout << std::endl;
+                std::cout << newasm::header::col::reset;
+            }
         }
         return 1;
     }
@@ -5901,6 +5906,21 @@ namespace newasm
                             return 1;
                         }
                         newasm::header::data::module = newasm::core::lang_inf::refs::ios;
+                        return 1;
+                    }
+                    case newasm::core::lang_inf::refs::cfg:
+                    {
+                        if(!newasm::kernel::cfg::Configuration)
+                        {
+                            newasm::terminate(newasm::exit_codes::sysenter_fail);
+                            return 1;
+                        }
+                        if(newasm::thread_line)
+                        {
+                            newasm::threads::sys_module.at(newasm::threads::id_now) = newasm::core::lang_inf::refs::cfg;
+                            return 1;
+                        }
+                        newasm::header::data::module = newasm::core::lang_inf::refs::cfg;
                         return 1;
                     }
                     case newasm::core::lang_inf::refs::fs:

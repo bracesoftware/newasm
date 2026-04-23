@@ -132,6 +132,11 @@ namespace newasm
     {
         constinit unsigned int ThreadCount = 0;
     }
+
+    namespace MutableConfig
+    {
+        constinit bool DisplaySourceInformation = false;
+    }
 }
 link "vm/impl";
 link "runtime/common/attrib";
@@ -271,6 +276,7 @@ namespace newasm
             bool Misc = false;
             bool Crypto = false;
             bool Context = false;
+            bool Configuration = false;
         }
     }
 }

@@ -25,9 +25,13 @@ using "tcp"
 using "tuple"
 using "http"
 using "math"
-
+non_existing_ins
 .start
-fetch std::ios::writeln ; set the this ptr
+    sysenter "cfg"
+    mov fdx, 1
+    mov rax, 1
+    syscall
+    fetch std::ios::writeln ; set the this ptr
     jmp skiplol
     ./std
         ./lol
@@ -2641,6 +2645,8 @@ jmp e2349083l
     call std::ios::writeln
     mov tlr, # this
     call std::ios::writeln
+
+    using "cfg"
 ; -------------------------- END OF PROGRAM -------------------------- ;
     mov tlr, *rax
     

@@ -265,6 +265,7 @@ namespace newasm
                 constinit const int crypto = 15;
                 constinit const int ctx = 16;
                 constinit const int fs_vdsk = 17;
+                constinit const int cfg = 18;
 
                 const std::unordered_map<int, std::string> identifiers__ = {
                     {ios, "ios"},
@@ -283,7 +284,8 @@ namespace newasm
                     {math, "math"},
                     {misc, "misc"},
                     {crypto, "crypto"},
-                    {ctx, "ctx"}
+                    {ctx, "ctx"},
+                    {cfg, "cfg"}
                 };
             }
             namespace directives

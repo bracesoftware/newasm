@@ -204,6 +204,11 @@ namespace newasm
                         newasm::kernel::cfg::FileStream_VDSK = true;
                         return;
                     }
+                    if(arg == newasm::core::lang_inf::refs::identifiers__.at(newasm::core::lang_inf::refs::cfg))
+                    {
+                        newasm::kernel::cfg::Configuration = true;
+                        return;
+                    }
                     newasm::compiler::abort(newasm::compiler::fail::invalid_krnlmod);
                     return;
                 }

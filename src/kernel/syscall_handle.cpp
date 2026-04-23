@@ -68,6 +68,30 @@ namespace newasm
             int code = newasm::kernel::makeHash(newasm::threads::functions::get_sysenter(), newasm::mem::regs::fdx.get_value());
             switch(code)
             {
+/*
+    __   ___   ____   _____  ____   ____  __ __  ____    ____  ______  ____  ___   ____  
+   /  ] /   \ |    \ |     ||    | /    ||  |  ||    \  /    ||      ||    |/   \ |    \ 
+  /  / |     ||  _  ||   __| |  | |   __||  |  ||  D  )|  o  ||      | |  ||     ||  _  |
+ /  /  |  O  ||  |  ||  |_   |  | |  |  ||  |  ||    / |     ||_|  |_| |  ||  O  ||  |  |
+/   \_ |     ||  |  ||   _]  |  | |  |_ ||  :  ||    \ |  _  |  |  |   |  ||     ||  |  |
+\     ||     ||  |  ||  |    |  | |     ||     ||  .  \|  |  |  |  |   |  ||     ||  |  |
+ \____| \___/ |__|__||__|   |____||___,_| \__,_||__|\_||__|__|  |__|  |____|\___/ |__|__|
+                                                                                         
+*/
+
+                case newasm::kernel::makeHash(newasm::core::lang_inf::refs::cfg, 1): //toggle exception source info
+                {
+                    int RaxVal = newasm::mem::regs::rax.get_value();
+                    if(RaxVal != 1 and RaxVal != 0)
+                    {
+                        newasm::header::functions::krnl("Wrong `rax` value; can be either 1 or 0.");
+                        newasm::terminate(newasm::exit_codes::kernel_panic);
+                        return 1;
+                    }
+                    newasm::MutableConfig::DisplaySourceInformation = RaxVal == 1 ? true : false;
+                    return 1;
+                }
+
                 /*
  /$$      /$$             /$$     /$$      
 | $$$    /$$$            | $$    | $$      

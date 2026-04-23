@@ -60,7 +60,7 @@ When a fatal error happens, program will shut down, returning a specific exit co
 | `53` | Cannot execute the thread using `await` because the thread is trying to access unreachable data. |
 | `54` | Invalid allocation. |
 | `55` | Invalid context initializer. |
-| `56` | The virtual machine reached a point where the linker failed. |
+| `56` | Dangling `this` pointer. |
 | `57` | JIT compiler failure. Occurs when you try to use `async` or `await` inside a procedure block. |
 | `58` | Kernel panic. Occurs when an error occurs within the kernel's functions! |
 | `59` | Tried to perform exclusive move on immovable type such as thread, procedure and static objects. |

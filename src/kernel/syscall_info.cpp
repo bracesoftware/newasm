@@ -102,7 +102,9 @@ namespace newasm
             {{NewASM::core::lang_inf::refs::fs_vdsk, 5}, "sys_vdsk_readfile"},
             {{NewASM::core::lang_inf::refs::fs_vdsk, 6}, "sys_vdsk_modfile"},
             {{NewASM::core::lang_inf::refs::fs_vdsk, 7}, "sys_vdsk_append"},
-            {{NewASM::core::lang_inf::refs::fs_vdsk, 8}, "sys_vdsk_typefile"}
+            {{NewASM::core::lang_inf::refs::fs_vdsk, 8}, "sys_vdsk_typefile"},
+
+            {{NewASM::core::lang_inf::refs::cfg, 1}, "sys_cfg_toggle_excsrcinfo"}
         };
     }
 }

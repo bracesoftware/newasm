@@ -86,6 +86,7 @@ You use `sysenter` to expose a specific kernel module to the program, and `sysca
 | `fs/vdsk` | `6` | `tlr`, `stl` | Opens a file named in `tlr` and stores the data stored in `stl` into the file. |
 | `fs/vdsk` | `7` | `tlr`, `stl` | Reads a file named in `tlr` and appends the data stored in `stl` into the file. |
 | `fs/vdsk` | `8` | `tlr` | Reads a file named in `tlr` and prints the contents of the file. |
+| `cfg` | `1` | `rax` | Toggle exception source information logging; `rax` = 1 for on and `rax` = 0 for off! |
 
 ## `int`
 This instruction is used to directly talk to the system.

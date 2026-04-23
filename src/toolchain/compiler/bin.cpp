@@ -345,6 +345,7 @@ namespace newasm
                 write_bin(out, newasm::kernel::cfg::Crypto);
                 write_bin(out, newasm::kernel::cfg::Context);
                 write_bin(out, newasm::kernel::cfg::FileStream_VDSK);
+                write_bin(out, newasm::kernel::cfg::Configuration);
 
                 //dynamic libs (*.newasm_dl files)
                 save_dynlibs(out, ins);
@@ -461,6 +462,7 @@ namespace newasm
                 read_bin(in, newasm::kernel::cfg::Crypto);
                 read_bin(in, newasm::kernel::cfg::Context);
                 read_bin(in, newasm::kernel::cfg::FileStream_VDSK);
+                read_bin(in, newasm::kernel::cfg::Configuration);
                 
                 //dynamic libs (*.newasm_dl files)
                 load_dynlibs(in, ins);
