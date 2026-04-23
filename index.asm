@@ -25,12 +25,12 @@ using "tcp"
 using "tuple"
 using "http"
 using "math"
-non_existing_ins
 .start
     sysenter "cfg"
     mov fdx, 1
     mov rax, 1
     syscall
+    non_existing_ins
     fetch std::ios::writeln ; set the this ptr
     jmp skiplol
     ./std

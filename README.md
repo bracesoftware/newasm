@@ -23,7 +23,7 @@
 > **NewASM** language runs inside a NewASM Virtual Machine.
 
 > [!CAUTION]
-> All of the following documentation applies exclusively to the version currently being in development. For docs about the version you downloaded, check the files you downloaded for the releases page.
+> All of the following documentation applies exclusively to the version currently being in development. For docs about the version you downloaded, check the files you downloaded from the releases page.
 
 # Documentation
 Below is the simple `Hello World` program written in New-Assembly.

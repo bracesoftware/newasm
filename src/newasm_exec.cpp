@@ -235,11 +235,12 @@ namespace newasm
 
             if(NewASM::MutableConfig::DisplaySourceInformation)
             {
-                std::string Insomnia = "\t\t\t  ";
-                std::cout << Insomnia << newasm::header::col::reset << newasm::header::col::gray;
-                std::cout << "^ error source information -> " << newasm::header::col::light_red << newasm::header::style::underline;
+                static const std::string Insomnia = "\t\t\t  ";
+                std::cout << Insomnia << newasm::header::col::reset << newasm::header::col::light_red;
+                std::cout << "^ exception source information -> " << newasm::header::col::gray << newasm::header::style::underline;
                 std::cout << loc.file_name() << ":" << loc.line() << ":" << loc.column() << "\n\t";
-                std::cout << Insomnia << loc.function_name();
+                std::cout << newasm::header::col::reset << newasm::header::col::light_red << '`' << newasm::header::col::gray;
+                std::cout << Insomnia << loc.function_name() << newasm::header::col::light_red << '`';
                 std::cout << newasm::header::col::reset << newasm::header::col::gray;
                 std::cout << std::endl;
                 std::cout << newasm::header::col::reset;
