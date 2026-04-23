@@ -30,7 +30,8 @@ using "math"
     mov fdx, 1
     mov rax, 1
     syscall
-    non_existing_ins
+    mov rax, 234434
+    syscall
     fetch std::ios::writeln ; set the this ptr
     jmp skiplol
     ./std
