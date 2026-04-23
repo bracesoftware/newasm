@@ -214,8 +214,19 @@ namespace newasm
                     mode.argInt = it->second;
                     return newasm::runtime::evalModes::regDeref;
                 }
-                if(s.front() == '#')
+                if(newasm::header::functions::trim(s) == "#")
                 {
+                    newasm::compiler::abort(newasm::compiler::fail::expected_token);
+                    return newasm::runtime::evalModes::addressOf;
+                }
+                if(s.front() == '#' and s.size() >= 2)
+                {
+                    std::string addrOfWhat = newasm::header::functions::trim(s.substr(1));
+                    mode.argString2 = addrOfWhat;
+                    if(mode.argString2 == THIS_STR)
+                    {
+                        mode.UsingThisPtr = true;
+                    }
                     return newasm::runtime::evalModes::addressOf;
                 }
                 if(s.at(0) == '*' and s.at(1) == '/')

@@ -15,7 +15,7 @@ namespace newasm
     void handle_threads();
     int compile_and_exec(std::string file, int lineidx_____);
     int compile(const std::string& file);
-    static inline int terminate_(int exit_code);
+    static inline int terminate_(int exit_code, const std::source_location& loc);
 
     inline void unsins(std::string ins)
     {
@@ -42,7 +42,7 @@ namespace newasm
         newasm::header::functions::err("Application crashed.");
         return;
     }
-    inline int terminate(int exit_code)
+    inline int terminate(int exit_code, const std::source_location loc)
     {
         //std::cout << "\nTERMINATE CALLED -> lmao -> " << exit_code << std::endl;
         if constexpr(0) if(newasm::handling_exit)
@@ -52,7 +52,7 @@ namespace newasm
         }
         NewASM::perf::heavyHostServices.start();
         
-        newasm::terminate_(exit_code);
+        newasm::terminate_(exit_code, loc);
         if constexpr(0) if(newasm::header::functions::trim(NewASM::ExceptionHandling::Line->raw) == std::string("syscall"))
         {
             newasm::header::functions::krnl("Kernel crashed.");
@@ -60,28 +60,28 @@ namespace newasm
         NewASM::perf::heavyHostServices.stop();
         return 1;
     }
-    inline int terminate(const std::string& exit_code)
+    inline int terminate(const std::string& exit_code, const std::source_location loc = std::source_location::current())
     {
         if(NewASM::header::functions::isnumeric(exit_code))
         {
-            NewASM::terminate((int)std::stoi(exit_code));
+            NewASM::terminate((int)std::stoi(exit_code), loc);
             return 1;
         }
         if(NewASM::header::functions::isfloat(exit_code))
         {
-            NewASM::terminate(static_cast<int>(std::round(std::stof(exit_code))));
+            NewASM::terminate(static_cast<int>(std::round(std::stof(exit_code))), loc);
             return 1;
         }
-        NewASM::terminate(NewASM::exit_codes::invalid_retn);
+        NewASM::terminate(NewASM::exit_codes::invalid_retn, loc);
         return 1;
     }
-    inline int terminate(float exit_code)
+    inline int terminate(float exit_code, const std::source_location loc = std::source_location::current())
     {
-        NewASM::terminate(static_cast<int>(std::round(exit_code)));
+        NewASM::terminate(static_cast<int>(std::round(exit_code)), loc);
         return 1;
     }
     //int redirect_exec(std::string filename);
-    static inline int terminate_(int exit_code)//, std::string line)
+    static inline int terminate_(int exit_code, const std::source_location& loc)//, std::string line)
     {
         bool temp_proc = false;
         std::cout << std::endl;
@@ -232,6 +232,13 @@ namespace newasm
                 std::cout << std::endl;
                 std::cout << newasm::header::col::reset;
             }
+
+            std::cout << "\t\t\t  " << newasm::header::col::reset << newasm::header::col::gray;
+            std::cout << "^ src location: " << newasm::header::col::light_red << newasm::header::style::underline;
+            std::cout << loc.file_name() << ":" << loc.line() << ":" << loc.column() << " -> " << loc.function_name();
+            std::cout << newasm::header::col::reset << newasm::header::col::gray << "";
+            std::cout << std::endl;
+            std::cout << newasm::header::col::reset;
         }
         return 1;
     }
@@ -2795,7 +2802,7 @@ namespace newasm
                         suf = newasm::header::functions::trim(newasm::header::functions::remamp(suf));
                         if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids)) [[unlikely]]
                         {
-                            //std::cout << "THIS HAPPENED!!!! -> "<< suf << std::endl;
+                            std::cout << "THIS HAPPENED!!!! -> "<< suf << std::endl;
                             newasm::terminate(newasm::exit_codes::invalid_memacc);
                             return 1;
                         }
@@ -2805,6 +2812,7 @@ namespace newasm
                     {
                         if(newasm::_this == nullptr) [[unlikely]]
                         {
+                            //std::cout << "THIS ACTUALLY HAPPENED!!!! -> "<< suf << std::endl;
                             newasm::terminate(newasm::exit_codes::invalid_memacc);
                             return 1;
                         }

@@ -1264,7 +1264,8 @@ nop
     int 0x3 ; activate autobos again
 
     mov tlr, 1
-    out 1
+    mov rax, 1
+    out * rax
     mov tlr, "red text"
     mov stl, 0c1
     mov fdx, 1
@@ -2637,6 +2638,8 @@ jmp e2349083l
     call std::ios::writeln
     merge this, ("mjau": "mjau mjau from merge this!")
     mov tlr, this (  "mjau"  )
+    call std::ios::writeln
+    mov tlr, # this
     call std::ios::writeln
 ; -------------------------- END OF PROGRAM -------------------------- ;
     mov tlr, *rax

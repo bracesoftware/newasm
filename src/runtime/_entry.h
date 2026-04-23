@@ -309,7 +309,7 @@ namespace newasm
 					}
 					case newasm::runtime::evalModes::addressOf:
 					{
-						newasm::header::functions::parseAddressOf<RawDataHere>(s, rdi);
+						newasm::header::functions::parseAddressOf<RawDataHere>(s, mode.argString2, mode.UsingThisPtr, rdi);
 						return;
 					}
 					case newasm::runtime::evalModes::valueOf: [[likely]] //primitive types and unions,and whole tuples/contexts

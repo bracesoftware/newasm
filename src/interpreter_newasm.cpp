@@ -402,7 +402,7 @@ namespace newasm
     {
         int udb_hash(const std::string& input);
     }
-    int terminate(int exit_code);
+    int terminate(int exit_code, const std::source_location loc = std::source_location::current());
     void async(const std::string& name);
     namespace header
     {

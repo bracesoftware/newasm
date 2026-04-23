@@ -980,7 +980,7 @@ namespace newasm
                             if(newasm::header::functions::istext(val))
                             {
                                 rdi->rawType = newasm::datatypes::text;
-                                rdi->rawFloat = newasm::header::functions::remq(val);
+                                rdi->rawString = newasm::header::functions::remq(val);
                                 break;
                             }
                             break;
@@ -1015,7 +1015,7 @@ namespace newasm
                             if(newasm::header::functions::istext(val))
                             {
                                 rdi->rawType = newasm::datatypes::text;
-                                rdi->rawFloat = newasm::header::functions::remq(val);
+                                rdi->rawString = newasm::header::functions::remq(val);
                                 break;
                             }
                             break;
@@ -1049,7 +1049,7 @@ namespace newasm
                             if(newasm::header::functions::istext(val))
                             {
                                 rdi->rawType = newasm::datatypes::text;
-                                rdi->rawFloat = newasm::header::functions::remq(val);
+                                rdi->rawString = newasm::header::functions::remq(val);
                                 break;
                             }
                             break;
@@ -1090,7 +1090,7 @@ namespace newasm
                             if(newasm::header::functions::istext(val))
                             {
                                 rdi->rawType = newasm::datatypes::text;
-                                rdi->rawFloat = newasm::header::functions::remq(val);
+                                rdi->rawString = newasm::header::functions::remq(val);
                                 break;
                             }
                             break;
@@ -1124,7 +1124,7 @@ namespace newasm
                             if(newasm::header::functions::istext(val))
                             {
                                 rdi->rawType = newasm::datatypes::text;
-                                rdi->rawFloat = newasm::header::functions::remq(val);
+                                rdi->rawString = newasm::header::functions::remq(val);
                                 break;
                             }
                             break;
@@ -1158,7 +1158,7 @@ namespace newasm
                             if(newasm::header::functions::istext(val))
                             {
                                 rdi->rawType = newasm::datatypes::text;
-                                rdi->rawFloat = newasm::header::functions::remq(val);
+                                rdi->rawString = newasm::header::functions::remq(val);
                                 break;
                             }
                             break;
@@ -1192,7 +1192,7 @@ namespace newasm
                             if(newasm::header::functions::istext(val))
                             {
                                 rdi->rawType = newasm::datatypes::text;
-                                rdi->rawFloat = newasm::header::functions::remq(val);
+                                rdi->rawString = newasm::header::functions::remq(val);
                                 break;
                             }
                             break;
@@ -1366,57 +1366,77 @@ namespace newasm
             }
 
             template<bool RawDataHere = false>
-            void parseAddressOf(std::string& s, newasm::rawData* rdi = nullptr)
+            inline void parseAddressOf(std::string& s, std::string addrOfWhat = "",
+                bool thisptr = false, newasm::rawData* rdi = nullptr
+            )
             {
-                if(s.empty())
+                VarPtr ptr = nullptr;
+                if(!thisptr)
                 {
-                    return;
-                }
-                if(s.at(0) != '#')
-                {
-                    return;
-                }
+                    if(addrOfWhat.empty())
+                    {
+                        if(s.empty())
+                        {
+                            return;
+                        }
+                        if(s.front() != '#')
+                        {
+                            return;
+                        }
+                        addrOfWhat = newasm::header::functions::trim(s.substr(1));
+                    }
+                    newasm::runtime::functions::parse<true>(addrOfWhat);
+                    auto it = newasm::variables::ids.find(addrOfWhat);
+                    if(it == newasm::variables::ids.end())
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return;
+                    }
 
-                auto suf = "&" + s.substr(1);
-                newasm::runtime::functions::parse(suf);
-                auto it = newasm::variables::ids.find(suf.substr(1));
-                if(it == newasm::variables::ids.end())
+                    ptr = &it->second;
+                }
+                else if(thisptr)
                 {
-                    newasm::terminate(newasm::exit_codes::invalid_memacc);
-                    return;
+                    if(newasm::_this == nullptr)
+                    {
+                        newasm::terminate(newasm::exit_codes::seg_fault);
+                        return;
+                    }
+
+                    ptr = newasm::_this;
                 }
                 
                 if constexpr(RawDataHere)
                 {
                     rdi->rawType = newasm::datatypes::number;
-                    rdi->rawInt = it->second.addr;
+                    rdi->rawInt = ptr->addr;
                 }
-                if constexpr(!RawDataHere) s = std::to_string(it->second.addr);
+                if constexpr(!RawDataHere) s = std::to_string(ptr->addr);
 
-                if(it->second.type == newasm::datatypes::yunion)
+                if(ptr->type == newasm::datatypes::yunion)
                 {
-                    if constexpr(RawDataHere) rdi->rawInt = it->second.yunion->addr;
-                    if constexpr(!RawDataHere) s = std::to_string(it->second.yunion->addr);
+                    if constexpr(RawDataHere) rdi->rawInt = ptr->yunion->addr;
+                    if constexpr(!RawDataHere) s = std::to_string(ptr->yunion->addr);
                 }
-                else if(it->second.type == newasm::datatypes::blueprint)
+                else if(ptr->type == newasm::datatypes::blueprint)
                 {
-                    if constexpr(RawDataHere) rdi->rawInt = it->second.blueprint->addr[0];
-                    if constexpr(!RawDataHere) s = std::to_string(it->second.blueprint->addr[0]);
+                    if constexpr(RawDataHere) rdi->rawInt = ptr->blueprint->addr[0];
+                    if constexpr(!RawDataHere) s = std::to_string(ptr->blueprint->addr[0]);
                 }
-                else if(it->second.type == newasm::datatypes::tuple)
+                else if(ptr->type == newasm::datatypes::tuple)
                 {
-                    if constexpr(RawDataHere) rdi->rawInt = it->second.tuple->addr[0];
-                    if constexpr(!RawDataHere) s = std::to_string(it->second.tuple->addr[0]);
+                    if constexpr(RawDataHere) rdi->rawInt = ptr->tuple->addr[0];
+                    if constexpr(!RawDataHere) s = std::to_string(ptr->tuple->addr[0]);
                 }
-                else if(it->second.type == newasm::datatypes::proc)
+                else if(ptr->type == newasm::datatypes::proc)
                 {
-                    if constexpr(RawDataHere) rdi->rawInt = it->second.addr;
-                    if constexpr(!RawDataHere) s = std::to_string(it->second.addr);//procedures aren't saved in same ram segment as vars
+                    if constexpr(RawDataHere) rdi->rawInt = ptr->addr;
+                    if constexpr(!RawDataHere) s = std::to_string(ptr->addr);//procedures aren't saved in same ram segment as vars
                 }
-                else if(it->second.type == newasm::datatypes::mycontext)
+                else if(ptr->type == newasm::datatypes::mycontext)
                 {
-                    if constexpr(RawDataHere) rdi->rawInt = it->second.context->addr[0];
-                    if constexpr(!RawDataHere) s = std::to_string(it->second.context->addr[0]);
+                    if constexpr(RawDataHere) rdi->rawInt = ptr->context->addr[0];
+                    if constexpr(!RawDataHere) s = std::to_string(ptr->context->addr[0]);
                 }
                 return;
             }
