@@ -128,15 +128,15 @@ namespace newasm
             std::string output;
             if(id == newasm::hardware::IO_ports::txtcol.get_addr())
             {
-                output = std::to_string(newasm::hardware::IO_ports::txtcol.get_value());
+                output = newasm::_std::to_string(newasm::hardware::IO_ports::txtcol.get_value());
             }
             if(id == newasm::hardware::IO_ports::dskfmat.get_addr())
             {
-                output = std::to_string(newasm::hardware::IO_ports::dskfmat.get_value());
+                output = newasm::_std::to_string(newasm::hardware::IO_ports::dskfmat.get_value());
             }
             if(id == newasm::hardware::IO_ports::dskw.get_addr())
             {
-                output = std::to_string(newasm::hardware::IO_ports::dskw.get_value());
+                output = newasm::_std::to_string(newasm::hardware::IO_ports::dskw.get_value());
             }
             if(id == newasm::hardware::IO_ports::dskr.get_addr())
             {

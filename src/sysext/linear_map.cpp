@@ -32,7 +32,7 @@ namespace newasm
             {
                 if(index >= this->size())
                 {
-                    throw std::out_of_range("linear_map: Function `this::operator()` cannot reach index " + std::to_string(index) + ".");
+                    throw std::out_of_range("linear_map: Function `this::operator()` cannot reach index " + newasm::_std::to_string(index) + ".");
                     return {__map__.at(0).first, __map__.at(0).second};
                 }
                 auto p = __map__.at(index);
@@ -58,7 +58,7 @@ namespace newasm
                         auto pos = i - offset;
                         if(pos < 0 || pos >= __map__.size())
                         {
-                            throw std::out_of_range("linear_map: Invalid offset (which is " + std::to_string(offset) + ").");
+                            throw std::out_of_range("linear_map: Invalid offset (which is " + newasm::_std::to_string(offset) + ").");
                         }
                         return __map__[pos].second;
                     }
@@ -81,7 +81,7 @@ namespace newasm
                         auto pos = i - offset;
                         if(pos < 0 || pos >= __map__.size())
                         {
-                            throw std::out_of_range("linear_map: Invalid offset (which is " + std::to_string(offset) + ").");
+                            throw std::out_of_range("linear_map: Invalid offset (which is " + newasm::_std::to_string(offset) + ").");
                         }
                         return __map__[pos].first;
                     }

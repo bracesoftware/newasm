@@ -55,7 +55,7 @@ namespace newasm
             //ext
             if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::ext)
             {
-                newasm::kernel::dynamic::CALL(newasm::mem::regs::dlx, std::to_string(newasm::mem::regs::fdx));
+                newasm::kernel::dynamic::CALL(newasm::mem::regs::dlx, newasm::_std::to_string(newasm::mem::regs::fdx));
                 newasm::mem::regs::tlr.add_end_("\"");
                 return 1;
             }
@@ -116,7 +116,7 @@ namespace newasm
                     }
                     float value = std::stof(newasm::mem::regs::tlr.get_value());
 
-                    newasm::mem::regs::tlr.set_value(std::to_string(std::sin(value)));
+                    newasm::mem::regs::tlr.set_value(newasm::_std::to_string(std::sin(value)));
                     return 1;
                 }
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::math, 2): //cosinus
@@ -130,7 +130,7 @@ namespace newasm
                     }
                     float value = std::stof(newasm::mem::regs::tlr.get_value());
 
-                    newasm::mem::regs::tlr.set_value(std::to_string(std::cos(value)));
+                    newasm::mem::regs::tlr.set_value(newasm::_std::to_string(std::cos(value)));
                     return 1;
                 }
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::math, 3): //tangens
@@ -144,7 +144,7 @@ namespace newasm
                     }
                     float value = std::stof(newasm::mem::regs::tlr.get_value());
 
-                    newasm::mem::regs::tlr.set_value(std::to_string(std::tan(value)));
+                    newasm::mem::regs::tlr.set_value(newasm::_std::to_string(std::tan(value)));
                     return 1;
                 }
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::math, 4): //sqrt
@@ -164,7 +164,7 @@ namespace newasm
                         value = -value;
                     }
 
-                    newasm::mem::regs::tlr.set_value(std::to_string(std::sqrt(value)));
+                    newasm::mem::regs::tlr.set_value(newasm::_std::to_string(std::sqrt(value)));
                     return 1;
                 }
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::math, 5): //absolute value
@@ -178,7 +178,7 @@ namespace newasm
                     }
                     float value = std::stof(newasm::mem::regs::tlr.get_value());
 
-                    newasm::mem::regs::tlr.set_value(std::to_string(std::abs(value)));
+                    newasm::mem::regs::tlr.set_value(newasm::_std::to_string(std::abs(value)));
                     return 1;
                 }
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::math, 6): //cbrt
@@ -192,7 +192,7 @@ namespace newasm
                     }
                     float value = std::stof(newasm::mem::regs::tlr.get_value());
 
-                    newasm::mem::regs::tlr.set_value(std::to_string(std::cbrt(value)));
+                    newasm::mem::regs::tlr.set_value(newasm::_std::to_string(std::cbrt(value)));
                     return 1;
                 }
                 /*
@@ -224,7 +224,7 @@ namespace newasm
                     }
 
                     int result = newasm::syscalls::misc::rand(std::stoi(newasm::mem::regs::tlr.get_value()), std::stoi(newasm::mem::regs::stl.get_value()));
-                    newasm::mem::regs::tlr.set_value(std::to_string(result));
+                    newasm::mem::regs::tlr.set_value(newasm::_std::to_string(result));
                     return 1;
                 }
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::misc, 2): // sys_misc_ctoi
@@ -442,7 +442,7 @@ namespace newasm
                     newasm::end = std::chrono::steady_clock::now();
                     newasm::network_deduction.push_back(newasm::end - newasm::start);
 
-                    newasm::mem::regs::tlr.set_value(std::to_string(result.first));
+                    newasm::mem::regs::tlr.set_value(newasm::_std::to_string(result.first));
                     newasm::mem::regs::stl.set_value(result.second);
                     newasm::mem::regs::stl.add_end_("\"");
                     return 1;
@@ -497,7 +497,7 @@ namespace newasm
                     {
                         if(it->second.type == newasm::datatypes::tuple)
                         {
-                            newasm::mem::regs::tlr.set_value(std::to_string(it->second.tuple->addr.size()));
+                            newasm::mem::regs::tlr.set_value(newasm::_std::to_string(it->second.tuple->addr.size()));
                             return 1;
                         }
                     }
@@ -533,7 +533,7 @@ namespace newasm
                     {
                         if(it->second.type == newasm::datatypes::mycontext)
                         {
-                            newasm::mem::regs::tlr.set_value(std::to_string(it->second.context->addr.size()));
+                            newasm::mem::regs::tlr.set_value(newasm::_std::to_string(it->second.context->addr.size()));
                             return 1;
                         }
                     }
@@ -629,32 +629,32 @@ namespace newasm
                                                             */
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::chrono, 1): //getyear
                 {
-                    newasm::mem::regs::tlr = std::to_string(newasm::chrono::year());
+                    newasm::mem::regs::tlr = newasm::_std::to_string(newasm::chrono::year());
                     return 1;
                 }
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::chrono, 2): //getmonth
                 {
-                    newasm::mem::regs::tlr = std::to_string(newasm::chrono::month());
+                    newasm::mem::regs::tlr = newasm::_std::to_string(newasm::chrono::month());
                     return 1;
                 }
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::chrono, 3): //day
                 {
-                    newasm::mem::regs::tlr = std::to_string(newasm::chrono::day());
+                    newasm::mem::regs::tlr = newasm::_std::to_string(newasm::chrono::day());
                     return 1;
                 }
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::chrono, 4): //hour
                 {
-                    newasm::mem::regs::tlr = std::to_string(newasm::chrono::hour());
+                    newasm::mem::regs::tlr = newasm::_std::to_string(newasm::chrono::hour());
                     return 1;
                 }
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::chrono, 5): //min
                 {
-                    newasm::mem::regs::tlr = std::to_string(newasm::chrono::minute());
+                    newasm::mem::regs::tlr = newasm::_std::to_string(newasm::chrono::minute());
                     return 1;
                 }
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::chrono, 6): //sec
                 {
-                    newasm::mem::regs::tlr = std::to_string(newasm::chrono::second());
+                    newasm::mem::regs::tlr = newasm::_std::to_string(newasm::chrono::second());
                     return 1;
                 }
                 
@@ -739,7 +739,7 @@ namespace newasm
                             newasm::header::functions::remq(
                                 newasm::mem::regs::stl
                             )
-                        ) + "'" + static_cast<std::string>("\nnewasm::net::download - result : '") + std::to_string(result) + "'"
+                        ) + "'" + static_cast<std::string>("\nnewasm::net::download - result : '") + newasm::_std::to_string(result) + "'"
                     );
                     return 1;
                 }
@@ -955,7 +955,7 @@ namespace newasm
                         return 1;
                     }
                     int result = newasm::containers::bit_arrays.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->get_at(std::stoi(newasm::mem::regs::tlr));
-                    newasm::mem::regs::tlr = std::to_string(result);
+                    newasm::mem::regs::tlr = newasm::_std::to_string(result);
                     return 1;
                 }
                 //binary trees
@@ -1001,7 +1001,7 @@ namespace newasm
                         return 1;
                     }
                     int result = newasm::containers::binary_trees.at(newasm::header::functions::remamp(newasm::mem::regs::cpt))->get_at(std::stoi(newasm::mem::regs::tlr));
-                    newasm::mem::regs::tlr = std::to_string(result);
+                    newasm::mem::regs::tlr = newasm::_std::to_string(result);
                     return 1;
                 }
 /*

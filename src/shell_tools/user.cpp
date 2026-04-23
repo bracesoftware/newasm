@@ -91,7 +91,7 @@ namespace newasm
             }
             inline static void setPasswdHash(std::string text)
             {
-                std::string hash = std::to_string(int(newasm::user::udb_hash(text)));
+                std::string hash = newasm::_std::to_string(int(newasm::user::udb_hash(text)));
                 newasm::user::overwriteFile(newasm::user::passwd_file, hash);
                 return;
             }

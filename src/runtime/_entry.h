@@ -54,10 +54,10 @@ namespace newasm
 							}
 							if(i.locked)
 							{
-								suf = std::to_string(0);
+								suf = newasm::_std::to_string(0);
 								return;
 							}
-							suf = std::to_string(newasm::hardware::randAccessMem.peek<int>(i.addr));
+							suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(i.addr));
 							return;
 						}
 						if(i.type == newasm::datatypes::decimal)
@@ -75,10 +75,10 @@ namespace newasm
 							}
 							if(i.locked)
 							{
-								suf = std::to_string(0.0);
+								suf = newasm::_std::to_string(0.0);
 								return;
 							}
-							suf = std::to_string(newasm::hardware::randAccessMem.peek<float>(i.addr));
+							suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(i.addr));
 							return;
 						}
 						if(i.type == newasm::datatypes::character)
@@ -132,12 +132,12 @@ namespace newasm
 							{
 								if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::num)
 								{
-									suf = std::to_string(0);
+									suf = newasm::_std::to_string(0);
 									return;
 								}
 								if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::decm)
 								{
-									suf = std::to_string(0.0);
+									suf = newasm::_std::to_string(0.0);
 									return;
 								}
 								if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::char__)
@@ -155,12 +155,12 @@ namespace newasm
 
 							if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::num)
 							{
-								suf = std::to_string(newasm::hardware::randAccessMem.peek<int>(i.yunion->addr));
+								suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(i.yunion->addr));
 								return;
 							}
 							if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::decm)
 							{
-								suf = std::to_string(newasm::hardware::randAccessMem.peek<float>(i.yunion->addr));
+								suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(i.yunion->addr));
 								return;
 							}
 							if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::char__)
@@ -187,13 +187,13 @@ namespace newasm
 							{
 								if(i.tuple->type[k] == newasm::datatypes::number)
 								{
-									temp = std::to_string(newasm::hardware::randAccessMem.peek<int>(i.tuple->addr[k]));
+									temp = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(i.tuple->addr[k]));
 									contents.push_back(temp);
 									continue;
 								}
 								if(i.tuple->type[k] == newasm::datatypes::decimal)
 								{
-									temp = std::to_string(newasm::hardware::randAccessMem.peek<float>(i.tuple->addr[k]));
+									temp = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(i.tuple->addr[k]));
 									contents.push_back(temp);
 									continue;
 								}
@@ -248,13 +248,13 @@ namespace newasm
 								temp.append("\"" + i.context->keys[idx] + "\":");
 								if(i.context->type[idx] == newasm::datatypes::number)
 								{
-									temp.append(std::to_string(newasm::hardware::randAccessMem.peek<int>(i.context->addr[idx])));
+									temp.append(newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(i.context->addr[idx])));
 									contents.push_back(temp);
 									continue;
 								}
 								if(i.context->type[idx] == newasm::datatypes::decimal)
 								{
-									temp.append(std::to_string(newasm::hardware::randAccessMem.peek<float>(i.context->addr[idx])));
+									temp.append(newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(i.context->addr[idx])));
 									contents.push_back(temp);
 									continue;
 								}
@@ -299,7 +299,7 @@ namespace newasm
 					case newasm::runtime::evalModes::sizeOf:
 					{
 						int size = newasm::header::functions::issizeof(s).second;
-						s = std::to_string(size);
+						s = newasm::_std::to_string(size);
 						return;
 					}
 					case newasm::runtime::evalModes::regDeref: [[likely]]
@@ -333,10 +333,10 @@ namespace newasm
 									}
 									if(i.locked)
 									{
-										suf = std::to_string(0);
+										suf = newasm::_std::to_string(0);
 										return;
 									}
-									suf = std::to_string(newasm::hardware::randAccessMem.peek<int>(i.addr));
+									suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(i.addr));
 									return;
 								}
 								if(i.type == newasm::datatypes::decimal)
@@ -354,10 +354,10 @@ namespace newasm
 									}
 									if(i.locked)
 									{
-										suf = std::to_string(0.0);
+										suf = newasm::_std::to_string(0.0);
 										return;
 									}
-									suf = std::to_string(newasm::hardware::randAccessMem.peek<float>(i.addr));
+									suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(i.addr));
 									return;
 								}
 								if(i.type == newasm::datatypes::character)
@@ -411,12 +411,12 @@ namespace newasm
 									{
 										if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::num)
 										{
-											suf = std::to_string(0);
+											suf = newasm::_std::to_string(0);
 											return;
 										}
 										if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::decm)
 										{
-											suf = std::to_string(0.0);
+											suf = newasm::_std::to_string(0.0);
 											return;
 										}
 										if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::char__)
@@ -434,12 +434,12 @@ namespace newasm
 
 									if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::num)
 									{
-										suf = std::to_string(newasm::hardware::randAccessMem.peek<int>(i.yunion->addr));
+										suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(i.yunion->addr));
 										return;
 									}
 									if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::decm)
 									{
-										suf = std::to_string(newasm::hardware::randAccessMem.peek<float>(i.yunion->addr));
+										suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(i.yunion->addr));
 										return;
 									}
 									if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::char__)
@@ -466,13 +466,13 @@ namespace newasm
 									{
 										if(i.tuple->type[k] == newasm::datatypes::number)
 										{
-											temp = std::to_string(newasm::hardware::randAccessMem.peek<int>(i.tuple->addr[k]));
+											temp = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(i.tuple->addr[k]));
 											contents.push_back(temp);
 											continue;
 										}
 										if(i.tuple->type[k] == newasm::datatypes::decimal)
 										{
-											temp = std::to_string(newasm::hardware::randAccessMem.peek<float>(i.tuple->addr[k]));
+											temp = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(i.tuple->addr[k]));
 											contents.push_back(temp);
 											continue;
 										}
@@ -526,13 +526,13 @@ namespace newasm
 										temp.append("\"" + i.context->keys[idx] + "\":");
 										if(i.context->type[idx] == newasm::datatypes::number)
 										{
-											temp.append(std::to_string(newasm::hardware::randAccessMem.peek<int>(i.context->addr[idx])));
+											temp.append(newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(i.context->addr[idx])));
 											contents.push_back(temp);
 											continue;
 										}
 										if(i.context->type[idx] == newasm::datatypes::decimal)
 										{
-											temp.append(std::to_string(newasm::hardware::randAccessMem.peek<float>(i.context->addr[idx])));
+											temp.append(newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(i.context->addr[idx])));
 											contents.push_back(temp);
 											continue;
 										}
@@ -649,10 +649,10 @@ namespace newasm
 									}
 									if(i.locked)
 									{
-										suf = std::to_string(0);
+										suf = newasm::_std::to_string(0);
 										return;
 									}
-									suf = std::to_string(newasm::hardware::randAccessMem.peek<int>(i.addr));
+									suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(i.addr));
 									return;
 								}
 								if(i.type == newasm::datatypes::decimal)
@@ -670,10 +670,10 @@ namespace newasm
 									}
 									if(i.locked)
 									{
-										suf = std::to_string(0.0);
+										suf = newasm::_std::to_string(0.0);
 										return;
 									}
-									suf = std::to_string(newasm::hardware::randAccessMem.peek<float>(i.addr));
+									suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(i.addr));
 									return;
 								}
 								if(i.type == newasm::datatypes::character)
@@ -727,12 +727,12 @@ namespace newasm
 									{
 										if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::num)
 										{
-											suf = std::to_string(0);
+											suf = newasm::_std::to_string(0);
 											return;
 										}
 										if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::decm)
 										{
-											suf = std::to_string(0.0);
+											suf = newasm::_std::to_string(0.0);
 											return;
 										}
 										if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::char__)
@@ -750,12 +750,12 @@ namespace newasm
 
 									if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::num)
 									{
-										suf = std::to_string(newasm::hardware::randAccessMem.peek<int>(i.yunion->addr));
+										suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(i.yunion->addr));
 										return;
 									}
 									if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::decm)
 									{
-										suf = std::to_string(newasm::hardware::randAccessMem.peek<float>(i.yunion->addr));
+										suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(i.yunion->addr));
 										return;
 									}
 									if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::char__)
@@ -784,13 +784,13 @@ namespace newasm
 									{
 										if(i.tuple->type[k] == newasm::datatypes::number)
 										{
-											temp = std::to_string(newasm::hardware::randAccessMem.peek<int>(i.tuple->addr[k]));
+											temp = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(i.tuple->addr[k]));
 											contents.push_back(temp);
 											continue;
 										}
 										if(i.tuple->type[k] == newasm::datatypes::decimal)
 										{
-											temp = std::to_string(newasm::hardware::randAccessMem.peek<float>(i.tuple->addr[k]));
+											temp = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(i.tuple->addr[k]));
 											contents.push_back(temp);
 											continue;
 										}
@@ -844,13 +844,13 @@ namespace newasm
 										temp.append("\"" + i.context->keys[idx] + "\":");
 										if(i.context->type[idx] == newasm::datatypes::number)
 										{
-											temp.append(std::to_string(newasm::hardware::randAccessMem.peek<int>(i.context->addr[idx])));
+											temp.append(newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(i.context->addr[idx])));
 											contents.push_back(temp);
 											continue;
 										}
 										if(i.context->type[idx] == newasm::datatypes::decimal)
 										{
-											temp.append(std::to_string(newasm::hardware::randAccessMem.peek<float>(i.context->addr[idx])));
+											temp.append(newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(i.context->addr[idx])));
 											contents.push_back(temp);
 											continue;
 										}
@@ -971,11 +971,11 @@ namespace newasm
 
 							if(TupleOrContext->context->type[idx] == newasm::datatypes::number)
 							{
-								suf = std::to_string(newasm::hardware::randAccessMem.peek<int>(TupleOrContext->context->addr[idx]));
+								suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(TupleOrContext->context->addr[idx]));
 							}
 							else if(TupleOrContext->context->type[idx] == newasm::datatypes::decimal)
 							{
-								suf = std::to_string(newasm::hardware::randAccessMem.peek<float>(TupleOrContext->context->addr[idx]));
+								suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(TupleOrContext->context->addr[idx]));
 							}
 							else if(TupleOrContext->context->type[idx] == newasm::datatypes::character)
 							{
@@ -1011,7 +1011,7 @@ namespace newasm
 									suf = "0";
 									return;
 								}
-								suf = std::to_string(newasm::hardware::randAccessMem.peek<int>(TupleOrContext->tuple->addr[index]));
+								suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(TupleOrContext->tuple->addr[index]));
 								return;
 							}
 							else if(TupleOrContext->tuple->type[index] == newasm::datatypes::decimal)
@@ -1021,7 +1021,7 @@ namespace newasm
 									suf = "0.0";
 									return;
 								}
-								suf = std::to_string(newasm::hardware::randAccessMem.peek<float>(TupleOrContext->tuple->addr[index]));
+								suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(TupleOrContext->tuple->addr[index]));
 							}
 							else if(TupleOrContext->tuple->type[index] == newasm::datatypes::character)
 							{
@@ -1193,20 +1193,20 @@ namespace newasm
 						{
 							if(i.locked)
 							{
-								suf = std::to_string(0);
+								suf = newasm::_std::to_string(0);
 								return;
 							}
-							suf = std::to_string(newasm::hardware::randAccessMem.peek<int>(i.addr));
+							suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(i.addr));
 							return;
 						}
 						if(i.type == newasm::datatypes::decimal)
 						{
 							if(i.locked)
 							{
-								suf = std::to_string(0.0);
+								suf = newasm::_std::to_string(0.0);
 								return;
 							}
-							suf = std::to_string(newasm::hardware::randAccessMem.peek<float>(i.addr));
+							suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(i.addr));
 							return;
 						}
 						if(i.type == newasm::datatypes::character)
@@ -1238,12 +1238,12 @@ namespace newasm
 							{
 								if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::num)
 								{
-									suf = std::to_string(0);
+									suf = newasm::_std::to_string(0);
 									return;
 								}
 								if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::decm)
 								{
-									suf = std::to_string(0.0);
+									suf = newasm::_std::to_string(0.0);
 									return;
 								}
 								if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::char__)
@@ -1261,12 +1261,12 @@ namespace newasm
 
 							if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::num)
 							{
-								suf = std::to_string(newasm::hardware::randAccessMem.peek<int>(i.yunion->addr));
+								suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(i.yunion->addr));
 								return;
 							}
 							if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::decm)
 							{
-								suf = std::to_string(newasm::hardware::randAccessMem.peek<float>(i.yunion->addr));
+								suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(i.yunion->addr));
 								return;
 							}
 							if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::char__)
@@ -1350,7 +1350,7 @@ namespace newasm
 							#if 0
 							if(idx != (-1))
 							{
-								newasm::header::functions::wrn("Found key: `" + tupleOrContextIndex + "` at idx " + std::to_string(idx) + ", it->second.context->keys.at(idx): `" + it->second.context->keys.at(idx) + "`");
+								newasm::header::functions::wrn("Found key: `" + tupleOrContextIndex + "` at idx " + newasm::_std::to_string(idx) + ", it->second.context->keys.at(idx): `" + it->second.context->keys.at(idx) + "`");
 							}
 							#endif
 							if(idx == (-1))
@@ -1361,11 +1361,11 @@ namespace newasm
 
 							if(it->second.context->type[idx] == newasm::datatypes::number)
 							{
-								suf = std::to_string(newasm::hardware::randAccessMem.peek<int>(it->second.context->addr[idx]));
+								suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(it->second.context->addr[idx]));
 							}
 							if(it->second.context->type[idx] == newasm::datatypes::decimal)
 							{
-								suf = std::to_string(newasm::hardware::randAccessMem.peek<float>(it->second.context->addr[idx]));
+								suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(it->second.context->addr[idx]));
 							}
 							if(it->second.context->type[idx] == newasm::datatypes::character)
 							{
@@ -1415,7 +1415,7 @@ namespace newasm
 								suf = "0";
 								return;
 							}
-							suf = std::to_string(newasm::hardware::randAccessMem.peek<int>(it->second.tuple->addr[index]));
+							suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(it->second.tuple->addr[index]));
 						}
 						if(it->second.tuple->type[index] == newasm::datatypes::decimal)
 						{
@@ -1424,7 +1424,7 @@ namespace newasm
 								suf = "0.0";
 								return;
 							}
-							suf = std::to_string(newasm::hardware::randAccessMem.peek<float>(it->second.tuple->addr[index]));
+							suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(it->second.tuple->addr[index]));
 						}
 						if(it->second.tuple->type[index] == newasm::datatypes::character)
 						{
@@ -1462,13 +1462,13 @@ namespace newasm
 						{
 							if(it->second.tuple->type[i] == newasm::datatypes::number)
 							{
-								temp = std::to_string(newasm::hardware::randAccessMem.peek<int>(it->second.tuple->addr[i]));
+								temp = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(it->second.tuple->addr[i]));
 								contents.push_back(temp);
 								continue;
 							}
 							if(it->second.tuple->type[i] == newasm::datatypes::decimal)
 							{
-								temp = std::to_string(newasm::hardware::randAccessMem.peek<float>(it->second.tuple->addr[i]));
+								temp = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(it->second.tuple->addr[i]));
 								contents.push_back(temp);
 								continue;
 							}
@@ -1522,13 +1522,13 @@ namespace newasm
 							temp.append("\"" + it->second.context->keys[idx] + "\":");
 							if(it->second.context->type[idx] == newasm::datatypes::number)
 							{
-								temp.append(std::to_string(newasm::hardware::randAccessMem.peek<int>(it->second.context->addr[idx])));
+								temp.append(newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(it->second.context->addr[idx])));
 								contents.push_back(temp);
 								continue;
 							}
 							if(it->second.context->type[idx] == newasm::datatypes::decimal)
 							{
-								temp.append(std::to_string(newasm::hardware::randAccessMem.peek<float>(it->second.context->addr[idx])));
+								temp.append(newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(it->second.context->addr[idx])));
 								contents.push_back(temp);
 								continue;
 							}
@@ -1644,13 +1644,13 @@ namespace newasm
                 if (var_info.type == newasm::datatypes::number)
                 {
                     if (var_info.locked) suf = "0";
-                    else suf = std::to_string(newasm::hardware::randAccessMem.peek<int>(var_info.addr));
+                    else suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(var_info.addr));
                     return;
                 }
                 if (var_info.type == newasm::datatypes::decimal)
                 {
                     if (var_info.locked) suf = "0.0";
-                    else suf = std::to_string(newasm::hardware::randAccessMem.peek<float>(var_info.addr));
+                    else suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(var_info.addr));
                     return;
                 }
                 if (var_info.type == newasm::datatypes::character)
@@ -1678,9 +1678,9 @@ namespace newasm
                     }
 
                     if (m_type == newasm::core::lang_inf::typenames::num)
-                        suf = std::to_string(newasm::hardware::randAccessMem.peek<int>(var_info.yunion->addr));
+                        suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(var_info.yunion->addr));
                     else if (m_type == newasm::core::lang_inf::typenames::decm)
-                        suf = std::to_string(newasm::hardware::randAccessMem.peek<float>(var_info.yunion->addr));
+                        suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(var_info.yunion->addr));
                     else if (m_type == newasm::core::lang_inf::typenames::char__)
                         suf = "'" + std::string(1, newasm::hardware::randAccessMem.peek<char>(var_info.yunion->addr)) + "'";
                     else if (m_type == newasm::core::lang_inf::typenames::txt)
@@ -1698,7 +1698,7 @@ namespace newasm
                     case newasm::runtime::evalModes::sizeOf:
                     {
                         int size = newasm::header::functions::issizeof(s).second;
-                        s = std::to_string(size);
+                        s = newasm::_std::to_string(size);
                         return;
                     }
                     case newasm::runtime::evalModes::regDeref:
@@ -1823,8 +1823,8 @@ namespace newasm
                             auto type = it->second.context->type[idx];
                             auto addr = it->second.context->addr[idx];
 
-                            if(type == newasm::datatypes::number) s = std::to_string(newasm::hardware::randAccessMem.peek<int>(addr));
-                            else if(type == newasm::datatypes::decimal) s = std::to_string(newasm::hardware::randAccessMem.peek<float>(addr));
+                            if(type == newasm::datatypes::number) s = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(addr));
+                            else if(type == newasm::datatypes::decimal) s = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(addr));
                             else if(type == newasm::datatypes::character) s = "'" + std::string(1, newasm::hardware::randAccessMem.peek<char>(addr)) + "'";
                             else if(type == newasm::datatypes::text) s = "\"" + newasm::hardware::randAccessMem.peek<std::string>(addr) + "\"";
                             return;
@@ -1857,8 +1857,8 @@ namespace newasm
                             auto type = it->second.tuple->type[index];
                             auto addr = it->second.tuple->addr[index];
 
-                            if(type == newasm::datatypes::number) s = std::to_string(newasm::hardware::randAccessMem.peek<int>(addr));
-                            else if(type == newasm::datatypes::decimal) s = std::to_string(newasm::hardware::randAccessMem.peek<float>(addr));
+                            if(type == newasm::datatypes::number) s = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(addr));
+                            else if(type == newasm::datatypes::decimal) s = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(addr));
                             else if(type == newasm::datatypes::character) s = "'" + std::string(1, newasm::hardware::randAccessMem.peek<char>(addr)) + "'";
                             else if(type == newasm::datatypes::text) s = "\"" + newasm::hardware::randAccessMem.peek<std::string>(addr) + "\"";
                         }
@@ -2000,8 +2000,8 @@ namespace newasm
                             auto type = it->second.context->type[idx];
                             auto addr = it->second.context->addr[idx];
 
-                            if(type == newasm::datatypes::number) suf = std::to_string(newasm::hardware::randAccessMem.peek<int>(addr));
-                            else if(type == newasm::datatypes::decimal) suf = std::to_string(newasm::hardware::randAccessMem.peek<float>(addr));
+                            if(type == newasm::datatypes::number) suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(addr));
+                            else if(type == newasm::datatypes::decimal) suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(addr));
                             else if(type == newasm::datatypes::character) suf = "'" + std::string(1, newasm::hardware::randAccessMem.peek<char>(addr)) + "'";
                             else if(type == newasm::datatypes::text) suf = "\"" + newasm::hardware::randAccessMem.peek<std::string>(addr) + "\"";
                             return;
@@ -2030,8 +2030,8 @@ namespace newasm
                         auto type = it->second.tuple->type[index];
                         auto addr = it->second.tuple->addr[index];
 
-                        if(type == newasm::datatypes::number) suf = std::to_string(newasm::hardware::randAccessMem.peek<int>(addr));
-                        else if(type == newasm::datatypes::decimal) suf = std::to_string(newasm::hardware::randAccessMem.peek<float>(addr));
+                        if(type == newasm::datatypes::number) suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(addr));
+                        else if(type == newasm::datatypes::decimal) suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(addr));
                         else if(type == newasm::datatypes::character) suf = "'" + std::string(1, newasm::hardware::randAccessMem.peek<char>(addr)) + "'";
                         else if(type == newasm::datatypes::text) suf = "\"" + newasm::hardware::randAccessMem.peek<std::string>(addr) + "\"";
                     }
@@ -2051,8 +2051,8 @@ namespace newasm
                             auto type = var_it->second.tuple->type[i];
                             auto addr = var_it->second.tuple->addr[i];
                             
-                            if(type == newasm::datatypes::number) parsed_contents += std::to_string(newasm::hardware::randAccessMem.peek<int>(addr));
-                            else if(type == newasm::datatypes::decimal) parsed_contents += std::to_string(newasm::hardware::randAccessMem.peek<float>(addr));
+                            if(type == newasm::datatypes::number) parsed_contents += newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(addr));
+                            else if(type == newasm::datatypes::decimal) parsed_contents += newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(addr));
                             else if(type == newasm::datatypes::character) parsed_contents += "'" + std::string(1, newasm::hardware::randAccessMem.peek<char>(addr)) + "'";
                             else if(type == newasm::datatypes::text) parsed_contents += "\"" + newasm::hardware::randAccessMem.peek<std::string>(addr) + "\"";
                             
@@ -2072,8 +2072,8 @@ namespace newasm
                             auto type = var_it->second.context->type[idx];
                             auto addr = var_it->second.context->addr[idx];
                             
-                            if(type == newasm::datatypes::number) parsed_contents += std::to_string(newasm::hardware::randAccessMem.peek<int>(addr));
-                            else if(type == newasm::datatypes::decimal) parsed_contents += std::to_string(newasm::hardware::randAccessMem.peek<float>(addr));
+                            if(type == newasm::datatypes::number) parsed_contents += newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(addr));
+                            else if(type == newasm::datatypes::decimal) parsed_contents += newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(addr));
                             else if(type == newasm::datatypes::character) parsed_contents += "'" + std::string(1, newasm::hardware::randAccessMem.peek<char>(addr)) + "'";
                             else if(type == newasm::datatypes::text) parsed_contents += "\"" + newasm::hardware::randAccessMem.peek<std::string>(addr) + "\"";
                             

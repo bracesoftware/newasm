@@ -323,7 +323,7 @@ namespace newasm
                     unsigned int pos = __stdlib_code.find(placeholder);
                     if(pos != std::string::npos)
                     {
-                        __stdlib_code.replace(pos, placeholder.length(), std::to_string(newasm::BUILD_NUMBER));
+                        __stdlib_code.replace(pos, placeholder.length(), newasm::_std::to_string(newasm::BUILD_NUMBER));
                     }
                     else
                     {

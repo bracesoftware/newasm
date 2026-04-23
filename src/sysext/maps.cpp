@@ -37,7 +37,7 @@ namespace newasm
                     std::cout << std::endl;
                     std::cout << "==========================================" << std::endl;
                     std::cout << "File: " << loc.file_name() << std::endl;
-                    std::cout << "Line: " << std::to_string(loc.line()) << std::endl;
+                    std::cout << "Line: " << newasm::_std::to_string(loc.line()) << std::endl;
                     std::cout << "Func: " << loc.function_name() << std::endl;
                     std::cout << "==========================================" << std::endl;
 

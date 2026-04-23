@@ -750,7 +750,7 @@ namespace newasm::header
             }
         }
 
-        inline bool isfloat(const std::string& s)
+        inline bool CheckFloatingPoint(const std::string& s)
         {
             int dotCount = 0;
             int minusSign = 0;
@@ -760,7 +760,7 @@ namespace newasm::header
             for(size_t i = 0; i < s.size(); ++i)
             {
                 char c = s[i];
-                if(std::isdigit(c))
+                if('0' <= c && c <= '9')//if(std::isdigit(c))
                 {
                     continue;
                 }
@@ -800,6 +800,12 @@ namespace newasm::header
 
             return dotCount == 1;
         }
+
+        ATTR_FLAT inline bool isfloat(const std::string& str)
+        {
+            return CheckFloatingPoint(str);// or isnumeric(str);
+        }
+
         inline bool istext_(const std::string& str)
         {
             int quocount = 0;

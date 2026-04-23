@@ -1218,7 +1218,7 @@ namespace newasm
                 newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                 return 1;
             }
-            struct_member_id->value = std::to_string(intreg);
+            struct_member_id->value = newasm::_std::to_string(intreg);
             if(debugit) std::cout << struct_member_id->datatype << " " << struct_member_id->name << " " << struct_member_id->value << std::endl;
             return 1;
         }
@@ -1229,7 +1229,7 @@ namespace newasm
                 newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                 return 1;
             }
-            struct_member_id->value = std::to_string(floatreg);
+            struct_member_id->value = newasm::_std::to_string(floatreg);
             if(debugit) std::cout << struct_member_id->datatype << " " << struct_member_id->name << " " << struct_member_id->value << std::endl;
             return 1;
         }
@@ -1812,7 +1812,7 @@ namespace newasm
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                             return 1;
                         }
-                        newasm::mem::data[opr] = std::to_string(newasm::mem::regs::fdx);
+                        newasm::mem::data[opr] = newasm::_std::to_string(newasm::mem::regs::fdx);
                         return 1;
                     }
                     case newasm::mem::regs::imm__:
@@ -1822,7 +1822,7 @@ namespace newasm
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                             return 1;
                         }
-                        newasm::mem::data[opr] = std::to_string(newasm::mem::regs::imm);
+                        newasm::mem::data[opr] = newasm::_std::to_string(newasm::mem::regs::imm);
                         return 1;
                     }
                     case newasm::mem::regs::rbx__:
@@ -1832,7 +1832,7 @@ namespace newasm
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                             return 1;
                         }
-                        newasm::mem::data[opr] = std::to_string(newasm::mem::regs::rbx);
+                        newasm::mem::data[opr] = newasm::_std::to_string(newasm::mem::regs::rbx);
                         return 1;
                     }
                     case newasm::mem::regs::rax__:
@@ -1842,7 +1842,7 @@ namespace newasm
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                             return 1;
                         }
-                        newasm::mem::data[opr] = std::to_string(newasm::mem::regs::rax);
+                        newasm::mem::data[opr] = newasm::_std::to_string(newasm::mem::regs::rax);
                         return 1;
                     }
                     case newasm::mem::regs::bos__:
@@ -1852,7 +1852,7 @@ namespace newasm
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                             return 1;
                         }
-                        newasm::mem::data[opr] = std::to_string(newasm::mem::regs::bos);
+                        newasm::mem::data[opr] = newasm::_std::to_string(newasm::mem::regs::bos);
                         return 1;
                     }
                     case newasm::mem::regs::tlr__:
@@ -2196,7 +2196,7 @@ namespace newasm
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                             return 1;
                         }
-                        newasm::mem::data[opr] = std::to_string(newasm::mem::regs::stk);
+                        newasm::mem::data[opr] = newasm::_std::to_string(newasm::mem::regs::stk);
                         return 1;
                     }
                     case newasm::mem::regs::hea__:
@@ -2206,7 +2206,7 @@ namespace newasm
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                             return 1;
                         }
-                        newasm::mem::data[opr] = std::to_string(newasm::mem::regs::hea);
+                        newasm::mem::data[opr] = newasm::_std::to_string(newasm::mem::regs::hea);
                         return 1;
                     }
                     case newasm::mem::regs::cpt__:
@@ -2228,19 +2228,19 @@ namespace newasm
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                             return 1;
                         }
-                        newasm::mem::data[opr] = std::to_string(newasm::mem::regs::cpr);
+                        newasm::mem::data[opr] = newasm::_std::to_string(newasm::mem::regs::cpr);
                         return 1;
                     }
                     case newasm::mem::regs::cr0__:
                     {
                         if(newasm::mem::datatypes[opr] == newasm::datatypes::number)
                         {
-                            newasm::mem::data[opr] = std::to_string(newasm::mem::regs::cr0.get_value());
+                            newasm::mem::data[opr] = newasm::_std::to_string(newasm::mem::regs::cr0.get_value());
                             return 1;
                         }
                         if(newasm::mem::datatypes[opr] == newasm::datatypes::decimal)
                         {
-                            newasm::mem::data[opr] = std::to_string(newasm::mem::regs::cr0);
+                            newasm::mem::data[opr] = newasm::_std::to_string(newasm::mem::regs::cr0);
                             return 1;
                         }
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
@@ -2250,12 +2250,12 @@ namespace newasm
                     {
                         if(newasm::mem::datatypes[opr] == newasm::datatypes::number)
                         {
-                            newasm::mem::data[opr] = std::to_string(newasm::mem::regs::cr1.get_value());
+                            newasm::mem::data[opr] = newasm::_std::to_string(newasm::mem::regs::cr1.get_value());
                             return 1;
                         }
                         if(newasm::mem::datatypes[opr] == newasm::datatypes::decimal)
                         {
-                            newasm::mem::data[opr] = std::to_string(newasm::mem::regs::cr1);
+                            newasm::mem::data[opr] = newasm::_std::to_string(newasm::mem::regs::cr1);
                             return 1;
                         }
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
@@ -2265,12 +2265,12 @@ namespace newasm
                     {
                         if(newasm::mem::datatypes[opr] == newasm::datatypes::number)
                         {
-                            newasm::mem::data[opr] = std::to_string(newasm::mem::regs::cr2);
+                            newasm::mem::data[opr] = newasm::_std::to_string(newasm::mem::regs::cr2);
                             return 1;
                         }
                         if(newasm::mem::datatypes[opr] == newasm::datatypes::decimal)
                         {
-                            newasm::mem::data[opr] = std::to_string(newasm::mem::regs::cr2.get_value());
+                            newasm::mem::data[opr] = newasm::_std::to_string(newasm::mem::regs::cr2.get_value());
                             return 1;
                         }
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
@@ -2280,12 +2280,12 @@ namespace newasm
                     {
                         if(newasm::mem::datatypes[opr] == newasm::datatypes::number)
                         {
-                            newasm::mem::data[opr] = std::to_string(newasm::mem::regs::cr3);
+                            newasm::mem::data[opr] = newasm::_std::to_string(newasm::mem::regs::cr3);
                             return 1;
                         }
                         if(newasm::mem::datatypes[opr] == newasm::datatypes::decimal)
                         {
-                            newasm::mem::data[opr] = std::to_string(newasm::mem::regs::cr3.get_value());
+                            newasm::mem::data[opr] = newasm::_std::to_string(newasm::mem::regs::cr3.get_value());
                             return 1;
                         }
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
@@ -2298,7 +2298,7 @@ namespace newasm
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                             return 1;
                         }
-                        newasm::mem::data[opr] = std::to_string(newasm::mem::regs::br0);
+                        newasm::mem::data[opr] = newasm::_std::to_string(newasm::mem::regs::br0);
                         return 1;
                     }
                     case newasm::mem::regs::br1__:
@@ -2308,7 +2308,7 @@ namespace newasm
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                             return 1;
                         }
-                        newasm::mem::data[opr] = std::to_string(newasm::mem::regs::br1);
+                        newasm::mem::data[opr] = newasm::_std::to_string(newasm::mem::regs::br1);
                         return 1;
                     }
                     default:
@@ -2875,6 +2875,7 @@ namespace newasm
                     {
                         if(lineInfo.altArgType == newasm::datatypes::symbol_name)
                         {
+                            //std::cout << "\nEvo ga error -> `" << opr << "`\n";
                             if(!newasm::header::functions::isfloat(opr))
                             {
                                 newasm::terminate(newasm::exit_codes::dtyp_mismatch);
@@ -2994,7 +2995,7 @@ namespace newasm
                         //newasm::header::functions::info("Modifying context: " + suf);
 
                         auto oldcontents_ = i.context->keys.size();
-                        //newasm::header::functions::info("Found keys: " + std::to_string(oldcontents_));
+                        //newasm::header::functions::info("Found keys: " + newasm::_std::to_string(oldcontents_));
                         int addr = 0;
                         for(int idx = 0; idx < oldcontents_; ++idx)
                         {
@@ -3030,15 +3031,15 @@ namespace newasm
                         auto size = i.context->keys.size();
                         if(i.context->addr.size() != size)
                         {
-                            //newasm::header::functions::err("ADDR.SIZE NIJE JEDNAK SIZE: " + std::to_string(i.context->addr.size()));
-                            newasm::header::functions::err("You should NOT have seen this message! Code: CTX1-" + std::to_string(size) + "-" + std::to_string(i.context->addr.size()));
+                            //newasm::header::functions::err("ADDR.SIZE NIJE JEDNAK SIZE: " + newasm::_std::to_string(i.context->addr.size()));
+                            newasm::header::functions::err("You should NOT have seen this message! Code: CTX1-" + newasm::_std::to_string(size) + "-" + newasm::_std::to_string(i.context->addr.size()));
                             newasm::terminate(newasm::exit_codes::invalid_alloc);
                             return 1;
                         }
                         if(i.context->type.size() != size)
                         {
-                            //newasm::header::functions::err("TYPE.SIZE NIJE JEDNAK SIZE: " + std::to_string(i.context->type.size()));
-                            newasm::header::functions::err("You should NOT have seen this message! Code: CTX2-" + std::to_string(size) + "-" + std::to_string(i.context->type.size()));
+                            //newasm::header::functions::err("TYPE.SIZE NIJE JEDNAK SIZE: " + newasm::_std::to_string(i.context->type.size()));
+                            newasm::header::functions::err("You should NOT have seen this message! Code: CTX2-" + newasm::_std::to_string(size) + "-" + newasm::_std::to_string(i.context->type.size()));
                             newasm::terminate(newasm::exit_codes::invalid_alloc);
                             return 1;
                         }
@@ -6472,12 +6473,12 @@ namespace newasm
                 };
                 if(suf == newasm::mem::regs::fdx.identifier())
                 {
-                    debugRegister(suf, std::to_string(newasm::mem::regs::fdx));
+                    debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::fdx));
                     return 1;
                 }
                 if(suf == newasm::mem::regs::bos.identifier())
                 {
-                    debugRegister(suf, std::to_string(newasm::mem::regs::bos));
+                    debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::bos));
                     return 1;
                 }
                 if(suf == newasm::mem::regs::tlr.identifier())
@@ -6512,12 +6513,12 @@ namespace newasm
                 }
                 if(suf == newasm::mem::regs::stk.identifier())
                 {
-                    debugRegister(suf, std::to_string(newasm::mem::regs::stk));
+                    debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::stk));
                     return 1;
                 }
                 if(suf == newasm::mem::regs::hea.identifier())
                 {
-                    debugRegister(suf, std::to_string(newasm::mem::regs::hea));
+                    debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::hea));
                     return 1;
                 }
                 #if 0
@@ -6535,27 +6536,27 @@ namespace newasm
                 
                 if(suf == newasm::mem::regs::cpr.identifier())
                 {
-                    debugRegister(suf, std::to_string(newasm::mem::regs::cpr));
+                    debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::cpr));
                     return 1;
                 }
                 if(suf == newasm::mem::regs::cr0.identifier())
                 {
-                    debugRegister(suf, std::to_string(newasm::mem::regs::cr0));
+                    debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::cr0));
                     return 1;
                 }
                 if(suf == newasm::mem::regs::cr1.identifier())
                 {
-                    debugRegister(suf, std::to_string(newasm::mem::regs::cr1));
+                    debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::cr1));
                     return 1;
                 }
                 if(suf == newasm::mem::regs::br0.identifier())
                 {
-                    debugRegister(suf, std::to_string(newasm::mem::regs::br0));
+                    debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::br0));
                     return 1;
                 }
                 if(suf == newasm::mem::regs::br1.identifier())
                 {
-                    debugRegister(suf, std::to_string(newasm::mem::regs::br1));
+                    debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::br1));
                     return 1;
                 }
                 newasm::terminate(newasm::exit_codes::invalid_syntax);
@@ -6883,7 +6884,7 @@ namespace newasm
                             return 1;
                         }
                         int tmp = std::stoi(newasm::mem::regs::tlr)+1;
-                        newasm::mem::regs::tlr = std::to_string(tmp);
+                        newasm::mem::regs::tlr = newasm::_std::to_string(tmp);
                         return 1;
                     }
                     case newasm::mem::regs::dlx__:
@@ -6894,7 +6895,7 @@ namespace newasm
                             return 1;
                         }
                         int tmp = std::stoi(newasm::mem::regs::dlx)+1;
-                        newasm::mem::regs::dlx = std::to_string(tmp);
+                        newasm::mem::regs::dlx = newasm::_std::to_string(tmp);
                         return 1;
                     }
                     case newasm::mem::regs::stl__:
@@ -6905,7 +6906,7 @@ namespace newasm
                             return 1;
                         }
                         int tmp = std::stoi(newasm::mem::regs::stl)+1;
-                        newasm::mem::regs::stl = std::to_string(tmp);
+                        newasm::mem::regs::stl = newasm::_std::to_string(tmp);
                         return 1;
                     }
                     case newasm::mem::regs::psx__:
@@ -6916,7 +6917,7 @@ namespace newasm
                             return 1;
                         }
                         int tmp = std::stoi(newasm::mem::regs::psx)+1;
-                        newasm::mem::regs::psx = std::to_string(tmp);
+                        newasm::mem::regs::psx = newasm::_std::to_string(tmp);
                         return 1;
                     }
 
@@ -6928,7 +6929,7 @@ namespace newasm
                             return 1;
                         }
                         int tmp = std::stoi(newasm::mem::regs::tr0)+1;
-                        newasm::mem::regs::tr0 = std::to_string(tmp);
+                        newasm::mem::regs::tr0 = newasm::_std::to_string(tmp);
                         return 1;
                     }
                     case newasm::mem::regs::tr1__:
@@ -6939,7 +6940,7 @@ namespace newasm
                             return 1;
                         }
                         int tmp = std::stoi(newasm::mem::regs::tr1)+1;
-                        newasm::mem::regs::tr1 = std::to_string(tmp);
+                        newasm::mem::regs::tr1 = newasm::_std::to_string(tmp);
                         return 1;
                     }
                     //and then, we have this beautiful procedure pointer...
@@ -7085,7 +7086,7 @@ namespace newasm
                             return 1;
                         }
                         int tmp = std::stoi(newasm::mem::regs::tlr)-1;
-                        newasm::mem::regs::tlr = std::to_string(tmp);
+                        newasm::mem::regs::tlr = newasm::_std::to_string(tmp);
                         return 1;
                     }
                     case newasm::mem::regs::dlx__:
@@ -7096,7 +7097,7 @@ namespace newasm
                             return 1;
                         }
                         int tmp = std::stoi(newasm::mem::regs::dlx)-1;
-                        newasm::mem::regs::dlx = std::to_string(tmp);
+                        newasm::mem::regs::dlx = newasm::_std::to_string(tmp);
                         return 1;
                     }
                     case newasm::mem::regs::stl__:
@@ -7107,7 +7108,7 @@ namespace newasm
                             return 1;
                         }
                         int tmp = std::stoi(newasm::mem::regs::stl)-1;
-                        newasm::mem::regs::stl = std::to_string(tmp);
+                        newasm::mem::regs::stl = newasm::_std::to_string(tmp);
                         return 1;
                     }
                     case newasm::mem::regs::psx__:
@@ -7118,7 +7119,7 @@ namespace newasm
                             return 1;
                         }
                         int tmp = std::stoi(newasm::mem::regs::psx)-1;
-                        newasm::mem::regs::psx = std::to_string(tmp);
+                        newasm::mem::regs::psx = newasm::_std::to_string(tmp);
                         return 1;
                     }
 
@@ -7130,7 +7131,7 @@ namespace newasm
                             return 1;
                         }
                         int tmp = std::stoi(newasm::mem::regs::tr1)-1;
-                        newasm::mem::regs::tr1 = std::to_string(tmp);
+                        newasm::mem::regs::tr1 = newasm::_std::to_string(tmp);
                         return 1;
                     }
                     case newasm::mem::regs::tr0__:
@@ -7141,7 +7142,7 @@ namespace newasm
                             return 1;
                         }
                         int tmp = std::stoi(newasm::mem::regs::tr0)-1;
-                        newasm::mem::regs::tr0 = std::to_string(tmp);
+                        newasm::mem::regs::tr0 = newasm::_std::to_string(tmp);
                         return 1;
                     }
                     #if 0
@@ -8482,11 +8483,11 @@ namespace newasm
 
                                 if(newasm::malloc::types[argaddr] == newasm::datatypes::number)
                                 {
-                                    operand = std::to_string(newasm::hardware::randAccessMem.peek<int>(argaddr));
+                                    operand = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(argaddr));
                                 }
                                 if(newasm::malloc::types[argaddr] == newasm::datatypes::decimal)
                                 {
-                                    operand = std::to_string(newasm::hardware::randAccessMem.peek<float>(argaddr));
+                                    operand = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(argaddr));
                                 }
                                 if(newasm::malloc::types[argaddr] == newasm::datatypes::character)
                                 {

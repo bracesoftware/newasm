@@ -282,6 +282,42 @@ namespace newasm
 //best thing i invented
 namespace newasm
 {
+    namespace _std
+    {
+        template <typename T>
+        ATTR_FLAT inline std::string to_string(T val)
+        {
+            char buffer[64];
+            auto [ptr, ec] = std::to_chars(buffer, buffer + sizeof(buffer), val);
+
+            if(ec != std::errc())
+            {
+                return "0.0";
+            }
+
+            if constexpr(std::is_floating_point_v<T>)
+            {
+                bool has_decimal = false;
+                for(char* c = buffer; c < ptr; ++c)
+                {
+                    if(*c == '.' || *c == 'e')
+                    {
+                        has_decimal = true;
+                        break;
+                    }
+                }
+
+                if(!has_decimal)
+                {
+                    *ptr++ = '.';
+                    *ptr++ = '0';
+                }
+            }
+
+            return std::string(buffer, ptr - buffer);
+        }
+    }
+    
     //now i use these for temporary string literals (for printing text, comparsion, etc.)
     class SmartString final
     {
@@ -374,6 +410,18 @@ namespace newasm
             res.append(rhs);
             return res;
         }
+
+        FORCE_INLINE friend inline std::string operator+(std::string&& lhs, const SmartString& rhs)
+        {
+            lhs.append(rhs.data, rhs.len);
+            return std::move(lhs);
+        }
+
+        FORCE_INLINE friend inline std::string operator+(const SmartString& lhs, std::string&& rhs)
+        {
+            rhs.insert(0, lhs.data, lhs.len);
+            return std::move(rhs);
+        }
     };
 
     FORCE_INLINE inline NewASM::SmartString operator ""_str(const char* str, std::size_t len)
@@ -407,7 +455,7 @@ namespace newasm
     FORCE_INLINE inline SmartString ToSmart(T t)
     {
         static thread_local std::string static_t;
-        static_t = std::to_string(t);
+        static_t = newasm::_std::to_string(t);
         return SmartString(static_t.c_str(), static_t.size());
     }
 

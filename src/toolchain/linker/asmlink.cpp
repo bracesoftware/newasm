@@ -57,7 +57,11 @@ namespace newasm
         template<typename T>
         public static inline void replaceVectorElement__NEW(std::vector<T>& v, const std::vector<T>& n, std::size_t index)
         {
-            if (index >= v.size()) return;
+            if(index >= v.size())
+            {
+                //std::co
+                return;
+            }
 
             v.insert(v.erase(v.begin() + index), n.begin(), n.end());
         }
@@ -197,7 +201,7 @@ namespace newasm
 
             std::cout << newasm::header::col::reset;
 
-            newasm::header::functions::nullprint("\tSuccessfully linked " + std::to_string(files) + " files.");
+            newasm::header::functions::nullprint("\tSuccessfully linked " + newasm::_std::to_string(files) + " files.");
             newasm::Linker::writeFile(outputfilename, v);
             newasm::forLinker__OLD::linked_size = v.size();
             return;

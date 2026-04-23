@@ -685,67 +685,67 @@ namespace newasm
                         }
                         case newasm::mem::regs::fdx__:
                         {
-                            arg = std::to_string(newasm::mem::regs::fdx.get_value());
+                            arg = newasm::_std::to_string(newasm::mem::regs::fdx.get_value());
                             break;
                         }
                         case newasm::mem::regs::cpr__:
                         {
-                            arg = std::to_string(newasm::mem::regs::cpr.get_value());
+                            arg = newasm::_std::to_string(newasm::mem::regs::cpr.get_value());
                             break;
                         }
                         case newasm::mem::regs::br0__:
                         {
-                            arg = std::to_string(newasm::mem::regs::br0.get_value());
+                            arg = newasm::_std::to_string(newasm::mem::regs::br0.get_value());
                             break;
                         }
                         case newasm::mem::regs::br1__:
                         {
-                            arg = std::to_string(newasm::mem::regs::br1.get_value());
+                            arg = newasm::_std::to_string(newasm::mem::regs::br1.get_value());
                             break;
                         }
                         case newasm::mem::regs::bos__:
                         {
-                            arg = std::to_string(newasm::mem::regs::bos.get_value());
+                            arg = newasm::_std::to_string(newasm::mem::regs::bos.get_value());
                             break;
                         }
                         case newasm::mem::regs::cr0__:
                         {
-                            arg = std::to_string(newasm::mem::regs::cr0.get_value());
+                            arg = newasm::_std::to_string(newasm::mem::regs::cr0.get_value());
                             break;
                         }
                         case newasm::mem::regs::cr1__:
                         {
-                            arg = std::to_string(newasm::mem::regs::cr1.get_value());
+                            arg = newasm::_std::to_string(newasm::mem::regs::cr1.get_value());
                             break;
                         }
                         case newasm::mem::regs::cr2__:
                         {
-                            arg = std::to_string(newasm::mem::regs::cr2.get_value());
+                            arg = newasm::_std::to_string(newasm::mem::regs::cr2.get_value());
                             break;
                         }
                         case newasm::mem::regs::cr3__:
                         {
-                            arg = std::to_string(newasm::mem::regs::cr3.get_value());
+                            arg = newasm::_std::to_string(newasm::mem::regs::cr3.get_value());
                             break;
                         }
                         case newasm::mem::regs::imm__:
                         {
-                            arg = std::to_string(newasm::mem::regs::imm.get_value());
+                            arg = newasm::_std::to_string(newasm::mem::regs::imm.get_value());
                             break;
                         }
                         case newasm::mem::regs::rax__:
                         {
-                            arg = std::to_string(newasm::mem::regs::rax.get_value());
+                            arg = newasm::_std::to_string(newasm::mem::regs::rax.get_value());
                             break;
                         }
                         case newasm::mem::regs::stk__:
                         {
-                            arg = std::to_string(newasm::mem::regs::stk.get_value());
+                            arg = newasm::_std::to_string(newasm::mem::regs::stk.get_value());
                             break;
                         }
                         case newasm::mem::regs::hea__:
                         {
-                            arg = std::to_string(newasm::mem::regs::hea.get_value());
+                            arg = newasm::_std::to_string(newasm::mem::regs::hea.get_value());
                             break;
                         }
                         default:
@@ -844,72 +844,72 @@ namespace newasm
                         }
                         case newasm::mem::regs::fdx__:
                         {
-                            arg = std::to_string(newasm::mem::regs::fdx.get_value());
+                            arg = newasm::_std::to_string(newasm::mem::regs::fdx.get_value());
                             break;
                         }
                         case newasm::mem::regs::cpr__:
                         {
-                            arg = std::to_string(newasm::mem::regs::cpr.get_value());
+                            arg = newasm::_std::to_string(newasm::mem::regs::cpr.get_value());
                             break;
                         }
                         case newasm::mem::regs::br0__:
                         {
-                            arg = std::to_string(newasm::mem::regs::br0.get_value());
+                            arg = newasm::_std::to_string(newasm::mem::regs::br0.get_value());
                             break;
                         }
                         case newasm::mem::regs::br1__:
                         {
-                            arg = std::to_string(newasm::mem::regs::br1.get_value());
+                            arg = newasm::_std::to_string(newasm::mem::regs::br1.get_value());
                             break;
                         }
                         case newasm::mem::regs::bos__:
                         {
-                            arg = std::to_string(newasm::mem::regs::bos.get_value());
+                            arg = newasm::_std::to_string(newasm::mem::regs::bos.get_value());
                             break;
                         }
                         case newasm::mem::regs::cr0__:
                         {
-                            arg = std::to_string(newasm::mem::regs::cr0.get_value());
+                            arg = newasm::_std::to_string(newasm::mem::regs::cr0.get_value());
                             break;
                         }
                         case newasm::mem::regs::cr1__:
                         {
-                            arg = std::to_string(newasm::mem::regs::cr1.get_value());
+                            arg = newasm::_std::to_string(newasm::mem::regs::cr1.get_value());
                             break;
                         }
                         case newasm::mem::regs::cr2__:
                         {
-                            arg = std::to_string(newasm::mem::regs::cr2.get_value());
+                            arg = newasm::_std::to_string(newasm::mem::regs::cr2.get_value());
                             break;
                         }
                         case newasm::mem::regs::cr3__:
                         {
-                            arg = std::to_string(newasm::mem::regs::cr3.get_value());
+                            arg = newasm::_std::to_string(newasm::mem::regs::cr3.get_value());
                             break;
                         }
                         case newasm::mem::regs::imm__:
                         {
-                            arg = std::to_string(newasm::mem::regs::imm.get_value());
+                            arg = newasm::_std::to_string(newasm::mem::regs::imm.get_value());
                             break;
                         }
                         case newasm::mem::regs::rax__:
                         {
-                            arg = std::to_string(newasm::mem::regs::rax.get_value());
+                            arg = newasm::_std::to_string(newasm::mem::regs::rax.get_value());
                             break;
                         }
                         case newasm::mem::regs::rbx__:
                         {
-                            arg = std::to_string(newasm::mem::regs::rbx.get_value());
+                            arg = newasm::_std::to_string(newasm::mem::regs::rbx.get_value());
                             break;
                         }
                         case newasm::mem::regs::stk__:
                         {
-                            arg = std::to_string(newasm::mem::regs::stk.get_value());
+                            arg = newasm::_std::to_string(newasm::mem::regs::stk.get_value());
                             break;
                         }
                         case newasm::mem::regs::hea__:
                         {
-                            arg = std::to_string(newasm::mem::regs::hea.get_value());
+                            arg = newasm::_std::to_string(newasm::mem::regs::hea.get_value());
                             break;
                         }
                         default:
@@ -1208,7 +1208,7 @@ namespace newasm
                             rdi->rawInt = newasm::mem::regs::fdx.get_value();
                             break;
                         }
-                        arg = std::to_string(newasm::mem::regs::fdx.get_value());
+                        arg = newasm::_std::to_string(newasm::mem::regs::fdx.get_value());
                         break;
                     }
                     case newasm::mem::regs::cpr__:
@@ -1219,7 +1219,7 @@ namespace newasm
                             rdi->rawInt = newasm::mem::regs::cpr.get_value();
                             break;
                         }
-                        arg = std::to_string(newasm::mem::regs::cpr.get_value());
+                        arg = newasm::_std::to_string(newasm::mem::regs::cpr.get_value());
                         break;
                     }
                     case newasm::mem::regs::br0__:
@@ -1230,7 +1230,7 @@ namespace newasm
                             rdi->rawInt = newasm::mem::regs::br0.get_value();
                             break;
                         }
-                        arg = std::to_string(newasm::mem::regs::br0.get_value());
+                        arg = newasm::_std::to_string(newasm::mem::regs::br0.get_value());
                         break;
                     }
                     case newasm::mem::regs::br1__:
@@ -1241,7 +1241,7 @@ namespace newasm
                             rdi->rawInt = newasm::mem::regs::br1.get_value();
                             break;
                         }
-                        arg = std::to_string(newasm::mem::regs::br1.get_value());
+                        arg = newasm::_std::to_string(newasm::mem::regs::br1.get_value());
                         break;
                     }
                     case newasm::mem::regs::bos__:
@@ -1252,7 +1252,7 @@ namespace newasm
                             rdi->rawInt = newasm::mem::regs::bos.get_value();
                             break;
                         }
-                        arg = std::to_string(newasm::mem::regs::bos.get_value());
+                        arg = newasm::_std::to_string(newasm::mem::regs::bos.get_value());
                         break;
                     }
                     case newasm::mem::regs::cr0__:
@@ -1263,7 +1263,7 @@ namespace newasm
                             rdi->rawFloat = newasm::mem::regs::cr0.get_value();
                             break;
                         }
-                        arg = std::to_string(newasm::mem::regs::cr0.get_value());
+                        arg = newasm::_std::to_string(newasm::mem::regs::cr0.get_value());
                         break;
                     }
                     case newasm::mem::regs::cr1__:
@@ -1274,7 +1274,7 @@ namespace newasm
                             rdi->rawFloat = newasm::mem::regs::cr1.get_value();
                             break;
                         }
-                        arg = std::to_string(newasm::mem::regs::cr1.get_value());
+                        arg = newasm::_std::to_string(newasm::mem::regs::cr1.get_value());
                         break;
                     }
                     case newasm::mem::regs::cr2__:
@@ -1285,7 +1285,7 @@ namespace newasm
                             rdi->rawInt = newasm::mem::regs::cr2.get_value();
                             break;
                         }
-                        arg = std::to_string(newasm::mem::regs::cr2.get_value());
+                        arg = newasm::_std::to_string(newasm::mem::regs::cr2.get_value());
                         break;
                     }
                     case newasm::mem::regs::cr3__:
@@ -1296,7 +1296,7 @@ namespace newasm
                             rdi->rawInt = newasm::mem::regs::cr3.get_value();
                             break;
                         }
-                        arg = std::to_string(newasm::mem::regs::cr3.get_value());
+                        arg = newasm::_std::to_string(newasm::mem::regs::cr3.get_value());
                         break;
                     }
                     case newasm::mem::regs::imm__:
@@ -1307,7 +1307,7 @@ namespace newasm
                             rdi->rawInt = newasm::mem::regs::imm.get_value();
                             break;
                         }
-                        arg = std::to_string(newasm::mem::regs::imm.get_value());
+                        arg = newasm::_std::to_string(newasm::mem::regs::imm.get_value());
                         break;
                     }
                     case newasm::mem::regs::rax__:
@@ -1318,7 +1318,7 @@ namespace newasm
                             rdi->rawInt = newasm::mem::regs::rax.get_value();
                             break;
                         }
-                        arg = std::to_string(newasm::mem::regs::rax.get_value());
+                        arg = newasm::_std::to_string(newasm::mem::regs::rax.get_value());
                         break;
                     }
                     case newasm::mem::regs::rbx__:
@@ -1329,7 +1329,7 @@ namespace newasm
                             rdi->rawFloat = newasm::mem::regs::rbx.get_value();
                             break;
                         }
-                        arg = std::to_string(newasm::mem::regs::rbx.get_value());
+                        arg = newasm::_std::to_string(newasm::mem::regs::rbx.get_value());
                         break;
                     }
                     case newasm::mem::regs::stk__:
@@ -1340,7 +1340,7 @@ namespace newasm
                             rdi->rawInt = newasm::mem::regs::stk.get_value();
                             break;
                         }
-                        arg = std::to_string(newasm::mem::regs::stk.get_value());
+                        arg = newasm::_std::to_string(newasm::mem::regs::stk.get_value());
                         break;
                     }
                     case newasm::mem::regs::hea__:
@@ -1351,7 +1351,7 @@ namespace newasm
                             rdi->rawInt = newasm::mem::regs::hea.get_value();
                             break;
                         }
-                        arg = std::to_string(newasm::mem::regs::hea.get_value());
+                        arg = newasm::_std::to_string(newasm::mem::regs::hea.get_value());
                         break;
                     }
                     default:
@@ -1411,32 +1411,32 @@ namespace newasm
                     rdi->rawType = newasm::datatypes::number;
                     rdi->rawInt = ptr->addr;
                 }
-                if constexpr(!RawDataHere) s = std::to_string(ptr->addr);
+                if constexpr(!RawDataHere) s = newasm::_std::to_string(ptr->addr);
 
                 if(ptr->type == newasm::datatypes::yunion)
                 {
                     if constexpr(RawDataHere) rdi->rawInt = ptr->yunion->addr;
-                    if constexpr(!RawDataHere) s = std::to_string(ptr->yunion->addr);
+                    if constexpr(!RawDataHere) s = newasm::_std::to_string(ptr->yunion->addr);
                 }
                 else if(ptr->type == newasm::datatypes::blueprint)
                 {
                     if constexpr(RawDataHere) rdi->rawInt = ptr->blueprint->addr[0];
-                    if constexpr(!RawDataHere) s = std::to_string(ptr->blueprint->addr[0]);
+                    if constexpr(!RawDataHere) s = newasm::_std::to_string(ptr->blueprint->addr[0]);
                 }
                 else if(ptr->type == newasm::datatypes::tuple)
                 {
                     if constexpr(RawDataHere) rdi->rawInt = ptr->tuple->addr[0];
-                    if constexpr(!RawDataHere) s = std::to_string(ptr->tuple->addr[0]);
+                    if constexpr(!RawDataHere) s = newasm::_std::to_string(ptr->tuple->addr[0]);
                 }
                 else if(ptr->type == newasm::datatypes::proc)
                 {
                     if constexpr(RawDataHere) rdi->rawInt = ptr->addr;
-                    if constexpr(!RawDataHere) s = std::to_string(ptr->addr);//procedures aren't saved in same ram segment as vars
+                    if constexpr(!RawDataHere) s = newasm::_std::to_string(ptr->addr);//procedures aren't saved in same ram segment as vars
                 }
                 else if(ptr->type == newasm::datatypes::mycontext)
                 {
                     if constexpr(RawDataHere) rdi->rawInt = ptr->context->addr[0];
-                    if constexpr(!RawDataHere) s = std::to_string(ptr->context->addr[0]);
+                    if constexpr(!RawDataHere) s = newasm::_std::to_string(ptr->context->addr[0]);
                 }
                 return;
             }

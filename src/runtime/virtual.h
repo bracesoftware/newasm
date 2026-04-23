@@ -187,11 +187,11 @@ namespace newasm
         {
             if(newasm::_virtual::readMode == readmode_num)
             {
-                return std::to_string(newasm::_virtual::virtualMemory.readintat(index));
+                return newasm::_std::to_string(newasm::_virtual::virtualMemory.readintat(index));
             }
             if(newasm::_virtual::readMode == readmode_decm)
             {
-                return std::to_string(newasm::_virtual::virtualMemory.readfloatat(index));
+                return newasm::_std::to_string(newasm::_virtual::virtualMemory.readfloatat(index));
             }
             if(newasm::_virtual::readMode == readmode_char)
             {

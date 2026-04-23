@@ -425,7 +425,7 @@ namespace newasm
                             #if NEWASM_DBG_SOURCE_LOC == true
                             std::cout << "==========================================" << std::endl;
                             std::cout << "File: " << loc.file_name() << std::endl;
-                            std::cout << "Line: " << std::to_string(loc.line()) << std::endl;
+                            std::cout << "Line: " << newasm::_std::to_string(loc.line()) << std::endl;
                             std::cout << "Func: " << loc.function_name() << std::endl;
                             std::cout << "==========================================" << std::endl;
                             std::cout << "THIS IS AN ERROR ! \n";
@@ -632,7 +632,7 @@ namespace newasm
 
     inline std::string operator+(int lhs, const std::string& rhs)
     {
-        return std::to_string(lhs) + rhs;
+        return newasm::_std::to_string(lhs) + rhs;
     }
 
     inline std::string operator+(const char* lhs, const newasm::_register<std::string>& rhs)

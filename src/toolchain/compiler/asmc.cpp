@@ -138,8 +138,8 @@ namespace newasm
                     seed ^= hasher(s) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
                 }
 
-                std::string result = std::to_string(seed);
-                result = result + "NEWASM"_str + std::to_string(vec.size()) + final_str;
+                std::string result = newasm::_std::to_string(seed);
+                result = result + "NEWASM"_str + newasm::_std::to_string(vec.size()) + final_str;
                 return result;
             }
 
@@ -844,11 +844,11 @@ namespace newasm
                                 //parse numbers
                                 if(newasm::header::functions::ishex(otherShit))
                                 {
-                                    otherShit = std::to_string(newasm::header::functions::hextoi(otherShit));
+                                    otherShit = newasm::_std::to_string(newasm::header::functions::hextoi(otherShit));
                                 }
                                 if(newasm::header::functions::isbin(otherShit))
                                 {
-                                    otherShit = std::to_string(newasm::header::functions::bintoi(otherShit));
+                                    otherShit = newasm::_std::to_string(newasm::header::functions::bintoi(otherShit));
                                 }
                                 if(newasm::header::functions::isnumeric(otherShit))
                                 {
@@ -977,11 +977,11 @@ namespace newasm
                     // optimisation
                     if(newasm::header::functions::ishex(lineCompiled.tokens.at(i)))
                     {
-                        lineCompiled.tokens.at(i) = std::to_string(newasm::header::functions::hextoi(lineCompiled.tokens.at(i)));
+                        lineCompiled.tokens.at(i) = newasm::_std::to_string(newasm::header::functions::hextoi(lineCompiled.tokens.at(i)));
                     }
                     if(newasm::header::functions::isbin(lineCompiled.tokens.at(i)))
                     {
-                        lineCompiled.tokens.at(i) = std::to_string(newasm::header::functions::bintoi(lineCompiled.tokens.at(i)));
+                        lineCompiled.tokens.at(i) = newasm::_std::to_string(newasm::header::functions::bintoi(lineCompiled.tokens.at(i)));
                     }
                     if(i == 1)
                     {

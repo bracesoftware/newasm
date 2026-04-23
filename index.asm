@@ -30,7 +30,7 @@ using "math"
     mov fdx, 1
     mov rax, 1
     syscall
-    mov rax, 234434
+    mov rax, 1
     syscall
     fetch std::ios::writeln ; set the this ptr
     jmp skiplol

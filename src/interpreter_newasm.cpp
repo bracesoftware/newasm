@@ -840,7 +840,7 @@ namespace newasm
             for(int i = files.size() - 1;; --i)
             {
                 //std::cout << "getLine :: Comparing (" << i << "): line -> " << line << "; files(i).first -> " << files(i).first << std::endl;
-                debug.push_back("getLine :: Comparing (" + std::to_string(i) + "): line -> " + std::to_string(line) + "; files(i).first -> " + std::to_string(files(i).first));
+                debug.push_back("getLine :: Comparing (" + newasm::_std::to_string(i) + "): line -> " + newasm::_std::to_string(line) + "; files(i).first -> " + newasm::_std::to_string(files(i).first));
                 if(line >= files(i).first)
                 {
                     //std::cout << "1->RETURNED `" << files(i).second << "`" << std::endl;
@@ -860,7 +860,7 @@ namespace newasm
         {
             for(int i = files.size() - 1;; --i)
             {
-                debug.push_back("getFile :: Comparing (" + std::to_string(i) + "): line -> " + std::to_string(line) + "; files(i).first -> " + std::to_string(files(i).first));
+                debug.push_back("getFile :: Comparing (" + newasm::_std::to_string(i) + "): line -> " + newasm::_std::to_string(line) + "; files(i).first -> " + newasm::_std::to_string(files(i).first));
                 if(line >= files(i).first)
                 {
                     //std::cout << "1->RETURNED `" << files(i).second << "`" << std::endl;
@@ -1654,7 +1654,7 @@ namespace newasm
         newasm::compile_and_exec(newasm::header::settings::script_file_LINKED, -1);
 
         EMPTYLINE;
-        newasm::header::functions::info(newasm::constv::pxstr + std::to_string(newasm::mem::regs::exc));
+        newasm::header::functions::info(newasm::constv::pxstr + newasm::_std::to_string(newasm::mem::regs::exc));
 
         /*newasm::procline(".start");
         newasm::procline("mov tlr, \"hello from built-in\"");
