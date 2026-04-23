@@ -131,6 +131,21 @@ You can also fetch a context or a tuple and use `this` as a handle:
 
 The `this` pointer can be used on `del`, `movasx` and `movaddr` as well.
 
+The `this` pointer can also be used as an operand by the address-of operator:
+```asm
+mov tlr, #this ; returns a safe pointer that doesn't have any access to your computer
+```
+
++ You can enable exception source information logging when a program crashes.
+```asm
+.start
+    using "cfg"
+    sysenter "cfg"
+    mov rax, 1
+    mov fdx, 1
+    syscall ; now you will see exactly what module of the vm's source code caused the newasm script to crash
+```
+
 ## Fixed issues
 
 + Fixed issue #32.
