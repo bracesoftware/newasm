@@ -7,7 +7,7 @@ Welcome to **`NewASM`**: a low-level programming language which combines explici
 
 * Version: `build 31`
 * Version of the runtime: `15`
-* Kernel version: `9`
+* Kernel version: `10`
 
 > [!NOTE]
 > This is a pre-release which means that this product version doesn't represent the final quality of the product - it may contain bugs and problems that aren't yet discovered.
