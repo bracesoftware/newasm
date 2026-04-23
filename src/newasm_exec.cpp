@@ -5804,7 +5804,44 @@ namespace newasm
             //int
             case newasm::core::lang_inf::int__:
             {
-                switch(lineInfo.priInt)
+                int SystemInterrupt = -1;
+                //in newasm runtime there is 3 levels of fetching
+                //1) firsly, we check if there is a rvalue inside the binary
+                if(lineInfo.priArgType == newasm::datatypes::number)
+                {
+                    //this is the fastest check,
+                    //we directly read from the binary
+                    SystemInterrupt = lineInfo.priInt;
+                }
+                //2) we check if there is a variable and get its value
+                else if(lineInfo.priArgType == newasm::datatypes::symbol_name) if(
+                    newasm::runtime::functions::eval<true>(suf, lineInfo.priEvalMode, &priArg);
+                    priArg.rawType == newasm::datatypes::number
+                )
+                {
+                    //if there is a var, we take its value
+                    SystemInterrupt = priArg.rawInt;
+                }
+                //3) if we by some miracle, have no more options,
+                // we directly read the string from the raw segment of the binary
+                else
+                {
+                    if(newasm::header::functions::isnumeric(suf))
+                    {
+                        //slowest, VERY slow
+                        SystemInterrupt = std::stoi(suf);
+                    }
+                }
+
+                //now if there is no hope..
+                //crash
+                if(SystemInterrupt == -1)
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_sysint);
+                    return 1;
+                }
+
+                switch(SystemInterrupt)
                 {
                     case 3:
                     {
