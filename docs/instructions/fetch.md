@@ -47,3 +47,18 @@ If you don't want a variable to be fetched, use the `@safe` attribute.
 .text
     fetch var ; segmentation fault
 ```
+
+
+You can also fetch a context or a tuple and use `this` as a handle:
+
+```asm
+.text
+    fetch tuplename
+    mov rax, this(1) ; get second element from the tuple
+    lea this, 4 ; load effective address for that tuple when moving at specific index
+
+    fetch ctxname
+    merge this, () ; delete all ctxname contents
+```
+
+The `this` pointer can be used on `del`, `movasx` and `movaddr` as well.
