@@ -923,7 +923,8 @@ namespace newasm
                 return;
             }
 
-            ATTR_HOT inline void parseRegDeref__2(std::string& arg, int loc)
+            template<bool RawDataHere = false>
+            ATTR_HOT inline void parseRegDeref__2(std::string& arg, int loc, newasm::rawData* rdi = nullptr)
             {
                 switch(loc)
                 {
@@ -955,17 +956,104 @@ namespace newasm
                     }
                     case newasm::mem::regs::tlr__:
                     {
+                        if constexpr(RawDataHere)
+                        {
+                            auto val = newasm::mem::regs::tlr.get_value();
+                            if(newasm::header::functions::isnumeric(val))
+                            {
+                                rdi->rawType = newasm::datatypes::number;
+                                rdi->rawInt = std::stoi(val);
+                                break;
+                            }
+                            if(newasm::header::functions::isfloat(val))
+                            {
+                                rdi->rawType = newasm::datatypes::decimal;
+                                rdi->rawFloat = std::stof(val);
+                                break;
+                            }
+                            if(newasm::header::functions::ischar(val))
+                            {
+                                rdi->rawType = newasm::datatypes::character;
+                                rdi->rawChar = newasm::header::functions::remsq(val)[0];
+                                break;
+                            }
+                            if(newasm::header::functions::istext(val))
+                            {
+                                rdi->rawType = newasm::datatypes::text;
+                                rdi->rawFloat = newasm::header::functions::remq(val);
+                                break;
+                            }
+                            break;
+                        }
                         arg = newasm::mem::regs::tlr.get_value();
                         //std::cout << "arg = `" << arg << "`" << std::endl;
                         break;
                     }
                     case newasm::mem::regs::stl__:
                     {
+                        if constexpr(RawDataHere)
+                        {
+                            auto val = newasm::mem::regs::stl.get_value();
+                            if(newasm::header::functions::isnumeric(val))
+                            {
+                                rdi->rawType = newasm::datatypes::number;
+                                rdi->rawInt = std::stoi(val);
+                                break;
+                            }
+                            if(newasm::header::functions::isfloat(val))
+                            {
+                                rdi->rawType = newasm::datatypes::decimal;
+                                rdi->rawFloat = std::stof(val);
+                                break;
+                            }
+                            if(newasm::header::functions::ischar(val))
+                            {
+                                rdi->rawType = newasm::datatypes::character;
+                                rdi->rawChar = newasm::header::functions::remsq(val)[0];
+                                break;
+                            }
+                            if(newasm::header::functions::istext(val))
+                            {
+                                rdi->rawType = newasm::datatypes::text;
+                                rdi->rawFloat = newasm::header::functions::remq(val);
+                                break;
+                            }
+                            break;
+                        }
                         arg = newasm::mem::regs::stl.get_value();
                         break;
                     }
                     case newasm::mem::regs::psx__:
                     {
+                        if constexpr(RawDataHere)
+                        {
+                            auto val = newasm::mem::regs::psx.get_value();
+                            if(newasm::header::functions::isnumeric(val))
+                            {
+                                rdi->rawType = newasm::datatypes::number;
+                                rdi->rawInt = std::stoi(val);
+                                break;
+                            }
+                            if(newasm::header::functions::isfloat(val))
+                            {
+                                rdi->rawType = newasm::datatypes::decimal;
+                                rdi->rawFloat = std::stof(val);
+                                break;
+                            }
+                            if(newasm::header::functions::ischar(val))
+                            {
+                                rdi->rawType = newasm::datatypes::character;
+                                rdi->rawChar = newasm::header::functions::remsq(val)[0];
+                                break;
+                            }
+                            if(newasm::header::functions::istext(val))
+                            {
+                                rdi->rawType = newasm::datatypes::text;
+                                rdi->rawFloat = newasm::header::functions::remq(val);
+                                break;
+                            }
+                            break;
+                        }
                         arg = newasm::mem::regs::psx.get_value();
                         break;
                     }
@@ -978,91 +1066,291 @@ namespace newasm
                     #endif
                     case newasm::mem::regs::cpt__:
                     {
+                        if constexpr(RawDataHere)
+                        {
+                            auto val = newasm::mem::regs::cpt.get_value();
+                            if(newasm::header::functions::isnumeric(val))
+                            {
+                                rdi->rawType = newasm::datatypes::number;
+                                rdi->rawInt = std::stoi(val);
+                                break;
+                            }
+                            if(newasm::header::functions::isfloat(val))
+                            {
+                                rdi->rawType = newasm::datatypes::decimal;
+                                rdi->rawFloat = std::stof(val);
+                                break;
+                            }
+                            if(newasm::header::functions::ischar(val))
+                            {
+                                rdi->rawType = newasm::datatypes::character;
+                                rdi->rawChar = newasm::header::functions::remsq(val)[0];
+                                break;
+                            }
+                            if(newasm::header::functions::istext(val))
+                            {
+                                rdi->rawType = newasm::datatypes::text;
+                                rdi->rawFloat = newasm::header::functions::remq(val);
+                                break;
+                            }
+                            break;
+                        }
                         arg = newasm::mem::regs::cpt.get_value();
                         break;
                     }
                     case newasm::mem::regs::tr0__:
                     {
+                        if constexpr(RawDataHere)
+                        {
+                            auto val = newasm::mem::regs::tr0.get_value();
+                            if(newasm::header::functions::isnumeric(val))
+                            {
+                                rdi->rawType = newasm::datatypes::number;
+                                rdi->rawInt = std::stoi(val);
+                                break;
+                            }
+                            if(newasm::header::functions::isfloat(val))
+                            {
+                                rdi->rawType = newasm::datatypes::decimal;
+                                rdi->rawFloat = std::stof(val);
+                                break;
+                            }
+                            if(newasm::header::functions::ischar(val))
+                            {
+                                rdi->rawType = newasm::datatypes::character;
+                                rdi->rawChar = newasm::header::functions::remsq(val)[0];
+                                break;
+                            }
+                            if(newasm::header::functions::istext(val))
+                            {
+                                rdi->rawType = newasm::datatypes::text;
+                                rdi->rawFloat = newasm::header::functions::remq(val);
+                                break;
+                            }
+                            break;
+                        }
                         arg = newasm::mem::regs::tr0.get_value();
                         break;
                     }
                     case newasm::mem::regs::tr1__:
                     {
+                        if constexpr(RawDataHere)
+                        {
+                            auto val = newasm::mem::regs::tr1.get_value();
+                            if(newasm::header::functions::isnumeric(val))
+                            {
+                                rdi->rawType = newasm::datatypes::number;
+                                rdi->rawInt = std::stoi(val);
+                                break;
+                            }
+                            if(newasm::header::functions::isfloat(val))
+                            {
+                                rdi->rawType = newasm::datatypes::decimal;
+                                rdi->rawFloat = std::stof(val);
+                                break;
+                            }
+                            if(newasm::header::functions::ischar(val))
+                            {
+                                rdi->rawType = newasm::datatypes::character;
+                                rdi->rawChar = newasm::header::functions::remsq(val)[0];
+                                break;
+                            }
+                            if(newasm::header::functions::istext(val))
+                            {
+                                rdi->rawType = newasm::datatypes::text;
+                                rdi->rawFloat = newasm::header::functions::remq(val);
+                                break;
+                            }
+                            break;
+                        }
                         arg = newasm::mem::regs::tr1.get_value();
                         break;
                     }
                     case newasm::mem::regs::dlx__:
                     {
+                        if constexpr(RawDataHere)
+                        {
+                            auto val = newasm::mem::regs::dlx.get_value();
+                            if(newasm::header::functions::isnumeric(val))
+                            {
+                                rdi->rawType = newasm::datatypes::number;
+                                rdi->rawInt = std::stoi(val);
+                                break;
+                            }
+                            if(newasm::header::functions::isfloat(val))
+                            {
+                                rdi->rawType = newasm::datatypes::decimal;
+                                rdi->rawFloat = std::stof(val);
+                                break;
+                            }
+                            if(newasm::header::functions::ischar(val))
+                            {
+                                rdi->rawType = newasm::datatypes::character;
+                                rdi->rawChar = newasm::header::functions::remsq(val)[0];
+                                break;
+                            }
+                            if(newasm::header::functions::istext(val))
+                            {
+                                rdi->rawType = newasm::datatypes::text;
+                                rdi->rawFloat = newasm::header::functions::remq(val);
+                                break;
+                            }
+                            break;
+                        }
                         arg = newasm::mem::regs::dlx.get_value();
                         break;
                     }
                     case newasm::mem::regs::fdx__:
                     {
+                        if constexpr(RawDataHere)
+                        {
+                            rdi->rawType = newasm::datatypes::number;
+                            rdi->rawInt = newasm::mem::regs::fdx.get_value();
+                            break;
+                        }
                         arg = std::to_string(newasm::mem::regs::fdx.get_value());
                         break;
                     }
                     case newasm::mem::regs::cpr__:
                     {
+                        if constexpr(RawDataHere)
+                        {
+                            rdi->rawType = newasm::datatypes::number;
+                            rdi->rawInt = newasm::mem::regs::cpr.get_value();
+                            break;
+                        }
                         arg = std::to_string(newasm::mem::regs::cpr.get_value());
                         break;
                     }
                     case newasm::mem::regs::br0__:
                     {
+                        if constexpr(RawDataHere)
+                        {
+                            rdi->rawType = newasm::datatypes::number;
+                            rdi->rawInt = newasm::mem::regs::br0.get_value();
+                            break;
+                        }
                         arg = std::to_string(newasm::mem::regs::br0.get_value());
                         break;
                     }
                     case newasm::mem::regs::br1__:
                     {
+                        if constexpr(RawDataHere)
+                        {
+                            rdi->rawType = newasm::datatypes::number;
+                            rdi->rawInt = newasm::mem::regs::br1.get_value();
+                            break;
+                        }
                         arg = std::to_string(newasm::mem::regs::br1.get_value());
                         break;
                     }
                     case newasm::mem::regs::bos__:
                     {
+                        if constexpr(RawDataHere)
+                        {
+                            rdi->rawType = newasm::datatypes::number;
+                            rdi->rawInt = newasm::mem::regs::bos.get_value();
+                            break;
+                        }
                         arg = std::to_string(newasm::mem::regs::bos.get_value());
                         break;
                     }
                     case newasm::mem::regs::cr0__:
                     {
+                        if constexpr(RawDataHere)
+                        {
+                            rdi->rawType = newasm::datatypes::decimal;
+                            rdi->rawFloat = newasm::mem::regs::cr0.get_value();
+                            break;
+                        }
                         arg = std::to_string(newasm::mem::regs::cr0.get_value());
                         break;
                     }
                     case newasm::mem::regs::cr1__:
                     {
+                        if constexpr(RawDataHere)
+                        {
+                            rdi->rawType = newasm::datatypes::decimal;
+                            rdi->rawFloat = newasm::mem::regs::cr1.get_value();
+                            break;
+                        }
                         arg = std::to_string(newasm::mem::regs::cr1.get_value());
                         break;
                     }
                     case newasm::mem::regs::cr2__:
                     {
+                        if constexpr(RawDataHere)
+                        {
+                            rdi->rawType = newasm::datatypes::number;
+                            rdi->rawInt = newasm::mem::regs::cr2.get_value();
+                            break;
+                        }
                         arg = std::to_string(newasm::mem::regs::cr2.get_value());
                         break;
                     }
                     case newasm::mem::regs::cr3__:
                     {
+                        if constexpr(RawDataHere)
+                        {
+                            rdi->rawType = newasm::datatypes::number;
+                            rdi->rawInt = newasm::mem::regs::cr3.get_value();
+                            break;
+                        }
                         arg = std::to_string(newasm::mem::regs::cr3.get_value());
                         break;
                     }
                     case newasm::mem::regs::imm__:
                     {
+                        if constexpr(RawDataHere)
+                        {
+                            rdi->rawType = newasm::datatypes::number;
+                            rdi->rawInt = newasm::mem::regs::imm.get_value();
+                            break;
+                        }
                         arg = std::to_string(newasm::mem::regs::imm.get_value());
                         break;
                     }
                     case newasm::mem::regs::rax__:
                     {
+                        if constexpr(RawDataHere)
+                        {
+                            rdi->rawType = newasm::datatypes::number;
+                            rdi->rawInt = newasm::mem::regs::rax.get_value();
+                            break;
+                        }
                         arg = std::to_string(newasm::mem::regs::rax.get_value());
                         break;
                     }
                     case newasm::mem::regs::rbx__:
                     {
+                        if constexpr(RawDataHere)
+                        {
+                            rdi->rawType = newasm::datatypes::decimal;
+                            rdi->rawFloat = newasm::mem::regs::rbx.get_value();
+                            break;
+                        }
                         arg = std::to_string(newasm::mem::regs::rbx.get_value());
                         break;
                     }
                     case newasm::mem::regs::stk__:
                     {
+                        if constexpr(RawDataHere)
+                        {
+                            rdi->rawType = newasm::datatypes::number;
+                            rdi->rawInt = newasm::mem::regs::stk.get_value();
+                            break;
+                        }
                         arg = std::to_string(newasm::mem::regs::stk.get_value());
                         break;
                     }
                     case newasm::mem::regs::hea__:
                     {
+                        if constexpr(RawDataHere)
+                        {
+                            rdi->rawType = newasm::datatypes::number;
+                            rdi->rawInt = newasm::mem::regs::hea.get_value();
+                            break;
+                        }
                         arg = std::to_string(newasm::mem::regs::hea.get_value());
                         break;
                     }
@@ -1077,7 +1365,8 @@ namespace newasm
                 return;
             }
 
-            void parseAddressOf(std::string& s)
+            template<bool RawDataHere = false>
+            void parseAddressOf(std::string& s, newasm::rawData* rdi = nullptr)
             {
                 if(s.empty())
                 {
@@ -1097,27 +1386,37 @@ namespace newasm
                     return;
                 }
                 
-                s = std::to_string(it->second.addr);
+                if constexpr(RawDataHere)
+                {
+                    rdi->rawType = newasm::datatypes::number;
+                    rdi->rawInt = it->second.addr;
+                }
+                if constexpr(!RawDataHere) s = std::to_string(it->second.addr);
 
                 if(it->second.type == newasm::datatypes::yunion)
                 {
-                    s = std::to_string(it->second.yunion->addr);
+                    if constexpr(RawDataHere) rdi->rawInt = it->second.yunion->addr;
+                    if constexpr(!RawDataHere) s = std::to_string(it->second.yunion->addr);
                 }
-                if(it->second.type == newasm::datatypes::blueprint)
+                else if(it->second.type == newasm::datatypes::blueprint)
                 {
-                    s = std::to_string(it->second.blueprint->addr[0]);
+                    if constexpr(RawDataHere) rdi->rawInt = it->second.blueprint->addr[0];
+                    if constexpr(!RawDataHere) s = std::to_string(it->second.blueprint->addr[0]);
                 }
-                if(it->second.type == newasm::datatypes::tuple)
+                else if(it->second.type == newasm::datatypes::tuple)
                 {
-                    s = std::to_string(it->second.tuple->addr[0]);
+                    if constexpr(RawDataHere) rdi->rawInt = it->second.tuple->addr[0];
+                    if constexpr(!RawDataHere) s = std::to_string(it->second.tuple->addr[0]);
                 }
-                if(it->second.type == newasm::datatypes::proc)
+                else if(it->second.type == newasm::datatypes::proc)
                 {
-                    s = std::to_string(it->second.addr);//procedures aren't saved in same ram segment as vars
+                    if constexpr(RawDataHere) rdi->rawInt = it->second.addr;
+                    if constexpr(!RawDataHere) s = std::to_string(it->second.addr);//procedures aren't saved in same ram segment as vars
                 }
-                if(it->second.type == newasm::datatypes::mycontext)
+                else if(it->second.type == newasm::datatypes::mycontext)
                 {
-                    s = std::to_string(it->second.context->addr[0]);
+                    if constexpr(RawDataHere) rdi->rawInt = it->second.context->addr[0];
+                    if constexpr(!RawDataHere) s = std::to_string(it->second.context->addr[0]);
                 }
                 return;
             }

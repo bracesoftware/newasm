@@ -304,12 +304,12 @@ namespace newasm
 					}
 					case newasm::runtime::evalModes::regDeref: [[likely]]
 					{
-						newasm::header::functions::parseRegDeref__2(s, mode.argInt);
+						newasm::header::functions::parseRegDeref__2<RawDataHere>(s, mode.argInt, rdi);
 						return;
 					}
 					case newasm::runtime::evalModes::addressOf:
 					{
-						newasm::header::functions::parseAddressOf(s);
+						newasm::header::functions::parseAddressOf<RawDataHere>(s, rdi);
 						return;
 					}
 					case newasm::runtime::evalModes::valueOf: [[likely]] //primitive types and unions,and whole tuples/contexts
