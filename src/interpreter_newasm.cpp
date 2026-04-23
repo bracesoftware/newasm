@@ -586,11 +586,14 @@ namespace newasm
         inline unsigned int iscomptins(std::string ins);
     }
 
+    struct rawData;
+
     namespace runtime
     {
         namespace functions
         {
-            inline void eval(std::string& s, newasm::compiler::EvalMode& mode);
+            template<bool RawDataHere = false>
+            inline void eval(std::string& s, newasm::compiler::EvalMode& mode, newasm::rawData* rdi = nullptr);
         }
     }
 

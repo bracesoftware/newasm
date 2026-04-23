@@ -2338,20 +2338,35 @@ namespace newasm
             //movasx
             case newasm::core::lang_inf::movasx:
             {
-                newasm::runtime::functions::parse(suf);
-                if(!newasm::header::functions::isref(suf))
+                VarPtr ptr = nullptr;
+                if(lineInfo.priArgType == newasm::datatypes::ThisPtr)
                 {
-                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                    return 1;
+                    if(newasm::_this == nullptr)
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    ptr = newasm::_this;
                 }
-
-                suf = newasm::header::functions::remamp(suf);
-                auto it = newasm::variables::ids.find(suf);
-
-                if(it == newasm::variables::ids.end())
+                else if(lineInfo.priArgType != newasm::datatypes::ThisPtr)
                 {
-                    newasm::terminate(newasm::exit_codes::invalid_tuple);
-                    return 1;
+                    newasm::runtime::functions::parse(suf);
+                    if(!newasm::header::functions::isref(suf))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+
+                    suf = newasm::header::functions::remamp(suf);
+                    auto it = newasm::variables::ids.find(suf);
+
+                    if(it == newasm::variables::ids.end())
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_tuple);
+                        return 1;
+                    }
+
+                    ptr = &it->second;
                 }
 
                 if(newasm::header::data::tupleIndex == -1)
@@ -2360,52 +2375,100 @@ namespace newasm
                     return 1;
                 }
 
-                if(it->second.type != newasm::datatypes::tuple)
+                if(ptr->type != newasm::datatypes::tuple)
                 {
                     newasm::terminate(newasm::exit_codes::seg_fault);
                     return 1;
                 }
 
-                if(!newasm::header::functions::isnumeric(opr))
+                int value = -1;
+                if(lineInfo.altArgType == newasm::datatypes::number)
                 {
-                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    value = lineInfo.altInt;
+                }
+                else if(lineInfo.altArgType == newasm::datatypes::symbol_name)
+                {
+                    newasm::runtime::functions::parse(opr);
+                    if(newasm::header::functions::isnumeric(opr))
+                    {
+                        value = std::stoi(opr);
+                    }
+                }
+
+                if(!newasm::RAM->is_valid_addr(value))
+                {
+                    newasm::terminate(newasm::exit_codes::seg_fault);
                     return 1;
                 }
 
-                it->second.tuple->addr[newasm::header::data::tupleIndex] = std::stoi(opr);
+                ptr->tuple->addr[newasm::header::data::tupleIndex] = value;
                 return 1;
             }
             // movaddr
             case newasm::core::lang_inf::movaddr:
             {
-                newasm::runtime::functions::parse(suf);
-                if(!newasm::header::functions::isref(suf))
+                VarPtr ptr = nullptr;
+                if(lineInfo.priArgType == newasm::datatypes::ThisPtr)
                 {
-                    newasm::terminate(newasm::exit_codes::invalid_memacc);
-                    return 1;
+                    if(newasm::_this == nullptr)
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    ptr = newasm::_this;
                 }
-                suf = newasm::header::functions::remamp(suf);
-                auto it = newasm::variables::ids.find(suf);
-
-                if(it == newasm::variables::ids.end())
+                else if(lineInfo.priArgType != newasm::datatypes::ThisPtr)
                 {
-                    newasm::terminate(newasm::exit_codes::invalid_memacc);
-                    return 1;
+                    newasm::runtime::functions::parse(suf);
+                    if(!newasm::header::functions::isref(suf))
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    suf = newasm::header::functions::remamp(suf);
+                    auto it = newasm::variables::ids.find(suf);
+
+                    if(it == newasm::variables::ids.end())
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+
+                    ptr = &it->second;
                 }
 
-                if(it->second.type == newasm::datatypes::tuple)
+                if(
+                    ptr->type != newasm::datatypes::number and
+                    ptr->type != newasm::datatypes::decimal and
+                    ptr->type != newasm::datatypes::text and
+                    ptr->type != newasm::datatypes::character
+                )
                 {
                     newasm::terminate(newasm::exit_codes::seg_fault);
                     return 1;
                 }
 
-                if(!newasm::header::functions::isnumeric(opr))
+                int value = -1;
+                if(lineInfo.altArgType == newasm::datatypes::number)
                 {
-                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    value = lineInfo.altInt;
+                }
+                else if(lineInfo.altArgType == newasm::datatypes::symbol_name)
+                {
+                    newasm::runtime::functions::parse(opr);
+                    if(newasm::header::functions::isnumeric(opr))
+                    {
+                        value = std::stoi(opr);
+                    }
+                }
+
+                if(!newasm::RAM->is_valid_addr(value))
+                {
+                    newasm::terminate(newasm::exit_codes::seg_fault);
                     return 1;
                 }
 
-                it->second.addr = std::stoi(opr);
+                ptr->addr = value;
                 return 1;
             }
             //loop
@@ -4010,6 +4073,8 @@ namespace newasm
             return 1;
         }*/
 
+        newasm::rawData priArg;
+
         switch(lineInfo.whatAmIDoing)//switch(it->second)
         {
             case INVALID_INS:
@@ -4757,49 +4822,59 @@ namespace newasm
             //del
             case newasm::core::lang_inf::del:
             {
-                //newasm::runtime::functions::parse(suf);
-                //newasm::progwin::api::cout("Processin' del");
-                newasm::runtime::functions::eval(suf, lineInfo.priEvalMode);
-                if(!newasm::header::functions::isref(suf))
+                VarPtr ptr = nullptr;
+                if(lineInfo.priArgType == newasm::datatypes::ThisPtr)
                 {
-                    newasm::terminate(newasm::exit_codes::invalid_memacc);
-                    return 1;
+                    if(newasm::_this == nullptr)
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    ptr = newasm::_this;
                 }
-                suf = newasm::header::functions::remamp(suf);
-                auto it = newasm::variables::ids.find(suf);
+                else if(lineInfo.priArgType != newasm::datatypes::ThisPtr)
+                {
+                    newasm::runtime::functions::eval(suf, lineInfo.priEvalMode);
+                    if(!newasm::header::functions::isref(suf))
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
 
-                if(it == newasm::variables::ids.end())
+                    suf = newasm::header::functions::remamp(suf);
+                    auto it = newasm::variables::ids.find(suf);
+                    if(it == newasm::variables::ids.end())
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    ptr = &it->second;
+                }
+                
+                if(ptr->type == newasm::datatypes::number)
                 {
-                    newasm::terminate(newasm::exit_codes::invalid_memacc);
+                    newasm::hardware::randAccessMem.delete__HEAP(ptr->addr, ptr->addr + sizeof(int));
                     return 1;
                 }
-
-                //newasm::progwin::api::cout("called del :: suf -> " + suf + " :: valid -> TRUE");
-
-                if(it->second.type == newasm::datatypes::number)
+                if(ptr->type == newasm::datatypes::decimal)
                 {
-                    newasm::hardware::randAccessMem.delete__HEAP(it->second.addr, it->second.addr + sizeof(int));
+                    newasm::hardware::randAccessMem.delete__HEAP(ptr->addr, ptr->addr + sizeof(float));
                     return 1;
                 }
-                if(it->second.type == newasm::datatypes::decimal)
+                if(ptr->type == newasm::datatypes::character)
                 {
-                    newasm::hardware::randAccessMem.delete__HEAP(it->second.addr, it->second.addr + sizeof(float));
+                    newasm::hardware::randAccessMem.delete__HEAP(ptr->addr, ptr->addr + sizeof(char));
                     return 1;
                 }
-                if(it->second.type == newasm::datatypes::character)
+                if(ptr->type == newasm::datatypes::text)
                 {
-                    newasm::hardware::randAccessMem.delete__HEAP(it->second.addr, it->second.addr + sizeof(char));
+                    int buffer_len = newasm::hardware::randAccessMem.peek<int>(ptr->addr);
+                    newasm::hardware::randAccessMem.delete__HEAP(ptr->addr, ptr->addr + sizeof(int) + buffer_len);
                     return 1;
                 }
-                if(it->second.type == newasm::datatypes::text)
+                if(ptr->type == newasm::datatypes::yunion)
                 {
-                    int buffer_len = newasm::hardware::randAccessMem.peek<int>(it->second.addr);
-                    newasm::hardware::randAccessMem.delete__HEAP(it->second.addr, it->second.addr + sizeof(int) + buffer_len);
-                    return 1;
-                }
-                if(it->second.type == newasm::datatypes::yunion)
-                {
-                    int yunion_addr = it->second.yunion->addr;
+                    int yunion_addr = ptr->yunion->addr;
                     if(newasm::header::data::movas_type == newasm::core::lang_inf::typenames::num)
                     {
                         newasm::hardware::randAccessMem.delete__HEAP(yunion_addr, yunion_addr + sizeof(int));
@@ -4824,7 +4899,7 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::seg_fault);
                     return 1;
                 }
-                if(it->second.type == newasm::datatypes::tuple)
+                if(ptr->type == newasm::datatypes::tuple)
                 {
                     if(newasm::header::data::tupleIndex == -1)
                     {
@@ -4832,27 +4907,27 @@ namespace newasm
                         return 1;
                     }
 
-                    int effectiveaddr = it->second.tuple->addr[newasm::header::data::tupleIndex];
+                    int effectiveaddr = ptr->tuple->addr[newasm::header::data::tupleIndex];
                 
-                    if(it->second.tuple->type[newasm::header::data::tupleIndex] == newasm::datatypes::number)
+                    if(ptr->tuple->type[newasm::header::data::tupleIndex] == newasm::datatypes::number)
                     {
                         newasm::hardware::randAccessMem.delete__HEAP(effectiveaddr, effectiveaddr + sizeof(int));
                         newasm::header::data::tupleIndex = -1;
                         return 1;
                     }
-                    if(it->second.tuple->type[newasm::header::data::tupleIndex] == newasm::datatypes::decimal)
+                    if(ptr->tuple->type[newasm::header::data::tupleIndex] == newasm::datatypes::decimal)
                     {
                         newasm::hardware::randAccessMem.delete__HEAP(effectiveaddr, effectiveaddr + sizeof(float));
                         newasm::header::data::tupleIndex = -1;
                         return 1;
                     }
-                    if(it->second.tuple->type[newasm::header::data::tupleIndex] == newasm::datatypes::character)
+                    if(ptr->tuple->type[newasm::header::data::tupleIndex] == newasm::datatypes::character)
                     {
                         newasm::hardware::randAccessMem.delete__HEAP(effectiveaddr, effectiveaddr + sizeof(char));
                         newasm::header::data::tupleIndex = -1;
                         return 1;
                     }
-                    if(it->second.tuple->type[newasm::header::data::tupleIndex] == newasm::datatypes::text)
+                    if(ptr->tuple->type[newasm::header::data::tupleIndex] == newasm::datatypes::text)
                     {
                         int buffer_len = newasm::hardware::randAccessMem.peek<int>(effectiveaddr);
                         newasm::hardware::randAccessMem.delete__HEAP(effectiveaddr, effectiveaddr + sizeof(int) + buffer_len);
@@ -4864,7 +4939,7 @@ namespace newasm
                     return 1;
                 }
 
-                newasm::terminate(newasm::exit_codes::os_error);
+                newasm::terminate(newasm::exit_codes::seg_fault);
                 return 1;
             }
             //pop
@@ -5178,14 +5253,15 @@ namespace newasm
                     newasm::hardware::outIOPOrt(lineInfo.priInt);
                     return 1;
                 }
-                newasm::runtime::functions::eval(suf, lineInfo.priEvalMode);
-                if(!newasm::header::functions::isnumeric(suf))
+
+                newasm::runtime::functions::eval<true>(suf, lineInfo.priEvalMode, &priArg);
+                if(priArg.rawType != newasm::datatypes::number)
                 {
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                     return 1;
                 }
 
-                newasm::hardware::outIOPOrt(std::stoi(suf));
+                newasm::hardware::outIOPOrt(priArg.rawInt);
                 return 1;
             }
             //in
@@ -5196,14 +5272,15 @@ namespace newasm
                     newasm::mem::regs::tlr.set_value(newasm::hardware::inIOPort(lineInfo.priInt));
                     return 1;
                 }
-                newasm::runtime::functions::eval(suf, lineInfo.priEvalMode);
-                if(!newasm::header::functions::isnumeric(suf))
+
+                newasm::runtime::functions::eval<true>(suf, lineInfo.priEvalMode, &priArg);
+                if(priArg.rawType != newasm::datatypes::number)
                 {
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                     return 1;
                 }
 
-                newasm::mem::regs::tlr.set_value(newasm::hardware::inIOPort(std::stoi(suf)));
+                newasm::mem::regs::tlr.set_value(newasm::hardware::inIOPort(priArg.rawInt));
                 return 1;
             }
             //switch

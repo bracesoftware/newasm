@@ -25,7 +25,8 @@ namespace newasm
         namespace functions
         {
 			inline void parse(std::string& suf);
-			FORCE_INLINE inline void eval(std::string& s, newasm::compiler::EvalMode& mode)
+			template<bool RawDataHere>
+			FORCE_INLINE inline void eval(std::string& s, newasm::compiler::EvalMode& mode, newasm::rawData* rdi)
 			{
 				switch(mode.type)
 				{
@@ -40,6 +41,17 @@ namespace newasm
 						auto& suf = s;
 						if(i.type == newasm::datatypes::number)
 						{
+							if constexpr(RawDataHere)
+							{
+								rdi->rawType = i.type;
+								if(i.locked)
+								{
+									rdi->rawInt = 0;
+									return;
+								}
+								rdi->rawInt = newasm::RAM->peek<int>(i.addr);
+								return;
+							}
 							if(i.locked)
 							{
 								suf = std::to_string(0);
@@ -50,6 +62,17 @@ namespace newasm
 						}
 						if(i.type == newasm::datatypes::decimal)
 						{
+							if constexpr(RawDataHere)
+							{
+								rdi->rawType = i.type;
+								if(i.locked)
+								{
+									rdi->rawFloat = 0.0;
+									return;
+								}
+								rdi->rawFloat = newasm::RAM->peek<float>(i.addr);
+								return;
+							}
 							if(i.locked)
 							{
 								suf = std::to_string(0.0);
@@ -60,6 +83,17 @@ namespace newasm
 						}
 						if(i.type == newasm::datatypes::character)
 						{
+							if constexpr(RawDataHere)
+							{
+								rdi->rawType = i.type;
+								if(i.locked)
+								{
+									rdi->rawChar = '?';
+									return;
+								}
+								rdi->rawChar = newasm::RAM->peek<char>(i.addr);
+								return;
+							}
 							if(i.locked)
 							{
 								suf = ("'?'");
@@ -71,6 +105,17 @@ namespace newasm
 						}
 						if(i.type == newasm::datatypes::text)
 						{
+							if constexpr(RawDataHere)
+							{
+								rdi->rawType = i.type;
+								if(i.locked)
+								{
+									rdi->rawString = "unknown??";
+									return;
+								}
+								rdi->rawString = newasm::RAM->peek<std::string>(i.addr);
+								return;
+							}
 							if(i.locked)
 							{
 								suf = "\"unknown??\"";
@@ -269,12 +314,23 @@ namespace newasm
 					}
 					case newasm::runtime::evalModes::valueOf: [[likely]] //primitive types and unions,and whole tuples/contexts
 					{
-						auto parseFromRAM = <::>(std::string& suf) -> void {
+						auto parseFromRAM = <:rdi:>(std::string& suf) -> void {
 							if(newasm::variables::ids.find(suf) != newasm::variables::ids.end())
 							{
 								auto i = newasm::variables::ids.at(suf);
 								if(i.type == newasm::datatypes::number)
 								{
+									if constexpr(RawDataHere)
+									{
+										rdi->rawType = i.type;
+										if(i.locked)
+										{
+											rdi->rawInt = 0;
+											return;
+										}
+										rdi->rawInt = newasm::RAM->peek<int>(i.addr);
+										return;
+									}
 									if(i.locked)
 									{
 										suf = std::to_string(0);
@@ -285,6 +341,17 @@ namespace newasm
 								}
 								if(i.type == newasm::datatypes::decimal)
 								{
+									if constexpr(RawDataHere)
+									{
+										rdi->rawType = i.type;
+										if(i.locked)
+										{
+											rdi->rawFloat = 0.0;
+											return;
+										}
+										rdi->rawFloat = newasm::RAM->peek<float>(i.addr);
+										return;
+									}
 									if(i.locked)
 									{
 										suf = std::to_string(0.0);
@@ -295,6 +362,17 @@ namespace newasm
 								}
 								if(i.type == newasm::datatypes::character)
 								{
+									if constexpr(RawDataHere)
+									{
+										rdi->rawType = i.type;
+										if(i.locked)
+										{
+											rdi->rawChar = '?';
+											return;
+										}
+										rdi->rawChar = newasm::RAM->peek<char>(i.addr);
+										return;
+									}
 									if(i.locked)
 									{
 										suf = ("'?'");
@@ -306,6 +384,17 @@ namespace newasm
 								}
 								if(i.type == newasm::datatypes::text)
 								{
+									if constexpr(RawDataHere)
+									{
+										rdi->rawType = i.type;
+										if(i.locked)
+										{
+											rdi->rawString = "unknown??";
+											return;
+										}
+										rdi->rawString = newasm::RAM->peek<std::string>(i.addr);
+										return;
+									}
 									if(i.locked)
 									{
 										suf = "\"unknown??\"";
@@ -541,12 +630,23 @@ namespace newasm
 					}
 					case newasm::runtime::evalModes::valueOfNamespacedVar:
 					{
-						auto parseFromRAM = [](std::string& suf) -> void {
+						auto parseFromRAM = <:rdi:>(std::string& suf) -> void {
 							if(newasm::variables::ids.find(suf) != newasm::variables::ids.end())
 							{
 								auto i = newasm::variables::ids.at(suf);
 								if(i.type == newasm::datatypes::number)
 								{
+									if constexpr(RawDataHere)
+									{
+										rdi->rawType = i.type;
+										if(i.locked)
+										{
+											rdi->rawInt = '?';
+											return;
+										}
+										rdi->rawInt = newasm::RAM->peek<int>(i.addr);
+										return;
+									}
 									if(i.locked)
 									{
 										suf = std::to_string(0);
@@ -557,6 +657,17 @@ namespace newasm
 								}
 								if(i.type == newasm::datatypes::decimal)
 								{
+									if constexpr(RawDataHere)
+									{
+										rdi->rawType = i.type;
+										if(i.locked)
+										{
+											rdi->rawFloat = '?';
+											return;
+										}
+										rdi->rawFloat = newasm::RAM->peek<float>(i.addr);
+										return;
+									}
 									if(i.locked)
 									{
 										suf = std::to_string(0.0);
@@ -567,6 +678,17 @@ namespace newasm
 								}
 								if(i.type == newasm::datatypes::character)
 								{
+									if constexpr(RawDataHere)
+									{
+										rdi->rawType = i.type;
+										if(i.locked)
+										{
+											rdi->rawChar = '?';
+											return;
+										}
+										rdi->rawChar = newasm::RAM->peek<char>(i.addr);
+										return;
+									}
 									if(i.locked)
 									{
 										suf = ("'?'");
@@ -578,6 +700,17 @@ namespace newasm
 								}
 								if(i.type == newasm::datatypes::text)
 								{
+									if constexpr(RawDataHere)
+									{
+										rdi->rawType = i.type;
+										if(i.locked)
+										{
+											rdi->rawString = '?';
+											return;
+										}
+										rdi->rawString = newasm::RAM->peek<std::string>(i.addr);
+										return;
+									}
 									if(i.locked)
 									{
 										suf = "\"unknown??\"";
@@ -912,7 +1045,7 @@ namespace newasm
 							}
 							return;
 						}
-						
+
 						//std::cout << "IS THIS THE ERROR C++???" << std::endl;
 						//std::cout << "indexNumeric: " << indexNumeric << std::endl;
 						//std::cout << "indexText: " << indexText << std::endl;
