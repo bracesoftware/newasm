@@ -62,3 +62,8 @@ You can also fetch a context or a tuple and use `this` as a handle:
 ```
 
 The `this` pointer can be used on `del`, `movasx` and `movaddr` as well.
+
+The `this` pointer can also be used as an operand by the address-of operator:
+```asm
+mov tlr, #this ; returns a safe pointer that doesn't have any access to your computer
+```
