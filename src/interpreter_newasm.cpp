@@ -1139,6 +1139,7 @@ namespace newasm
     {
         inline void cleanup()
         {
+            NewASM::MutableConfig::DisplaySourceInformation = false;
             NewASM::kernel::ThreadCount = 0;
             NewASM::compiler::data::IfResult = true;
             NewASM::compiler::data::MacroTable.clear();
@@ -1179,6 +1180,7 @@ namespace newasm
             newasm::kernel::cfg::Crypto = false;
             newasm::kernel::cfg::Context = false;
             NewASM::kernel::cfg::FileStream_VDSK = false;
+            NewASM::kernel::cfg::Configuration = false;
 
             newasm::mem::datatypes.clear();
             newasm::mem::data.clear();

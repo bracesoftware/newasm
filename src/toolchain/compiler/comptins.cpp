@@ -115,7 +115,7 @@ namespace newasm
                     auto arg = arg1;
                     if(!newasm::header::functions::istext(arg))
                     {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        newasm::compiler::abort(newasm::compiler::fail::expected_token);
                         return;
                     }
                     arg = newasm::header::functions::remq(arg);

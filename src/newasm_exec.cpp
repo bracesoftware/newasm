@@ -83,6 +83,20 @@ namespace newasm
     //int redirect_exec(std::string filename);
     static inline int terminate_(int exit_code, const std::source_location& loc)//, std::string line)
     {
+        auto LogExceptionSourceLoc = <:loc:>() -> void {
+            if(NewASM::MutableConfig::DisplaySourceInformation)
+            {
+                static const std::string Insomnia = "\t\t\t  ";
+                std::cout << Insomnia << newasm::header::col::reset << newasm::header::col::light_red;
+                std::cout << "^ exception source information -> " << newasm::header::col::gray << newasm::header::style::underline;
+                std::cout << loc.file_name() << ":" << loc.line() << ":" << loc.column() << newasm::header::col::reset << "\n\t" << Insomnia;
+                std::cout << newasm::header::col::light_red << '`' << newasm::header::col::gray;
+                std::cout << loc.function_name() << newasm::header::col::light_red << '`';
+                std::cout << newasm::header::col::reset << newasm::header::col::gray;
+                std::cout << std::endl;
+                std::cout << newasm::header::col::reset;
+            }
+        };
         bool temp_proc = false;
         std::cout << std::endl;
         //std::cout << "TERMINATEEE" << std::endl;
@@ -102,6 +116,7 @@ namespace newasm
                 newasm::header::col::red << "\" occured >> "<<
                 newasm::header::col::gray<<
                 newasm::header::data::LastLine->raw << std::endl;
+                LogExceptionSourceLoc();
 
                 std::cout << newasm::header::col::reset << std::endl;
             }
@@ -232,19 +247,7 @@ namespace newasm
                 std::cout << std::endl;
                 std::cout << newasm::header::col::reset;
             }
-
-            if(NewASM::MutableConfig::DisplaySourceInformation)
-            {
-                static const std::string Insomnia = "\t\t\t  ";
-                std::cout << Insomnia << newasm::header::col::reset << newasm::header::col::light_red;
-                std::cout << "^ exception source information -> " << newasm::header::col::gray << newasm::header::style::underline;
-                std::cout << loc.file_name() << ":" << loc.line() << ":" << loc.column() << newasm::header::col::reset << "\n\t" << Insomnia;
-                std::cout << newasm::header::col::light_red << '`' << newasm::header::col::gray;
-                std::cout << loc.function_name() << newasm::header::col::light_red << '`';
-                std::cout << newasm::header::col::reset << newasm::header::col::gray;
-                std::cout << std::endl;
-                std::cout << newasm::header::col::reset;
-            }
+            LogExceptionSourceLoc();
         }
         return 1;
     }
