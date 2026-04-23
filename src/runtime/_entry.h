@@ -912,6 +912,11 @@ namespace newasm
 							}
 							return;
 						}
+						
+						//std::cout << "IS THIS THE ERROR C++???" << std::endl;
+						//std::cout << "indexNumeric: " << indexNumeric << std::endl;
+						//std::cout << "indexText: " << indexText << std::endl;
+						//std::cout << "tupleOrContextIndex: `" << tupleIndex << "`" << std::endl;
 						newasm::terminate(newasm::exit_codes::dtyp_mismatch);
 						return;
 					}

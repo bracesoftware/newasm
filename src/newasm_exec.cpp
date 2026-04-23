@@ -1372,18 +1372,38 @@ namespace newasm
             //merge
             case newasm::core::lang_inf::merge:
             {
-                newasm::runtime::functions::parse(suf);
-                if(!newasm::header::functions::isref(suf))
+                VarPtr ptr = nullptr;
+                if(lineInfo.priArgType == newasm::datatypes::ThisPtr)
                 {
-                    newasm::terminate(newasm::exit_codes::invalid_memacc);
-                    return 1;
+                    if(newasm::_this == nullptr)
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    ptr = newasm::_this;
                 }
-                
-                suf = newasm::header::functions::remamp(suf);
-                auto it = newasm::variables::ids.find(suf);
-                if(it == newasm::variables::ids.end())
+                else if(lineInfo.priArgType != newasm::datatypes::ThisPtr)
                 {
-                    newasm::terminate(newasm::exit_codes::invalid_memacc);
+                    newasm::runtime::functions::parse(suf);
+                    if(!newasm::header::functions::isref(suf))
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    
+                    suf = newasm::header::functions::remamp(suf);
+                    auto it = newasm::variables::ids.find(suf);
+                    if(it == newasm::variables::ids.end())
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    ptr = &it->second;
+                }
+
+                if(ptr->type != newasm::datatypes::mycontext)
+                {
+                    newasm::terminate(newasm::exit_codes::seg_fault);
                     return 1;
                 }
 
@@ -1412,10 +1432,10 @@ namespace newasm
                         return 1;
                     }
                     key = newasm::header::functions::remq(key);
-                    //auto key_ = it->second.context->keys.find(key);
-                    auto& KEYS____ = it->second.context->keys;
+
+                    auto& KEYS____ = ptr->context->keys;
                     auto key_ = std::find(KEYS____.begin(), KEYS____.end(), key);
-                    if(key_ == it->second.context->keys.end()) //key doesn't exist, we add it
+                    if(key_ == ptr->context->keys.end()) //key doesn't exist, we add it
                     {
                         if(value == NIL_STR)
                         {
@@ -1425,56 +1445,56 @@ namespace newasm
                         if(newasm::header::functions::isnumeric(value))
                         {
                             addr = newasm::hardware::randAccessMem.write<int>(std::stoi(value));
-                            it->second.context->keys.push_back(key);
-                            it->second.context->type.push_back(newasm::datatypes::number);
-                            it->second.context->addr.push_back(addr);
+                            ptr->context->keys.push_back(key);
+                            ptr->context->type.push_back(newasm::datatypes::number);
+                            ptr->context->addr.push_back(addr);
                             continue;
                         }
                         if(newasm::header::functions::isfloat(value))
                         {
                             addr = newasm::hardware::randAccessMem.write<float>(std::stof(value));
-                            it->second.context->keys.push_back(key);
-                            it->second.context->type.push_back(newasm::datatypes::decimal);
-                            it->second.context->addr.push_back(addr);
+                            ptr->context->keys.push_back(key);
+                            ptr->context->type.push_back(newasm::datatypes::decimal);
+                            ptr->context->addr.push_back(addr);
                             continue;
                         }
                         if(newasm::header::functions::ischar(value))
                         {
                             addr = newasm::hardware::randAccessMem.write<char>(newasm::header::functions::remsq(value).at(0));
-                            it->second.context->keys.push_back(key);
-                            it->second.context->type.push_back(newasm::datatypes::character);
-                            it->second.context->addr.push_back(addr);
+                            ptr->context->keys.push_back(key);
+                            ptr->context->type.push_back(newasm::datatypes::character);
+                            ptr->context->addr.push_back(addr);
                             continue;
                         }
                         if(newasm::header::functions::istext(value))
                         {
                             addr = newasm::hardware::randAccessMem.write<std::string>(newasm::header::functions::remq(value));
-                            it->second.context->keys.push_back(key);
-                            it->second.context->type.push_back(newasm::datatypes::text);
-                            it->second.context->addr.push_back(addr);
+                            ptr->context->keys.push_back(key);
+                            ptr->context->type.push_back(newasm::datatypes::text);
+                            ptr->context->addr.push_back(addr);
                             continue;
                         }
                     }
-                    if(key_ != it->second.context->keys.end()) //key exists. we can modify it or delete it
+                    if(key_ != ptr->context->keys.end()) //key exists. we can modify it or delete it
                     {
-                        int idx = newasm::header::functions::getIndex(it->second.context->keys, key);
+                        int idx = newasm::header::functions::getIndex(ptr->context->keys, key);
 
-                        addr = it->second.context->addr[idx];
+                        addr = ptr->context->addr[idx];
                         //we delete everything from RAM anyway
                         // might be inefficient, so i'll look into optimizing a lil
-                        if(it->second.context->type[idx] == newasm::datatypes::number)
+                        if(ptr->context->type[idx] == newasm::datatypes::number)
                         {
                             newasm::hardware::randAccessMem.delete__HEAP(addr, addr + sizeof(int));
                         }
-                        if(it->second.context->type[idx] == newasm::datatypes::decimal)
+                        if(ptr->context->type[idx] == newasm::datatypes::decimal)
                         {
                             newasm::hardware::randAccessMem.delete__HEAP(addr, addr + sizeof(float));
                         }
-                        if(it->second.context->type[idx] == newasm::datatypes::character)
+                        if(ptr->context->type[idx] == newasm::datatypes::character)
                         {
                             newasm::hardware::randAccessMem.delete__HEAP(addr, addr + sizeof(char));
                         }
-                        if(it->second.context->type[idx] == newasm::datatypes::text)
+                        if(ptr->context->type[idx] == newasm::datatypes::text)
                         {
                             int buffer_len, bytes;
                             std::memcpy(&buffer_len, &newasm::hardware::randAccessMem.__memory__[addr], sizeof(int));
@@ -1485,9 +1505,9 @@ namespace newasm
                         // we erase it completely from contextData
                         if(value == NIL_STR)
                         {
-                            it->second.context->addr.erase(it->second.context->addr.begin() + idx);
-                            it->second.context->type.erase(it->second.context->type.begin() + idx);
-                            it->second.context->keys.erase(it->second.context->keys.begin() + idx);
+                            ptr->context->addr.erase(ptr->context->addr.begin() + idx);
+                            ptr->context->type.erase(ptr->context->type.begin() + idx);
+                            ptr->context->keys.erase(ptr->context->keys.begin() + idx);
                             continue;
                         }
                         
@@ -1496,30 +1516,30 @@ namespace newasm
                         if(newasm::header::functions::isnumeric(value))
                         {
                             addr = newasm::hardware::randAccessMem.write<int>(std::stoi(value));
-                            it->second.context->addr[idx] = addr;
-                            it->second.context->type[idx] = newasm::datatypes::number;
+                            ptr->context->addr[idx] = addr;
+                            ptr->context->type[idx] = newasm::datatypes::number;
                             //it->second.context->keys[idx] --------> we DON'T touch this, we want the key to stay the same
                             continue;
                         }
                         if(newasm::header::functions::isfloat(value))
                         {
                             addr = newasm::hardware::randAccessMem.write<float>(std::stof(value));
-                            it->second.context->addr[idx] = addr;
-                            it->second.context->type[idx] = newasm::datatypes::decimal;
+                            ptr->context->addr[idx] = addr;
+                            ptr->context->type[idx] = newasm::datatypes::decimal;
                             continue;
                         }
                         if(newasm::header::functions::ischar(value))
                         {
                             addr = newasm::hardware::randAccessMem.write<char>(newasm::header::functions::remsq(value).at(0));
-                            it->second.context->addr[idx] = addr;
-                            it->second.context->type[idx] = newasm::datatypes::character;
+                            ptr->context->addr[idx] = addr;
+                            ptr->context->type[idx] = newasm::datatypes::character;
                             continue;
                         }
                         if(newasm::header::functions::istext(value))
                         {
                             addr = newasm::hardware::randAccessMem.write<std::string>(newasm::header::functions::remq(value));
-                            it->second.context->addr[idx] = addr;
-                            it->second.context->type[idx] = newasm::datatypes::text;
+                            ptr->context->addr[idx] = addr;
+                            ptr->context->type[idx] = newasm::datatypes::text;
                             continue;
                         }
                         newasm::terminate(newasm::exit_codes::invalid_init);
@@ -1531,6 +1551,7 @@ namespace newasm
             //lea
             case newasm::core::lang_inf::lea:
             {
+                #if 0
                 if(lineInfo.altArgType == newasm::datatypes::symbol_name)
                 {
                     if(newasm::header::functions::isnumeric(opr))
@@ -1625,6 +1646,68 @@ namespace newasm
                 }
 
                 newasm::header::data::tupleIndex = localidx;
+                #endif
+
+                VarPtr ptr = nullptr;
+                if(lineInfo.priArgType == newasm::datatypes::ThisPtr)
+                {
+                    if(newasm::_this == nullptr)
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    ptr = newasm::_this;
+                }
+                else if(lineInfo.priArgType != newasm::datatypes::ThisPtr)
+                {
+                    if(!newasm::header::functions::isref(suf))
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+
+                    newasm::runtime::functions::parse(suf);
+                    suf = newasm::header::functions::remamp(suf);
+
+                    auto it = newasm::variables::ids.find(suf);
+                    if(it == newasm::variables::ids.end())
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+
+                    ptr = &it->second;
+                }
+
+                if(ptr->type != newasm::datatypes::tuple)
+                {
+                    newasm::terminate(newasm::exit_codes::seg_fault);
+                    return 1;
+                }
+
+                auto TupleSize = ptr->tuple->addr.size();
+
+                int IDX = -1;
+                if(lineInfo.altArgType == newasm::datatypes::symbol_name)
+                {
+                    newasm::runtime::functions::parse(opr);
+                    if(newasm::header::functions::isnumeric(opr))
+                    {
+                        IDX = std::stoi(opr);
+                    }
+                }
+                else if(lineInfo.altArgType == newasm::datatypes::number)
+                {
+                    IDX = lineInfo.altInt;
+                }
+
+                if(IDX < 0 or IDX >= TupleSize)
+                {
+                    newasm::terminate(newasm::exit_codes::seg_fault);
+                    return 1;
+                }
+
+                newasm::header::data::tupleIndex = IDX;
                 return 1;
             }
             //vmov

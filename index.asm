@@ -2628,8 +2628,15 @@ jmp e2349083l
     fetch interesting::lmao
     mov tlr, this(4)
     call std::ios::writeln
+    lea this, 0
+    mov this, "hi from modified lea this"
+    mov tlr, this(0)
+    call std::ios::writeln
     fetch lol::new
     mov tlr, this("mjau")
+    call std::ios::writeln
+    merge this, ("mjau": "mjau mjau from merge this!")
+    mov tlr, this (  "mjau"  )
     call std::ios::writeln
 ; -------------------------- END OF PROGRAM -------------------------- ;
     mov tlr, *rax

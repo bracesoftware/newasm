@@ -249,6 +249,7 @@ namespace newasm
                         mode.UsingThisPtr = true;
                     }
                     mode.argString = n.second.second;
+                    mode.argString = NewASM::header::functions::trim(mode.argString);
                     if(NewASM::header::functions::isnumeric(mode.argString))
                     {
                         mode.argType = NewASM::datatypes::number;
@@ -256,6 +257,7 @@ namespace newasm
                     }
                     else if(NewASM::header::functions::istext(mode.argString))
                     {
+                        mode.argString = newasm::header::functions::parseBackslash(mode.argString);
                         mode.argType = NewASM::datatypes::text;
                         mode.argString = NewASM::header::functions::remq(mode.argString);
                     }
