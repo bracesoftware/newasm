@@ -152,7 +152,7 @@ mov tlr, #this ; returns a safe pointer that doesn't have any access to your com
 
 ## Important notes
 
-- No important notes.
++ Build 31 of the virtual machine is compiled using C++26.
 
 --------------------------------------------------------------------------------
 
@@ -161,14 +161,14 @@ mov tlr, #this ; returns a safe pointer that doesn't have any access to your com
 
 ```bash
 go build networking.go -buildmode=c-archive -o networking.a
-C:\path_to_your_compiler\g++ -static -std=c++23 index.cpp -o index.exe networking.a
+C:\path_to_your_compiler\g++ -static -std=c++26 index.cpp -o index.exe networking.a
 ```
 
 - If you are using Windows Subsystem for Linux, use the following command:
 
 ```bash
 wsl go build networking.go -buildmode=c-archive -o networking.a
-wsl g++ -m64 -static -std=c++23 index.cpp -o index.out networking.a
+wsl g++ -m64 -static -std=c++26 index.cpp -o index.out networking.a
 ```
 
 ### Downloading
