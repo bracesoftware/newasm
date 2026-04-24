@@ -2377,6 +2377,25 @@ jmp lmao
 
     thread thisisfun -> {
         fetch std::ios::writeln
+        resb 4
+        push 535
+        mov tlr, "now we're moving on to call stack"
+        call this
+        resb 4873
+        push 1 ; push the sec arg
+        push "call stack works" ; push the first arg
+        mov imm, 1 ; tell the virtual CPU that we're actually calling a function and not pushing the number
+        push 0x827 ; call the procedure
+        zero imm ; reset the flag
+        stack ;clear up the stack after the procedure call
+        wait 3000
+        db stk
+        push 1 ; push the sec arg
+        push "call stack works again!" ; push the first arg
+        mov imm, 1
+        push 0x827 ; call the procedure
+        zero imm
+        stack ;clear up the stack after the procedure call
         mov imm, 2
         {:shee}
         mov tlr, "this is really fun"
@@ -2647,6 +2666,7 @@ jmp e2349083l
     call std::ios::writeln
     mov tlr, # this
     call std::ios::writeln
+    ;movaddr this, -1
 
     using "cfg"
 ; -------------------------- END OF PROGRAM -------------------------- ;

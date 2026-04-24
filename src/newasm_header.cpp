@@ -63,8 +63,8 @@ namespace newasm::header
         constinit bool blueprint_now = false;
         std::string blueprint_decl = "";
 
-        constinit int argc = 0;
-        constinit int callstkidx = 0;
+        newasm::kernel::thread_safe<int> argc = 0;
+        newasm::kernel::thread_safe<int> callstkidx = 0;
 
         constinit int module = 0;
 

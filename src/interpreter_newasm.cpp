@@ -635,6 +635,19 @@ namespace newasm
     using execBytecode = newasm::compiler::lineData;
     newasm::kernel::thread_safe<newasm::compiler::lineData*> PRC;
     newasm::kernel::thread_safe<VarPtr> _this = nullptr;
+    struct _m_StackInfo final
+    {
+        int stkType;
+        int stkAddr;
+    };
+    struct _g_DedicatedStack_ final
+    {
+        bool Usable = false;
+        int addr;
+        int stackEnd;
+        std::vector<newasm::_m_StackInfo> StackInfo;
+    };
+    newasm::kernel::thread_safe<_g_DedicatedStack_> DedicatedMemory;
     
     int procline(newasm::compiler::lineData& line);
     int procline(std::string& line);

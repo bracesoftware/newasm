@@ -16,12 +16,8 @@ namespace newasm
             public unsigned char __memory__[MEM_SIZE];
 
             public newasm::containers::bit_array<MEM_SIZE> __memory_free__;
-            struct _m_StackInfo final
-            {
-                int stkType;
-                int stkAddr;
-            };
-            public std::vector<_m_StackInfo> StackInfo;
+            
+            public std::vector<newasm::_m_StackInfo> StackInfo;
 
             private int last_used_pos = 0;
             private int smallObjectThreshold = sizeof(int);
@@ -360,7 +356,62 @@ namespace newasm
                 return;
             }
 
-            template<typename T>
+            public inline int dedicateStack(int bytes) noexcept
+            {
+                int addr = get_free_alloc(sizeof(int) + bytes);
+                if(addr == -1)
+                {
+                    return -1;
+                }
+                int header = bytes;
+                // copy the header
+                std::memcpy(&__memory__[addr], &header, sizeof(int));
+                // now actually fill the memory
+                for(int i = addr; i < addr + sizeof(int) + bytes; ++i)
+                {
+                    __memory_free__.set_at(i, 1);
+                }
+
+                return addr;
+            }
+
+            public inline int getDedicatedStackEnd(int addr) noexcept
+            {
+                int bytes = 0;
+                std::memcpy(&bytes, &__memory__[addr], sizeof(int));
+                return addr + sizeof(int) + bytes;
+            }
+
+            public inline bool getDedicatedStackHeapCollision(_g_DedicatedStack_& dStack)
+            {
+                int stp = newasm::mem::regs::stk.get_value();
+                if(
+                    dStack.addr + sizeof(int) - 1 >= stp or
+                    stp >= dStack.stackEnd + 1
+                )
+                {
+                    return true;
+                }
+                return false;
+            }
+
+            public inline void freeStack(int addr) noexcept
+            {
+                int bytes = 0;
+                std::memcpy(&bytes, &__memory__[addr], sizeof(int));
+                for(int i = addr; i < addr + sizeof(int) + bytes; ++i)
+                {
+                    // just free
+                    __memory_free__.set_at(i, 0);
+                }
+                MARK_DELETED_BLOCK(addr, sizeof(int) + bytes);
+                //newasm::mem::regs::hea.set_value(get_heap_end());
+                return;
+            }
+
+
+
+            template<typename T, bool dstk = false>
             public inline void push__STACK(T value) noexcept
             {
                 if constexpr(std::is_same<T, std::string>::value)
@@ -373,14 +424,14 @@ namespace newasm
                     // Then the value
                     std::memcpy(&__memory__[address + sizeof(int)], value.data(), len);
 
-                    for(int i = address; i < address + sizeof(int) + len; ++i)
+                    if constexpr(!dstk) for(int i = address; i < address + sizeof(int) + len; ++i)
                     {
                         __memory_free__.set_at(i, 1); // tell the thing it is occupied
                     }
 
                     //std::cout << "Pushed " << address << "| value : `" << value << "`" << std::endl;
-                    this->StackInfo.push_back({newasm::datatypes::text, address}); // initialize metadata
-
+                    if constexpr(!dstk) this->StackInfo.push_back({newasm::datatypes::text, address}); // initialize metadata
+                    if constexpr(dstk) DedicatedMemory->StackInfo.push_back({newasm::datatypes::text, address});
                     return;
                 }
 
@@ -388,28 +439,31 @@ namespace newasm
                 newasm::mem::regs::stk.set_value(address);
 
                 std::memcpy(&__memory__[address], &value, sizeof(T));
-                for(int i = address; i < address + sizeof(T); ++i)
+                if constexpr(!dstk) for(int i = address; i < address + sizeof(T); ++i)
                 {
                     __memory_free__.set_at(i, 1); // tell the thing it is occupied
                 }
 
                 if constexpr(std::is_same<T, int>::value)
                 {
-                    this->StackInfo.push_back({newasm::datatypes::number, address});
+                    if constexpr(!dstk) this->StackInfo.push_back({newasm::datatypes::number, address}); // initialize metadata
+                    if constexpr(dstk) DedicatedMemory->StackInfo.push_back({newasm::datatypes::number, address});
                 }
                 if constexpr(std::is_same<T, float>::value)
                 {
-                    this->StackInfo.push_back({newasm::datatypes::decimal, address});
+                    if constexpr(!dstk) this->StackInfo.push_back({newasm::datatypes::decimal, address}); // initialize metadata
+                    if constexpr(dstk) DedicatedMemory->StackInfo.push_back({newasm::datatypes::decimal, address});
                 }
                 if constexpr(std::is_same<T, char>::value)
                 {
-                    this->StackInfo.push_back({newasm::datatypes::character, address});
+                    if constexpr(!dstk) this->StackInfo.push_back({newasm::datatypes::character, address}); // initialize metadata
+                    if constexpr(dstk) DedicatedMemory->StackInfo.push_back({newasm::datatypes::character, address});
                 }
                 //std::cout << "Pushed " << address << "| value : `" << value << "`" << std::endl;
                 return;
             }
 
-            template<typename T>
+            template<typename T, bool dstk = false>
             public inline int pop__STACK(T& value) noexcept
             {
                 if constexpr(std::is_same<T, std::string>::value)
@@ -421,7 +475,7 @@ namespace newasm
                     std::memcpy(buffer.data(), &__memory__[address + sizeof(int)], buffer_len);
                     value = buffer;
 
-                    for(int i = newasm::mem::regs::stk; i < newasm::mem::regs::stk + sizeof(int) + buffer_len; ++i)
+                    if constexpr(!dstk) for(int i = newasm::mem::regs::stk; i < newasm::mem::regs::stk + sizeof(int) + buffer_len; ++i)
                     {
                         __memory_free__.set_at(i, 0);
                     }
@@ -435,7 +489,7 @@ namespace newasm
                 std::memcpy(&val, &__memory__[address], sizeof(T));
                 value = val;
 
-                for(int i = newasm::mem::regs::stk; i < newasm::mem::regs::stk + sizeof(T); ++i)
+                if constexpr(!dstk) for(int i = newasm::mem::regs::stk; i < newasm::mem::regs::stk + sizeof(T); ++i)
                 {
                     __memory_free__.set_at(i, 0);
                 }
@@ -443,11 +497,11 @@ namespace newasm
                 newasm::mem::regs::stk.set_value(newasm::mem::regs::stk.get_value() + sizeof(T));
                 return address;
             }
-            template<typename T>
+            template<typename T, bool dstk = false>
             public inline int pop__STACK() noexcept
             {
                 T value;
-                return pop__STACK<T>(value);
+                return pop__STACK<T, dstk>(value);
             }
             //
 

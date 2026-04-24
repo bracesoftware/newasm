@@ -83,7 +83,7 @@ namespace newasm
     //int redirect_exec(std::string filename);
     static inline int terminate_(int exit_code, const std::source_location& loc)//, std::string line)
     {
-        static const std::string Insomnia = "\t\t\t  ";
+        const std::string Insomnia = "\t\t\t  ";
         auto LogExceptionSourceLoc = <:loc, Insomnia:>() -> void {
             if(NewASM::MutableConfig::DisplaySourceInformation)
             {
@@ -2485,6 +2485,7 @@ namespace newasm
                     ptr->type != newasm::datatypes::character
                 )
                 {
+                    newasm::SetExceptionComment("not a supported object type");
                     newasm::terminate(newasm::exit_codes::seg_fault);
                     return 1;
                 }
@@ -4992,11 +4993,6 @@ namespace newasm
             //pop
             case newasm::core::lang_inf::pop:
             {
-                if(newasm::thread_line)
-                {
-                    newasm::terminate(newasm::exit_codes::seg_fault);
-                    return 1;
-                }
                 if(newasm::RAM->StackInfo.empty())
                 {
                     newasm::terminate(newasm::exit_codes::os_error);
@@ -5193,37 +5189,139 @@ namespace newasm
 
                 return 1;
             }
+            //pop
+            case newasm::core::lang_inf::pop__THREAD:
+            {
+                std::cout << "popt POZVAN -> " << lineInfo.raw << std::endl;
+                auto& DedicatedStack = *newasm::DedicatedMemory;
+                if(DedicatedStack.StackInfo.empty())
+                {
+                    newasm::terminate(newasm::exit_codes::os_error);
+                    return 1;
+                }
+                int type = DedicatedStack.StackInfo.back().stkType;
+                DedicatedStack.StackInfo.pop_back();
+                if(lineInfo.priArgType == NewASM::datatypes::NIL)
+                {
+                    if(type == newasm::datatypes::number)
+                    {
+                        newasm::hardware::randAccessMem.pop__STACK<int, true>();
+                        return 1;
+                    }
+                    if(type == newasm::datatypes::decimal)
+                    {
+                        newasm::hardware::randAccessMem.pop__STACK<float, true>();
+                        return 1;
+                    }
+                    if(type == newasm::datatypes::character)
+                    {
+                        newasm::hardware::randAccessMem.pop__STACK<char, true>();
+                        return 1;
+                    }
+                    if(type == newasm::datatypes::text)
+                    {
+                        newasm::hardware::randAccessMem.pop__STACK<std::string, true>();
+                        return 1;
+                    }
+                    return 1;
+                }
+
+                VarPtr ptr = nullptr;
+                if(lineInfo.priArgType == newasm::datatypes::ThisPtr)
+                {
+                    if(newasm::_this == nullptr)
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    ptr = newasm::_this;
+                }
+                else if(lineInfo.priArgType != newasm::datatypes::ThisPtr)
+                {
+                    if(!newasm::header::functions::isref(suf))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    suf = newasm::header::functions::remamp(suf);
+                    newasm::runtime::functions::parse<true>(suf);
+    
+                    auto it = newasm::variables::ids.find(suf);
+                    if(it == newasm::variables::ids.end())
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    ptr = &it->second;
+                }
+                
+                // integers
+                if(type == newasm::datatypes::number)
+                {
+                    if(ptr->type != newasm::datatypes::number)
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+
+                    int value;
+                    newasm::hardware::randAccessMem.pop__STACK<int, true>(value);
+                    ptr->addr = newasm::hardware::randAccessMem.overwrite<int>(ptr->addr, value);
+                    return 1;
+                }
+                // floats
+                if(type == newasm::datatypes::decimal)
+                {
+                    if(ptr->type != newasm::datatypes::decimal)
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+
+                    float value;
+                    newasm::hardware::randAccessMem.pop__STACK<float, true>(value);
+                    ptr->addr = newasm::hardware::randAccessMem.overwrite<float>(ptr->addr, value);
+                    return 1;
+                }
+                // char
+                if(type == newasm::datatypes::character)
+                {
+                    if(ptr->type != newasm::datatypes::character)
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+
+                    char value;
+                    newasm::hardware::randAccessMem.pop__STACK<char, true>(value);
+                    ptr->addr = newasm::hardware::randAccessMem.overwrite<char>(ptr->addr, value);
+                    return 1;
+                }
+                // string
+                if(type == newasm::datatypes::text)
+                {
+                    if(ptr->type != newasm::datatypes::text)
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+
+                    std::string value;
+                    newasm::hardware::randAccessMem.pop__STACK<std::string, true>(value);
+                    ptr->addr = newasm::hardware::randAccessMem.overwrite<std::string>(ptr->addr, value);
+                    return 1;
+                }
+
+                newasm::terminate(newasm::exit_codes::jit_fail);
+                return 1;
+            }
             //push
             case newasm::core::lang_inf::push:
             {
-                #if 0
-                auto opr = suf;
-                if(newasm::mem::functions::check_stkhea_col())
-                {
-                    newasm::terminate(newasm::exit_codes::stkhea_col);//,wholeline);
-                    return 1;
-                }
-                newasm::mem::program_memory[newasm::mem::regs::stk] = opr;
-                newasm::mem::regs::stk = newasm::mem::regs::stk - 1;
-                if(newasm::header::functions::ishex(opr))
-                {
-                    newasm::header::data::callstkidx = newasm::mem::regs::stk;
-                    if(newasm::stack::events.find(opr) != newasm::stack::events.end())
-                    {
-                        newasm::callproc(newasm::stack::events.at(opr));
-                    }
-                }
-                #endif
-
-                if(newasm::thread_line)
-                {
-                    newasm::terminate(newasm::exit_codes::seg_fault);
-                    return 1;
-                }
-
                 if(newasm::mem::regs::imm == 1 && lineInfo.priArgType == newasm::datatypes::number)
                 {
                     newasm::hardware::randAccessMem.push__STACK<int>(lineInfo.priInt);
+
                     newasm::header::data::callstkidx = newasm::mem::regs::stk;
                     auto it = newasm::stack::events.find(lineInfo.priInt);
                     if(it != newasm::stack::events.end())
@@ -5238,57 +5336,41 @@ namespace newasm
                 }
 
                 //we favorize raw binary data
-                if(lineInfo.priArgType != newasm::datatypes::symbol_name)
+                if(lineInfo.priArgType == newasm::datatypes::number)
                 {
-                    if(lineInfo.priArgType == newasm::datatypes::number)
-                    {
-                        newasm::hardware::randAccessMem.push__STACK<int>(lineInfo.priInt);
-                    }
-                    else if(lineInfo.priArgType == newasm::datatypes::decimal)
-                    {
-                        newasm::hardware::randAccessMem.push__STACK<float>(lineInfo.priFloat);
-                    }
-                    else if(lineInfo.priArgType == newasm::datatypes::character)
-                    {
-                        newasm::hardware::randAccessMem.push__STACK<char>(lineInfo.priChar);
-                    }
-                    else if(lineInfo.priArgType == newasm::datatypes::text)
-                    {
-                        newasm::hardware::randAccessMem.push__STACK<std::string>(lineInfo.priString);
-                    }
-                    else
-                    {
-                        newasm::terminate(newasm::exit_codes::jit_fail);
-                        return 1;
-                    }
+                    newasm::hardware::randAccessMem.push__STACK<int>(lineInfo.priInt);
+                }
+                else if(lineInfo.priArgType == newasm::datatypes::decimal)
+                {
+                    newasm::hardware::randAccessMem.push__STACK<float>(lineInfo.priFloat);
+                }
+                else if(lineInfo.priArgType == newasm::datatypes::character)
+                {
+                    newasm::hardware::randAccessMem.push__STACK<char>(lineInfo.priChar);
+                }
+                else if(lineInfo.priArgType == newasm::datatypes::text)
+                {
+                    newasm::hardware::randAccessMem.push__STACK<std::string>(lineInfo.priString);
                 }
                 //then fetching
                 else if(lineInfo.priArgType == newasm::datatypes::symbol_name)
                 {
                     newasm::runtime::functions::eval<true>(suf, lineInfo.priEvalMode, &priArg);
-                    if(priArg.rawType != newasm::datatypes::symbol_name)
+                    if(priArg.rawType == newasm::datatypes::number)
                     {
-                        if(priArg.rawType == newasm::datatypes::number)
-                        {
-                            newasm::hardware::randAccessMem.push__STACK<int>(priArg.rawInt);
-                        }
-                        else if(priArg.rawType == newasm::datatypes::decimal)
-                        {
-                            newasm::hardware::randAccessMem.push__STACK<float>(priArg.rawFloat);
-                        }
-                        else if(priArg.rawType == newasm::datatypes::character)
-                        {
-                            newasm::hardware::randAccessMem.push__STACK<char>(priArg.rawChar);
-                        }
-                        else if(priArg.rawType == newasm::datatypes::text)
-                        {
-                            newasm::hardware::randAccessMem.push__STACK<std::string>(priArg.rawString);
-                        }
-                        else
-                        {
-                            newasm::terminate(newasm::exit_codes::jit_fail);
-                            return 1;
-                        }
+                        newasm::hardware::randAccessMem.push__STACK<int>(priArg.rawInt);
+                    }
+                    else if(priArg.rawType == newasm::datatypes::decimal)
+                    {
+                        newasm::hardware::randAccessMem.push__STACK<float>(priArg.rawFloat);
+                    }
+                    else if(priArg.rawType == newasm::datatypes::character)
+                    {
+                        newasm::hardware::randAccessMem.push__STACK<char>(priArg.rawChar);
+                    }
+                    else if(priArg.rawType == newasm::datatypes::text)
+                    {
+                        newasm::hardware::randAccessMem.push__STACK<std::string>(priArg.rawString);
                     }
                     else if(priArg.rawType == newasm::datatypes::symbol_name)
                     {
@@ -5302,7 +5384,8 @@ namespace newasm
                         }
                         else if(newasm::header::functions::ischar(suf))
                         {
-                            newasm::hardware::randAccessMem.push__STACK<char>(newasm::header::functions::remsq(suf).at(0));
+                            char CHAR__ = newasm::header::functions::remsq(suf).at(0);
+                            newasm::hardware::randAccessMem.push__STACK<char>(CHAR__);
                         }
                         else if(newasm::header::functions::istext(suf))
                         {
@@ -5329,6 +5412,116 @@ namespace newasm
                 if(newasm::mem::functions::check_stkhea_col())
                 {
                     newasm::terminate(newasm::exit_codes::stkhea_col);//,wholeline);
+                    return 1;
+                }
+                return 1;
+            }
+            //push THREAD
+            case newasm::core::lang_inf::push__THREAD:
+            {
+                std::cout << "pusht POZVAN -> " << lineInfo.raw << std::endl;
+                if(newasm::mem::regs::imm == 1 && lineInfo.priArgType == newasm::datatypes::number)
+                {
+                    newasm::hardware::randAccessMem.push__STACK<int, true>(lineInfo.priInt);
+
+                    newasm::header::data::callstkidx = newasm::mem::regs::stk;
+                    auto it = newasm::stack::events.find(lineInfo.priInt);
+                    if(it != newasm::stack::events.end())
+                    {
+                        newasm::header::data::temp_ = it->second;
+                        newasm::runtime::functions::parse<true>(newasm::header::data::temp_);
+                        newasm::callproc(newasm::header::data::temp_);
+                        return 1;
+                    }
+                    newasm::terminate(newasm::exit_codes::unknown_event);
+                    return 1;
+                }
+
+                if(!newasm::DedicatedMemory->Usable)
+                {
+                    newasm::SetExceptionComment("stack has to be dedicated with 'resb'");
+                    newasm::terminate(newasm::exit_codes::seg_fault);
+                    return 1;
+                }
+
+                //we favorize raw binary data
+                if(lineInfo.priArgType == newasm::datatypes::number)
+                {
+                    newasm::RAM->push__STACK<int, true>(lineInfo.priInt);
+                }
+                else if(lineInfo.priArgType == newasm::datatypes::decimal)
+                {
+                    newasm::RAM->push__STACK<float, true>(lineInfo.priFloat);
+                }
+                else if(lineInfo.priArgType == newasm::datatypes::character)
+                {
+                    newasm::RAM->push__STACK<char, true>(lineInfo.priChar);
+                }
+                else if(lineInfo.priArgType == newasm::datatypes::text)
+                {
+                    newasm::RAM->push__STACK<std::string, true>(lineInfo.priString);
+                }
+                //then fetching
+                else if(lineInfo.priArgType == newasm::datatypes::symbol_name)
+                {
+                    newasm::runtime::functions::eval<true>(suf, lineInfo.priEvalMode, &priArg);
+                    if(priArg.rawType == newasm::datatypes::number)
+                    {
+                        newasm::RAM->push__STACK<int, true>(priArg.rawInt);
+                    }
+                    else if(priArg.rawType == newasm::datatypes::decimal)
+                    {
+                        newasm::RAM->push__STACK<float, true>(priArg.rawFloat);
+                    }
+                    else if(priArg.rawType == newasm::datatypes::character)
+                    {
+                        newasm::RAM->push__STACK<char, true>(priArg.rawChar);
+                    }
+                    else if(priArg.rawType == newasm::datatypes::text)
+                    {
+                        newasm::RAM->push__STACK<std::string, true>(priArg.rawString);
+                    }
+                    else if(priArg.rawType == newasm::datatypes::symbol_name)
+                    {
+                        if(newasm::header::functions::isnumeric(suf))
+                        {
+                            newasm::RAM->push__STACK<int, true>(std::stoi(suf));
+                        }
+                        else if(newasm::header::functions::isfloat(suf))
+                        {
+                            newasm::RAM->push__STACK<float, true>(std::stof(suf));
+                        }
+                        else if(newasm::header::functions::ischar(suf))
+                        {
+                            char CHAR__ = newasm::header::functions::remsq(suf).at(0);
+                            newasm::RAM->push__STACK<char, true>(CHAR__);
+                        }
+                        else if(newasm::header::functions::istext(suf))
+                        {
+                            newasm::RAM->push__STACK<std::string, true>(newasm::header::functions::remq(suf));
+                        }
+                        else
+                        {
+                            newasm::terminate(newasm::exit_codes::jit_fail);
+                            return 1;
+                        }
+                    }
+                    else
+                    {
+                        newasm::terminate(newasm::exit_codes::jit_fail);
+                        return 1;
+                    }
+                }
+                else
+                {
+                    newasm::terminate(newasm::exit_codes::jit_fail);
+                    return 1;
+                }
+
+            
+                if(newasm::RAM->getDedicatedStackHeapCollision(DedicatedMemory))
+                {
+                    newasm::terminate(newasm::exit_codes::stkhea_col);
                     return 1;
                 }
                 return 1;
@@ -6310,60 +6503,156 @@ namespace newasm
             //wait
             case newasm::core::lang_inf::wait:
             {
-                if(!newasm::header::functions::isnumeric(suf))
+                int time = -1;
+                if(lineInfo.priArgType == newasm::datatypes::number)
+                {
+                    time = lineInfo.priInt;
+                }
+                else if(lineInfo.priArgType == newasm::datatypes::symbol_name)
+                {
+                    newasm::runtime::functions::eval<true>(suf, lineInfo.priEvalMode, &priArg);
+                    if(priArg.rawType == newasm::datatypes::number)
+                    {
+                        time = priArg.rawInt;
+                    }
+                }
+
+                if(time == -1)
                 {
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                     return 1;
                 }
-                auto k = newasm::header::functions::wait(std::stoi(suf));
+
+                auto k = newasm::header::functions::wait(time);
 
                 if(k != -1)
                 {
-                    newasm::wasted_deduction.push_back(std::chrono::duration<double, std::milli>(std::stof(suf)));
+                    newasm::wasted_deduction.push_back(std::chrono::duration<double, std::milli>(time));
                 }
 
                 if(k == -1)
                 {
-                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    newasm::SetExceptionComment("'wait' handler returned -1");
+                    newasm::terminate(newasm::exit_codes::os_error);
                 }
                 return 1;
             }
             //sel
             case newasm::core::lang_inf::sel:
             {
-                newasm::runtime::functions::parse(suf);
-                if(!newasm::header::functions::isnumeric(suf))
+                int address = -1;
+                if(lineInfo.priArgType == newasm::datatypes::number)
+                {
+                    address = lineInfo.priInt;
+                }
+                else if(lineInfo.priArgType == newasm::datatypes::symbol_name)
+                {
+                    newasm::runtime::functions::eval<true>(suf, lineInfo.priEvalMode, &priArg);
+                    if(priArg.rawType == newasm::datatypes::number)
+                    {
+                        address = priArg.rawInt;
+                    }
+                }
+
+                if(address == -1)
                 {
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                     return 1;
                 }
 
-                if(std::find(newasm::malloc::meta.begin(), newasm::malloc::meta.end(), std::stoi(suf)) == newasm::malloc::meta.end())
+                if(std::find(newasm::malloc::meta.begin(), newasm::malloc::meta.end(), address) == newasm::malloc::meta.end())
                 {
                     newasm::terminate(newasm::exit_codes::seg_fault);
                     return 1;
                 }
 
-                newasm::header::data::malloc_block_used = std::stoi(suf);
+                newasm::header::data::malloc_block_used = address;
+                return 1;
+            }
+            case newasm::core::lang_inf::resb__:
+            {
+                std::cout << "RESB POZVAN -> " << lineInfo.raw << std::endl;
+                if(!newasm::thread_line)
+                {
+                    newasm::SetExceptionComment("'resb' can be used only within threads");
+                    newasm::terminate(newasm::exit_codes::invalid_memacc);
+                    return 1;
+                }
+
+                int bytes = -1;
+                if(lineInfo.priArgType == newasm::datatypes::number)
+                {
+                    bytes = lineInfo.priInt;
+                }
+                else if(lineInfo.priArgType == newasm::datatypes::symbol_name)
+                {
+                    newasm::runtime::functions::eval<true>(suf, lineInfo.priEvalMode, &priArg);
+                    if(priArg.rawType == newasm::datatypes::number)
+                    {
+                        bytes = priArg.rawInt;
+                    }
+                }
+
+                if(bytes == -1)
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    return 1;
+                }
+
+                auto& DedicatedStack = *newasm::DedicatedMemory;
+                if(DedicatedStack.Usable) //prevent memory leaks
+                {
+                    newasm::RAM->freeStack(DedicatedStack.addr);
+                }
+                DedicatedStack.Usable = true;
+                DedicatedStack.addr = newasm::RAM->dedicateStack(bytes);
+                if(DedicatedStack.addr == -1)
+                {
+                    newasm::SetExceptionComment("no enough memory or invalid size");
+                    newasm::terminate(newasm::exit_codes::seg_fault);
+                    DedicatedStack.Usable = false;
+                    return 1;
+                }
+                DedicatedStack.stackEnd = newasm::RAM->getDedicatedStackEnd(DedicatedStack.addr);
+                DedicatedStack.StackInfo.clear();
+
+                //context switch is on, so the stk is gonna change for the thread itself
+                newasm::mem::regs::stk.set_value(newasm::RAM->getDedicatedStackEnd(DedicatedStack.addr));
                 return 1;
             }
             //malloc
             case newasm::core::lang_inf::malloc__:
             {
-                if(newasm::header::functions::isvmemsize(suf).first)
+                if(lineInfo.VirtualMemoryAccess)
                 {
-                    newasm::_virtual::virtualMemory.init(newasm::header::functions::isvmemsize(suf).second);
+                    newasm::_virtual::virtualMemory.init(lineInfo.priInt);
                     return 1;
                 }
 
-                if(!newasm::header::functions::isnumeric(suf))
+                int bytes = -1;
+                if(lineInfo.priArgType == newasm::datatypes::number)
+                {
+                    bytes = lineInfo.priInt;
+                }
+                else if(lineInfo.priArgType == newasm::datatypes::symbol_name)
+                {
+                    newasm::runtime::functions::eval<true>(suf, lineInfo.priEvalMode, &priArg);
+                    if(priArg.rawType == newasm::datatypes::number)
+                    {
+                        bytes = priArg.rawInt;
+                    }
+                }
+
+                if(bytes == -1)
                 {
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                     return 1;
                 }
-                auto i = newasm::hardware::randAccessMem.malloc(std::stoi(suf));
+
+                auto i = newasm::hardware::randAccessMem.malloc(bytes);
                 if(i == -1)
                 {
+                    newasm::SetExceptionComment("no enough memory or invalid size");
                     newasm::terminate(newasm::exit_codes::malloc_err);
                     return 1;
                 }
@@ -7471,11 +7760,6 @@ namespace newasm
             //stack
             case newasm::core::lang_inf::stack:
             {
-                if(newasm::thread_line)
-                {
-                    newasm::terminate(newasm::exit_codes::seg_fault);
-                    return 1;
-                }
                 if(newasm::header::data::callstkidx == 0)
                 {
                     newasm::terminate(newasm::exit_codes::seg_fault);
@@ -7495,7 +7779,21 @@ namespace newasm
                 // then the function arguments
                 for(int i = 0; i < newasm::header::data::argc; ++i)
                 {
-                    type = newasm::RAM->StackInfo.at(i).stkType;
+                    int REAL_IDX = newasm::RAM->StackInfo.size() - i - 1;
+                    if(
+                        REAL_IDX < 0 or
+                        REAL_IDX >= newasm::RAM->StackInfo.size()
+                    )
+                    {
+                        newasm::SetExceptionComment(
+                            "calculated index `" +
+                            newasm::_std::to_string(REAL_IDX) +
+                            "` doesn't align with dedicated memory info vectr"
+                        );
+                        newasm::terminate(newasm::exit_codes::seg_fault);
+                        return 1;
+                    }
+                    type = newasm::RAM->StackInfo.at(REAL_IDX).stkType;
                     if(type == newasm::datatypes::number)
                     {
                         newasm::hardware::randAccessMem.pop__STACK<int>(); // no ref
@@ -7514,6 +7812,72 @@ namespace newasm
                     if(type == newasm::datatypes::text)
                     {
                         newasm::hardware::randAccessMem.pop__STACK<std::string>(); // no ref
+                        continue;
+                    }
+                }
+
+
+                newasm::header::data::argc = 0;
+                newasm::header::data::callstkidx = 0;
+                return 1;
+            }
+            //stack
+            case newasm::core::lang_inf::stack__THREAD:
+            {
+                std::cout << "STACKT POZVAN -> " << lineInfo.raw << std::endl;
+                if(newasm::header::data::callstkidx == 0)
+                {
+                    newasm::terminate(newasm::exit_codes::seg_fault);
+                    return 1;
+                }
+
+                int type;
+                auto& DedicatedStack = *newasm::DedicatedMemory;
+                // firsly pop the function call
+                if(DedicatedStack.StackInfo.empty())
+                {
+                    newasm::terminate(newasm::exit_codes::seg_fault);
+                    return 1;
+                }
+                DedicatedStack.StackInfo.pop_back();
+                newasm::hardware::randAccessMem.pop__STACK<int, true>(); // no ref
+
+                // then the function arguments
+                for(int i = 0; i < newasm::header::data::argc; ++i)
+                {
+                    int REAL_IDX = DedicatedStack.StackInfo.size() - i - 1;
+                    if(
+                        REAL_IDX < 0 or
+                        REAL_IDX >= DedicatedStack.StackInfo.size()
+                    )
+                    {
+                        newasm::SetExceptionComment(
+                            "calculated index `" +
+                            newasm::_std::to_string(REAL_IDX) +
+                            "` doesn't align with dedicated memory info vectr"
+                        );
+                        newasm::terminate(newasm::exit_codes::seg_fault);
+                        return 1;
+                    }
+                    type = DedicatedStack.StackInfo.at(REAL_IDX).stkType;
+                    if(type == newasm::datatypes::number)
+                    {
+                        newasm::hardware::randAccessMem.pop__STACK<int, true>(); // no ref
+                        continue;
+                    }
+                    if(type == newasm::datatypes::decimal)
+                    {
+                        newasm::hardware::randAccessMem.pop__STACK<float, true>(); // no ref
+                        continue;
+                    }
+                    if(type == newasm::datatypes::character)
+                    {
+                        newasm::hardware::randAccessMem.pop__STACK<char, true>(); // no ref
+                        continue;
+                    }
+                    if(type == newasm::datatypes::text)
+                    {
+                        newasm::hardware::randAccessMem.pop__STACK<std::string, true>(); // no ref
                         continue;
                     }
                 }
@@ -8581,39 +8945,80 @@ namespace newasm
                                 // then we are looking for i-argid address
                                 // that i is callstkidx
                                 int argid = line.altInt;
-                                int idx = newasm::RAM->StackInfo.size() - 2 - argid;
-                                if(
-                                    idx < 0 or
-                                    idx >= newasm::RAM->StackInfo.size()
-                                )
+                                if(!newasm::thread_line)
                                 {
-                                    newasm::terminate(newasm::exit_codes::seg_fault);
-                                    return 1;
-                                }
-                                auto& p = newasm::RAM->StackInfo.at(idx);
-                                int type = p.stkType;
-                                int argaddr = p.stkAddr;
+                                    int idx = newasm::RAM->StackInfo.size() - 2 - argid;
+                                    if(
+                                        idx < 0 or
+                                        idx >= newasm::RAM->StackInfo.size()
+                                    )
+                                    {
+                                        newasm::terminate(newasm::exit_codes::seg_fault);
+                                        return 1;
+                                    }
+                                    auto& p = newasm::RAM->StackInfo.at(idx);
+                                    int type = p.stkType;
+                                    int argaddr = p.stkAddr;
 
-                                if(type == newasm::datatypes::number)
-                                {
-                                    operand = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(argaddr));
+                                    if(type == newasm::datatypes::number)
+                                    {
+                                        operand = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(argaddr));
+                                    }
+                                    else if(type == newasm::datatypes::decimal)
+                                    {
+                                        operand = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(argaddr));
+                                    }
+                                    else if(type == newasm::datatypes::character)
+                                    {
+                                        std::string buf(1, newasm::hardware::randAccessMem.peek<char>(argaddr));
+                                        operand = "'";
+                                        operand += buf;
+                                        operand += "'";
+                                    }
+                                    else if(type == newasm::datatypes::text)
+                                    {
+                                        operand = "\"";
+                                        operand += newasm::hardware::randAccessMem.peek<std::string>(argaddr);
+                                        operand += "\"";
+                                    }
                                 }
-                                if(type == newasm::datatypes::decimal)
+                                else
                                 {
-                                    operand = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(argaddr));
-                                }
-                                if(type == newasm::datatypes::character)
-                                {
-                                    std::string buf(1, newasm::hardware::randAccessMem.peek<char>(argaddr));
-                                    operand = "'";
-                                    operand += buf;
-                                    operand += "'";
-                                }
-                                if(type == newasm::datatypes::text)
-                                {
-                                    operand = "\"";
-                                    operand += newasm::hardware::randAccessMem.peek<std::string>(argaddr);
-                                    operand += "\"";
+                                    auto& DedicatedStack = *newasm::DedicatedMemory;
+                                    int idx = DedicatedStack.StackInfo.size() - 2 - argid;
+                                    if(
+                                        idx < 0 or
+                                        idx >= DedicatedStack.StackInfo.size()
+                                    )
+                                    {
+                                        newasm::terminate(newasm::exit_codes::seg_fault);
+                                        return 1;
+                                    }
+                                    auto& p = DedicatedStack.StackInfo.at(idx);
+                                    int type = p.stkType;
+                                    int argaddr = p.stkAddr;
+
+                                    if(type == newasm::datatypes::number)
+                                    {
+                                        operand = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(argaddr));
+                                    }
+                                    else if(type == newasm::datatypes::decimal)
+                                    {
+                                        operand = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(argaddr));
+                                    }
+                                    else if(type == newasm::datatypes::character)
+                                    {
+                                        std::string buf(1, newasm::hardware::randAccessMem.peek<char>(argaddr));
+                                        operand = "'";
+                                        operand += buf;
+                                        operand += "'";
+                                    }
+                                    else if(type == newasm::datatypes::text)
+                                    {
+                                        operand = "\"";
+                                        operand += newasm::hardware::randAccessMem.peek<std::string>(argaddr);
+                                        operand += "\"";
+                                    }
                                 }
                                 //std::cout << "operand is `" << operand << "`" << std::endl;
                                 //std::cout << "stk is " << newasm::mem::regs::stk.get_value() << std::endl;

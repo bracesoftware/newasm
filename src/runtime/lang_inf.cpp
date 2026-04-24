@@ -142,10 +142,16 @@ namespace newasm
             const int callc = 77;//
             const int retc = 78;//
             const int fetch__ = 79;//
+            const int resb__ = 80;
 
             /// @brief //////
             const int Link___ = 99;
             const int __say = 100;
+
+            /// JIT RESERVED OPTIMIZATIONS ///
+            const int push__THREAD = 101;
+            const int pop__THREAD = 102;
+            const int stack__THREAD = 103;
 
             const std::unordered_map<int, std::string> instruction_set = {
                 {load,"load"},
@@ -242,6 +248,7 @@ namespace newasm
                 {callc, "callc"},
                 {retc, "retc"},
                 {fetch__, "fetch"},
+                {resb__, "resb"},
 
                 {__say, "__say"}
             };

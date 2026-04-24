@@ -1071,6 +1071,16 @@ namespace newasm
                                 lineCompiled.priArgType = NewASM::datatypes::NIL;
                             }
                         }
+
+                        if(lineCompiled.whatAmIDoing == newasm::core::lang_inf::malloc__)
+                        {
+                            auto e = newasm::header::functions::isvmemsize(lc.tokens.at(i));
+                            if(e.first)
+                            {
+                                lc.VirtualMemoryAccess = true;
+                                lc.priInt = e.second;
+                            }
+                        }
                     }
                     if(i == 2)
                     {

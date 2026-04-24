@@ -152,6 +152,28 @@ namespace newasm
                         bytecode.jumpinTo = this->labels.at(label_name);
                         continue;
                     }
+                    // instruction specialization
+                    if(
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::push
+                    )
+                    {
+                        bytecode.whatAmIDoing = newasm::core::lang_inf::push__THREAD;
+                        continue;
+                    }
+                    if(
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::pop
+                    )
+                    {
+                        bytecode.whatAmIDoing = newasm::core::lang_inf::pop__THREAD;
+                        continue;
+                    }
+                    if(
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::stack
+                    )
+                    {
+                        bytecode.whatAmIDoing = newasm::core::lang_inf::stack__THREAD;
+                        continue;
+                    }
                 }
 
                 return;
