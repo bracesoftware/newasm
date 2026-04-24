@@ -267,7 +267,7 @@ __say 0,"debug5"
 
     zero  stl 
 
-    push  some#randomcrap
+    push 6
     pop nil
 
     mov  tlr , "LABEL TEST"
@@ -2651,6 +2651,10 @@ jmp e2349083l
     using "cfg"
 ; -------------------------- END OF PROGRAM -------------------------- ;
     mov tlr, *rax
+    push ramdagadam
+    mov &ramdagadam, 23
+    pop &ramdagadam
+    mov tlr, ramdagadam
     
     call std::ios::writeln
     zero rax

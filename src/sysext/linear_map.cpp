@@ -49,7 +49,9 @@ namespace newasm
                 return;
             }
 
-            public const U& at(T index, int offset) const
+            public const U& at(T index, int offset,
+                const std::source_location loc = std::source_location::current()
+            ) const
             {
                 for(int i = 0; i < __map__.size(); ++i)
                 {
@@ -58,7 +60,7 @@ namespace newasm
                         auto pos = i - offset;
                         if(pos < 0 || pos >= __map__.size())
                         {
-                            throw std::out_of_range("linear_map: Invalid offset (which is " + newasm::_std::to_string(offset) + ").");
+                            throw std::out_of_range("linear_map::at(..): Invalid offset (which is " + newasm::_std::to_string(offset) + ").");
                         }
                         return __map__[pos].second;
                     }
@@ -72,7 +74,9 @@ namespace newasm
                 throw std::out_of_range(ss.str());
             }
 
-            public inline const U& __(T index, int offset) const
+            public inline const U& __(T index, int offset,
+                const std::source_location loc = std::source_location::current()
+            ) const
             {
                 for(int i = 0; i < __map__.size(); ++i)
                 {
@@ -81,7 +85,9 @@ namespace newasm
                         auto pos = i - offset;
                         if(pos < 0 || pos >= __map__.size())
                         {
-                            throw std::out_of_range("linear_map: Invalid offset (which is " + newasm::_std::to_string(offset) + ").");
+                            std::cout << std::endl;
+                            std::cout << loc.file_name() <<":"<< loc.line() <<":"<< loc.column() <<"->"<<loc.function_name() << std::endl;
+                            throw std::out_of_range("linear_map::__(..): Invalid offset (which is " + newasm::_std::to_string(offset) + ").");
                         }
                         return __map__[pos].first;
                     }
