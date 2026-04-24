@@ -115,6 +115,8 @@ namespace newasm
 
                 write_bin(out, ld.altEvalMode.UsingThisPtr);
                 write_bin(out, ld.priEvalMode.UsingThisPtr);
+
+                write_bin(out, ld.AltStackArg);
                 return;
             }
             void load_lineData(std::ifstream& in, newasm::compiler::lineData& ld)
@@ -187,6 +189,8 @@ namespace newasm
 
                 read_bin(in, ld.altEvalMode.UsingThisPtr);
                 read_bin(in, ld.priEvalMode.UsingThisPtr);
+
+                read_bin(in, ld.AltStackArg);
                 return;
             }
             //label addresses

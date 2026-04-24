@@ -542,6 +542,7 @@ namespace newasm
             bool MacroComponent = false;
             string SourceMacroName = "";
             bool AltArgLambda = false;
+            bool AltStackArg = false;
 
             //---------------------------------------------
             //stuff not included in the binary:
@@ -581,7 +582,8 @@ namespace newasm
                     this->whatCodeSection == rhs.whatCodeSection and
                     this->krnlMod == rhs.krnlMod and
                     this->letsDecorateVariables == rhs.letsDecorateVariables and
-                    this->whatTheFuckAreEvents == rhs.whatTheFuckAreEvents
+                    this->whatTheFuckAreEvents == rhs.whatTheFuckAreEvents and
+                    this->AltStackArg == rhs.AltStackArg
                 );
             }
         };

@@ -4970,6 +4970,11 @@ namespace newasm
             //pop
             case newasm::core::lang_inf::pop:
             {
+                if(newasm::thread_line)
+                {
+                    newasm::terminate(newasm::exit_codes::seg_fault);
+                    return 1;
+                }
                 if(newasm::RAM->StackInfo.empty())
                 {
                     newasm::terminate(newasm::exit_codes::os_error);
@@ -5187,6 +5192,12 @@ namespace newasm
                     }
                 }
                 #endif
+
+                if(newasm::thread_line)
+                {
+                    newasm::terminate(newasm::exit_codes::seg_fault);
+                    return 1;
+                }
 
                 if(newasm::mem::regs::imm == 1 && lineInfo.priArgType == newasm::datatypes::number)
                 {
@@ -7438,6 +7449,11 @@ namespace newasm
             //stack
             case newasm::core::lang_inf::stack:
             {
+                if(newasm::thread_line)
+                {
+                    newasm::terminate(newasm::exit_codes::seg_fault);
+                    return 1;
+                }
                 if(newasm::header::data::callstkidx == 0)
                 {
                     newasm::terminate(newasm::exit_codes::seg_fault);
@@ -8536,14 +8552,13 @@ namespace newasm
                         auto operand = line.tokens.at(2);
                         if(newasm::header::data::proc_now)
                         {
-                            auto f = newasm::header::functions::isargref(line.tokens.at(2));
-                            if(f.first)
+                            if(line.AltStackArg)
                             {
                                 newasm::header::data::argc ++;                                
                                 // If the address of the func handler is i,
                                 // then we are looking for i-argid address
                                 // that i is callstkidx
-                                int argid = f.second;
+                                int argid = line.altInt;
                                 int idx = newasm::RAM->StackInfo.size() - 2 - argid;
                                 if(
                                     idx < 0 or

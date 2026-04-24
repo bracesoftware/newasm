@@ -1074,6 +1074,13 @@ namespace newasm
                     }
                     if(i == 2)
                     {
+                        auto p = newasm::header::functions::isargref(lc.tokens.at(i));
+                        if(p.first)
+                        {
+                            lc.AltStackArg = true;
+                            lc.altInt = p.second;
+                            return lc;
+                        }
                         auto lambda = newasm::header::functions::is_lambda(lineCompiled.tokens.at(i));
                         if(lambda.first) if(lambda.second == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::proc))
                         {
