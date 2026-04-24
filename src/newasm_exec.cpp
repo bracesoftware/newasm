@@ -5198,11 +5198,12 @@ namespace newasm
 
                 if(newasm::mem::regs::imm == 1 && lineInfo.priArgType == newasm::datatypes::number)
                 {
-                    newasm::hardware::randAccessMem.push__STACK<std::string>(suf);
+                    newasm::hardware::randAccessMem.push__STACK<int>(lineInfo.priInt);
                     newasm::header::data::callstkidx = newasm::mem::regs::stk;
-                    if(newasm::stack::events.find(lineInfo.priInt) != newasm::stack::events.end())
+                    auto it = newasm::stack::events.find(lineInfo.priInt);
+                    if(it != newasm::stack::events.end())
                     {
-                        newasm::header::data::temp_ = newasm::stack::events.at(lineInfo.priInt);
+                        newasm::header::data::temp_ = it->second;
                         newasm::runtime::functions::parse<true>(newasm::header::data::temp_);
                         newasm::callproc(newasm::header::data::temp_);
                         return 1;
@@ -7453,13 +7454,20 @@ namespace newasm
                 //newasm::mem::regs::stk = newasm::mem::regs::stk + 1 + newasm::header::data::argc;
                 int addr;
 
+                std::cout << "\nnewasm::header::data::callstkidx -> " << newasm::header::data::callstkidx << std::endl;
+                std::cout << "newasm::malloc::types.size() -> " << newasm::malloc::types.size() << std::endl;
+
+                newasm::malloc::types.debug__();
+
                 // firsly pop the function call
-                newasm::hardware::randAccessMem.pop__STACK<std::string>(); // no ref
+                newasm::hardware::randAccessMem.pop__STACK<int>(); // no ref
 
                 // then the function arguments
                 for(int i = 0; i < newasm::header::data::argc; ++i)
                 {
-                    addr = newasm::malloc::types.__(newasm::header::data::callstkidx, 1 + i);
+                    std::cout << "\nOffset: " << i + 1 << std::endl;
+
+                    addr = newasm::malloc::types.__(newasm::header::data::callstkidx, i + 1);
                     if(newasm::malloc::types[addr] == newasm::datatypes::number)
                     {
                         newasm::hardware::randAccessMem.pop__STACK<int>(); // no ref
@@ -7487,6 +7495,8 @@ namespace newasm
                 }
 
                 newasm::malloc::types.erase(newasm::header::data::callstkidx);
+                std::cout << "After erasing data:" << std::endl;
+                newasm::malloc::types.debug__();
 
                 newasm::header::data::argc = 0;
                 newasm::header::data::callstkidx = 0;

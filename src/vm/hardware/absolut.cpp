@@ -371,6 +371,7 @@ namespace newasm
                         __memory_free__.set_at(i, 1); // tell the thing it is occupied
                     }
 
+                    std::cout << "Pushed " << address << "| value : `" << value << "`" << std::endl;
                     newasm::malloc::types[address] = newasm::datatypes::text; // initialize metadata
 
                     return;
@@ -397,6 +398,7 @@ namespace newasm
                 {
                     newasm::malloc::types[address] = newasm::datatypes::character;
                 }
+                std::cout << "Pushed " << address << "| value : `" << value << "`" << std::endl;
                 return;
             }
 

@@ -57,7 +57,7 @@ namespace newasm
                 {
                     if(__map__[i].first == index)
                     {
-                        auto pos = i - offset;
+                        int pos = i - offset;
                         if(pos < 0 || pos >= __map__.size())
                         {
                             throw std::out_of_range("linear_map::at(..): Invalid offset (which is " + newasm::_std::to_string(offset) + ").");
@@ -74,7 +74,7 @@ namespace newasm
                 throw std::out_of_range(ss.str());
             }
 
-            public inline const U& __(T index, int offset,
+            public inline const U& __(T index, int offset = 0,
                 const std::source_location loc = std::source_location::current()
             ) const
             {
@@ -82,7 +82,7 @@ namespace newasm
                 {
                     if(__map__[i].first == index)
                     {
-                        auto pos = i - offset;
+                        int pos = i - offset;
                         if(pos < 0 || pos >= __map__.size())
                         {
                             std::cout << std::endl;
