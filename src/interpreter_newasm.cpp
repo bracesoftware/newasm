@@ -119,6 +119,7 @@ namespace newasm
         namespace data
         {
             newasm::compiler::lineData* LastLine = nullptr;
+            constinit bool LoadingStdlib = false;
         }
     }
 
@@ -1487,6 +1488,10 @@ namespace newasm
         }
         
         auto load_std = []() -> bool {
+            newasm::header::data::LoadingStdlib = true;
+            $defer
+                newasm::header::data::LoadingStdlib = false;
+            $
             if(newasm::header::settings::use_std)
             {
                 if(newasm::flags::loaded_std)

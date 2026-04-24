@@ -150,13 +150,20 @@ namespace newasm
                 newasm::events::exitNow == false
             )
             {
-                std::cout <<
-                newasm::header::col::gray <<
-                newasm::header::style::bold <<
-                newasm::header::style::underline <<
-                newasm::forLinker::getFile(newasm::mem::regs::lcx.get_value()) <<//(newasm::header::data::lastlndx) << //newasm::header::settings::script_file <<
-                ":" <<
-                newasm::forLinker::getLine(newasm::mem::regs::lcx.get_value());//(newasm::header::data::lastlndx);
+                if(newasm::header::data::LoadingStdlib)
+                {
+                    std::cout << newasm::header::constants::std_library;
+                }
+                else
+                {
+                    std::cout <<
+                    newasm::header::col::gray <<
+                    newasm::header::style::bold <<
+                    newasm::header::style::underline <<
+                    newasm::forLinker::getFile(newasm::mem::regs::lcx.get_value()) <<//(newasm::header::data::lastlndx) << //newasm::header::settings::script_file <<
+                    ":" <<
+                    newasm::forLinker::getLine(newasm::mem::regs::lcx.get_value());//(newasm::header::data::lastlndx);
+                }
             }
             if(newasm::header::data::proc_now == true)
             {
