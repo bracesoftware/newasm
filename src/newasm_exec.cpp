@@ -83,16 +83,28 @@ namespace newasm
     //int redirect_exec(std::string filename);
     static inline int terminate_(int exit_code, const std::source_location& loc)//, std::string line)
     {
-        auto LogExceptionSourceLoc = <:loc:>() -> void {
+        static const std::string Insomnia = "\t\t\t  ";
+        auto LogExceptionSourceLoc = <:loc, Insomnia:>() -> void {
             if(NewASM::MutableConfig::DisplaySourceInformation)
             {
-                static const std::string Insomnia = "\t\t\t  ";
                 std::cout << Insomnia << newasm::header::col::reset << newasm::header::col::light_red;
                 std::cout << "^ exception source information -> " << newasm::header::col::gray << newasm::header::style::underline;
                 std::cout << loc.file_name() << ":" << loc.line() << ":" << loc.column() << newasm::header::col::reset << "\n\t" << Insomnia;
                 std::cout << newasm::header::col::light_red << '`' << newasm::header::col::gray;
                 std::cout << loc.function_name() << newasm::header::col::light_red << '`';
                 std::cout << newasm::header::col::reset << newasm::header::col::gray;
+                std::cout << std::endl;
+                std::cout << newasm::header::col::reset;
+            }
+        };
+        auto LogComment = <:Insomnia:>() -> void {
+            if(NewASM::header::data::ExceptionComment)
+            {
+                NewASM::header::data::ExceptionComment = false;
+                std::cout << Insomnia << newasm::header::col::reset << newasm::header::col::orange;
+                std::cout << "^ comment -> `" << newasm::header::col::gray;
+                std::cout << newasm::GetExceptionComment();
+                std::cout << newasm::header::col::orange << '`';
                 std::cout << std::endl;
                 std::cout << newasm::header::col::reset;
             }
@@ -117,6 +129,7 @@ namespace newasm
                 newasm::header::col::gray<<
                 newasm::header::data::LastLine->raw << std::endl;
                 LogExceptionSourceLoc();
+                LogComment();
 
                 std::cout << newasm::header::col::reset << std::endl;
             }
@@ -255,6 +268,7 @@ namespace newasm
                 std::cout << newasm::header::col::reset;
             }
             LogExceptionSourceLoc();
+            LogComment();
         }
         return 1;
     }
@@ -2420,6 +2434,10 @@ namespace newasm
 
                 if(!newasm::RAM->is_valid_addr(value))
                 {
+                    newasm::SetExceptionComment(
+                        newasm::_std::to_string(value) +
+                        " is not a valid accessible address"
+                    );
                     newasm::terminate(newasm::exit_codes::seg_fault);
                     return 1;
                 }
@@ -2487,6 +2505,10 @@ namespace newasm
 
                 if(!newasm::RAM->is_valid_addr(value))
                 {
+                    newasm::SetExceptionComment(
+                        newasm::_std::to_string(value) +
+                        " is not a valid accessible address"
+                    );
                     newasm::terminate(newasm::exit_codes::seg_fault);
                     return 1;
                 }

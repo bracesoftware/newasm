@@ -205,6 +205,7 @@ namespace newasm
             const std::string light_red = "";
             const std::string light_blue = "";
             const std::string lime_teal = "";
+            const std::string orange = "";
             const std::string aqua = "";
 
             const std::string reset = "";

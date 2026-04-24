@@ -120,7 +120,22 @@ namespace newasm
         {
             newasm::compiler::lineData* LastLine = nullptr;
             constinit bool LoadingStdlib = false;
+            constinit bool ExceptionComment = false;
         }
+    }
+
+    std::string __EXCCOMMENT;
+
+    inline void SetExceptionComment(const std::string& cmt) noexcept
+    {
+        newasm::__EXCCOMMENT = cmt;
+        newasm::header::data::ExceptionComment = true;
+        return;
+    }
+
+    inline auto GetExceptionComment() noexcept
+    {
+        return newasm::__EXCCOMMENT;
     }
 
     namespace Namespaces
