@@ -16,6 +16,12 @@ namespace newasm
             public unsigned char __memory__[MEM_SIZE];
 
             public newasm::containers::bit_array<MEM_SIZE> __memory_free__;
+            struct _m_StackInfo final
+            {
+                int stkType;
+                int stkAddr;
+            };
+            public std::vector<_m_StackInfo> StackInfo;
 
             private int last_used_pos = 0;
             private int smallObjectThreshold = sizeof(int);
@@ -28,6 +34,7 @@ namespace newasm
                 this->last_used_pos = 0;
                 this->free_blocks.reserve(500);
                 __free_blocks__ = 0;
+                this->StackInfo.reserve(1000);
             }
 
             protected inline int get_size() noexcept
@@ -371,8 +378,8 @@ namespace newasm
                         __memory_free__.set_at(i, 1); // tell the thing it is occupied
                     }
 
-                    std::cout << "Pushed " << address << "| value : `" << value << "`" << std::endl;
-                    newasm::malloc::types[address] = newasm::datatypes::text; // initialize metadata
+                    //std::cout << "Pushed " << address << "| value : `" << value << "`" << std::endl;
+                    this->StackInfo.push_back({newasm::datatypes::text, address}); // initialize metadata
 
                     return;
                 }
@@ -388,17 +395,17 @@ namespace newasm
 
                 if constexpr(std::is_same<T, int>::value)
                 {
-                    newasm::malloc::types[address] = newasm::datatypes::number;
+                    this->StackInfo.push_back({newasm::datatypes::number, address});
                 }
                 if constexpr(std::is_same<T, float>::value)
                 {
-                    newasm::malloc::types[address] = newasm::datatypes::decimal;
+                    this->StackInfo.push_back({newasm::datatypes::decimal, address});
                 }
                 if constexpr(std::is_same<T, char>::value)
                 {
-                    newasm::malloc::types[address] = newasm::datatypes::character;
+                    this->StackInfo.push_back({newasm::datatypes::character, address});
                 }
-                std::cout << "Pushed " << address << "| value : `" << value << "`" << std::endl;
+                //std::cout << "Pushed " << address << "| value : `" << value << "`" << std::endl;
                 return;
             }
 

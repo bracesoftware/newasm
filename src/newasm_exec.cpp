@@ -4970,35 +4970,33 @@ namespace newasm
             //pop
             case newasm::core::lang_inf::pop:
             {
+                if(newasm::RAM->StackInfo.empty())
+                {
+                    newasm::terminate(newasm::exit_codes::os_error);
+                    return 1;
+                }
+                int type = newasm::RAM->StackInfo.back().stkType;
+                newasm::RAM->StackInfo.pop_back();
                 if(lineInfo.priArgType == NewASM::datatypes::NIL)
                 {
-                    int address = newasm::mem::regs::stk;
-                    if(newasm::malloc::types[address] == newasm::datatypes::number)
+                    if(type == newasm::datatypes::number)
                     {
-                        int value;
-                        newasm::hardware::randAccessMem.pop__STACK<int>(value);
-                        newasm::malloc::types.erase(address);
+                        newasm::hardware::randAccessMem.pop__STACK<int>();
                         return 1;
                     }
-                    if(newasm::malloc::types[address] == newasm::datatypes::decimal)
+                    if(type == newasm::datatypes::decimal)
                     {
-                        float value;
-                        newasm::hardware::randAccessMem.pop__STACK<float>(value);
-                        newasm::malloc::types.erase(address);
+                        newasm::hardware::randAccessMem.pop__STACK<float>();
                         return 1;
                     }
-                    if(newasm::malloc::types[address] == newasm::datatypes::character)
+                    if(type == newasm::datatypes::character)
                     {
-                        char value;
-                        newasm::hardware::randAccessMem.pop__STACK<char>(value);
-                        newasm::malloc::types.erase(address);
+                        newasm::hardware::randAccessMem.pop__STACK<char>();
                         return 1;
                     }
-                    if(newasm::malloc::types[address] == newasm::datatypes::text)
+                    if(type == newasm::datatypes::text)
                     {
-                        std::string value;
-                        newasm::hardware::randAccessMem.pop__STACK<std::string>(value);
-                        newasm::malloc::types.erase(address);
+                        newasm::hardware::randAccessMem.pop__STACK<std::string>();
                         return 1;
                     }
                     return 1;
@@ -5032,11 +5030,9 @@ namespace newasm
                     }
                     ptr = &it->second;
                 }
-    
-                auto address = newasm::mem::regs::stk;
-                
+                    
                 // integers
-                if(newasm::malloc::types[address] == newasm::datatypes::number)
+                if(type == newasm::datatypes::number)
                 {
                     if(ptr->type != newasm::datatypes::number)
                     {
@@ -5047,11 +5043,10 @@ namespace newasm
                     int value;
                     newasm::hardware::randAccessMem.pop__STACK<int>(value);
                     ptr->addr = newasm::hardware::randAccessMem.overwrite<int>(ptr->addr, value);
-                    newasm::malloc::types.erase(address);
                     return 1;
                 }
                 // floats
-                if(newasm::malloc::types[address] == newasm::datatypes::decimal)
+                if(type == newasm::datatypes::decimal)
                 {
                     if(ptr->type != newasm::datatypes::decimal)
                     {
@@ -5062,11 +5057,10 @@ namespace newasm
                     float value;
                     newasm::hardware::randAccessMem.pop__STACK<float>(value);
                     ptr->addr = newasm::hardware::randAccessMem.overwrite<float>(ptr->addr, value);
-                    newasm::malloc::types.erase(address);
                     return 1;
                 }
                 // char
-                if(newasm::malloc::types[address] == newasm::datatypes::character)
+                if(type == newasm::datatypes::character)
                 {
                     if(ptr->type != newasm::datatypes::character)
                     {
@@ -5077,11 +5071,10 @@ namespace newasm
                     char value;
                     newasm::hardware::randAccessMem.pop__STACK<char>(value);
                     ptr->addr = newasm::hardware::randAccessMem.overwrite<char>(ptr->addr, value);
-                    newasm::malloc::types.erase(address);
                     return 1;
                 }
                 // string
-                if(newasm::malloc::types[address] == newasm::datatypes::text)
+                if(type == newasm::datatypes::text)
                 {
                     if(ptr->type != newasm::datatypes::text)
                     {
@@ -5092,7 +5085,6 @@ namespace newasm
                     std::string value;
                     newasm::hardware::randAccessMem.pop__STACK<std::string>(value);
                     ptr->addr = newasm::hardware::randAccessMem.overwrite<std::string>(ptr->addr, value);
-                    newasm::malloc::types.erase(address);
                     return 1;
                 }
 
@@ -7451,52 +7443,43 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::seg_fault);
                     return 1;
                 }
-                //newasm::mem::regs::stk = newasm::mem::regs::stk + 1 + newasm::header::data::argc;
-                int addr;
 
-                std::cout << "\nnewasm::header::data::callstkidx -> " << newasm::header::data::callstkidx << std::endl;
-                std::cout << "newasm::malloc::types.size() -> " << newasm::malloc::types.size() << std::endl;
-
-                newasm::malloc::types.debug__();
-
+                int type;
                 // firsly pop the function call
+                if(newasm::RAM->StackInfo.empty())
+                {
+                    newasm::terminate(newasm::exit_codes::seg_fault);
+                    return 1;
+                }
+                newasm::RAM->StackInfo.pop_back();
                 newasm::hardware::randAccessMem.pop__STACK<int>(); // no ref
 
                 // then the function arguments
                 for(int i = 0; i < newasm::header::data::argc; ++i)
                 {
-                    std::cout << "\nOffset: " << i + 1 << std::endl;
-
-                    addr = newasm::malloc::types.__(newasm::header::data::callstkidx, i + 1);
-                    if(newasm::malloc::types[addr] == newasm::datatypes::number)
+                    type = newasm::RAM->StackInfo.at(i).stkType;
+                    if(type == newasm::datatypes::number)
                     {
                         newasm::hardware::randAccessMem.pop__STACK<int>(); // no ref
-                        newasm::malloc::types.erase(addr);
                         continue;
                     }
-                    if(newasm::malloc::types[addr] == newasm::datatypes::decimal)
+                    if(type == newasm::datatypes::decimal)
                     {
                         newasm::hardware::randAccessMem.pop__STACK<float>(); // no ref
-                        newasm::malloc::types.erase(addr);
                         continue;
                     }
-                    if(newasm::malloc::types[addr] == newasm::datatypes::character)
+                    if(type == newasm::datatypes::character)
                     {
                         newasm::hardware::randAccessMem.pop__STACK<char>(); // no ref
-                        newasm::malloc::types.erase(addr);
                         continue;
                     }
-                    if(newasm::malloc::types[addr] == newasm::datatypes::text)
+                    if(type == newasm::datatypes::text)
                     {
                         newasm::hardware::randAccessMem.pop__STACK<std::string>(); // no ref
-                        newasm::malloc::types.erase(addr);
                         continue;
                     }
                 }
 
-                newasm::malloc::types.erase(newasm::header::data::callstkidx);
-                std::cout << "After erasing data:" << std::endl;
-                newasm::malloc::types.debug__();
 
                 newasm::header::data::argc = 0;
                 newasm::header::data::callstkidx = 0;
@@ -8553,38 +8536,43 @@ namespace newasm
                         auto operand = line.tokens.at(2);
                         if(newasm::header::data::proc_now)
                         {
-                            if(newasm::header::functions::isargref(line.tokens.at(2)).first)
+                            auto f = newasm::header::functions::isargref(line.tokens.at(2));
+                            if(f.first)
                             {
-                                newasm::header::data::argc ++;
-                                //operand = newasm::mem::program_memory[newasm::header::data::callstkidx + 2 + newasm::header::functions::isargref(line.tokens.at(2)).second];
-                                
+                                newasm::header::data::argc ++;                                
                                 // If the address of the func handler is i,
                                 // then we are looking for i-argid address
                                 // that i is callstkidx
-                                //std::cout << "--------------" << std::endl;
-                                int argid = newasm::header::functions::isargref(line.tokens.at(2)).second;
-                                //std::cout << "argid is " << argid << std::endl;
-                                int argaddr = newasm::malloc::types.__(newasm::header::data::callstkidx, argid + 1);
-                                //std::cout << "argaddr is " << argaddr << std::endl;
+                                int argid = f.second;
+                                int idx = newasm::RAM->StackInfo.size() - 2 - argid;
+                                if(
+                                    idx < 0 or
+                                    idx >= newasm::RAM->StackInfo.size()
+                                )
+                                {
+                                    newasm::terminate(newasm::exit_codes::seg_fault);
+                                    return 1;
+                                }
+                                auto& p = newasm::RAM->StackInfo.at(idx);
+                                int type = p.stkType;
+                                int argaddr = p.stkAddr;
 
-                                //newasm::malloc::types.debug__();
-
-                                if(newasm::malloc::types[argaddr] == newasm::datatypes::number)
+                                if(type == newasm::datatypes::number)
                                 {
                                     operand = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(argaddr));
                                 }
-                                if(newasm::malloc::types[argaddr] == newasm::datatypes::decimal)
+                                if(type == newasm::datatypes::decimal)
                                 {
                                     operand = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(argaddr));
                                 }
-                                if(newasm::malloc::types[argaddr] == newasm::datatypes::character)
+                                if(type == newasm::datatypes::character)
                                 {
                                     std::string buf(1, newasm::hardware::randAccessMem.peek<char>(argaddr));
                                     operand = "'";
                                     operand += buf;
                                     operand += "'";
                                 }
-                                if(newasm::malloc::types[argaddr] == newasm::datatypes::text)
+                                if(type == newasm::datatypes::text)
                                 {
                                     operand = "\"";
                                     operand += newasm::hardware::randAccessMem.peek<std::string>(argaddr);
