@@ -607,12 +607,13 @@ __say 0,"debug5"
 .data
     float exptest: 0.0
 .start
-
+    mov tlr, "\n\nexptest:"
+    call this
     mov &exptest, *cr0
-    mov  tlr , exptest
-    mov  fdx , 2
-    mov  stl , 0c1
-    syscall  
+    mov tlr, exptest
+    call this
+    mov tlr, "\n\n"
+    call this
 
     mov  br0 , 0
     mov br1 , 87878747
