@@ -7,6 +7,7 @@ This article includes the following instructions:
 3. [`vmov` and `cast`](#vmov-and-cast)
 4. [`movaddr`, `movasx` and `lea`](#movaddr-and-movasx)
 5. [`merge`](#merge)
+6. [`resb`](#resb)
 
 ### `malloc` and `free`
 Easily manage heap memory. Example:
@@ -146,3 +147,26 @@ movasx &tuple, *hea ; specific addr
 
 ## `merge`
 Used for merging contexts.
+
+## `resb`
+
+> [!CAUTION]
+> This instruction was added in build 32.
+
+You use this instruction to ask the VM to dedicate `n`-number of bytes to a specific thread and use it as stack space.
+
+```
+.text
+    thread myThread -> {
+        resb 64 ; ask the system for 64 bytes of thread-safe stack space
+        push 429
+        push 'c'
+        push 873.45
+    }
+```
+
+Now, 64 bytes of stack space we got from the VM is just a part of the heap, but it is internally used as stack space since each thread has its own copy of the stack pointer because of the context-switching.
+
+You can also use the `stack` instruction, the JIT compiler replaces standard `push`, `pop` and `stack` with thread-specialized versions. That means you can call procedures that accept arguments. This approach ensures memory thread-safety and speed.
+
+You can still have access to the global stack from within the child procedures and encapsulated lambda procedures.
