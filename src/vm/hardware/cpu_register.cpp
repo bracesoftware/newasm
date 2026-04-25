@@ -337,7 +337,7 @@ namespace newasm
                 //thread_values.max_load_factor(MAX_LOAD_FACTOR);
             }
 
-
+        
         public inline void log_change() const
         {
             if(this->log == false)
@@ -346,8 +346,8 @@ namespace newasm
             }
             std::cout << newasm::header::col::aqua;
             std::cout << std::endl;
-            //std::cout << "newasm::real_line -> `" << NewASM::ExceptionHandling::Line->raw << "`\n";
-            std::cout << "newasm::lambda::process -> " << newasm::lambda::process << "\n";
+            //std::cout << "newasm::real_line -> `" << "probably something" << "`\n";
+            std::cout << "newasm::lambda::process -> " << *((newasm::kernel::thread_safe<bool>*)newasm::LambdaDispatchRaw::LambdaLine) << "\n";
             std::cout << "newasm::header::data::repl -> " << newasm::header::data::repl << "\n";
             std::cout << "newasm::thread_line -> " << newasm::thread_line << "\n";
             std::cout << "value -> " << this->value << "\n";
@@ -410,9 +410,11 @@ namespace newasm
             #endif
         )
         {
+            #if NEWASM_CPU_REG_LOG == true
             newasm::_std::scope_exit a([this]() {
                 this->log_change();
             });
+            #endif
             //T new_val = new_val_;
             if constexpr(std::is_same_v<T, int>)
             {
@@ -458,9 +460,11 @@ namespace newasm
         }
         inline _register<T>& operator=(const T& new_val)
         {
+            #if NEWASM_CPU_REG_LOG == true
             newasm::_std::scope_exit a([this]() {
                 this->log_change();
             });
+            #endif
             //T new_val = new_val_;
             if constexpr(std::is_same_v<T, int>)
             {

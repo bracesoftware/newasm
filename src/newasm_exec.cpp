@@ -2525,7 +2525,7 @@ namespace newasm
                     case newasm::mem::regs::rax__:
                     {
                         --newasm::mem::regs::rax;
-                        if(newasm::mem::regs::rax.get_value() == 0)
+                        if(newasm::mem::regs::rax.get_value() <= 0)
                         {
                             return 1;
                         }
@@ -2533,8 +2533,12 @@ namespace newasm
                     }
                     case newasm::mem::regs::imm__:
                     {
+                        #if NEWASM_IMM_LOGS == false
                         --newasm::mem::regs::imm;
-                        if(newasm::mem::regs::imm.get_value() == 0)
+                        #elif NEWASM_IMM_LOGS == true
+                        newasm::mem::regs::imm.set_value(newasm::mem::regs::imm.get_value() - 1);
+                        #endif
+                        if(newasm::mem::regs::imm.get_value() <= 0)
                         {
                             return 1;
                         }
@@ -2543,7 +2547,7 @@ namespace newasm
                     case newasm::mem::regs::cr2__:
                     {
                         --newasm::mem::regs::cr2;
-                        if(newasm::mem::regs::cr2.get_value() == 0)
+                        if(newasm::mem::regs::cr2.get_value() <= 0)
                         {
                             return 1;
                         }
@@ -2552,7 +2556,7 @@ namespace newasm
                     case newasm::mem::regs::cr3__:
                     {
                         --newasm::mem::regs::cr3;
-                        if(newasm::mem::regs::cr3.get_value() == 0)
+                        if(newasm::mem::regs::cr3.get_value() <= 0)
                         {
                             return 1;
                         }
@@ -5192,7 +5196,7 @@ namespace newasm
             //pop
             case newasm::core::lang_inf::pop__THREAD:
             {
-                std::cout << "popt POZVAN -> " << lineInfo.raw << std::endl;
+                //std::cout << "popt POZVAN -> " << lineInfo.raw << std::endl;
                 auto& DedicatedStack = *newasm::DedicatedMemory;
                 if(DedicatedStack.StackInfo.empty())
                 {
@@ -5419,7 +5423,7 @@ namespace newasm
             //push THREAD
             case newasm::core::lang_inf::push__THREAD:
             {
-                std::cout << "pusht POZVAN -> " << lineInfo.raw << std::endl;
+                //std::cout << "pusht POZVAN -> " << lineInfo.raw << std::endl;
                 if(newasm::mem::regs::imm == 1 && lineInfo.priArgType == newasm::datatypes::number)
                 {
                     newasm::hardware::randAccessMem.push__STACK<int, true>(lineInfo.priInt);
@@ -6571,7 +6575,7 @@ namespace newasm
             }
             case newasm::core::lang_inf::resb__:
             {
-                std::cout << "RESB POZVAN -> " << lineInfo.raw << std::endl;
+                //std::cout << "RESB POZVAN -> " << lineInfo.raw << std::endl;
                 if(!newasm::thread_line)
                 {
                     newasm::SetExceptionComment("'resb' can be used only within threads");
@@ -7824,7 +7828,7 @@ namespace newasm
             //stack
             case newasm::core::lang_inf::stack__THREAD:
             {
-                std::cout << "STACKT POZVAN -> " << lineInfo.raw << std::endl;
+                //std::cout << "STACKT POZVAN -> " << lineInfo.raw << std::endl;
                 if(newasm::header::data::callstkidx == 0)
                 {
                     newasm::terminate(newasm::exit_codes::seg_fault);
@@ -8654,10 +8658,24 @@ namespace newasm
             // LAMBDA TERMINATOR
             case newasm::compiler::lambdaTerminator:
             {
+                //if we're declaring a thread..
                 if(newasm::threads::thread_now)
                 {
+                    //..push bytecode to thread's data
                     newasm::threads::memory.at(newasm::threads::thread_decl)->contents.push_back(line);
                     return 1;
+                }
+                if(newasm::thread_line)
+                {
+                    std::cout << "|                                      |" << std::endl;
+                    std::cout << "|---> we're inside a thread lambda <---|" << std::endl;
+                    std::cout << "|                                      |" << std::endl;
+                }
+                else
+                {
+                    std::cout << "|                                     |" << std::endl;
+                    std::cout << "|---> we're inside a maint lambda <---|" << std::endl;
+                    std::cout << "|                                     |" << std::endl;
                 }
                 if(
                     newasm::LambdaDispatch::LambdaHalt or
@@ -8678,7 +8696,7 @@ namespace newasm
                     {
                         break;
                     }
-                    if(
+                    else if(
                         newasm::LambdaDispatch::ThreadSafePtr->idx >= newasm::LambdaDispatch::ThreadSafePtr->contents.size() or
                         newasm::LambdaDispatch::ThreadSafePtr->idx < 0
                     )
@@ -8701,7 +8719,18 @@ namespace newasm
                 std::string eval = *newasm::LambdaDispatch::JitLine + *newasm::LambdaDispatch::Result;
                 auto JIT_COMPILE = newasm::compiler::DO(eval);
                 newasm::procline(JIT_COMPILE);
-                
+                if(newasm::thread_line)
+                {
+                    std::cout << "|                                       |" << std::endl;
+                    std::cout << "|---> we're outside a thread lambda <---|" << std::endl;
+                    std::cout << "|                                       |" << std::endl;
+                }
+                else
+                {
+                    std::cout << "|                                      |" << std::endl;
+                    std::cout << "|---> we're outside a maint lambda <---|" << std::endl;
+                    std::cout << "|                                      |" << std::endl;
+                }
                 return 1;
             }
             //class instance

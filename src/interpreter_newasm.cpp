@@ -322,6 +322,13 @@ extern "C"
 {
     void free_string(char* str);
 }
+namespace newasm
+{
+    namespace LambdaDispatchRaw
+    {
+        void* LambdaLine = nullptr;
+    }
+}
 link "vm/hardware/cpu_register";
 
 // Resources (assets) used in the program
@@ -1325,6 +1332,12 @@ namespace newasm
 {
     inline signed int entry(signed int argc, char* argv[])
     {
+        #if NEWASM_IMM_LOGS == true
+        newasm::mem::regs::imm.log_things(true);
+        #endif
+        #if NEWASM_CPU_REG_LOG == true
+        NewASM::LambdaDispatchRaw::LambdaLine = &NewASM::LambdaDispatch::LambdaLine;
+        #endif
         NewASM::RamChip::PeekString = [](int addr) -> std::string {
             return NewASM::RAM->peek<std::string>(addr);
         };

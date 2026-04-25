@@ -2388,7 +2388,7 @@ jmp lmao
         push 0x827 ; call the procedure
         zero imm ; reset the flag
         stack ;clear up the stack after the procedure call
-        wait 3000
+        ;wait 3000
         db stk
         push 1 ; push the sec arg
         push "call stack works again!" ; push the first arg
@@ -2396,7 +2396,7 @@ jmp lmao
         push 0x827 ; call the procedure
         zero imm
         stack ;clear up the stack after the procedure call
-        mov imm, 2
+        mov rax, 2
         {:shee}
         mov tlr, "this is really fun"
         call this
@@ -2414,14 +2414,14 @@ jmp lmao
 
         mov tlr, (proc)
             int 0x3
-            mov rax, 4
+            mov imm, 4
             mov tlr, "Hi from lambda in thread\n"
             mov fdx, 1
             sysenter "ios"
             syscall
             {:lmao}
             syscall
-            loop rax, lmao
+            loop imm, lmao
             int 0x3
 
             jmp label2
@@ -2432,8 +2432,9 @@ jmp lmao
             {:label3}
             halt 0
         (end)
-        loop imm, shee
+        loop rax, shee
     }
+    await &thisisfun
 :p
     mov tlr, (proc)
         int 0x3
@@ -2442,6 +2443,7 @@ jmp lmao
         mov tlr, "Hi from lambda in main thread\n"
         mov fdx, 1
         sysenter "ios"
+        
         {:lmao}
         syscall
         loop imm, lmao

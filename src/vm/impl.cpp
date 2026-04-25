@@ -1,6 +1,8 @@
 // Copyright (c) 2026 Brace Software Co.
 // NewASM Virtual Machine and Toolchain
 
+#define NEWASM_IMM_LOGS false
+#define NEWASM_CPU_REG_LOG false
 #define __newasm_MEMORY_SIZE 10 // MiB
 #define __newasm_DISK_SIZE 20 // MiB
 #define __newasm_CACHE_LINES 1024 //8KiB since line is 8bytes

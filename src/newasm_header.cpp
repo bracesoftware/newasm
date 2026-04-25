@@ -22,7 +22,7 @@ namespace newasm::header
     namespace flags
     {
         bool compexpr = false;
-        bool autobos = false;
+        newasm::kernel::thread_safe<bool> autobos = false;
     }
     namespace system_info
     {
