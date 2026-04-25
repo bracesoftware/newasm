@@ -8665,17 +8665,20 @@ namespace newasm
                     newasm::threads::memory.at(newasm::threads::thread_decl)->contents.push_back(line);
                     return 1;
                 }
-                if(newasm::thread_line)
+                if constexpr(NEWASM_CPU_REG_LOG)
                 {
-                    std::cout << "|                                      |" << std::endl;
-                    std::cout << "|---> we're inside a thread lambda <---|" << std::endl;
-                    std::cout << "|                                      |" << std::endl;
-                }
-                else
-                {
-                    std::cout << "|                                     |" << std::endl;
-                    std::cout << "|---> we're inside a maint lambda <---|" << std::endl;
-                    std::cout << "|                                     |" << std::endl;
+                    if(newasm::thread_line)
+                    {
+                        std::cout << "|                                      |" << std::endl;
+                        std::cout << "|---> we're inside a thread lambda <---|" << std::endl;
+                        std::cout << "|                                      |" << std::endl;
+                    }
+                    else
+                    {
+                        std::cout << "|                                     |" << std::endl;
+                        std::cout << "|---> we're inside a maint lambda <---|" << std::endl;
+                        std::cout << "|                                     |" << std::endl;
+                    }
                 }
                 if(
                     newasm::LambdaDispatch::LambdaHalt or
@@ -8719,17 +8722,20 @@ namespace newasm
                 std::string eval = *newasm::LambdaDispatch::JitLine + *newasm::LambdaDispatch::Result;
                 auto JIT_COMPILE = newasm::compiler::DO(eval);
                 newasm::procline(JIT_COMPILE);
-                if(newasm::thread_line)
+                if constexpr(NEWASM_CPU_REG_LOG)
                 {
-                    std::cout << "|                                       |" << std::endl;
-                    std::cout << "|---> we're outside a thread lambda <---|" << std::endl;
-                    std::cout << "|                                       |" << std::endl;
-                }
-                else
-                {
-                    std::cout << "|                                      |" << std::endl;
-                    std::cout << "|---> we're outside a maint lambda <---|" << std::endl;
-                    std::cout << "|                                      |" << std::endl;
+                    if(newasm::thread_line)
+                    {
+                        std::cout << "|                                       |" << std::endl;
+                        std::cout << "|---> we're outside a thread lambda <---|" << std::endl;
+                        std::cout << "|                                       |" << std::endl;
+                    }
+                    else
+                    {
+                        std::cout << "|                                      |" << std::endl;
+                        std::cout << "|---> we're outside a maint lambda <---|" << std::endl;
+                        std::cout << "|                                      |" << std::endl;
+                    }
                 }
                 return 1;
             }
