@@ -6578,13 +6578,23 @@ namespace newasm
                 //std::cout << "RESB POZVAN -> " << lineInfo.raw << std::endl;
                 if(!newasm::thread_line)
                 {
-                    newasm::SetExceptionComment("'resb' can be used only within threads");
+                    newasm::SetExceptionComment("`resb` can be used only within threads");
                     newasm::terminate(newasm::exit_codes::invalid_memacc);
                     return 1;
                 }
 
                 int bytes = -1;
-                if(lineInfo.priArgType == newasm::datatypes::number)
+                auto& DedicatedStack = *newasm::DedicatedMemory;
+                if(lineInfo.priArgType == newasm::datatypes::NIL)
+                {
+                    if(DedicatedStack.Usable)
+                    {
+                        newasm::RAM->freeStack(DedicatedStack.addr);
+                    }
+                    DedicatedStack.Usable = false;
+                    return 1;
+                }
+                else if(lineInfo.priArgType == newasm::datatypes::number)
                 {
                     bytes = lineInfo.priInt;
                 }
@@ -6603,7 +6613,6 @@ namespace newasm
                     return 1;
                 }
 
-                auto& DedicatedStack = *newasm::DedicatedMemory;
                 if(DedicatedStack.Usable) //prevent memory leaks
                 {
                     newasm::RAM->freeStack(DedicatedStack.addr);

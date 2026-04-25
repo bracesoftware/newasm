@@ -2381,6 +2381,7 @@ jmp lmao
         push 535
         mov tlr, "now we're moving on to call stack"
         call this
+        resb nil
         resb 4873
         push 1 ; push the sec arg
         push "call stack works" ; push the first arg

@@ -1063,7 +1063,8 @@ namespace newasm
                         if(
                             (lineCompiled.whatAmIDoing == NewASM::core::lang_inf::free__) or
                             (lineCompiled.whatAmIDoing == NewASM::core::lang_inf::fetch__) or
-                            (lineCompiled.whatAmIDoing == NewASM::core::lang_inf::pop)
+                            (lineCompiled.whatAmIDoing == NewASM::core::lang_inf::pop) or
+                            (lineCompiled.whatAmIDoing == newasm::core::lang_inf::resb__)
                         )
                         {
                             if(lineCompiled.tokens.at(i) == NIL_STR)
@@ -1253,6 +1254,16 @@ namespace newasm
             )
             {
                 OptDescription("peephole optimization, removed redundant refetch", &lastLine, newasm::OptimizerData::LastLineIdx);
+                lastLine.type = newasm::compiler::empty;
+                return;
+            }
+            //------------------------------------------- redundant stack memory dedication -------------------------------------------
+            if(
+                line.whatAmIDoing == newasm::core::lang_inf::resb__ and
+                lastLine.whatAmIDoing == newasm::core::lang_inf::resb__
+            )
+            {
+                OptDescription("peephole optimization, removed redundant stack memory dedication", &lastLine, newasm::OptimizerData::LastLineIdx);
                 lastLine.type = newasm::compiler::empty;
                 return;
             }

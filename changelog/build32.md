@@ -40,6 +40,7 @@ You can still have access to the global stack from within the child procedures a
 
 + Fixed issue #36.
 + Fixed issue #38.
++ Fixed the `loop` instruction going into an infinite loop when the register is below 0 or 0.
 
 ## Important notes
 

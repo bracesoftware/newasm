@@ -450,7 +450,7 @@ namespace newasm
             return;
         }
         
-        inline T& ref_value()
+        FORCE_INLINE inline T& ref_value()
         {
             if(newasm::thread_line)
             {
@@ -458,7 +458,7 @@ namespace newasm
             }
             return value;
         }
-        inline _register<T>& operator=(const T& new_val)
+        FORCE_INLINE inline _register<T>& operator=(const T& new_val)
         {
             #if NEWASM_CPU_REG_LOG == true
             newasm::_std::scope_exit a([this]() {
@@ -490,7 +490,7 @@ namespace newasm
             value = new_val;
             return *this;
         }
-        inline operator T&()
+        FORCE_INLINE inline operator T&()
         {
             if(newasm::thread_line)
             {
@@ -499,7 +499,7 @@ namespace newasm
             return value;
         }
 
-        inline operator T() const
+        FORCE_INLINE inline operator T() const
         {
             if(newasm::thread_line)
             {
@@ -507,7 +507,7 @@ namespace newasm
             }
             return value;
         }
-        inline operator const T&() const
+        FORCE_INLINE inline operator const T&() const
         {
             if(newasm::thread_line)
             {
@@ -515,7 +515,7 @@ namespace newasm
             }
             return value;
         }
-        inline friend std::ostream& operator<<(std::ostream& os, const _register<T>& r)
+        FORCE_INLINE inline friend std::ostream& operator<<(std::ostream& os, const _register<T>& r)
         {
             if(newasm::thread_line)
             {
@@ -525,7 +525,7 @@ namespace newasm
             os << r.value;
             return os;
         }
-        inline friend std::istream& operator>>(std::istream& is, _register<T>& r)
+        FORCE_INLINE inline friend std::istream& operator>>(std::istream& is, _register<T>& r)
         {
             if(newasm::thread_line)
             {
@@ -536,7 +536,7 @@ namespace newasm
             return is;
         }
 
-        bool operator==(const T& other) const
+        FORCE_INLINE bool operator==(const T& other) const
         {
             if(newasm::thread_line)
             {
@@ -544,7 +544,7 @@ namespace newasm
             }
             return value == other;
         }
-        friend bool operator==(const T& lhs, const _register<T>& rhs)
+        FORCE_INLINE friend bool operator==(const T& lhs, const _register<T>& rhs)
         {
             if(newasm::thread_line)
             {
@@ -553,7 +553,7 @@ namespace newasm
             return lhs == rhs.value;
         }
 
-        inline void add_end_(const std::string& str__)
+        FORCE_INLINE inline void add_end_(const std::string& str__)
         {
             if constexpr(!std::is_same_v<T, std::string>)
             {
@@ -575,7 +575,7 @@ namespace newasm
             value = ss.str();
             return;
         }
-        inline void SetStringValue(const std::string& value)
+        FORCE_INLINE inline void SetStringValue(const std::string& value)
         {
             if constexpr(std::is_same_v<T, std::string>)
             {
