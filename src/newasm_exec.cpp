@@ -102,9 +102,9 @@ namespace newasm
             {
                 NewASM::header::data::ExceptionComment = false;
                 std::cout << Insomnia << newasm::header::col::reset << newasm::header::col::orange;
-                std::cout << "^ comment -> `" << newasm::header::col::gray;
+                std::cout << "^ comment -> \"" << newasm::header::col::gray;
                 std::cout << newasm::GetExceptionComment();
-                std::cout << newasm::header::col::orange << '`';
+                std::cout << newasm::header::col::orange << '"';
                 std::cout << std::endl;
                 std::cout << newasm::header::col::reset;
             }
@@ -552,7 +552,7 @@ namespace newasm
 
                 if(line.priArgType == newasm::datatypes::symbol_name) if(!newasm::header::functions::isnumeric(value))
                 {
-                    std::cout << "Imamo error -> `" << value << "`->" << line.priEvalMode.type << "\n";
+                    //std::cout << "Imamo error -> `" << value << "`->" << line.priEvalMode.type << "\n";
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);//,wholeline);
                     return 1;
                 }
@@ -1414,6 +1414,7 @@ namespace newasm
                 {
                     if(newasm::_this == nullptr)
                     {
+                        newasm::SetExceptionComment("`this` is probably not initialized");
                         newasm::terminate(newasm::exit_codes::invalid_memacc);
                         return 1;
                     }
@@ -1440,6 +1441,7 @@ namespace newasm
 
                 if(ptr->type != newasm::datatypes::mycontext)
                 {
+                    newasm::SetExceptionComment("object is not a context");
                     newasm::terminate(newasm::exit_codes::seg_fault);
                     return 1;
                 }
@@ -1690,6 +1692,7 @@ namespace newasm
                 {
                     if(newasm::_this == nullptr)
                     {
+                        newasm::SetExceptionComment("`this` is probably not initialized");
                         newasm::terminate(newasm::exit_codes::invalid_memacc);
                         return 1;
                     }
@@ -1718,6 +1721,7 @@ namespace newasm
 
                 if(ptr->type != newasm::datatypes::tuple)
                 {
+                    newasm::SetExceptionComment("object is not a tuple");
                     newasm::terminate(newasm::exit_codes::seg_fault);
                     return 1;
                 }
@@ -2380,6 +2384,7 @@ namespace newasm
                 {
                     if(newasm::_this == nullptr)
                     {
+                        newasm::SetExceptionComment("`this` is probably not initialized");
                         newasm::terminate(newasm::exit_codes::invalid_memacc);
                         return 1;
                     }
@@ -2414,6 +2419,7 @@ namespace newasm
 
                 if(ptr->type != newasm::datatypes::tuple)
                 {
+                    newasm::SetExceptionComment("object is not a tuple");
                     newasm::terminate(newasm::exit_codes::seg_fault);
                     return 1;
                 }
@@ -2453,6 +2459,7 @@ namespace newasm
                 {
                     if(newasm::_this == nullptr)
                     {
+                        newasm::SetExceptionComment("`this` is probably not initialized");
                         newasm::terminate(newasm::exit_codes::invalid_memacc);
                         return 1;
                     }
@@ -2485,7 +2492,7 @@ namespace newasm
                     ptr->type != newasm::datatypes::character
                 )
                 {
-                    newasm::SetExceptionComment("not a supported object type");
+                    newasm::SetExceptionComment("not a supported object type: intg, float, string, char");
                     newasm::terminate(newasm::exit_codes::seg_fault);
                     return 1;
                 }
@@ -2855,6 +2862,7 @@ namespace newasm
                     {
                         if(newasm::_this == nullptr) [[unlikely]]
                         {
+                            newasm::SetExceptionComment("`this` is probably not initialized");
                             //std::cout << "THIS ACTUALLY HAPPENED!!!! -> "<< suf << std::endl;
                             newasm::terminate(newasm::exit_codes::invalid_memacc);
                             return 1;
@@ -4178,6 +4186,7 @@ namespace newasm
                         return 1;
                     }
 
+                    newasm::SetExceptionComment("object is already fetched by another thread");
                     newasm::terminate(newasm::exit_codes::seg_fault);
                     return 1;
                 }
@@ -4879,6 +4888,7 @@ namespace newasm
                 {
                     if(newasm::_this == nullptr)
                     {
+                        newasm::SetExceptionComment("`this` is probably not initialized");
                         newasm::terminate(newasm::exit_codes::invalid_memacc);
                         return 1;
                     }
@@ -5034,6 +5044,7 @@ namespace newasm
                 {
                     if(newasm::_this == nullptr)
                     {
+                        newasm::SetExceptionComment("`this` is probably not initialized");
                         newasm::terminate(newasm::exit_codes::invalid_memacc);
                         return 1;
                     }
@@ -5063,6 +5074,7 @@ namespace newasm
                 {
                     if(ptr->type != newasm::datatypes::number)
                     {
+                        newasm::SetExceptionComment("object is not an integer");
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                         return 1;
                     }
@@ -5077,6 +5089,7 @@ namespace newasm
                 {
                     if(ptr->type != newasm::datatypes::decimal)
                     {
+                        newasm::SetExceptionComment("object is not a float");
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                         return 1;
                     }
@@ -5091,6 +5104,7 @@ namespace newasm
                 {
                     if(ptr->type != newasm::datatypes::character)
                     {
+                        newasm::SetExceptionComment("object is not a character");
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                         return 1;
                     }
@@ -5105,6 +5119,7 @@ namespace newasm
                 {
                     if(ptr->type != newasm::datatypes::text)
                     {
+                        newasm::SetExceptionComment("object is not a string");
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                         return 1;
                     }
@@ -5235,6 +5250,7 @@ namespace newasm
                 {
                     if(newasm::_this == nullptr)
                     {
+                        newasm::SetExceptionComment("`this` is probably not initialized");
                         newasm::terminate(newasm::exit_codes::invalid_memacc);
                         return 1;
                     }
@@ -5264,6 +5280,7 @@ namespace newasm
                 {
                     if(ptr->type != newasm::datatypes::number)
                     {
+                        newasm::SetExceptionComment("object is not an integer");
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                         return 1;
                     }
@@ -5278,6 +5295,7 @@ namespace newasm
                 {
                     if(ptr->type != newasm::datatypes::decimal)
                     {
+                        newasm::SetExceptionComment("object is not a float");
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                         return 1;
                     }
@@ -5292,6 +5310,7 @@ namespace newasm
                 {
                     if(ptr->type != newasm::datatypes::character)
                     {
+                        newasm::SetExceptionComment("object is not a character");
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                         return 1;
                     }
@@ -5306,6 +5325,7 @@ namespace newasm
                 {
                     if(ptr->type != newasm::datatypes::text)
                     {
+                        newasm::SetExceptionComment("object is not a string");
                         newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                         return 1;
                     }
@@ -5443,7 +5463,7 @@ namespace newasm
 
                 if(!newasm::DedicatedMemory->Usable)
                 {
-                    newasm::SetExceptionComment("stack has to be dedicated with 'resb'");
+                    newasm::SetExceptionComment("stack has to be dedicated with `resb`");
                     newasm::terminate(newasm::exit_codes::seg_fault);
                     return 1;
                 }
@@ -6536,7 +6556,7 @@ namespace newasm
 
                 if(k == -1)
                 {
-                    newasm::SetExceptionComment("'wait' handler returned -1");
+                    newasm::SetExceptionComment("`wait` handler returned -1");
                     newasm::terminate(newasm::exit_codes::os_error);
                 }
                 return 1;
@@ -6707,6 +6727,7 @@ namespace newasm
                 {
                     if(newasm::_this == nullptr) [[unlikely]]
                     {
+                        newasm::SetExceptionComment("`this` is probably not initialized");
                         newasm::terminate(newasm::exit_codes::invalid_memacc);
                         return 1;
                     }
