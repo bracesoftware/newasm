@@ -374,7 +374,7 @@ namespace newasm
         __LOAD_STD global_load_std = nullptr;
         __SHOW_PERF global_showPerf = nullptr;
 
-        bool showed_perf = false;
+        constinit bool showed_perf = false;
     }
 
     namespace compiler
