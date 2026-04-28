@@ -97,6 +97,7 @@ namespace newasm
         static constinit const int ifdef__ = 6;
         static constinit const int ifndef__ = 7;
         static constinit const int fi__ = 8;
+        static constinit const int extern__ = 9;
 
         static const std::unordered_map<std::string, int> instructions = {
             {"def", def},
@@ -106,7 +107,8 @@ namespace newasm
             {"undef", undef__},
             {"ifdef", ifdef__},
             {"ifndef", ifndef__},
-            {"fi", fi__}
+            {"fi", fi__},
+            {"extern", extern__}
         };
     }
     namespace ExceptionHandling
@@ -158,6 +160,14 @@ link "vm/impl";
 link "runtime/common/attrib";
 namespace newasm
 {
+    struct ReturnUnion final
+    {
+        unsigned int type;
+        int Int;
+        float Float;
+        char Char;
+        std::string String;
+    };
     namespace CapturedData
     {
         int* ExitCodeInvalidMemacc = nullptr;
@@ -325,6 +335,39 @@ extern "C"
 }
 namespace newasm
 {
+    std::vector<std::string> DynLibNames;
+    std::vector<newasm::DynamicLibrary> DynLibs;
+    inline newasm::DynamicLibrary* FindDynLib(const std::string& dynlib)
+    {
+        if(newasm::DynLibs.empty())
+        {
+            return nullptr;
+        }
+        for(int i = 0; i < newasm::DynLibs.size(); ++i)
+        {
+            if(newasm::DynLibs.at(i).getName() == dynlib)
+            {
+                return &newasm::DynLibs.at(i);
+            }
+        }
+        return nullptr;
+    }
+
+    inline std::pair<bool, std::string> LoadDynamicLibraries()
+    {
+        for(int i = 0; i < newasm::DynLibNames.size(); ++i)
+        {
+            newasm::DynLibs.push_back(newasm::DynamicLibrary(newasm::DynLibNames.at(i)));
+            if(!newasm::DynLibs.back().loaded())
+            {
+                return {false, newasm::DynLibNames.at(i)};
+            }
+            ReturnUnion returnVal;
+            newasm::DynLibs.back().call<void>(DL_EVENT_SIG + "onload"_str, &returnVal);
+        }
+        return {true, ""};
+    }
+
     namespace LambdaDispatchRaw
     {
         void* LambdaLine = nullptr;
@@ -1045,6 +1088,11 @@ link "libs._platformSpecific";
 //
 link "vm/hardware/cpu_cache";
 link "vm/hardware/absolut";
+namespace newasm
+{
+    auto* RAM = &newasm::hardware::randAccessMem;
+    using RamPointer = decltype(RAM);
+}
 link "kernel/syscall_handle";
 
 link "runtime/namespaces";
@@ -1054,12 +1102,6 @@ link "toolchain/compiler/asmc";
 link "toolchain/compiler/comptins";
 
 //link "runtime/memory_impl";
-
-namespace newasm
-{
-    auto* RAM = &newasm::hardware::randAccessMem;
-    using RamPointer = decltype(RAM);
-}
 
 struct __global_newasm final
 {
@@ -1176,6 +1218,8 @@ namespace newasm
     {
         inline void cleanup()
         {
+            newasm::DynLibNames.clear();
+            NewASM::DynLibs.clear();
             NewASM::MutableConfig::DisplaySourceInformation = false;
             NewASM::kernel::ThreadCount = 0;
             NewASM::compiler::data::IfResult = true;

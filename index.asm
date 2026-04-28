@@ -1330,6 +1330,9 @@ nop
 .data
     string looptest : "hello"
     intg msglen : $- looptest
+    ./test 
+    union testLibUnion: nil
+    ./!test
 .start
     mov tlr, msglen
     inc tlr
@@ -1378,14 +1381,18 @@ nop
     mov tlr, &TEST
     syscall ; display the thread output
 
-    mov tlr, "DLL moment of thruth: "
-    call std::ios::write
-
+    mov tlr, "\nDLL moment of truth: "
+    call std::ios::writeln
+    extern "testlib" ; compiler links our binary with testlib.dll
     mov dlx, "testlib"
+    fetch test::testLibUnion ; we need to fetch an union to store our return address
     mov fdx, 1
-    sysenter "ext"
-    syscall
+    sysenter "ext" ; we tell the kernel to look for the function in testlib
+    syscall ; we call it
 
+    movas string
+    mov tlr, test::testLibUnion
+    fetch std::ios::writeln
     call this
     
 using "ios"

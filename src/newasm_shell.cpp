@@ -301,6 +301,7 @@ namespace newasm
                         newasm::forLinker::lineData.clear();
                         newasm::CYCLE_COUNT = 0;
                         NewASM::kernel::ThreadCount = 0;
+                        NewASM::DynLibNames.clear();
                         NewASM::_this = nullptr;
 
                         newasm::Console::show("NewASM Application Window");
@@ -310,7 +311,8 @@ namespace newasm
                             newasm::mem::labels,
                             newasm::forLinker::lineData,
                             newasm::mem::instructions,
-                            newasm::compiler::caseJumpTable
+                            newasm::compiler::caseJumpTable,
+                            NewASM::DynLibNames
                         );
 
                         //newasm::GLOBAL::global_load_std();

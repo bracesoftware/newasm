@@ -51,12 +51,68 @@ namespace newasm
             __newasmDBG(std::cout << "SYSCALL: sysenter = " << newasm::threads::functions::get_sysenter() << std::endl)
             __newasmDBG(std::cout << "SYSCALL: thread = " << newasm::thread_line << std::endl)
             #endif
-
             //ext
             if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::ext)
             {
-                newasm::kernel::dynamic::CALL(newasm::mem::regs::dlx, newasm::_std::to_string(newasm::mem::regs::fdx));
-                newasm::mem::regs::tlr.add_end_("\"");
+                if(newasm::_this == nullptr)
+                {
+                    newasm::SetExceptionComment("`this` pointer is probably not initialized");
+                    newasm::terminate(newasm::exit_codes::invalid_memacc);
+                    return 1;
+                }
+                if((*newasm::_this)->type != newasm::datatypes::yunion)
+                {
+                    newasm::SetExceptionComment("`this` is not pointing to an union");
+                    newasm::terminate(newasm::exit_codes::seg_fault);
+                    return 1;
+                }
+                
+                //newasm::kernel::dynamic::CALL(newasm::mem::regs::dlx, newasm::_std::to_string(newasm::mem::regs::fdx));
+                std::string libname = newasm::header::functions::remq(newasm::mem::regs::dlx.get_value());
+                newasm::DynamicLibrary* lib = newasm::FindDynLib(libname);
+                if(lib == nullptr)
+                {
+                    newasm::SetExceptionComment(
+                        "couldn't find dynamic library, `dlx` register is `"_str + 
+                        libname + "`"_str
+                    );
+                    newasm::terminate(newasm::exit_codes::invalid_memacc);
+                    return 1;
+                }
+                ReturnUnion returnVal;
+                lib->syscall<ReturnUnion>(newasm::mem::regs::fdx.get_value(), &returnVal);
+                if(returnVal.type == newasm::datatypes::number)
+                {
+                    int addr;
+                    addr = newasm::RAM->write<int>(returnVal.Int);
+                    (*newasm::_this)->yunion->addr = addr;
+                }
+                else if(returnVal.type == newasm::datatypes::decimal)
+                {
+                    int addr;
+                    addr = newasm::RAM->write<float>(returnVal.Float);
+                    (*newasm::_this)->yunion->addr = addr;
+                }
+                else if(returnVal.type == newasm::datatypes::character)
+                {
+                    int addr;
+                    addr = newasm::RAM->write<char>(returnVal.Char);
+                    (*newasm::_this)->yunion->addr = addr;
+                }
+                else if(returnVal.type == newasm::datatypes::text)
+                {
+                    int addr;
+                    addr = newasm::RAM->write<std::string>(returnVal.String);
+                    (*newasm::_this)->yunion->addr = addr;
+                }
+                else
+                {
+                    newasm::SetExceptionComment(
+                        "external function returned an invalid value type ("_str +
+                        newasm::_std::to_string(returnVal.type) + ")"_str
+                    );
+                    newasm::terminate(newasm::exit_codes::invalid_init);
+                }
                 return 1;
             }
             if(newasm::threads::functions::get_sysenter() == newasm::core::lang_inf::refs::cmanip)

@@ -51,6 +51,10 @@ stock constexpr inline void _newasm_rem__24234() noexcept
 #define INS_EXTERNAL (-2)
 #define MAX_LOAD_FACTOR (0.5f)
 
+#define UNKNOWN_STR "unknown??"_str
+#define FOREIGN_SYSCALL_SIG "__newasm_syscall_"_str
+#define DL_EVENT_SIG "__newasm_event"_str
+
 static_assert(sizeof(int) == 4);
 static_assert(sizeof(float) == 4);
 static_assert(sizeof(char) == 1);

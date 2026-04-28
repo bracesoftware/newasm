@@ -9307,6 +9307,17 @@ namespace newasm
             return;
         }
 
+        //we load other libs
+        auto status = newasm::LoadDynamicLibraries();
+        if(!status.first)
+        {
+            newasm::header::functions::linkinfo(
+                "Couldn't load dynamic library: `" +
+                status.second + "`"
+            );
+            return;
+        }
+
         newasm::CYCLE_COUNT = 0, newasm::perf::start = std::chrono::steady_clock::now();
 
         //cleanup timers
@@ -9489,6 +9500,7 @@ namespace newasm
     #endif
     inline int compile_and_exec(std::string file, int lineidx_____)
     {
+        NewASM::DynLibNames.clear();
         if(lineidx_____ == -1)
         {
             newasm::mem::regs::resetRegisters();
@@ -9792,7 +9804,8 @@ namespace newasm
                 newasm::mem::labels,
                 newasm::forLinker::lineData,
                 newasm::mem::instructions,
-                newasm::compiler::caseJumpTable
+                newasm::compiler::caseJumpTable,
+                NewASM::DynLibNames
             );
 
             newasm::header::functions::wait(1000);

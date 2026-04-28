@@ -26,7 +26,7 @@
     },
     {
       "name": "comptins.newasm",
-      "match":  "\\b(fi|ifdef|ifndef|undef|pragma|using|def|link)\\b"
+      "match":  "\\b(extern|fi|ifdef|ifndef|undef|pragma|using|def|link)\\b"
     },
     {
       "name": "register.control.newasm",

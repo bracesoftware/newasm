@@ -110,6 +110,19 @@ namespace newasm
                     newasm::compiler::meta::defines.erase(arg1);
                     return;
                 }
+                case newasm::compiler::extern__:
+                {
+                    auto arg = arg1;
+                    if(!newasm::header::functions::istext(arg))
+                    {
+                        newasm::compiler::abort(newasm::compiler::fail::expected_token);
+                        return;
+                    }
+                    arg = newasm::header::functions::remq(arg);
+                    arg = newasm::header::functions::trim(arg);
+                    newasm::DynLibNames.push_back(arg);
+                    return;
+                }
                 case newasm::compiler::using__:
                 {
                     auto arg = arg1;

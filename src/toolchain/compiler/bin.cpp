@@ -296,7 +296,8 @@ namespace newasm
                 const std::unordered_map<std::string, int>& labels,
                 const std::vector<std::pair<std::string, int>>& files,
                 const std::unordered_map<std::string, std::vector<std::string>>& ins,
-                const std::vector<newasm::compiler::lineData>& jumptable
+                const std::vector<newasm::compiler::lineData>& jumptable,
+                const std::vector<std::string>& dynlibs
             )
             {
                 std::ofstream out(path, std::ios::binary);
@@ -359,11 +360,19 @@ namespace newasm
                 write_string(out, newasm::project_data::version);
 
                 //jump table
-                uint32_t jumpTableSize = jumptable.size();
+                unsigned int jumpTableSize = jumptable.size();
                 write_bin(out, jumpTableSize);
                 for(auto& l : jumptable)
                 {
                     save_lineData(out, l);
+                }
+
+                //dynlibs
+                unsigned int dynLibTableSize = dynlibs.size();
+                write_bin(out, dynLibTableSize);
+                for(auto& n : dynlibs)
+                {
+                    write_string(out, n);
                 }
                 return true;
             }
@@ -397,7 +406,8 @@ namespace newasm
                 std::unordered_map<std::string, int>& labels,
                 std::vector<std::pair<std::string, int>>& files,
                 std::unordered_map<std::string, std::vector<std::string>>& ins,
-                std::vector<lineData>& jumptable
+                std::vector<lineData>& jumptable,
+                std::vector<std::string>& dynlibs
             )
             {
                 std::ifstream in(path, std::ios::binary);
@@ -476,12 +486,21 @@ namespace newasm
                 read_string(in, newasm::project_data::version);
 
                 //jump table
-                uint32_t jumpTableSize;
+                unsigned int jumpTableSize;
                 read_bin(in, jumpTableSize);
                 jumptable.resize(jumpTableSize);
                 for(auto& l : jumptable)
                 {
                     load_lineData(in, l);
+                }
+
+                //dynlibs
+                unsigned int dynlibsize;
+                read_bin(in, dynlibsize);
+                jumptable.resize(dynlibsize);
+                for(auto& l : dynlibs)
+                {
+                    read_string(in, l);
                 }
                 return true;
             }
