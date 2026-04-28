@@ -1467,6 +1467,7 @@ namespace newasm
 
                     if(!newasm::header::functions::istext(key))
                     {
+                        newasm::SetExceptionComment("key has to contain textual data");
                         newasm::terminate(newasm::exit_codes::invalid_init);
                         return 1;
                     }
