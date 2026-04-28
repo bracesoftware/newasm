@@ -306,6 +306,7 @@ link "sysext/csimple";
 #define __newasm_included "NEWASM"_str
 link "runtime/alpha";
 link "sys._platformSpecific";
+link "newasm_dynlib";
 //<- UNDER THIS ALL MODULES CAN LOAD
 module(vm_impl, {
     //empty
@@ -362,7 +363,6 @@ namespace newasm
     {
         constexpr auto makeHash(unsigned short a, unsigned short b) noexcept -> unsigned int <%
             return (static_cast<unsigned int>(a) << 16) | b;
-            //return (uint32_t(uint16_t(a)) << 16) | uint32_t(uint16_t(b));
         %>
     }
 
@@ -991,7 +991,6 @@ link "utils._platformSpecific";
 link "runtime/utils";
 link "runtime/common/opcodes";
 
-link "newasm_dynlib";
 link "newasm_header";
 link "toolchain/compiler/native_jit";
 link "toolchain/linker/asmlink";
