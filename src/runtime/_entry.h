@@ -299,6 +299,12 @@ namespace newasm
 					case newasm::runtime::evalModes::sizeOf:
 					{
 						int size = newasm::header::functions::issizeof(s).second;
+						if constexpr(RawDataHere)
+						{
+							rdi->rawType = newasm::datatypes::number;
+							rdi->rawInt = size;
+							return;
+						}
 						s = newasm::_std::to_string(size);
 						return;
 					}
@@ -956,6 +962,7 @@ namespace newasm
 						{
 							if(TupleOrContext->type != newasm::datatypes::mycontext)
 							{
+								newasm::SetExceptionComment("object is not a context");
 								newasm::terminate(newasm::exit_codes::seg_fault);
 								return;
 							}
@@ -965,25 +972,70 @@ namespace newasm
 			
 							if(idx == (-1))
 							{
+								newasm::SetExceptionComment("invalid context key");
 								newasm::terminate(newasm::exit_codes::seg_fault);
 								return;
 							}
 
 							if(TupleOrContext->context->type[idx] == newasm::datatypes::number)
 							{
+								if constexpr(RawDataHere)
+								{
+									rdi->rawType = TupleOrContext->context->type[idx];
+									if(TupleOrContext->locked)
+									{
+										rdi->rawInt = 0;
+										return;
+									}
+									rdi->rawInt = newasm::RAM->peek<int>(TupleOrContext->context->addr[idx]);
+									return;
+								}
 								suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(TupleOrContext->context->addr[idx]));
 							}
 							else if(TupleOrContext->context->type[idx] == newasm::datatypes::decimal)
 							{
+								if constexpr(RawDataHere)
+								{
+									rdi->rawType = TupleOrContext->context->type[idx];
+									if(TupleOrContext->locked)
+									{
+										rdi->rawFloat = 0;
+										return;
+									}
+									rdi->rawFloat = newasm::RAM->peek<float>(TupleOrContext->context->addr[idx]);
+									return;
+								}
 								suf = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(TupleOrContext->context->addr[idx]));
 							}
 							else if(TupleOrContext->context->type[idx] == newasm::datatypes::character)
 							{
+								if constexpr(RawDataHere)
+								{
+									rdi->rawType = TupleOrContext->context->type[idx];
+									if(TupleOrContext->locked)
+									{
+										rdi->rawChar = 0;
+										return;
+									}
+									rdi->rawChar = newasm::RAM->peek<char>(TupleOrContext->context->addr[idx]);
+									return;
+								}
 								std::string buf(1, newasm::hardware::randAccessMem.peek<char>(TupleOrContext->context->addr[idx]));
 								suf = "'"; suf += buf; suf += "'";
 							}
 							else if(TupleOrContext->context->type[idx] == newasm::datatypes::text)
 							{
+								if constexpr(RawDataHere)
+								{
+									rdi->rawType = TupleOrContext->context->type[idx];
+									if(TupleOrContext->locked)
+									{
+										rdi->rawString = "unknown??";
+										return;
+									}
+									rdi->rawString = newasm::RAM->peek<std::string>(TupleOrContext->context->addr[idx]);
+									return;
+								}
 								std::string buf = newasm::hardware::randAccessMem.peek<std::string>(TupleOrContext->context->addr[idx]);
 								suf = "\""; suf += buf; suf += "\"";
 							}
@@ -994,18 +1046,31 @@ namespace newasm
 						{
 							if(TupleOrContext->type != newasm::datatypes::tuple)
 							{
+								newasm::SetExceptionComment("object is not a tuple");
 								newasm::terminate(newasm::exit_codes::seg_fault);
 								return;
 							}
 							int index = k ? std::stoi(tupleIndex) : mode.argInt;
 							if(index >= TupleOrContext->tuple->addr.size() || index < 0)
 							{
+								newasm::SetExceptionComment("invalid tuple index");
 								newasm::terminate(newasm::exit_codes::seg_fault);
 								return;
 							}
 							
 							if(TupleOrContext->tuple->type[index] == newasm::datatypes::number)
 							{
+								if constexpr(RawDataHere)
+								{
+									rdi->rawType = TupleOrContext->tuple->type[index];
+									if(TupleOrContext->locked)
+									{
+										rdi->rawInt = 0;
+										return;
+									}
+									rdi->rawInt = newasm::RAM->peek<int>(TupleOrContext->tuple->addr[index]);
+									return;
+								}
 								if(TupleOrContext->locked)
 								{
 									suf = "0";
@@ -1016,6 +1081,17 @@ namespace newasm
 							}
 							else if(TupleOrContext->tuple->type[index] == newasm::datatypes::decimal)
 							{
+								if constexpr(RawDataHere)
+								{
+									rdi->rawType = TupleOrContext->tuple->type[index];
+									if(TupleOrContext->locked)
+									{
+										rdi->rawFloat = 0;
+										return;
+									}
+									rdi->rawFloat = newasm::RAM->peek<float>(TupleOrContext->tuple->addr[index]);
+									return;
+								}
 								if(TupleOrContext->locked)
 								{
 									suf = "0.0";
@@ -1025,6 +1101,17 @@ namespace newasm
 							}
 							else if(TupleOrContext->tuple->type[index] == newasm::datatypes::character)
 							{
+								if constexpr(RawDataHere)
+								{
+									rdi->rawType = TupleOrContext->tuple->type[index];
+									if(TupleOrContext->locked)
+									{
+										rdi->rawChar = 0;
+										return;
+									}
+									rdi->rawChar = newasm::RAM->peek<char>(TupleOrContext->tuple->addr[index]);
+									return;
+								}
 								if(TupleOrContext->locked)
 								{
 									suf = "'?'";
@@ -1035,6 +1122,17 @@ namespace newasm
 							}
 							else if(TupleOrContext->tuple->type[index] == newasm::datatypes::text)
 							{
+								if constexpr(RawDataHere)
+								{
+									rdi->rawType = TupleOrContext->tuple->type[index];
+									if(TupleOrContext->locked)
+									{
+										rdi->rawString = "unknown??";
+										return;
+									}
+									rdi->rawString = newasm::RAM->peek<std::string>(TupleOrContext->tuple->addr[index]);
+									return;
+								}
 								if(TupleOrContext->locked)
 								{
 									suf = "\"unknown??\"";

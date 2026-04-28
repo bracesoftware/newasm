@@ -381,7 +381,7 @@ namespace newasm::header
 
             std::cout << std::endl;
 
-            std::cout << newasm::header::col::light_blue << newasm::header::style::bold << newasm::header::style::underline;
+            std::cout << newasm::header::col::light_blue << newasm::header::style::bold << newasm::header::style::reverse << newasm::header::style::underline;
             newasm::utils::glitch_text(newasm::header::system_info::fullname);
             std::cout << newasm::header::col::reset << newasm::header::col::gray;
             std::cout << "\n  Build: " << version << "-" << os << "_" << arch;

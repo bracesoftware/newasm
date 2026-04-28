@@ -25,6 +25,10 @@ namespace newasm
             const std::string orange = "\033[38;2;255;165;0m";
 
             const std::string aqua = "\033[38;2;41;204;193m";
+            const std::string electric_purple = "\033[38;2;191;0;255m";
+            const std::string hot_pink = "\033[38;2;255;105;180m";
+            const std::string gold = "\033[38;2;255;215;0m";
+            const std::string ghost_white = "\033[38;2;248;248;255m";
 
             const std::string reset = "\033[0m";
         }
@@ -32,6 +36,18 @@ namespace newasm
         {
             const std::string underline = "\033[4m";
             const std::string bold = "\033[1m";
+            const std::string italic = "\033[3m";
+            const std::string dim = "\033[2m";
+            const std::string blink = "\033[5m";
+            const std::string reverse = "\033[7m";
+            const std::string strikethrough = "\033[9m";
+        }
+        namespace bg
+        {
+            const std::string err_red = "\033[48;5;88m";
+            const std::string red = "\033[41m";
+            const std::string green = "\033[42m";
+            const std::string night_blue = "\033[48;2;25;25;112m";
         }
     }
 }

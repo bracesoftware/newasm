@@ -207,6 +207,10 @@ namespace newasm
             const std::string lime_teal = "";
             const std::string orange = "";
             const std::string aqua = "";
+            const std::string electric_purple = "";
+            const std::string hot_pink = "";
+            const std::string gold = "";
+            const std::string ghost_white = "";
 
             const std::string reset = "";
         }
@@ -214,6 +218,18 @@ namespace newasm
         {
             const std::string underline = "";
             const std::string bold = "";
+            const std::string italic = "";
+            const std::string dim = "";
+            const std::string blink = "";
+            const std::string reverse = "";
+            const std::string strikethrough = "";
+        }
+        namespace bg
+        {
+            const std::string err_red = "";
+            const std::string red = "";
+            const std::string green = "";
+            const std::string night_blue = "";
         }
     }
 }
