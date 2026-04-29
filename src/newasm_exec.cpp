@@ -9384,6 +9384,7 @@ namespace newasm
         }
         newasm::perf::end = std::chrono::steady_clock::now();
         newasm::compiler::data::JIT_mode = false;
+        newasm::UnloadDynamicLibraries();
         return;
     }
     #if 0 //this ain't comin

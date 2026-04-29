@@ -160,6 +160,7 @@ link "vm/impl";
 link "runtime/common/attrib";
 namespace newasm
 {
+    #pragma pack(push, 1)
     struct ReturnUnion final
     {
         unsigned int type;
@@ -168,6 +169,7 @@ namespace newasm
         char Char;
         std::string String;
     };
+    #pragma pack(pop)
     namespace CapturedData
     {
         int* ExitCodeInvalidMemacc = nullptr;
@@ -379,6 +381,8 @@ namespace newasm
             }
             continue;
         }
+        newasm::DynLibs.clear();
+        newasm::DynLibNames.clear();
         return;
     }
 
@@ -1232,8 +1236,6 @@ namespace newasm
     {
         inline void cleanup()
         {
-            newasm::DynLibNames.clear();
-            NewASM::DynLibs.clear();
             NewASM::MutableConfig::DisplaySourceInformation = false;
             NewASM::kernel::ThreadCount = 0;
             NewASM::compiler::data::IfResult = true;

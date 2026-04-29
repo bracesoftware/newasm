@@ -87,6 +87,10 @@ namespace newasm
 
         inline void load(const std::string& name)
         {
+            if(this->loaded())
+            {
+                this->unload();
+            }
             this->libn = name;
             #if _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
             handle = LoadLibraryA((name + ".dll").c_str());
