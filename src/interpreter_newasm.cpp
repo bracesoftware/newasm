@@ -167,7 +167,7 @@ namespace newasm
         int Int;
         float Float;
         char Char;
-        std::string String;
+        char String[255];
     };
     #pragma pack(pop)
     namespace CapturedData
@@ -365,7 +365,9 @@ namespace newasm
                 return {false, newasm::DynLibNames.at(i)};
             }
             ReturnUnion returnVal;
+            //std::cout << "onload called" << std::endl;
             newasm::DynLibs.back().call<void>(DL_EVENT_SIG + "onload"_str, &returnVal);
+            //std::cout << "onload called finish" << std::endl;
         }
         return {true, ""};
     }

@@ -9700,7 +9700,7 @@ namespace newasm
                         }
                         catch(std::exception& e)
                         {
-                            for(auto p = newasm::mem::labels.begin(); p != newasm::mem::labels.end(); ++p)
+                            if(0) for(auto p = newasm::mem::labels.begin(); p != newasm::mem::labels.end(); ++p)
                             {
                                 std::cout << "labels[" << p->first << "] = `" << p->second << "`\n";
                             }

@@ -102,7 +102,7 @@ namespace newasm
                 else if(returnVal.type == newasm::datatypes::text)
                 {
                     int addr;
-                    addr = newasm::RAM->write<std::string>(returnVal.String);
+                    addr = newasm::RAM->write<std::string>(std::string(returnVal.String));
                     (*newasm::_this)->yunion->addr = addr;
                 }
                 else

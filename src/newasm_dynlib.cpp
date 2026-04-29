@@ -70,10 +70,12 @@ namespace newasm
 
         explicit inline DynamicLibrary() {}
 
+        #if 0
         inline ~DynamicLibrary()
         {
             this->unload();
         }
+        #endif
 
         inline auto getName() const
         {
@@ -89,6 +91,7 @@ namespace newasm
         {
             if(this->loaded())
             {
+                //std::cout << "reloading.." << std::endl;
                 this->unload();
             }
             this->libn = name;
@@ -105,7 +108,9 @@ namespace newasm
             if(handle)
             {
                 ReturnUnion returnVal;
+                //std::cout << "onexit called" << std::endl;
                 this->call<void>(DL_EVENT_SIG + "onexit"_str, &returnVal);
+                //std::cout << "onexit finished" << std::endl;
                 #if _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
                 FreeLibrary(handle);
                 #elif _NEWASM_OS == _NEWASM_OS_linux
