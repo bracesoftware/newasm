@@ -368,6 +368,20 @@ namespace newasm
         return {true, ""};
     }
 
+    inline void UnloadDynamicLibraries()
+    {
+        for(int i = 0; i < newasm::DynLibs.size(); ++i)
+        {
+            auto& dl = newasm::DynLibs.at(i);
+            if(dl.loaded())
+            {
+                dl.unload();
+            }
+            continue;
+        }
+        return;
+    }
+
     namespace LambdaDispatchRaw
     {
         void* LambdaLine = nullptr;
