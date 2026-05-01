@@ -1391,7 +1391,7 @@ nop
     syscall ; we call it
 
     movas string
-    mov tlr, test::testLibUnion
+    mov tlr, *this
     fetch std::ios::writeln
     call this
     

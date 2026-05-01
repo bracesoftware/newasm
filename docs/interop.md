@@ -69,18 +69,6 @@ struct ___newasm_union_STRUCT final
 > [!TIP]
 > This is the whole SDK! ***xD***
 
-You can then easily call your library like this:
-
-```asm
-extern "testlib" ; tell the compiler to link your app with our lib
-.start
-    mov dlx, "testlib"  ; you don't need to provide if it is DLL/SO
-                        ; to keep code independent of platform
-    mov fdx, 1
-    sysenter "ext"
-    syscall
-```
-
 ### Example library
 Below is an example of the `testlib` library on Windows, written in C++:
 
@@ -114,4 +102,21 @@ _NEWASM_syscall_export _NEWASM_syscall(1) _NEWASM_syscall_args
 Compile it with:
 ```
 path/to/g++ -shared -o testlib.dll testlib.cpp -Wl,--out-implib,libtestlib.a
+```
+
+You can then easily call your library like this:
+
+```asm
+extern "testlib" ; tell the compiler to link your app with our lib
+.data
+    union result: nil
+.start
+    fetch result ; set this ptr to &result
+                 ; so we can take the return value
+    movas string ; since we're returning a string in the example
+    mov dlx, "testlib"  ; you don't need to provide if it is DLL/SO
+                        ; to keep code independent of platform
+    mov fdx, 1
+    sysenter "ext"
+    syscall
 ```
