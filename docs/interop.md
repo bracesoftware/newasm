@@ -93,7 +93,7 @@ _NEWASM_syscall_export _NEWASM_syscall(1) _NEWASM_syscall_args
 {
     _NEWASM_UNION result;
     result.setType(NewASM::Types::String);
-    result.setString("ayee string vracen!!");
+    result.setString("ayee string returned!!");
     std::cout << "Hello from DLL!" << std::endl;
     return result;
 }
