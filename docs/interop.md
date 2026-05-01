@@ -119,4 +119,8 @@ extern "testlib" ; tell the compiler to link your app with our lib
     mov fdx, 1
     sysenter "ext"
     syscall
+
+
+    ; to get the value, just do
+    mov tlr, *this ; your string is stored into tlr
 ```
