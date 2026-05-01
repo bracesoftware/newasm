@@ -6,6 +6,7 @@ There are a few compile-time directives:
 4. [`pragma`](#pragma)
 5. [`undef`](#undef)
 6. [`if ... variants` and `fi`](#compile-time-logic)
+7. [`extern`](#extern)
 
 ## `using`
 With this directive, you include kernel modules you're going to use in your project.
@@ -69,3 +70,12 @@ fi
 ```
 
 There are no `else` variants, you have to end each if-block with `fi`.
+
+## `extern`
+
+> [!NOTE]
+> This was added in build 32.
+
+This instruction is used to dynamically link a C/C++ library to your NewASM application.
+
+Read more in DLL/SO integration docs.
