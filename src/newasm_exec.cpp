@@ -9299,13 +9299,23 @@ namespace newasm
             newasm::mem::regs::hea = 0;
             newasm::mem::regs::lcx.set_value(0);
         }
-
+        //cleanup timers
+        newasm::wasted_deduction.clear();
+        newasm::network_deduction.clear();
+        newasm::perf::inputWasteTimer.clear();
+        newasm::perf::heavyHostServices.clear();
+        newasm::perf::StandardLibLoading.clear();
+        newasm::perf::DynLibLoading.clear();
         //now we load the standard lib after loading the case jump table
+        newasm::CYCLE_COUNT = 0, newasm::perf::start = std::chrono::steady_clock::now();
+        newasm::perf::StandardLibLoading.start();
         bool result = newasm::GLOBAL::global_load_std();
         if(!result)
         {
+            newasm::perf::StandardLibLoading.stop();
             return;
         }
+        newasm::perf::StandardLibLoading.stop();
 
         //we load other libs
         auto status = newasm::LoadDynamicLibraries();
@@ -9317,14 +9327,6 @@ namespace newasm
             );
             return;
         }
-
-        newasm::CYCLE_COUNT = 0, newasm::perf::start = std::chrono::steady_clock::now();
-
-        //cleanup timers
-        newasm::wasted_deduction.clear();
-        newasm::network_deduction.clear();
-        newasm::perf::inputWasteTimer.clear();
-        newasm::perf::heavyHostServices.clear();
 
         auto size = newasm::compiler::compiledCode.size();
 

@@ -59,6 +59,7 @@ namespace newasm
             constinit const int label_redef = 11;
             constinit const int unexpected_term = 12;
             constinit const int linker_err = 13;
+            constinit const int already_linked = 14;
 
             const std::unordered_map<int, std::string> id = {
                 {unmatched_syntax, "UnmatchedSyntax"},
@@ -73,7 +74,8 @@ namespace newasm
                 {retc_fail, "CannotReturnToCaseJumpTable"},
                 {label_redef, "LabelAlreadyExists"},
                 {unexpected_term, "UnexpectedMacroTerminator"},
-                {linker_err, "LinkerError"}
+                {linker_err, "LinkerError"},
+                {already_linked, "LibraryAlreadyLinked"}
             };
         }
 

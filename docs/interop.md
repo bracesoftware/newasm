@@ -74,7 +74,7 @@ Below is an example of the `testlib` library on Windows, written in C++:
 
 `testlib.cpp`:
 ```cpp
-// hellodll.cpp
+// Test library
 #include "exdk/newasm.h"
 
 _NEWASM_event_export(onload) _NEWASM_event_args

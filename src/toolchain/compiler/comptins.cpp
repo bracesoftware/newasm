@@ -120,6 +120,11 @@ namespace newasm
                     }
                     arg = newasm::header::functions::remq(arg);
                     arg = newasm::header::functions::trim(arg);
+                    if(std::find(newasm::DynLibNames.begin(), newasm::DynLibNames.end(), arg) != newasm::DynLibNames.end())
+                    {
+                        newasm::compiler::abort(newasm::compiler::fail::already_linked);
+                        return;
+                    }
                     newasm::DynLibNames.push_back(arg);
                     return;
                 }

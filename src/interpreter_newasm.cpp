@@ -337,6 +337,65 @@ extern "C"
 }
 namespace newasm
 {
+    class timer final
+    {
+        using clock = std::chrono::steady_clock;
+        private clock::time_point start_time;
+        private double accumulated_ms = 0.0;
+        private bool running = false;
+
+        public void start()
+        {
+            if(!running) 
+            {
+                start_time = clock::now();
+                running = true;
+            }
+        }
+
+        public void stop()
+        {
+            if(running)
+            {
+                auto end_time = clock::now();
+                accumulated_ms += std::chrono::duration<double, std::milli>(end_time - start_time).count();
+                running = false;
+            }
+            return;
+        }
+
+        public double count() const
+        {
+            if(!running)
+            {
+                return accumulated_ms;
+            }
+            
+            auto current_duration = std::chrono::duration<double, std::milli>(clock::now() - start_time).count();
+            return accumulated_ms + current_duration;
+        }
+
+        public void clear()
+        {
+            accumulated_ms = 0.0;
+            if(running)
+            {
+                start_time = clock::now();
+                return;
+            }
+        }
+    };
+
+    namespace perf
+    {
+        auto start = std::chrono::steady_clock::now();
+        auto end = std::chrono::steady_clock::now();
+
+        newasm::timer inputWasteTimer;
+        newasm::timer heavyHostServices;
+        newasm::timer StandardLibLoading;
+        newasm::timer DynLibLoading;
+    }
     std::vector<std::string> DynLibNames;
     std::vector<newasm::DynamicLibrary> DynLibs;
     inline newasm::DynamicLibrary* FindDynLib(const std::string& dynlib)
@@ -357,6 +416,15 @@ namespace newasm
 
     inline std::pair<bool, std::string> LoadDynamicLibraries()
     {
+        newasm::perf::DynLibLoading.start();
+        $defer
+            newasm::perf::DynLibLoading.stop();
+        $
+        if(newasm::DynLibNames.empty())
+        {
+            std::cout << "newasm::DynLibNames.size() is 0!" << std::endl;
+            return {true, ""};
+        }
         for(int i = 0; i < newasm::DynLibNames.size(); ++i)
         {
             newasm::DynLibs.push_back(newasm::DynamicLibrary(newasm::DynLibNames.at(i)));
@@ -374,6 +442,10 @@ namespace newasm
 
     inline void UnloadDynamicLibraries()
     {
+        newasm::perf::DynLibLoading.start();
+        $defer
+            newasm::perf::DynLibLoading.stop();
+        $
         for(int i = 0; i < newasm::DynLibs.size(); ++i)
         {
             auto& dl = newasm::DynLibs.at(i);
@@ -819,64 +891,6 @@ namespace newasm
             return;
         }
     };
-
-    class timer
-    {
-        using clock = std::chrono::steady_clock;
-        private clock::time_point start_time;
-        private double accumulated_ms = 0.0;
-        private bool running = false;
-
-        public void start()
-        {
-            if(!running) 
-            {
-                start_time = clock::now();
-                running = true;
-            }
-        }
-
-        public void stop()
-        {
-            if(running)
-            {
-                auto end_time = clock::now();
-                accumulated_ms += std::chrono::duration<double, std::milli>(end_time - start_time).count();
-                running = false;
-            }
-            return;
-        }
-
-        public double count() const
-        {
-            if(!running)
-            {
-                return accumulated_ms;
-            }
-            
-            auto current_duration = std::chrono::duration<double, std::milli>(clock::now() - start_time).count();
-            return accumulated_ms + current_duration;
-        }
-
-        public void clear()
-        {
-            accumulated_ms = 0.0;
-            if(running)
-            {
-                start_time = clock::now();
-                return;
-            }
-        }
-    };
-
-    namespace perf
-    {
-        auto start = std::chrono::steady_clock::now();
-        auto end = std::chrono::steady_clock::now();
-
-        newasm::timer inputWasteTimer;
-        newasm::timer heavyHostServices;
-    }
 
     void* test = nullptr;
 
@@ -1658,12 +1672,22 @@ namespace newasm
             std::cout << newasm::header::col::gray << "\t\t\t" << newasm::perf::inputWasteTimer.count() << " ms wasted on user input\n";
             std::cout << newasm::header::col::gray << "\t\t\t" << newasm::perf::heavyHostServices.count() << " ms used on heavy host services\n";
             std::cout << newasm::header::col::gray << "\t\t\t" << network_wasted.count() << " ms wasted on network latency\n";
+            std::cout << newasm::header::col::gray << "\t\t\t" << newasm::perf::DynLibLoading.count() << " ms used on DLL/SO maintenence\n";
+            std::cout << newasm::header::col::gray << "\t\t\t" << newasm::perf::StandardLibLoading.count() << " ms used on standard library loading\n";
             //
             std::cout << newasm::header::style::underline;
             std::cout << newasm::header::col::gray << "\t\t\t" << wait_wasted.count() << " ms wasted on `wait`\n";
             std::cout << newasm::header::col::reset;
             std::cout << newasm::header::col::gray << "\t\t\tTotal: ";
-            std::cout << (elapsed.count() - newasm::perf::heavyHostServices.count() - newasm::perf::inputWasteTimer.count() - wait_wasted.count() - network_wasted.count()) << " ms\n";
+            std::cout << (
+                elapsed.count()
+                - newasm::perf::heavyHostServices.count()
+                - newasm::perf::inputWasteTimer.count()
+                - wait_wasted.count()
+                - network_wasted.count()
+                - newasm::perf::StandardLibLoading.count()
+                - newasm::perf::DynLibLoading.count()
+            ) << " ms\n";
             std::cout << newasm::header::col::gray << "\t\t\tCycle count: " << newasm::CYCLE_COUNT << '\n';
             std::cout << newasm::header::col::reset;
             return;
