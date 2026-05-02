@@ -422,7 +422,7 @@ namespace newasm
         $
         if(newasm::DynLibNames.empty())
         {
-            std::cout << "newasm::DynLibNames.size() is 0!" << std::endl;
+            //std::cout << "newasm::DynLibNames.size() is 0!" << std::endl;
             return {true, ""};
         }
         for(int i = 0; i < newasm::DynLibNames.size(); ++i)

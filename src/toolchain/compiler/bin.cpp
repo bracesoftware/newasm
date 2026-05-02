@@ -370,8 +370,10 @@ namespace newasm
                 //dynlibs
                 unsigned int dynLibTableSize = dynlibs.size();
                 write_bin(out, dynLibTableSize);
+                //std::cout << "dynLibTableSize written is " << dynLibTableSize << std::endl;
                 for(auto& n : dynlibs)
                 {
+                    //std::cout << "dylibs written: `" << n << "`" << std::endl;
                     write_string(out, n);
                 }
                 return true;
@@ -497,9 +499,11 @@ namespace newasm
                 //dynlibs
                 unsigned int dynlibsize;
                 read_bin(in, dynlibsize);
-                jumptable.resize(dynlibsize);
+                //std::cout << "dynlibsize read: " << dynlibsize << std::endl;
+                dynlibs.resize(dynlibsize);
                 for(auto& l : dynlibs)
                 {
+                    //std::cout << "dynlibs read: `" << l << "`" << std::endl;
                     read_string(in, l);
                 }
                 return true;
