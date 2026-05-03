@@ -58,6 +58,7 @@ stock constexpr inline void _newasm_rem__24234() noexcept
 static_assert(sizeof(int) == 4);
 static_assert(sizeof(float) == 4);
 static_assert(sizeof(char) == 1);
+static_assert(sizeof(unsigned long long) == 8);
 
 static_assert(__newasm_MB_TO_B(__newasm_MEMORY_SIZE) % __newasm_CACHE_LINES == 0);
 #define __newasm_LINEBYTES (__newasm_MB_TO_B(__newasm_MEMORY_SIZE) / __newasm_CACHE_LINES)

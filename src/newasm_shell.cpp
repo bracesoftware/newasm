@@ -38,7 +38,8 @@ namespace newasm
             {"perf",        {"/",               "Show profiler statistics for the last app you ran."}},
             {"syscfg",      {"/",               "Open up the system configuration menu."}},
             {"cls",         {"/",               "Clear your screen."}},
-            {"list",        {"/",               "List files on the virtual disk."}}
+            {"list",        {"/",               "List files on the virtual disk."}},
+            {"usrcfg",      {"/",               "Manage your local user account."}}
         };
         
         inline void help_info()
@@ -116,6 +117,10 @@ namespace newasm
         {
             inline int process_c(std::string cmd)
             {
+                $defer
+                    using namespace newasm::user::impl;
+                    SaveSimpleConfig();
+                $
                 auto tokenize = [](std::string str) -> std::vector<std::string> {
                     std::vector<std::string> tokens;
                     std::string token;
@@ -272,8 +277,8 @@ namespace newasm
                         newasm::header::functions::nullprint(newasm::header::col::red + newasm::header::style::bold + "System Configuration\n" +
                             newasm::header::col::reset + newasm::header::col::gray + "  Navigate with `A` and `D` keys.\n");
                         int option = newasm::utils::inlineMenu({
-                            "Cancel",
-                            "Enable the standard library"
+                            "Cancel",//0
+                            "Enable the standard library",//1
                         });
                         if(option == 0)
                         {
@@ -284,6 +289,36 @@ namespace newasm
                         {
                             newasm::header::functions::info("Successfully enabled the standard library flag.\n\tUse `mount stdlib` to mount the library.");
                             newasm::header::settings::use_std = true;
+                            return 1;
+                        }
+                        return 1;
+                    }
+                    if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::usrcfg__))
+                    {
+                        _newasm_CHECKLOGIN;
+                        newasm::header::functions::nullprint(newasm::header::col::red + newasm::header::style::bold + "User Configuration\n" +
+                            newasm::header::col::reset + newasm::header::col::gray + "  Navigate with `A` and `D` keys.\n");
+                        int option = newasm::utils::inlineMenu({
+                            "Cancel",//0
+                            "Toggle automatic login"//1
+                        });
+                        
+                        if(option == 0)
+                        {
+                            newasm::header::functions::info("Operation cancelled successfully.");
+                            return 1;
+                        }
+                        if(option == 1)
+                        {
+                            using namespace newasm::user::cfg;
+                            if(SimpleConfig & AutomaticLogin)
+                            {
+                                newasm::header::functions::info("Successfully DISABLED the automatic login.");
+                                SimpleConfig &= ~AutomaticLogin;
+                                return 1;
+                            }
+                            SimpleConfig |= AutomaticLogin;
+                            newasm::header::functions::info("Successfully ENABLED the automatic login.");
                             return 1;
                         }
                         return 1;
