@@ -63,6 +63,8 @@ static_assert(sizeof(unsigned long long) == 8);
 static_assert(__newasm_MB_TO_B(__newasm_MEMORY_SIZE) % __newasm_CACHE_LINES == 0);
 #define __newasm_LINEBYTES (__newasm_MB_TO_B(__newasm_MEMORY_SIZE) / __newasm_CACHE_LINES)
 
+#define NEWASM_JMP__(idx) newasm::code_stream::jump=1;newasm::code_stream::jumpto=idx;
+
 // real bs
 namespace newasm
 {

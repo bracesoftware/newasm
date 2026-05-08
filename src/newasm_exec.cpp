@@ -2595,8 +2595,7 @@ namespace newasm
                     return 1;
                 }
 
-                newasm::code_stream::jump = 1;
-                newasm::code_stream::jumpto = lineInfo.jumpinTo;//newasm::mem::labels[suf];
+                NEWASM_JMP__(lineInfo.jumpinTo)
                 return 1;
             }
             //movx
@@ -4534,8 +4533,7 @@ namespace newasm
                     return 1;
                 }
 
-                newasm::code_stream::jump = 1;
-                newasm::code_stream::jumpto = lineInfo.jumpinTo;//newasm::mem::labels[suf];
+                NEWASM_JMP__(lineInfo.jumpinTo)
                 return 1;
             }
             //jne //jnz
@@ -4587,8 +4585,7 @@ namespace newasm
                     return 1;
                 }
 
-                newasm::code_stream::jump = 1;
-                newasm::code_stream::jumpto = lineInfo.jumpinTo;//newasm::mem::labels[suf];
+                NEWASM_JMP__(lineInfo.jumpinTo)
                 return 1;
             }
             //jl
@@ -4640,8 +4637,7 @@ namespace newasm
                     return 1;
                 }
 
-                newasm::code_stream::jump = 1;
-                newasm::code_stream::jumpto = lineInfo.jumpinTo;//newasm::mem::labels[suf];
+                NEWASM_JMP__(lineInfo.jumpinTo)
                 return 1;
             }
             //jg
@@ -4693,8 +4689,8 @@ namespace newasm
                     newasm::threads::memory.at(newasm::threads::now)->lcx = lineInfo.jumpinTo;//newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
                     return 1;
                 }
-                newasm::code_stream::jump = 1;
-                newasm::code_stream::jumpto = lineInfo.jumpinTo;//newasm::mem::labels[suf];
+                
+                NEWASM_JMP__(lineInfo.jumpinTo)
                 return 1;
             }
             //jle
@@ -4745,8 +4741,8 @@ namespace newasm
                     newasm::threads::memory.at(newasm::threads::now)->lcx = lineInfo.jumpinTo;//newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
                     return 1;
                 }
-                newasm::code_stream::jump = 1;
-                newasm::code_stream::jumpto = lineInfo.jumpinTo;//newasm::mem::labels[suf];
+                
+                NEWASM_JMP__(lineInfo.jumpinTo)
                 return 1;
             }
             //jge
@@ -4796,8 +4792,7 @@ namespace newasm
                     return 1;
                 }
 
-                newasm::code_stream::jump = 1;
-                newasm::code_stream::jumpto = lineInfo.jumpinTo;//newasm::mem::labels[suf];
+                NEWASM_JMP__(lineInfo.jumpinTo)
                 return 1;
             }
             //jmp
@@ -4844,9 +4839,7 @@ namespace newasm
                     return 1;
                 }
 
-                newasm::code_stream::jump = 1;
-                newasm::code_stream::jumpto = lineInfo.jumpinTo;//newasm::mem::labels[suf];
-                //std::cout << "JUMPED TO " << newasm::mem::labels[suf];
+                NEWASM_JMP__(lineInfo.jumpinTo)
                 return 1;
             }
             //callc
@@ -4874,8 +4867,7 @@ namespace newasm
                     return 1;
                 }
 
-                newasm::code_stream::jump = 1;
-                newasm::code_stream::jumpto = lineInfo.jumpinTo;
+                NEWASM_JMP__(lineInfo.jumpinTo)
                 NewASM::header::data::CallCStack->push_back(lineInfo.returninTo);
                 //std::cout << "CallCStack size = " << NewASM::header::data::CallCStack->size() << std::endl;
                 //std::cout << "CallCStack pushed = " << NewASM::header::data::CallCStack->back() << std::endl;
@@ -7750,8 +7742,7 @@ namespace newasm
 
                 int address = NewASM::header::data::CallCStack->back() + 1;
                 NewASM::header::data::CallCStack->pop_back();
-                newasm::code_stream::jump = 1;
-                newasm::code_stream::jumpto = address;
+                NEWASM_JMP__(address)
                 //std::cout << "CallCStack size = " << NewASM::header::data::CallCStack->size() << std::endl;
                 //std::cout << "CallCStack popped = " << address << std::endl;
                 return 1;
