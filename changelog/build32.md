@@ -47,6 +47,10 @@ catch ErrorLabel ; if there was an error, in code above, then jump to label
 ; rax is gonna contain error code that was supposed to crash the application
 ```
 
++ Optimized the following instructions:
+1. `heap`
+2. `db`
+
 ## Fixed issues
 
 + Fixed issue #36.

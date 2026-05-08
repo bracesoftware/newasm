@@ -2383,9 +2383,12 @@ jmp lmao
     syscall
 
     thread thisisfun -> {
+        mov tlr, "Thisisfun begins here"
+        call std::ios::writeln
         try
             fetch nil
             mov this, 0
+            nop
         catch errr
         {:lmaox}
         fetch std::ios::writeln
@@ -2447,14 +2450,17 @@ jmp lmao
             halt 0
         (end)
         fetch std::ios::writeln
+        db rax
         loop rax, shee
 
+        retf 0
+
         {:errr}
-            mov tlr, "err code is "
-            call std::ios::write
-            mov tlr, *rax
-            call std::ios::writeln
-            jmp lmaox
+        mov tlr, "err code is "
+        call std::ios::write
+        mov tlr, *rax
+        call std::ios::writeln
+        jmp lmaox
     }
     await &thisisfun
 :p
@@ -2469,13 +2475,14 @@ jmp lmao
         {:lmao}
         syscall
         loop imm, lmao
-        int 0x3
 
         try
             fetch nil
             mov this, 0
+            nop
         catch errr
         {:lmaox}
+        int 0x3
         halt 0
         {:errr}
         mov tlr, "err code is "
@@ -2488,6 +2495,8 @@ jmp lmao
         syscall
         jmp lmaox
     (end)
+
+    fetch std::ios::writeln
 
     mov tlr, 763
     call this

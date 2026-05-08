@@ -6918,27 +6918,44 @@ namespace newasm
             //heap
             case newasm::core::lang_inf::heap:
             {
-                if(newasm::header::functions::isnumeric(suf))
+                int heapaddr;
+                if(lineInfo.priArgType == newasm::datatypes::number)
                 {
-                    newasm::mem::regs::hea = newasm::mem::regs::hea + std::stoi(suf);
-                    if(newasm::mem::regs::hea > 10 * 1024 * 1024)
-                    {
-                        newasm::terminate(newasm::exit_codes::mem_overflow);//,wholeline);
-                        return 1;
-                    }
-                    if(newasm::mem::regs::hea < 0)
-                    {
-                        newasm::terminate(newasm::exit_codes::mem_underflow);//,wholeline);
-                        return 1;
-                    }
-                    if(newasm::mem::functions::check_stkhea_col())
-                    {
-                        newasm::terminate(newasm::exit_codes::stkhea_col);//,wholeline);
-                        return 1;
-                    }
+                    heapaddr = lineInfo.priInt;
+                }
+                else if(
+                    newasm::runtime::functions::eval<true>(suf, lineInfo.priEvalMode, &priArg);
+                    priArg.rawType == newasm::datatypes::number
+                )
+                {
+                    heapaddr = priArg.rawInt;
+                }
+                else if(newasm::header::functions::isnumeric(suf))
+                {
+                    heapaddr = std::stoi(suf);
+                }
+                else
+                {
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                     return 1;
                 }
-                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+
+                newasm::mem::regs::hea = newasm::mem::regs::hea + heapaddr;
+                if(newasm::mem::regs::hea > 10 * 1024 * 1024)
+                {
+                    newasm::terminate(newasm::exit_codes::mem_overflow);//,wholeline);
+                    return 1;
+                }
+                if(newasm::mem::regs::hea < 0)
+                {
+                    newasm::terminate(newasm::exit_codes::mem_underflow);//,wholeline);
+                    return 1;
+                }
+                if(newasm::mem::functions::check_stkhea_col())
+                {
+                    newasm::terminate(newasm::exit_codes::stkhea_col);//,wholeline);
+                    return 1;
+                }
                 return 1;
             }
             //db - debug
@@ -6951,94 +6968,116 @@ namespace newasm
                         str2 + 
                         "`"_str
                     );
+                    //newasm::progwin::api::flush();
                 };
-                if(suf == newasm::mem::regs::fdx.identifier())
+                switch(lineInfo.whatAreRegistersLol)
                 {
-                    debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::fdx));
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::bos.identifier())
-                {
-                    debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::bos));
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::tlr.identifier())
-                {
-                    debugRegister(suf, (newasm::mem::regs::tlr));
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::dlx.identifier())
-                {
-                    debugRegister(suf, (newasm::mem::regs::dlx));
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::tr0.identifier())
-                {
-                    debugRegister(suf, (newasm::mem::regs::tr0));
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::tr1.identifier())
-                {
-                    debugRegister(suf, (newasm::mem::regs::tr1));
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::stl.identifier())
-                {
-                    debugRegister(suf, (newasm::mem::regs::stl));
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::psx.identifier())
-                {
-                    debugRegister(suf, (newasm::mem::regs::psx));
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::stk.identifier())
-                {
-                    debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::stk));
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::hea.identifier())
-                {
-                    debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::hea));
-                    return 1;
-                }
-                #if 0
-                if(suf == newasm::mem::regs::prp.identifier())
-                {
-                    debugRegister(suf, (newasm::mem::regs::prp));
-                    return 1;
-                }
-                #endif
-                if(suf == newasm::mem::regs::cpt.identifier())
-                {
-                    debugRegister(suf, (newasm::mem::regs::cpt));
-                    return 1;
-                }
-                
-                if(suf == newasm::mem::regs::cpr.identifier())
-                {
-                    debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::cpr));
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::cr0.identifier())
-                {
-                    debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::cr0));
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::cr1.identifier())
-                {
-                    debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::cr1));
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::br0.identifier())
-                {
-                    debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::br0));
-                    return 1;
-                }
-                if(suf == newasm::mem::regs::br1.identifier())
-                {
-                    debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::br1));
-                    return 1;
+                    case newasm::mem::regs::fdx__://if(suf == newasm::mem::regs::fdx.identifier())
+                    {
+                        debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::fdx));
+                        return 1;
+                    }
+                    case newasm::mem::regs::bos__://if(suf == newasm::mem::regs::bos.identifier())
+                    {
+                        debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::bos));
+                        return 1;
+                    }
+                    case newasm::mem::regs::tlr__://if(suf == newasm::mem::regs::tlr.identifier())
+                    {
+                        debugRegister(suf, (newasm::mem::regs::tlr));
+                        return 1;
+                    }
+                    case newasm::mem::regs::dlx__://if(suf == newasm::mem::regs::dlx.identifier())
+                    {
+                        debugRegister(suf, (newasm::mem::regs::dlx));
+                        return 1;
+                    }
+                    case newasm::mem::regs::tr0__://if(suf == newasm::mem::regs::tr0.identifier())
+                    {
+                        debugRegister(suf, (newasm::mem::regs::tr0));
+                        return 1;
+                    }
+                    case newasm::mem::regs::tr1__://if(suf == newasm::mem::regs::tr1.identifier())
+                    {
+                        debugRegister(suf, (newasm::mem::regs::tr1));
+                        return 1;
+                    }
+                    case newasm::mem::regs::stl__://if(suf == newasm::mem::regs::stl.identifier())
+                    {
+                        debugRegister(suf, (newasm::mem::regs::stl));
+                        return 1;
+                    }
+                    case newasm::mem::regs::psx__://if(suf == newasm::mem::regs::psx.identifier())
+                    {
+                        debugRegister(suf, (newasm::mem::regs::psx));
+                        return 1;
+                    }
+                    case newasm::mem::regs::stk__://if(suf == newasm::mem::regs::stk.identifier())
+                    {
+                        debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::stk));
+                        return 1;
+                    }
+                    case newasm::mem::regs::hea__://if(suf == newasm::mem::regs::hea.identifier())
+                    {
+                        debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::hea));
+                        return 1;
+                    }
+                    case newasm::mem::regs::cpt__://if(suf == newasm::mem::regs::cpt.identifier())
+                    {
+                        debugRegister(suf, (newasm::mem::regs::cpt));
+                        return 1;
+                    }
+                    
+                    case newasm::mem::regs::cpr__://if(suf == newasm::mem::regs::cpr.identifier())
+                    {
+                        debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::cpr));
+                        return 1;
+                    }
+                    case newasm::mem::regs::cr0__://if(suf == newasm::mem::regs::cr0.identifier())
+                    {
+                        debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::cr0));
+                        return 1;
+                    }
+                    case newasm::mem::regs::cr1__://if(suf == newasm::mem::regs::cr1.identifier())
+                    {
+                        debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::cr1));
+                        return 1;
+                    }
+                    case newasm::mem::regs::br0__://if(suf == newasm::mem::regs::br0.identifier())
+                    {
+                        debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::br0));
+                        return 1;
+                    }
+                    case newasm::mem::regs::br1__://if(suf == newasm::mem::regs::br1.identifier())
+                    {
+                        debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::br1));
+                        return 1;
+                    }
+                    case newasm::mem::regs::rax__://if(suf == newasm::mem::regs::rax.identifier())
+                    {
+                        debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::rax));
+                        return 1;
+                    }
+                    case newasm::mem::regs::imm__://if(suf == newasm::mem::regs::imm.identifier())
+                    {
+                        debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::imm));
+                        return 1;
+                    }
+                    case newasm::mem::regs::rbx__://if(suf == newasm::mem::regs::rbx.identifier())
+                    {
+                        debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::rbx));
+                        return 1;
+                    }
+                    case newasm::mem::regs::cr2__:
+                    {
+                        debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::cr2));
+                        return 1;
+                    }
+                    case newasm::mem::regs::cr3__:
+                    {
+                        debugRegister(suf, newasm::_std::to_string(newasm::mem::regs::cr3));
+                        return 1;
+                    }
                 }
                 newasm::terminate(newasm::exit_codes::invalid_syntax);
                 return 1;
