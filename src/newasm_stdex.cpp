@@ -50,7 +50,10 @@ namespace newasm
                 i != newasm::stack::macros.end(); ++i
             )
             {
-                if(i->second != nullptr) delete i->second;
+                if(i->second != nullptr)
+                {
+                    delete i->second;
+                }
             }
             newasm::stack::macros.clear();
             return;
