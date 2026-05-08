@@ -50,6 +50,34 @@ namespace newasm
             newasm::__CRASH__();
             return 1;
         }
+
+        if(NewASM::header::data::TryBlock)
+        {
+            NewASM::header::data::TryBlock = false;
+            NewASM::header::data::TryCatched = true;
+            auto& IDX = NewASM::header::data::TryJump;
+            newasm::mem::regs::rax.set_value(exit_code);
+            if(newasm::header::data::proc_now)
+            {
+                NewASM::CurrentProcA->proc->idx = IDX;
+                return 1;
+            }
+            else if(newasm::LambdaDispatch::LambdaLine)
+            {
+                newasm::LambdaDispatch::ThreadSafePtr->idx = IDX;
+                return 1;
+            }
+
+            if(newasm::thread_line)
+            {
+                newasm::threads::memory.at(newasm::threads::now)->lcx = IDX;
+                return 1;
+            }
+
+            NEWASM_JMP__(IDX)
+            return 1;
+        }
+
         NewASM::perf::heavyHostServices.start();
         
         newasm::terminate_(exit_code, loc);
@@ -4842,6 +4870,39 @@ namespace newasm
                 NEWASM_JMP__(lineInfo.jumpinTo)
                 return 1;
             }
+            //catch
+            case newasm::core::lang_inf::catch__:
+            {
+                __newasm_CHECK_JUMP_PROPERLY
+
+                if(!newasm::header::data::TryCatched)
+                {
+                    newasm::header::data::TryBlock = false;
+                    return 1;
+                }
+
+                newasm::header::data::TryCatched = false;
+
+                if(newasm::header::data::proc_now)
+                {
+                    NewASM::CurrentProcA->proc->idx = lineInfo.jumpinTo;
+                    return 1;
+                }
+                else if(newasm::LambdaDispatch::LambdaLine)
+                {
+                    newasm::LambdaDispatch::ThreadSafePtr->idx = lineInfo.jumpinTo;
+                    return 1;
+                }
+
+                if(newasm::thread_line)
+                {
+                    newasm::threads::memory.at(newasm::threads::now)->lcx = lineInfo.jumpinTo;//newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
+                    return 1;
+                }
+
+                NEWASM_JMP__(lineInfo.jumpinTo)
+                return 1;
+            }
             //callc
             case newasm::core::lang_inf::callc:
             {
@@ -7624,6 +7685,18 @@ namespace newasm
                 newasm::terminate(newasm::exit_codes::invalid_ins);
                 return 1;
             }
+            //try
+            case newasm::core::lang_inf::try__:
+            {
+                if(newasm::header::data::repl)
+                {
+                    newasm::unsins(ins);
+                    return 1;
+                }
+                newasm::header::data::TryBlock = true;
+                newasm::header::data::TryJump = lineInfo.jumpinTo;
+                return 1;
+            }
             //exit
             case newasm::core::lang_inf::exit:
             {
@@ -9767,6 +9840,52 @@ namespace newasm
 
             AOTCompileBytecode(newasm::compiler::compiledCode);
             AOTCompileBytecode(newasm::compiler::caseJumpTable);
+
+            //4th compiler pass for try-catch blocks
+            int TryFound = -1;
+            //int CatchFound = -1;
+            for(int i = 0; i < newasm::compiler::compiledCode.size(); ++i)
+            {
+                newasm::compiler::data::lnidx = i;
+                auto& bytecode = newasm::compiler::compiledCode.at(i);
+                newasm::compiler::data::line = bytecode.raw;
+                
+                //we check if try and catch blocks align
+                if(
+                    bytecode.type == newasm::compiler::labelJumpPoint or
+                    bytecode.type == newasm::compiler::sectionModifier or
+                    bytecode.whatAmIDoing == newasm::core::lang_inf::proc or
+                    bytecode.whatAmIDoing == newasm::core::lang_inf::thread__
+                )
+                {
+                    if(TryFound != -1)
+                    {
+                        newasm::compiler::abort(newasm::compiler::fail::unmatched_syntax);
+                        break;
+                    }
+                }
+                if(bytecode.whatAmIDoing == newasm::core::lang_inf::try__)
+                {
+                    if(TryFound != -1)
+                    {
+                        newasm::compiler::abort(newasm::compiler::fail::redundant_try);
+                        break;
+                    }
+                    TryFound = i;
+                    continue;
+                }
+                if(bytecode.whatAmIDoing == newasm::core::lang_inf::catch__)
+                {
+                    if(TryFound == -1)
+                    {
+                        newasm::compiler::abort(newasm::compiler::fail::redundant_catch);
+                        break;
+                    }
+                    newasm::compiler::compiledCode.at(TryFound).jumpinTo = i;
+                    TryFound = -1;
+                    continue;
+                }
+            }
 
             __newasmDBG_COMPLEX({
                 std::cout << "2: LINE DATA SIZE -> " << newasm::forLinker::lineData.size() << std::endl;

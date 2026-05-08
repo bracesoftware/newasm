@@ -142,7 +142,10 @@ namespace newasm
             const int callc = 77;//
             const int retc = 78;//
             const int fetch__ = 79;//
-            const int resb__ = 80;
+            const int resb__ = 80;//
+
+            const int try__ = 81;//
+            const int catch__ = 82;//
 
             /// @brief //////
             const int Link___ = 99;
@@ -249,6 +252,9 @@ namespace newasm
                 {retc, "retc"},
                 {fetch__, "fetch"},
                 {resb__, "resb"},
+
+                {try__, "try"},
+                {catch__, "catch"},
 
                 {__say, "__say"}
             };
@@ -461,7 +467,8 @@ namespace newasm
                     line.whatAmIDoing == newasm::core::lang_inf::jle or
                     line.whatAmIDoing == newasm::core::lang_inf::jg or
                     line.whatAmIDoing == newasm::core::lang_inf::jge or
-                    line.whatAmIDoing == newasm::core::lang_inf::callc
+                    line.whatAmIDoing == newasm::core::lang_inf::callc or
+                    line.whatAmIDoing == newasm::core::lang_inf::catch__
                 )
                 {
                     return true;

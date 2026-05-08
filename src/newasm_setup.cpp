@@ -565,6 +565,49 @@ namespace newasm
                     }
                 }
 
+                int TryFound = -1;
+                for(int i = 0; i < this->contents.size(); ++i)
+                {
+                    auto& bytecode = this->contents.at(i);
+                    if(bytecode.type == newasm::compiler::sealedLabel)
+                    {
+                        if(TryFound != -1)
+                        {
+                            newasm::terminate(newasm::exit_codes::jit_fail);
+                            break;
+                        }
+                    }
+                    if(
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::proc or
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::thread__
+                    )
+                    {
+                        newasm::terminate(newasm::exit_codes::jit_fail);
+                        break;
+                    }
+                    if(bytecode.whatAmIDoing == newasm::core::lang_inf::try__)
+                    {
+                        if(TryFound != -1)
+                        {
+                            newasm::terminate(newasm::exit_codes::jit_fail);
+                            break;
+                        }
+                        TryFound = i;
+                        continue;
+                    }
+                    if(bytecode.whatAmIDoing == newasm::core::lang_inf::catch__)
+                    {
+                        if(TryFound == -1)
+                        {
+                            newasm::terminate(newasm::exit_codes::jit_fail);
+                            break;
+                        }
+                        this->contents.at(TryFound).jumpinTo = i;
+                        TryFound = -1;
+                        continue;
+                    }
+                }
+
                 //std::cout << "JIT compiler successfully compiled " << this->labels.size() << " labels in proc " << this->original_name <<  "." << std::endl;
                 return;
             }

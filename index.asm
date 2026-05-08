@@ -2383,6 +2383,11 @@ jmp lmao
     syscall
 
     thread thisisfun -> {
+        try
+            fetch nil
+            mov this, 0
+        catch errr
+        {:lmaox}
         fetch std::ios::writeln
         resb 4
         push 535
@@ -2438,9 +2443,18 @@ jmp lmao
             {:label2}
             jmp label1
             {:label3}
+            
             halt 0
         (end)
+        fetch std::ios::writeln
         loop rax, shee
+
+        {:errr}
+            mov tlr, "err code is "
+            call std::ios::write
+            mov tlr, *rax
+            call std::ios::writeln
+            jmp lmaox
     }
     await &thisisfun
 :p
@@ -2456,7 +2470,23 @@ jmp lmao
         syscall
         loop imm, lmao
         int 0x3
+
+        try
+            fetch nil
+            mov this, 0
+        catch errr
+        {:lmaox}
         halt 0
+        {:errr}
+        mov tlr, "err code is "
+        sysenter "ios"
+        mov fdx, 1
+        syscall
+        mov tlr, *rax
+        syscall
+        mov tlr, "\n"
+        syscall
+        jmp lmaox
     (end)
 
     mov tlr, 763
@@ -2687,11 +2717,23 @@ jmp e2349083l
     mov tlr, ramdagadam
     
     call std::ios::writeln
+    
+    try
+        fetch nil
+        mov this, 3
+        nop
+    catch kids
+:lmaoooo    
     zero rax
     mov rax, 223 ; exit code
     ret *rax ; returns from the whole program to the host OS or newasm shell
 ; -------------------------- FUNCTIONS -------------------------- ;
-
+:kids
+    mov tlr, "Error properly catched and handled, exit code: "
+    call std::ios::write
+    mov tlr, *rax
+    call std::ios::writeln
+    jmp lmaoooo
 @mangle ; tell the compiler to do compile-time mangling of the label
 ./std ; these namespace delcarations don't exist in the binary because they're under @mangle
 ./345345

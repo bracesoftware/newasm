@@ -60,6 +60,8 @@ namespace newasm
             constinit const int unexpected_term = 12;
             constinit const int linker_err = 13;
             constinit const int already_linked = 14;
+            constinit const int redundant_try = 15;
+            constinit const int redundant_catch = 16;
 
             const std::unordered_map<int, std::string> id = {
                 {unmatched_syntax, "UnmatchedSyntax"},
@@ -75,7 +77,9 @@ namespace newasm
                 {label_redef, "LabelAlreadyExists"},
                 {unexpected_term, "UnexpectedMacroTerminator"},
                 {linker_err, "LinkerError"},
-                {already_linked, "LibraryAlreadyLinked"}
+                {already_linked, "LibraryAlreadyLinked"},
+                {redundant_try, "RedundantTry"},
+                {redundant_catch, "RedundantCatch"}
             };
         }
 

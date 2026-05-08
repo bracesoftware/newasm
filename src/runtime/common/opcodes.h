@@ -90,6 +90,8 @@ namespace newasm
             {78, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::await__)},
             {79, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::fetch__)},
             {80, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::resb__)},
+            {81, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::catch__)},
+            {82, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::try__)},
 
             {99, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::__say)}
         };

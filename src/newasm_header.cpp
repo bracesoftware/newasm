@@ -102,6 +102,9 @@ namespace newasm::header
         #endif
 
         NewASM::kernel::thread_safe<std::vector<int>> CallCStack;
+        NewASM::kernel::thread_safe<bool> TryBlock;
+        NewASM::kernel::thread_safe<int> TryJump;
+        NewASM::kernel::thread_safe<bool> TryCatched;
     }
     namespace constants
     {

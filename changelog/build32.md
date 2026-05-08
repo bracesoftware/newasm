@@ -36,6 +36,17 @@ You can also use the `stack` instruction, the JIT compiler replaces standard `pu
 
 You can still have access to the global stack from within the child procedures and encapsulated lambda procedures.
 
++ Added instructions for error handling, `try` and `catch`.
+
+```asm
+try
+nop ; some code
+catch ErrorLabel ; if there was an error, in code above, then jump to label
+:ErrorLabel
+; code that exits the app normally
+; rax is gonna contain error code that was supposed to crash the application
+```
+
 ## Fixed issues
 
 + Fixed issue #36.
