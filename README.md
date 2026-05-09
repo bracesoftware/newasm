@@ -163,6 +163,7 @@ NewASM features many instructions, around 70 of them. Here is a list:
 10. [I/O port-related instructions](docs/instructions/ioports.md)
 11. [Calculated calls and returns](docs/instructions/calc.md)
 12. [Instructions for address fetching](docs/instructions/fetch.md)
+13. [Error-handling instructions](docs/instructions/err.md)
 
 ***
 #### Language concepts

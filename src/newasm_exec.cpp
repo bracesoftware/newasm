@@ -51,41 +51,62 @@ namespace newasm
             return 1;
         }
 
+        NewASM::perf::heavyHostServices.start();
+        $defer
+            NewASM::perf::heavyHostServices.stop();
+        $
+
+        NewASM::variables::procedureData* p = nullptr;
+        if(newasm::header::data::proc_now) p = NewASM::CurrentProcA->proc;
+        if(newasm::LambdaDispatch::LambdaLine) p = &(*newasm::LambdaDispatch::ThreadSafePtr);
+        if(p)
+        {
+            if(p->TryBlock)
+            {
+                p->TryBlock = false;
+                p->TryCatched = true;
+                p->idx = p->TryJump - 1;
+                newasm::mem::regs::rax.set_value(exit_code);
+                NewASM::RemoveExceptionComment();
+                return 1;
+            }
+        }
+
+        if(newasm::thread_line)
+        {
+            auto& mmap = newasm::threads::memory.at(newasm::threads::now);
+            if(mmap->TryBlock)
+            {
+                //std::cout << "Error catched in thread -> " << exit_code << std::endl;
+                mmap->TryBlock = false;
+                mmap->TryCatched = true;
+                mmap->lcx = mmap->TryJump - 1;
+                //std::cout << "Type -> " << mmap->contents.at(mmap->TryJump).whatAmIDoing << std::endl;
+                newasm::mem::regs::rax.set_value(exit_code);
+
+                if(p) p->forceShutdown();
+                NewASM::RemoveExceptionComment();
+                return 1;
+            }
+        }
+
         if(NewASM::header::data::TryBlock)
         {
             NewASM::header::data::TryBlock = false;
             NewASM::header::data::TryCatched = true;
-            auto& IDX = NewASM::header::data::TryJump;
+            NEWASM_JMP__(newasm::header::data::TryJump)
             newasm::mem::regs::rax.set_value(exit_code);
-            if(newasm::header::data::proc_now)
-            {
-                NewASM::CurrentProcA->proc->idx = IDX;
-                return 1;
-            }
-            else if(newasm::LambdaDispatch::LambdaLine)
-            {
-                newasm::LambdaDispatch::ThreadSafePtr->idx = IDX;
-                return 1;
-            }
 
-            if(newasm::thread_line)
-            {
-                newasm::threads::memory.at(newasm::threads::now)->lcx = IDX;
-                return 1;
-            }
-
-            NEWASM_JMP__(IDX)
+            if(p) p->forceShutdown();
+            NewASM::RemoveExceptionComment();
             return 1;
         }
 
-        NewASM::perf::heavyHostServices.start();
-        
         newasm::terminate_(exit_code, loc);
         if constexpr(0) if(newasm::header::functions::trim(NewASM::ExceptionHandling::Line->raw) == std::string("syscall"))
         {
             newasm::header::functions::krnl("Kernel crashed.");
         }
-        NewASM::perf::heavyHostServices.stop();
         return 1;
     }
     inline int terminate(const std::string& exit_code, const std::source_location loc = std::source_location::current())
@@ -4873,34 +4894,48 @@ namespace newasm
             //catch
             case newasm::core::lang_inf::catch__:
             {
-                __newasm_CHECK_JUMP_PROPERLY
-
-                if(!newasm::header::data::TryCatched)
+                NewASM::variables::procedureData* p = nullptr;
+                if(newasm::header::data::proc_now) p = NewASM::CurrentProcA->proc;
+                if(newasm::LambdaDispatch::LambdaLine) p = &(*newasm::LambdaDispatch::ThreadSafePtr);
+                if(p)
                 {
-                    newasm::header::data::TryBlock = false;
-                    return 1;
-                }
-
-                newasm::header::data::TryCatched = false;
-
-                if(newasm::header::data::proc_now)
-                {
-                    NewASM::CurrentProcA->proc->idx = lineInfo.jumpinTo;
-                    return 1;
-                }
-                else if(newasm::LambdaDispatch::LambdaLine)
-                {
-                    newasm::LambdaDispatch::ThreadSafePtr->idx = lineInfo.jumpinTo;
+                    if(!p->TryCatched)
+                    {
+                        p->TryBlock = false;
+                        return 1;
+                    }
+                    p->TryCatched = false;
+                    if(lineInfo.priArgType != newasm::datatypes::NIL)
+                    {
+                        p->idx = lineInfo.jumpinTo;
+                    }
                     return 1;
                 }
 
                 if(newasm::thread_line)
                 {
-                    newasm::threads::memory.at(newasm::threads::now)->lcx = lineInfo.jumpinTo;//newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
+                    auto& mmap = newasm::threads::memory.at(newasm::threads::now);
+                    if(!mmap->TryCatched)
+                    {
+                        mmap->TryBlock = false;
+                        return 1;
+                    }
+                    mmap->TryCatched = false;
+                    mmap->lcx = lineInfo.jumpinTo;
+                    //std::cout << "thread::catch__ IDX -> " << lineInfo.jumpinTo << std::endl;
                     return 1;
                 }
 
+                using namespace NewASM::header::data;
+                if(!TryCatched)
+                {
+                    TryBlock = false;
+                    return 1;
+                }
+
+                TryCatched = false;
                 NEWASM_JMP__(lineInfo.jumpinTo)
+                //std::cout << "::catch__ IDX -> " << lineInfo.jumpinTo << std::endl;
                 return 1;
             }
             //callc
@@ -6821,23 +6856,6 @@ namespace newasm
             //free
             case newasm::core::lang_inf::free__:
             {
-                #if 0
-                if(newasm::allocation_data == nullptr) // malloc nije upotrebljen // NoAlloc
-                {
-                    newasm::terminate(newasm::exit_codes::malloc_err);
-                    return 1;
-                }
-                newasm::mem::regs::hea -= newasm::allocation_data->size;
-                if(newasm::mem::regs::hea != newasm::allocation_data->heapsize_new - newasm::allocation_data->size) //neko je manualno dirao heap prije free
-                {
-                    newasm::terminate(newasm::exit_codes::manual_heap);
-                    return 1;
-                }
-                newasm::mem::regs::hea = newasm::mem::regs::hea;
-                delete newasm::allocation_data;
-                newasm::allocation_data = nullptr;
-                #endif
-
                 if(lineInfo.priArgType == NewASM::datatypes::NIL)
                 {
                     if(newasm::malloc::meta.size() == 0)
@@ -6853,18 +6871,30 @@ namespace newasm
                     return 1;
                 }
 
-                newasm::runtime::functions::parse(suf);
-
-                if(!newasm::header::functions::isnumeric(suf) && suf != NIL_STR)
+                int heapaddr;
+                if(lineInfo.priArgType == newasm::datatypes::number)
+                {
+                    heapaddr = lineInfo.priInt;
+                }
+                else if(
+                    newasm::runtime::functions::eval<true>(suf, lineInfo.priEvalMode, &priArg);
+                    priArg.rawType == newasm::datatypes::number
+                )
+                {
+                    heapaddr = priArg.rawInt;
+                }
+                else if(newasm::header::functions::isnumeric(suf))
+                {
+                    heapaddr = std::stoi(suf);
+                }
+                else
                 {
                     newasm::terminate(newasm::exit_codes::invalid_alloc);
                     return 1;
                 }
 
-                int addr = std::stoi(suf);
-
                 auto& v = newasm::malloc::meta;
-                auto element = std::find(v.begin(), v.end(), addr);
+                auto element = std::find(v.begin(), v.end(), heapaddr);
                 if(element == v.end())
                 {
                     newasm::terminate(newasm::exit_codes::invalid_alloc);
@@ -7719,23 +7749,6 @@ namespace newasm
 
         switch(lineInfo.whatAmIDoing)//switch(it->second)
         {
-            case INVALID_INS:
-            {
-                newasm::terminate(newasm::exit_codes::invalid_ins);
-                return 1;
-            }
-            //try
-            case newasm::core::lang_inf::try__:
-            {
-                if(newasm::header::data::repl)
-                {
-                    newasm::unsins(ins);
-                    return 1;
-                }
-                newasm::header::data::TryBlock = true;
-                newasm::header::data::TryJump = lineInfo.jumpinTo;
-                return 1;
-            }
             //exit
             case newasm::core::lang_inf::exit:
             {
@@ -7796,6 +7809,45 @@ namespace newasm
         }
         switch(lineInfo.whatAmIDoing)//switch(it->second)
         {
+            case INVALID_INS:
+            {
+                newasm::terminate(newasm::exit_codes::invalid_ins);
+                return 1;
+            }
+            //try
+            case newasm::core::lang_inf::try__:
+            {
+                if(newasm::header::data::repl)
+                {
+                    newasm::unsins(ins);
+                    return 1;
+                }
+
+                if(newasm::header::data::proc_now)
+                {
+                    NewASM::CurrentProcA->proc->TryBlock = true;
+                    NewASM::CurrentProcA->proc->TryJump = lineInfo.jumpinTo;
+                    return 1;
+                }
+                else if(newasm::LambdaDispatch::LambdaLine)
+                {
+                    newasm::LambdaDispatch::ThreadSafePtr->TryBlock = true;
+                    newasm::LambdaDispatch::ThreadSafePtr->TryJump = lineInfo.jumpinTo;
+                    return 1;
+                }
+
+                if(newasm::thread_line)
+                {
+                    auto& mmap = newasm::threads::memory.at(newasm::threads::now);
+                    mmap->TryBlock = true;
+                    mmap->TryJump = lineInfo.jumpinTo;
+                    return 1;
+                }
+
+                newasm::header::data::TryBlock = true;
+                newasm::header::data::TryJump = lineInfo.jumpinTo;
+                return 1;
+            }
             //nop
             case newasm::core::lang_inf::nop:
             {
@@ -8814,19 +8866,20 @@ namespace newasm
                         std::cout << "|                                     |" << std::endl;
                     }
                 }
+                auto& p = newasm::LambdaDispatch::ThreadSafePtr;
                 if(
                     newasm::LambdaDispatch::LambdaHalt or
-                    newasm::LambdaDispatch::ThreadSafePtr->contents.empty()
+                    p->contents.empty()
                 )
                 {
                     newasm::terminate(newasm::exit_codes::unexpected_end); // if the lambda func was empty
                     return 1;
                 }
-                newasm::LambdaDispatch::ThreadSafePtr->JIT_compile();
+                p->JIT_compile();
                 newasm::LambdaDispatch::LambdaNow = false;
 
                 newasm::LambdaDispatch::LambdaLine = true;
-                newasm::LambdaDispatch::ThreadSafePtr->idx = 0;
+                p->idx = 0;
                 while(true)
                 {
                     if(newasm::LambdaDispatch::LambdaHalt)
@@ -8834,16 +8887,16 @@ namespace newasm
                         break;
                     }
                     else if(
-                        newasm::LambdaDispatch::ThreadSafePtr->idx >= newasm::LambdaDispatch::ThreadSafePtr->contents.size() or
-                        newasm::LambdaDispatch::ThreadSafePtr->idx < 0
+                        p->idx >= p->contents.size() or
+                        p->idx < 0
                     )
                     {
                         break;
                     }
-                    auto& lll = newasm::LambdaDispatch::ThreadSafePtr->contents.at(newasm::LambdaDispatch::ThreadSafePtr->idx);
+                    auto& lll = p->contents.at(p->idx);
                     newasm::header::data::LastLine = &lll;
                     newasm::procline(lll);
-                    newasm::LambdaDispatch::ThreadSafePtr->idx++;
+                    p->idx++;
                 }
                 newasm::LambdaDispatch::LambdaLine = false;
                 if(!newasm::LambdaDispatch::LambdaHalt)
@@ -9814,6 +9867,13 @@ namespace newasm
                     }
                     if(newasm::compiler::utils::IsJumpIns(bytecode))
                     {
+                        if(bytecode.whatAmIDoing == newasm::core::lang_inf::catch__)
+                        {
+                            if(bytecode.priArgType == newasm::datatypes::NIL)
+                            {
+                                continue;
+                            }
+                        }
                         if(bytecode.tokens.size() != 2)
                         {
                             continue;

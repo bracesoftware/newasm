@@ -482,12 +482,21 @@ namespace newasm
             std::string original_name;
             bool mangled = false;
 
+            bool TryBlock = false;
+            int TryJump = -1;
+            bool TryCatched = false;
+
             public explicit inline procedureData() noexcept {}
             inline ~procedureData() noexcept {}
 
-            inline void sysResetLambda()
+            inline void sysResetLambda() noexcept
             {
                 this->prepared = false;
+            }
+
+            inline void forceShutdown() noexcept
+            {
+                this->idx = this->contents.size() + 1;
             }
 
             public inline void JIT_compile()
@@ -528,6 +537,13 @@ namespace newasm
                     auto& bytecode = this->contents.at(i);
                     if(newasm::compiler::utils::IsJumpIns(bytecode))
                     {
+                        if(bytecode.whatAmIDoing == newasm::core::lang_inf::catch__)
+                        {
+                            if(bytecode.priArgType == newasm::datatypes::NIL)
+                            {
+                                continue;
+                            }
+                        }
                         if(bytecode.tokens.size() != 2)
                         {
                             continue;

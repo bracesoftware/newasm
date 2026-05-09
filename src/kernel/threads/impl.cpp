@@ -26,6 +26,10 @@ namespace newasm
             std::unordered_map<std::string, int> labels;
             unsigned int id = 0;
 
+            bool TryBlock = false;
+            int TryJump = -1;
+            bool TryCatched = false;
+
             int lcx = 0;
 
             explicit inline object__()
@@ -116,6 +120,13 @@ namespace newasm
                     if(FLAG1) continue;
                     if(newasm::compiler::utils::IsJumpIns(bytecode))
                     {
+                        if(bytecode.whatAmIDoing == newasm::core::lang_inf::catch__)
+                        {
+                            if(bytecode.priArgType == newasm::datatypes::NIL)
+                            {
+                                continue;
+                            }
+                        }
                         if(bytecode.tokens.size() != 2)
                         {
                             continue;

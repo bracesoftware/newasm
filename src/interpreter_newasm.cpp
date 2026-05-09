@@ -135,6 +135,12 @@ namespace newasm
         return;
     }
 
+    inline void RemoveExceptionComment() noexcept
+    {
+        newasm::header::data::ExceptionComment = false;
+        return;
+    }
+
     inline auto GetExceptionComment() noexcept
     {
         return newasm::__EXCCOMMENT;

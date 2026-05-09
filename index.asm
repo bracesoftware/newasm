@@ -2490,8 +2490,10 @@ jmp lmao
         mov fdx, 1
         syscall
         mov tlr, *rax
+        mov fdx, 2
         syscall
         mov tlr, "\n"
+        mov fdx, 1
         syscall
         jmp lmaox
     (end)
@@ -2510,6 +2512,8 @@ jmp lmao
     sysenter "thread"
     mov fdx, 1
     syscall
+    try
+    catch yay
     jmp yay
     g
     :yay
@@ -2718,7 +2722,6 @@ jmp e2349083l
     ;movaddr this, -1
 
     using "cfg"
-; -------------------------- END OF PROGRAM -------------------------- ;
     mov tlr, *rax
     push ramdagadam
     mov &ramdagadam, 23
@@ -2726,6 +2729,23 @@ jmp e2349083l
     mov tlr, ramdagadam
     
     call std::ios::writeln
+
+    proc ProcWithError
+        try
+            pddsfdssd ; purposefully try to use a non-existing dyn lib
+        catch nil ; just continue
+        mov tlr, "hi from ProcWithError"
+        sysenter "ios"
+        mov fdx, 1
+        syscall
+        halt 0
+    end
+
+    try
+        call ProcWithError
+    catch kids
+
+; -------------------------- END OF PROGRAM -------------------------- ;
     
     try
         fetch nil

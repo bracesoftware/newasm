@@ -1069,6 +1069,7 @@ namespace newasm
                         if(
                             (lineCompiled.whatAmIDoing == NewASM::core::lang_inf::free__) or
                             (lineCompiled.whatAmIDoing == NewASM::core::lang_inf::fetch__) or
+                            (lineCompiled.whatAmIDoing == NewASM::core::lang_inf::catch__) or
                             (lineCompiled.whatAmIDoing == NewASM::core::lang_inf::pop) or
                             (lineCompiled.whatAmIDoing == newasm::core::lang_inf::resb__)
                         )
@@ -1251,6 +1252,19 @@ namespace newasm
                     OptDescription("peephole optimization, removed redundant double code");
                     line.type = newasm::compiler::empty;
                 }
+                return;
+            }
+            //------------------------------------------- empty try-catch block -------------------------------------------
+            if(
+                line.whatAmIDoing == newasm::core::lang_inf::catch__ and
+                lastLine.whatAmIDoing == newasm::core::lang_inf::try__
+            )
+            {
+                OptDescription("removed redundant try-catch block", &lastLine, newasm::OptimizerData::LastLineIdx);
+                OptDescription("^");
+
+                lastLine.type = newasm::compiler::empty;
+                line.type = newasm::compiler::empty;
                 return;
             }
             //------------------------------------------- redundant refetch -------------------------------------------
