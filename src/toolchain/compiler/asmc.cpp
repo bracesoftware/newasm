@@ -40,6 +40,7 @@ namespace newasm
             constinit bool CompileTimeMangle = false;
 
             unsigned int ErrorCount = 0;
+            unsigned int OptimizationCount = 0;
 
             constinit bool IfResult = true;
         }
@@ -1251,8 +1252,8 @@ namespace newasm
                 {
                     OptDescription("peephole optimization, removed redundant double code");
                     line.type = newasm::compiler::empty;
+                    return;
                 }
-                return;
             }
             //------------------------------------------- empty try-catch block -------------------------------------------
             if(
@@ -1267,25 +1268,46 @@ namespace newasm
                 line.type = newasm::compiler::empty;
                 return;
             }
-            //------------------------------------------- redundant refetch -------------------------------------------
-            if(
-                line.whatAmIDoing == newasm::core::lang_inf::fetch__ and
-                lastLine.whatAmIDoing == newasm::core::lang_inf::fetch__
-            )
+            //------------------------------------------- redundant operations -------------------------------------------
+            if(line.whatAmIDoing == lastLine.whatAmIDoing)
             {
-                OptDescription("peephole optimization, removed redundant refetch", &lastLine, newasm::OptimizerData::LastLineIdx);
-                lastLine.type = newasm::compiler::empty;
-                return;
-            }
-            //------------------------------------------- redundant stack memory dedication -------------------------------------------
-            if(
-                line.whatAmIDoing == newasm::core::lang_inf::resb__ and
-                lastLine.whatAmIDoing == newasm::core::lang_inf::resb__
-            )
-            {
-                OptDescription("peephole optimization, removed redundant stack memory dedication", &lastLine, newasm::OptimizerData::LastLineIdx);
-                lastLine.type = newasm::compiler::empty;
-                return;
+                auto ins = line.whatAmIDoing;
+                if(ins == newasm::core::lang_inf::fetch__) // redundant refetch
+                {
+                    OptDescription(
+                        "peephole optimization, removed redundant refetch",
+                        &lastLine, newasm::OptimizerData::LastLineIdx
+                    );
+                    lastLine.type = newasm::compiler::empty;
+                    return;
+                }
+                if(ins == newasm::core::lang_inf::resb__) // redundant stack memory dedication
+                {
+                    OptDescription(
+                        "peephole optimization, removed redundant stack memory dedication",
+                        &lastLine, newasm::OptimizerData::LastLineIdx
+                    );
+                    lastLine.type = newasm::compiler::empty;
+                    return;
+                }
+                if(ins == newasm::core::lang_inf::sysenter)
+                {
+                    OptDescription(
+                        "peephole optimization, removed redundant kernel module entrance",
+                        &lastLine, newasm::OptimizerData::LastLineIdx
+                    );
+                    lastLine.type = newasm::compiler::empty;
+                    return;
+                }
+                if(ins == newasm::core::lang_inf::align)
+                {
+                    OptDescription(
+                        "peephole optimization, removed redundant memory alignment",
+                        &lastLine, newasm::OptimizerData::LastLineIdx
+                    );
+                    lastLine.type = newasm::compiler::empty;
+                    return;
+                }
             }
             //------------------------------------------- assigning register value to itself -------------------------------------------
             if(line.whatAmIDoing == newasm::core::lang_inf::mov)
@@ -1337,7 +1359,6 @@ namespace newasm
                     lastLine.type = newasm::compiler::empty;
                     return;
                 }
-                return;
             }
             //------------------------------------------- code section reassignments -------------------------------------------
             if(line.type == newasm::compiler::sectionModifier and !newasm::OptimizerData::JmpUsed)
@@ -1352,9 +1373,10 @@ namespace newasm
                 return;
             }
             if(
-                line.whatCodeSection == lastLine.whatCodeSection and
-                ((line.whatCodeSection == newasm::code_stream::sections::data) or
-                (line.whatCodeSection == newasm::code_stream::sections::start))
+                line.whatCodeSection == lastLine.whatCodeSection and (
+                    (line.whatCodeSection == newasm::code_stream::sections::data) or
+                    (line.whatCodeSection == newasm::code_stream::sections::start)
+                )
             )
             {
                 OptDescription("removed redundant code section reset");
@@ -1444,6 +1466,7 @@ namespace newasm
                     std::cout << newasm::header::col::gray;
                     std::cout << ": " << text << ": " << newasm::header::col::magenta << L->raw;
                     std::cout << '\n' << newasm::header::col::reset;
+                    ++NewASM::compiler::data::OptimizationCount;
                 }
                 return;
             };

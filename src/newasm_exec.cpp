@@ -10014,14 +10014,20 @@ namespace newasm
                 std::cout << "Line data back -> " << newasm::forLinker::lineData.back().first << ", " << newasm::forLinker::lineData.back().second << std::endl;
                 std::cout << "Compiled code back -> " << newasm::compiler::compiledCode.back().raw << std::endl;
             });
+
+            static const std::string newasm_LOCAL_ALIGNMENT__ = "  "_str;
+            std::cout << newasm_LOCAL_ALIGNMENT__ << newasm::header::col::magenta;
+            std::cout << "\t" << NewASM::compiler::data::OptimizationCount << " optimization(s).\n";
+            std::cout << newasm::header::col::reset;
+
             if(!newasm::compiler::data::aborted)
             {
-                std::cout << "  " << newasm::header::col::gray << "\tProject successfully compiled. Running...\n\n";
+                std::cout << newasm_LOCAL_ALIGNMENT__ << newasm::header::col::gray << "\tProject successfully compiled. Running...\n\n";
             }
             if(newasm::compiler::data::aborted)
             {
-                std::cout << "  " << newasm::header::col::red << "\t" << NewASM::compiler::data::ErrorCount << " error(s).\n";
-                std::cout << "  " << newasm::header::col::red << "\tCompilation aborted.\n\n";
+                std::cout << newasm_LOCAL_ALIGNMENT__ << newasm::header::col::red << "\t" << NewASM::compiler::data::ErrorCount << " error(s).\n";
+                std::cout << newasm_LOCAL_ALIGNMENT__ << newasm::header::col::red << "\tCompilation aborted.\n\n";
             }
             std::cout << newasm::header::col::reset;
             if(newasm::compiler::data::aborted)

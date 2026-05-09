@@ -7,7 +7,7 @@ fi
     string PrintThisLaterLol: "Test string"
     intg len2 : $ - PrintThisLaterLol
 .start
-
+    align 4
     align 3
     int 0x4
     ;cls
