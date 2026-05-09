@@ -58,7 +58,7 @@ namespace newasm
 
         NewASM::variables::procedureData* p = nullptr;
         if(newasm::header::data::proc_now) p = NewASM::CurrentProcA->proc;
-        if(newasm::LambdaDispatch::LambdaLine) p = &(*newasm::LambdaDispatch::ThreadSafePtr);
+        else if(newasm::LambdaDispatch::LambdaLine) p = &(*newasm::LambdaDispatch::ThreadSafePtr);
         if(p)
         {
             if(p->TryBlock)
@@ -4896,7 +4896,7 @@ namespace newasm
             {
                 NewASM::variables::procedureData* p = nullptr;
                 if(newasm::header::data::proc_now) p = NewASM::CurrentProcA->proc;
-                if(newasm::LambdaDispatch::LambdaLine) p = &(*newasm::LambdaDispatch::ThreadSafePtr);
+                else if(newasm::LambdaDispatch::LambdaLine) p = &(*newasm::LambdaDispatch::ThreadSafePtr);
                 if(p)
                 {
                     if(!p->TryCatched)
@@ -7823,29 +7823,49 @@ namespace newasm
                     return 1;
                 }
 
-                if(newasm::header::data::proc_now)
+                NewASM::variables::procedureData* p = nullptr;
+                if(newasm::header::data::proc_now) p = NewASM::CurrentProcA->proc;
+                else if(newasm::LambdaDispatch::LambdaLine) p = &(*newasm::LambdaDispatch::ThreadSafePtr);
+                
+                if(p)
                 {
-                    NewASM::CurrentProcA->proc->TryBlock = true;
-                    NewASM::CurrentProcA->proc->TryJump = lineInfo.jumpinTo;
-                    return 1;
-                }
-                else if(newasm::LambdaDispatch::LambdaLine)
-                {
-                    newasm::LambdaDispatch::ThreadSafePtr->TryBlock = true;
-                    newasm::LambdaDispatch::ThreadSafePtr->TryJump = lineInfo.jumpinTo;
+                    if(p->TryBlock)
+                    {
+                        p->TryBlock = false;
+                        newasm::SetExceptionComment("unusable try-catch block on same identation level");
+                        newasm::terminate(newasm::exit_codes::jit_fail);
+                        return 1;
+                    }
+                    p->TryBlock = true;
+                    p->TryJump = lineInfo.jumpinTo;
                     return 1;
                 }
 
                 if(newasm::thread_line)
                 {
                     auto& mmap = newasm::threads::memory.at(newasm::threads::now);
+                    if(mmap->TryBlock)
+                    {
+                        mmap->TryBlock = false;
+                        newasm::SetExceptionComment("unusable try-catch block on same identation level");
+                        newasm::terminate(newasm::exit_codes::jit_fail);
+                        return 1;
+                    }
                     mmap->TryBlock = true;
                     mmap->TryJump = lineInfo.jumpinTo;
                     return 1;
                 }
 
-                newasm::header::data::TryBlock = true;
-                newasm::header::data::TryJump = lineInfo.jumpinTo;
+                using namespace NewASM::header::data;
+                if(TryBlock)
+                {
+                    TryBlock = false;
+                    newasm::SetExceptionComment("unusable try-catch block on same identation level");
+                    newasm::terminate(newasm::exit_codes::jit_fail);
+                    return 1;
+                }
+                TryBlock = true;
+                TryJump = lineInfo.jumpinTo;
                 return 1;
             }
             //nop
