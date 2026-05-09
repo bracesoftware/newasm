@@ -1172,7 +1172,9 @@ namespace newasm
             return lineCompiled;
         }
 
+        // ---------------------------------- OPTIMIZER ----------------------------------
         using DescFunc = std::function<void(const std::string&, newasm::compiler::lineData*, int)>;
+        using DescFuncRange = std::function<void(const std::string&, int, int)>;
 
         inline void OptimizeCodeA(
             DescFunc _OptDescription,
@@ -1440,10 +1442,62 @@ namespace newasm
             return;
         }
 
+        inline void OptimizeCodeC(DescFuncRange OptDescription)
+        {
+            auto& k = newasm::compiler::compiledCode;
+            if(k.empty()) [[unlikely]]
+            {
+                return;
+            }
+            static constexpr signed int INVALID_LINE = -1;
+            int JumpFound = INVALID_LINE;
+            std::string label_name;
+
+            for(unsigned int i = 0; i < k.size(); ++i)
+            {
+                auto& lc = k.at(i);
+                if(lc.whatAmIDoing == newasm::core::lang_inf::jmp)
+                {
+                    if(lc.tokens.size() != 2)
+                    {
+                        continue;
+                    }
+                    JumpFound = i;
+                    label_name = newasm::header::functions::trim(lc.tokens[1]);
+                    auto p = NewASM::header::functions::DetectNamespace(label_name);
+                    if(p.first)
+                    {
+                        label_name = NewASM::compiler::utils::MangleName(p.second.first, p.second.second);
+                    }
+                    continue;
+                }
+                if(lc.type == newasm::compiler::labelJumpPoint)
+                {
+                    if(
+                        JumpFound != INVALID_LINE and
+                        lc.other == label_name
+                    )
+                    {
+                        OptDescription("removed unreachable code block", JumpFound, i);
+                        for(unsigned int j = JumpFound; j < i; ++j)
+                        {
+                            k.at(j).type = newasm::compiler::empty;
+                        }
+                        continue;
+                    }
+                    JumpFound = INVALID_LINE;
+                    continue;
+                }
+            }
+
+            return;
+        }
+
         inline namespace OPTIMIZATION_LEVELS
         {
             constinit const signed int OPT_PEEPHOLE = 0;
             constinit const signed int OPT_CODESEC = 1;
+            constinit const signed int OPT_UNREACHABLE = 2;
         }
 
         template<int _What, typename... Args>
@@ -1470,6 +1524,33 @@ namespace newasm
                 }
                 return;
             };
+            auto __O_DESC_GENERIC2__ = <::>(const std::string& text, int range1, int range2) -> void {
+                if(NewASM::header::data::LogCompilerOptimizations)
+                {
+                    std::cout << "\t  " << newasm::header::col::magenta;
+                    try
+                    {
+                        std::cout << newasm::forLinker::getFile(range1) << ":";
+                        std::cout << newasm::forLinker::getLine(range1) << " -> ";
+                        std::cout << newasm::forLinker::getFile(range2) << ":";
+                        std::cout << newasm::forLinker::getLine(range2);
+                    }
+                    catch(const std::exception& e)
+                    {
+                        std::cout << "cached code block";
+                    }
+                    std::cout << newasm::header::col::gray;
+                    std::cout << ": " << text << ": " << newasm::header::col::magenta << '\n';
+                    std::cout << newasm::header::style::dim;
+                    for(unsigned int i = range1; i <= range2; ++i)
+                    {
+                        std::cout << "\t\t\t" << newasm::compiler::compiledCode.at(i).raw << '\n';
+                    }
+                    std::cout << '\n' << newasm::header::col::reset;
+                    ++NewASM::compiler::data::OptimizationCount;
+                }
+                return;
+            };
             if constexpr(_What == OPT_PEEPHOLE)
             {
                 OptimizeCodeA(__O_DESC_GENERIC__, std::forward<Args>(a) ...);
@@ -1478,6 +1559,11 @@ namespace newasm
             if constexpr(_What == OPT_CODESEC)
             {
                 OptimizeCodeB(__O_DESC_GENERIC__, std::forward<Args>(a) ...);
+                return;
+            }
+            if constexpr(_What == OPT_UNREACHABLE)
+            {
+                OptimizeCodeC(__O_DESC_GENERIC2__);
                 return;
             }
             return;

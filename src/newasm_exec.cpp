@@ -9797,6 +9797,9 @@ namespace newasm
 
             NewASM::compiler::Optimize<newasm::compiler::OPT_CODESEC>();
 
+            //removing unreachable code
+            NewASM::compiler::Optimize<newasm::compiler::OPT_UNREACHABLE>();
+
             for(int i = 0; i < v1.size(); true) // VERY IMPORTANT PART!
             {
                 //this loop ensures that all empty lines are not in the final binary
