@@ -2748,6 +2748,7 @@ jmp e2349083l
 ; -------------------------- END OF PROGRAM -------------------------- ;
     
     try
+        callc idkman
         fetch nil
         mov this, 3
         nop
@@ -2757,7 +2758,15 @@ jmp e2349083l
     mov rax, 223 ; exit code
     ret *rax ; returns from the whole program to the host OS or newasm shell
 ; -------------------------- FUNCTIONS -------------------------- ;
+:idkman
+    ;try
+        nop
+    ;catch nil
+    retc
 :kids
+    try
+    nop
+    catch nil
     mov tlr, "Error properly catched and handled, exit code: "
     call std::ios::write
     mov tlr, *rax
