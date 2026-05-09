@@ -2736,6 +2736,7 @@ jmp e2349083l
         catch nil ; just continue
         mov tlr, "hi from ProcWithError"
         sysenter "ios"
+        sysenter "ios"
         mov fdx, 1
         syscall
         halt 0
@@ -2765,7 +2766,7 @@ jmp e2349083l
     retc
 :kids
     try
-    nop
+        nop
     catch nil
     mov tlr, "Error properly catched and handled, exit code: "
     call std::ios::write
