@@ -89,6 +89,18 @@ Error properly catched and handled, exit code: 10
 
 Or you can modify the `ProcWithError` procedure to just ignore the error with `catch nil`:
 ```asm
+.text
+    proc ProcWithError
+        try
+            pddsfdssd ; purposefully try to use a non-existing dyn lib
+        catch nil ; just continue with execution
+        
+        mov tlr, "hi from ProcWithError\n"
+        sysenter "ios"
+        mov fdx, 1
+        syscall
+        halt 0
+    end
 ```
 
 And you get the output:

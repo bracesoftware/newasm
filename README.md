@@ -150,7 +150,7 @@ In NewASM there's a huge variety of built in variable types and data containers.
 
 ***
 #### Available instructions
-NewASM features many instructions, around 70 of them. Here is a list:
+NewASM features many instructions, around 80 of them. Here is a list:
 1. [Data manipulation instructions](docs/instructions/data_manip.md)
 2. [Manual memory allocation instructions](docs/instructions/malloc.md)
 3. [Kernel-related instructions](docs/instructions/kernel.md)
