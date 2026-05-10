@@ -2755,10 +2755,12 @@ mymacro : #
         $mymacro
         halt 0
     end
+    jmp 345lmao
     thread lma29837982743o -> {
         call myFunction
     }
-
+:345lmao
+    call myFunction
     try
         callc idkman
         fetch nil
