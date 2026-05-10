@@ -6926,6 +6926,7 @@ namespace newasm
                 }
                 if(newasm::thread_line)
                 {
+                    newasm::SetExceptionComment("cannot create a procedure within a thread, use `.., (proc)`");
                     newasm::terminate(newasm::exit_codes::invalid_syntax);
                     return 1;
                 }
@@ -6956,6 +6957,7 @@ namespace newasm
                     return 1;
                 }
 
+                newasm::SetExceptionComment("procedure name is probably not alphanumeric");
                 newasm::terminate(newasm::exit_codes::os_error);
                 return 1;
             }
@@ -6980,6 +6982,7 @@ namespace newasm
                 }
                 else
                 {
+                    newasm::SetExceptionComment("couln't fetch the value of the first operand");
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                     return 1;
                 }
