@@ -6833,7 +6833,7 @@ namespace newasm
 
                 newasm::runtime::functions::parse<true>(suf);
 
-                std::cout << "Called a procedure -> " << suf << std::endl;
+                //std::cout << "Called a procedure -> " << suf << std::endl;
 
                 if(newasm::header::functions::isalphanum(suf))
                 {
@@ -9331,7 +9331,7 @@ namespace newasm
         newasm::system::processing_proc = ptr->proc->original_name;
         NewASM::CurrentProcA = ptr;
         
-        std::cout << "Actually called -> " << ptr->proc->original_name << std::endl;
+        //std::cout << "Actually called -> " << ptr->proc->original_name << std::endl;
 
         ptr->proc->idx = 0;
         auto& proc_contents = ptr->proc->contents;
