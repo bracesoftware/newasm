@@ -6808,6 +6808,7 @@ namespace newasm
             {
                 if(newasm::header::data::proc_now)
                 {
+                    newasm::SetExceptionComment("cannot call a procedure within procedure, use `callc`");
                     newasm::terminate(newasm::exit_codes::inline_proc);
                     return 1;
                 }
@@ -6822,6 +6823,7 @@ namespace newasm
                     }
                     if((*newasm::_this)->type != newasm::datatypes::proc) [[unlikely]]
                     {
+                        newasm::SetExceptionComment("object is not a procedure");
                         newasm::terminate(newasm::exit_codes::seg_fault);
                         return 1;
                     }
@@ -6831,11 +6833,14 @@ namespace newasm
 
                 newasm::runtime::functions::parse<true>(suf);
 
+                std::cout << "Called a procedure -> " << suf << std::endl;
+
                 if(newasm::header::functions::isalphanum(suf))
                 {
-                    auto p = newasm::mem::functions::datavalid(suf,newasm::variables::ids);
+                    auto p = newasm::mem::functions::datavalid(suf, newasm::variables::ids);
                     if(!p) [[unlikely]]
                     {
+                        newasm::SetExceptionComment("procedure not found in object map");
                         newasm::terminate(newasm::exit_codes::invalid_proc);
                         return 1;
                     }
@@ -6844,6 +6849,7 @@ namespace newasm
                     {
                         if(newasm::variables::ids.at(suf).type != newasm::datatypes::proc) [[unlikely]]
                         {
+                            newasm::SetExceptionComment("object is not a procedure");
                             newasm::terminate(newasm::exit_codes::invalid_proc);
                             return 1;
                         }
@@ -6852,6 +6858,10 @@ namespace newasm
                     newasm::callproc(suf);
                     return 1;
                 }
+
+                newasm::SetExceptionComment("case not matched");
+                newasm::terminate(newasm::exit_codes::invalid_syntax);
+                return 1;
             }
             //free
             case newasm::core::lang_inf::free__:
@@ -6927,6 +6937,10 @@ namespace newasm
                     newasm::system::original_proc = newasm::header::functions::demangleName(newasm::nms::stack, suf);
                     suf = newasm::header::functions::mangleName(newasm::nms::stack, suf);
                     newasm::system::mangled_proc = true;
+                }
+                else
+                {
+                    newasm::system::original_proc = suf;
                 }
 
                 if(newasm::header::functions::isalphanum(suf))
@@ -9313,7 +9327,9 @@ namespace newasm
         newasm::header::data::proc_now = true;
         newasm::system::processing_proc = ptr->proc->original_name;
         NewASM::CurrentProcA = ptr;
-      
+        
+        std::cout << "Actually called -> " << ptr->proc->original_name << std::endl;
+
         ptr->proc->idx = 0;
         auto& proc_contents = ptr->proc->contents;
         while(true)//for(int i = 0; i < proc_contents.size(); ++i)
@@ -9355,8 +9371,10 @@ namespace newasm
         if(it != newasm::variables::ids.end())
         {
             newasm::threads::memory[name] = new newasm::threads::object__();
-            newasm::threads::memory.at(name)->contents = newasm::variables::ids.at(name).proc->contents;
-            newasm::threads::memory.at(name)->labels = newasm::variables::ids.at(name).proc->labels;//recompile_threadProc();
+            auto& mmap = newasm::threads::memory.at(name);
+            auto& mmap2 = newasm::variables::ids.at(name);
+            mmap->contents = mmap2.proc->contents;
+            mmap->labels = mmap2.proc->labels;
             newasm::threads::valid_threads.push_back(name);
         }
         return;

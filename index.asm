@@ -2747,7 +2747,15 @@ jmp e2349083l
     catch kids
 
 ; -------------------------- END OF PROGRAM -------------------------- ;
-    
+mymacro : #
+    fetch nil
+    mov this, 0
+#
+    proc myFunction
+        $mymacro
+        halt 0
+    end
+    call myFunction
     try
         callc idkman
         fetch nil
