@@ -31,6 +31,7 @@ namespace newasm
             bool TryCatched = false;
 
             int lcx = 0;
+            int LCX;
 
             explicit inline object__()
             {

@@ -2755,7 +2755,10 @@ mymacro : #
         $mymacro
         halt 0
     end
-    call myFunction
+    thread lma29837982743o -> {
+        call myFunction
+    }
+
     try
         callc idkman
         fetch nil

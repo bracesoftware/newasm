@@ -158,6 +158,17 @@ namespace newasm
                 std::cout << newasm::header::col::reset;
             }
         };
+        auto LogDeclarationSource = <:Insomnia:>(const std::string& name, int idx) -> void {
+            std::cout << Insomnia << newasm::header::col::reset << newasm::header::col::red;
+            std::cout << newasm::header::style::dim;
+            std::cout << "^ `" << name << "` declared in: " << newasm::header::style::underline;
+            std::cout << newasm::header::col::gray <<
+                    newasm::forLinker::getFile(idx) <<//(newasm::header::data::lastlndx) << //newasm::header::settings::script_file <<
+                    ":" <<
+                    newasm::forLinker::getLine(idx);
+            std::cout << std::endl;
+            std::cout << newasm::header::col::reset;
+        };
         bool temp_proc = false;
         std::cout << std::endl;
         //std::cout << "TERMINATEEE" << std::endl;
@@ -229,45 +240,43 @@ namespace newasm
             }
             if(newasm::header::data::proc_now == true)
             {
-                std::cout << "the procedure " <<
+                std::cout << "procedure " <<
                 newasm::header::col::gray <<
                 newasm::header::style::bold <<
                 newasm::header::style::underline <<
                 newasm::system::processing_proc;
+                std::cout << ':' << NewASM::CurrentProcA->proc->idx + 1;
                 temp_proc = true;
             }
             if(newasm::thread_line == true)
             {
-                std::cout << "the thread " <<
+                if(temp_proc)
+                {
+                    std::cout << newasm::header::col::reset;
+                    std::cout << newasm::header::col::red;
+                    std::cout << "...\n";
+                    std::cout << Insomnia << Insomnia;
+                    std::cout << "in ";
+                }
+                auto& t = newasm::threads::now;
+                auto& mmap = newasm::threads::memory.at(t);
+                std::cout << "thread " <<
                 newasm::header::col::gray <<
                 newasm::header::style::bold <<
                 newasm::header::style::underline <<
-                newasm::threads::now;
+                t;
+                std::cout << ':' << mmap->lcx + 1;
                 //temp_proc = true;
             }
             if(newasm::events::exitNow == true)
             {
-                std::cout << "the event handler for " <<
+                std::cout << "event handler for " <<
                 newasm::header::col::gray <<
                 newasm::header::style::bold <<
                 newasm::header::style::underline <<
                 "'termination'";
                 //temp_proc = true;
             }
-
-
-            #if 0
-            if(newasm::header::execution_flow::exec_redirected) if(newasm::header::data::proc_now == false)
-            {
-                std::cout << "child process "<<
-                newasm::header::col::gray <<
-                newasm::header::style::bold <<
-                newasm::header::style::underline <<
-                newasm::header::execution_flow::file <<
-                ":" <<
-                newasm::header::data::lastlndx;
-            }
-            #endif
 
             std::cout <<
             newasm::header::col::reset <<
@@ -278,18 +287,26 @@ namespace newasm
             std::endl;
 
             std::cout << newasm::header::col::reset;
+
+            if(newasm::thread_line)
+            {
+                auto& t = newasm::threads::now;
+                auto& mmap = newasm::threads::memory.at(t);
+                LogDeclarationSource(t, mmap->LCX);
+            }
             if(temp_proc)
             {
                 auto& k = NewASM::CurrentProcA->proc;
                 if(k->mangled)
                 {
                     std::cout << "\t\t\t  " << newasm::header::col::reset << newasm::header::col::light_blue;
-                    std::cout << "^ original procedure: \"" << newasm::header::col::gray << newasm::header::style::underline;
+                    std::cout << "^ original procedure name: \"" << newasm::header::col::gray << newasm::header::style::underline;
                     std::cout << k->original_name;
                     std::cout << newasm::header::col::reset << newasm::header::col::light_blue << "\"";
                     std::cout << std::endl;
                     std::cout << newasm::header::col::reset;
                 }
+                LogDeclarationSource(k->original_name, k->LCX);
             }
 
             if(NewASM::ExceptionHandling::Line->MacroComponent)
@@ -2901,13 +2918,13 @@ namespace newasm
                         suf = newasm::header::functions::trim(newasm::header::functions::remamp(suf));
                         if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids)) [[unlikely]]
                         {
-                            std::cout << "THIS HAPPENED!!!! -> "<< suf << std::endl;
+                            //std::cout << "THIS HAPPENED!!!! -> "<< suf << std::endl;
                             newasm::terminate(newasm::exit_codes::invalid_memacc);
                             return 1;
                         }
                         ptr = &newasm::variables::ids.at(suf);
                     }
-                    else if(lineInfo.priArgType == newasm::datatypes::ThisPtr)
+                    else// if(lineInfo.priArgType == newasm::datatypes::ThisPtr)
                     {
                         if(newasm::_this == nullptr) [[unlikely]]
                         {
@@ -6007,6 +6024,7 @@ namespace newasm
                 auto& mmap2 = newasm::threads::memory.at(suf);
                 mmap2->paused = false;
                 mmap2->id = newasm::kernel::ThreadCount;
+                mmap2->LCX = newasm::mem::regs::lcx.get_value();
                 newasm::kernel::ThreadCount++;
                 newasm::threads::sys_module[mmap2->id] = 0;
                 newasm::mem::regs::resetRegisters(mmap2->id);
@@ -6953,6 +6971,7 @@ namespace newasm
                     newasm::variables::ids[newasm::system::cproc].proc = new newasm::variables::procedureData;
                     auto& mmap = newasm::variables::ids.at(newasm::system::cproc);
                     mmap.type = newasm::datatypes::proc;
+                    mmap.proc->LCX = newasm::mem::regs::lcx.get_value();
                     NewASM::CurrentProc = &mmap;
                     return 1;
                 }

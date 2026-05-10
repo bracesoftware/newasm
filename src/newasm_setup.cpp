@@ -477,6 +477,7 @@ namespace newasm
             public std::vector<newasm::compiler::lineData> contents;
             std::unordered_map<std::string, int> labels;
             int idx;
+            int LCX;
             std::vector<int> CallCStack;
 
             std::string original_name;
