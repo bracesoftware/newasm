@@ -26,6 +26,9 @@ using "tuple"
 using "http"
 using "math"
 .start
+    try
+        throw
+    catch nil
     sysenter "cfg"
     mov fdx, 1
     mov rax, 1
@@ -960,8 +963,8 @@ jmp shjfjsdhfj
         mov tlr, "Hiiii"
         call std::ios::writeln
         db tlr
-        mov   tlr , "exit proc called"
-        mov   stl , 0c1
+        mov tlr , "exit proc called"
+        mov stl , 0c1
         mov bos, 16
         ;mov bos, 100
         mov   fdx , 1
@@ -2748,6 +2751,7 @@ jmp e2349083l
 
 ; -------------------------- END OF PROGRAM -------------------------- ;
 mymacro : #
+    throw
     fetch nil
     mov this, 0
 #
@@ -2758,12 +2762,14 @@ mymacro : #
         $mymacro
         halt 0
     end
-    jmp 345lmao
+jmp 345lmao
     thread lma29837982743o -> {
         call myFunction
     }
 :345lmao
-    call myFunction
+    ;try
+        call myFunction
+    ;catch nil
     try
         callc idkman
         fetch nil

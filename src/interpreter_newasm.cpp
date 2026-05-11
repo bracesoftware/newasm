@@ -114,6 +114,7 @@ namespace newasm
     namespace ExceptionHandling
     {
         newasm::compiler::lineData* Line = nullptr;
+        newasm::compiler::lineData* ParentLine = nullptr;
     }
 
     namespace header
@@ -1756,7 +1757,7 @@ namespace newasm
         NewASM::hardware::Disk.init();
         NewASM::header::functions::finfo("Sucessfully allocated %i MiB of virtual disk space.", __newasm_DISK_SIZE);
  
-        NewASM::header::functions::finfo("Preparing to execute: %s%s %s%s",
+        NewASM::header::functions::finfo("Preparing to compile and execute project: %s%s %s%s",
             NewASM::header::col::yellow,
             NewASM::project_data::name,
             NewASM::project_data::version,

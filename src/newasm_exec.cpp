@@ -132,7 +132,7 @@ namespace newasm
     //int redirect_exec(std::string filename);
     static inline int terminate_(int exit_code, const std::source_location& loc)//, std::string line)
     {
-        const std::string Insomnia = "\t\t\t  ";
+        const std::string Insomnia = "\t\t  ";
         auto LogExceptionSourceLoc = <:loc, Insomnia:>() -> void {
             if(NewASM::MutableConfig::DisplaySourceInformation)
             {
@@ -169,6 +169,21 @@ namespace newasm
             std::cout << std::endl;
             std::cout << newasm::header::col::reset;
         };
+        auto GetLineLocation = <::>(int idx) -> std::pair<bool, std::string> {
+            if(
+                idx < 0 or
+                idx >= newasm::compiler::compiledCode.size()
+            )
+            {
+                return {false, ""};
+            }
+            std::stringstream ss;
+            ss <<
+                    newasm::forLinker::getFile(idx) <<//(newasm::header::data::lastlndx) << //newasm::header::settings::script_file <<
+                    ":" <<
+                    newasm::forLinker::getLine(idx);
+            return {true, ss.str()};
+        };
         bool temp_proc = false;
         std::cout << std::endl;
         //std::cout << "TERMINATEEE" << std::endl;
@@ -178,16 +193,17 @@ namespace newasm
             if(newasm::header::data::exception)
             {
                 std::cout <<
-                "\t\t" <<
+                "\t" <<
                 newasm::header::col::red <<
                 "Exception \"" <<
                 newasm::header::col::gray<<
                 newasm::header::style::underline<<
                 newasm::exit_codes::identifier.at(exit_code)<<
                 newasm::header::col::reset<<
-                newasm::header::col::red << "\" occured >> "<<
+                newasm::header::col::red << "\" [";
+                std::cout << newasm::header::col::gray << exit_code << newasm::header::col::red << "] occured >> "<<
                 newasm::header::col::gray<<
-                newasm::header::data::LastLine->raw << std::endl;
+                newasm::header::functions::trim(newasm::header::data::LastLine->raw) << std::endl;
                 LogExceptionSourceLoc();
                 LogComment();
 
@@ -206,7 +222,7 @@ namespace newasm
         if(newasm::header::data::exception)
         {
             std::cout <<
-            "\t\t" <<
+            "\t" <<
             newasm::header::col::red <<
             "Exception \"" <<
             newasm::header::col::gray<<
@@ -214,7 +230,8 @@ namespace newasm
             newasm::exit_codes::identifier.at(exit_code)<<
             newasm::header::col::reset <<
             newasm::header::col::red <<
-            "\" in ";
+            "\" [";
+            std::cout << newasm::header::col::gray << exit_code << newasm::header::col::red << "] in ";
 
             //if(newasm::header::execution_flow::exec_redirected == false)
             if(
@@ -233,9 +250,7 @@ namespace newasm
                     newasm::header::col::gray <<
                     newasm::header::style::bold <<
                     newasm::header::style::underline <<
-                    newasm::forLinker::getFile(newasm::mem::regs::lcx.get_value()) <<//(newasm::header::data::lastlndx) << //newasm::header::settings::script_file <<
-                    ":" <<
-                    newasm::forLinker::getLine(newasm::mem::regs::lcx.get_value());//(newasm::header::data::lastlndx);
+                    GetLineLocation(newasm::mem::regs::lcx.get_value()).second;//(newasm::header::data::lastlndx);
                 }
             }
             if(newasm::header::data::proc_now == true)
@@ -283,7 +298,7 @@ namespace newasm
             newasm::header::col::red <<
             " >> " <<
             newasm::header::col::gray <<
-            newasm::header::data::LastLine->raw << 
+            newasm::header::functions::trim(newasm::header::data::LastLine->raw) << 
             std::endl;
 
             std::cout << newasm::header::col::reset;
@@ -299,7 +314,7 @@ namespace newasm
                 auto& k = NewASM::CurrentProcA->proc;
                 if(k->mangled)
                 {
-                    std::cout << "\t\t\t  " << newasm::header::col::reset << newasm::header::col::light_blue;
+                    std::cout << Insomnia << newasm::header::col::reset << newasm::header::col::light_blue;
                     std::cout << "^ original procedure name: \"" << newasm::header::col::gray << newasm::header::style::underline;
                     std::cout << k->original_name;
                     std::cout << newasm::header::col::reset << newasm::header::col::light_blue << "\"";
@@ -311,7 +326,7 @@ namespace newasm
 
             if(NewASM::ExceptionHandling::Line->MacroComponent)
             {
-                std::cout << "\t\t\t  " << newasm::header::col::reset << newasm::header::col::magenta;
+                std::cout << Insomnia << newasm::header::col::reset << newasm::header::col::magenta;
                 std::cout << "^ after expanding macro: \"" << newasm::header::col::gray << newasm::header::style::underline;
                 std::cout << NewASM::ExceptionHandling::Line->SourceMacroName;
                 std::cout << newasm::header::col::reset << newasm::header::col::magenta << "\"";
@@ -319,16 +334,23 @@ namespace newasm
                 std::cout << newasm::header::col::reset;
             }
 
-            std::cout << "\t\t\t  " << newasm::header::col::reset << newasm::header::col::yellow;
+            std::cout << Insomnia << newasm::header::col::reset << newasm::header::col::yellow;
             std::cout << "^ backtrace: \"" << newasm::header::col::gray << newasm::header::style::underline;
             std::cout << NewASM::ExceptionHandling::Line->raw;
             std::cout << newasm::header::col::reset << newasm::header::col::yellow << "\"";
+            auto l = GetLineLocation(newasm::mem::regs::lcx.get_value());
+            if(l.first)
+            {
+                std::cout << " [invoked by " << newasm::header::col::gray;
+                std::cout << l.second;
+                std::cout << newasm::header::col::yellow << "]";
+            }
             std::cout << std::endl;
             std::cout << newasm::header::col::reset;
 
             if(newasm::LambdaDispatch::LambdaLine)
             {
-                std::cout << "\t\t\t  " << newasm::header::col::reset << newasm::header::col::magenta;
+                std::cout << Insomnia << newasm::header::col::reset << newasm::header::col::magenta;
                 std::cout << "^ in lambda/anonymous procedure";
                 std::cout << std::endl;
                 std::cout << newasm::header::col::reset;
@@ -9754,35 +9776,8 @@ namespace newasm
         if(_file.is_open())
         {
             lineidx = 1;
-            //std::cout << "file = `" << file << "`" << std::endl;
-            if(lineidx_____ == -1) while(std::getline(_file, line)) //internal compile
+            while(std::getline(_file, line))
             {
-                //std::cout << lineidx << " |  " << line << std::endl;
-                line = newasm::header::functions::trim(line);
-
-                if(line.empty())
-                {
-                    lineidx++;
-                    newasm::mem::COD.push_back("; empty");
-                    continue;
-                }
-
-                if(line.at(0) == ';')
-                {
-                    lineidx++;
-                    newasm::mem::COD.push_back("; comment");
-                    continue;
-                }
-                line = newasm::header::functions::remc(line);
-                #if 0
-                if(line.at(0) == ':')
-                {
-                    lineidx++;
-                    newasm::process_l(newasm::header::functions::trim(line.substr(1)), lineidx);
-                    newasm::mem::COD.push_back(NEWASM_JUMP_POINT);
-                    continue;
-                }
-                #endif
                 newasm::mem::COD.push_back(line);
                 lineidx++;
             }

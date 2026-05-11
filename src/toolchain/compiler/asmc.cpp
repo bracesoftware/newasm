@@ -1503,11 +1503,16 @@ namespace newasm
         template<int _What, typename... Args>
         inline void Optimize(Args&&... a)
         {
+            if(newasm::compiler::data::aborted)
+            {
+                return;
+            }
             //helper func
             auto __O_DESC_GENERIC__ = <::>(const std::string& text, newasm::compiler::lineData* L, int idx) -> void {
                 if(NewASM::header::data::LogCompilerOptimizations)
                 {
-                    std::cout << "\t  " << newasm::header::col::magenta;
+                    static const std::string Insomnia = "\t  "_str;
+                    std::cout << Insomnia << newasm::header::col::magenta;
                     try
                     {
                         std::cout << newasm::forLinker::getFile(idx) << ":";
@@ -1518,7 +1523,13 @@ namespace newasm
                         std::cout << "cached code";
                     }
                     std::cout << newasm::header::col::gray;
-                    std::cout << ": " << text << ": " << newasm::header::col::magenta << L->raw;
+                    auto LINE_CODE__ = newasm::header::functions::trim(L->raw);
+                    std::cout << ": " << text << ": " << newasm::header::col::magenta;
+                    if(LINE_CODE__.size() > 15)
+                    {
+                        std::cout << '\n' << Insomnia << Insomnia;
+                    }
+                    std::cout << LINE_CODE__;
                     std::cout << '\n' << newasm::header::col::reset;
                     ++NewASM::compiler::data::OptimizationCount;
                 }
