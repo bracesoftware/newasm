@@ -4,10 +4,11 @@
 > This feature was added in build 32.
 
 This article covers the following instructions:
-1. [`try`](#error-handling)
-2. [`catch`](#error-handling)
+1. [`try`](#try-and-catch)
+2. [`catch`](#try-and-catch)
+3. [`throw`](#throw)
 
-### `try`
+### `try` and `catch`
 Instruction `try` is used to begin a try-catch block. Essentially, `try` tells the program termination system that it should expect a `catch` instruction. When your app encounters an error, the program temporarily stops and checks if `try` was used, if it was it is going to jump to nearby `catch` instruction and then jump to an error-handling label.
 
 ```asm
@@ -118,3 +119,18 @@ try
 catch smth
 ```
 3. You are going to get a runtime error if you do a `callc` within a try-catch block if the address you are jumping to has a try-catch block.
+
+### `throw`
+
+> [!WARNING]
+> This feature was added in build 33.
+
+This instruction is used to manually invoke an error.
+
+```asm
+.text
+    try
+        throw
+    catch nil
+    ; ...
+```

@@ -92,6 +92,7 @@ namespace newasm
             {80, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::resb__)},
             {81, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::catch__)},
             {82, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::try__)},
+            {83, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::throw__)},
 
             {99, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::__say)}
         };

@@ -17,7 +17,7 @@ Welcome to **`NewASM`**: a low-level programming language which combines explici
 
 ## What's new or changed?
 
-- No new features were introduced.
++ Added the `throw` instruction. Just throws an exception (an instance of `UserError`) and crashes the program. Can be used for controlled exception management within try-catch blocks.
 
 ## Fixed issues
 

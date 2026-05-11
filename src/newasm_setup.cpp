@@ -84,6 +84,7 @@ namespace newasm
         const int jit_fail = 57;
         const int kernel_panic = 58;
         const int immovable_type = 59;
+        const int user_error = 60;
 
         const std::unordered_map<int, std::string> identifier = {
             {noterm_point, "NoTerminationPoint"},
@@ -145,7 +146,8 @@ namespace newasm
             {dangling_this, "DanglingThisPointer"},
             {jit_fail, "JITCompilerFailure"},
             {kernel_panic, "KernelPanicOrSysCrash"},
-            {immovable_type, "ImmovableType"}
+            {immovable_type, "ImmovableType"},
+            {user_error, "UserError"}
         };
     }
     namespace cmp_results

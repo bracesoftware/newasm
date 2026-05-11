@@ -2751,6 +2751,9 @@ mymacro : #
     fetch nil
     mov this, 0
 #
+    try
+        throw
+    catch nil
     proc myFunction
         $mymacro
         halt 0

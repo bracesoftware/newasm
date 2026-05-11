@@ -146,6 +146,7 @@ namespace newasm
 
             const int try__ = 81;//
             const int catch__ = 82;//
+            const int throw__ = 83;//
 
             /// @brief //////
             const int Link___ = 99;
@@ -255,6 +256,7 @@ namespace newasm
 
                 {try__, "try"},
                 {catch__, "catch"},
+                {throw__, "throw"},
 
                 {__say, "__say"}
             };

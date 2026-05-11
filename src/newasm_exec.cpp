@@ -4938,8 +4938,10 @@ namespace newasm
                         return 1;
                     }
                     mmap->TryCatched = false;
-                    mmap->lcx = lineInfo.jumpinTo;
-                    //std::cout << "thread::catch__ IDX -> " << lineInfo.jumpinTo << std::endl;
+                    if(lineInfo.priArgType != newasm::datatypes::NIL)
+                    {
+                        mmap->lcx = lineInfo.jumpinTo;
+                    }
                     return 1;
                 }
 
@@ -4951,8 +4953,10 @@ namespace newasm
                 }
 
                 TryCatched = false;
-                NEWASM_JMP__(lineInfo.jumpinTo)
-                //std::cout << "::catch__ IDX -> " << lineInfo.jumpinTo << std::endl;
+                if(lineInfo.priArgType != newasm::datatypes::NIL)
+                {
+                    NEWASM_JMP__(lineInfo.jumpinTo)
+                }
                 return 1;
             }
             //callc
@@ -7848,6 +7852,13 @@ namespace newasm
             case INVALID_INS:
             {
                 newasm::terminate(newasm::exit_codes::invalid_ins);
+                return 1;
+            }
+            //throw
+            case newasm::core::lang_inf::throw__:
+            {
+                newasm::SetExceptionComment("`throw` was used");
+                newasm::terminate(newasm::exit_codes::user_error);
                 return 1;
             }
             //try
