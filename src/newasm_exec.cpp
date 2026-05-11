@@ -161,7 +161,7 @@ namespace newasm
         auto LogDeclarationSource = <:Insomnia:>(const std::string& name, int idx) -> void {
             std::cout << Insomnia << newasm::header::col::reset << newasm::header::col::red;
             std::cout << newasm::header::style::dim;
-            std::cout << "^ `" << name << "` declared in: " << newasm::header::style::underline;
+            std::cout << "| `" << name << "` declared in: " << newasm::header::style::underline;
             std::cout << newasm::header::col::gray <<
                     newasm::forLinker::getFile(idx) <<//(newasm::header::data::lastlndx) << //newasm::header::settings::script_file <<
                     ":" <<
