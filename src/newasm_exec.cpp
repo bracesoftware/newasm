@@ -132,6 +132,7 @@ namespace newasm
     //int redirect_exec(std::string filename);
     static inline int terminate_(int exit_code, const std::source_location& loc)//, std::string line)
     {
+        // ---- helper funcs ---- //
         const std::string Insomnia = "\t\t  ";
         auto LogExceptionSourceLoc = <:loc, Insomnia:>() -> void {
             if(NewASM::MutableConfig::DisplaySourceInformation)
@@ -184,6 +185,17 @@ namespace newasm
                     newasm::forLinker::getLine(idx);
             return {true, ss.str()};
         };
+        auto LogLambda = <:Insomnia:>() -> void {
+            if(newasm::LambdaDispatch::LambdaLine)
+            {
+                std::cout << Insomnia << newasm::header::col::reset << newasm::header::col::magenta;
+                std::cout << "^ in lambda/anonymous procedure";
+                std::cout << std::endl;
+                std::cout << newasm::header::col::reset;
+            }
+        };
+
+        // ---- body ---- //
         bool temp_proc = false;
         std::cout << std::endl;
         //std::cout << "TERMINATEEE" << std::endl;
@@ -206,6 +218,7 @@ namespace newasm
                 newasm::header::functions::trim(newasm::header::data::LastLine->raw) << std::endl;
                 LogExceptionSourceLoc();
                 LogComment();
+                LogLambda();
 
                 std::cout << newasm::header::col::reset << std::endl;
             }
@@ -323,6 +336,7 @@ namespace newasm
                 }
                 LogDeclarationSource(k->original_name, k->LCX);
             }
+            LogLambda();
 
             if(NewASM::ExceptionHandling::Line->MacroComponent)
             {
@@ -348,13 +362,6 @@ namespace newasm
             std::cout << std::endl;
             std::cout << newasm::header::col::reset;
 
-            if(newasm::LambdaDispatch::LambdaLine)
-            {
-                std::cout << Insomnia << newasm::header::col::reset << newasm::header::col::magenta;
-                std::cout << "^ in lambda/anonymous procedure";
-                std::cout << std::endl;
-                std::cout << newasm::header::col::reset;
-            }
             LogExceptionSourceLoc();
             LogComment();
         }
