@@ -656,6 +656,9 @@ namespace newasm
 
             //config
             bool UsingThisPtr = false;
+            bool UsingStruct = false;
+            string structString1 = "";
+            string structString2 = "";
         };
 
         struct lineData final

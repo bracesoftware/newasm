@@ -204,6 +204,11 @@ namespace newasm
 
             inline int getEvalMode(const std::string& s, newasm::compiler::EvalMode& mode)
             {
+                auto o = newasm::header::functions::parseObject(s);
+                mode.UsingStruct = o.first;
+                mode.structString1 = o.second.first;
+                mode.structString2 = o.second.second;
+
                 if(s.at(0) == '*' and s.at(1) != '/')
                 {
                     auto DEREF_TEXT = newasm::header::functions::trim(s.substr(1));

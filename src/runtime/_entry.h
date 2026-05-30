@@ -629,7 +629,10 @@ namespace newasm
 						};
 						parseFromRAM(s);
 						newasm::header::functions::parseopr(s, newasm::mem::data);
-						newasm::parseopr_struct(s);
+						if(mode.UsingStruct)
+						{
+							newasm::ParseOprStruct(s, mode.structString1, mode.structString2);
+						}
 						return;
 					}
 					case newasm::runtime::evalModes::environmentVariable:
@@ -1004,7 +1007,11 @@ namespace newasm
 						}
 						parseFromRAM(s);
 						newasm::header::functions::parseopr(s, newasm::mem::data);
-						newasm::parseopr_struct(s);
+
+						if(mode.UsingStruct)
+						{
+							newasm::ParseOprStruct(s, mode.structString1, mode.structString2);
+						}
 						return;
 					}
 					case newasm::runtime::evalModes::valueOfNamespacedTupleOrContext:

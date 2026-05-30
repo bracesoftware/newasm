@@ -378,7 +378,7 @@ namespace newasm
 
             if(newasm::header::functions::parseNamespaceSegments(struct_name).first)
             {
-                newasm::progwin::api::cout("Object<yes> NMS -> " + struct_name);
+                //newasm::progwin::api::cout("Object<yes> NMS -> " + struct_name);
                 auto i = newasm::header::functions::parseNamespaceSegments(struct_name);
                 std::string symbol_name = i.second.back();
                 auto vec = i.second;
@@ -414,6 +414,7 @@ namespace newasm
                 return 1;
             }
             opr = i->value;
+            #if 0
             try {if(newasm::mem::data_attrib.at(struct_name).locked)
             {
                 opr = "\"unknown??\"";
@@ -423,7 +424,74 @@ namespace newasm
                 std::cerr << e.what() << std::endl;
                 std::cout << "Zajebucnuo si se sa ovim!\n";
             }
+            #endif
+            auto it = newasm::mem::data_attrib.find(struct_name);
+            if(it != newasm::mem::data_attrib.end())
+            if(it->second.locked)
+            {
+                opr = "\"unknown??\"";
+            }
             return 1;
+        }
+        return 1;
+    }
+    
+    inline int ParseOprStruct(std::string& opr, std::string struct_name, const std::string& member_name)
+    {
+        if(newasm::header::functions::parseNamespaceSegments(struct_name).first)
+        {
+            //newasm::progwin::api::cout("Object<yes> NMS -> " + struct_name);
+            auto i = newasm::header::functions::parseNamespaceSegments(struct_name);
+            std::string symbol_name = i.second.back();
+            auto vec = i.second;
+            vec.pop_back(); // namespace list
+            
+            struct_name = newasm::header::functions::mangleName(vec, symbol_name);
+        }
+
+        if(!newasm::header::functions::isalphanum(struct_name))
+        {
+            return 1;
+        }
+
+        if(!newasm::mem::functions::datavalid(struct_name, newasm::mem::structs))
+        {
+            //std::cout << "struct_name: " << struct_name << std::endl;
+            newasm::terminate(newasm::exit_codes::undefined_object);
+            return 1;
+        }
+        bool member_found = false;
+        std::vector<newasm::mem::struct_member>::iterator i;
+        for(i = newasm::mem::structs[struct_name].begin(); i !=newasm::mem::structs[struct_name].end(); ++i)
+        {
+            if(i->name == member_name)
+            {
+                member_found = true;
+                break;
+            }
+        }
+        if(!member_found)
+        {
+            newasm::terminate(newasm::exit_codes::undefined_objectmem);
+            return 1;
+        }
+        opr = i->value;
+        #if 0
+        try {if(newasm::mem::data_attrib.at(struct_name).locked)
+        {
+            opr = "\"unknown??\"";
+        }}
+        catch(std::exception& e)
+        {
+            std::cerr << e.what() << std::endl;
+            std::cout << "Zajebucnuo si se sa ovim!\n";
+        }
+        #endif
+        auto it = newasm::mem::data_attrib.find(struct_name);
+        if(it != newasm::mem::data_attrib.end())
+        if(it->second.locked)
+        {
+            opr = "\"unknown??\"";
         }
         return 1;
     }
