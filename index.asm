@@ -2776,7 +2776,8 @@ jmp 345lmao
         mov this, 3
         nop
     catch kids
-:lmaoooo    
+:lmaoooo 
+    
     zero rax
     mov rax, 223 ; exit code
     ret *rax ; returns from the whole program to the host OS or newasm shell

@@ -22,6 +22,8 @@ Welcome to **`NewASM`**: a low-level programming language which combines explici
 ## Fixed issues
 
 + Fixed issue #39.
++ Fixed issue #40.
++ Fixed issue #41.
 
 ## Important notes
 
