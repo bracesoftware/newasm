@@ -2745,10 +2745,11 @@ jmp e2349083l
         halt 0
     end
 
+./eh
     try
         call ProcWithError
     catch kids
-
+./!eh
 ; -------------------------- END OF PROGRAM -------------------------- ;
 mymacro : #
     throw
@@ -2789,6 +2790,12 @@ jmp 345lmao
     retc
 :kids
     try
+        ./lmao
+        ./!lmao
+        ./lmao
+        ./!lmao
+        ./lmao
+        ./!lmao
         nop
     catch nil
     mov tlr, "Error properly catched and handled, exit code: "

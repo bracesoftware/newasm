@@ -1534,7 +1534,7 @@ namespace newasm
                     NS_Con.size() > 0
                 )
                 {
-                    if(NS_Con.front() > NS_Des.back)
+                    if(NS_Con.front() > NS_Des.back())
                     {
                         NamespaceEmpty = false;
                     }
@@ -1561,7 +1561,7 @@ namespace newasm
                         for(int p = 0; p < NS_Con.size(); ++p)
                         {
                             auto& lcc = k.at(p);
-                            lcc.type = newasm::compiler::empty();
+                            lcc.type = newasm::compiler::empty;
                         }
                         NS_Con.clear();
                         NS_Des.clear();
