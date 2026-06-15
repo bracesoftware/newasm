@@ -9920,6 +9920,7 @@ namespace newasm
 
             //removing unreachable code
             NewASM::compiler::Optimize<newasm::compiler::OPT_UNREACHABLE>();
+            NewASM::compiler::Optimize<newasm::compiler::OPT_EMPTY_NAMESPACES>();
 
             for(int i = 0; i < v1.size(); true) // VERY IMPORTANT PART!
             {

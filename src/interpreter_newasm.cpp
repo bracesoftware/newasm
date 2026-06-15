@@ -661,6 +661,11 @@ namespace newasm
             string structString2 = "";
         };
 
+        struct lineDataCT final
+        {
+            bool dataDecl = false;
+        };
+
         struct lineData final
         {
             //some definitions, typedef where we can, using where we must!
@@ -712,6 +717,8 @@ namespace newasm
             bool AltStackArg = false;
 
             //---------------------------------------------
+            // compile-time info
+            lineDataCT CompileTime;
             //stuff not included in the binary:
             unsigned int resType = 0;
             int resInt = 0;

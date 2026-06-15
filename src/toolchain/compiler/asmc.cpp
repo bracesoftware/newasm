@@ -670,6 +670,7 @@ namespace newasm
                 auto name = data_macroDecl.second.at(1);
                 auto value = data_macroDecl.second.at(2);
                 newasm::compiler::utils::fixString(value);
+                lc.CompileTime.dataDecl = true;
                 lineCompiled.priEvalMode.type = newasm::compiler::utils::getEvalMode(value, lineCompiled.priEvalMode);
 
                 if(!newasm::header::functions::isalphanum(name))
@@ -711,11 +712,11 @@ namespace newasm
                     lineCompiled.parsedType = it->second;
                 }
 
-                if(typ == "class")
+                if(typ == "class"_str)
                 {
                     newasm::compiler::data::objectDecl = true;
                 }
-                if(typ == "obj")
+                if(typ == "obj"_str)
                 {
                     newasm::compiler::data::objectDecl = true;
                     auto t = newasm::header::functions::tokenize__2(value);
@@ -1180,6 +1181,7 @@ namespace newasm
         // ---------------------------------- OPTIMIZER ----------------------------------
         using DescFunc = std::function<void(const std::string&, newasm::compiler::lineData*, int)>;
         using DescFuncRange = std::function<void(const std::string&, int, int)>;
+        using DescFuncLmao = std::function<void(const std::string&, const std::vector<unsigned int>&)>;
 
         inline void OptimizeCodeA(
             DescFunc _OptDescription,
@@ -1498,11 +1500,85 @@ namespace newasm
             return;
         }
 
+        inline void OptimizeCodeD(DescFuncLmao OptDescription)
+        {
+            auto& k = newasm::compiler::compiledCode;
+            if(k.empty()) [[unlikely]]
+            {
+                return;
+            }
+            static constexpr signed int INVALID_LINE = -1;
+            bool NamespaceEmpty = true;
+            std::vector<unsigned int> NS_Con;
+            std::vector<unsigned int> NS_Des;
+            for(unsigned int i = 0; i < k.size(); ++i)
+            {
+                auto& lc = k.at(i);
+                //check if it is a namespace
+                if(lc.type == newasm::compiler::namespace__)
+                {
+                    if(lc.priInt == NewASM::Namespaces::Construction)
+                    {
+                        NS_Con.push_back(i);
+                        continue;
+                    }
+                    else
+                    {
+                        NS_Des.push_back(i);
+                        continue;
+                    }
+                }
+                //check if they are empty
+                if(
+                    NS_Con.size() == NS_Des.size() and
+                    NS_Con.size() > 0
+                )
+                {
+                    if(NS_Con.front() > NS_Des.back)
+                    {
+                        NamespaceEmpty = false;
+                    }
+                    for(unsigned int j = NS_Con.front(); j < NS_Des.back(); ++j)
+                    {
+                        auto& lcc = k.at(j);
+                        if(lcc.whatAmIDoing == newasm::core::lang_inf::proc)
+                        {
+                            NamespaceEmpty = false;
+                        }
+                        if(lcc.whatAmIDoing == newasm::core::lang_inf::thread__)
+                        {
+                            NamespaceEmpty = false;
+                        }
+                        if(lcc.CompileTime.dataDecl)
+                        {
+                            NamespaceEmpty = false;
+                        }
+                    }
+                    if(NamespaceEmpty)
+                    {
+                        NS_Con.insert(NS_Con.end(), NS_Des.begin(), NS_Des.end());
+                        OptDescription("removed empty namespaces", NS_Con);
+                        for(int p = 0; p < NS_Con.size(); ++p)
+                        {
+                            auto& lcc = k.at(p);
+                            lcc.type = newasm::compiler::empty();
+                        }
+                        NS_Con.clear();
+                        NS_Des.clear();
+                        NamespaceEmpty = true;
+                        continue;
+                    }
+                }
+            }
+            return;
+        }
+
         inline namespace OPTIMIZATION_LEVELS
         {
             constinit const signed int OPT_PEEPHOLE = 0;
             constinit const signed int OPT_CODESEC = 1;
             constinit const signed int OPT_UNREACHABLE = 2;
+            constinit const signed int OPT_EMPTY_NAMESPACES = 3;
         }
 
         template<int _What, typename... Args>
@@ -1567,6 +1643,36 @@ namespace newasm
                 }
                 return;
             };
+            auto __O_DESC_GENERIC3__ = <::>(const std::string& text, const std::vector<unsigned int>& v) -> void {
+                if(NewASM::header::data::LogCompilerOptimizations)
+                {
+                    std::cout << "\t  " << newasm::header::col::magenta;
+                    std::cout << NewASM::project_data::name;
+                    if(!NewASM::project_data::version.empty()) std::cout << ":" << NewASM::project_data::version;
+                    std::cout << newasm::header::col::gray;
+                    std::cout << ": " << text << ": " << newasm::header::col::magenta << '\n';
+                    std::cout << newasm::header::style::dim;
+                    for(unsigned int i = 0; i < v.size(); ++i)
+                    {
+                        auto IDX = v.at(i);
+                        std::cout << "\t\t\t";
+                        try
+                        {
+                            std::cout << newasm::forLinker::getFile(IDX) << ":";
+                            std::cout << newasm::forLinker::getLine(IDX);
+                        }
+                        catch(const std::exception& e)
+                        {
+                            std::cout << "cached code";
+                        }
+                        std::cout << "  | ";
+                        std::cout << newasm::compiler::compiledCode.at(IDX).raw << '\n';
+                    }
+                    std::cout << '\n' << newasm::header::col::reset;
+                    ++NewASM::compiler::data::OptimizationCount;
+                }
+                return;
+            };
             if constexpr(_What == OPT_PEEPHOLE)
             {
                 OptimizeCodeA(__O_DESC_GENERIC__, std::forward<Args>(a) ...);
@@ -1580,6 +1686,11 @@ namespace newasm
             if constexpr(_What == OPT_UNREACHABLE)
             {
                 OptimizeCodeC(__O_DESC_GENERIC2__);
+                return;
+            }
+            if constexpr(_What == OPT_EMPTY_NAMESPACES)
+            {
+                OptimizeCodeD(__O_DESC_GENERIC3__);
                 return;
             }
             return;
