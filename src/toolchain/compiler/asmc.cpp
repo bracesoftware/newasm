@@ -1541,15 +1541,14 @@ namespace newasm
                     for(unsigned int j = NS_Con.front(); j < NS_Des.back(); ++j)
                     {
                         auto& lcc = k.at(j);
-                        if(lcc.whatAmIDoing == newasm::core::lang_inf::proc)
+                        if(
+                            lcc.whatAmIDoing == newasm::core::lang_inf::proc ||
+                            lcc.whatAmIDoing == newasm::core::lang_inf::thread__
+                        )
                         {
                             NamespaceEmpty = false;
                         }
-                        if(lcc.whatAmIDoing == newasm::core::lang_inf::thread__)
-                        {
-                            NamespaceEmpty = false;
-                        }
-                        if(lcc.CompileTime.dataDecl)
+                        else if(lcc.CompileTime.dataDecl)
                         {
                             NamespaceEmpty = false;
                         }
