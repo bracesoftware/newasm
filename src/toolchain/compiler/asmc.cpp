@@ -63,6 +63,7 @@ namespace newasm
             constinit const int already_linked = 14;
             constinit const int redundant_try = 15;
             constinit const int redundant_catch = 16;
+            constinit const int unexpected_nmst = 17;
 
             const std::unordered_map<int, std::string> id = {
                 {unmatched_syntax, "UnmatchedSyntax"},
@@ -80,7 +81,8 @@ namespace newasm
                 {linker_err, "LinkerError"},
                 {already_linked, "LibraryAlreadyLinked"},
                 {redundant_try, "RedundantTry"},
-                {redundant_catch, "RedundantCatch"}
+                {redundant_catch, "RedundantCatch"},
+                {unexpected_nmst, "UnexpectedNamespaceTerminator"}
             };
         }
 
@@ -541,7 +543,7 @@ namespace newasm
                 else
                 {
                     newasm::compiler::data::namespace_stack.push_back(namespace_name);
-                    lineCompiled.priString = namespace_name;
+                    lineCompiled.priString = newasm::header::functions::trim(namespace_name);
                     lineCompiled.priInt = NewASM::Namespaces::Construction;
                 }
                 if(!NewASM::header::functions::isalphanum(lineCompiled.priString))
@@ -1181,7 +1183,7 @@ namespace newasm
         // ---------------------------------- OPTIMIZER ----------------------------------
         using DescFunc = std::function<void(const std::string&, newasm::compiler::lineData*, int)>;
         using DescFuncRange = std::function<void(const std::string&, int, int)>;
-        using DescFuncLmao = std::function<void(const std::string&, const std::vector<unsigned int>&)>;
+        using DescFuncLmao = std::function<void(const std::string&, const std::vector<int>&)>;
 
         inline void OptimizeCodeA(
             DescFunc _OptDescription,
@@ -1509,65 +1511,106 @@ namespace newasm
             }
             static constexpr signed int INVALID_LINE = -1;
             bool NamespaceEmpty = true;
-            std::vector<unsigned int> NS_Con;
-            std::vector<unsigned int> NS_Des;
+            std::vector<std::pair<int, int>> NamespaceTree;
+            auto GetNamespaceLine = <::>(const decltype(NamespaceTree)& v) -> int {
+                if(v.empty())
+                {
+                    return INVALID_LINE;
+                }
+                for(unsigned int i = v.size(); i > 0; true)
+                {
+                    --i;
+                    if(v.at(i).second == INVALID_LINE)
+                    {
+                        //std::cout << "found idx " << i << std::endl;
+                        return i;
+                    }
+                }
+                return INVALID_LINE;
+            };
+            //we make a namespace tree and 
+            //check if the namespaces are empty from top to bottom
             for(unsigned int i = 0; i < k.size(); ++i)
             {
+                newasm::compiler::data::lnidx = i;
                 auto& lc = k.at(i);
+                newasm::compiler::data::line = lc.raw;
                 //check if it is a namespace
                 if(lc.type == newasm::compiler::namespace__)
                 {
                     if(lc.priInt == NewASM::Namespaces::Construction)
                     {
-                        NS_Con.push_back(i);
+                        NamespaceTree.push_back({i, INVALID_LINE});
                         continue;
                     }
                     else
                     {
-                        NS_Des.push_back(i);
+                        auto IDX = GetNamespaceLine(NamespaceTree);
+                        if(
+                            IDX == INVALID_LINE or
+                            (
+                                IDX != INVALID_LINE and
+                                k.at(i).priString != k.at(NamespaceTree[IDX].first).priString
+                            )
+                        )
+                        {
+                            #if 0
+                            try
+                            {
+                                std::cout << "Lines: " << k.at(i).raw << " | " << k.at(NamespaceTree[IDX].first).raw << std::endl;
+                            }
+                            catch(const std::exception& e)
+                            {
+                                std::cerr << e.what() << '\n';
+                            }
+                            #endif
+                            if constexpr(false) for(int s = 0; s < NamespaceTree.size(); ++s)
+                            {
+                                std::cout << "NamespaceTree[" << s << "]: ";
+                                if(NamespaceTree[s].first != INVALID_LINE) std::cout << newasm::forLinker::getFile(NamespaceTree[s].first) << ":" << newasm::forLinker::getLine(NamespaceTree[s].first) << " -> ";
+                                if(NamespaceTree[s].first == INVALID_LINE) std::cout << "-1" << " -> ";
+                                if(NamespaceTree[s].second == INVALID_LINE) std::cout << "-1" << std::endl;
+                                if(NamespaceTree[s].second != INVALID_LINE) std::cout << newasm::forLinker::getFile(NamespaceTree[s].second) << ":" << newasm::forLinker::getLine(NamespaceTree[s].second) << std::endl;
+                            }
+                            newasm::compiler::abort(newasm::compiler::fail::unexpected_nmst);
+                            break;
+                        }
+                        NamespaceTree[IDX].second = i;
                         continue;
                     }
                 }
-                //check if they are empty
-                if(
-                    NS_Con.size() == NS_Des.size() and
-                    NS_Con.size() > 0
-                )
+            }
+            //now after we have a good namespace tree
+            //we check if any of these are empty
+            auto& g = NamespaceTree;
+            if(g.empty())
+            {
+                return;
+            }
+            for(unsigned int j = g.size() - 1; j != 0; --j)
+            {
+                for(unsigned int i = g.at(j).first; i < g.at(j).second; ++i)
                 {
-                    if(NS_Con.front() > NS_Des.back())
+                    auto& lc = k.at(i);
+                    if(
+                        lc.whatAmIDoing == newasm::core::lang_inf::proc or
+                        lc.whatAmIDoing == newasm::core::lang_inf::thread__
+                    )
                     {
                         NamespaceEmpty = false;
                     }
-                    for(unsigned int j = NS_Con.front(); j < NS_Des.back(); ++j)
+                    else if(lc.CompileTime.dataDecl)
                     {
-                        auto& lcc = k.at(j);
-                        if(
-                            lcc.whatAmIDoing == newasm::core::lang_inf::proc ||
-                            lcc.whatAmIDoing == newasm::core::lang_inf::thread__
-                        )
-                        {
-                            NamespaceEmpty = false;
-                        }
-                        else if(lcc.CompileTime.dataDecl)
-                        {
-                            NamespaceEmpty = false;
-                        }
-                    }
-                    if(NamespaceEmpty)
-                    {
-                        NS_Con.insert(NS_Con.end(), NS_Des.begin(), NS_Des.end());
-                        OptDescription("removed empty namespaces", NS_Con);
-                        for(int p = 0; p < NS_Con.size(); ++p)
-                        {
-                            auto& lcc = k.at(p);
-                            lcc.type = newasm::compiler::empty;
-                        }
-                        NS_Con.clear();
-                        NS_Des.clear();
-                        NamespaceEmpty = true;
-                        continue;
+                        NamespaceEmpty = false;
                     }
                 }
+                if(NamespaceEmpty)
+                {
+                    OptDescription("removed useless namespace labels", {g.at(j).first, g.at(j).second});
+                    k.at(g.at(j).first).type = newasm::compiler::empty;
+                    k.at(g.at(j).second).type = newasm::compiler::empty;
+                }
+                NamespaceEmpty = true;
             }
             return;
         }
@@ -1642,7 +1685,7 @@ namespace newasm
                 }
                 return;
             };
-            auto __O_DESC_GENERIC3__ = <::>(const std::string& text, const std::vector<unsigned int>& v) -> void {
+            auto __O_DESC_GENERIC3__ = <::>(const std::string& text, const std::vector<int>& v) -> void {
                 if(NewASM::header::data::LogCompilerOptimizations)
                 {
                     std::cout << "\t  " << newasm::header::col::magenta;
