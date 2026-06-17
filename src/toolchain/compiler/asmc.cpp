@@ -1335,7 +1335,7 @@ namespace newasm
                 )
                 {
                     //logging the optimization
-                    OptDescription("peephole optimization, removed redundant code");
+                    OptDescription("peephole optimization, value of a register changed to itself");
                     //actual optimization xd
                     line.type = newasm::compiler::empty;
                     return;
@@ -1366,7 +1366,7 @@ namespace newasm
 
                 if(SameRegisters and ValidRegisters)
                 {
-                    OptDescription("peephole optimization, redundant assignment before reassignment", &lastLine, newasm::OptimizerData::LastLineIdx);
+                    OptDescription("peephole optimization, removed redundant assignment before reassignment", &lastLine, newasm::OptimizerData::LastLineIdx);
                     lastLine.type = newasm::compiler::empty;
                     return;
                 }
