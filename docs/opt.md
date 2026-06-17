@@ -30,16 +30,19 @@ catch xd
 
 3. `peephole optimization, removed redundant refetch`
 
-Double `fetch` instructions.
+Double `fetch` instructions are removed.
+
 4. `peephole optimization, removed redundant stack memory dedication`
 
-Double `resb` instructions.
+Double `resb` instructions are removed.
+
 5. `peephole optimization, removed redundant kernel module entrance`
 
-Double `sysenter` instructions.
+Double `sysenter` instructions are removed.
+
 6. `peephole optimization, removed redundant memory alignment`
 
-Double `align` instructions.
+Double `align` instructions are removed.
 
 7. `peephole optimization, value of a register changed to itself`
 
