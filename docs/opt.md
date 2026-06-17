@@ -5,6 +5,7 @@ The NewASM compiler does several different optimizations by default before packi
 The compiler will of course perform minor peephole optimizations such as:
 
 1. `peephole optimization, removed redundant double code`
+
 Code such as double jumps, double returns, or double reassignments, for example:
 
 ```asm
@@ -18,6 +19,7 @@ jmp smth ; removed, this line will never be reached
 ```
 
 2. `removed redundant try-catch block`
+
 Empty try-catch blocks will be ultimatively removed from the binary as they're relatively expensive.
 
 ```asm
@@ -27,14 +29,20 @@ catch xd
 ```
 
 3. `peephole optimization, removed redundant refetch`
+
 Double `fetch` instructions.
 4. `peephole optimization, removed redundant stack memory dedication`
+
 Double `resb` instructions.
 5. `peephole optimization, removed redundant kernel module entrance`
+
 Double `sysenter` instructions.
 6. `peephole optimization, removed redundant memory alignment`
+
 Double `align` instructions.
+
 7. `peephole optimization, value of a register changed to itself`
+
 Code such as:
 
 ```asm
@@ -44,9 +52,11 @@ mov tlr, *tlr
 will also get removed by the compiler.
 
 8. `peephole optimization, removed dead code`
+
 Dead instructions like `rem` will get removed.
 
 9. `peephole optimization, removed redundant assignment before reassignment`
+
 Code like this will also be modified:
 ```asm
 mov tlr, 6 ; removed cuz the next instruction's modifying tlr again
@@ -56,6 +66,7 @@ mov tlr, *tlr
 ### More complex optimizations
 
 1. `removed redundant code section reset`
+
 Redundant code section modifiers are also removed.
 
 ```asm
