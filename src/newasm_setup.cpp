@@ -636,14 +636,14 @@ namespace newasm
         {
             struct ThreadChannel final
             {
-                bool empty = true;
-                std::string content;
+                public bool empty = true;
+                std::string contents;
             };
         }
 
         class containerData final
         {
-            int type = 0;
+            public int type = 0;
             ContainerTypes::ThreadChannel* chan = nullptr;
         };
 

@@ -19,6 +19,15 @@ Welcome to **`NewASM`**: a low-level programming language which combines explici
 
 + Added the `throw` instruction. Just throws an exception (an instance of `UserError`) and crashes the program. Can be used for controlled exception management within try-catch blocks.
 
++ Now you can fetch channel addresses.
+```asm
+.data
+    cont channelName: ? chan
+.start
+    fetch channelName
+    send this, "data"
+```
+
 ## Fixed issues
 
 + Fixed issue #39.

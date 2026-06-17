@@ -1576,14 +1576,19 @@ jmp kjhdfhdkjs
 .start
 
     thread testChannel -> {
-        recv &threads::lol::myChannel
-        mov stl, 0c1
+        recv & threads::lol::myChannel
+        ;recv this
         mov fdx, 1
         sysenter "ios"
         syscall
+
+        mov tlr, "\n"
+        syscall
     }
 
-    send &threads::lol::myChannel, "Data from the channel\n"
+    fetch threads::lol::myChannel
+    send this, "Data from the channel\n"
+    fetch std::ios::writeln
     await &testChannel
     sysenter "thread"
     mov tlr, &testChannel

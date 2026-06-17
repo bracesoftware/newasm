@@ -1396,6 +1396,18 @@ namespace newasm
                         delete i->second.thrd;
                     }
                 }
+                //container cleanup
+                if(i->second.type == newasm::datatypes::container)
+                {
+                    if(i->second.container != nullptr)
+                    {
+                        if(i->second.container->chan != nullptr)
+                        {
+                            delete i->second.container->chan;
+                        }
+                        delete i->second.container;
+                    }
+                }
             }
             newasm::variables::ids.clear();
 

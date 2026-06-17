@@ -1263,15 +1263,16 @@ namespace newasm
                     // thread channels
                     case newasm::core::lang_inf::typenames::chan:
                     {
-                        if(newasm::mem::functions::datavalid(name, newasm::containers::thread_channels))
-                        {
-                            newasm::terminate(newasm::exit_codes::datastruct_redef);
-                            return 1;
-                        }
+                        newasm::variables::ids[name].type = newasm::datatypes::container;
+                        auto& mmap = newasm::variables::ids.at(name);
+                        mmap.container = new newasm::variables::containerData;
+                        mmap.container->chan = new newasm::variables::ContainerTypes::ThreadChannel;
+                        mmap.container->chan->empty = true;
+                        mmap.container->chan->contents = "??";
+                        mmap.container->type = newasm::datatypes::cont_types::channel;
 
-                        newasm::containers::thread_channels[name] = new newasm::containers::thread_channel__();
-                        newasm::containers::thread_channels.at(name)->empty = true;
-                        newasm::containers::thread_channels.at(name)->data = "??";
+                        mmap.attrib = newasm::runtime::currentAttributes;
+                        newasm::runtime::currentAttributes = 0;
                         return 1;
                     }
                 }
@@ -1533,25 +1534,53 @@ namespace newasm
             //send
             case newasm::core::lang_inf::send:
             {
-                if(!newasm::header::functions::isref(suf))
+                VarPtr ptr = nullptr;
+                if(lineInfo.priArgType != newasm::datatypes::ThisPtr)
                 {
+                    if(!newasm::header::functions::isref(suf))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    newasm::runtime::functions::parse(suf); // for namespaces
+                    suf = newasm::header::functions::trim(newasm::header::functions::remamp(suf));
+                    if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids)) [[unlikely]]
+                    {
+                        //std::cout << "THIS HAPPENED!!!! -> "<< suf << std::endl;
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+
+                    ptr = &newasm::variables::ids.at(suf);
+                }
+                else// if(lineInfo.priArgType == newasm::datatypes::ThisPtr)
+                {
+                    if(newasm::_this == nullptr) [[unlikely]]
+                    {
+                        newasm::SetExceptionComment("`this` is probably not initialized");
+                        //std::cout << "THIS ACTUALLY HAPPENED!!!! -> "<< suf << std::endl;
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+
+                    ptr = newasm::_this;
+                }
+
+                if(ptr->type != newasm::datatypes::container)
+                {
+                    newasm::SetExceptionComment("object is not a container");
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                     return 1;
                 }
-
-                newasm::runtime::functions::parse(suf);
-                suf = newasm::header::functions::remamp(suf);
-
-                if(newasm::containers::thread_channels.find(suf) == newasm::containers::thread_channels.end())
+                if(ptr->container->type != newasm::datatypes::cont_types::channel)
                 {
-                    newasm::terminate(newasm::exit_codes::invalid_memacc);
+                    newasm::SetExceptionComment("object is a container; but isn't of eligible type `chan`");
+                    newasm::terminate(newasm::exit_codes::seg_fault);
                     return 1;
                 }
 
-                newasm::containers::thread_channels.at(suf)->empty = false;
-                newasm::containers::thread_channels.at(suf)->data = opr;
-
-                //std::cout << "Sent `" << newasm::containers::thread_channels.at(suf)->data << "` to channel " << suf << std::endl;
+                ptr->container->chan->empty = false;
+                ptr->container->chan->contents = opr;
                 return 1;
             }
             //__say
@@ -6145,38 +6174,69 @@ namespace newasm
             {
                 if(!newasm::thread_line)
                 {
+                    newasm::SetExceptionComment("cannot receive data from a channel inside the main thread");
                     newasm::terminate(newasm::exit_codes::invalid_exp);
                     return 1;
                 }
-                if(!newasm::header::functions::isref(suf))
+             
+                VarPtr ptr = nullptr;
+                if(lineInfo.priArgType != newasm::datatypes::ThisPtr)
                 {
+                    if(!newasm::header::functions::isref(suf))
+                    {
+                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                        return 1;
+                    }
+                    newasm::runtime::functions::parse(suf); // for namespaces
+                    suf = newasm::header::functions::trim(newasm::header::functions::remamp(suf));
+                    if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids)) [[unlikely]]
+                    {
+                        //std::cout << "THIS HAPPENED!!!! -> "<< suf << std::endl;
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+
+                    ptr = &newasm::variables::ids.at(suf);
+                }
+                else// if(lineInfo.priArgType == newasm::datatypes::ThisPtr)
+                {
+                    if(newasm::_this == nullptr) [[unlikely]]
+                    {
+                        newasm::SetExceptionComment("`this` is probably not initialized");
+                        //std::cout << "THIS ACTUALLY HAPPENED!!!! -> "<< suf << std::endl;
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+
+                    ptr = newasm::_this;
+                }
+
+                if(ptr->type != newasm::datatypes::container)
+                {
+                    newasm::SetExceptionComment("object is not a container");
                     newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                     return 1;
                 }
-
-                newasm::runtime::functions::parse(suf);
-                suf = newasm::header::functions::remamp(suf);
-
-                if(newasm::containers::thread_channels.find(suf) == newasm::containers::thread_channels.end())
+                if(ptr->container->type != newasm::datatypes::cont_types::channel)
                 {
-                    newasm::terminate(newasm::exit_codes::invalid_memacc);
+                    newasm::SetExceptionComment("object is a container; but isn't of eligible type `chan`");
+                    newasm::terminate(newasm::exit_codes::seg_fault);
                     return 1;
                 }
-
-                auto channel = newasm::containers::thread_channels.find(suf);
 
                 //std::cout << "recv called in " << newasm::threads::now << std::endl;
+                auto& l = newasm::threads::memory.at(newasm::threads::now);
 
-                if(channel->second->empty)
+                if(ptr->container->chan->empty)
                 {
                     //std::cout << "CHANNEL " << suf << " IS EMPTY!" << std::endl;
-                    newasm::threads::memory.at(newasm::threads::now)->paused = true;
+                    l->paused = true;
                     return 1;
                 }
 
-                channel->second->empty = true;
-                newasm::threads::memory.at(newasm::threads::now)->paused = false;
-                newasm::mem::regs::tlr.set_value(channel->second->data);
+                ptr->container->chan->empty = true;
+                l->paused = false;
+                newasm::mem::regs::tlr.set_value(ptr->container->chan->contents);
                 //std::cout << "channel->second->data is `" << channel->second->data << "`" << std::endl;
                 return 1;
             }
