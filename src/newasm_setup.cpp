@@ -632,6 +632,21 @@ namespace newasm
             }
         };
 
+        namespace ContainerTypes
+        {
+            struct ThreadChannel final
+            {
+                bool empty = true;
+                std::string content;
+            };
+        }
+
+        class containerData final
+        {
+            int type = 0;
+            ContainerTypes::ThreadChannel* chan = nullptr;
+        };
+
         VarTable ids;
     }
 }

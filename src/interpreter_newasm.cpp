@@ -196,6 +196,7 @@ namespace newasm
         class threadData;
         struct eventData;
         struct staticObjectData;
+        class containerData;
 
         struct varData final
         {
@@ -206,6 +207,7 @@ namespace newasm
             unionData* yunion = nullptr; // if it is an union, we use this
             contextData* context = nullptr; // if it is a context, use this
             procedureData* proc = nullptr; //if it is a proc, use this
+            containerData* container = nullptr;//if container
 
             //just for checks
             threadData* thrd = nullptr;
@@ -268,11 +270,17 @@ namespace newasm
         
         const int static_objz = 11;
         const int threadz = 12;
+        const int container = 13;
         const int event = 100;
         const int _regDeref = 101;
         constinit const int NIL = 102;
         constinit const int tokenOpenBrace = 103;
         constinit const int ThisPtr = 104;
+
+        namespace cont_types
+        {
+            constinit const int channel = 1;
+        }
     }
     namespace runtime
     {
