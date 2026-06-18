@@ -4,7 +4,7 @@ The NewASM compiler does several different optimizations by default before packi
 ### Simple optimizations
 The compiler will of course perform minor peephole optimizations such as:
 
-1. `peephole optimization, removed redundant double code`
+1. **`peephole optimization, removed redundant double code`**
 
 Code such as double jumps, double returns, or double reassignments, for example:
 
@@ -18,7 +18,7 @@ jmp lmao
 jmp smth ; removed, this line will never be reached
 ```
 
-2. `removed redundant try-catch block`
+2. **`removed redundant try-catch block`**
 
 Empty try-catch blocks will be ultimatively removed from the binary as they're relatively expensive.
 
@@ -28,23 +28,23 @@ try
 catch xd
 ```
 
-3. `peephole optimization, removed redundant refetch`
+3. **`peephole optimization, removed redundant refetch`**
 
 Double `fetch` instructions are removed.
 
-4. `peephole optimization, removed redundant stack memory dedication`
+4. **`peephole optimization, removed redundant stack memory dedication`**
 
 Double `resb` instructions are removed.
 
-5. `peephole optimization, removed redundant kernel module entrance`
+5. **`peephole optimization, removed redundant kernel module entrance`**
 
 Double `sysenter` instructions are removed.
 
-6. `peephole optimization, removed redundant memory alignment`
+6. **`peephole optimization, removed redundant memory alignment`**
 
 Double `align` instructions are removed.
 
-7. `peephole optimization, value of a register changed to itself`
+7. **`peephole optimization, value of a register changed to itself`**
 
 Code such as:
 
@@ -54,11 +54,11 @@ mov tlr, *tlr
 
 will also get removed by the compiler.
 
-8. `peephole optimization, removed dead code`
+8. **`peephole optimization, removed dead code`**
 
 Dead instructions like `rem` will get removed.
 
-9. `peephole optimization, removed redundant assignment before reassignment`
+9. **`peephole optimization, removed redundant assignment before reassignment`**
 
 Code like this will also be modified:
 ```asm
@@ -68,7 +68,7 @@ mov tlr, *tlr
 
 ### More complex optimizations
 
-1. `removed redundant code section reset`
+1. **`removed redundant code section reset`**
 
 Redundant code section modifiers are also removed.
 
@@ -81,7 +81,7 @@ Redundant code section modifiers are also removed.
 
 Although this looks like a very simple optimization, it requires some deeper code analysis by the compiler in order to determine if the removal is 100% safe.
 
-2. `removed unreachable code block`
+2. **`removed unreachable code block`**
 
 The compiler also does deeper code analysis in order to remove unreachable code blocks such as:
 
@@ -93,7 +93,7 @@ jmp lmao
 
 ```
 
-3. `removed useless namespace labels`
+3. **`removed useless namespace labels`**
 
 The compiler also removes empty namespaces. By empty, it means no procedure, thread, data container or a variable is declared within it.
 
