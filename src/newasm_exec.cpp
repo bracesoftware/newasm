@@ -9486,7 +9486,7 @@ namespace newasm
         return 0;
     }
   
-    void analyzeline(std::string &line, int lineidx)
+    inline void analyzeline(std::string& line, int lineidx)
     {
         //using namespace std;
         //cout << "DEBUG:\t" << line << endl;
