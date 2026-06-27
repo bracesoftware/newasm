@@ -9360,13 +9360,14 @@ namespace newasm
                                     return 1;
                                 }
                             }
-                            for(int i = 0; i < newasm::mem::instructions[libname].size(); ++i)
+                            auto& l = newasm::mem::instructions[libname];
+                            for(int i = 0; i < l.size(); ++i)
                             {
                                 if(newasm::system::terminated)
                                 {
                                     return 1;
                                 }
-                                auto JIT_COMPILE = newasm::compiler::DO(newasm::mem::instructions[libname].at(i));
+                                auto JIT_COMPILE = newasm::compiler::DO(l.at(i));
                                 newasm::procline(JIT_COMPILE);
                             }
                             return 1;
