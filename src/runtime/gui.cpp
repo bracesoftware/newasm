@@ -153,13 +153,16 @@ namespace newasm::runtime::gui
                         if(b == selectedIndex)
                         {
                             std::cout << newasm::header::bg_col::white_black;
-                            std::cout << "[ " << buttons[b] << " ]";
+                            std::cout << " " << buttons[b] << " ";
                             std::cout << newasm::header::bg_col::black_white;
                         }
                         else
                         {
-                            std::cout << "[ " << buttons[b] << " ]";
+                            std::cout << newasm::header::bg::gray << newasm::header::col::black;
+                            std::cout << " " << buttons[b] << " ";
+                            std::cout << newasm::header::bg_col::black_white;
                         }
+                        std::cout << " ";
                     }
                     
                     for(int p = pad + totalBtnLen; p < boxWidth; ++p) std::cout << " ";
