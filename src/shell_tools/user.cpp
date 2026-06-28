@@ -253,6 +253,7 @@ namespace newasm
                 }
                 if(std::stoi(content) == 1) //login
                 {
+                    newasm::user::impl::LoadSimpleConfig();
                     if(newasm::user::loggedin)
                     {
                         newasm::header::functions::err("Already logged in.");
@@ -267,7 +268,7 @@ namespace newasm
                         {
                             newasm::user::global::username = newasm::user::impl::getUsername();
                             newasm::user::loggedin = true;
-                            newasm::user::impl::LoadSimpleConfig();
+                            //newasm::user::impl::LoadSimpleConfig();
                             newasm::header::functions::info("Automatically logged in because the password was used within the last 10 minutes.");
                             return;
                         }
@@ -287,7 +288,6 @@ namespace newasm
                     newasm::user::loggedin = true;
                     newasm::user::impl::saveLoginTimeStamp();
                     newasm::user::global::username = newasm::user::impl::getUsername();
-                    newasm::user::impl::LoadSimpleConfig();
                     return;
                 }
                 return;

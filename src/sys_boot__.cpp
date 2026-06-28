@@ -85,7 +85,7 @@ namespace newasm::bootloader
             return 0;
         }
 
-        newasm::runtime::gui::box("Test", "Mdfkin test", {"xd","lmao","lel"});
+        newasm::runtime::gui::box("Test", "Mdfkin test", {"xd","lmao","lel","haha", "lesgooo", "i am gay"});
 
         #if 0
         module(test, {

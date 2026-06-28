@@ -200,6 +200,7 @@ namespace newasm
                     }
                     if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::logout__))
                     {
+                        newasm::user::impl::SaveSimpleConfig();
                         newasm::user::main();
                         return 1;
                     }
@@ -315,10 +316,12 @@ namespace newasm
                             {
                                 newasm::header::functions::info("Successfully DISABLED the automatic login.");
                                 SimpleConfig &= ~AutomaticLogin;
+                                newasm::user::impl::SaveSimpleConfig();
                                 return 1;
                             }
                             SimpleConfig |= AutomaticLogin;
                             newasm::header::functions::info("Successfully ENABLED the automatic login.");
+                            newasm::user::impl::SaveSimpleConfig();
                             return 1;
                         }
                         return 1;
