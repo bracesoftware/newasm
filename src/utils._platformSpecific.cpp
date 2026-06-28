@@ -19,6 +19,7 @@ module(hostos_specific__UTILS, {
 #endif
 
 link "vm/Experimental";
+link "runtime/gui";
 
 module(SDL_screen_emulator, {
     //setup goes here
