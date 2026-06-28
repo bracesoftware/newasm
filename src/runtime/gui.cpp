@@ -143,29 +143,29 @@ namespace newasm::runtime::gui
                     std::string btnRow = "";
                     
                     int totalBtnLen = 0;
-                    for(const auto& btn : buttons) totalBtnLen += btn.length() + 4;
-                    int pad = (boxWidth - totalBtnLen) / 2;
+                    for(const auto& btn : buttons) totalBtnLen += btn.length() + 2;
+                    int pad = (boxWidth - totalBtnLen - numButtons) / 2;
                     
-                    for(int p = 0; p < pad; ++p) std::cout << " ";
+                    for(int p = 0; p < pad; ++p) std::cout << ' ';
                     
                     for(int b = 0; b < numButtons; ++b)
                     {
                         if(b == selectedIndex)
                         {
                             std::cout << newasm::header::bg_col::white_black;
-                            std::cout << " " << buttons[b] << " ";
+                            std::cout << ' ' << buttons[b] << ' ';
                             std::cout << newasm::header::bg_col::black_white;
                         }
                         else
                         {
                             std::cout << newasm::header::bg::gray << newasm::header::col::black;
-                            std::cout << " " << buttons[b] << " ";
+                            std::cout << ' ' << buttons[b] << ' ';
                             std::cout << newasm::header::bg_col::black_white;
                         }
-                        std::cout << " ";
+                        std::cout << ' ';
                     }
                     
-                    for(int p = pad + totalBtnLen; p < boxWidth; ++p) std::cout << " ";
+                    for(int p = pad + totalBtnLen; p < boxWidth - numButtons; ++p) std::cout << ' ';
                     std::cout << newasm::header::col::reset << newasm::header::col::sky_blue;
                 } 
                 else if(i >= 2 && i < 2 + (int)messageLines.size())
