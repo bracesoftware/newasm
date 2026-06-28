@@ -200,6 +200,7 @@ namespace newasm
             const std::string magenta = "";
             const std::string cyan = "";
             const std::string gray = "";
+            const std::string black = "";
             const std::string kernel = "";
 
             const std::string light_red = "";
@@ -231,6 +232,7 @@ namespace newasm
             const std::string red = "";
             const std::string green = "";
             const std::string night_blue = "";
+            const std::string gray = "";
         }
         namespace bg_col
         {

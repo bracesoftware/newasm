@@ -133,8 +133,8 @@ namespace newasm::runtime::gui
                 
                 if(i == 0)
                 {
-                    std::cout << newasm::header::style::underline;
-                    std::cout << newasm::header::bg_col::black_white << CenterText(" " + title, boxWidth);
+                    std::cout << newasm::header::style::underline << newasm::header::col::black;
+                    std::cout << newasm::header::bg::gray << CenterText(" " + title, boxWidth);
                     std::cout << newasm::header::col::reset << newasm::header::col::sky_blue;
                 } 
                 else if(i == boxHeight - 2)
