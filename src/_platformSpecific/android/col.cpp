@@ -30,6 +30,8 @@ namespace newasm
             const std::string gold = "\033[38;2;255;215;0m";
             const std::string ghost_white = "\033[38;2;248;248;255m";
 
+            const std::string sky_blue = "\033[44m";
+
             const std::string reset = "\033[0m";
         }
         namespace style
@@ -48,6 +50,11 @@ namespace newasm
             const std::string red = "\033[41m";
             const std::string green = "\033[42m";
             const std::string night_blue = "\033[48;2;25;25;112m";
+        }
+        namespace bg_col
+        {
+            const std::string black_white = "\033[47;30m";
+            const std::string white_black = "\033[40;37m";
         }
     }
 }

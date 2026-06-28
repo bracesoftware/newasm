@@ -85,6 +85,8 @@ namespace newasm::bootloader
             return 0;
         }
 
+        newasm::runtime::gui::box("Test", "Mdfkin test", {"xd","lmao","lel"});
+
         #if 0
         module(test, {
             NewASM::Modules::PrintLine("Test.");

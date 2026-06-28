@@ -213,6 +213,7 @@ namespace newasm
             const std::string ghost_white = "";
 
             const std::string reset = "";
+            const std::string sky_blue = "";
         }
         namespace style
         {
@@ -230,6 +231,11 @@ namespace newasm
             const std::string red = "";
             const std::string green = "";
             const std::string night_blue = "";
+        }
+        namespace bg_col
+        {
+            const std::string black_white = "";
+            const std::string white_black = "";
         }
     }
 }

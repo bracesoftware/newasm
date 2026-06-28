@@ -10,21 +10,9 @@
 #include <unistd.h>
 #endif
 
-namespace newasm::runtime::gui {
-
-    enum class Key { None, Enter, Left, Right, Tab };
-
-    inline void SetupTerminal()
-    {
-        #if _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
-        HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-        DWORD dwMode = 0;
-        GetConsoleMode(hOut, &dwMode);
-        dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-        SetConsoleMode(hOut, dwMode);
-        #endif
-    }
-
+//ai written at first but reworked
+namespace newasm::runtime::gui
+{
     inline void GetTerminalSize(int& width, int& height)
     {
         #if _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
@@ -40,41 +28,34 @@ namespace newasm::runtime::gui {
         #endif
     }
 
-    Key GetKeyPress()
+    const int KEY_ENTER = 1;
+    const int KEY_LEFT = 2;
+    const int KEY_RIGHT = 3;
+    const int KEY_TAB = 4;
+    const int KEY_NONE = 5;
+
+    std::atomic<int> pressed(0);
+    std::atomic<char> ch('?');
+    bool killInputListener = false;
+
+    void inputListener()
     {
-        #if _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
-        int ch = _getch();
-        if (ch == 13) return Key::Enter;
-        if (ch == 9) return Key::Tab;
-        if (ch == 0 || ch == 224) { // Windows strelice šalju dva bajta
-            int ext = _getch();
-            if (ext == 75) return Key::Left;
-            if (ext == 77) return Key::Right;
-        }
-        return Key::None;
-        #else
-        struct termios oldt, newt;
-        tcgetattr(STDIN_FILENO, &oldt);
-        newt = oldt;
-        newt.c_lflag &= ~(ICANON | ECHO);
-        tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-        
-        int ch = getchar();
-        Key result = Key::None;
-        
-        if (ch == 10) result = Key::Enter;
-        else if (ch == 9) result = Key::Tab;
-        else if (ch == 27) { // ANSI Escape sekvenca za strelice (ESC [ C/D)
-            if (getchar() == '[') {
-                int arrow = getchar();
-                if (arrow == 'D') result = Key::Left;
-                if (arrow == 'C') result = Key::Right;
+        pressed = KEY_NONE;
+        while(true)
+        {
+            if(killInputListener)
+            {
+                return;
             }
+            ch = newasm::_compat::getch();
+            if(ch == 'A' or ch == 'a') pressed = KEY_LEFT;
+            else if(ch == 'D' or ch == 'd') pressed = KEY_RIGHT;
+            else if(ch == '\n' or ch == '\r') pressed = KEY_ENTER;
+            else if(ch == '\t') pressed = KEY_TAB;
+            else pressed = KEY_NONE;
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
-        
-        tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-        return result;
-        #endif
     }
 
     inline std::vector<std::string> WrapText(const std::string& text, int maxWidth)
@@ -102,7 +83,7 @@ namespace newasm::runtime::gui {
 
     inline std::string CenterText(const std::string& text, int width)
     {
-        if (static_cast<int>(text.length()) >= width) return text.substr(0, width);
+        if(static_cast<int>(text.length()) >= width) return text.substr(0, width);
         int padding = (width - text.length()) / 2;
         std::string result(padding, ' ');
         result += text;
@@ -110,51 +91,59 @@ namespace newasm::runtime::gui {
         return result;
     }
 
-    inline int CreateBox(const std::string& title, const std::string& message, const std::vector<std::string>& buttons)
+    inline int box(const std::string& title, const std::string& message, const std::vector<std::string>& buttons)
     {
-        int termWidth, termHeight;
-        GetTerminalSize(termWidth, termHeight);
-
-        const int boxWidth = 50;
-        int startX = (termWidth - boxWidth) / 2;
-        if (startX < 1) startX = 1;
-        std::vector<std::string> messageLines = WrapText(message, boxWidth - 8);
-                const int boxHeight = messageLines.size() + 6; 
-        int startY = (termHeight - boxHeight) / 2;
-        if (startY < 1) startY = 1;
-
+        int termWidth = 0, termHeight = 0, TW_OLD, TH_OLD;
         auto moveCursor = [](int x, int y) {
             std::cout << "\033[" << y << ";" << x << "H";
         };
-
-        std::cout << "\033[?1049h\033[?25l"; // Alternate buffer, sakrij kursor
-        
-        // Oboj pozadinu preko cijelog ekrana u plavo (kao klasični Linux TUI)
-        std::cout << "\033[44m\033[2J"; 
+        const int boxWidth = 50;
+        int boxHeight, startY, startX;
+        static const std::string CLS = "\033[2J";
+        std::vector<std::string> messageLines = WrapText(message, boxWidth - 8);
+        //magic-DO NOT TOUCH! NOTE INFO IMPORTANT
+        std::cout << "\033[?1049h\033[?25l" << newasm::header::col::sky_blue << CLS;
 
         int selectedIndex = 0;
         int numButtons = buttons.size();
         bool running = true;
-
-        // Glavna Event Petlja
+        std::thread listener(inputListener);
         while(running)
         {
+            std::cout << newasm::header::col::sky_blue;
+            GetTerminalSize(termWidth, termHeight);
+
+            if(TW_OLD != termWidth or TH_OLD != termHeight)
+            {
+                std::cout << CLS;
+                startX = (termWidth - boxWidth) / 2;
+                if(startX < 1) startX = 1;
+                boxHeight = messageLines.size() + 6; 
+                startY = (termHeight - boxHeight) / 2;
+                if(startY < 1) startY = 1;
+            }
+            TW_OLD = termWidth;
+            TH_OLD = termHeight;
+
+            
+            //std::this_thread::sleep_for(std::chrono::milliseconds(100));
             for(int i = 0; i < boxHeight; ++i)
             {
                 moveCursor(startX, startY + i);
                 
                 if(i == 0)
                 {
-                    // Title bar
-                    std::cout << "\033[47;30m" << CenterText(" " + title, boxWidth) << "\033[0m\033[44m";
+                    std::cout << newasm::header::style::underline;
+                    std::cout << newasm::header::bg_col::black_white << CenterText(" " + title, boxWidth);
+                    std::cout << newasm::header::col::reset << newasm::header::col::sky_blue;
                 } 
                 else if(i == boxHeight - 2)
                 {
-                    std::cout << "\033[47;30m";
+                    std::cout << newasm::header::bg_col::black_white;
                     std::string btnRow = "";
                     
                     int totalBtnLen = 0;
-                    for(const auto& btn : buttons) totalBtnLen += btn.length() + 4; // "[ txt ]"
+                    for(const auto& btn : buttons) totalBtnLen += btn.length() + 4;
                     int pad = (boxWidth - totalBtnLen) / 2;
                     
                     for(int p = 0; p < pad; ++p) std::cout << " ";
@@ -163,7 +152,9 @@ namespace newasm::runtime::gui {
                     {
                         if(b == selectedIndex)
                         {
-                            std::cout << "\033[40;37m[ " << buttons[b] << " ]\033[47;30m";
+                            std::cout << newasm::header::bg_col::white_black;
+                            std::cout << "[ " << buttons[b] << " ]";
+                            std::cout << newasm::header::bg_col::black_white;
                         }
                         else
                         {
@@ -172,53 +163,54 @@ namespace newasm::runtime::gui {
                     }
                     
                     for(int p = pad + totalBtnLen; p < boxWidth; ++p) std::cout << " ";
-                    std::cout << "\033[0m\033[44m";
+                    std::cout << newasm::header::col::reset << newasm::header::col::sky_blue;
                 } 
                 else if(i >= 2 && i < 2 + (int)messageLines.size())
                 {
-                    std::cout << "\033[47;30m" << CenterText(messageLines[i - 2], boxWidth) << "\033[0m\033[44m";
+                    std::cout << newasm::header::bg_col::black_white;
+                    std::cout << newasm::header::col::gray << CenterText(messageLines[i - 2], boxWidth);
+                    std::cout << newasm::header::col::reset << newasm::header::col::sky_blue;
                 }
                 else
                 {
-                    std::cout << "\033[47;30m" << std::string(boxWidth, ' ') << "\033[0m\033[44m";
+                    std::cout << newasm::header::bg_col::black_white << std::string(boxWidth, ' ');
+                    std::cout << newasm::header::col::reset << newasm::header::col::sky_blue;
                 }
             }
+
+            std::string footerText = "Navigate with `A`, `D` and `Tab` keys. `Enter` to continue.";
+            int footerX = startX + (boxWidth - (int)footerText.length()) / 2;
+            int footerY = startY + boxHeight + 2;
+
+            moveCursor(footerX, footerY);
+            std::cout << newasm::header::col::yellow << footerText << newasm::header::col::reset;
+
             std::cout << std::flush;
 
-            // Čekanje i obrada unosa
-            Key k = GetKeyPress();
-            if(k == Key::Right || k == Key::Tab)
+            if(pressed == KEY_RIGHT or pressed == KEY_TAB)
             {
                 selectedIndex = (selectedIndex + 1) % numButtons;
+                pressed = KEY_NONE;
             }
-            else if(k == Key::Left)
+            else if(pressed == KEY_LEFT)
             {
                 selectedIndex = (selectedIndex - 1 + numButtons) % numButtons;
+                pressed = KEY_NONE;
             }
-            else if(k == Key::Enter)
+            else if(pressed == KEY_ENTER)
             {
+                pressed = KEY_NONE;
+                killInputListener = true;
                 running = false;
             }
+            else if(pressed == KEY_NONE)
+            {
+                continue;
+            }
         }
-
+        listener.join();
+        //more magic
         std::cout << "\033[?1049l\033[?25h" << std::flush;
         return selectedIndex;
     }
-}
-
-int main() {
-    CustomTUI::SetupTerminal();
-    std::cout << "Lmao" << std::endl;
-    
-    std::string longMessage = "Ovo je jedan vrlo dugacak string koji testira algoritam za prelamanje teksta. "
-                              "Sistem ce izracunati duzinu i automatski razbiti ovaj tekst u vise linija tako "
-                              "da savrseno stane u nas okvir od 50 karaktera sirine, a visina okvira ce se prilagoditi!";
-                              
-    std::vector<std::string> buttons = {"Prihvati", "Odbij", "Odgodi"};
-
-    int result = CustomTUI::CreateBox("Sistemska Konfiguracija", longMessage, buttons);
-
-    std::cout << "Dialog zatvoren. Korisnik je odabrao opciju: " << buttons[result] << " (Index " << result << ")\n";
-
-    return 0;
 }
