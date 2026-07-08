@@ -81,7 +81,7 @@ namespace newasm::runtime::gui
         return lines;
     }
 
-    inline std::string CenterText(const std::string& text, int width)
+    inline std::string CenterText_OLD(const std::string& text, int width)
     {
         if(static_cast<int>(text.length()) >= width) return text.substr(0, width);
         int padding = (width - text.length()) / 2;
@@ -91,9 +91,22 @@ namespace newasm::runtime::gui
         return result;
     }
 
+    inline std::string CenterText(const std::string& text, int width)
+    {
+        if(static_cast<int>(text.length()) >= width) 
+        {
+            return text.substr(0, width);
+        }
+
+        std::string result(width, ' ');
+        size_t padding = (width - text.length()) / 2;
+        result.replace(padding, text.length(), text);
+        return result;
+    }
+
     inline int box(const std::string& title, const std::string& message, const std::vector<std::string>& buttons)
     {
-        int termWidth = 0, termHeight = 0, TW_OLD, TH_OLD;
+        int termWidth = 0, termHeight = 0, TW_OLD = 1, TH_OLD = 1;
         auto moveCursor = [](int x, int y) {
             std::cout << "\033[" << y << ";" << x << "H";
         };
