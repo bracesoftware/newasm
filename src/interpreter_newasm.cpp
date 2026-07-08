@@ -23,6 +23,7 @@ namespace newasm
 namespace SYS = newasm;
 namespace NewASM = newasm;
 namespace llsq = newasm;
+namespace НовиАСМ = newasm;
 
 link "runtime/common/os";
 link "runtime/common/arch";
