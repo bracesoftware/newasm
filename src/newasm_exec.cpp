@@ -12,6 +12,11 @@ module(virtual_cpu, {
 
 namespace newasm
 {
+    inline signed int GetCurrentThread()
+    {
+        if(!newasm::thread_line) return -1;
+        return newasm::threads::id_now;
+    }
     void handle_threads();
     int compile_and_exec(std::string file, int lineidx_____);
     int compile(const std::string& file);
@@ -3082,6 +3087,27 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::constant_modif);
                         return 1;
                     }
+                    else if(i.MutexLock && i.MutexOwner != newasm::GetCurrentThread()) [[unlikely]]
+                    {
+                        if(newasm::header::data::proc_now)
+                        {
+                            std::cout << "Proc terminated cuz of mutexlock" << std::endl;
+                            NewASM::CurrentProcA->proc->idx = -1;
+                        }
+
+                        if(newasm::thread_line)
+                        {
+                            std::cout << "Thread is waiting cuz of mutexlock" << std::endl;
+                            newasm::threads::memory.at(newasm::threads::now)->paused = true;
+                        }
+                        else
+                        {
+                            std::cout << "Main thread is waiting cuz of mutexlock" << std::endl;
+                            newasm::code_stream::paused = true;
+                        }
+                        return 1;
+                    }
+
                     if(i.type == newasm::datatypes::number)
                     {
                         if(lineInfo.altArgType == newasm::datatypes::symbol_name)
@@ -4349,6 +4375,7 @@ namespace newasm
                 auto it = newasm::variables::ids.find(suf);
                 if(it == newasm::variables::ids.end())
                 {
+                    newasm::SetExceptionComment("could not find an object: `"_str + suf + "`"_str);
                     newasm::terminate(newasm::exit_codes::invalid_memacc);
                     return 1;
                 }
@@ -5114,6 +5141,137 @@ namespace newasm
                 NewASM::header::data::CallCStack->push_back(lineInfo.returninTo);
                 //std::cout << "CallCStack size = " << NewASM::header::data::CallCStack->size() << std::endl;
                 //std::cout << "CallCStack pushed = " << NewASM::header::data::CallCStack->back() << std::endl;
+                return 1;
+            }
+            //lock
+            case newasm::core::lang_inf::lock__:
+            {
+                VarPtr ptr = nullptr;
+                if(lineInfo.priArgType == newasm::datatypes::ThisPtr)
+                {
+                    if(newasm::_this == nullptr)
+                    {
+                        newasm::SetExceptionComment("`this` is probably not initialized");
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    ptr = newasm::_this;
+                }
+                else if(lineInfo.priArgType != newasm::datatypes::ThisPtr)
+                {
+                    newasm::runtime::functions::eval(suf, lineInfo.priEvalMode);
+                    if(!newasm::header::functions::isref(suf))
+                    {
+                        std::cout << "Jel ovd belaj" << std::endl;
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+
+                    suf = newasm::header::functions::remamp(suf);
+                    auto it = newasm::variables::ids.find(suf);
+                    if(it == newasm::variables::ids.end())
+                    {
+                        std::cout << "il je ovde" << std::endl;
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    ptr = &it->second;
+                }
+
+                if(!(ptr->attrib & newasm::core::lang_inf::attributes::MUTEX__))
+                {
+                    newasm::SetExceptionComment("object is not marked as mutual exclusive (mutex)");
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    return 1;
+                }
+
+                if(ptr->MutexLock && ptr->MutexOwner != newasm::GetCurrentThread()) [[unlikely]]
+                {
+                    if(newasm::header::data::proc_now)
+                    {
+                        std::cout << "Proc terminated cuz of mutexlock" << std::endl;
+                        NewASM::CurrentProcA->proc->idx = -1;
+                    }
+
+                    if(newasm::thread_line)
+                    {
+                        std::cout << "Thread is waiting cuz of mutexlock" << std::endl;
+                        newasm::threads::memory.at(newasm::threads::now)->paused = true;
+                    }
+                    else
+                    {
+                        std::cout << "Main thread is waiting cuz of mutexlock" << std::endl;
+                        newasm::code_stream::paused = true;
+                    }
+                    return 1;
+                }
+
+                ptr->MutexLock = true;
+                ptr->MutexOwner = newasm::GetCurrentThread();
+                return 1;
+            }
+            //unlock
+            case newasm::core::lang_inf::unlock__:
+            {
+                VarPtr ptr = nullptr;
+                if(lineInfo.priArgType == newasm::datatypes::ThisPtr)
+                {
+                    if(newasm::_this == nullptr)
+                    {
+                        newasm::SetExceptionComment("`this` is probably not initialized");
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    ptr = newasm::_this;
+                }
+                else if(lineInfo.priArgType != newasm::datatypes::ThisPtr)
+                {
+                    newasm::runtime::functions::eval(suf, lineInfo.priEvalMode);
+                    if(!newasm::header::functions::isref(suf))
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+
+                    suf = newasm::header::functions::remamp(suf);
+                    auto it = newasm::variables::ids.find(suf);
+                    if(it == newasm::variables::ids.end())
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    ptr = &it->second;
+                }
+
+                if(!(ptr->attrib & newasm::core::lang_inf::attributes::MUTEX__))
+                {
+                    newasm::SetExceptionComment("object is not marked as mutual exclusive (mutex)");
+                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    return 1;
+                }
+
+                if(ptr->MutexLock && ptr->MutexOwner != newasm::GetCurrentThread()) [[unlikely]]
+                {
+                    if(newasm::header::data::proc_now)
+                    {
+                        std::cout << "Proc terminated cuz of mutexlock" << std::endl;
+                        NewASM::CurrentProcA->proc->idx = -1;
+                    }
+
+                    if(newasm::thread_line)
+                    {
+                        std::cout << "Thread is waiting cuz of mutexlock" << std::endl;
+                        newasm::threads::memory.at(newasm::threads::now)->paused = true;
+                    }
+                    else
+                    {
+                        std::cout << "Main thread is waiting cuz of mutexlock" << std::endl;
+                        newasm::code_stream::paused = true;
+                    }
+                    return 1;
+                }
+
+                ptr->MutexLock = false;
                 return 1;
             }
             //del
@@ -9677,6 +9835,7 @@ namespace newasm
         //clean up for jit
         newasm::compiler::data::symbol_map.clear();
         newasm::compiler::data::JIT_mode = true;
+        newasm::code_stream::paused = false;
         
         if constexpr(what == true)
         {
@@ -9749,12 +9908,16 @@ namespace newasm
             }
             #endif
             
-            if(newasm::code_stream::jump)
+            if(newasm::code_stream::paused)
+            {
+                newasm::code_stream::paused = false;
+            }
+            else if(newasm::code_stream::jump)//
             {
                 newasm::code_stream::jump = 0;
                 newasm::mem::regs::lcx.set_value(newasm::code_stream::jumpto);
             }
-            else newasm::mem::regs::lcx.set_value(newasm::mem::regs::lcx.get_value() + 1);
+            else newasm::mem::regs::lcx.set_value(newasm::mem::regs::lcx.get_value() + 1);//
         }
 
         if(

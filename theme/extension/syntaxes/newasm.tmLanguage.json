@@ -58,7 +58,7 @@
     },
     {
       "name": "keyword.section.newasm",
-      "match": "\\.[\\s]*(text|data|start|hndl)"
+      "match": "\\.[\\s]*(text|data|start)"
     },
     {
       "name": "variable.register.newasm",
@@ -70,7 +70,7 @@
     },
     {
       "name": "namespace.newasm",
-      "match": "\\b(final|static|mangle|safe)\\b"
+      "match": "\\b(mutex|final|static|mangle|safe)\\b"
     },
     {
       "name": "namespace.newasm",

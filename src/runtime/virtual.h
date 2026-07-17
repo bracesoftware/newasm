@@ -13,8 +13,7 @@ namespace newasm
         newasm::core::constants::separator + newasm::core::constants::virtual_mem;
         class RAM
         {
-            private:
-            std::string path;
+            private std::string path;
             int size;
 
             public:

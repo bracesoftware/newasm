@@ -45,16 +45,18 @@ namespace newasm
         {
             namespace attributes
             {
-                inline constinit const int CONST__ = 1 << 0;
-                inline constinit const int STATIC__ = 1 << 1;
-                inline constinit const int MANGLE__ = 1 << 2;
-                inline constinit const int SAFE__ = 1 << 3;
+                inline constinit const int CONST__      = 1 << 0;
+                inline constinit const int STATIC__     = 1 << 1;
+                inline constinit const int MANGLE__     = 1 << 2;
+                inline constinit const int SAFE__       = 1 << 3;
+                inline constinit const int MUTEX__      = 1 << 4;
 
                 inline const std::unordered_map<std::string, int> ids = {
                     {"final", CONST__},
                     {"static", STATIC__},
                     {"mangle", MANGLE__},
-                    {"safe", SAFE__}
+                    {"safe", SAFE__},
+                    {"mutex", MUTEX__}
                 };
             }
             const int load = 1;//
@@ -147,6 +149,9 @@ namespace newasm
             const int try__ = 81;//
             const int catch__ = 82;//
             const int throw__ = 83;//
+
+            const int lock__ = 84;//
+            const int unlock__ = 85;//
 
             /// @brief //////
             const int Link___ = 99;
@@ -257,6 +262,9 @@ namespace newasm
                 {try__, "try"},
                 {catch__, "catch"},
                 {throw__, "throw"},
+
+                {lock__, "lock"},
+                {unlock__, "unlock"},
 
                 {__say, "__say"}
             };

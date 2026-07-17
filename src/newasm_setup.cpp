@@ -15,6 +15,7 @@ namespace newasm
     {
         int jumpto = 1;
         int jump = 0;
+        bool paused = false;
         const int invalid_lnidx = -1;
         namespace sections
         {

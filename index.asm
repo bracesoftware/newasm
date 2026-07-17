@@ -133,6 +133,7 @@ using "math"
         sysenter "ios"
         syscall
     }
+    
     int 0x3; auto bos
     await &testthread ; wait for the thread to finish immediatelly
     ;if the thread doesn't finish, we will get ExpectedAwait error
@@ -1400,12 +1401,12 @@ nop
     
 using "ios"
 .data
-    [lock]
+    [private]
     string myLockedstr : "Locked"
     obj lockedObj : {
         string lockedMember : "LockedMember"
     }
-    [!lock]
+    [!private]
     string unlockedstr : "Unlocked"
 .start
     thread mythread -> {
@@ -2696,6 +2697,8 @@ jmp e2349083l
     ./interesting
         tuple lmao: ("hello", 32, 5.3, 23, "this is insane", "lmao")
     ./!interesting
+    @ mutex
+    string testinggg : "Lmao"
 .text
     ;fetch lol ; crash, lol is labelled as @safe
     thread interesting -> {
@@ -2755,6 +2758,7 @@ jmp e2349083l
         call ProcWithError
     catch kids
 ./!eh
+
 ; -------------------------- END OF PROGRAM -------------------------- ;
 mymacro : #
     throw
@@ -2774,6 +2778,29 @@ jmp 345lmao
     }
 :345lmao
     ;try
+
+    
+    thread Funnyx -> {
+        fetch testinggg
+        lock this
+        mov &testinggg, "Testing the funny string"
+        mov tlr, testinggg
+        call std::ios::writeln
+        unlock this
+    }
+
+    lock &testinggg
+    mov &testinggg, "Testing the funny string from main thread"
+    mov tlr, testinggg
+    call std::ios::writeln
+    unlock &testinggg
+
+    await &Funnyx
+    mov tlr, &Funnyx
+    sysenter "thread"
+    mov fdx, 1
+    syscall
+
         call myFunction
     ;catch nil
     try
@@ -2783,6 +2810,9 @@ jmp 345lmao
         nop
     catch kids
 :lmaoooo 
+
+
+
     
     zero rax
     mov rax, 223 ; exit code
