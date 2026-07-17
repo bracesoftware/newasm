@@ -209,9 +209,9 @@ namespace newasm
             contextData* context = nullptr; // if it is a context, use this
             procedureData* proc = nullptr; //if it is a proc, use this
             containerData* container = nullptr;//if container
+            threadData* thrd = nullptr;//if thread
 
             //just for checks
-            threadData* thrd = nullptr;
             eventData* event = nullptr;
             staticObjectData* obj = nullptr;
             bool deleted = false;
@@ -232,6 +232,10 @@ namespace newasm
     VarPtr CurrentProc = nullptr;
     VarPtr CurrentProcA = nullptr;
     VarPtr CurrentClass = nullptr;
+    VarPtr CurrentThread = nullptr;
+    VarPtr CurrentThreadA = nullptr;
+
+    std::vector<VarPtr> CurrentThreads;
 
     constinit int CYCLE_COUNT = 0;
     std::string CONST__ = NIL_STR;
@@ -585,7 +589,7 @@ namespace newasm
         int udb_hash(const std::string& input);
     }
     int terminate(int exit_code, const std::source_location loc = std::source_location::current());
-    void async(const std::string& name);
+    void async(VarPtr p);
     namespace header
     {
         namespace functions
@@ -1279,6 +1283,7 @@ namespace newasm
     {
         inline void cleanup()
         {
+            NewASM::CurrentThreads.clear();
             NewASM::MutableConfig::DisplaySourceInformation = false;
             NewASM::kernel::ThreadCount = 0;
             NewASM::compiler::data::IfResult = true;
@@ -1332,7 +1337,6 @@ namespace newasm
             newasm::containers::functions::free_dyn_mem();
             newasm::stack::free_macro_mem();
 
-            newasm::threads::functions::free_mem();
             newasm::core::env_vars::functions::save_env();
 
             newasm::compiler::data::sealed_labels.clear();
@@ -1386,6 +1390,10 @@ namespace newasm
                 }
                 if(i->second.type == newasm::datatypes::proc)
                 {
+                    if(i->second.proc->Async)
+                    {
+                        delete i->second.thrd;
+                    }
                     if(i->second.proc != nullptr)
                     {
                         delete i->second.proc;
@@ -1912,160 +1920,3 @@ namespace newasm
         #endif
 
 link "sys_boot__";
-
-#if 0
-
-namespace newasm
-{
-    namespace __
-    {
-int main(int argc, char *argv[])
-{
-    newasm::runtime::main();
-    std::string cmd;
-
-    fs::path data_folder = fs::path(newasm::core::constants::data_folder);
-    fs::path cache_folder = fs::path(newasm::core::constants::data_folder+
-        newasm::core::constants::separator+
-        newasm::core::constants::cache_folder
-    );
-    if(!fs::exists(data_folder))
-    {
-        fs::create_directories(data_folder);
-    }
-    if(!fs::exists(cache_folder))
-    {
-        fs::create_directories(cache_folder);
-    }
-    newasm::_virtual::main();
-    newasm::dyn_ins_set = &newasm::mem::instructions;
-    //std::cout << "IDIOTISM" << std::endl;
-    newasm::env_vars = &newasm::core::env_vars::priv_env_var;
-
-    std::cout << std::endl; newasm::header::functions::vers_info();
-
-    
-    newasm::header::functions::log("System loading...");
-
-    if(newasm::vercheck)
-    {
-        newasm::vers::main();
-        if(std::filesystem::exists(newasm::core::constants::data_folder + newasm::core::constants::separator + newasm::core::constants::temp_vers))
-        {
-            std::filesystem::remove(newasm::core::constants::data_folder + newasm::core::constants::separator + newasm::core::constants::temp_vers);
-        }
-    }
-
-    std::cout << std::endl;
-    newasm::header::execution_flow::entry_exec = newasm::header::settings::script_file;
-
-    newasm::core::env_vars::functions::setup_env();
-    /*newasm::project_data::impl::setup_proj();
-    newasm::header::functions::info(
-        static_cast<std::string>("Preparing to execute: ") + newasm::header::col::yellow +
-        newasm::project_data::name + static_cast<std::string>(" ") + newasm::project_data::version
-        + newasm::header::col::reset);
-*/
-    /*
-        Before executing the file we need to open the program window.
-    */
-    if(newasm::dwin)
-    {
-        if(!std::filesystem::exists(newasm::core::constants::progwin))
-        {
-            newasm::header::functions::err("`progwin` (debugger) not found.");
-            return 1;
-        }
-
-        newasm::progwin::api::cout("Debug window ready.");
-
-        newasm::runtime::start_program(newasm::core::constants::progwin);
-    }
-    /*
-        NewASM Shell
-    */
-    std::string command;
-    std::string username = "root";
-    while(true)
-    {
-        std::cout << newasm::header::col::green << "shell@" << 
-        newasm::header::col::yellow<<username<<newasm::header::col::green
-        <<" $"
-        << newasm::header::col::reset;
-        std::cin >> command;
-        newasm::shell::main(command);
-        if(newasm::shell::data::terminated)
-        {
-            break;
-        }
-    }
-
-    // File to analyze.
-    
-    if(newasm::header::data::exception)
-    {
-        newasm::header::functions::log("Process terminated...");
-    }
-    
-    newasm::header::functions::info("Cleaning up...");
-
-    newasm::handles::delete_handles();
-    newasm::containers::functions::free_dyn_mem();
-    newasm::stack::free_macro_mem();
-    newasm::header::functions::log("System unloading...");
-
-    if(newasm::dyn_ins_set != nullptr)
-    {
-        delete newasm::dyn_ins_set;
-        newasm::dyn_ins_set = nullptr;
-    }
-    if(newasm::env_vars != nullptr)
-    {
-        delete newasm::env_vars;
-        newasm::env_vars = nullptr;
-    }
-    
-    newasm::threads::functions::free_mem();
-
-    if(newasm::dwin)
-    {
-        newasm::progwin::api::exit();
-    }
-
-    return 0;
-}}}
-
-        #endif
-
-namespace newasm
-{
-    void __init__()
-    {
-        #ifdef NEWASM_STRICT_TEST
-        std::string line = "  mov   \"oh, no\"";
-        std::string line2 = "   ret    tlr,             \"eh, sexy\"";
-        std::string line3 = "   syscall    ";
-        std::string line4 = "   zero    stl";
-        std::cout << newasm::common::tokenize(line).size() << char(32) <<
-        newasm::common::tokenize(line2).size() << char(32) <<
-        newasm::common::tokenize(line3).size() << char(32) <<
-        newasm::common::tokenize(line4).size() << char(32) << std::endl; 
-
-        std::cout << newasm::common::tokenize(line).at(0) << '|' << newasm::common::tokenize(line).at(1) << '|'<< std::endl;
-        std::cout << newasm::common::tokenize(line2).at(0) << '|' << newasm::common::tokenize(line2).at(1) << '|' << newasm::common::tokenize(line2).at(2) << '|'<< std::endl;
-        std::cout << newasm::common::tokenize(line3).at(0) << '|'<<std::endl;
-        std::cout << newasm::common::tokenize(line4).at(0) << '|' << newasm::common::tokenize(line4).at(1) << '|'<< std::endl;
-
-        //line = newasm::header::functions::trim(line);
-        
-
-        return 1;
-        
-
-        newasm::_register<std::string> test("test", "xd");
-        test = '-' +static_cast<std::string>("\"")+'e'+test+static_cast<std::string>("\"")+'-'+static_cast<std::string>("ahaha");
-        std::cout << "Test :: " << test;
-        return 1;
-        #endif
-    }
-}

@@ -616,27 +616,23 @@ namespace newasm
                         return 1;
                     }
                     std::string thread__ = newasm::header::functions::remamp(newasm::mem::regs::tlr);
-                    if(!newasm::mem::functions::datavalid(thread__, newasm::threads::memory))
+                    auto it = newasm::variables::ids.find(thread__);
+                    if(it == newasm::variables::ids.end())
                     {
-                        newasm::terminate(newasm::exit_codes::invalid_thread);
+                        newasm::SetExceptionComment("not an existing object");
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
                         return 1;
                     }
-                    #if 0
-                    if(!newasm::threads::memory.at(thread__)->contents.empty())
-                    {
-                        newasm::terminate(newasm::exit_codes::expected_await);
-                        return 1;
-                    }
-                    #endif
-                    //if(newasm::threads::memory.at(thread__)->lcx != newasm::threads::memory.at(thread__)->contents.size())
-                    if(!newasm::threads::memory.at(thread__)->returned)
+
+                    auto& mmap = it->second;
+
+                    if(!mmap.thrd->returned)
                     {
                         newasm::terminate(newasm::exit_codes::expected_await);
                         return 1;
                     }
                     
-                    newasm::Console::out(newasm::threads::memory.at(thread__)->output.str());
-                    //newasm::kernel::write_stl();
+                    newasm::Console::out(mmap.thrd->output.str());
                     return 1;
                 }
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::thread, 2): //get returned val from thread
@@ -647,28 +643,23 @@ namespace newasm
                         return 1;
                     }
                     std::string thread__ = newasm::header::functions::remamp(newasm::mem::regs::tlr);
-                    if(!newasm::mem::functions::datavalid(thread__, newasm::threads::memory))
+                    auto it = newasm::variables::ids.find(thread__);
+                    if(it == newasm::variables::ids.end())
                     {
-                        newasm::terminate(newasm::exit_codes::invalid_thread);
+                        newasm::SetExceptionComment("not an existing object");
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
                         return 1;
                     }
-                    #if 0
-                    if(!newasm::threads::memory.at(thread__)->contents.empty())
-                    {
-                        newasm::terminate(newasm::exit_codes::expected_await);
-                        return 1;
-                    }
-                    #endif
 
-                    //if(newasm::threads::memory.at(thread__)->lcx != newasm::threads::memory.at(thread__)->contents.size())
-                    if(!newasm::threads::memory.at(thread__)->returned)
+                    auto& mmap = it->second;
+
+                    if(!mmap.thrd->returned)
                     {
                         newasm::terminate(newasm::exit_codes::expected_await);
                         return 1;
                     }
-                    //std::cout << newasm::threads::memory.at(thread__)->output.str();
-                    //newasm::syscalls::iostream::out_bopr(newasm::mem::regs::stl);
-                    newasm::mem::regs::tlr = newasm::threads::memory.at(thread__)->returned_val;
+                    
+                    newasm::mem::regs::tlr = mmap.thrd->returned_val;
                     return 1;
                 }
 /*
@@ -1140,8 +1131,7 @@ namespace newasm
                     std::string _chars_ = newasm::header::functions::remq(newasm::mem::regs::tlr);
                     if(newasm::thread_line)
                     {
-                        newasm::threads::memory.at(newasm::threads::now)->output << _chars_;
-                        //newasm::threads::memory.at(newasm::threads::now)->output << newasm::syscalls::iostream::get_ref_val__2(newasm::mem::regs::stl);
+                        newasm::CurrentThreadA->thrd->output << _chars_;
                         return 1;
                     }
 
@@ -1176,8 +1166,7 @@ namespace newasm
                     }
                     if(newasm::thread_line)
                     {
-                        newasm::threads::memory.at(newasm::threads::now)->output << newasm::mem::regs::tlr.get_value();
-                        //newasm::threads::memory.at(newasm::threads::now)->output << newasm::syscalls::iostream::get_ref_val__2(newasm::mem::regs::stl);
+                        newasm::CurrentThreadA->thrd->output << newasm::mem::regs::tlr.get_value();
                         return 1;
                     }
                     if(0) std::cout << newasm::mem::regs::tlr;// << std::endl;
@@ -1216,17 +1205,6 @@ namespace newasm
                 //print values of builtin operands
                 case newasm::kernel::makeHash(newasm::core::lang_inf::refs::ios, 5):
                 {
-                    #if 0
-                    if(newasm::thread_line)
-                    {
-                        newasm::threads::memory.at(newasm::threads::now)->output << newasm::syscalls::iostream::get_ref_val__2(newasm::mem::regs::tlr);
-                        return 1;
-                    }
-                    //newasm::mem::functions::out_bopr(newasm::mem::regs::tlr);
-                    //newasm::syscalls::iostream::out_bopr(newasm::mem::regs::tlr);
-                    newasm::kernel::write_tlr();
-                    #endif
-                    //newasm::header::functions::krnl("This host service is deprecated.");
                     return 1;
                 }
                 //print references
@@ -1241,8 +1219,7 @@ namespace newasm
                     }
                     if(newasm::thread_line)
                     {
-                        newasm::threads::memory.at(newasm::threads::now)->output << newasm::header::functions::remamp(newasm::mem::regs::tlr);
-                        //newasm::threads::memory.at(newasm::threads::now)->output << newasm::syscalls::iostream::get_ref_val__2(newasm::mem::regs::stl);
+                        newasm::CurrentThreadA->thrd->output << newasm::header::functions::remamp(newasm::mem::regs::tlr);
                         return 1;
                     }
                     
@@ -1268,8 +1245,7 @@ namespace newasm
                     }
                     if(newasm::thread_line)
                     {
-                        newasm::threads::memory.at(newasm::threads::now)->output << newasm::header::functions::remsq(newasm::mem::regs::tlr);
-                        //newasm::threads::memory.at(newasm::threads::now)->output << newasm::syscalls::iostream::get_ref_val__2(newasm::mem::regs::stl);
+                        newasm::CurrentThreadA->thrd->output << newasm::header::functions::remsq(newasm::mem::regs::tlr);
                         return 1;
                     }
                     //std::cout << newasm::header::functions::remsq(newasm::mem::regs::tlr);
@@ -1644,7 +1620,7 @@ namespace newasm
                     std::string contents = READFILE(NewASM::hardware::Disk, TLR);
                     if(newasm::thread_line)
                     {
-                        newasm::threads::memory.at(newasm::threads::now)->output << contents;
+                        newasm::CurrentThreadA->thrd->output << contents;
                         return 1;
                     }
                     NewASM::Console::out(contents);

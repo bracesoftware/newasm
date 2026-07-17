@@ -349,6 +349,7 @@ namespace newasm
                 const int context__ = 14;
 
                 const int proc__ = 15;
+                const int thread___ = 16;
 
                 const std::unordered_map<int, std::string> identifiers__ = {
                     {num, "intg"},
@@ -367,7 +368,8 @@ namespace newasm
                     {bit_arr, "bit_arr"},
                     {bin_tree, "bin_tree"},
                     {chan, "chan"},
-                    {proc__, "proc"}
+                    {proc__, "proc"},
+                    {thread___, "thread"}
                 };
             }
 

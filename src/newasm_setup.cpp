@@ -469,11 +469,6 @@ namespace newasm
             short addr = 0;
         };
 
-        class threadData final
-        {
-            public int addr = 0;
-        };
-
         class procedureData final
         {
             private bool prepared = false;
@@ -485,6 +480,7 @@ namespace newasm
 
             std::string original_name;
             bool mangled = false;
+            bool Async = false;
 
             bool TryBlock = false;
             int TryJump = -1;
@@ -632,6 +628,239 @@ namespace newasm
                 return;
             }
         };
+
+        
+        class threadData final
+        {
+            private bool prepared = false;
+            public std::vector<newasm::compiler::lineData> contents;
+            std::stringstream output;
+            std::string returned_val;
+            bool returned = false;
+            bool paused = false;
+            std::unordered_map<std::string, int> labels;
+            unsigned int id = 0;
+            std::string original_name;
+
+            bool TryBlock = false;
+            int TryJump = -1;
+            bool TryCatched = false;
+
+            int lcx = 0;
+            int LCX;
+
+            explicit inline threadData()
+            {
+                #if 0
+                this->contents.reserve(500);
+                #endif
+            }
+
+            inline void restartThread()
+            {
+                this->lcx = 0;
+                this->returned = false;
+                this->paused = false;
+                this->TryBlock = false;
+                this->TryJump = -1;
+                this->TryCatched = false;
+            }
+
+            inline void recompile_threadProc()
+            {
+                if(this->prepared)
+                {
+                    return;
+                }
+                this->prepared = true;
+
+                if(this->contents.empty())
+                {
+                    return;
+                }
+                this->labels.max_load_factor(MAX_LOAD_FACTOR);
+
+                bool FLAG1 = false;
+
+                for(int i = 0; i < this->contents.size(); ++i)
+                {
+                    auto& line = this->contents.at(i);
+                    if(line.AltArgLambda) //allow lambdas inside threads to have their own labels
+                    {
+                        if(FLAG1) [[unlikely]]
+                        {
+                            newasm::terminate(newasm::exit_codes::jit_fail);
+                            break;
+                        }
+                        FLAG1 = true;
+                        continue;
+                    }
+                    if(line.type == newasm::compiler::lambdaTerminator)
+                    {
+                        if(!FLAG1) [[unlikely]]
+                        {
+                            newasm::terminate(newasm::exit_codes::jit_fail);
+                            break;
+                        }
+                        FLAG1 = false;
+                        continue;
+                    }
+                    if(FLAG1) continue;
+                    if(line.type == newasm::compiler::sealedLabel)
+                    {
+                        //std::cout << "Successfully added label: `" << this->contents.at(i).other << "`" << std::endl;
+                        auto k = line.other;
+                        if(this->labels.find(k) != this->labels.end())
+                        {
+                            newasm::terminate(newasm::exit_codes::label_redef);
+                        }
+                        this->labels[k] = i;
+                        newasm::sealedLabels->push_back(k);
+                        line.type = newasm::compiler::empty;
+                        continue;
+                    }
+                }
+
+                FLAG1 = false; for(int i = 0; i < this->contents.size(); ++i)
+                {
+                    auto& bytecode = this->contents.at(i);
+                    if(bytecode.AltArgLambda) //allow lambdas inside threads to have their own labels
+                    {
+                        if(FLAG1) [[unlikely]]
+                        {
+                            newasm::terminate(newasm::exit_codes::jit_fail);
+                            break;
+                        }
+                        FLAG1 = true;
+                        continue;
+                    }
+                    if(bytecode.type == newasm::compiler::lambdaTerminator)
+                    {
+                        if(!FLAG1) [[unlikely]]
+                        {
+                            newasm::terminate(newasm::exit_codes::jit_fail);
+                            break;
+                        }
+                        FLAG1 = false;
+                        continue;
+                    }
+                    if(FLAG1) continue;
+                    if(newasm::compiler::utils::IsJumpIns(bytecode))
+                    {
+                        if(bytecode.whatAmIDoing == newasm::core::lang_inf::catch__)
+                        {
+                            if(bytecode.priArgType == newasm::datatypes::NIL)
+                            {
+                                continue;
+                            }
+                        }
+                        if(bytecode.tokens.size() != 2)
+                        {
+                            continue;
+                        }
+                        auto& label_name = bytecode.tokens[1];
+
+                        if(this->labels.find(label_name) == this->labels.end())
+                        {
+                            newasm::terminate(newasm::exit_codes::bus_err);
+                            break;
+                        }
+                        bytecode.jumpinTo = this->labels.at(label_name);
+
+                        if(bytecode.whatAmIDoing == newasm::core::lang_inf::callc)
+                        {
+                            bytecode.returninTo = i;
+                        }
+                        continue;
+                    }
+                    if(
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::loop
+                    )
+                    {
+                        if(bytecode.tokens.size() != 3)
+                        {
+                            continue;
+                        }
+                        auto& label_name = bytecode.tokens[2];
+                        if(this->labels.find(label_name) == this->labels.end())
+                        {
+                            newasm::terminate(newasm::exit_codes::bus_err);
+                            break;
+                        }
+                        bytecode.jumpinTo = this->labels.at(label_name);
+                        continue;
+                    }
+                    // instruction specialization
+                    if(
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::push
+                    )
+                    {
+                        bytecode.whatAmIDoing = newasm::core::lang_inf::push__THREAD;
+                        continue;
+                    }
+                    if(
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::pop
+                    )
+                    {
+                        bytecode.whatAmIDoing = newasm::core::lang_inf::pop__THREAD;
+                        continue;
+                    }
+                    if(
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::stack
+                    )
+                    {
+                        bytecode.whatAmIDoing = newasm::core::lang_inf::stack__THREAD;
+                        continue;
+                    }
+                }
+
+                int TryFound = -1;
+                for(int i = 0; i < this->contents.size(); ++i)
+                {
+                    auto& bytecode = this->contents.at(i);
+                    if(bytecode.type == newasm::compiler::sealedLabel)
+                    {
+                        if(TryFound != -1)
+                        {
+                            newasm::terminate(newasm::exit_codes::jit_fail);
+                            break;
+                        }
+                    }
+                    if(
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::proc or
+                        bytecode.whatAmIDoing == newasm::core::lang_inf::thread__
+                    )
+                    {
+                        newasm::terminate(newasm::exit_codes::jit_fail);
+                        break;
+                    }
+                    if(bytecode.whatAmIDoing == newasm::core::lang_inf::try__)
+                    {
+                        if(TryFound != -1)
+                        {
+                            newasm::terminate(newasm::exit_codes::jit_fail);
+                            break;
+                        }
+                        TryFound = i;
+                        continue;
+                    }
+                    if(bytecode.whatAmIDoing == newasm::core::lang_inf::catch__)
+                    {
+                        if(TryFound == -1)
+                        {
+                            newasm::terminate(newasm::exit_codes::jit_fail);
+                            break;
+                        }
+                        this->contents.at(TryFound).jumpinTo = i;
+                        TryFound = -1;
+                        continue;
+                    }
+                }
+
+                return;
+            }
+        };
+        
 
         namespace ContainerTypes
         {

@@ -2789,6 +2789,11 @@ jmp 345lmao
         unlock this
     }
 
+    thread LmaoWhatsThos -> {
+        mov tlr, "Hello from lmaowhatsthos"
+        call std::ios::writeln
+    }
+
     lock &testinggg
     mov &testinggg, "Testing the funny string from main thread"
     mov tlr, testinggg
@@ -2797,6 +2802,12 @@ jmp 345lmao
 
     await &Funnyx
     mov tlr, &Funnyx
+    sysenter "thread"
+    mov fdx, 1
+    syscall
+
+    await &LmaoWhatsThos
+    mov tlr, &LmaoWhatsThos
     sysenter "thread"
     mov fdx, 1
     syscall

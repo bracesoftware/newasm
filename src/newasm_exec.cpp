@@ -79,7 +79,7 @@ namespace newasm
 
         if(newasm::thread_line)
         {
-            auto& mmap = newasm::threads::memory.at(newasm::threads::now);
+            auto& mmap = newasm::CurrentThreadA->thrd;
             if(mmap->TryBlock)
             {
                 //std::cout << "Error catched in thread -> " << exit_code << std::endl;
@@ -292,7 +292,7 @@ namespace newasm
                     std::cout << "in ";
                 }
                 auto& t = newasm::threads::now;
-                auto& mmap = newasm::threads::memory.at(t);
+                auto& mmap = newasm::CurrentThreadA->thrd;
                 std::cout << "thread " <<
                 newasm::header::col::gray <<
                 newasm::header::style::bold <<
@@ -324,7 +324,7 @@ namespace newasm
             if(newasm::thread_line)
             {
                 auto& t = newasm::threads::now;
-                auto& mmap = newasm::threads::memory.at(t);
+                auto& mmap = newasm::CurrentThreadA->thrd;
                 LogDeclarationSource(t, mmap->LCX);
             }
             if(temp_proc)
@@ -621,56 +621,7 @@ namespace newasm
             name = newasm::header::functions::mangleName(newasm::nms::stack, name);
             //std::cout << "mangled name: `" << name << "`" << std::endl;
         }
-        #if 0
-        if(!newasm::header::data::struct_now) if(newasm::mem::functions::datavalid(name, newasm::mem::data))
-        {
-            if(true)
-            {
-                newasm::terminate(newasm::exit_codes::var_redef);
-                return 1;
-            }
-        }
-        if(!newasm::header::data::struct_now) if(newasm::mem::functions::datavalid(name, newasm::variables::ids))
-        {
-            if(true)
-            {
-                newasm::terminate(newasm::exit_codes::var_redef);
-                return 1;
-            }
-        }
-        if(!newasm::header::data::struct_now) if(newasm::mem::functions::datavalid(name, newasm::mem::structs))
-        {
-            if(true)//if(newasm::namespaceCollision(name))
-            {
-                newasm::terminate(newasm::exit_codes::object_redef);
-                return 1;
-            }
-        }
-        if(!newasm::header::data::struct_now) if(newasm::mem::functions::datavalid(name, newasm::threads::memory))
-        {
-            if(true)//if(newasm::namespaceCollision(name))
-            {
-                newasm::terminate(newasm::exit_codes::object_redef);
-                return 1;
-            }
-        }
-        if(!newasm::header::data::struct_now) if(newasm::mem::functions::datavalid(name, newasm::mem::tuple))
-        {
-            if(true)//if(newasm::namespaceCollision(name))
-            {
-                newasm::terminate(newasm::exit_codes::tuple_redef);
-                return 1;
-            }
-        }
-        #endif
-        #if 0
-        auto it = newasm::inverted_types.find(dtyp);
-        if(it == newasm::inverted_types.end())
-        {
-            newasm::terminate(newasm::exit_codes::invalid_syntax);
-            return 1;
-        }
-        #endif
+    
         switch(line.parsedType)
         {
             //objects
@@ -2788,7 +2739,7 @@ namespace newasm
 
                 if(newasm::thread_line)
                 {
-                    newasm::threads::memory.at(newasm::threads::now)->lcx = lineInfo.jumpinTo;//newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
+                    newasm::CurrentThreadA->thrd->lcx = lineInfo.jumpinTo;//newasm::CurrentThreadA->thrd->labels.at(suf);
                     return 1;
                 }
 
@@ -3091,18 +3042,18 @@ namespace newasm
                     {
                         if(newasm::header::data::proc_now)
                         {
-                            std::cout << "Proc terminated cuz of mutexlock" << std::endl;
+                            //std::cout << "Proc terminated cuz of mutexlock" << std::endl;
                             NewASM::CurrentProcA->proc->idx = -1;
                         }
 
                         if(newasm::thread_line)
                         {
-                            std::cout << "Thread is waiting cuz of mutexlock" << std::endl;
-                            newasm::threads::memory.at(newasm::threads::now)->paused = true;
+                            //std::cout << "Thread is waiting cuz of mutexlock" << std::endl;
+                            newasm::CurrentThreadA->thrd->paused = true;
                         }
                         else
                         {
-                            std::cout << "Main thread is waiting cuz of mutexlock" << std::endl;
+                            //std::cout << "Main thread is waiting cuz of mutexlock" << std::endl;
                             newasm::code_stream::paused = true;
                         }
                         return 1;
@@ -4401,7 +4352,7 @@ namespace newasm
                 {
                     if(newasm::thread_line)
                     {
-                        newasm::threads::memory.at(newasm::threads::now)->paused = true;
+                        newasm::CurrentThreadA->thrd->paused = true;
                         return 1;
                     }
 
@@ -4722,7 +4673,7 @@ namespace newasm
                         return 1;
                     }
                     #endif
-                    if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
+                    if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::CurrentThreadA->thrd->labels))
                     {
                         newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
                         return 1;
@@ -4748,7 +4699,7 @@ namespace newasm
 
                 if(newasm::thread_line)
                 {
-                    newasm::threads::memory.at(newasm::threads::now)->lcx = lineInfo.jumpinTo;//newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
+                    newasm::CurrentThreadA->thrd->lcx = lineInfo.jumpinTo;//newasm::CurrentThreadA->thrd->labels.at(suf);
                     return 1;
                 }
 
@@ -4776,7 +4727,7 @@ namespace newasm
                         return 1;
                     }
                     #endif
-                    if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
+                    if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::CurrentThreadA->thrd->labels))
                     {
                         newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
                         return 1;
@@ -4800,7 +4751,7 @@ namespace newasm
 
                 if(newasm::thread_line)
                 {
-                    newasm::threads::memory.at(newasm::threads::now)->lcx = lineInfo.jumpinTo;//newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
+                    newasm::CurrentThreadA->thrd->lcx = lineInfo.jumpinTo;//newasm::CurrentThreadA->thrd->labels.at(suf);
                     return 1;
                 }
 
@@ -4827,7 +4778,7 @@ namespace newasm
                         return 1;
                     }
                     #endif
-                    if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
+                    if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::CurrentThreadA->thrd->labels))
                     {
                         newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
                         return 1;
@@ -4852,7 +4803,7 @@ namespace newasm
 
                 if(newasm::thread_line)
                 {
-                    newasm::threads::memory.at(newasm::threads::now)->lcx = lineInfo.jumpinTo;//newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
+                    newasm::CurrentThreadA->thrd->lcx = lineInfo.jumpinTo;//newasm::CurrentThreadA->thrd->labels.at(suf);
                     return 1;
                 }
 
@@ -4880,7 +4831,7 @@ namespace newasm
                         return 1;
                     }
                     #endif
-                    if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
+                    if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::CurrentThreadA->thrd->labels))
                     {
                         newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
                         return 1;
@@ -4905,7 +4856,7 @@ namespace newasm
                 
                 if(newasm::thread_line)
                 {
-                    newasm::threads::memory.at(newasm::threads::now)->lcx = lineInfo.jumpinTo;//newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
+                    newasm::CurrentThreadA->thrd->lcx = lineInfo.jumpinTo;//newasm::CurrentThreadA->thrd->labels.at(suf);
                     return 1;
                 }
                 
@@ -4932,7 +4883,7 @@ namespace newasm
                         return 1;
                     }
                     #endif
-                    if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
+                    if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::CurrentThreadA->thrd->labels))
                     {
                         newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
                         return 1;
@@ -4957,7 +4908,7 @@ namespace newasm
 
                 if(newasm::thread_line)
                 {
-                    newasm::threads::memory.at(newasm::threads::now)->lcx = lineInfo.jumpinTo;//newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
+                    newasm::CurrentThreadA->thrd->lcx = lineInfo.jumpinTo;//newasm::CurrentThreadA->thrd->labels.at(suf);
                     return 1;
                 }
                 
@@ -4982,7 +4933,7 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
                         return 1;
                     }
-                    if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
+                    if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::CurrentThreadA->thrd->labels))
                     {
                         newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
                         return 1;
@@ -5007,7 +4958,7 @@ namespace newasm
 
                 if(newasm::thread_line)
                 {
-                    newasm::threads::memory.at(newasm::threads::now)->lcx = lineInfo.jumpinTo;//newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
+                    newasm::CurrentThreadA->thrd->lcx = lineInfo.jumpinTo;//newasm::CurrentThreadA->thrd->labels.at(suf);
                     return 1;
                 }
 
@@ -5032,7 +4983,7 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
                         return 1;
                     }
-                    if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::threads::memory.at(newasm::threads::now)->labels))
+                    if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::CurrentThreadA->thrd->labels))
                     {
                         newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
                         return 1;
@@ -5054,7 +5005,7 @@ namespace newasm
 
                 if(newasm::thread_line)
                 {
-                    newasm::threads::memory.at(newasm::threads::now)->lcx = lineInfo.jumpinTo;//newasm::threads::memory.at(newasm::threads::now)->labels.at(suf);
+                    newasm::CurrentThreadA->thrd->lcx = lineInfo.jumpinTo;//newasm::CurrentThreadA->thrd->labels.at(suf);
                     return 1;
                 }
 
@@ -5084,7 +5035,7 @@ namespace newasm
 
                 if(newasm::thread_line)
                 {
-                    auto& mmap = newasm::threads::memory.at(newasm::threads::now);
+                    auto& mmap = newasm::CurrentThreadA->thrd;
                     if(!mmap->TryCatched)
                     {
                         mmap->TryBlock = false;
@@ -5132,7 +5083,7 @@ namespace newasm
 
                 if(newasm::thread_line)
                 {
-                    newasm::threads::memory.at(newasm::threads::now)->lcx = lineInfo.jumpinTo;
+                    newasm::CurrentThreadA->thrd->lcx = lineInfo.jumpinTo;
                     NewASM::header::data::CallCStack->push_back(lineInfo.returninTo);
                     return 1;
                 }
@@ -5162,7 +5113,6 @@ namespace newasm
                     newasm::runtime::functions::eval(suf, lineInfo.priEvalMode);
                     if(!newasm::header::functions::isref(suf))
                     {
-                        std::cout << "Jel ovd belaj" << std::endl;
                         newasm::terminate(newasm::exit_codes::invalid_memacc);
                         return 1;
                     }
@@ -5171,7 +5121,6 @@ namespace newasm
                     auto it = newasm::variables::ids.find(suf);
                     if(it == newasm::variables::ids.end())
                     {
-                        std::cout << "il je ovde" << std::endl;
                         newasm::terminate(newasm::exit_codes::invalid_memacc);
                         return 1;
                     }
@@ -5189,18 +5138,18 @@ namespace newasm
                 {
                     if(newasm::header::data::proc_now)
                     {
-                        std::cout << "Proc terminated cuz of mutexlock" << std::endl;
+                        //std::cout << "Proc terminated cuz of mutexlock" << std::endl;
                         NewASM::CurrentProcA->proc->idx = -1;
                     }
 
                     if(newasm::thread_line)
                     {
-                        std::cout << "Thread is waiting cuz of mutexlock" << std::endl;
-                        newasm::threads::memory.at(newasm::threads::now)->paused = true;
+                        //std::cout << "Thread is waiting cuz of mutexlock" << std::endl;
+                        newasm::CurrentThreadA->thrd->paused = true;
                     }
                     else
                     {
-                        std::cout << "Main thread is waiting cuz of mutexlock" << std::endl;
+                        //std::cout << "Main thread is waiting cuz of mutexlock" << std::endl;
                         newasm::code_stream::paused = true;
                     }
                     return 1;
@@ -5254,18 +5203,18 @@ namespace newasm
                 {
                     if(newasm::header::data::proc_now)
                     {
-                        std::cout << "Proc terminated cuz of mutexlock" << std::endl;
+                        //std::cout << "Proc terminated cuz of mutexlock" << std::endl;
                         NewASM::CurrentProcA->proc->idx = -1;
                     }
 
                     if(newasm::thread_line)
                     {
-                        std::cout << "Thread is waiting cuz of mutexlock" << std::endl;
-                        newasm::threads::memory.at(newasm::threads::now)->paused = true;
+                        //std::cout << "Thread is waiting cuz of mutexlock" << std::endl;
+                        newasm::CurrentThreadA->thrd->paused = true;
                     }
                     else
                     {
-                        std::cout << "Main thread is waiting cuz of mutexlock" << std::endl;
+                        //std::cout << "Main thread is waiting cuz of mutexlock" << std::endl;
                         newasm::code_stream::paused = true;
                     }
                     return 1;
@@ -6154,17 +6103,6 @@ namespace newasm
                 int real_type = 0;
                 if(it == newasm::inverted_types.end())
                 {
-                    if(typ == "thread")
-                    {
-                        if(newasm::threads::memory.find(suf) == newasm::threads::memory.end())
-                        {
-                            //std::cout << "cant find thread: `" << suf << "`" << std::endl;
-                            newasm::terminate(newasm::exit_codes::sysreq_fail);
-                            return 1;
-                        }
-                        return 1;
-                    }
-                    
                     newasm::terminate(newasm::exit_codes::invalid_syntax);
                     return 1;
                 }
@@ -6183,6 +6121,15 @@ namespace newasm
 
                 switch(type)
                 {
+                    case newasm::core::lang_inf::typenames::thread___:
+                    {
+                        if(real_type != newasm::datatypes::threadz)
+                        {
+                            newasm::terminate(newasm::exit_codes::sysreq_fail);
+                            return 1;
+                        }
+                        return 1;
+                    }
                     case newasm::core::lang_inf::typenames::proc__:
                     {
                         if(real_type != newasm::datatypes::proc)
@@ -6296,33 +6243,36 @@ namespace newasm
                     return 1;
                 }
 
+                std::string original_name;
                 if(newasm::nms::count != 0)
                 {
+                    original_name = newasm::header::functions::demangleName(newasm::nms::stack, suf);
                     suf = newasm::header::functions::mangleName(newasm::nms::stack, suf);
                 }
+
 
                 newasm::variables::ids[suf].type = newasm::datatypes::threadz;
                 auto& mmap = newasm::variables::ids.at(suf);
                 mmap.thrd = new newasm::variables::threadData;
-                mmap.thrd->addr = newasm::RAM->write<int>(1);
                 newasm::threads::thread_now = true;
                 newasm::threads::thread_decl = suf;
-                newasm::threads::memory[suf] = new newasm::threads::object__();
-                newasm::threads::valid_threads.push_back(suf);
-                auto& mmap2 = newasm::threads::memory.at(suf);
-                mmap2->paused = false;
-                mmap2->id = newasm::kernel::ThreadCount;
-                mmap2->LCX = newasm::mem::regs::lcx.get_value();
+                NewASM::CurrentThreads.push_back(&mmap);
+                NewASM::CurrentThread = &mmap;
+                mmap.thrd->paused = false;
+                mmap.thrd->id = newasm::kernel::ThreadCount;
+                mmap.thrd->LCX = newasm::mem::regs::lcx.get_value();
                 newasm::kernel::ThreadCount++;
-                newasm::threads::sys_module[mmap2->id] = 0;
-                newasm::mem::regs::resetRegisters(mmap2->id);
+                newasm::threads::sys_module[mmap.thrd->id] = 0;
+                newasm::mem::regs::resetRegisters(mmap.thrd->id);
 
-                newasm::LambdaDispatch::LambdaNow.setThreadValue(mmap2->id, false);
-                newasm::LambdaDispatch::LambdaHalt.setThreadValue(mmap2->id, false);
-                newasm::LambdaDispatch::LambdaLine.setThreadValue(mmap2->id, false);
-                newasm::_this.setThreadValue(mmap2->id, nullptr);
+                newasm::LambdaDispatch::LambdaNow.setThreadValue(mmap.thrd->id, false);
+                newasm::LambdaDispatch::LambdaHalt.setThreadValue(mmap.thrd->id, false);
+                newasm::LambdaDispatch::LambdaLine.setThreadValue(mmap.thrd->id, false);
+                newasm::_this.setThreadValue(mmap.thrd->id, nullptr);
 
                 newasm::brace_stack__.push_back(newasm::brace_stack::thread_block);
+                mmap.thrd->original_name = original_name;
+                
                 
                 //newasm::threads::thread_count++;
                 //newasm::header::data::case_line.clear();
@@ -6383,7 +6333,7 @@ namespace newasm
                 }
 
                 //std::cout << "recv called in " << newasm::threads::now << std::endl;
-                auto& l = newasm::threads::memory.at(newasm::threads::now);
+                auto& l = newasm::CurrentThreadA->thrd;
 
                 if(ptr->container->chan->empty)
                 {
@@ -6413,7 +6363,7 @@ namespace newasm
                     return result;
                 }();
 
-                auto& mmap = newasm::threads::memory.at(newasm::threads::now);
+                auto& mmap = newasm::CurrentThreadA->thrd;
                 mmap->returned = true;
                 mmap->returned_val = retf__v;
                 if(newasm::_this != nullptr)
@@ -6433,33 +6383,50 @@ namespace newasm
                     return 1;
                 }
 
-                if(!newasm::header::functions::isref(suf))
+                if(newasm::thread_line)
                 {
-                    //std::cout << "suf - `" << suf << '`' << std::endl;
-                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    newasm::terminate(newasm::exit_codes::jit_fail);
                     return 1;
                 }
 
-                suf = newasm::header::functions::remamp(suf);
-                newasm::runtime::functions::parse<true>(suf);
-
-                if(!newasm::mem::functions::datavalid(
-                    suf, newasm::variables::ids))
+                VarPtr ptr = nullptr;
+                if(lineInfo.priArgType == newasm::datatypes::ThisPtr)
                 {
+                    if(newasm::_this == nullptr)
+                    {
+                        newasm::SetExceptionComment("`this` is probably not initialized");
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    ptr = newasm::_this;
+                }
+                else if(lineInfo.priArgType != newasm::datatypes::ThisPtr)
+                {
+                    newasm::runtime::functions::eval(suf, lineInfo.priEvalMode);
+                    if(!newasm::header::functions::isref(suf))
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+
+                    suf = newasm::header::functions::remamp(suf);
+                    auto it = newasm::variables::ids.find(suf);
+                    if(it == newasm::variables::ids.end())
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    ptr = &it->second;
+                }
+
+                if(ptr->type != newasm::datatypes::proc)
+                {
+                    newasm::SetExceptionComment("not a procedure object");
                     newasm::terminate(newasm::exit_codes::invalid_proc);
                     return 1;
                 }
 
-                if(newasm::mem::functions::datavalid(suf, newasm::variables::ids))
-                {
-                    if(newasm::variables::ids.at(suf).type != newasm::datatypes::proc)
-                    {
-                        newasm::terminate(newasm::exit_codes::invalid_proc);
-                        return 1;
-                    }
-                }
-
-                newasm::async(suf);
+                newasm::async(ptr);
                 return 1;
             }
             //await
@@ -6470,92 +6437,103 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::jit_fail);
                     return 1;
                 }
-                
-                if(!newasm::header::functions::isref(suf))
+
+                if(newasm::thread_line)
                 {
-                    //std::cout << "suf - `" << suf << '`' << std::endl;
-                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                    newasm::terminate(newasm::exit_codes::jit_fail);
                     return 1;
                 }
-                #if 0
-                if(!newasm::mem::functions::datavalid(
-                    newasm::header::functions::remamp(suf), newasm::threads::memory))
+
+                VarPtr ptr = nullptr;
+                if(lineInfo.priArgType == newasm::datatypes::ThisPtr)
                 {
-                    newasm::terminate(newasm::exit_codes::invalid_thread);
-                    return 1;
-                }
-                #endif
-                std::string thread__ = newasm::header::functions::remamp(suf);
-                newasm::runtime::functions::parse<true>(thread__);
-                auto it = newasm::threads::memory.find(thread__);
-                if(it == newasm::threads::memory.end())
-                {
-                    newasm::terminate(newasm::exit_codes::invalid_thread);
-                    return 1;
-                }
-                //if(0) newasm::threads::memory.at(thread__)->prepare_sys();
-                try
-                {
-                    while(true)
+                    if(newasm::_this == nullptr)
                     {
-                        #if 0
-                        newasm::thread_line = true;
-                        newasm::threads::now = (thread__);
-                        newasm::procline(*newasm::threads::memory.at(thread__)->contents.begin());
-                        newasm::thread_line = false;
-                        if(newasm::threads::memory.at(thread__)->paused)
-                        {
-                            newasm::terminate(newasm::exit_codes::channel_deadlock);
-                            return 1;
-                        }
-                        newasm::threads::memory.at(thread__)->contents.pop_front();
-                        #endif
-                        auto& mmap = it->second;
-                        if(mmap->returned)
-                        {
-                            newasm::_this.setThreadValue(mmap->id, nullptr);
-                            break;
-                        }
-                        if(mmap->contents.empty())
-                        {
-                            mmap->returned = true;
-                            mmap->returned_val = "0";
-                            continue;
-                        }
-                        auto& IDX = mmap->lcx;
-                        newasm::thread_line = true;
-                        newasm::threads::now = (thread__); // thread name
-                        newasm::threads::id_now = mmap->id;
-                        if(IDX < 0 or IDX >= mmap->contents.size())
-                        {
-                            mmap->returned = true;
-                            mmap->returned_val = "0";
-                            auto ptr = newasm::_this.getThreadValue(mmap->id);
-                            if(ptr != nullptr)
-                            {
-                                ptr->fetched = false;
-                                newasm::_this.setThreadValue(mmap->id, nullptr);
-                            }
-                        }
-                        else newasm::procline(mmap->contents.at(IDX));
-                        IDX++;
-                        newasm::thread_line = false;
-                        if(mmap->paused)
-                        {
-                            IDX--;
-                            //std::cout << "Thread paused by channel: " << newasm::threads::now << std::endl;
-                            mmap->paused = false;
-                            newasm::terminate(newasm::exit_codes::channel_deadlock);
-                            return 1;
-                        }
+                        newasm::SetExceptionComment("`this` is probably not initialized");
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    ptr = newasm::_this;
+                }
+                else if(lineInfo.priArgType != newasm::datatypes::ThisPtr)
+                {
+                    newasm::runtime::functions::eval(suf, lineInfo.priEvalMode);
+                    if(!newasm::header::functions::isref(suf))
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+
+                    suf = newasm::header::functions::remamp(suf);
+                    auto it = newasm::variables::ids.find(suf);
+                    if(it == newasm::variables::ids.end())
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    ptr = &it->second;
+                }
+
+                if(
+                    ptr->type != newasm::datatypes::threadz and
+                    ptr->type != newasm::datatypes::proc
+                )
+                {
+                    newasm::terminate(newasm::exit_codes::invalid_thread);
+                    return 1;
+                }
+
+                auto& mmap = ptr->thrd;
+                if(ptr->type == newasm::datatypes::proc)
+                {
+                    if(!ptr->proc->Async)
+                    {
+                        newasm::SetExceptionComment("not an asynchronous procedure object");
+                        newasm::terminate(newasm::exit_codes::invalid_thread);
+                        return 1;
                     }
                 }
-                catch(const std::exception& e)
+
+                while(true)
                 {
-                    std::cerr << "Zajebucnuo si se thred->lmao :: " << thread__ << " -----> " << e.what() << '\n';
-                    std::cout << "last line --> " << newasm::real_line << std::endl;
+                    if(mmap->returned)
+                    {
+                        newasm::_this.setThreadValue(mmap->id, nullptr);
+                        break;
+                    }
+                    if(mmap->contents.empty())
+                    {
+                        mmap->returned = true;
+                        mmap->returned_val = "0";
+                        continue;
+                    }
+                    auto& IDX = mmap->lcx;
+                    newasm::thread_line = true;
+                    newasm::threads::id_now = mmap->id;
+                    if(IDX < 0 or IDX >= mmap->contents.size())
+                    {
+                        mmap->returned = true;
+                        mmap->returned_val = "0";
+                        auto ptr = newasm::_this.getThreadValue(mmap->id);
+                        if(ptr != nullptr)
+                        {
+                            ptr->fetched = false;
+                            newasm::_this.setThreadValue(mmap->id, nullptr);
+                        }
+                    }
+                    else newasm::procline(mmap->contents.at(IDX));
+                    IDX++;
+                    newasm::thread_line = false;
+                    if(mmap->paused)
+                    {
+                        IDX--;
+                        //std::cout << "Thread paused by channel: " << newasm::threads::now << std::endl;
+                        mmap->paused = false;
+                        newasm::terminate(newasm::exit_codes::channel_deadlock);
+                        return 1;
+                    }
                 }
-                
+
                 return 1;
             }
             //int
@@ -8205,7 +8183,7 @@ namespace newasm
 
                 if(newasm::thread_line)
                 {
-                    auto& mmap = newasm::threads::memory.at(newasm::threads::now);
+                    auto& mmap = newasm::CurrentThreadA->thrd;
                     if(mmap->TryBlock)
                     {
                         mmap->TryBlock = false;
@@ -8276,7 +8254,7 @@ namespace newasm
                     }
                     int address = NewASM::header::data::CallCStack->back() + 1;
                     NewASM::header::data::CallCStack->pop_back();
-                    newasm::threads::memory.at(newasm::threads::now)->lcx = address;
+                    newasm::CurrentThreadA->thrd->lcx = address;
                     return 1;
                 }
 
@@ -8761,9 +8739,9 @@ namespace newasm
         }
         if(newasm::thread_line)
         {
-            if(newasm::threads::memory.at(newasm::threads::now)->returned)
+            if(newasm::CurrentThreadA->thrd->returned)
             {
-                //newasm::threads::memory.at(newasm::threads::now)->contents.pop_front(); //btw get rid of this
+                //newasm::CurrentThreadA->thrd->contents.pop_front(); //btw get rid of this
                 return 1; //skip line
             }
         }
@@ -9179,9 +9157,8 @@ namespace newasm
 
                 if(brace_purpose == newasm::brace_stack::thread_block)
                 {
-                    std::string& thread__ = newasm::threads::thread_decl;
                     newasm::threads::thread_now = false;
-                    auto& mmap = newasm::threads::memory.at(thread__);
+                    auto& mmap = newasm::CurrentThread->thrd;
                     mmap->recompile_threadProc();
                     
                     ++NewASM::header::data::ActiveThreads;
@@ -9230,7 +9207,7 @@ namespace newasm
                 if(newasm::threads::thread_now)
                 {
                     //..push bytecode to thread's data
-                    newasm::threads::memory.at(newasm::threads::thread_decl)->contents.push_back(line);
+                    newasm::CurrentThread->thrd->contents.push_back(line);
                     return 1;
                 }
                 if constexpr(NEWASM_CPU_REG_LOG)
@@ -9346,14 +9323,14 @@ namespace newasm
 
         if(newasm::threads::thread_now)
         {
-            newasm::threads::memory.at(newasm::threads::thread_decl)->contents.push_back(line);
+            newasm::CurrentThread->thrd->contents.push_back(line);
             return 1;
         }
 
         /*
         if(newasm::thread_line)
         {
-            if(newasm::threads::memory.at(newasm::threads::now)->returned)
+            if(newasm::CurrentThreadA->thrd->returned)
             {
                 return 1;
             }
@@ -9714,18 +9691,23 @@ namespace newasm
         return;
     }
 
-    inline void async(const std::string& name)
+    inline void async(VarPtr p)
     {
-        auto it = newasm::variables::ids.find(name);
-        if(it != newasm::variables::ids.end())
+        auto& mmap = *p;
+        if(mmap.thrd == nullptr) mmap.thrd = new newasm::variables::threadData;
+        mmap.thrd->contents = mmap.proc->contents;
+        mmap.thrd->labels = mmap.proc->labels;
+        
+        if(!mmap.proc->Async)
         {
-            newasm::threads::memory[name] = new newasm::threads::object__();
-            auto& mmap = newasm::threads::memory.at(name);
-            auto& mmap2 = newasm::variables::ids.at(name);
-            mmap->contents = mmap2.proc->contents;
-            mmap->labels = mmap2.proc->labels;
-            newasm::threads::valid_threads.push_back(name);
+            mmap.thrd->id = newasm::kernel::ThreadCount;
+            newasm::kernel::ThreadCount++;
+            newasm::CurrentThreads.push_back(&mmap);
         }
+
+        mmap.thrd->restartThread();
+
+        mmap.proc->Async = true;
         return;
     }
 
@@ -10418,10 +10400,10 @@ namespace newasm
             return;
         }
         NewASM::header::data::ActiveThreads = 0;
-        for(int p = 0; p < newasm::threads::valid_threads.size(); ++p)
+        for(int p = 0; p < newasm::CurrentThreads.size(); ++p)
         {
-            auto& i = newasm::threads::valid_threads.at(p);
-            auto& mmap = newasm::threads::memory.at(i);
+            auto& i = newasm::CurrentThreads.at(p);
+            auto& mmap = i->thrd;
             //if(0) newasm::threads::memory.at(*i)->prepare_sys();
             if(mmap->returned)
             {
@@ -10434,8 +10416,9 @@ namespace newasm
             ++NewASM::header::data::ActiveThreads;
             auto& IDX = mmap->lcx;
             newasm::thread_line = true;
-            newasm::threads::now = (i); // thread name
+            newasm::threads::now = mmap->original_name;
             newasm::threads::id_now = mmap->id;
+            newasm::CurrentThreadA = i;
             
             if(IDX < 0 or IDX >= mmap->contents.size())
             {
