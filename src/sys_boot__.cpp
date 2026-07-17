@@ -85,12 +85,11 @@ namespace newasm::bootloader
             return 0;
         }
 
-        newasm::runtime::gui::box("Test", "Mdfkin test", {"xd","lmao","lel","haha", "lesgooo", "i am gay"});
-
         #if 0
         module(test, {
             NewASM::Modules::PrintLine("Test.");
         });
+        newasm::runtime::gui::box("Test", "Mdfkin test", {"xd","lmao","lel","haha", "lesgooo", "i am gay"});
         #endif
         
         newasm::sealedLabels = &newasm::compiler::data::sealed_labels;
