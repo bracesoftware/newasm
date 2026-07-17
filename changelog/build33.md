@@ -28,6 +28,35 @@ Welcome to **`NewASM`**: a low-level programming language which combines explici
     send this, "data"
 ```
 
++ Added mutual exclusive objects. Now you can mark variables as `mutex` via the attribute and ensure it is being manipulated by a specific thread at a time.
+
+```asm
+.data
+    @mutex
+    string testinggg: ""
+.start
+    thread Funnyx -> {
+        fetch testinggg
+        lock this
+        mov &testinggg, "Testing the funny string"
+        mov tlr, testinggg
+        call std::ios::writeln
+        unlock this
+    }
+
+    lock &testinggg
+    mov &testinggg, "Testing the funny string from main thread"
+    mov tlr, testinggg
+    call std::ios::writeln
+    unlock &testinggg
+
+    await &Funnyx
+    mov tlr, &Funnyx
+    sysenter "thread"
+    mov fdx, 1
+    syscall
+```
+
 ## Fixed issues
 
 + Fixed issue #39.

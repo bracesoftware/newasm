@@ -164,6 +164,7 @@ NewASM features many instructions, around 80 of them. Here is a list:
 11. [Calculated calls and returns](docs/instructions/calc.md)
 12. [Instructions for address fetching](docs/instructions/fetch.md)
 13. [Error-handling instructions](docs/instructions/err.md)
+14. [Mutual exclusiveness](docs/instructions/mutex.md)
 
 ***
 #### Language concepts
