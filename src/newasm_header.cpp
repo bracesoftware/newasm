@@ -1243,7 +1243,7 @@ namespace newasm::header
         std::atomic<char> pressed('?');
         bool killInputListener = false;
 
-        void inputListener()
+        inline void inputListener()
         {
             while(true)
             {
@@ -1257,7 +1257,7 @@ namespace newasm::header
             }
         }
 
-        void pause()
+        inline void pause()
         {
             std::cout << newasm::header::col::gray << "\tPress `q` to terminate the session..." << newasm::header::col::reset << std::flush;
             std::thread listener(inputListener);

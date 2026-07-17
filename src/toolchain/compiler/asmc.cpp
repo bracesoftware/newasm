@@ -486,7 +486,7 @@ namespace newasm
             if(newasm::header::functions::isdeco(line).first)
             {
                 static const std::unordered_map<std::string, short> decorators = {
-                    {"lock", newasm::decorators::id::LOCK},
+                    {"private", newasm::decorators::id::LOCK},
                     {"volatile", newasm::decorators::id::VOLATILE},
                     {"transient", newasm::decorators::id::TRANSIENT}
                 };
