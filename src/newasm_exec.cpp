@@ -6256,7 +6256,7 @@ namespace newasm
                 mmap.thrd = new newasm::variables::threadData;
                 newasm::threads::thread_now = true;
                 newasm::threads::thread_decl = suf;
-                NewASM::CurrentThreads.push_back(&mmap);
+                
                 NewASM::CurrentThread = &mmap;
                 mmap.thrd->paused = false;
                 mmap.thrd->id = newasm::kernel::ThreadCount;
@@ -9162,6 +9162,8 @@ namespace newasm
                     mmap->recompile_threadProc();
                     
                     ++NewASM::header::data::ActiveThreads;
+
+                    NewASM::CurrentThreads.push_back(newasm::CurrentThread);
                     return 1;
                 }
                 if(brace_purpose == newasm::brace_stack::object_block)
