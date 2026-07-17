@@ -9699,6 +9699,7 @@ namespace newasm
         if(mmap.thrd == nullptr) mmap.thrd = new newasm::variables::threadData;
         mmap.thrd->contents = mmap.proc->contents;
         mmap.thrd->labels = mmap.proc->labels;
+        ++NewASM::header::data::ActiveThreads;
         
         if(!mmap.proc->Async)
         {
