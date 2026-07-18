@@ -13,6 +13,46 @@
 //ai written at first but reworked
 namespace newasm::runtime::gui
 {
+    #if _NEWASM_OS == _NEWASM_OS_windows_old
+    class ConShapshot final
+    {
+        COORD size;
+        std::vector<CHAR_INFO> buffer;
+    };
+
+    inline ConShapshot SaveConsole()
+    {
+        HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+        CONSOLE_SCREEN_BUFFER_INFO csbi;
+        GetConsoleScreenBufferInfo(hOut, &csbi);
+        
+        SMALL_RECT region = csbi.srWindow;
+        COORD size = { 
+            (short)(region.Right - region.Left + 1),
+            (short)(region.Bottom - region.Top + 1)
+        };
+        
+        ConShapshot snapshot;
+        snapshot.size = size;
+        snapshot.buffer.resize(size.X * size.Y);
+        
+        ReadConsoleOutput(hOut, snapshot.buffer.data(), size, {0,0}, &region);
+        return snapshot;
+    }
+
+    inline void RestoreConsole(const ConShapshot& snapshot)
+    {
+        HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+        SMALL_RECT region = {
+            0, 0,
+            snapshot.size.X - 1,
+            snapshot.size.Y - 1
+        };
+        WriteConsoleOutput(hOut, snapshot.buffer.data(), snapshot.size, {0,0}, &region);
+        return;
+    }
+    #endif
+
     inline void GetTerminalSize(int& width, int& height)
     {
         #if _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
@@ -108,14 +148,29 @@ namespace newasm::runtime::gui
     {
         int termWidth = 0, termHeight = 0, TW_OLD = 1, TH_OLD = 1;
         auto moveCursor = [](int x, int y) {
+            #if _NEWASM_OS == _NEWASM_OS_linux
             std::cout << "\033[" << y << ";" << x << "H";
+            #elif _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
+            HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+            COORD pos = {
+                (SHORT)x,
+                (SHORT)y
+            };
+            SetConsoleCursorPosition(h, pos);
+            #endif
         };
         const int boxWidth = 50;
         int boxHeight, startY, startX;
         static const std::string CLS = "\033[2J";
         std::vector<std::string> messageLines = WrapText(message, boxWidth - 8);
         //magic-DO NOT TOUCH! NOTE INFO IMPORTANT
-        std::cout << "\033[?1049h\033[?25l" << newasm::header::col::sky_blue << CLS;
+        #if _NEWASM_OS == _NEWASM_OS_linux
+        std::cout << "\033[?1049h\033[?25l" << CLS;
+        #elif _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
+        ConShapshot s = SaveConsole();
+        NewASM::Console::cls_BARE_METAL__();
+        #endif
+        std::cout << newasm::header::col::sky_blue;
 
         int selectedIndex = 0;
         int numButtons = buttons.size();
@@ -226,7 +281,11 @@ namespace newasm::runtime::gui
         }
         listener.join();
         //more magic
+        #if _NEWASM_OS == _NEWASM_OS_linux
         std::cout << "\033[?1049l\033[?25h" << std::flush;
+        #elif _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
+        RestoreConsole(s);
+        #endif
         return selectedIndex;
     }
 }
