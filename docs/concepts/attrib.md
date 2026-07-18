@@ -21,6 +21,7 @@ You can assign attributes with `@`.
 | `static` | Marks data immune to move semantics, static variables and objects cannot be moved. Nor can you move data to static variables and objects. |
 | `mangle` | Tells the compiler to mangle namespaces into label names at compile time. |
 | `safe` | Prevents the JIT compiler from fetching address of a safe variable. |
+| `mutex` | Allows you to mark an object as mutually exclusive. |
 
 ### Multiple attributes in one line
 
