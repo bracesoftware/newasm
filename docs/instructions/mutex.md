@@ -4,7 +4,9 @@
 > This feature was added in build 33.
 
 This little article covers mutual exclusiveness.
-Two instructions that you use to manage *mutex* variables are **lock** and **unlock**.
+Two instructions that you use to manage *mutex* variables are:
+- **`lock`** and,
+- **`unlock`**.
 
 ```asm
 .data
