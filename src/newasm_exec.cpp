@@ -5157,6 +5157,10 @@ namespace newasm
 
                 ptr->MutexLock = true;
                 ptr->MutexOwner = newasm::GetCurrentThread();
+                if(newasm::thread_line)
+                {
+                    newasm::CurrentThreadA->thrd->LockedObjects.push_back(ptr);
+                }
                 return 1;
             }
             //unlock
@@ -10433,17 +10437,26 @@ namespace newasm
                     ptr->fetched = false;
                     newasm::_this.setThreadValue(mmap->id, nullptr);
                 }
+                //automatically unlock everything
+                if(!mmap->LockedObjects.empty())
+                {
+                    for(int g = 0; g < mmap->LockedObjects.size(); ++g)
+                    {
+                        auto& ptr = mmap->LockedObjects.at(g);
+                        ptr->MutexLock = false;
+                    }
+                    mmap->LockedObjects.clear();
+                }
             }
             else newasm::procline(mmap->contents.at(IDX));
             
-            ++IDX;
             newasm::thread_line = false;
             if(mmap->paused)
             {
-                --IDX;
                 mmap->paused = false;
                 continue;
             }
+            else ++IDX;
         }
         return;
     }

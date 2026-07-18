@@ -646,6 +646,8 @@ namespace newasm
             int TryJump = -1;
             bool TryCatched = false;
 
+            std::vector<VarPtr> LockedObjects;
+
             int lcx = 0;
             int LCX;
 

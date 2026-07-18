@@ -2786,7 +2786,7 @@ jmp 345lmao
         mov &testinggg, "Testing the funny string"
         mov tlr, testinggg
         call std::ios::writeln
-        unlock this
+        ;unlock this
     }
 
     thread LmaoWhatsThos -> {
