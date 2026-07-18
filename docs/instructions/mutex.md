@@ -36,3 +36,6 @@ Two instructions that you use to manage *mutex* variables are:
 ```
 
 The `mutex` attribute allows you to mark variables as mutually exclusive so that only one thread can manipulate with a variable, forcing other variables to wait for an unlock.
+
+
+After a specific thread ends, you do not have to use `unlock` to unlock any locked mutexes. The thread will do it for you, however using `unlock` is a good practice since it boosts your program performance by immediatelly letting other threads use a specific mutex.
