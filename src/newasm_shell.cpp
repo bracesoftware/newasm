@@ -182,6 +182,12 @@ namespace newasm
                 {
                     if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::exit__))
                     {
+                        int choice = newasm::runtime::gui::box("Notice", "Are you sure you want to exit?", {"Yes", "Cancel"});
+                        if(choice == 1)
+                        {
+                            newasm::header::functions::info("Cancelled exit.");
+                            return 1;
+                        }
                         newasm::ctl::data::finish = true;
                         newasm::header::functions::info("Cleaning up...");
                         return 1;

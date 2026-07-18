@@ -13,10 +13,11 @@
 //ai written at first but reworked
 namespace newasm::runtime::gui
 {
-    #if _NEWASM_OS == _NEWASM_OS_windows_old
+    #if _NEWASM_OS == _NEWASM_OS_windows_old || _NEWASM_OS == _NEWASM_OS_windows
     class ConShapshot final
     {
-        COORD size;
+        public COORD size;
+        COORD cursor;
         std::vector<CHAR_INFO> buffer;
     };
 
@@ -34,6 +35,7 @@ namespace newasm::runtime::gui
         
         ConShapshot snapshot;
         snapshot.size = size;
+        snapshot.cursor = csbi.dwCursorPosition;
         snapshot.buffer.resize(size.X * size.Y);
         
         ReadConsoleOutput(hOut, snapshot.buffer.data(), size, {0,0}, &region);
@@ -45,10 +47,11 @@ namespace newasm::runtime::gui
         HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
         SMALL_RECT region = {
             0, 0,
-            snapshot.size.X - 1,
-            snapshot.size.Y - 1
+            static_cast<SHORT>(snapshot.size.X - 1),
+            static_cast<SHORT>((short)snapshot.size.Y - 1)
         };
         WriteConsoleOutput(hOut, snapshot.buffer.data(), snapshot.size, {0,0}, &region);
+        SetConsoleCursorPosition(hOut, snapshot.cursor);
         return;
     }
     #endif
@@ -153,8 +156,8 @@ namespace newasm::runtime::gui
             #elif _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
             HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
             COORD pos = {
-                (SHORT)x,
-                (SHORT)y
+                (short)x,
+                (short)y
             };
             SetConsoleCursorPosition(h, pos);
             #endif
@@ -183,7 +186,7 @@ namespace newasm::runtime::gui
 
             if(TW_OLD != termWidth or TH_OLD != termHeight)
             {
-                std::cout << CLS;
+                NewASM::Console::cls_BARE_METAL__();
                 startX = (termWidth - boxWidth) / 2;
                 if(startX < 1) startX = 1;
                 boxHeight = messageLines.size() + 6; 
@@ -221,7 +224,7 @@ namespace newasm::runtime::gui
                         if(b == selectedIndex)
                         {
                             std::cout << newasm::header::bg_col::white_black;
-                            std::cout << ' ' << buttons[b] << ' ';
+                            std::cout << '*' << buttons[b] << ' ';
                             std::cout << newasm::header::bg_col::black_white;
                         }
                         else
@@ -284,6 +287,7 @@ namespace newasm::runtime::gui
         #if _NEWASM_OS == _NEWASM_OS_linux
         std::cout << "\033[?1049l\033[?25h" << std::flush;
         #elif _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
+        newasm::Console::cls_BARE_METAL__();
         RestoreConsole(s);
         #endif
         return selectedIndex;
