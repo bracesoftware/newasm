@@ -2812,7 +2812,12 @@ jmp 345lmao
     mov fdx, 1
     syscall
 
-        call myFunction
+    async &TEST
+    await &TEST
+    mov tlr, &TEST
+    syscall
+
+    ;call myFunction
     ;catch nil
     try
         callc idkman
