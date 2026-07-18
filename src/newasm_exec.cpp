@@ -916,7 +916,7 @@ namespace newasm
                 mmap.tuple = new newasm::variables::tupleData;
                 mmap.attrib = newasm::runtime::currentAttributes;
                 newasm::runtime::currentAttributes = 0;
-                for(int i = 0; i < contents.size(); ++i)
+                for(size_t i = 0; i < contents.size(); ++i)
                 {
                     int address;
                     std::string value_buf = contents.at(i);
@@ -987,7 +987,7 @@ namespace newasm
                 //std::string key, value;
                 std::vector<std::string> v;
                 int addr_temp = 0;
-                for(int i = 0; i < contents.size(); ++i)
+                for(size_t i = 0; i < contents.size(); ++i)
                 {
                     if(!contents.at(i).find(':'))
                     {
@@ -1603,7 +1603,7 @@ namespace newasm
 
                 std::vector<std::string> v;
                 int addr;
-                for(int i = 0; i < contents.size(); ++i)
+                for(size_t i = 0; i < contents.size(); ++i)
                 {
                     v.clear();
                     // This function guarantees v.size() to be 2!!!!
@@ -3262,7 +3262,7 @@ namespace newasm
                         std::vector<std::string> v;
                         int addr_temp = 0;
                         //newasm::header::functions::info("Adding to existing context: " + suf);
-                        for(int idx = 0; idx < contents.size(); ++idx)
+                        for(size_t idx = 0; idx < contents.size(); ++idx)
                         {
                             if(!contents.at(idx).find(':'))
                             {
@@ -9774,7 +9774,7 @@ namespace newasm
         newasm::perf::heavyHostServices.start();
 
         newasm::events::exitNow = true;
-        for(int i = 0; i < newasm::events::exitHandler.GetBytecode.size(); ++i)
+        for(size_t i = 0; i < newasm::events::exitHandler.GetBytecode.size(); ++i)
         {
             newasm::procline(newasm::events::exitHandler.GetBytecode.at(i));
         }
@@ -10084,7 +10084,7 @@ namespace newasm
             }
             try
             {
-                for(int i = 0; i < newasm::mem::COD.size(); ++i)//for(auto i = newasm::mem::COD.begin(); i != newasm::mem::COD.end(); ++i)
+                for(size_t i = 0; i < newasm::mem::COD.size(); ++i)//for(auto i = newasm::mem::COD.begin(); i != newasm::mem::COD.end(); ++i)
                 {
                     newasm::compiler::data::lnidx = i;
 
@@ -10103,7 +10103,7 @@ namespace newasm
             auto& v1 = newasm::compiler::compiledCode;
             auto& v2 = newasm::forLinker::lineData;
             auto& f = newasm::compiler::data::MacroTable;
-            for(int i = 0; i < v1.size(); ++i)
+            for(size_t i = 0; i < v1.size(); ++i)
             {
                 if(v1[i].type == newasm::compiler::macroCall) //macro inlining
                 {
@@ -10116,7 +10116,7 @@ namespace newasm
                     std::vector<newasm::compiler::lineData>& v3 = f.at(l.other);
                     newasm::Linker::replaceVectorElement__NEW(v1, v3, i);
                     std::vector<NewASM::lineSource> v4;
-                    for(int j = 0; j < v3.size(); ++j)
+                    for(size_t j = 0; j < v3.size(); ++j)
                     {
                         v4.push_back({v2.at(i).first, v2.at(i).second});
                     }
@@ -10135,7 +10135,7 @@ namespace newasm
             NewASM::compiler::Optimize<newasm::compiler::OPT_UNREACHABLE>();
             NewASM::compiler::Optimize<newasm::compiler::OPT_EMPTY_NAMESPACES>();
 
-            for(int i = 0; i < v1.size(); true) // VERY IMPORTANT PART!
+            for(size_t i = 0; i < v1.size(); true) // VERY IMPORTANT PART!
             {
                 //this loop ensures that all empty lines are not in the final binary
                 if(
@@ -10154,7 +10154,7 @@ namespace newasm
                 }
             }
             //3rd compilation pass for labels
-            for(int i = 0; i < newasm::compiler::compiledCode.size(); ++i)
+            for(size_t i = 0; i < newasm::compiler::compiledCode.size(); ++i)
             {
                 newasm::compiler::data::lnidx = i;
                 auto& bytecode = newasm::compiler::compiledCode.at(i);
@@ -10168,7 +10168,7 @@ namespace newasm
             //thing above us was for this down here
             auto AOTCompileBytecode = <:&:>(auto& vec) -> void {
                 static bool already_processed = false;
-                for(int i = 0; i < vec.size(); ++i)
+                for(size_t i = 0; i < vec.size(); ++i)
                 {
                     auto& bytecode = vec.at(i);
                     if(!already_processed) newasm::compiler::data::lnidx = i;
@@ -10191,7 +10191,7 @@ namespace newasm
                         if(
                             newasm::mem::labels.find(label_name) == newasm::mem::labels.end() and
                             ![&](const std::string& name) -> bool {
-                                for(int q = 0; q < sl.size(); ++q)
+                                for(size_t q = 0; q < sl.size(); ++q)
                                 {
                                     if(sl[q] == name)
                                     {
@@ -10204,7 +10204,7 @@ namespace newasm
                         {
                             newasm::compiler::abort(newasm::compiler::fail::unknown_label);
                             //std::cout << "Tried compiling -> `" << bytecode.raw << "` " << (std::find(sl.begin(), sl.end(), label_name) != sl.end()) << "\n";
-                            if(0) for(int j = 0; j < sl.size(); ++j)
+                            if(0) for(size_t j = 0; j < sl.size(); ++j)
                             {
                                 std::cout << "sl[" << j << "] = `" << sl[j] << "`\n";
                             }
@@ -10254,7 +10254,7 @@ namespace newasm
                         if(
                             newasm::mem::labels.find(label_name) == newasm::mem::labels.end() and
                             ![&](const std::string& name) -> bool {
-                                for(int q = 0; q < sl.size(); ++q)
+                                for(size_t q = 0; q < sl.size(); ++q)
                                 {
                                     if(sl[q] == name)
                                     {
@@ -10267,7 +10267,7 @@ namespace newasm
                         {
                             newasm::compiler::abort(newasm::compiler::fail::unknown_label);
                             //std::cout << "Tried compiling -> `" << bytecode.raw << "` " << (std::find(sl.begin(), sl.end(), label_name) != sl.end()) << "\n";
-                            if(0) for(int j = 0; j < sl.size(); ++j)
+                            if(0) for(size_t j = 0; j < sl.size(); ++j)
                             {
                                 std::cout << "sl[" << j << "] = `" << sl[j] << "`\n";
                             }
@@ -10301,7 +10301,7 @@ namespace newasm
             //4th compiler pass for try-catch blocks
             int TryFound = -1;
             //int CatchFound = -1;
-            for(int i = 0; i < newasm::compiler::compiledCode.size(); ++i)
+            for(size_t i = 0; i < newasm::compiler::compiledCode.size(); ++i)
             {
                 newasm::compiler::data::lnidx = i;
                 auto& bytecode = newasm::compiler::compiledCode.at(i);
@@ -10407,7 +10407,7 @@ namespace newasm
             return;
         }
         NewASM::header::data::ActiveThreads = 0;
-        for(int p = 0; p < newasm::CurrentThreads.size(); ++p)
+        for(size_t p = 0; p < newasm::CurrentThreads.size(); ++p)
         {
             auto& i = newasm::CurrentThreads.at(p);
             auto& mmap = i->thrd;
@@ -10440,7 +10440,7 @@ namespace newasm
                 //automatically unlock everything
                 if(!mmap->LockedObjects.empty())
                 {
-                    for(int g = 0; g < mmap->LockedObjects.size(); ++g)
+                    for(size_t g = 0; g < mmap->LockedObjects.size(); ++g)
                     {
                         auto& ptr = mmap->LockedObjects.at(g);
                         ptr->MutexLock = false;

@@ -516,7 +516,7 @@ namespace newasm
 
                 this->labels.max_load_factor(MAX_LOAD_FACTOR);
 
-                for(int i = 0; i < this->contents.size(); ++i)
+                for(size_t i = 0; i < this->contents.size(); ++i)
                 {
                     if(this->contents.at(i).type == newasm::compiler::sealedLabel)
                     {
@@ -532,7 +532,7 @@ namespace newasm
                         continue;
                     }
                 }
-                for(int i = 0; i < this->contents.size(); ++i)
+                for(size_t i = 0; i < this->contents.size(); ++i)
                 {
                     auto& bytecode = this->contents.at(i);
                     if(newasm::compiler::utils::IsJumpIns(bytecode))
@@ -582,7 +582,7 @@ namespace newasm
                 }
 
                 int TryFound = -1;
-                for(int i = 0; i < this->contents.size(); ++i)
+                for(size_t i = 0; i < this->contents.size(); ++i)
                 {
                     auto& bytecode = this->contents.at(i);
                     if(bytecode.type == newasm::compiler::sealedLabel)
@@ -684,7 +684,7 @@ namespace newasm
 
                 bool FLAG1 = false;
 
-                for(int i = 0; i < this->contents.size(); ++i)
+                for(size_t i = 0; i < this->contents.size(); ++i)
                 {
                     auto& line = this->contents.at(i);
                     if(line.AltArgLambda) //allow lambdas inside threads to have their own labels
@@ -723,7 +723,7 @@ namespace newasm
                     }
                 }
 
-                FLAG1 = false; for(int i = 0; i < this->contents.size(); ++i)
+                FLAG1 = false; for(size_t i = 0; i < this->contents.size(); ++i)
                 {
                     auto& bytecode = this->contents.at(i);
                     if(bytecode.AltArgLambda) //allow lambdas inside threads to have their own labels
@@ -817,7 +817,7 @@ namespace newasm
                 }
 
                 int TryFound = -1;
-                for(int i = 0; i < this->contents.size(); ++i)
+                for(size_t i = 0; i < this->contents.size(); ++i)
                 {
                     auto& bytecode = this->contents.at(i);
                     if(bytecode.type == newasm::compiler::sealedLabel)
