@@ -212,7 +212,7 @@ namespace newasm::header
                 dest = "beta";
             }
         }
-        inline void getversion(std::string& dest)
+        inline void getsnapshot(std::string& dest)
         {
             std::function<std::string(const std::string&)> hash = [](const std::string& input) -> std::string {
                 std::hash<std::string> hasher;
@@ -249,11 +249,15 @@ namespace newasm::header
             time = hash(time);
 
             dest.clear();
-            dest = "b"_str +
-                    (newasm::BUILD_NUMBER | _strV) + "."_str +
-                    date + "."_str +
+            dest = date + "."_str +
                     time + "-"_str +
                     release__type;
+            return;
+        }
+        inline void getversion(std::string& dest)
+        {
+            dest = (newasm::BUILD_NUMBER | _strV);
+            return;
         }
         inline void getos(std::string& dest)
         {
@@ -377,22 +381,25 @@ namespace newasm::header
             }
             return false;
         }
-        inline void vers_info() noexcept
+        inline void vers_info(bool showglitch = true) noexcept
         {
             std::string arch;
             std::string os;
             std::string version;
+            std::string snapshot;
 
             newasm::header::functions::getarch(arch);
             newasm::header::functions::getos(os);
             newasm::header::functions::getversion(version);
+            newasm::header::functions::getsnapshot(snapshot);
 
-            std::cout << std::endl;
+            if(showglitch) std::cout << std::endl;
 
-            std::cout << newasm::header::col::light_blue << newasm::header::style::bold << newasm::header::style::reverse << newasm::header::style::underline;
-            newasm::utils::glitch_text(newasm::header::system_info::fullname);
+            if(showglitch) std::cout << newasm::header::col::light_blue << newasm::header::style::bold << newasm::header::style::reverse << newasm::header::style::underline;
+            if(showglitch) newasm::utils::glitch_text(newasm::header::system_info::fullname);
             std::cout << newasm::header::col::reset << newasm::header::col::gray;
             std::cout << "\n  Build: " << version << "-" << os << "_" << arch;
+            std::cout << "\n  Snapshot: " << snapshot;
             std::cout << "\n  Compiled with: C++" << __cplusplus << " on " << __DATE__ << " at " << __TIME__;
             
             std::cout << "\n\n  Runtime version: v" << newasm::runtime::version;

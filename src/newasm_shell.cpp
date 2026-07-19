@@ -39,7 +39,8 @@ namespace newasm
             {"syscfg",      {"/",               "Open up the system configuration menu."}},
             {"cls",         {"/",               "Clear your screen."}},
             {"list",        {"/",               "List files on the virtual disk."}},
-            {"usrcfg",      {"/",               "Manage your local user account."}}
+            {"usrcfg",      {"/",               "Manage your local user account."}},
+            {"ver",         {"/",               "Shows basic information about your system."}}
         };
         
         inline void help_info()
@@ -202,6 +203,11 @@ namespace newasm
                     if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::login__))
                     {
                         newasm::user::impl::login();
+                        return 1;
+                    }
+                    if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::ver__))
+                    {
+                        newasm::header::functions::vers_info(false);
                         return 1;
                     }
                     if(tokens[0] == newasm::core::lang_inf::cmds::identifiers__.at(newasm::core::lang_inf::cmds::logout__))

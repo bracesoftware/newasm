@@ -154,7 +154,9 @@ namespace newasm
             #endif
             std::system("cls");
             #elif _NEWASM_OS == _NEWASM_OS_linux
-            std::system("clear");
+            static const std::string CLS = "\033[2J";
+            std::cout << CLS;
+            //std::system("clear");
             #elif _NEWASM_OS == _NEWASM_OS_android
             std::cout << "\033[2J\033[H";
                 #endif

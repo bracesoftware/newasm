@@ -148,6 +148,8 @@ namespace newasm
         }
     };
 }
+
+#define MAX_PAD 60
 int __newasm__MODULEID = 1;
 bool __newasm_GLOBAL_MODULE = true;
 #define __newasm_CHECK_JUMP_PROPERLY if(newasm::header::data::repl and not newasm::header::data::proc_now){newasm::unsins(ins);return 1;}
@@ -155,7 +157,7 @@ bool __newasm_GLOBAL_MODULE = true;
     __gMOD_INIT_##name final{\
     inline ~__gMOD_INIT_##name(){if(!__newasm_GLOBAL_MODULE)NewASM::Modules::__LIST__.pop_back();--__newasm__MODULEID;}\
     explicit inline __gMOD_INIT_##name() noexcept{\
-        NewASM::Modules::__LIST__.push_back(std::string(#name));\
+        std::string MODULE_NAME__ = std::string(#name);NewASM::Modules::__LIST__.push_back(MODULE_NAME__);\
         using namespace std;vector<string> __NEWASM_BUFFER;\
         bool __NEWASM_MODULE_ERR=false;std::string __NEWASM_ERRTEXT;NewASM::BasicFunction __NEWASM_DESTRUCTOR;auto __err__NEWASM = [&](const std::string& errtext)->\
         void {__NEWASM_MODULE_ERR=true;__NEWASM_ERRTEXT=__NEWASM_ERRTEXT+std::string(" ")+errtext;return;};\
@@ -165,7 +167,7 @@ bool __newasm_GLOBAL_MODULE = true;
         NewASM::Modules::SetDestructor=__setdestruct_NEWASM;\
         auto __##name = [&]() -> void {func};\
         std::cout << newasm::header::col::red << "[  Service " << __newasm__MODULEID << "  ]: " << newasm::header::col::gray << \
-        "Virtual machine is setting up module `" << #name << "`... ";\
+        "Virtual machine is setting up module `" << MODULE_NAME__ << "`... ";int PAD_=MAX_PAD - MODULE_NAME__.length();for(int i=0;i<PAD_;++i)std::cout<<' ';\
         NewASM::NullBuffer__ nil;std::streambuf* old_buf = std::cout.rdbuf(&nil);\
         __NEWASM_DESTRUCTOR=[]()->void{};__##name();std::cout.rdbuf(old_buf);\
         if(!__NEWASM_MODULE_ERR)cout << NewASM::header::col::green << "OK!\n"<<flush;\

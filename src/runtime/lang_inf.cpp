@@ -397,6 +397,7 @@ namespace newasm
                 const int list__ = 20;
                 const int cd__ = 21;
                 const int usrcfg__ = 22;
+                const int ver__ = 23;
 
                 const std::unordered_map<int, std::string> identifiers__ = {
                     {exit__, "exit"},
@@ -420,7 +421,8 @@ namespace newasm
                     {compile__, "compile"},
                     {list__, "list"},
                     {cd__, "cd"},
-                    {usrcfg__, "usrcfg"}
+                    {usrcfg__, "usrcfg"},
+                    {ver__, "ver"}
                 };
             }
 

@@ -15,9 +15,9 @@ namespace newasm::runtime::gui
 {
     inline void EnterPopupMode()
     {
-        #if _NEWASM_OS == _NEWASM_OS_linux
+        #if _NEWASM_OS == _NEWASM_OS_linux || _NEWASM_OS == _NEWASM_OS_windows
         std::cout << "\033[?1049h\033[?25l" << std::flush;
-        #elif _NEWASM_OS == _NEWASM_OS_windows_old || _NEWASM_OS == _NEWASM_OS_windows
+        #elif _NEWASM_OS == _NEWASM_OS_windows_old
         NewASM::Console::cls_BARE_METAL__();
 
         HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -30,9 +30,9 @@ namespace newasm::runtime::gui
 
     inline void ExitPopupMode()
     {
-        #if _NEWASM_OS == _NEWASM_OS_linux
+        #if _NEWASM_OS == _NEWASM_OS_linux || _NEWASM_OS == _NEWASM_OS_windows
         std::cout << "\033[?1049l\033[?25h" << std::flush;
-        #elif _NEWASM_OS == _NEWASM_OS_windows_old || _NEWASM_OS == _NEWASM_OS_windows
+        #elif _NEWASM_OS == _NEWASM_OS_windows_old
         NewASM::Console::cls_BARE_METAL__();
 
         HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
