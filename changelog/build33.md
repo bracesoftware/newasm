@@ -17,6 +17,8 @@ Welcome to **`NewASM`**: a low-level programming language which combines explici
 
 ## What's new or changed?
 
++ Added the `ver` shell command.
+
 + Added the `throw` instruction. Just throws an exception (an instance of `UserError`) and crashes the program. Can be used for controlled exception management within try-catch blocks.
 
 + Now you can fetch channel addresses.

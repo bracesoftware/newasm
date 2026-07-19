@@ -1,6 +1,9 @@
 
 ## Available shell commands
 
+> [!WARNING]
+> The list of commands may not be accurate for older versions, as this snapshot of the docs corresponds strictly to the version that is currently in development. For version-specific docs, go to the releases page.
+
 | Command | Arguments | Description |
 | ---------------- | --------- | ----------- |
 | `help` | - | Displays this panel within the console. |
@@ -21,3 +24,6 @@
 | `perf` |- | Display performance details about the last application you ran. |
 | `syscfg` |- | Opens the system configuration menu. |
 | `cls` | - | Clears your screen. |
+| `list` | - | Lists files created on the virtual disk. |
+| `usrcfg` | - | Manage your local user account. |
+| `ver` | - | Shows basic information about your system. |
