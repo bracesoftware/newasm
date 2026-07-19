@@ -1330,7 +1330,7 @@ namespace newasm
             newasm::mem::datatypes.clear();
             newasm::mem::data.clear();
             newasm::mem::data_attrib.clear();
-
+            
             newasm::mem::structs.clear();
             //newasm::mem::funcs.clear();
 
