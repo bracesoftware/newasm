@@ -348,7 +348,7 @@ namespace newasm
             {
                 std::cout << " [invoked by " << newasm::header::col::gray;
                 std::cout << l.second;
-                std::cout << newasm::header::col::yellow << "]";
+                std::cout << "|" << newasm::mem::regs::lcx.get_value() << newasm::header::col::yellow << "]";
             }
             std::cout << std::endl;
             std::cout << newasm::header::col::reset;
@@ -6336,16 +6336,20 @@ namespace newasm
                             newasm::_this.setThreadValue(mmap->id, nullptr);
                         }
                     }
-                    else newasm::procline(mmap->contents.at(IDX));
-                    IDX++;
+                    else
+                    {
+                        std::cout << "---Processing thread " << mmap->original_name << ":" << IDX << "---" << std::endl;
+                        newasm::procline(mmap->contents.at(IDX));
+                    }
+                    
                     newasm::thread_line = false;
                     if(mmap->paused)
                     {
-                        IDX--;
                         mmap->paused = false;
                         newasm::terminate(newasm::exit_codes::channel_deadlock);
                         return 1;
                     }
+                    else ++IDX;
                 }
 
                 return 1;
@@ -6942,6 +6946,7 @@ namespace newasm
                     return 1;
                 }
 
+                VarPtr ptr = nullptr;
                 if(lineInfo.priArgType == newasm::datatypes::ThisPtr)
                 {
                     if(newasm::_this == nullptr) [[unlikely]]
@@ -6956,40 +6961,28 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::seg_fault);
                         return 1;
                     }
-                    newasm::callproc(newasm::_this);
-                    return 1;
+                    ptr = newasm::_this;
                 }
-
-                newasm::runtime::functions::parse<true>(suf);
-
-                //std::cout << "Called a procedure -> " << suf << std::endl;
-
-                if(newasm::header::functions::isalphanum(suf))
+                else
                 {
-                    auto p = newasm::mem::functions::datavalid(suf, newasm::variables::ids);
-                    if(!p) [[unlikely]]
+                    newasm::runtime::functions::parse<true>(suf);
+                    auto it = newasm::variables::ids.find(suf);
+                    if(it == newasm::variables::ids.end())
                     {
-                        newasm::SetExceptionComment("procedure not found in object map");
-                        newasm::terminate(newasm::exit_codes::invalid_proc);
+                        newasm::SetExceptionComment("object with such name does not exist");
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
                         return 1;
                     }
-
-                    if(p)
+                    ptr = &it->second;
+                    if(ptr->type != newasm::datatypes::proc) [[unlikely]]
                     {
-                        if(newasm::variables::ids.at(suf).type != newasm::datatypes::proc) [[unlikely]]
-                        {
-                            newasm::SetExceptionComment("object is not a procedure");
-                            newasm::terminate(newasm::exit_codes::invalid_proc);
-                            return 1;
-                        }
+                        newasm::SetExceptionComment("object is not a procedure");
+                        newasm::terminate(newasm::exit_codes::seg_fault);
+                        return 1;
                     }
-
-                    newasm::callproc(suf);
-                    return 1;
                 }
 
-                newasm::SetExceptionComment("case not matched");
-                newasm::terminate(newasm::exit_codes::invalid_syntax);
+                newasm::callproc(ptr);
                 return 1;
             }
             //free
@@ -8393,417 +8386,6 @@ namespace newasm
         newasm::terminate(newasm::exit_codes::invalid_syntax);
         return 1;
     }
-    #if 0
-    int proclineUncompiled(std::string &line)
-    {
-        line = newasm::header::functions::remc(line);
-        line = newasm::header::functions::trim(line);
-        if(line[0] == ';')
-        {
-            return 0;
-        }
-        if(line.empty())
-        {
-            return 0;
-        }
-        if(newasm::header::functions::parseDirective(line).first)
-        {
-            auto it = newasm::header::functions::parseDirective(line);
-            newasm::pp::impl::processDirectives(it.second.first, it.second.second);
-            return 0;
-        }
-        if(newasm::system::section == newasm::code_stream::sections::data)
-        if(newasm::header::functions::isdeco(line).first)
-        {
-            newasm::expcfg::process_dec(newasm::header::functions::isdeco(line).second);
-            return 1;
-        }
-        if(newasm::system::section == newasm::code_stream::sections::data)
-        if(newasm::header::functions::parseNamespace(line).first)
-        {
-            newasm::nms::process_nms(newasm::header::functions::parseNamespace(line).second);
-            return 1;
-        }
-        if(line == static_cast<std::string>("}"))
-        {
-            if(newasm::header::data::struct_now)
-            {
-                newasm::header::data::struct_now = false;
-                return 1;
-            }
-            if(newasm::threads::thread_now)
-            {
-                newasm::threads::thread_now = false;
-                return 1;
-            }
-            newasm::terminate(newasm::exit_codes::unexpected_cbrace);
-            return 1;
-        }
-        if(line == static_cast<std::string>("#"))
-        {
-            if(newasm::header::data::macro_now)
-            {
-                newasm::header::data::macro_now = false;
-                return 1;
-            }
-            newasm::terminate(newasm::exit_codes::unexpected_cbrace);
-            return 1;
-        }
-        auto lambda = newasm::header::functions::is_lambda(line);
-        if(lambda.first) if(lambda.second == newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::end))
-        {
-            if(newasm::lambda::GLOBAL.contents.empty())
-            {
-                newasm::terminate(newasm::exit_codes::unexpected_end);
-                return 1;
-            }
-            //std::cout << "Called (LAMBDA.INS) << end" << std::endl;
-            newasm::lambda::lambda_now = false;
-            newasm::lambda::process = true;
-            for(auto i = newasm::lambda::GLOBAL.contents.begin(); i != newasm::lambda::GLOBAL.contents.end(); ++i)
-            {
-                //std::cout << "lambda line >> " << *i << std::endl;
-                //std::cout << "vector size >> " << newasm::lambda::GLOBAL.contents.size() << std::endl;
-                newasm::procline(*i);
-                if(newasm::lambda::GLOBAL.ret)
-                {
-                    break;
-                }
-            }
-            newasm::lambda::process = false;
-            if(!newasm::lambda::GLOBAL.ret)
-            {
-                // Must return a value inside a lambda procedure
-                newasm::terminate(newasm::exit_codes::invalid_exp);
-                return 1;
-            }
-            try
-            {
-                //std::cout << "EVAL >> " << newasm::lambda::GLOBAL.line + newasm::lambda::GLOBAL.result << std::endl;
-                std::string eval = newasm::lambda::GLOBAL.line + newasm::lambda::GLOBAL.result;
-                //std::cout << "RETURNED >> " << newasm::lambda::GLOBAL.result << '\n';
-                newasm::procline(eval);
-            }
-            catch (const std::out_of_range& e) {
-                std::cerr << "Out of range: " << e.what() << '\n';
-            }
-            catch (const std::invalid_argument& e) {
-                std::cerr << "Invalid argument: " << e.what() << '\n';
-            }
-            catch (const std::exception& e) {
-                std::cerr << "Standard exception: " << e.what() << '\n';
-            }
-            
-            return 1;
-        }
-
-        if(newasm::lambda::lambda_now)
-        {
-            if(newasm::thread_line)
-            {
-                if(newasm::lambda::GLOBAL.thread)
-                {
-                    //std::cout << "Thread :: lambda >> " << line << std::endl;
-                    newasm::lambda::GLOBAL.contents.push_back(line);
-                }
-            }
-            if(!newasm::thread_line)
-            {
-                if(!newasm::lambda::GLOBAL.thread)
-                {
-                    //std::cout << "Thread.not :: lambda.not >> " << line << std::endl;
-                    newasm::lambda::GLOBAL.contents.push_back(line);
-                }
-            }
-            return 1;
-        }
-
-        //using namespace std;
-        //cout << newasm::threads::thread_now << endl;
-        if(newasm::threads::thread_now)
-        {
-            //std::cout << "FUCCCKKKKKKKKKK2\n";
-            newasm::threads::memory.at(newasm::threads::thread_decl)->contents.push_back(line);
-            //newasm::threads::memory.at(newasm::threads::thread_decl)->size++;
-            return 1;
-        }
-        if(newasm::header::data::macro_now)
-        {
-            //std::cout << "FUCCCKKKKKKKKKK2\n";
-            newasm::stack::macros.at(newasm::header::data::macro_decl)->contents.push_back(line);
-            //newasm::threads::memory.at(newasm::threads::thread_decl)->size++;
-            return 1;
-        }
-        if(newasm::thread_line)
-        {
-            if(newasm::CurrentThreadA->thrd->returned)
-            {
-                //newasm::CurrentThreadA->thrd->contents.pop_front(); //btw get rid of this
-                return 1; //skip line
-            }
-        }
-        std::string ins, suf, opr, stat, arg, dtyp, ev, pr;
-        std::vector<std::string> tmp, tmp1, tmp2, tmp3;
-        tmp.clear();
-        tmp1.clear();
-        tmp2.clear();
-        tmp3.clear();
-
-        ins.clear();
-        suf.clear();
-        opr.clear();
-        
-        stat.clear();
-        arg.clear();
-        dtyp.clear();
-
-        if(line.at(0) == '.')
-        {
-            bool valid = false;
-            std::string sec = newasm::header::functions::trim(line.substr(1,line.size()));
-            newasm::process_s_(valid,line,"_",sec);
-            if(valid)
-            {
-                return 1;
-            }
-        }
-
-        if(newasm::system::section == newasm::code_stream::sections::hndl)
-        {
-            if(line.size() < 1 || line.find(',') == std::string::npos)
-            {
-                newasm::terminate(newasm::exit_codes::invalid_syntax);
-                return 1;
-            }
-            tmp = newasm::header::functions::split_fixed(line, ',');
-            ev = tmp[0];
-            pr = tmp[1];
-            
-            ev = newasm::header::functions::trim(ev);
-            pr = newasm::header::functions::trim(pr);
-
-            return newasm::process_hndl(ev,pr);
-        }
-        if(newasm::system::section == newasm::code_stream::sections::text)
-        {
-            if(line.find(':') == std::string::npos)
-            {
-                newasm::terminate(newasm::exit_codes::invalid_syntax);
-                return 1;
-            }
-            tmp = newasm::header::functions::split_fixed(line, ':');
-            stat = tmp[0];
-            arg = tmp[1];
-            stat = newasm::header::functions::trim(stat);
-            arg = newasm::header::functions::trim(arg);
-            return newasm::process_text(stat,arg);
-        }
-        /*if(newasm::system::section == newasm::code_stream::sections::config)
-        {
-            if(line.find('~') == std::string::npos)
-            {
-                newasm::terminate(newasm::exit_codes::invalid_syntax);
-                return 1;
-            }
-            tmp = newasm::header::functions::split_fixed(line, '~');
-            stat = tmp[0];
-            arg = tmp[1];
-            stat = newasm::header::functions::trim(stat);
-            arg = newasm::header::functions::trim(arg);
-            return newasm::process_c(line,stat,arg);
-        }*/
-        if(newasm::system::section == newasm::code_stream::sections::data)
-        {
-            try
-            {
-                if(line.size() < 1 || line.find(':') == std::string::npos)
-                {
-                    //std::cout << "FUCKKKKKKKKKK\n";
-                    newasm::terminate(newasm::exit_codes::invalid_syntax);
-                    return 1;
-                }
-                std::vector<std::string> tokens = newasm::common::tokenize2(line);
-                std::vector<std::string> tokens2 = newasm::header::functions::split_fixed(tokens[1],':');
-
-                if(tokens.size() < 2) return newasm::terminate(newasm::exit_codes::os_error);
-                if(tokens2.size() < 2) return newasm::terminate(newasm::exit_codes::os_error);
-
-                tokens[0] = newasm::header::functions::trim(tokens[0]);
-                tokens2[0] = newasm::header::functions::trim(tokens2[0]);
-                tokens2[1] = newasm::header::functions::trim(tokens2[1]);
-
-                //std::cout << tokens[0] << tokens2[0] << tokens2[1] << std::endl; 
-
-                newasm::process_d(line,tokens[0],tokens2[0],tokens2[1]);
-            }
-            catch(std::exception& err)
-            {
-                std::cout << "DATA SEC :: " << err.what() << std::endl;
-            }
-            return 1;
-        }
-        if(newasm::header::data::struct_now)
-        {
-            newasm::terminate(newasm::exit_codes::expected_cbrace);
-            return 1;
-        }
-        if(newasm::system::section == newasm::code_stream::sections::start)
-        {
-            if(newasm::thread_line == false)
-            {
-                newasm::handle_threads();
-            }
-            if(newasm::mem::functions::datavalid(line, newasm::mem::instructions))
-            {
-                for(int i = 0; i < newasm::dynlib::mem::invalid_dynlibs.size(); ++i)
-                {
-                    if(line == newasm::dynlib::mem::invalid_dynlibs.at(i))
-                    {
-                        newasm::terminate(newasm::exit_codes::improper_dynlib);
-                        return 1;
-                    }
-                }
-                for(int i = 0; i < newasm::mem::instructions[line].size(); ++i)
-                {
-                    if(newasm::system::terminated)
-                    {
-                        return 1;
-                    }
-                    newasm::procline(newasm::mem::instructions[line].at(i));
-                }
-                return 1;
-            }
-            if(line.at(0) == '$')
-            {
-                std::string macroname = newasm::header::functions::trim(line.substr(1));
-                auto it = newasm::stack::macros; if(it.find(macroname) != it.end())
-                {
-                    for(int i = 0; i < it.at(macroname)->contents.size(); ++i)
-                    {
-                        newasm::procline(it.at(macroname)->contents.at(i));
-                    }
-                    return 1;
-                }
-                newasm::terminate(newasm::exit_codes::undefined_macro);
-                return 1;
-            }
-            //tokenizer starts here
-            auto is_str_ = [](std::string text, int idx) -> bool {
-                std::vector<std::pair<int,int>> positions;
-                int first_p = -1, second_p = -1;
-        
-                for(int i = 0; i < text.size(); ++i)
-                {
-                    if(text.at(i) == '"')
-                    {
-                        if(first_p == -1)
-                        {
-                            first_p = i;
-                            continue;
-                        }
-                        if(second_p == -1)
-                        {
-                            second_p = i;
-                            continue;
-                        }
-                        if((first_p != -1) && (second_p != -1))
-                        {
-                            positions.push_back({first_p, second_p});
-                            first_p = -1;
-                            second_p = -1;
-                            continue;
-                        }
-                    }
-                }
-                if(first_p == -1)
-                {
-                    //newasm::terminate(newasm::exit_codes::invalid_exp);
-                    return false;
-                }
-                for(int i = 0; i < positions.size(); ++i)
-                {
-                    if(positions.at(i).first <= idx && idx <= positions.at(i).second)
-                    {
-                        return true;
-                    }
-                }
-                return false;
-            };
-            int idx__ = line.find("->"); //conditionals
-            if(idx__ != std::string::npos)
-            {
-                if(is_str_(line, idx__) == false && is_str_(line, idx__ + 1) == false)
-                {
-                    if(line.size() != idx__+2)
-                    {
-                        std::vector<std::string> linetokens_inline = newasm::common::tokenize(line.substr(0, idx__));
-                        if(linetokens_inline.size() == 2)
-                        {
-                            //std::cout << linetokens_inline.at(0) << " + " << linetokens_inline.at(1) << std::endl;
-                            newasm::header::data::case_line = line.substr(idx__+2);
-                            return process_is(line, linetokens_inline.at(0), linetokens_inline.at(1));
-                        }
-                        if(linetokens_inline.size() == 1)
-                        {
-                            //std::cout << linetokens_inline.at(0) << " + " << linetokens_inline.at(1) << std::endl;
-                            newasm::header::data::case_line = line.substr(idx__+2);
-                            return process_i(line, linetokens_inline.at(0));
-                        }
-                    }
-                }
-            }
-            std::vector<std::string> linetokens = newasm::common::tokenize(line);
-
-            std::string instruction;
-            if(!linetokens.empty())
-            {
-                instruction = linetokens.at(0);
-            }
-            if(newasm::header::functions::ishex(instruction))
-            {
-                for(std::unordered_map<int, std::string>::iterator i = newasm::opcodes::mem.begin(); i != newasm::opcodes::mem.end(); ++i)
-                {
-                    if(i->first == newasm::header::functions::hextoi(instruction))
-                    {
-                        /*using namespace std;
-                        cout << instruction << endl;
-                        cout << i->first << endl;
-                        cout << i->second << endl;*/
-                        instruction = i->second;
-                        //cout << instruction << endl;
-                    }
-                }
-            }               
-
-            if(linetokens.size() == 1)
-            {
-                return newasm::process_i(line, instruction);
-            }
-            if(linetokens.size() == 2)
-            {
-                return newasm::process_is(line, instruction,linetokens.at(1));
-            }
-            if(linetokens.size() == 3)
-            {
-                std::string operand;
-                operand = linetokens.at(2);
-                if(newasm::header::data::proc_now)
-                {
-                    if(newasm::header::functions::isargref(linetokens.at(2)).first)
-                    {
-                        newasm::header::data::argc++;
-                        operand = newasm::mem::program_memory[newasm::header::data::callstkidx + 2 + newasm::header::functions::isargref(linetokens.at(2)).second];
-                    }
-                }
-                return newasm::process_iso(line, instruction,linetokens.at(1),operand);
-            }
-         
-        }
-       
-        newasm::terminate(newasm::exit_codes::invalid_syntax);
-        return 0;
-    }
-    #endif
 
     inline void process_cli(std::string name, decltype(name) classname)
     {
@@ -9051,7 +8633,6 @@ namespace newasm
                         break;
                     }
                     auto& lll = p->contents.at(p->idx);
-                    newasm::header::data::LastLine = &lll;
                     newasm::procline(lll);
                     p->idx++;
                 }
@@ -9252,10 +8833,11 @@ namespace newasm
 
         if(newasm::system::section == newasm::code_stream::sections::start)
         {
-            if(newasm::thread_line == false)
+            if(!newasm::thread_line)
             {
                 if(NewASM::header::data::ActiveThreads != 0) newasm::handle_threads();
             }
+
             std::string libname;
             
             switch(line.type)
@@ -9470,7 +9052,9 @@ namespace newasm
             {
                 break;
             }
-            newasm::header::data::LastLine = &proc_contents.at(ptr->proc->idx);
+
+            std::cout << "---Processing proc " << ptr->proc->original_name << ":" << ptr->proc->idx << "---" << std::endl;
+
             newasm::procline(proc_contents.at(ptr->proc->idx));
             ptr->proc->idx++;
         }
@@ -10238,8 +9822,12 @@ namespace newasm
                     mmap->LockedObjects.clear();
                 }
             }
-            else newasm::procline(mmap->contents.at(IDX));
-            
+            else
+            {
+                std::cout << "---Processing thread " << mmap->original_name << ":" << IDX << "---" << std::endl;
+                newasm::procline(mmap->contents.at(IDX));
+            }
+
             newasm::thread_line = false;
             if(mmap->paused)
             {
