@@ -14,7 +14,6 @@ namespace newasm
     bool thread_line = false;
     namespace threads
     {
-        std::string now;
         unsigned int id_now = 0;
         newasm::_std::vec<int> sys_module;
     }

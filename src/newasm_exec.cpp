@@ -291,7 +291,7 @@ namespace newasm
                     std::cout << Insomnia << Insomnia;
                     std::cout << "in ";
                 }
-                auto& t = newasm::threads::now;
+                auto& t = NewASM::CurrentThreadA->thrd->original_name;
                 auto& mmap = newasm::CurrentThreadA->thrd;
                 std::cout << "thread " <<
                 newasm::header::col::gray <<
@@ -323,7 +323,7 @@ namespace newasm
 
             if(newasm::thread_line)
             {
-                auto& t = newasm::threads::now;
+                auto& t = NewASM::CurrentThreadA->thrd->original_name;
                 auto& mmap = newasm::CurrentThreadA->thrd;
                 LogDeclarationSource(t, mmap->LCX);
             }
@@ -6336,7 +6336,6 @@ namespace newasm
                     return 1;
                 }
 
-                //std::cout << "recv called in " << newasm::threads::now << std::endl;
                 auto& l = newasm::CurrentThreadA->thrd;
 
                 if(ptr->container->chan->empty)
@@ -6531,7 +6530,6 @@ namespace newasm
                     if(mmap->paused)
                     {
                         IDX--;
-                        //std::cout << "Thread paused by channel: " << newasm::threads::now << std::endl;
                         mmap->paused = false;
                         newasm::terminate(newasm::exit_codes::channel_deadlock);
                         return 1;
@@ -10423,7 +10421,6 @@ namespace newasm
             ++NewASM::header::data::ActiveThreads;
             auto& IDX = mmap->lcx;
             newasm::thread_line = true;
-            newasm::threads::now = mmap->original_name;
             newasm::threads::id_now = mmap->id;
             newasm::CurrentThreadA = i;
             
