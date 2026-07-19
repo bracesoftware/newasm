@@ -2794,6 +2794,17 @@ jmp 345lmao
         call std::ios::writeln
     }
 
+    ./lmao
+        thread Interesting -> {
+            ;throw
+            nop
+        }
+    ./!lmao
+
+    thread nig -> {
+        throw
+    }
+
     lock &testinggg
     mov &testinggg, "Testing the funny string from main thread"
     mov tlr, testinggg

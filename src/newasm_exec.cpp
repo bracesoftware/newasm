@@ -6253,7 +6253,10 @@ namespace newasm
                     original_name = newasm::header::functions::demangleName(newasm::nms::stack, suf);
                     suf = newasm::header::functions::mangleName(newasm::nms::stack, suf);
                 }
-
+                else
+                {
+                    original_name = suf;
+                }
 
                 newasm::variables::ids[suf].type = newasm::datatypes::threadz;
                 auto& mmap = newasm::variables::ids.at(suf);
