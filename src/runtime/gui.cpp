@@ -14,6 +14,46 @@
 namespace newasm::runtime::gui
 {
     #if _NEWASM_OS == _NEWASM_OS_windows_old || _NEWASM_OS == _NEWASM_OS_windows
+    static HANDLE OriginalBuf = GetStdHandle(STD_OUTPUT_HANDLE);
+    static HANDLE PopupBuf = NULL;
+
+    inline void EnterPopupMode()
+    {
+        #if _NEWASM_OS == _NEWASM_OS_linux
+        //magic code
+        std::cout << "\033[?1049h\033[?25l" << std::flush;
+        #else
+        hPopupBuffer = CreateConsoleScreenBuffer(
+            GENERIC_READ | GENERIC_WRITE, 
+            FILE_SHARE_READ | FILE_SHARE_WRITE,
+            NULL, CONSOLE_TEXTMODE_BUFFER, NULL
+        );
+        
+        CONSOLE_CURSOR_INFO cursorInfo = {100, FALSE};
+        SetConsoleCursorInfo(hPopupBuffer, &cursorInfo);
+        
+        SetConsoleActiveScreenBuffer(hPopupBuffer);
+        #endif
+        return;
+    }
+
+    inline void ExitPopupMode()
+    {
+        #if _NEWASM_OS == _NEWASM_OS_linux
+        //yet more magic
+        std::cout << "\033[?1049l\033[?25h" << std::flush;
+        #else
+        SetConsoleActiveScreenBuffer(hOriginalBuffer);
+        if(hPopupBuffer)
+        {
+            CloseHandle(hPopupBuffer);
+            hPopupBuffer = NULL;
+        }
+        #endif
+        return;
+    }
+
+
     class ConShapshot final
     {
         public COORD size;
@@ -84,12 +124,8 @@ namespace newasm::runtime::gui
     void inputListener()
     {
         pressed = KEY_NONE;
-        while(true)
+        while(!killInputListener)
         {
-            if(killInputListener)
-            {
-                return;
-            }
             ch = newasm::_compat::getch();
             if(ch == 'A' or ch == 'a') pressed = KEY_LEFT;
             else if(ch == 'D' or ch == 'd') pressed = KEY_RIGHT;
@@ -167,12 +203,7 @@ namespace newasm::runtime::gui
         static const std::string CLS = "\033[2J";
         std::vector<std::string> messageLines = WrapText(message, boxWidth - 8);
         //magic-DO NOT TOUCH! NOTE INFO IMPORTANT
-        #if _NEWASM_OS == _NEWASM_OS_linux
-        std::cout << "\033[?1049h\033[?25l" << CLS;
-        #elif _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
-        ConShapshot s = SaveConsole();
-        NewASM::Console::cls_BARE_METAL__();
-        #endif
+        EnterPopupMode();
         std::cout << newasm::header::col::sky_blue;
 
         int selectedIndex = 0;
@@ -283,13 +314,7 @@ namespace newasm::runtime::gui
             }
         }
         listener.join();
-        //more magic
-        #if _NEWASM_OS == _NEWASM_OS_linux
-        std::cout << "\033[?1049l\033[?25h" << std::flush;
-        #elif _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
-        newasm::Console::cls_BARE_METAL__();
-        RestoreConsole(s);
-        #endif
+        ExitPopupMode();
         return selectedIndex;
     }
 }
