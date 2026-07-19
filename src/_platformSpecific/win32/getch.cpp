@@ -7,7 +7,7 @@ namespace newasm
 {
     namespace _compat
     {
-        inline char getch() noexcept //very useful
+        inline char getch_OLD() noexcept //very useful
         {
             HANDLE hInput = GetStdHandle(STD_INPUT_HANDLE);
             if(hInput == INVALID_HANDLE_VALUE)
@@ -37,6 +37,27 @@ namespace newasm
 
             SetConsoleMode(hInput, mode); // restore
             return ch;
+        }
+
+        //stack overflow
+        inline char getch() noexcept
+        {
+            HANDLE hInput = GetStdHandle(STD_INPUT_HANDLE);
+            DWORD numEvents = 0;
+            
+            GetNumberOfConsoleInputEvents(hInput, &numEvents);
+            if(numEvents == 0) return 0;
+
+            INPUT_RECORD record;
+            DWORD read;
+            if(ReadConsoleInputA(hInput, &record, 1, &read))
+            {
+                if(record.EventType == KEY_EVENT && record.Event.KeyEvent.bKeyDown)
+                {
+                    return record.Event.KeyEvent.uChar.AsciiChar;
+                }
+            }
+            return 0;
         }
 
         // two very useful functions from stackoverflow >:)

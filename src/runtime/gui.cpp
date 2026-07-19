@@ -23,16 +23,27 @@ namespace newasm::runtime::gui
         //magic code
         std::cout << "\033[?1049h\033[?25l" << std::flush;
         #else
-        hPopupBuffer = CreateConsoleScreenBuffer(
+        PopupBuf = CreateConsoleScreenBuffer(
             GENERIC_READ | GENERIC_WRITE, 
             FILE_SHARE_READ | FILE_SHARE_WRITE,
             NULL, CONSOLE_TEXTMODE_BUFFER, NULL
         );
+
+        #if _NEWASM_OS != _NEWASM_OS_windows_old
+        DWORD sm = 0;
+        GetConsoleMode(PopupBuf, &sm);
+        sm |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+        SetConsoleMode(PopupBuf, sm);
+        #endif
         
         CONSOLE_CURSOR_INFO cursorInfo = {100, FALSE};
-        SetConsoleCursorInfo(hPopupBuffer, &cursorInfo);
+        SetConsoleCursorInfo(PopupBuf, &cursorInfo);
         
-        SetConsoleActiveScreenBuffer(hPopupBuffer);
+        SetConsoleActiveScreenBuffer(PopupBuf);
+        SetStdHandle(STD_OUTPUT_HANDLE, PopupBuf);
+
+        freopen("CONOUT$", "w", stdout);
+        std::cout.clear();
         #endif
         return;
     }
@@ -43,11 +54,16 @@ namespace newasm::runtime::gui
         //yet more magic
         std::cout << "\033[?1049l\033[?25h" << std::flush;
         #else
-        SetConsoleActiveScreenBuffer(hOriginalBuffer);
-        if(hPopupBuffer)
+        SetConsoleActiveScreenBuffer(OriginalBuf);
+        SetStdHandle(STD_OUTPUT_HANDLE, OriginalBuf);
+
+        freopen("CONOUT$", "w", stdout);
+        std::cout.clear();
+        
+        if(PopupBuf)
         {
-            CloseHandle(hPopupBuffer);
-            hPopupBuffer = NULL;
+            CloseHandle(PopupBuf);
+            PopupBuf = NULL;
         }
         #endif
         return;
@@ -132,7 +148,6 @@ namespace newasm::runtime::gui
             else if(ch == '\n' or ch == '\r') pressed = KEY_ENTER;
             else if(ch == '\t') pressed = KEY_TAB;
             else pressed = KEY_NONE;
-
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
     }
@@ -190,7 +205,7 @@ namespace newasm::runtime::gui
             #if _NEWASM_OS == _NEWASM_OS_linux
             std::cout << "\033[" << y << ";" << x << "H";
             #elif _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
-            HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+            HANDLE h = (PopupBuf != NULL) ? PopupBuf : OriginalBuf;
             COORD pos = {
                 (short)x,
                 (short)y
