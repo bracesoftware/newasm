@@ -1326,7 +1326,7 @@ namespace newasm
             newasm::kernel::cfg::Context = false;
             NewASM::kernel::cfg::FileStream_VDSK = false;
             NewASM::kernel::cfg::Configuration = false;
-
+            
             newasm::mem::datatypes.clear();
             newasm::mem::data.clear();
             newasm::mem::data_attrib.clear();

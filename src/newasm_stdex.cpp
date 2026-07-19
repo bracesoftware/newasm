@@ -45,6 +45,7 @@ namespace newasm
             {
                 return;
             }
+            
             for(
                 std::unordered_map<std::string, newasm::stack::macro_data*>::iterator i = newasm::stack::macros.begin();
                 i != newasm::stack::macros.end(); ++i
