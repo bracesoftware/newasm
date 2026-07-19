@@ -140,15 +140,24 @@ namespace newasm
 
         ATTR_FLAT inline static void cls_BARE_METAL__()
         {
-            #if true
-                #if _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
-                    std::system("cls");
-                #elif _NEWASM_OS == _NEWASM_OS_linux
-                    std::system("clear");
-                #elif _NEWASM_OS == _NEWASM_OS_android
-                    std::cout << "\033[2J\033[H";
-                #endif
+            #if _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
+            #if 0
+            HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+            COORD coord = {0, 0};
+            DWORD written;
+            CONSOLE_SCREEN_BUFFER_INFO csbi;
+            GetConsoleScreenBufferInfo(h, &csbi);
+            DWORD size = csbi.dwSize.X * csbi.dwSize.Y;
+            FillConsoleOutputCharacter(h, ' ', size, coord, &written);
+            FillConsoleOutputAttribute(h, csbi.wAttributes, size, coord, &written);
+            SetConsoleCursorPosition(h, coord);
             #endif
+            std::system("cls");
+            #elif _NEWASM_OS == _NEWASM_OS_linux
+            std::system("clear");
+            #elif _NEWASM_OS == _NEWASM_OS_android
+            std::cout << "\033[2J\033[H";
+                #endif
             return;
         }
 

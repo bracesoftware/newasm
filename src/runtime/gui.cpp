@@ -13,104 +13,35 @@
 //ai written at first but reworked
 namespace newasm::runtime::gui
 {
-    #if _NEWASM_OS == _NEWASM_OS_windows_old || _NEWASM_OS == _NEWASM_OS_windows
-    static HANDLE OriginalBuf = GetStdHandle(STD_OUTPUT_HANDLE);
-    static HANDLE PopupBuf = NULL;
-
     inline void EnterPopupMode()
     {
         #if _NEWASM_OS == _NEWASM_OS_linux
-        //magic code
         std::cout << "\033[?1049h\033[?25l" << std::flush;
-        #else
-        PopupBuf = CreateConsoleScreenBuffer(
-            GENERIC_READ | GENERIC_WRITE, 
-            FILE_SHARE_READ | FILE_SHARE_WRITE,
-            NULL, CONSOLE_TEXTMODE_BUFFER, NULL
-        );
+        #elif _NEWASM_OS == _NEWASM_OS_windows_old || _NEWASM_OS == _NEWASM_OS_windows
+        NewASM::Console::cls_BARE_METAL__();
 
-        #if _NEWASM_OS != _NEWASM_OS_windows_old
-        DWORD sm = 0;
-        GetConsoleMode(PopupBuf, &sm);
-        sm |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-        SetConsoleMode(PopupBuf, sm);
+        HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+        CONSOLE_CURSOR_INFO cci;
+        GetConsoleCursorInfo(h, &cci);
+        cci.bVisible = FALSE;
+        SetConsoleCursorInfo(h, &cci);
         #endif
-        
-        CONSOLE_CURSOR_INFO cursorInfo = {100, FALSE};
-        SetConsoleCursorInfo(PopupBuf, &cursorInfo);
-        
-        SetConsoleActiveScreenBuffer(PopupBuf);
-        SetStdHandle(STD_OUTPUT_HANDLE, PopupBuf);
-
-        freopen("CONOUT$", "w", stdout);
-        std::cout.clear();
-        #endif
-        return;
     }
 
     inline void ExitPopupMode()
     {
         #if _NEWASM_OS == _NEWASM_OS_linux
-        //yet more magic
         std::cout << "\033[?1049l\033[?25h" << std::flush;
-        #else
-        SetConsoleActiveScreenBuffer(OriginalBuf);
-        SetStdHandle(STD_OUTPUT_HANDLE, OriginalBuf);
+        #elif _NEWASM_OS == _NEWASM_OS_windows_old || _NEWASM_OS == _NEWASM_OS_windows
+        NewASM::Console::cls_BARE_METAL__();
 
-        freopen("CONOUT$", "w", stdout);
-        std::cout.clear();
-        
-        if(PopupBuf)
-        {
-            CloseHandle(PopupBuf);
-            PopupBuf = NULL;
-        }
+        HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+        CONSOLE_CURSOR_INFO cci;
+        GetConsoleCursorInfo(h, &cci);
+        cci.bVisible = TRUE;
+        SetConsoleCursorInfo(h, &cci);
         #endif
-        return;
     }
-
-
-    class ConShapshot final
-    {
-        public COORD size;
-        COORD cursor;
-        std::vector<CHAR_INFO> buffer;
-    };
-
-    inline ConShapshot SaveConsole()
-    {
-        HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-        CONSOLE_SCREEN_BUFFER_INFO csbi;
-        GetConsoleScreenBufferInfo(hOut, &csbi);
-        
-        SMALL_RECT region = csbi.srWindow;
-        COORD size = { 
-            (short)(region.Right - region.Left + 1),
-            (short)(region.Bottom - region.Top + 1)
-        };
-        
-        ConShapshot snapshot;
-        snapshot.size = size;
-        snapshot.cursor = csbi.dwCursorPosition;
-        snapshot.buffer.resize(size.X * size.Y);
-        
-        ReadConsoleOutput(hOut, snapshot.buffer.data(), size, {0,0}, &region);
-        return snapshot;
-    }
-
-    inline void RestoreConsole(const ConShapshot& snapshot)
-    {
-        HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-        SMALL_RECT region = {
-            0, 0,
-            static_cast<SHORT>(snapshot.size.X - 1),
-            static_cast<SHORT>((short)snapshot.size.Y - 1)
-        };
-        WriteConsoleOutput(hOut, snapshot.buffer.data(), snapshot.size, {0,0}, &region);
-        SetConsoleCursorPosition(hOut, snapshot.cursor);
-        return;
-    }
-    #endif
 
     inline void GetTerminalSize(int& width, int& height)
     {
@@ -205,7 +136,7 @@ namespace newasm::runtime::gui
             #if _NEWASM_OS == _NEWASM_OS_linux
             std::cout << "\033[" << y << ";" << x << "H";
             #elif _NEWASM_OS == _NEWASM_OS_windows || _NEWASM_OS == _NEWASM_OS_windows_old
-            HANDLE h = (PopupBuf != NULL) ? PopupBuf : OriginalBuf;
+            HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
             COORD pos = {
                 (short)x,
                 (short)y
@@ -215,7 +146,6 @@ namespace newasm::runtime::gui
         };
         const int boxWidth = 50;
         int boxHeight, startY, startX;
-        static const std::string CLS = "\033[2J";
         std::vector<std::string> messageLines = WrapText(message, boxWidth - 8);
         //magic-DO NOT TOUCH! NOTE INFO IMPORTANT
         EnterPopupMode();
@@ -224,6 +154,7 @@ namespace newasm::runtime::gui
         int selectedIndex = 0;
         int numButtons = buttons.size();
         bool running = true;
+        killInputListener = false;
         std::thread listener(inputListener);
         while(running)
         {
