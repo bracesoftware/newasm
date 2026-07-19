@@ -149,7 +149,7 @@ namespace newasm
     };
 }
 
-#define MAX_PAD 60
+#define MAX_PAD 30
 int __newasm__MODULEID = 1;
 bool __newasm_GLOBAL_MODULE = true;
 #define __newasm_CHECK_JUMP_PROPERLY if(newasm::header::data::repl and not newasm::header::data::proc_now){newasm::unsins(ins);return 1;}
