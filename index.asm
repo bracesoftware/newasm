@@ -2795,15 +2795,20 @@ jmp 345lmao
     }
 
     ./lmao
+        proc hi
+            mov tlr, "hi\n"
+            mov fdx, 1
+            sysenter "ios"
+            syscall
+            throw
+            halt 0
+        end
         thread Interesting -> {
             ;throw
-            nop
+            call lmao::hi
         }
     ./!lmao
 
-    thread nig -> {
-        nop
-    }
 
     lock &testinggg
     mov &testinggg, "Testing the funny string from main thread"

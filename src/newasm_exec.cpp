@@ -201,7 +201,6 @@ namespace newasm
         };
 
         // ---- body ---- //
-        bool temp_proc = false;
         std::cout << std::endl;
         //std::cout << "TERMINATEEE" << std::endl;
         if(newasm::header::data::repl)
@@ -271,19 +270,18 @@ namespace newasm
                     GetLineLocation(newasm::mem::regs::lcx.get_value()).second;//(newasm::header::data::lastlndx);
                 }
             }
-            if(newasm::header::data::proc_now == true)
+            if(newasm::header::data::proc_now)
             {
                 std::cout << "procedure " <<
                 newasm::header::col::gray <<
                 newasm::header::style::bold <<
                 newasm::header::style::underline <<
-                newasm::system::processing_proc;
+                NewASM::CurrentProcA->proc->original_name;
                 std::cout << ':' << NewASM::CurrentProcA->proc->idx + 1;
-                temp_proc = true;
             }
-            if(newasm::thread_line == true)
+            if(newasm::thread_line)
             {
-                if(temp_proc)
+                if(newasm::header::data::proc_now)
                 {
                     std::cout << newasm::header::col::reset;
                     std::cout << newasm::header::col::red;
@@ -299,7 +297,6 @@ namespace newasm
                 newasm::header::style::underline <<
                 t;
                 std::cout << ':' << mmap->lcx + 1;
-                //temp_proc = true;
             }
             if(newasm::events::exitNow == true)
             {
@@ -308,7 +305,6 @@ namespace newasm
                 newasm::header::style::bold <<
                 newasm::header::style::underline <<
                 "'termination'";
-                //temp_proc = true;
             }
 
             std::cout <<
@@ -323,22 +319,12 @@ namespace newasm
 
             if(newasm::thread_line)
             {
-                auto& t = NewASM::CurrentThreadA->thrd->original_name;
-                auto& mmap = newasm::CurrentThreadA->thrd;
-                LogDeclarationSource(t, mmap->LCX);
+                auto& t = NewASM::CurrentThreadA->thrd;
+                LogDeclarationSource(t->original_name, t->LCX);
             }
-            if(temp_proc)
+            if(newasm::header::data::proc_now)
             {
                 auto& k = NewASM::CurrentProcA->proc;
-                if(k->mangled)
-                {
-                    std::cout << Insomnia << newasm::header::col::reset << newasm::header::col::light_blue;
-                    std::cout << "^ original procedure name: \"" << newasm::header::col::gray << newasm::header::style::underline;
-                    std::cout << k->original_name;
-                    std::cout << newasm::header::col::reset << newasm::header::col::light_blue << "\"";
-                    std::cout << std::endl;
-                    std::cout << newasm::header::col::reset;
-                }
                 LogDeclarationSource(k->original_name, k->LCX);
             }
             LogLambda();
@@ -1450,7 +1436,6 @@ namespace newasm
             newasm::LambdaDispatch::ThreadSafePtr->CallCStack.clear();
 
             newasm::LambdaDispatch::JitLine = newasm::header::functions::form_iso(ins,suf,"");
-            newasm::LambdaDispatch::ThreadSafePtr->mangled = false;
             newasm::LambdaDispatch::ThreadSafePtr->idx = 0;
             return 1;
         }
@@ -1459,17 +1444,8 @@ namespace newasm
         //so we can easily check what instructions are being added to a function,etc
         if(newasm::system::stop == 1)
         {
-            #if 0
             newasm::system::proclines ++;
-            std::string newline = ins + static_cast<std::string>(" ") + suf + static_cast<std::string>(",") + opr;
-            // OLD -> newasm::mem::funcs[newasm::system::cproc].push_back(newline);
-            //std::cout << newasm::system::cproc << " : " << newline << std::endl;
-            newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo.raw);
-            #endif
-            newasm::system::proclines ++;
-            //newasm::variables::ids.at(newasm::system::cproc).
             NewASM::CurrentProc->proc->contents.push_back(lineInfo);
-            //newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo);
             return 1;
         }
 
@@ -4281,17 +4257,8 @@ namespace newasm
     {
         if(newasm::system::stop == 1)
         {
-            #if 0
             newasm::system::proclines ++;
-            std::string newline = ins + static_cast<std::string>(" ") + suf;
-            // OLD -> newasm::mem::funcs[newasm::system::cproc].push_back(newline);
-            //std::cout << newasm::system::cproc << " : " << newline << std::endl;
-            newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo.raw);
-            #endif
-            newasm::system::proclines ++;
-            //newasm::variables::ids.at(newasm::system::cproc).
             NewASM::CurrentProc->proc->contents.push_back(lineInfo);
-            //newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo);
             return 1;
         }
         /*
@@ -4650,36 +4617,7 @@ namespace newasm
             case newasm::core::lang_inf::je:
             {
                 __newasm_CHECK_JUMP_PROPERLY
-                #if 0
-                if(newasm::header::data::proc_now)
-                if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids.at(newasm::system::processing_proc).proc->labels))
-                {
-                    #if 0
-                    std::cout << "VOLIMO C++!" << std::endl;
-                    for(auto it = newasm::variables::ids.at(newasm::system::processing_proc).proc->labels.begin(); it != newasm::variables::ids.at(newasm::system::processing_proc).proc->labels.end(); ++it)
-                    {
-                        std::cout << "it->first: `" << it->first << "`, it->second: `" << it->second << "`\n";
-                    }
-                    #endif
-                    newasm::terminate(newasm::exit_codes::bus_err);
-                    return 1;
-                }
-                if(!newasm::header::data::proc_now)
-                {
-                    #if 0
-                    if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
-                    {
-                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                        return 1;
-                    }
-                    #endif
-                    if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::CurrentThreadA->thrd->labels))
-                    {
-                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                        return 1;
-                    }
-                }
-                #endif
+                
                 if(newasm::mem::regs::cpr != newasm::cmp_results::equal)
                 {
                     //std::cout << "\nnewasm::mem::regs::cpr = " << newasm::mem::regs::cpr << std::endl;
@@ -4711,29 +4649,7 @@ namespace newasm
             case newasm::core::lang_inf::jne:
             {
                 __newasm_CHECK_JUMP_PROPERLY
-                #if 0
-                if(newasm::header::data::proc_now)
-                if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids.at(newasm::system::processing_proc).proc->labels))
-                {
-                    newasm::terminate(newasm::exit_codes::bus_err);
-                    return 1;
-                }
-                if(!newasm::header::data::proc_now)
-                {
-                    #if 0
-                    if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
-                    {
-                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                        return 1;
-                    }
-                    #endif
-                    if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::CurrentThreadA->thrd->labels))
-                    {
-                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                        return 1;
-                    }
-                }
-                #endif
+                
                 if(newasm::mem::regs::cpr == newasm::cmp_results::equal)
                 {
                     return 1;
@@ -4762,29 +4678,7 @@ namespace newasm
             case newasm::core::lang_inf::jl:
             {
                 __newasm_CHECK_JUMP_PROPERLY
-                #if 0
-                if(newasm::header::data::proc_now)
-                if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids.at(newasm::system::processing_proc).proc->labels))
-                {
-                    newasm::terminate(newasm::exit_codes::bus_err);
-                    return 1;
-                }
-                if(!newasm::header::data::proc_now)
-                {
-                    #if 0
-                    if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
-                    {
-                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                        return 1;
-                    }
-                    #endif
-                    if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::CurrentThreadA->thrd->labels))
-                    {
-                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                        return 1;
-                    }
-                }
-                #endif
+                
                 if(newasm::mem::regs::cpr != newasm::cmp_results::less)
                 {
                     return 1;
@@ -4815,29 +4709,7 @@ namespace newasm
             {
                 __newasm_CHECK_JUMP_PROPERLY
 
-                #if 0
-                if(newasm::header::data::proc_now)
-                if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids.at(newasm::system::processing_proc).proc->labels))
-                {
-                    newasm::terminate(newasm::exit_codes::bus_err);
-                    return 1;
-                }
-                if(!newasm::header::data::proc_now)
-                {
-                    #if 0
-                    if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
-                    {
-                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                        return 1;
-                    }
-                    #endif
-                    if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::CurrentThreadA->thrd->labels))
-                    {
-                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                        return 1;
-                    }
-                }
-                #endif
+                
                 if(newasm::mem::regs::cpr != newasm::cmp_results::greater)
                 {
                     return 1;
@@ -4867,29 +4739,7 @@ namespace newasm
             case newasm::core::lang_inf::jle:
             {
                 __newasm_CHECK_JUMP_PROPERLY
-                #if 0
-                if(newasm::header::data::proc_now)
-                if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids.at(newasm::system::processing_proc).proc->labels))
-                {
-                    newasm::terminate(newasm::exit_codes::bus_err);
-                    return 1;
-                }
-                if(!newasm::header::data::proc_now)
-                {
-                    #if 0
-                    if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
-                    {
-                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                        return 1;
-                    }
-                    #endif
-                    if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::CurrentThreadA->thrd->labels))
-                    {
-                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                        return 1;
-                    }
-                }
-                #endif
+                
                 if(newasm::mem::regs::cpr != newasm::cmp_results::less && newasm::mem::regs::cpr != newasm::cmp_results::equal)
                 {
                     return 1;
@@ -4919,27 +4769,7 @@ namespace newasm
             case newasm::core::lang_inf::jge:
             {
                 __newasm_CHECK_JUMP_PROPERLY
-                #if 0
-                if(newasm::header::data::proc_now)
-                if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids.at(newasm::system::processing_proc).proc->labels))
-                {
-                    newasm::terminate(newasm::exit_codes::bus_err);
-                    return 1;
-                }
-                if(!newasm::header::data::proc_now)
-                {
-                    if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
-                    {
-                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                        return 1;
-                    }
-                    if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::CurrentThreadA->thrd->labels))
-                    {
-                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                        return 1;
-                    }
-                }
-                #endif
+               
                 if(newasm::mem::regs::cpr != newasm::cmp_results::greater && newasm::mem::regs::cpr != newasm::cmp_results::equal)
                 {
                     return 1;
@@ -4969,27 +4799,6 @@ namespace newasm
             case newasm::core::lang_inf::jmp:
             {
                 __newasm_CHECK_JUMP_PROPERLY
-                #if 0
-                if(newasm::header::data::proc_now)
-                if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids.at(newasm::system::processing_proc).proc->labels))
-                {
-                    newasm::terminate(newasm::exit_codes::bus_err);
-                    return 1;
-                }
-                if(!newasm::header::data::proc_now)
-                {
-                    if(!newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::mem::labels))
-                    {
-                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                        return 1;
-                    }
-                    if(newasm::thread_line) if(!newasm::mem::functions::datavalid(suf, newasm::CurrentThreadA->thrd->labels))
-                    {
-                        newasm::terminate(newasm::exit_codes::bus_err);//,wholeline);
-                        return 1;
-                    }
-                }
-                #endif
 
                 if(newasm::header::data::proc_now)
                 {
@@ -7251,30 +7060,27 @@ namespace newasm
                     return 1;
                 }
 
-                newasm::system::mangled_proc = false;
-
+                std::string original_name;
                 if(newasm::nms::count != 0)
                 {
-                    newasm::system::original_proc = newasm::header::functions::demangleName(newasm::nms::stack, suf);
+                    original_name = newasm::header::functions::demangleName(newasm::nms::stack, suf);
                     suf = newasm::header::functions::mangleName(newasm::nms::stack, suf);
-                    newasm::system::mangled_proc = true;
                 }
                 else
                 {
-                    newasm::system::original_proc = suf;
+                    original_name = suf;
                 }
 
                 if(newasm::header::functions::isalphanum(suf))
                 {
                     newasm::system::stop = 1;
-                    newasm::system::cproc = suf;
                     newasm::system::proclines = 0;
-                    //std::cout << "Creating proc: " << opr << std::endl;
-                    newasm::variables::ids[newasm::system::cproc].proc = new newasm::variables::procedureData;
-                    auto& mmap = newasm::variables::ids.at(newasm::system::cproc);
+                    newasm::variables::ids[suf].proc = new newasm::variables::procedureData;
+                    auto& mmap = newasm::variables::ids.at(suf);
                     mmap.type = newasm::datatypes::proc;
                     mmap.proc->LCX = newasm::mem::regs::lcx.get_value();
                     NewASM::CurrentProc = &mmap;
+                    mmap.proc->original_name = original_name;
                     return 1;
                 }
 
@@ -8118,31 +7924,17 @@ namespace newasm
                     return 1;
                 }
 
-                //newasm::mem::funcs_data[newasm::system::cproc].mangled = newasm::system::mangled_proc;
-                //newasm::mem::funcs_data[newasm::system::cproc].original_name = newasm::system::original_proc;
-
-                //auto& a = newasm::variables::ids.at(newasm::system::cproc);
-                NewASM::CurrentProc->proc->mangled = newasm::system::mangled_proc;
-                NewASM::CurrentProc->proc->original_name = newasm::system::original_proc;
+             
                 NewASM::CurrentProc->proc->JIT_compile();
 
                 newasm::system::stop = 0;
-                //std::cout << "Finished proc: " << newasm::system::cproc << std::endl;
                 return 1;
             }
         }
         if(newasm::system::stop == 1)
         {
-            #if 0
             newasm::system::proclines ++;
-            std::string newline = ins;
-            newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo.raw);
-            //std::cout << newasm::system::cproc << " : " << newline << std::endl;
-            #endif
-            newasm::system::proclines ++;
-            //newasm::variables::ids.at(newasm::system::cproc).
             NewASM::CurrentProc->proc->contents.push_back(lineInfo);
-            //newasm::mem::funcs[newasm::system::cproc].push_back(lineInfo);
             return 1;
         }
         switch(lineInfo.whatAmIDoing)//switch(it->second)
@@ -9116,7 +8908,6 @@ namespace newasm
                     if(newasm::system::stop == 1)
                     {
                         NewASM::CurrentProc->proc->contents.push_back(line);
-                        //newasm::mem::funcs[newasm::system::cproc].push_back(line);
                         return 1;
                     }
                 }
@@ -9658,7 +9449,6 @@ namespace newasm
     {
         newasm::system::stoproc = 0;
         newasm::header::data::proc_now = true;
-        newasm::system::processing_proc = ptr->proc->original_name;
         NewASM::CurrentProcA = ptr;
         
         //std::cout << "Actually called -> " << ptr->proc->original_name << std::endl;

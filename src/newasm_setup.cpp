@@ -168,11 +168,11 @@ namespace newasm
         int section = 0;
         int stop = 0;
         int stoproc = 0;
-        std::string cproc;
+        //std::string cproc;
         int proclines = 0;
-        std::string original_proc;
-        bool mangled_proc;
-        std::string processing_proc;
+        //std::string original_proc;
+        //bool mangled_proc;
+        //std::string processing_proc;
     }
     namespace mem
     {
@@ -479,7 +479,6 @@ namespace newasm
             std::vector<int> CallCStack;
 
             std::string original_name;
-            bool mangled = false;
             bool Async = false;
 
             bool TryBlock = false;
