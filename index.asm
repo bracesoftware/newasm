@@ -2802,7 +2802,7 @@ jmp 345lmao
     ./!lmao
 
     thread nig -> {
-        throw
+        nop
     }
 
     lock &testinggg
