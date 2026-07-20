@@ -167,7 +167,7 @@ namespace newasm
         bool terminated = false;
         int section = 0;
         int stop = 0;
-        int stoproc = 0;
+        //int stoproc = 0;
         //std::string cproc;
         int proclines = 0;
         //std::string original_proc;
@@ -480,6 +480,8 @@ namespace newasm
 
             std::string original_name;
             bool Async = false;
+            int calledBy = 0;
+            bool Halt = false;
 
             bool TryBlock = false;
             int TryJump = -1;

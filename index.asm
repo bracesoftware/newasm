@@ -2826,20 +2826,23 @@ jmp 345lmao
         call std::ios::writeln ; test3
     }
 
-    ./lmao
+    
+    ./lmaoo
         proc hi
-            mov tlr, "hi\n"
+            mov tlr, "hi man bro lol\n"
             mov fdx, 1
+
+            
             sysenter "ios"
+            
             syscall
-            ;throw
-            halt 0
+            
+            ;halt 0
         end
         thread Interesting -> {
-            ;throw
-            call lmao::hi
+            call lmaoo::hi
         }
-    ./!lmao
+    ./!lmaoo
 
 
     lock &testinggg

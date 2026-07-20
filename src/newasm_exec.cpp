@@ -326,6 +326,16 @@ namespace newasm
             {
                 auto& k = NewASM::CurrentProcA->proc;
                 LogDeclarationSource(k->original_name, k->LCX);
+                
+                auto z = GetLineLocation(k->calledBy);
+                if(z.first)
+                {
+                    std::cout << Insomnia << Insomnia << Insomnia << newasm::header::col::reset;
+                    std::cout << newasm::header::style::dim;
+                    std::cout << newasm::header::col::lime_teal;
+                    std::cout << "^ called by " << newasm::header::col::gray << z.second;
+                    std::cout << std::endl;
+                }
             }
             LogLambda();
 
@@ -348,7 +358,9 @@ namespace newasm
             {
                 std::cout << " [invoked by " << newasm::header::col::gray;
                 std::cout << l.second;
-                std::cout << " << " << GetLineLocation(NewASM::header::data::LastLine->SourceLocation).second << newasm::header::col::yellow << "]";
+                auto j = GetLineLocation(NewASM::header::data::LastLine->SourceLocation);
+                if(j.first) std::cout << " << " << j.second;
+                std::cout << newasm::header::col::yellow << "]";
             }
             std::cout << std::endl;
             std::cout << newasm::header::col::reset;
@@ -4608,7 +4620,8 @@ namespace newasm
                     newasm::LambdaDispatch::LambdaHalt = true;
                     return 1;
                 }
-                newasm::system::stoproc = 1;
+                
+                NewASM::CurrentProcA->proc->Halt = true;
                 newasm::mem::regs::psx = (suf);
                 return 1;
             }
@@ -6322,25 +6335,35 @@ namespace newasm
                         mmap->returned_val = "0";
                         continue;
                     }
-                    auto& IDX = mmap->lcx;
                     newasm::thread_line = true;
                     newasm::threads::id_now = mmap->id;
-                    if(IDX < 0 or IDX >= mmap->contents.size())
+                    if(mmap->lcx < 0 or mmap->lcx >= mmap->contents.size())
                     {
                         mmap->returned = true;
                         mmap->returned_val = "0";
+                        //removes the fetch
                         auto ptr = newasm::_this.getThreadValue(mmap->id);
                         if(ptr != nullptr)
                         {
                             ptr->fetched = false;
                             newasm::_this.setThreadValue(mmap->id, nullptr);
                         }
+                        //automatically unlocks all locked mutexes
+                        if(!mmap->LockedObjects.empty())
+                        {
+                            for(size_t g = 0; g < mmap->LockedObjects.size(); ++g)
+                            {
+                                auto& ptr = mmap->LockedObjects.at(g);
+                                ptr->MutexLock = false;
+                            }
+                            mmap->LockedObjects.clear();
+                        }
                     }
                     else
                     {
                         //std::cout << "---Processing thread " << mmap->original_name << ":" << IDX << "---" << std::endl;
-                        newasm::header::data::LastLine = &mmap->contents.at(IDX);
-                        newasm::procline(mmap->contents.at(IDX));
+                        newasm::header::data::LastLine = &mmap->contents.at(mmap->lcx);
+                        newasm::procline(mmap->contents.at(mmap->lcx));
                     }
                     
                     newasm::thread_line = false;
@@ -6350,7 +6373,7 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::channel_deadlock);
                         return 1;
                     }
-                    else ++IDX;
+                    else ++mmap->lcx;
                 }
 
                 return 1;
@@ -6942,7 +6965,7 @@ namespace newasm
             {
                 if(newasm::header::data::proc_now)
                 {
-                    newasm::SetExceptionComment("cannot call a procedure within procedure, use `callc`");
+                    newasm::SetExceptionComment("cannot call a procedure within procedure, use `callc`; `" + NewASM::CurrentProcA->proc->original_name + "` is running already");
                     newasm::terminate(newasm::exit_codes::inline_proc);
                     return 1;
                 }
@@ -6983,6 +7006,7 @@ namespace newasm
                     }
                 }
 
+                ptr->proc->calledBy = lineInfo.SourceLocation;
                 newasm::callproc(ptr);
                 return 1;
             }
@@ -9031,24 +9055,19 @@ namespace newasm
     }
     FORCE_INLINE inline void callproc(VarPtr ptr)
     {
-        newasm::system::stoproc = 0;
         newasm::header::data::proc_now = true;
         NewASM::CurrentProcA = ptr;
         
-        //std::cout << "Actually called -> " << ptr->proc->original_name << std::endl;
-
+        ptr->proc->Halt = false;
         ptr->proc->idx = 0;
-        auto& proc_contents = ptr->proc->contents;
-        while(true)//for(int i = 0; i < proc_contents.size(); ++i)
+        while(true)
         {
-            if(newasm::system::stoproc == 1)
+            if(ptr->proc->Halt)
             {
-                newasm::system::stoproc = 0;
-                newasm::header::data::proc_now = false;
                 break;
             }
             if(
-                ptr->proc->idx >= proc_contents.size() or
+                ptr->proc->idx >= ptr->proc->contents.size() or
                 ptr->proc->idx < 0
             )
             {
@@ -9057,10 +9076,9 @@ namespace newasm
 
             //std::cout << "---Processing proc " << ptr->proc->original_name << ":" << ptr->proc->idx << "---" << std::endl;
             newasm::header::data::LastLine = &ptr->proc->contents.at(ptr->proc->idx);
-            newasm::procline(proc_contents.at(ptr->proc->idx));
+            newasm::procline(ptr->proc->contents.at(ptr->proc->idx));
             ptr->proc->idx++;
         }
-        //newasm::header::data::proc_now = false;
         newasm::header::data::proc_now = false;
         return;
     }
@@ -9782,11 +9800,7 @@ namespace newasm
     }
     inline void handle_threads()
     {
-        if(!NewASM::header::data::EnableThreads)
-        {
-            return;
-        }
-        if(newasm::header::data::proc_now)
+        if(not NewASM::header::data::EnableThreads or newasm::header::data::proc_now)
         {
             return;
         }
@@ -9805,12 +9819,11 @@ namespace newasm
                 continue;
             }
             ++NewASM::header::data::ActiveThreads;
-            auto& IDX = mmap->lcx;
             newasm::thread_line = true;
             newasm::threads::id_now = mmap->id;
             newasm::CurrentThreadA = i;
             
-            if(IDX < 0 or IDX >= mmap->contents.size())
+            if(mmap->lcx < 0 or mmap->lcx >= mmap->contents.size())
             {
                 mmap->returned = true;
                 mmap->returned_val = "0";
@@ -9833,9 +9846,9 @@ namespace newasm
             }
             else
             {
-                newasm::header::data::LastLine = &mmap->contents.at(IDX);
+                newasm::header::data::LastLine = &mmap->contents.at(mmap->lcx);
                 //std::cout << "---Processing thread " << mmap->original_name << ":" << IDX << "---" << std::endl;
-                newasm::procline(mmap->contents.at(IDX));
+                newasm::procline(mmap->contents.at(mmap->lcx));
             }
 
             newasm::thread_line = false;
@@ -9844,7 +9857,7 @@ namespace newasm
                 mmap->paused = false;
                 continue;
             }
-            else ++IDX;
+            else ++mmap->lcx;
         }
         return;
     }
