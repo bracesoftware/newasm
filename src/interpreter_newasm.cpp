@@ -730,6 +730,8 @@ namespace newasm
             string SourceMacroName = "";
             bool AltArgLambda = false;
             bool AltStackArg = false;
+
+            int SourceLocation = -1;
             //---------------------------------------------
             // compile-time info
             lineDataCT CompileTime;

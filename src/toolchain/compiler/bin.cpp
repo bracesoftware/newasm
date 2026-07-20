@@ -125,6 +125,8 @@ namespace newasm
                 write_bin(out, ld.priEvalMode.UsingStruct);
                 write_string(out, ld.priEvalMode.structString1);
                 write_string(out, ld.priEvalMode.structString2);
+
+                write_bin(out, ld.SourceLocation);
                 return;
             }
             void load_lineData(std::ifstream& in, newasm::compiler::lineData& ld)
@@ -207,6 +209,8 @@ namespace newasm
                 read_bin(in, ld.priEvalMode.UsingStruct);
                 read_string(in, ld.priEvalMode.structString1);
                 read_string(in, ld.priEvalMode.structString2);
+
+                read_bin(in, ld.SourceLocation);
                 return;
             }
             //label addresses

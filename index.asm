@@ -2740,7 +2740,39 @@ jmp e2349083l
     mov tlr, ramdagadam
     
     call std::ios::writeln
+jmp 927349872l
+    thread Lmao759837 -> {
+        mov tlr, "Hello bro"
+        call std::ios::writeln
+        call std::ios::writeln
+        call std::ios::writeln
+        call std::ios::writeln
+        call std::ios::writeln
+        call std::ios::writeln
+        call std::ios::writeln
+        call std::ios::writeln
+        call std::ios::writeln
+        call std::ios::writeln
+        call std::ios::writeln
+        call std::ios::writeln
+    }
 
+    thread _Lmao759837 -> {
+        mov tlr, "Hello broopooooooooooo"
+        call std::ios::writeln
+        call std::ios::writeln
+        call std::ios::writeln
+        call std::ios::writeln
+        call std::ios::writeln
+        call std::ios::writeln
+        call std::ios::writeln
+        call std::ios::writeln
+        call std::ios::writeln
+        call std::ios::writeln
+        call std::ios::writeln
+        call std::ios::writeln
+    }
+:927349872l
     proc ProcWithError
         try
             pddsfdssd ; purposefully try to use a non-existing dyn lib

@@ -343,12 +343,12 @@ namespace newasm
             std::cout << "^ backtrace: \"" << newasm::header::col::gray << newasm::header::style::underline;
             std::cout << NewASM::ExceptionHandling::Line->raw;
             std::cout << newasm::header::col::reset << newasm::header::col::yellow << "\"";
-            auto l = GetLineLocation(newasm::mem::regs::lcx.get_value());
+            auto l = GetLineLocation(NewASM::ExceptionHandling::Line->SourceLocation);
             if(l.first)
             {
                 std::cout << " [invoked by " << newasm::header::col::gray;
                 std::cout << l.second;
-                std::cout << "|" << newasm::mem::regs::lcx.get_value() << newasm::header::col::yellow << "]";
+                std::cout << " << " << GetLineLocation(NewASM::header::data::LastLine->SourceLocation).second << newasm::header::col::yellow << "]";
             }
             std::cout << std::endl;
             std::cout << newasm::header::col::reset;
@@ -6338,7 +6338,8 @@ namespace newasm
                     }
                     else
                     {
-                        std::cout << "---Processing thread " << mmap->original_name << ":" << IDX << "---" << std::endl;
+                        //std::cout << "---Processing thread " << mmap->original_name << ":" << IDX << "---" << std::endl;
+                        newasm::header::data::LastLine = &mmap->contents.at(IDX);
                         newasm::procline(mmap->contents.at(IDX));
                     }
                     
@@ -8633,6 +8634,7 @@ namespace newasm
                         break;
                     }
                     auto& lll = p->contents.at(p->idx);
+                    newasm::header::data::LastLine = &lll;
                     newasm::procline(lll);
                     p->idx++;
                 }
@@ -9053,8 +9055,8 @@ namespace newasm
                 break;
             }
 
-            std::cout << "---Processing proc " << ptr->proc->original_name << ":" << ptr->proc->idx << "---" << std::endl;
-
+            //std::cout << "---Processing proc " << ptr->proc->original_name << ":" << ptr->proc->idx << "---" << std::endl;
+            newasm::header::data::LastLine = &ptr->proc->contents.at(ptr->proc->idx);
             newasm::procline(proc_contents.at(ptr->proc->idx));
             ptr->proc->idx++;
         }
@@ -9749,6 +9751,13 @@ namespace newasm
                 return 1;
             }
 
+            for(size_t i = 0; i < newasm::compiler::compiledCode.size(); ++i)
+            {
+                auto& mmap = newasm::compiler::compiledCode.at(i);
+                mmap.SourceLocation = i;
+                continue;
+            }
+
             newasm::compiler::bin::ASSEMBLE( // create the binary format
                 newasm::bin_out_name,
                 newasm::compiler::compiledCode,
@@ -9824,7 +9833,8 @@ namespace newasm
             }
             else
             {
-                std::cout << "---Processing thread " << mmap->original_name << ":" << IDX << "---" << std::endl;
+                newasm::header::data::LastLine = &mmap->contents.at(IDX);
+                //std::cout << "---Processing thread " << mmap->original_name << ":" << IDX << "---" << std::endl;
                 newasm::procline(mmap->contents.at(IDX));
             }
 
