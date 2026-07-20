@@ -101,7 +101,7 @@ namespace newasm
         {
             constinit int SimpleConfig = 0;
 
-            constinit bool AutomaticLogin = 1 << 0;
+            constinit int AutomaticLogin = 1 << 0;
         }
         namespace impl
         {

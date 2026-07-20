@@ -2543,7 +2543,7 @@ jmp lmao
 
     :d787234
     ;int 0x5
-    mov bos, 0b11110100001001000000;1000000
+    mov bos, 5;0b11110100001001000000;1000000
     :loop___
     cmp bos, 0
     jz end____
@@ -2822,25 +2822,36 @@ jmp 345lmao
     }
 
     thread LmaoWhatsThos -> {
+        __say 0, "This is the problem! DBG 1"
+        nop
+        zero tlr
         mov tlr, "Hello from lmaowhatsthos"
+        __say 0, "This is the problem! DBG 2"
+
         call std::ios::writeln ; test3
+        __say 0, "This is the problem! DBG 3"
+
     }
 
     
     ./lmaoo
         proc hi
+            __say 0, "This is the problem! DBG 4"
+
             mov tlr, "hi man bro lol\n"
             mov fdx, 1
+            __say 0, "This is the problem! DBG 5"
 
-            
             sysenter "ios"
-            
+            __say 0, "This is the problem! DBG 6"
             syscall
-            
-            ;halt 0
+            __say 0, "This is the problem! DBG 7"
+            halt 0
         end
         thread Interesting -> {
+            __say 0, "This is the problem! DBG 8"
             call lmaoo::hi
+            __say 0, "This is the problem! DBG 9"
         }
     ./!lmaoo
 

@@ -949,7 +949,7 @@ namespace newasm::header
             int size_b = b.size();
             int result = 0;
 
-            for(int i = 0; i < size_a > size_b ? size_b : size_a; ++i)
+            for(int i = 0; i < (size_a > size_b) ? size_b : size_a; ++i)
             {
                 if(a.at(i) != b.at(i))
                 {

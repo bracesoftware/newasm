@@ -14,7 +14,6 @@ namespace newasm
     namespace threads
     {
         bool thread_now = false;
-        std::string thread_decl = "?";
 
         //std::unordered_map<std::string, newasm::threads::object__*> memory;
         //std::vector<std::string> valid_threads;
@@ -26,7 +25,7 @@ namespace newasm
             {
                 if(newasm::thread_line)
                 {
-                    return newasm::threads::sys_module[newasm::threads::id_now];
+                    return newasm::threads::sys_module[newasm::CurrentThreadA->thrd->id];
                 }
                 return newasm::header::data::module;
             }

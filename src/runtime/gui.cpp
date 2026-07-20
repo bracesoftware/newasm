@@ -145,7 +145,7 @@ namespace newasm::runtime::gui
             #endif
         };
         const int boxWidth = 50;
-        int boxHeight, startY, startX;
+        int boxHeight = -1, startY = -1, startX = -1;
         std::vector<std::string> messageLines = WrapText(message, boxWidth - 8);
         //magic-DO NOT TOUCH! NOTE INFO IMPORTANT
         EnterPopupMode();

@@ -487,6 +487,7 @@ namespace newasm
         void* LambdaLine = nullptr;
     }
 }
+
 link "vm/hardware/cpu_register";
 
 // Resources (assets) used in the program
@@ -1107,6 +1108,7 @@ link "toolchain/linker/asmlink";
 
 link "runtime/common/tokenize";
 link "newasm_setup";
+
 namespace newasm
 {
     namespace LambdaDispatch
