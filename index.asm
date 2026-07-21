@@ -2813,8 +2813,8 @@ jmp 345lmao
 
     
     thread Funnyx -> {
-        fetch testinggg
-        lock this
+        ;fetch testinggg
+        lock &testinggg
         mov &testinggg, "Testing the funny string"
         mov tlr, testinggg
         call std::ios::writeln ; test2
