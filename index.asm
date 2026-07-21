@@ -2811,12 +2811,15 @@ jmp 345lmao
 :345lmao
     ;try
 
-    
+    jmp 35j3452l43j52kj3452453
     thread Funnyx -> {
-        ;fetch testinggg
-        lock &testinggg
+        __say 0, "Is this me going crazy? DBG 0"
+        fetch testinggg
+        __say 0, "Is this me going crazy? DBG 1"
+        ;lock &testinggg
         mov &testinggg, "Testing the funny string"
-        mov tlr, testinggg
+        __say 0, "Is this me going crazy? DBG 2"
+        mov tlr, *this
         call std::ios::writeln ; test2
         ;unlock this
     }
@@ -2832,8 +2835,6 @@ jmp 345lmao
         __say 0, "This is the problem! DBG 3"
 
     }
-
-    
     ./lmaoo
         proc hi
             __say 0, "This is the problem! DBG 4"
@@ -2848,20 +2849,23 @@ jmp 345lmao
             __say 0, "This is the problem! DBG 7"
             halt 0
         end
-        thread Interesting -> {
+    ./!lmaoo
+
+    thread Interesting -> {
             __say 0, "This is the problem! DBG 8"
             call lmaoo::hi
             __say 0, "This is the problem! DBG 9"
         }
-    ./!lmaoo
+        :35j3452l43j52kj3452453
 
-
-    lock &testinggg
-    mov &testinggg, "Testing the funny string from main thread"
-    mov tlr, testinggg
+    fetch testinggg
+    lock this
+    mov this, "Testing the funny string from main thread"
+    mov tlr, *this
     call std::ios::writeln ; test
-    unlock &testinggg
+    unlock this
 
+jmp 2387ztdlfgkj
     await &Funnyx
     mov tlr, &Funnyx
     sysenter "thread"
@@ -2870,10 +2874,8 @@ jmp 345lmao
 
     await &LmaoWhatsThos
     mov tlr, &LmaoWhatsThos
-    sysenter "thread"
-    mov fdx, 1
     syscall
-
+:2387ztdlfgkj
     async &TEST
     await &TEST
     mov tlr, &TEST

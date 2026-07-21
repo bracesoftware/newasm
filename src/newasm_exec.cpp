@@ -3016,6 +3016,7 @@ namespace newasm
                             (*newasm::_this)->type != newasm::datatypes::tuple
                         ) [[unlikely]]
                         {
+                            newasm::SetExceptionComment("object is not of a supported type");
                             newasm::terminate(newasm::exit_codes::seg_fault);
                             return 1;
                         }
@@ -3026,13 +3027,15 @@ namespace newasm
                     auto& i = *ptr;
                     if(i.attrib & newasm::core::lang_inf::attributes::CONST__) [[unlikely]]
                     {
+                        newasm::SetExceptionComment("object was marked as final");
                         newasm::terminate(newasm::exit_codes::constant_modif);
                         return 1;
                     }
                     else if(i.MutexLock && i.MutexOwner != newasm::GetCurrentThread()) [[unlikely]]
                     {
-                        if constexpr(false) if(newasm::header::data::proc_now)
+                        if(newasm::header::data::proc_now)
                         {
+                            /*
                             std::cout << "Proc terminated cuz of mutexlock -> " << NewASM::GetLineLocation(lineInfo.SourceLocation).second << std::endl;
                             std::cout << "i.MutexOwner -> " << i.MutexOwner << " | newasm::GetCurrentThread() -> " << newasm::GetCurrentThread() << '\n';
                             auto it = newasm::variables::ids.find("Funnyx");
@@ -3045,6 +3048,7 @@ namespace newasm
                             {
                                 std::cout << "LmaoWhatsThos thread id -> " << it->second.thrd->id << '\n';
                             }
+                            */
                             NewASM::CurrentProcA->proc->Halt = true;
                         }
 
@@ -3139,7 +3143,7 @@ namespace newasm
                             }
 
                             // We have to change the pointer if the string gets reallocated
-                            newasm::variables::ids.at(suf).addr = newasm::hardware::randAccessMem.overwrite<std::string>(i.addr, newasm::header::functions::remq(opr));;
+                            i.addr = newasm::hardware::randAccessMem.overwrite<std::string>(i.addr, newasm::header::functions::remq(opr));;
                             return 1;
                         }
                         if(lineInfo.altArgType != i.type)
@@ -3148,7 +3152,7 @@ namespace newasm
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                             return 1;
                         }
-                        newasm::variables::ids.at(suf).addr = newasm::hardware::randAccessMem.overwrite<std::string>(i.addr, lineInfo.altString);
+                        i.addr = newasm::hardware::randAccessMem.overwrite<std::string>(i.addr, lineInfo.altString);
                         return 1;
                     }
                     if(i.type == newasm::datatypes::yunion)
@@ -4343,21 +4347,8 @@ namespace newasm
                     return 1;
                 }
 
-                if(ptr->fetched and ptr->type != newasm::datatypes::proc)
-                {
-                    if(newasm::thread_line)
-                    {
-                        newasm::CurrentThreadA->thrd->paused = true;
-                        return 1;
-                    }
-
-                    newasm::SetExceptionComment("object is already fetched by another thread");
-                    newasm::terminate(newasm::exit_codes::seg_fault);
-                    return 1;
-                }
-
                 newasm::_this = ptr;
-                ptr->fetched = true; //this shi prevents other threads from taking our pointer away
+                ptr->fetched = true;
                 return 1;
             }
             //LOAD.adr/ref
@@ -4974,7 +4965,7 @@ namespace newasm
 
                 if(ptr->MutexLock && ptr->MutexOwner != newasm::GetCurrentThread()) [[unlikely]]
                 {
-                    if constexpr(false) if(newasm::header::data::proc_now)
+                    if(newasm::header::data::proc_now)
                     {
                         //std::cout << "Proc terminated cuz of mutexlock" << std::endl;
                         NewASM::CurrentProcA->proc->Halt = true;
@@ -5043,7 +5034,7 @@ namespace newasm
 
                 if(ptr->MutexLock && ptr->MutexOwner != newasm::GetCurrentThread()) [[unlikely]]
                 {
-                    if constexpr(false) if(newasm::header::data::proc_now)
+                    if(newasm::header::data::proc_now)
                     {
                         //std::cout << "Proc terminated cuz of mutexlock" << std::endl;
                         NewASM::CurrentProcA->proc->Halt = true;
