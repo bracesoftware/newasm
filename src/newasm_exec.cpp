@@ -3031,16 +3031,21 @@ namespace newasm
                     }
                     else if(i.MutexLock && i.MutexOwner != newasm::GetCurrentThread()) [[unlikely]]
                     {
-                        if(newasm::header::data::proc_now)
+                        if constexpr(false) if(newasm::header::data::proc_now)
                         {
                             std::cout << "Proc terminated cuz of mutexlock -> " << NewASM::GetLineLocation(lineInfo.SourceLocation).second << std::endl;
-                            std::cout << "i.MutexOwner -> " << i.MutexOwner << "| newasm::GetCurrentThread() -> " << newasm::GetCurrentThread() << '\n';
+                            std::cout << "i.MutexOwner -> " << i.MutexOwner << " | newasm::GetCurrentThread() -> " << newasm::GetCurrentThread() << '\n';
                             auto it = newasm::variables::ids.find("Funnyx");
                             if(it != newasm::variables::ids.end())
                             {
                                 std::cout << "Funnyx thread id -> " << it->second.thrd->id << '\n';
                             }
-                            NewASM::CurrentProcA->proc->idx = -1;
+                            it = newasm::variables::ids.find("LmaoWhatsThos");
+                            if(it != newasm::variables::ids.end())
+                            {
+                                std::cout << "LmaoWhatsThos thread id -> " << it->second.thrd->id << '\n';
+                            }
+                            NewASM::CurrentProcA->proc->Halt = true;
                         }
 
                         if(newasm::thread_line)
@@ -4969,10 +4974,10 @@ namespace newasm
 
                 if(ptr->MutexLock && ptr->MutexOwner != newasm::GetCurrentThread()) [[unlikely]]
                 {
-                    if(newasm::header::data::proc_now)
+                    if constexpr(false) if(newasm::header::data::proc_now)
                     {
                         //std::cout << "Proc terminated cuz of mutexlock" << std::endl;
-                        NewASM::CurrentProcA->proc->idx = -1;
+                        NewASM::CurrentProcA->proc->Halt = true;
                     }
 
                     if(newasm::thread_line)
@@ -5038,10 +5043,10 @@ namespace newasm
 
                 if(ptr->MutexLock && ptr->MutexOwner != newasm::GetCurrentThread()) [[unlikely]]
                 {
-                    if(newasm::header::data::proc_now)
+                    if constexpr(false) if(newasm::header::data::proc_now)
                     {
                         //std::cout << "Proc terminated cuz of mutexlock" << std::endl;
-                        NewASM::CurrentProcA->proc->idx = -1;
+                        NewASM::CurrentProcA->proc->Halt = true;
                     }
 
                     if(newasm::thread_line)
@@ -6203,10 +6208,22 @@ namespace newasm
                 auto& mmap = newasm::CurrentThreadA->thrd;
                 mmap->returned = true;
                 mmap->returned_val = retf__v;
-                if(newasm::_this != nullptr)
+
+                auto ptr = newasm::_this.getThreadValue(mmap->id);
+                if(ptr != nullptr)
                 {
-                    (*newasm::_this)->fetched = false;
-                    newasm::_this = nullptr;
+                    ptr->fetched = false;
+                    newasm::_this.setThreadValue(mmap->id, nullptr);
+                }
+                //automatically unlock everything
+                if(!mmap->LockedObjects.empty())
+                {
+                    for(size_t g = 0; g < mmap->LockedObjects.size(); ++g)
+                    {
+                        auto& ptr = mmap->LockedObjects.at(g);
+                        ptr->MutexLock = false;
+                    }
+                    mmap->LockedObjects.clear();
                 }
             
                 return 1;

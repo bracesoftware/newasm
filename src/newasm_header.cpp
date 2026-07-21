@@ -398,9 +398,9 @@ namespace newasm::header
             if(showglitch) std::cout << newasm::header::col::light_blue << newasm::header::style::bold << newasm::header::style::reverse << newasm::header::style::underline;
             if(showglitch) newasm::utils::glitch_text(newasm::header::system_info::fullname);
             std::cout << newasm::header::col::reset << newasm::header::col::gray;
-            std::cout << "\n  Build: " << version << "-" << os << "_" << arch;
-            std::cout << "\n  Snapshot: " << snapshot;
-            std::cout << "\n  Compiled with: C++" << __cplusplus << " on " << __DATE__ << " at " << __TIME__;
+            std::cout << newasm::header::col::light_blue << "\n  Build: " << newasm::header::col::gray << version << "-" << os << "_" << arch;
+            std::cout << newasm::header::col::light_blue << "\n  Snapshot: " << newasm::header::col::gray << snapshot;
+            std::cout << newasm::header::col::light_blue << "\n  Compiled with:"<< newasm::header::col::gray << " C++" << __cplusplus << " on " << __DATE__ << " at " << __TIME__;
             
             std::cout << "\n\n  Runtime version: v" << newasm::runtime::version;
             std::cout << "\t\tKernel version: v" << newasm::KERNEL_VERSION;

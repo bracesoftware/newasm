@@ -163,6 +163,7 @@ namespace newasm
     {
         constinit bool DisplaySourceInformation = false;
     }
+    int terminate(int exit_code, const std::source_location loc = std::source_location::current());
 }
 link "vm/impl";
 link "runtime/common/attrib";
@@ -243,7 +244,141 @@ namespace newasm
     std::vector<std::string>* sealedLabels = nullptr;
 
     constinit bool priRegDeref = false;
+    namespace compiler
+    {
+        struct argumentData
+        {
+            int type;
+            int addr;
+        };
 
+        struct EvalMode final
+        {
+            typedef std::string string;
+
+            int type = 0;
+            int argType = INVALID_INS;
+            signed int argInt = 0;
+            float argFloat = 0;
+            char argChar = 0;
+            string argString = "";
+            string argString2 = "";
+
+            //config
+            bool UsingThisPtr = false;
+            bool UsingStruct = false;
+            string structString1 = "";
+            string structString2 = "";
+        };
+
+        struct lineDataCT final
+        {
+            bool dataDecl = false;
+        };
+
+        struct lineData final
+        {
+            //some definitions, typedef where we can, using where we must!
+            typedef std::string string;
+            template<typename T>
+            using vec = std::vector<T>;
+
+            //actual code
+            string raw;
+            int type;
+            vec<string> tokens;
+            string other;
+
+            int priArgType = 0;
+            EvalMode priEvalMode;
+            int priInt = 0;
+            float priFloat = 0;
+            char priChar = 0;
+            string priString = "";
+            
+            int altArgType = 0;
+            EvalMode altEvalMode;
+            int altInt = 0;
+            float altFloat = 0;
+            char altChar = 0;
+            string altString = "";
+
+            int caseLineArgType = 0;
+
+            //newasm::compiler::argumentData suffixLiteral;
+            //newasm::compiler::argumentData operandLiteral;
+
+            int whatAmIDoing = INVALID_INS;
+            short parsedType = INVALID_INS;
+            short whatCodeSection = INVALID_INS;
+            int letsDecorateVariables = INVALID_INS; //kernel'z makeHash returns an int
+            short whatTheFuckAreEvents = INVALID_INS;
+            int attribute = INVALID_INS;
+            int whatAreRegistersLol = INVALID_INS;
+            unsigned short krnlMod = INVALID_INS;
+            int jumpinTo = INVALID_INS;
+            bool VirtualMemoryAccess = false;
+            unsigned int caseTableAddress = 0;
+            int returninTo = INVALID_INS;
+            //for runtime analysis and better error messages
+            bool MacroComponent = false;
+            string SourceMacroName = "";
+            bool AltArgLambda = false;
+            bool AltStackArg = false;
+
+            int SourceLocation = -1;
+            //---------------------------------------------
+            // compile-time info
+            lineDataCT CompileTime;
+            //stuff not included in the binary:
+            unsigned int resType = 0;
+            int resInt = 0;
+            float resFloat = 0;
+            char resChar = 0;
+            string resString = "";
+            
+            explicit inline lineData() noexcept {}
+            ~lineData() noexcept {}
+
+            inline bool operator==(const lineData& rhs) const noexcept
+            {
+                return (
+                    this->tokens == rhs.tokens and
+                    this->type == rhs.type and
+                    this->whatAmIDoing == rhs.whatAmIDoing and
+                    this->whatAreRegistersLol == rhs.whatAreRegistersLol and
+
+                    this->priArgType == rhs.priArgType and
+                    this->priEvalMode.type == rhs.priEvalMode.type and
+                    this->priInt == rhs.priInt and
+                    this->priFloat == rhs.priFloat and
+                    this->priChar == rhs.priChar and
+                    this->priString == rhs.priString and
+
+                    this->altArgType == rhs.altArgType and
+                    this->altEvalMode.type == rhs.altEvalMode.type and
+                    this->altInt == rhs.altInt and
+                    this->altFloat == rhs.altFloat and
+                    this->altChar == rhs.altChar and
+                    this->altString == rhs.altString and
+
+                    this->VirtualMemoryAccess == rhs.VirtualMemoryAccess and
+                    this->attribute == rhs.attribute and
+                    this->whatCodeSection == rhs.whatCodeSection and
+                    this->krnlMod == rhs.krnlMod and
+                    this->letsDecorateVariables == rhs.letsDecorateVariables and
+                    this->whatTheFuckAreEvents == rhs.whatTheFuckAreEvents and
+                    this->AltStackArg == rhs.AltStackArg
+                );
+            }
+        };
+
+        inline std::string parse_def(std::string suf);
+        inline void process_compti(std::string ins);
+        inline void process_comptis(std::string ins, std::string arg1);
+        inline void process_comptiso(std::string ins, std::string arg1, std::string arg2);
+        inline unsigned int iscomptins(std::string ins);
+    }
     namespace lambda
     {
         constinit bool process = false; // if lambda contents is being processed
@@ -486,6 +621,34 @@ namespace newasm
     {
         void* LambdaLine = nullptr;
     }
+
+    namespace variables
+    {
+        class threadData final
+        {
+            private bool prepared = false;
+            public std::vector<newasm::compiler::lineData> contents;
+            std::stringstream output;
+            std::string returned_val;
+            bool returned = false;
+            bool paused = false;
+            std::unordered_map<std::string, int> labels;
+            unsigned int id = 0;
+            std::string original_name;
+
+            bool TryBlock = false;
+            int TryJump = -1;
+            bool TryCatched = false;
+
+            std::vector<VarPtr> LockedObjects;
+
+            int lcx = 0;
+            int LCX = 0;
+
+            inline void restartThread();
+            inline void recompile_threadProc();
+        };
+    }
 }
 
 link "vm/hardware/cpu_register";
@@ -589,7 +752,6 @@ namespace newasm
     {
         int udb_hash(const std::string& input);
     }
-    int terminate(int exit_code, const std::source_location loc = std::source_location::current());
     void async(VarPtr p);
     namespace header
     {
@@ -649,141 +811,6 @@ namespace newasm
                 return 0;
             }
         };
-    }
-    namespace compiler
-    {
-        struct argumentData
-        {
-            int type;
-            int addr;
-        };
-
-        struct EvalMode final
-        {
-            typedef std::string string;
-
-            int type = 0;
-            int argType = INVALID_INS;
-            signed int argInt = 0;
-            float argFloat = 0;
-            char argChar = 0;
-            string argString = "";
-            string argString2 = "";
-
-            //config
-            bool UsingThisPtr = false;
-            bool UsingStruct = false;
-            string structString1 = "";
-            string structString2 = "";
-        };
-
-        struct lineDataCT final
-        {
-            bool dataDecl = false;
-        };
-
-        struct lineData final
-        {
-            //some definitions, typedef where we can, using where we must!
-            typedef std::string string;
-            template<typename T>
-            using vec = std::vector<T>;
-
-            //actual code
-            string raw;
-            int type;
-            vec<string> tokens;
-            string other;
-
-            int priArgType = 0;
-            EvalMode priEvalMode;
-            int priInt = 0;
-            float priFloat = 0;
-            char priChar = 0;
-            string priString = "";
-            
-            int altArgType = 0;
-            EvalMode altEvalMode;
-            int altInt = 0;
-            float altFloat = 0;
-            char altChar = 0;
-            string altString = "";
-
-            int caseLineArgType = 0;
-
-            //newasm::compiler::argumentData suffixLiteral;
-            //newasm::compiler::argumentData operandLiteral;
-
-            int whatAmIDoing = INVALID_INS;
-            short parsedType = INVALID_INS;
-            short whatCodeSection = INVALID_INS;
-            int letsDecorateVariables = INVALID_INS; //kernel'z makeHash returns an int
-            short whatTheFuckAreEvents = INVALID_INS;
-            int attribute = INVALID_INS;
-            int whatAreRegistersLol = INVALID_INS;
-            unsigned short krnlMod = INVALID_INS;
-            int jumpinTo = INVALID_INS;
-            bool VirtualMemoryAccess = false;
-            unsigned int caseTableAddress = 0;
-            int returninTo = INVALID_INS;
-            //for runtime analysis and better error messages
-            bool MacroComponent = false;
-            string SourceMacroName = "";
-            bool AltArgLambda = false;
-            bool AltStackArg = false;
-
-            int SourceLocation = -1;
-            //---------------------------------------------
-            // compile-time info
-            lineDataCT CompileTime;
-            //stuff not included in the binary:
-            unsigned int resType = 0;
-            int resInt = 0;
-            float resFloat = 0;
-            char resChar = 0;
-            string resString = "";
-            
-            explicit inline lineData() noexcept {}
-            ~lineData() noexcept {}
-
-            inline bool operator==(const lineData& rhs) const noexcept
-            {
-                return (
-                    this->tokens == rhs.tokens and
-                    this->type == rhs.type and
-                    this->whatAmIDoing == rhs.whatAmIDoing and
-                    this->whatAreRegistersLol == rhs.whatAreRegistersLol and
-
-                    this->priArgType == rhs.priArgType and
-                    this->priEvalMode.type == rhs.priEvalMode.type and
-                    this->priInt == rhs.priInt and
-                    this->priFloat == rhs.priFloat and
-                    this->priChar == rhs.priChar and
-                    this->priString == rhs.priString and
-
-                    this->altArgType == rhs.altArgType and
-                    this->altEvalMode.type == rhs.altEvalMode.type and
-                    this->altInt == rhs.altInt and
-                    this->altFloat == rhs.altFloat and
-                    this->altChar == rhs.altChar and
-                    this->altString == rhs.altString and
-
-                    this->VirtualMemoryAccess == rhs.VirtualMemoryAccess and
-                    this->attribute == rhs.attribute and
-                    this->whatCodeSection == rhs.whatCodeSection and
-                    this->krnlMod == rhs.krnlMod and
-                    this->letsDecorateVariables == rhs.letsDecorateVariables and
-                    this->whatTheFuckAreEvents == rhs.whatTheFuckAreEvents and
-                    this->AltStackArg == rhs.AltStackArg
-                );
-            }
-        };
-
-        inline std::string parse_def(std::string suf);
-        inline void process_compti(std::string ins);
-        inline void process_comptis(std::string ins, std::string arg1);
-        inline void process_comptiso(std::string ins, std::string arg1, std::string arg2);
-        inline unsigned int iscomptins(std::string ins);
     }
 
     struct rawData;
