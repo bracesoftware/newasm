@@ -64,6 +64,7 @@ namespace newasm
             constinit const int redundant_try = 15;
             constinit const int redundant_catch = 16;
             constinit const int unexpected_nmst = 17;
+            constinit const int invalid_nilu = 18;
 
             const std::unordered_map<int, std::string> id = {
                 {unmatched_syntax, "UnmatchedSyntax"},
@@ -82,7 +83,8 @@ namespace newasm
                 {already_linked, "LibraryAlreadyLinked"},
                 {redundant_try, "RedundantTry"},
                 {redundant_catch, "RedundantCatch"},
-                {unexpected_nmst, "UnexpectedNamespaceTerminator"}
+                {unexpected_nmst, "UnexpectedNamespaceTerminator"},
+                {invalid_nilu, "InvalidNilUsage"}
             };
         }
 
@@ -1074,18 +1076,21 @@ namespace newasm
                             lineCompiled.priArgType = newasm::datatypes::character;
                             lineCompiled.priChar = newasm::header::functions::remsq(lineCompiled.tokens.at(i))[0];
                         }
-
-                        if(
-                            (lineCompiled.whatAmIDoing == NewASM::core::lang_inf::free__) or
-                            (lineCompiled.whatAmIDoing == NewASM::core::lang_inf::fetch__) or
-                            (lineCompiled.whatAmIDoing == NewASM::core::lang_inf::catch__) or
-                            (lineCompiled.whatAmIDoing == NewASM::core::lang_inf::pop) or
-                            (lineCompiled.whatAmIDoing == newasm::core::lang_inf::resb__)
-                        )
+                        else if(lineCompiled.tokens.at(i) == NIL_STR)
                         {
-                            if(lineCompiled.tokens.at(i) == NIL_STR)
+                            if(
+                                (lineCompiled.whatAmIDoing == NewASM::core::lang_inf::free__) or
+                                (lineCompiled.whatAmIDoing == NewASM::core::lang_inf::fetch__) or
+                                (lineCompiled.whatAmIDoing == NewASM::core::lang_inf::catch__) or
+                                (lineCompiled.whatAmIDoing == NewASM::core::lang_inf::pop) or
+                                (lineCompiled.whatAmIDoing == newasm::core::lang_inf::resb__)
+                            )
                             {
                                 lineCompiled.priArgType = NewASM::datatypes::NIL;
+                            }
+                            else
+                            {
+                                newasm::compiler::abort(newasm::compiler::fail::invalid_nilu);
                             }
                         }
 

@@ -3031,7 +3031,7 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::constant_modif);
                         return 1;
                     }
-                    else if(i.MutexLock && i.MutexOwner != newasm::GetCurrentThread()) [[unlikely]]
+                    if(i.MutexLock) if(i.MutexOwner != newasm::GetCurrentThread()) [[unlikely]]
                     {
                         if(newasm::header::data::proc_now)
                         {
@@ -3076,7 +3076,7 @@ namespace newasm
                                 return 1;
                             }
 
-                            newasm::hardware::randAccessMem.overwrite<int>(i.addr, std::stoi(opr));
+                            newasm::RAM->overwrite<int>(i.addr, std::stoi(opr));
                             return 1;
                         }
                         if(lineInfo.altArgType != i.type) [[unlikely]]
@@ -3085,7 +3085,7 @@ namespace newasm
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                             return 1;
                         }
-                        newasm::hardware::randAccessMem.overwrite<int>(i.addr, lineInfo.altInt);
+                        newasm::RAM->overwrite<int>(i.addr, lineInfo.altInt);
                         return 1;
                     }
                     if(i.type == newasm::datatypes::decimal)
@@ -3099,7 +3099,7 @@ namespace newasm
                                 return 1;
                             }
 
-                            newasm::hardware::randAccessMem.overwrite<float>(i.addr, std::stof(opr));
+                            newasm::RAM->overwrite<float>(i.addr, std::stof(opr));
                             return 1;
                         }
                         if(lineInfo.altArgType != i.type)
@@ -3107,7 +3107,7 @@ namespace newasm
                             newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                             return 1;
                         }
-                        newasm::hardware::randAccessMem.overwrite<float>(i.addr, lineInfo.altFloat);
+                        newasm::RAM->overwrite<float>(i.addr, lineInfo.altFloat);
                         return 1;
                     }
                     if(i.type == newasm::datatypes::character)
@@ -4319,6 +4319,12 @@ namespace newasm
                     newasm::_this = nullptr;
                     return 1;
                 }
+                std::cout << "\n---\tFetched: `" << suf << "` | " << newasm::GetLineLocation(lineInfo.SourceLocation).second << '\n';
+                if(newasm::thread_line)
+                {
+                    auto& f = NewASM::CurrentThreadA->thrd;
+                    std::cout << "\n---\tThread line:" << f->original_name << "|" << f->id << ":" << f->lcx << '\n';
+                }
                 newasm::runtime::functions::parse<true>(suf);
                 auto it = newasm::variables::ids.find(suf);
                 if(it == newasm::variables::ids.end())
@@ -4963,7 +4969,7 @@ namespace newasm
                     return 1;
                 }
 
-                if(ptr->MutexLock && ptr->MutexOwner != newasm::GetCurrentThread()) [[unlikely]]
+                if(ptr->MutexLock) if(ptr->MutexOwner != newasm::GetCurrentThread()) [[unlikely]]
                 {
                     if(newasm::header::data::proc_now)
                     {
@@ -5032,7 +5038,7 @@ namespace newasm
                     return 1;
                 }
 
-                if(ptr->MutexLock && ptr->MutexOwner != newasm::GetCurrentThread()) [[unlikely]]
+                if(ptr->MutexLock) if(ptr->MutexOwner != newasm::GetCurrentThread()) [[unlikely]]
                 {
                     if(newasm::header::data::proc_now)
                     {
@@ -9812,14 +9818,21 @@ namespace newasm
         }
         return 0;
     }
-    FORCE_INLINE inline void handle_threads()
+    inline void handle_threads()
     {
-        if(
-            not NewASM::header::data::EnableThreads or
-            newasm::header::data::proc_now or
-            newasm::thread_line or
-            (NewASM::header::data::ActiveThreads == 0)
-        )
+        if(NewASM::header::data::ActiveThreads == 0)
+        {
+            return;
+        }
+        else if(not NewASM::header::data::EnableThreads)
+        {
+            return;
+        }
+        else if(newasm::header::data::proc_now)
+        {
+            return;
+        }
+        else if(newasm::thread_line)
         {
             return;
         }
@@ -9874,7 +9887,7 @@ namespace newasm
             else
             {
                 newasm::header::data::LastLine = &mmap->contents.at(mmap->lcx);
-                //std::cout << "---Processing thread " << mmap->original_name << ":" << mmap->lcx << "---" << std::endl;
+                //std::cout << "---Processing thread " << mmap->original_name << ":" << mmap->lcx << "|id:" << mmap->id<<"---" << std::endl;
                 newasm::procline(mmap->contents.at(mmap->lcx));
             }
 

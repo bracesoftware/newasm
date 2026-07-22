@@ -2859,6 +2859,8 @@ jmp 345lmao
             __say 0, "This is the problem! DBG 7"
             halt 0
         end
+
+        
         thread Interesting -> {
             __say 0, "This is the problem! DBG 8"
             call lmaoo::hix

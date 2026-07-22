@@ -249,7 +249,8 @@ namespace newasm::header
             time = hash(time);
 
             dest.clear();
-            dest = date + "."_str +
+            
+            dest = date + ":"_str +
                     time + "-"_str +
                     release__type;
             return;
