@@ -4355,7 +4355,7 @@ namespace newasm
                     return 1;
                 }
 
-                if(ptr->type != newasm::datatypes::proc) if(ptr->fetched)
+                if constexpr(false) if(ptr->type != newasm::datatypes::proc) if(ptr->fetched)
                 {
                     if(newasm::header::data::proc_now)
                     {
@@ -4373,6 +4373,7 @@ namespace newasm
 
                 newasm::_this = ptr;
                 ptr->fetched = true;
+                //if(newasm::thread_line) std::cout << "Thread " << NewASM::CurrentThreadA->thrd->id << " successfully fetched -> " << suf << '\n';
                 return 1;
             }
             //LOAD.adr/ref
@@ -6118,6 +6119,7 @@ namespace newasm
                 NewASM::CurrentThread = &mmap;
                 mmap.thrd->paused = false;
                 mmap.thrd->id = newasm::kernel::ThreadCount;
+                mmap.thrd->lcx = 0;
                 mmap.thrd->LCX = newasm::mem::regs::lcx.get_value();
                 newasm::kernel::ThreadCount++;
                 newasm::threads::sys_module[mmap.thrd->id] = 0;
@@ -6221,26 +6223,8 @@ namespace newasm
                 }();
 
                 auto& mmap = newasm::CurrentThreadA->thrd;
-                mmap->returned = true;
-                mmap->returned_val = retf__v;
-
-                auto ptr = newasm::_this.getThreadValue(mmap->id);
-                if(ptr != nullptr)
-                {
-                    ptr->fetched = false;
-                    newasm::_this.setThreadValue(mmap->id, nullptr);
-                }
-                //automatically unlock everything
-                if(!mmap->LockedObjects.empty())
-                {
-                    for(size_t g = 0; g < mmap->LockedObjects.size(); ++g)
-                    {
-                        auto& ptr = mmap->LockedObjects.at(g);
-                        ptr->MutexLock = false;
-                    }
-                    mmap->LockedObjects.clear();
-                }
-            
+                
+                mmap->terminate_stream(retf__v);
                 return 1;
             }
             //async
@@ -6379,25 +6363,7 @@ namespace newasm
                     newasm::thread_line = true;
                     if(mmap->lcx < 0 or mmap->lcx >= mmap->contents.size())
                     {
-                        mmap->returned = true;
-                        mmap->returned_val = "0";
-                        //removes the fetch
-                        auto ptr = newasm::_this.getThreadValue(mmap->id);
-                        if(ptr != nullptr)
-                        {
-                            ptr->fetched = false;
-                            newasm::_this.setThreadValue(mmap->id, nullptr);
-                        }
-                        //automatically unlocks all locked mutexes
-                        if(!mmap->LockedObjects.empty())
-                        {
-                            for(size_t g = 0; g < mmap->LockedObjects.size(); ++g)
-                            {
-                                auto& ptr = mmap->LockedObjects.at(g);
-                                ptr->MutexLock = false;
-                            }
-                            mmap->LockedObjects.clear();
-                        }
+                        mmap->terminate_stream("0");
                     }
                     else
                     {
@@ -9318,7 +9284,11 @@ namespace newasm
             #if NEWASM_DEBUG == 1
             try{
             #endif
-            //std::cout << "---Processing source line " << NewASM::GetLineLocation(ll.SourceLocation).second << "---" << std::endl;
+            
+            #if NEWASM_DEBUG == 1
+            std::cout << "---Processing source line " << NewASM::GetLineLocation(ll.SourceLocation).second << "---" << std::endl;
+            #endif
+
             newasm::procline(ll);
             #if NEWASM_DEBUG == 1
             }catch(const std::exception& e)
@@ -9333,11 +9303,14 @@ namespace newasm
             if(newasm::code_stream::paused)
             {
                 newasm::code_stream::paused = false;
+                continue;
             }
-            else if(newasm::code_stream::jump)//
+
+            if(newasm::code_stream::jump)//
             {
                 newasm::code_stream::jump = 0;
                 newasm::mem::regs::lcx.set_value(newasm::code_stream::jumpto);
+                continue;
             }
             else newasm::mem::regs::lcx.set_value(newasm::mem::regs::lcx.get_value() + 1);//
         }
@@ -9883,24 +9856,7 @@ namespace newasm
             
             if(mmap->lcx < 0 or mmap->lcx >= mmap->contents.size())
             {
-                mmap->returned = true;
-                mmap->returned_val = "0";
-                auto ptr = newasm::_this.getThreadValue(mmap->id);
-                if(ptr != nullptr)
-                {
-                    ptr->fetched = false;
-                    newasm::_this.setThreadValue(mmap->id, nullptr);
-                }
-                //automatically unlock everything
-                if(!mmap->LockedObjects.empty())
-                {
-                    for(size_t g = 0; g < mmap->LockedObjects.size(); ++g)
-                    {
-                        auto& ptr = mmap->LockedObjects.at(g);
-                        ptr->MutexLock = false;
-                    }
-                    mmap->LockedObjects.clear();
-                }
+                mmap->terminate_stream("0");
             }
             else
             {

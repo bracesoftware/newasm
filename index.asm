@@ -78,6 +78,10 @@ using "math"
         __say 0,"thread debug 8"
         __say 0,"thread debug 9"
         __say 0,"thread debug 10"
+
+        try
+            jsdif
+        catch nil
         
         mov tlr, "Hello from thread\n"
         mov stl, 0c1
@@ -2775,13 +2779,16 @@ jmp 927349872l
     }
 :927349872l
     proc ProcWithError
+        sysenter "ios"
+        mov fdx, 1
+        mov tlr, "preparing for the hi...\n"
+        syscall
+        jmp 332hj34jhn
         try
             pddsfdssd ; purposefully try to use a non-existing dyn lib
         catch nil ; just continue
+        {:332hj34jhn}
         mov tlr, "hi from ProcWithError"
-        sysenter "ios"
-        sysenter "ios"
-        mov fdx, 1
         syscall
         halt 0
     end
@@ -2805,88 +2812,42 @@ mymacro : #
         $mymacro
         halt 0
     end
-jmp 345lmao
-    thread lma29837982743o -> {
-        call myFunction
-    }
-:345lmao
-    ;try
 
-    jmp 35j3452l43j52kj3452453
-    thread Funnyx -> {
-        __say 0, "Is this me going crazy? DBG 0"
+
+    thread AbsoluteShit -> {
+        __say 0, "hi 234234243x\n"
         fetch testinggg
-        __say 0, "Is this me going crazy? DBG 1"
-        ;lock &testinggg
-        mov this, "Testing the funny string"
-        __say 0, "Is this me going crazy? DBG 2"
-        mov tlr, *this
-        call std::ios::writeln ; test2
-        ;unlock this
-    }
-
-    thread LmaoWhatsThos -> {
-        __say 0, "This is the problem! DBG 1"
-        nop
-        zero tlr
-        mov tlr, "Hello from lmaowhatsthos"
-        __say 0, "This is the problem! DBG 2"
-
-        call std::ios::writeln ; test3
-        __say 0, "This is the problem! DBG 3"
-
-    }
-    :35j3452l43j52kj3452453
-
-    thread lmao2734273 -> {
-        fetch testinggg
-        ;lock this
+        lock this
         mov this,"xd\n"
         mov tlr, *this
-        call std::ios::writeln
-        ;unlock this
+        mov fdx, 1
+        sysenter "ios"
+        syscall
+        unlock this
+        retf 0
     }
+
+    proc hix
+        mov tlr, "hi man bro lol\n"
+        mov fdx, 1
+        sysenter "ios"
+        syscall
+        halt 0
+    end
+
     ./lmaoo
-        proc hix
-            __say 0, "This is the problem! DBG 4"
-
-            mov tlr, "hi man bro lol\n"
-            mov fdx, 1
-            __say 0, "This is the problem! DBG 5"
-
-            sysenter "ios"
-            __say 0, "This is the problem! DBG 6"
-            syscall
-            __say 0, "This is the problem! DBG 7"
-            halt 0
-        end
-
-        
         thread Interesting -> {
-            __say 0, "This is the problem! DBG 8"
-            call lmaoo::hix
-            __say 0, "This is the problem! DBG 9"
+            call hix
         }
     ./!lmaoo
 
     fetch testinggg
-    ;lock this
-    mov this, "Testing the funny string from main thread"
-    mov tlr, *this
+    lock this
+    mov &testinggg, "Testing the funny string from main thread"
+    mov tlr, testinggg
     call std::ios::writeln ; test
-    ;unlock this
+    unlock this
 
-jmp 2387ztdlfgkj
-    await &Funnyx
-    mov tlr, &Funnyx
-    sysenter "thread"
-    mov fdx, 1
-    syscall
-
-    await &LmaoWhatsThos
-    mov tlr, &LmaoWhatsThos
-    syscall
-:2387ztdlfgkj
     async &TEST
     await &TEST
     mov fdx, 1
@@ -2898,8 +2859,6 @@ jmp 2387ztdlfgkj
     mov tlr, &lmaoo::Interesting
     syscall
 
-    ;call myFunction
-    ;catch nil
     try
         callc idkman
         fetch nil

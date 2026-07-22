@@ -630,7 +630,30 @@ namespace newasm
             }
         };
 
-        inline void threadData::restartThread()
+        ATTR_HOT inline void threadData::terminate_stream(const std::string& val)
+        {
+            this->returned = true;
+            this->returned_val = val;
+            auto ptr = newasm::_this.getThreadValue(this->id);
+            if(ptr != nullptr)
+            {
+                ptr->fetched = false;
+                newasm::_this.setThreadValue(this->id, nullptr);
+            }
+            //automatically unlock everything
+            if(!this->LockedObjects.empty())
+            {
+                for(size_t g = 0; g < this->LockedObjects.size(); ++g)
+                {
+                    auto& ptr = this->LockedObjects.at(g);
+                    ptr->MutexLock = false;
+                }
+                this->LockedObjects.clear();
+            }
+            return;
+        }
+
+        ATTR_HOT inline void threadData::restartThread()
         {
             this->lcx = 0;
             this->returned = false;
@@ -638,9 +661,13 @@ namespace newasm
             this->TryBlock = false;
             this->TryJump = -1;
             this->TryCatched = false;
+
+            newasm::LambdaDispatch::LambdaNow.setThreadValue(this->id, false);
+            newasm::LambdaDispatch::LambdaHalt.setThreadValue(this->id, false);
+            newasm::LambdaDispatch::LambdaLine.setThreadValue(this->id, false);
         }
 
-        inline void threadData::recompile_threadProc()
+        ATTR_HOT inline void threadData::recompile_threadProc()
         {
             if(this->prepared)
             {

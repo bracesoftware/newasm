@@ -647,6 +647,7 @@ namespace newasm
 
             inline void restartThread();
             inline void recompile_threadProc();
+            inline void terminate_stream(const std::string& val);
         };
     }
 }
@@ -1134,22 +1135,32 @@ link "toolchain/compiler/native_jit";
 link "toolchain/linker/asmlink";
 
 link "runtime/common/tokenize";
+
+namespace newasm
+{
+    namespace LambdaDispatch
+    {
+        //thread safe lambda data for newasm_setup
+        newasm::kernel::thread_safe<bool> LambdaNow = false;
+        newasm::kernel::thread_safe<bool> LambdaLine = false;
+        newasm::kernel::thread_safe<bool> LambdaHalt = false;
+    }
+}
+
 link "newasm_setup";
 
 namespace newasm
 {
     namespace LambdaDispatch
     {
-        //thread safe lambda data
+        //more thread safe lambda data
         typedef std::string string;
         newasm::kernel::thread_safe<newasm::variables::procedureData> ThreadSafePtr;
-        newasm::kernel::thread_safe<bool> LambdaNow = false;
-        newasm::kernel::thread_safe<bool> LambdaLine = false;
-        newasm::kernel::thread_safe<bool> LambdaHalt = false;
         newasm::kernel::thread_safe<string> JitLine;
         newasm::kernel::thread_safe<string> Result;
     }
 }
+
 link "runtime/virtual";
 
 link "runtime/expcfg/decorators";
