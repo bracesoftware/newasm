@@ -4319,12 +4319,14 @@ namespace newasm
                     newasm::_this = nullptr;
                     return 1;
                 }
+                /*
                 std::cout << "\n---\tFetched: `" << suf << "` | " << newasm::GetLineLocation(lineInfo.SourceLocation).second << '\n';
                 if(newasm::thread_line)
                 {
                     auto& f = NewASM::CurrentThreadA->thrd;
                     std::cout << "\n---\tThread line:" << f->original_name << "|" << f->id << ":" << f->lcx << '\n';
                 }
+                */
                 newasm::runtime::functions::parse<true>(suf);
                 auto it = newasm::variables::ids.find(suf);
                 if(it == newasm::variables::ids.end())
@@ -4350,6 +4352,22 @@ namespace newasm
                 {
                     newasm::SetExceptionComment("cannot fetch safe objects");
                     newasm::terminate(newasm::exit_codes::seg_fault);
+                    return 1;
+                }
+
+                if(ptr->type != newasm::datatypes::proc) if(ptr->fetched)
+                {
+                    if(newasm::header::data::proc_now)
+                    {
+                        newasm::CurrentProcA->proc->Halt = true;
+                    }
+
+                    if(newasm::thread_line)
+                    {
+                        newasm::CurrentThreadA->thrd->paused = true;
+                        return 1;
+                    }
+                    newasm::code_stream::paused = true;
                     return 1;
                 }
 

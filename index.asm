@@ -2697,6 +2697,7 @@ jmp e2349083l
     ./interesting
         tuple lmao: ("hello", 32, 5.3, 23, "this is insane", "lmao")
     ./!interesting
+    
     @ mutex
     string testinggg : "Lmao"
 .text
@@ -2839,11 +2840,11 @@ jmp 345lmao
 
     thread lmao2734273 -> {
         fetch testinggg
-        lock this
+        ;lock this
         mov this,"xd\n"
         mov tlr, *this
         call std::ios::writeln
-        unlock this
+        ;unlock this
     }
     ./lmaoo
         proc hix
@@ -2869,11 +2870,11 @@ jmp 345lmao
     ./!lmaoo
 
     fetch testinggg
-    lock this
+    ;lock this
     mov this, "Testing the funny string from main thread"
     mov tlr, *this
     call std::ios::writeln ; test
-    unlock this
+    ;unlock this
 
 jmp 2387ztdlfgkj
     await &Funnyx
