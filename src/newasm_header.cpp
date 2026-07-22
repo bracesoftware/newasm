@@ -270,6 +270,8 @@ namespace newasm::header
                 dest = "linux";
             #elif _NEWASM_OS == _NEWASM_OS_android
                 dest = "android";
+            #elif _NEWASM_OS == _NEWASM_OS_macos
+                dest = "macos";
             #endif
         }
         inline void getarch(std::string& dest)
