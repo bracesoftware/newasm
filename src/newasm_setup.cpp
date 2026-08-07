@@ -630,6 +630,23 @@ namespace newasm
             }
         };
 
+        class listData final
+        {
+            public std::vector<int> addr;
+            int size;
+            int type;
+
+            int IDX = 0;
+
+            explicit inline listData() noexcept
+            {
+                this->size = 0;
+            }
+
+            ATTR_HOT inline void DeleteFromMemory();
+            ATTR_HOT inline void IResizeList(int s);
+        };
+
         ATTR_HOT inline void threadData::terminate_stream(const std::string& val)
         {
             this->returned = true;

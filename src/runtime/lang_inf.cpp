@@ -153,6 +153,8 @@ namespace newasm
             const int lock__ = 84;//
             const int unlock__ = 85;//
 
+            const int resize__ = 86;//
+
             /// @brief //////
             const int Link___ = 99;
             const int __say = 100;
@@ -265,6 +267,7 @@ namespace newasm
 
                 {lock__, "lock"},
                 {unlock__, "unlock"},
+                {resize__, "resize"},
 
                 {__say, "__say"}
             };
@@ -350,6 +353,7 @@ namespace newasm
 
                 const int proc__ = 15;
                 const int thread___ = 16;
+                const int list__ = 17;
 
                 const std::unordered_map<int, std::string> identifiers__ = {
                     {num, "intg"},
@@ -369,7 +373,8 @@ namespace newasm
                     {bin_tree, "bin_tree"},
                     {chan, "chan"},
                     {proc__, "proc"},
-                    {thread___, "thread"}
+                    {thread___, "thread"},
+                    {list__, "list"}
                 };
             }
 

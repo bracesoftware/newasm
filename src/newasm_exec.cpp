@@ -653,6 +653,47 @@ namespace newasm
                 newasm::brace_stack__.push_back(newasm::brace_stack::object_block);
                 return 1;
             }
+            //lists
+            case newasm::core::lang_inf::typenames::list__:
+            {
+                if(newasm::header::data::struct_now)
+                {
+                    newasm::SetExceptionComment("cannot create a list within such an object");
+                    newasm::terminate(newasm::exit_codes::bus_err);
+                    return 1;
+                }
+
+                newasm::variables::ids[name].type = newasm::datatypes::listz;
+                auto& mmap = newasm::variables::ids.at(name);
+                mmap.attrib = newasm::runtime::currentAttributes;
+                newasm::runtime::currentAttributes = 0;
+
+                mmap.list = new newasm::variables::listData;
+
+                if(line.priInt == newasm::core::lang_inf::typenames::num)
+                {
+                    mmap.list->type = newasm::datatypes::number;
+                }
+                else if(line.priInt == newasm::core::lang_inf::typenames::txt)
+                {
+                    mmap.list->type = newasm::datatypes::text;
+                }
+                else if(line.priInt == newasm::core::lang_inf::typenames::char__)
+                {
+                    mmap.list->type = newasm::datatypes::character;
+                }
+                else if(line.priInt == newasm::core::lang_inf::typenames::decm)
+                {
+                    mmap.list->type = newasm::datatypes::decimal;
+                }
+                else
+                {
+                    newasm::SetExceptionComment("cannot create a list of such objects");
+                    newasm::terminate(newasm::exit_codes::invalid_alloc);
+                    return 1;
+                }
+                return 1;
+            }
             // whole numbers
             case newasm::core::lang_inf::typenames::num:
             {
@@ -1726,106 +1767,9 @@ namespace newasm
                 }
                 return 1;
             }
-            //lea
-            case newasm::core::lang_inf::lea:
+            //resize
+            case newasm::core::lang_inf::resize__:
             {
-                #if 0
-                if(lineInfo.altArgType == newasm::datatypes::symbol_name)
-                {
-                    if(newasm::header::functions::isnumeric(opr))
-                    {
-                        if(std::stoi(opr) == -1)
-                        {
-                            if(suf == NIL_STR)
-                            {
-                                newasm::header::data::tupleIndex = -1;
-                                return 1;
-                            }
-                        }
-                    }
-                    if(!newasm::header::functions::isref(suf))
-                    {
-                        newasm::terminate(newasm::exit_codes::invalid_memacc);
-                        return 1;
-                    }
-                    newasm::runtime::functions::parse(suf);
-                    //std::cout << "lea -> suf is :: " << suf << std::endl;
-                    
-                    suf = newasm::header::functions::remamp(suf);
-                    if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids))
-                    {
-                        newasm::terminate(newasm::exit_codes::invalid_memacc);
-                        return 1;
-                    }
-                    if(!newasm::header::functions::isnumeric(opr))
-                    {
-                        newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                        return 1;
-                    }
-                    if(newasm::variables::ids.at(suf).tuple == nullptr)
-                    {
-                        newasm::terminate(newasm::exit_codes::invalid_tuple);
-                        return 1;
-                    }
-
-                    int localidx = std::stoi(opr);
-
-                    if(localidx >= newasm::variables::ids.at(suf).tuple->addr.size())
-                    {
-                        newasm::terminate(newasm::exit_codes::seg_fault);
-                        return 1;
-                    }
-
-                    newasm::header::data::tupleIndex = localidx;
-                    return 1;
-                }
-                if(lineInfo.altArgType == newasm::datatypes::number)
-                {
-                    if(lineInfo.altInt == -1)
-                    {
-                        if(suf == NIL_STR)
-                        {
-                            newasm::header::data::tupleIndex = -1;
-                            return 1;
-                        }
-                    }
-                }
-                if(!newasm::header::functions::isref(suf))
-                {
-                    newasm::terminate(newasm::exit_codes::invalid_memacc);
-                    return 1;
-                }
-                newasm::runtime::functions::parse(suf);
-                //std::cout << "lea -> suf is :: " << suf << std::endl;
-                
-                suf = newasm::header::functions::remamp(suf);
-                if(!newasm::mem::functions::datavalid(suf, newasm::variables::ids))
-                {
-                    newasm::terminate(newasm::exit_codes::invalid_memacc);
-                    return 1;
-                }
-                if(lineInfo.altArgType != newasm::datatypes::number)
-                {
-                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                    return 1;
-                }
-                if(newasm::variables::ids.at(suf).tuple == nullptr)
-                {
-                    newasm::terminate(newasm::exit_codes::invalid_tuple);
-                    return 1;
-                }
-
-                int localidx = lineInfo.altInt;
-
-                if(localidx >= newasm::variables::ids.at(suf).tuple->addr.size())
-                {
-                    newasm::terminate(newasm::exit_codes::seg_fault);
-                    return 1;
-                }
-
-                newasm::header::data::tupleIndex = localidx;
-                #endif
-
                 VarPtr ptr = nullptr;
                 if(lineInfo.priArgType == newasm::datatypes::ThisPtr)
                 {
@@ -1858,15 +1802,7 @@ namespace newasm
                     ptr = &it->second;
                 }
 
-                if(ptr->type != newasm::datatypes::tuple)
-                {
-                    newasm::SetExceptionComment("object is not a tuple");
-                    newasm::terminate(newasm::exit_codes::seg_fault);
-                    return 1;
-                }
-
-                auto TupleSize = ptr->tuple->addr.size();
-
+                //get IDX from the binary
                 int IDX = -1;
                 if(lineInfo.altArgType == newasm::datatypes::symbol_name)
                 {
@@ -1881,13 +1817,101 @@ namespace newasm
                     IDX = lineInfo.altInt;
                 }
 
-                if(IDX < 0 or IDX >= TupleSize)
+                if(ptr->type != newasm::datatypes::listz)
                 {
+                    newasm::SetExceptionComment("object is not a list");
                     newasm::terminate(newasm::exit_codes::seg_fault);
                     return 1;
                 }
 
-                newasm::header::data::tupleIndex = IDX;
+                ptr->list->IResizeList(IDX);
+                if(IDX < 0)
+                {
+                    newasm::SetExceptionComment("cannot resize a list to a negative value");
+                    newasm::terminate(newasm::exit_codes::invalid_init);
+                }
+                return 1;
+            }
+            //lea
+            case newasm::core::lang_inf::lea:
+            {
+                VarPtr ptr = nullptr;
+                if(lineInfo.priArgType == newasm::datatypes::ThisPtr)
+                {
+                    if(newasm::_this == nullptr)
+                    {
+                        newasm::SetExceptionComment("`this` is probably not initialized");
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    ptr = newasm::_this;
+                }
+                else if(lineInfo.priArgType != newasm::datatypes::ThisPtr)
+                {
+                    if(!newasm::header::functions::isref(suf))
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+
+                    newasm::runtime::functions::parse(suf);
+                    suf = newasm::header::functions::remamp(suf);
+
+                    auto it = newasm::variables::ids.find(suf);
+                    if(it == newasm::variables::ids.end())
+                    {
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+
+                    ptr = &it->second;
+                }
+
+                //get IDX from the binary
+                int IDX = -1;
+                if(lineInfo.altArgType == newasm::datatypes::symbol_name)
+                {
+                    newasm::runtime::functions::parse(opr);
+                    if(newasm::header::functions::isnumeric(opr))
+                    {
+                        IDX = std::stoi(opr);
+                    }
+                }
+                else if(lineInfo.altArgType == newasm::datatypes::number)
+                {
+                    IDX = lineInfo.altInt;
+                }
+
+                //if object is a tuple
+                if(ptr->type == newasm::datatypes::tuple)
+                {
+                    auto TupleSize = ptr->tuple->addr.size();
+
+                    if(IDX < 0 or IDX >= TupleSize)
+                    {
+                        newasm::terminate(newasm::exit_codes::seg_fault);
+                        return 1;
+                    }
+
+                    newasm::header::data::tupleIndex = IDX;
+                    return 1;
+                }
+
+                //if object is a list
+                if(ptr->type == newasm::datatypes::listz)
+                {
+                    if(IDX < 0 or IDX >= ptr->list->size)
+                    {
+                        newasm::SetExceptionComment("index out of list bounds");
+                        newasm::terminate(newasm::exit_codes::invalid_memacc);
+                        return 1;
+                    }
+                    ptr->list->IDX = IDX;
+                    return 1;
+                }
+
+                newasm::SetExceptionComment("object is not a tuple or a list");
+                newasm::terminate(newasm::exit_codes::seg_fault);
                 return 1;
             }
             //vmov
@@ -3031,7 +3055,7 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::constant_modif);
                         return 1;
                     }
-                    if(i.MutexLock) if(i.MutexOwner != newasm::GetCurrentThread()) [[unlikely]]
+                    if constexpr(false) if(i.MutexLock) if(i.MutexOwner != newasm::GetCurrentThread()) [[unlikely]]
                     {
                         if(newasm::header::data::proc_now)
                         {

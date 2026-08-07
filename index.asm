@@ -2868,9 +2868,15 @@ mymacro : #
     catch kids
 :lmaoooo 
 
+.data
+    list myTestList : intg
+.text
 
-
+    fetch myTestList
+    resize this, 1
+    lea this, 0
     
+
     zero rax
     mov rax, 223 ; exit code
     ret *rax ; returns from the whole program to the host OS or newasm shell

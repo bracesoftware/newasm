@@ -22,7 +22,7 @@
     },
     {
       "name": "keyword.control.newasm",
-      "match":  "\\b(lock|unlock|resb|fetch|retc|callc|movx|loop|mod|evt|merge|align|sel|movas|movasx|jz|jnz|movaddr|del|send|recv|thread|lea|async|cast|in|out|default|switch|case|vmov|await|retf|cls|load|stor|sysreq|pop|retn|mov|syscall|proc|call|rem|halt|push|jmp|heap|cmp|je|jne|jl|jg|jle|jge|ret|zero|inc|dec|exit|end|nop|add|sub|div|mul|exp|log|and|or|xor|not|shl|shr|db|malloc|free|stack|wait|sysenter|xchg|int|__say)\\b"
+      "match":  "\\b(resize|lock|unlock|resb|fetch|retc|callc|movx|loop|mod|evt|merge|align|sel|movas|movasx|jz|jnz|movaddr|del|send|recv|thread|lea|async|cast|in|out|default|switch|case|vmov|await|retf|cls|load|stor|sysreq|pop|retn|mov|syscall|proc|call|rem|halt|push|jmp|heap|cmp|je|jne|jl|jg|jle|jge|ret|zero|inc|dec|exit|end|nop|add|sub|div|mul|exp|log|and|or|xor|not|shl|shr|db|malloc|free|stack|wait|sysenter|xchg|int|__say)\\b"
     },
     {
       "name": "special.keyword.newasm",
@@ -34,7 +34,7 @@
     },
     {
       "name": "register.control.newasm",
-      "match":  "\\b(intg|float|string|char|ref|obj|cont|tuple|bit_arr|bin_tree|chan|instance|class|union|ctx)\\b"
+      "match":  "\\b(list|intg|float|string|char|ref|obj|cont|tuple|bit_arr|bin_tree|chan|instance|class|union|ctx)\\b"
     },
     {
       "name": "keyword.control.newasm",

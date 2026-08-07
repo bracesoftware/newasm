@@ -78,6 +78,8 @@ namespace newasm::header
         std::string case_line;
         //tuples
         newasm::kernel::thread_safe<int> tupleIndex = -1;
+        //lists
+        newasm::kernel::thread_safe<int> listIndex = -1;
 
         //for calling funcs
         std::string temp_;

@@ -199,6 +199,7 @@ namespace newasm
         struct eventData;
         struct staticObjectData;
         class containerData;
+        class listData;
 
         struct varData final
         {
@@ -211,6 +212,7 @@ namespace newasm
             procedureData* proc = nullptr; //if it is a proc, use this
             containerData* container = nullptr;//if container
             threadData* thrd = nullptr;//if thread
+            listData* list = nullptr;//if list
 
             //just for checks
             eventData* event = nullptr;
@@ -418,6 +420,7 @@ namespace newasm
         constinit const int NIL = 102;
         constinit const int tokenOpenBrace = 103;
         constinit const int ThisPtr = 104;
+        constinit const int listz = 105;
 
         namespace cont_types
         {
@@ -1200,6 +1203,7 @@ namespace newasm
     auto* RAM = &newasm::hardware::randAccessMem;
     using RamPointer = decltype(RAM);
 }
+link "runtime/bridge/lists";
 link "kernel/syscall_handle";
 
 link "runtime/namespaces";

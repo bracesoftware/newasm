@@ -742,7 +742,14 @@ namespace newasm
                         }
                     }
                 }
-                
+                if(lc.parsedType == newasm::core::lang_inf::typenames::list__)
+                {
+                    auto h = newasm::inverted_types.find(value);
+                    if(h != newasm::inverted_types.end())
+                    {
+                        lc.priInt = h->second;
+                    }
+                }
                 return lineCompiled;
             }
             // class instance
