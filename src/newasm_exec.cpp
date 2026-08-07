@@ -9281,32 +9281,14 @@ namespace newasm
             newasm::header::data::LastLine = &ll;
             newasm::header::data::lastlndx = newasm::mem::regs::lcx.get_value();
             
-            #if NEWASM_DEBUG == 1
-            try{
-            #endif
-            
-            #if NEWASM_DEBUG == 1
-            std::cout << "---Processing source line " << NewASM::GetLineLocation(ll.SourceLocation).second << "---" << std::endl;
-            #endif
-
             newasm::procline(ll);
-            #if NEWASM_DEBUG == 1
-            }catch(const std::exception& e)
-            {
-                std::cerr << "Kompajler te zajebucnuo -> " << e.what() << '\n';
-                std::cout << "LCX value -> " << newasm::mem::regs::lcx.get_value() << std::endl;
-                std::cout << "CC size -> " << newasm::compiler::compiledCode.size() << std::endl;
-                std::cout << "Line data -> " << newasm::compiler::compiledCode.at(newasm::mem::regs::lcx.get_value()).raw << std::endl;
-            }
-            #endif
             
             if(newasm::code_stream::paused)
             {
                 newasm::code_stream::paused = false;
                 continue;
             }
-
-            if(newasm::code_stream::jump)//
+            else if(newasm::code_stream::jump)//
             {
                 newasm::code_stream::jump = 0;
                 newasm::mem::regs::lcx.set_value(newasm::code_stream::jumpto);
