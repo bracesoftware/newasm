@@ -1,6 +1,10 @@
 // Copyright (c) 2026 Brace Software Co.
 // NewASM Virtual Machine and Toolchain
 
+module(api_runtime_bridge, {
+    NewASM::Modules::PrintLine("Successfully loaded API bridge.");
+});
+
 namespace newasm
 {
     namespace variables

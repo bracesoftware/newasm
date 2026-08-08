@@ -2871,7 +2871,6 @@ mymacro : #
 .data
     list myTestList : string
 .text
-
     fetch myTestList
     resize this, 1
     lea this, 0

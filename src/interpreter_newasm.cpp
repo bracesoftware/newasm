@@ -15,8 +15,8 @@
 namespace newasm
 {
     inline void enable_ansi() noexcept;
-    inline constinit const int BUILD_NUMBER = 33;
-    inline constinit const int RUNTIME_VERSION = 17;
+    inline constinit const int BUILD_NUMBER = 34;
+    inline constinit const int RUNTIME_VERSION = 18;
     inline constinit const int KERNEL_VERSION = 10;
 }
 
@@ -1450,6 +1450,15 @@ namespace newasm
                     if(i->second.thrd != nullptr)
                     {
                         delete i->second.thrd;
+                    }
+                }
+                //list cleanup
+                if(i->second.type == newasm::datatypes::listz)
+                {
+                    if(i->second.list != nullptr)
+                    {
+                        i->second.list->DeleteFromMemory();
+                        delete i->second.list;
                     }
                 }
                 //container cleanup

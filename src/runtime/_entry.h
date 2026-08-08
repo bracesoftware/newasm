@@ -293,6 +293,109 @@ namespace newasm
 							suf = parsed_contents;
 							return;
 						}
+						//LISTTTTTTZZZZZZZZZZZZZZZZZZZZZZ
+						if(i.type == newasm::datatypes::listz)
+						{
+							if(i.list->IDX == NEWASM_INVALID_LIST_IDX)
+							{
+								newasm::SetExceptionComment("effective address for a list hasn't been calculated using `lea`");
+								newasm::terminate(newasm::exit_codes::seg_fault);
+								return;
+							}
+							auto& addr = i.list->addr[i.list->IDX];
+							//list of integers
+							if(i.list->type == newasm::datatypes::number)
+							{
+								if constexpr(RawDataHere)
+								{
+									rdi->rawType = i.list->type;
+									if(i.locked)
+									{
+										rdi->rawInt = 0;
+										return;
+									}
+									rdi->rawInt = newasm::RAM->peek<int>(addr);
+									return;
+								}
+								if(i.locked)
+								{
+									suf = newasm::_std::to_string(0);
+									return;
+								}
+								suf = newasm::_std::to_string(newasm::RAM->peek<int>(addr));
+								return;
+							}
+							//list of floats
+							if(i.list->type == newasm::datatypes::decimal)
+							{
+								if constexpr(RawDataHere)
+								{
+									rdi->rawType = i.list->type;
+									if(i.locked)
+									{
+										rdi->rawFloat = 0.0;
+										return;
+									}
+									rdi->rawFloat = newasm::RAM->peek<float>(addr);
+									return;
+								}
+								if(i.locked)
+								{
+									suf = newasm::_std::to_string(0.0);
+									return;
+								}
+								suf = newasm::_std::to_string(newasm::RAM->peek<float>(addr));
+								return;
+							}
+							//list of chars
+							if(i.list->type == newasm::datatypes::character)
+							{
+								if constexpr(RawDataHere)
+								{
+									rdi->rawType = i.list->type;
+									if(i.locked)
+									{
+										rdi->rawChar = '?';
+										return;
+									}
+									rdi->rawChar = newasm::RAM->peek<char>(addr);
+									return;
+								}
+								if(i.locked)
+								{
+									suf = "'?'";
+									return;
+								}
+								std::string buf(1, newasm::RAM->peek<char>(addr));
+								suf = "'"; suf += buf; suf += "'";
+								return;
+							}
+							//list of strings
+							if(i.list->type == newasm::datatypes::text)
+							{
+								if constexpr(RawDataHere)
+								{
+									rdi->rawType = i.list->type;
+									if(i.locked)
+									{
+										rdi->rawString = "unknown??";
+										return;
+									}
+									rdi->rawString = newasm::RAM->peek<std::string>(addr);
+									return;
+								}
+								if(i.locked)
+								{
+									suf = "\"unknown??\"";
+									return;
+								}
+								suf = "\"";
+								suf += newasm::RAM->peek<std::string>(addr);
+								suf += "\"";
+								return;
+							}
+							return;
+						}
 						newasm::terminate(newasm::exit_codes::seg_fault);
 						return;
 					}

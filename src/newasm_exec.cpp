@@ -3037,7 +3037,8 @@ namespace newasm
                             (*newasm::_this)->type != newasm::datatypes::text and
                             (*newasm::_this)->type != newasm::datatypes::yunion and
                             (*newasm::_this)->type != newasm::datatypes::mycontext and
-                            (*newasm::_this)->type != newasm::datatypes::tuple
+                            (*newasm::_this)->type != newasm::datatypes::tuple and
+                            (*newasm::_this)->type != newasm::datatypes::listz
                         ) [[unlikely]]
                         {
                             newasm::SetExceptionComment("object is not of a supported type");
@@ -3415,7 +3416,7 @@ namespace newasm
                             return 1;
                         }
                         //if it is a list of chars
-                        if(i.list->type == newasm::datatypes::number)
+                        if(i.list->type == newasm::datatypes::character)
                         {
                             if(lineInfo.altArgType == newasm::datatypes::symbol_name)
                             {
@@ -3437,7 +3438,7 @@ namespace newasm
                             return 1;
                         }
                         //if it is a list of strings
-                        if(i.list->type == newasm::datatypes::number)
+                        if(i.list->type == newasm::datatypes::text)
                         {
                             if(lineInfo.altArgType == newasm::datatypes::symbol_name)
                             {
@@ -3447,7 +3448,7 @@ namespace newasm
                                     return 1;
                                 }
 
-                                addr = newasm::RAM->overwrite<char>(addr, newasm::header::functions::remq(opr));
+                                addr = newasm::RAM->overwrite<std::string>(addr, newasm::header::functions::remq(opr));
                                 return 1;
                             }
                             if(lineInfo.altArgType != i.list->type)
@@ -3455,9 +3456,10 @@ namespace newasm
                                 newasm::terminate(newasm::exit_codes::dtyp_mismatch);
                                 return 1;
                             }
-                            addr = newasm::RAM->overwrite<char>(addr, lineInfo.altString);
+                            addr = newasm::RAM->overwrite<std::string>(addr, lineInfo.altString);
                             return 1;
                         }
+                        newasm::terminate(newasm::exit_codes::os_error);
                         return 1;
                     }
                     //////////////tuples
