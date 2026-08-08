@@ -856,6 +856,7 @@ namespace newasm
     };
     newasm::kernel::thread_safe<_g_DedicatedStack_> DedicatedMemory;
     
+    template<bool HandleThreads = false>
     int procline(newasm::compiler::lineData& line);
     int procline(std::string& line);
     int procline(const char* line);

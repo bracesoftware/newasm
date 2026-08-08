@@ -8596,6 +8596,7 @@ namespace newasm
         return 1;
     }
 
+    template<bool HandleThreads>
     inline int procline(newasm::execBytecode& line)
     {
         if(
@@ -8991,7 +8992,10 @@ namespace newasm
 
         if(newasm::system::section == newasm::code_stream::sections::start)
         {
-            newasm::handle_threads();
+            if constexpr(HandleThreads)
+            {
+                newasm::handle_threads();
+            }
 
             std::string libname;
             
@@ -9407,7 +9411,7 @@ namespace newasm
             newasm::header::data::LastLine = &ll;
             newasm::header::data::lastlndx = newasm::mem::regs::lcx.get_value();
             
-            newasm::procline(ll);
+            newasm::procline<true>(ll);
             
             if(newasm::code_stream::paused)
             {
@@ -9924,14 +9928,6 @@ namespace newasm
             return;
         }
         else if(not NewASM::header::data::EnableThreads)
-        {
-            return;
-        }
-        else if(newasm::header::data::proc_now)
-        {
-            return;
-        }
-        else if(newasm::thread_line)
         {
             return;
         }
