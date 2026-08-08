@@ -8994,7 +8994,7 @@ namespace newasm
         {
             if constexpr(HandleThreads)
             {
-                newasm::handle_threads();
+                if(NewASM::header::data::ActiveThreads != 0) newasm::handle_threads();
             }
 
             std::string libname;
@@ -9192,7 +9192,10 @@ namespace newasm
         NewASM::CurrentProcA = ptr;
         
         ptr->proc->Halt = false;
-        ptr->proc->idx = 0;
+        auto& BYTECODE = ptr->proc->contents;
+        auto& IDX = ptr->proc->idx;
+
+        IDX = 0;
         while(true)
         {
             if(ptr->proc->Halt)
@@ -9200,17 +9203,17 @@ namespace newasm
                 break;
             }
             if(
-                ptr->proc->idx >= ptr->proc->contents.size() or
-                ptr->proc->idx < 0
+                IDX >= BYTECODE.size() or
+                IDX < 0
             )
             {
                 break;
             }
 
             //std::cout << "---Processing proc " << ptr->proc->original_name << ":" << ptr->proc->idx << "---" << std::endl;
-            newasm::header::data::LastLine = &ptr->proc->contents.at(ptr->proc->idx);
-            newasm::procline(ptr->proc->contents.at(ptr->proc->idx));
-            ptr->proc->idx++;
+            newasm::header::data::LastLine = &BYTECODE[IDX];
+            newasm::procline(BYTECODE[IDX]);
+            ++IDX;
         }
         newasm::header::data::proc_now = false;
         return;
@@ -9923,11 +9926,7 @@ namespace newasm
     }
     inline void handle_threads()
     {
-        if(NewASM::header::data::ActiveThreads == 0)
-        {
-            return;
-        }
-        else if(not NewASM::header::data::EnableThreads)
+        if(!NewASM::header::data::EnableThreads)
         {
             return;
         }
@@ -9944,12 +9943,14 @@ namespace newasm
         {
             auto& i = newasm::CurrentThreads.at(p);
             auto& mmap = i->thrd;
+            auto& IDX = mmap->lcx;
+            auto& BYTECODE = mmap->contents;
             //if(0) newasm::threads::memory.at(*i)->prepare_sys();
             if(mmap->returned)
             {
                 continue;
             }
-            if(mmap->contents.empty())
+            if(BYTECODE.empty())
             {
                 mmap->returned = true;
                 continue;
@@ -9958,15 +9959,15 @@ namespace newasm
             newasm::thread_line = true;
             newasm::CurrentThreadA = i;
             
-            if(mmap->lcx < 0 or mmap->lcx >= mmap->contents.size())
+            if(IDX < 0 or IDX >= BYTECODE.size())
             {
                 mmap->terminate_stream("0");
             }
             else
             {
-                newasm::header::data::LastLine = &mmap->contents.at(mmap->lcx);
+                newasm::header::data::LastLine = &BYTECODE[IDX];
                 //std::cout << "---Processing thread " << mmap->original_name << ":" << mmap->lcx << "|id:" << mmap->id<<"---" << std::endl;
-                newasm::procline(mmap->contents.at(mmap->lcx));
+                newasm::procline(BYTECODE[IDX]);
             }
 
             newasm::thread_line = false;
@@ -9975,7 +9976,7 @@ namespace newasm
                 mmap->paused = false;
                 continue;
             }
-            else ++mmap->lcx;
+            else ++IDX;
         }
         return;
     }
