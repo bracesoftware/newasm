@@ -487,7 +487,10 @@ namespace newasm
             int TryJump = -1;
             bool TryCatched = false;
 
-            public explicit inline procedureData() noexcept {}
+            public explicit inline procedureData() noexcept
+            {
+                this->contents.reserve(NEWASM_BYTECODE_RESERVE);
+            }
             inline ~procedureData() noexcept {}
 
             inline void sysResetLambda() noexcept

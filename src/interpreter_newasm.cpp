@@ -237,6 +237,8 @@ namespace newasm
     VarPtr CurrentClass = nullptr;
     VarPtr CurrentThread = nullptr;
     VarPtr CurrentThreadA = nullptr;
+    constinit int CurrentThreadB = 0;
+    VarPtr CurrentThreadC = nullptr;
 
     std::vector<VarPtr> CurrentThreads;
 
@@ -647,6 +649,11 @@ namespace newasm
 
             int lcx = 0;
             int LCX = 0;
+
+            explicit inline threadData() noexcept
+            {
+                this->contents.reserve(NEWASM_BYTECODE_RESERVE);
+            }
 
             inline void restartThread();
             inline void recompile_threadProc();

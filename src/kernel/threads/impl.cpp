@@ -25,7 +25,7 @@ namespace newasm
             {
                 if(newasm::thread_line)
                 {
-                    return newasm::threads::sys_module[newasm::CurrentThreadA->thrd->id];
+                    return newasm::threads::sys_module[newasm::CurrentThreadB];
                 }
                 return newasm::header::data::module;
             }
