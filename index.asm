@@ -2869,13 +2869,16 @@ mymacro : #
 :lmaoooo 
 
 .data
-    list myTestList : intg
+    list myTestList : string
 .text
 
     fetch myTestList
     resize this, 1
     lea this, 0
-    
+
+    mov this, "Test list works loool"
+    mov tlr, *this
+    call std::ios::writeln
 
     zero rax
     mov rax, 223 ; exit code

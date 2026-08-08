@@ -3360,6 +3360,106 @@ namespace newasm
                         }
                         return 1;
                     }
+                    ////////////lists
+                    if(i.type == newasm::datatypes::listz)
+                    {
+                        if(i.list->IDX == NEWASM_INVALID_LIST_IDX)
+                        {
+                            newasm::SetExceptionComment("effective address for this list hasn't been calculated using `lea`");
+                            newasm::terminate(newasm::exit_codes::seg_fault);
+                            return 1;
+                        }
+                        auto& addr = i.list->addr.at(i.list->IDX);
+                        //if it is a list of integers
+                        if(i.list->type == newasm::datatypes::number)
+                        {
+                            if(lineInfo.altArgType == newasm::datatypes::symbol_name)
+                            {
+                                if(!newasm::header::functions::isnumeric(opr))
+                                {
+                                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                                    return 1;
+                                }
+
+                                newasm::RAM->overwrite<int>(addr, std::stoi(opr));
+                                return 1;
+                            }
+                            if(lineInfo.altArgType != i.list->type)
+                            {
+                                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                                return 1;
+                            }
+                            newasm::RAM->overwrite<int>(addr, lineInfo.altInt);
+                            return 1;
+                        }
+                        //if it is a list of floats
+                        if(i.list->type == newasm::datatypes::decimal)
+                        {
+                            if(lineInfo.altArgType == newasm::datatypes::symbol_name)
+                            {
+                                if(!newasm::header::functions::isfloat(opr))
+                                {
+                                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                                    return 1;
+                                }
+
+                                newasm::RAM->overwrite<float>(addr, std::stof(opr));
+                                return 1;
+                            }
+                            if(lineInfo.altArgType != i.list->type)
+                            {
+                                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                                return 1;
+                            }
+                            newasm::RAM->overwrite<float>(addr, lineInfo.altFloat);
+                            return 1;
+                        }
+                        //if it is a list of chars
+                        if(i.list->type == newasm::datatypes::number)
+                        {
+                            if(lineInfo.altArgType == newasm::datatypes::symbol_name)
+                            {
+                                if(!newasm::header::functions::ischar(opr))
+                                {
+                                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                                    return 1;
+                                }
+
+                                newasm::RAM->overwrite<char>(addr, newasm::header::functions::remsq(opr)[0]);
+                                return 1;
+                            }
+                            if(lineInfo.altArgType != i.list->type)
+                            {
+                                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                                return 1;
+                            }
+                            newasm::RAM->overwrite<char>(addr, lineInfo.altChar);
+                            return 1;
+                        }
+                        //if it is a list of strings
+                        if(i.list->type == newasm::datatypes::number)
+                        {
+                            if(lineInfo.altArgType == newasm::datatypes::symbol_name)
+                            {
+                                if(!newasm::header::functions::istext(opr))
+                                {
+                                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                                    return 1;
+                                }
+
+                                addr = newasm::RAM->overwrite<char>(addr, newasm::header::functions::remq(opr));
+                                return 1;
+                            }
+                            if(lineInfo.altArgType != i.list->type)
+                            {
+                                newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+                                return 1;
+                            }
+                            addr = newasm::RAM->overwrite<char>(addr, lineInfo.altString);
+                            return 1;
+                        }
+                        return 1;
+                    }
                     //////////////tuples
                     if(i.type == newasm::datatypes::tuple)
                     {

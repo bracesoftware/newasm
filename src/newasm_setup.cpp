@@ -641,6 +641,7 @@ namespace newasm
             explicit inline listData() noexcept
             {
                 this->size = 0;
+                this->IDX = NEWASM_INVALID_LIST_IDX;
             }
 
             ATTR_HOT inline void DeleteFromMemory();

@@ -43,6 +43,7 @@ namespace newasm
         {
             auto& v = this->addr;
             auto& t = this->type;
+            this->IDX = NEWASM_INVALID_LIST_IDX;
             if(s == this->size or s < 0)
             {
                 return;
