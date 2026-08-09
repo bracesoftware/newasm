@@ -1318,10 +1318,12 @@ nop
     sysenter "thread"
     mov fdx, 1
     mov tlr, &testthread2
+    await &testthread2
     syscall ; display the thread output
     sysenter "thread"
     mov fdx, 1
     mov tlr, &testthread3
+    await &testthread3
     syscall ; display the thread output
 
 .data

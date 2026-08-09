@@ -11,6 +11,7 @@
 #define __newasm_MAX_FILENAME_LEN 128
 #define NEWASM_INVALID_LIST_IDX (-1)
 #define NEWASM_BYTECODE_RESERVE 1000
+#define NEWASM_INVALID_MUTEX_OWNER -1
 
 // funcs
 #define __newasm_B_TO_KB(val)   ((val) / 1024.0)

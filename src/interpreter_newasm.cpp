@@ -226,7 +226,7 @@ namespace newasm
             //attrib
             int attrib = 0;
             bool MutexLock = false;
-            signed int MutexOwner = -1;
+            signed int MutexOwner = NEWASM_INVALID_MUTEX_OWNER;
         };
     }
     typedef std::unordered_map<std::string, newasm::variables::varData> VarTable;

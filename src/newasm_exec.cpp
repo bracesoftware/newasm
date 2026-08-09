@@ -3056,35 +3056,19 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::constant_modif);
                         return 1;
                     }
-                    if constexpr(false) if(i.MutexLock) if(i.MutexOwner != newasm::GetCurrentThread()) [[unlikely]]
+                    if(i.MutexLock) if(i.MutexOwner != newasm::GetCurrentThread()) [[unlikely]]
                     {
                         if(newasm::header::data::proc_now)
                         {
-                            /*
-                            std::cout << "Proc terminated cuz of mutexlock -> " << NewASM::GetLineLocation(lineInfo.SourceLocation).second << std::endl;
-                            std::cout << "i.MutexOwner -> " << i.MutexOwner << " | newasm::GetCurrentThread() -> " << newasm::GetCurrentThread() << '\n';
-                            auto it = newasm::variables::ids.find("Funnyx");
-                            if(it != newasm::variables::ids.end())
-                            {
-                                std::cout << "Funnyx thread id -> " << it->second.thrd->id << '\n';
-                            }
-                            it = newasm::variables::ids.find("LmaoWhatsThos");
-                            if(it != newasm::variables::ids.end())
-                            {
-                                std::cout << "LmaoWhatsThos thread id -> " << it->second.thrd->id << '\n';
-                            }
-                            */
                             NewASM::CurrentProcA->proc->Halt = true;
                         }
 
                         if(newasm::thread_line)
                         {
-                            //std::cout << "Thread is waiting cuz of mutexlock" << std::endl;
                             newasm::CurrentThreadA->thrd->paused = true;
                         }
                         else
                         {
-                            //std::cout << "Main thread is waiting cuz of mutexlock" << std::endl;
                             newasm::code_stream::paused = true;
                         }
                         return 1;
@@ -5075,6 +5059,7 @@ namespace newasm
                 return 1;
             }
             //lock
+            #if defined(MUTEXXXXXXXXXX)
             case newasm::core::lang_inf::lock__:
             {
                 VarPtr ptr = nullptr;
@@ -5205,8 +5190,10 @@ namespace newasm
                 }
 
                 ptr->MutexLock = false;
+                ptr->MutexOwner = NEWASM_INVALID_MUTEX_OWNER;
                 return 1;
             }
+            #endif
             //del
             case newasm::core::lang_inf::del:
             {
@@ -9929,18 +9916,19 @@ namespace newasm
         }
         return 0;
     }
+
+    inline void ThreadCleanup()
+    {
+        auto& u = newasm::CurrentThreads;
+        auto d = std::remove_if(u.begin(), u.end(), [](VarPtr k) {
+            return k->type != newasm::datatypes::threadz;
+        });
+        u.erase(d, u.end());
+        return;
+    }
+
     inline void handle_threads()
     {
-        if constexpr(false)
-        {
-            auto& u = newasm::CurrentThreads;
-            auto d = std::remove_if(u.begin(), u.end(), [](VarPtr k) {
-                return k->type != newasm::datatypes::threadz;
-            });
-            u.erase(d, u.end());
-        }
-        ///////////////////////
-
         if(!NewASM::header::data::EnableThreads)
         {
             return;
