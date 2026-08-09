@@ -24,9 +24,12 @@ To declare a variable, you do this:
 You can also create unions, as in the C language. Check union-related instructions documentation.
 
 ## Simple arrays
-Also called static objects. There are 2 types of simple arrays:
+Also called static objects. There are a few types of simple arrays:
 - tuples,
-- contexts.
+- contexts,
+- lists.
+
+### Tuples
 
 Tuples are like vectors in C++, they can grow to any size, but each index can hold an address to a different data type such as a float or a string.
 
@@ -52,6 +55,8 @@ In order to completely change the tuple, just set the specific register to a tup
 mov tlr, ("ey", 67, 1.2, 'a')
 mov &tuple_name, *tlr ; change the whole tuple
 ```
+
+### Contexts
 
 On the other hand, context is something like a hash-map.
 
@@ -100,6 +105,29 @@ To access the value of a specific key, do:
 
 > [!TIP]
 > All of these are memory-safe operations!
+
+### Lists
+
+A list is a non-continuous list of primitive objects: integers, floats, characters and strings. It is basically an equivalent of a C++'s standard vector. To declare a list, use the following syntax:
+
+```asm
+.data
+    list ListName : intg ; or float, char, and string
+```
+
+To resize or access a specific index of the list, you have to use `resize` and `lea` instructions, respectively.
+
+```asm
+.text
+    fetch ListName
+    resize this, 10 ; make it 10 elements
+    lea this, 3 ; load the third element
+
+    mov this, 3
+    mov tlr, *this
+```
+
+After using `lea`, the list will return the value stored on index 3. Attempting to modify a list without using `lea` first will cause a crash. After each resize, the index will be also invalidated.
 
 ## Containers
 These objects/variables are complex data containers that can each be manipulated in their own way.
