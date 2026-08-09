@@ -29,8 +29,8 @@ namespace newasm
     };
     inline signed int GetCurrentThread()
     {
-        if(!newasm::thread_line) return -1;
-        return newasm::CurrentThreadB;
+        if(!newasm::thread_line) return 0;
+        return newasm::CurrentThreadB + 1;
     }
     void handle_threads();
     int compile_and_exec(std::string file, int lineidx_____);
@@ -5059,7 +5059,6 @@ namespace newasm
                 return 1;
             }
             //lock
-            #if defined(MUTEXXXXXXXXXX)
             case newasm::core::lang_inf::lock__:
             {
                 VarPtr ptr = nullptr;
@@ -5193,7 +5192,6 @@ namespace newasm
                 ptr->MutexOwner = NEWASM_INVALID_MUTEX_OWNER;
                 return 1;
             }
-            #endif
             //del
             case newasm::core::lang_inf::del:
             {

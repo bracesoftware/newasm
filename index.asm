@@ -2847,7 +2847,7 @@ mymacro : #
     fetch testinggg
     lock this
     mov &testinggg, "Testing the funny string from main thread"
-    mov tlr, testinggg
+    mov tlr, *this
     call std::ios::writeln ; test
     unlock this
 
