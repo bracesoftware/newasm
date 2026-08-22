@@ -92,26 +92,30 @@ namespace newasm
     inline void TinyInsProc(NewASM::compiler::lineData& line);
     inline void MediumInsProc(NewASM::compiler::lineData& line);
     inline void LargeInsProc(NewASM::compiler::lineData& line);
+    inline void MutexProc(NewASM::compiler::lineData& line);
 
     namespace Const
     {
         typedef std::function<void(NewASM::compiler::lineData&)> ClassProcessor;
         namespace InstructionClass
         {
+            //simple classes
             constinit const int Tiny = 1;
             constinit const int Medium = 2;
             constinit const int Large = 3;
 
-            const std::unordered_map<int, ClassProcessor> ClassProcessorsSlow = {
-                {Tiny, TinyInsProc},
-                {Medium, MediumInsProc},
-                {Large, LargeInsProc}
-            };
+            namespace DedicatedClass
+            {
+                constinit const int Mutex = 4;
+            }
 
-            const std::array<ClassProcessor, 3> ClassProcessors = {
+            const std::array<ClassProcessor, 4> ClassProcessors = {
                 TinyInsProc,
                 MediumInsProc,
-                LargeInsProc
+                LargeInsProc,
+
+                //Dedicated instruction classes
+                MutexProc
             };
         }
     }

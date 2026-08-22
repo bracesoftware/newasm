@@ -1193,6 +1193,14 @@ namespace newasm
                     }
                 }
 
+                if(
+                    lc.whatAmIDoing == NewASM::core::lang_inf::unlock__ or
+                    lc.whatAmIDoing == NewASM::core::lang_inf::lock__
+                )
+                {
+                    lc.Class = NewASM::Const::InstructionClass::DedicatedClass::Mutex;
+                }
+
                 return lineCompiled;
             }
 
