@@ -87,9 +87,37 @@ namespace newasm
         }
     }
 
+    namespace compiler { struct lineData; }
+
+    inline void TinyInsProc(NewASM::compiler::lineData& line);
+    inline void MediumInsProc(NewASM::compiler::lineData& line);
+    inline void LargeInsProc(NewASM::compiler::lineData& line);
+
+    namespace Const
+    {
+        typedef std::function<void(NewASM::compiler::lineData&)> ClassProcessor;
+        namespace InstructionClass
+        {
+            constinit const int Tiny = 1;
+            constinit const int Medium = 2;
+            constinit const int Large = 3;
+
+            const std::unordered_map<int, ClassProcessor> ClassProcessorsSlow = {
+                {Tiny, TinyInsProc},
+                {Medium, MediumInsProc},
+                {Large, LargeInsProc}
+            };
+
+            const std::array<ClassProcessor, 3> ClassProcessors = {
+                TinyInsProc,
+                MediumInsProc,
+                LargeInsProc
+            };
+        }
+    }
+
     namespace compiler
     {
-        struct lineData;
         static const int def = 1;
         static const int using__ = 2;
         static const int link__ = 3;
@@ -333,10 +361,11 @@ namespace newasm
             bool AltStackArg = false;
 
             int SourceLocation = -1;
+            int Class = 0;
             //---------------------------------------------
             // compile-time info
             lineDataCT CompileTime;
-            lineDataRT* Runtime;
+            lineDataRT* Runtime = nullptr;
             //stuff not included in the binary:
             unsigned int resType = 0;
             int resInt = 0;
@@ -382,7 +411,7 @@ namespace newasm
 
         struct lineDataRT final
         {
-            std::function<void(lineData&)> Processor = nullptr;
+            Const::ClassProcessor Processor = nullptr;
         };
 
         inline std::string parse_def(std::string suf);
@@ -565,6 +594,7 @@ namespace newasm
         newasm::timer heavyHostServices;
         newasm::timer StandardLibLoading;
         newasm::timer DynLibLoading;
+        newasm::timer Jitc;
     }
     std::vector<std::string> DynLibNames;
     std::vector<newasm::DynamicLibrary> DynLibs;
@@ -1244,6 +1274,7 @@ static __global_newasm nG;
 link "runtime/garbage_collector";
 link "toolchain/compiler/bin";
 link "newasm_exec";
+link "runtime/bridge/inscp";
 link "runtime/repl_mode";
 
 link "newasm_compexpr";
@@ -1792,6 +1823,7 @@ namespace newasm
             std::cout << newasm::header::col::gray << "\t\t\t" << network_wasted.count() << " ms wasted on network latency\n";
             std::cout << newasm::header::col::gray << "\t\t\t" << newasm::perf::DynLibLoading.count() << " ms used on DLL/SO maintenence\n";
             std::cout << newasm::header::col::gray << "\t\t\t" << newasm::perf::StandardLibLoading.count() << " ms used on standard library loading\n";
+            std::cout << newasm::header::col::gray << "\t\t\t" << newasm::perf::Jitc.count() << " ms used by the JIT compiler\n";
             //
             std::cout << newasm::header::style::underline;
             std::cout << newasm::header::col::gray << "\t\t\t" << wait_wasted.count() << " ms wasted on `wait`\n";
@@ -1805,6 +1837,7 @@ namespace newasm
                 - network_wasted.count()
                 - newasm::perf::StandardLibLoading.count()
                 - newasm::perf::DynLibLoading.count()
+                - newasm::perf::Jitc.count()
             ) << " ms\n";
             std::cout << newasm::header::col::gray << "\t\t\tCycle count: " << newasm::CYCLE_COUNT << '\n';
             std::cout << newasm::header::col::reset;

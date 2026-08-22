@@ -8986,8 +8986,6 @@ namespace newasm
             {
                 if(NewASM::header::data::ActiveThreads != 0) newasm::handle_threads();
             }
-
-            std::string libname;
             
             switch(line.type)
             {
@@ -9010,135 +9008,7 @@ namespace newasm
                 }
                 case newasm::compiler::instruction:
                 {
-                    if(line.tokens.size() == 1)
-                    {
-                        //if(newasm::mem::functions::datavalid(libname, newasm::mem::instructions))
-                        if(line.whatAmIDoing == INS_EXTERNAL)
-                        {
-                            libname = line.tokens.at(0);
-                            for(int i = 0; i < newasm::dynlib::mem::invalid_dynlibs.size(); ++i)
-                            {
-                                if(libname == newasm::dynlib::mem::invalid_dynlibs.at(i))
-                                {
-                                    newasm::terminate(newasm::exit_codes::improper_dynlib);
-                                    return 1;
-                                }
-                            }
-                            auto& l = newasm::mem::instructions[libname];
-                            for(int i = 0; i < l.size(); ++i)
-                            {
-                                if(newasm::system::terminated)
-                                {
-                                    return 1;
-                                }
-                                auto JIT_COMPILE = newasm::compiler::DO(l.at(i));
-                                newasm::procline(JIT_COMPILE);
-                            }
-                            return 1;
-                        }
-                        newasm::process_i(line.raw, line.tokens.at(0), line);
-                        return 1;
-                    }
-                    if(line.tokens.size() == 2)
-                    {
-                        newasm::process_is(line.raw, line.tokens.at(0), line.tokens.at(1), line);
-                        return 1;
-                    }
-                    if(line.tokens.size() == 3)
-                    {
-                        auto operand = line.tokens.at(2);
-                        if(newasm::header::data::proc_now)
-                        {
-                            if(line.AltStackArg)
-                            {
-                                newasm::header::data::argc ++;                                
-                                // If the address of the func handler is i,
-                                // then we are looking for i-argid address
-                                // that i is callstkidx
-                                int argid = line.altInt;
-                                if(!newasm::thread_line)
-                                {
-                                    int idx = newasm::RAM->StackInfo.size() - 2 - argid;
-                                    if(
-                                        idx < 0 or
-                                        idx >= newasm::RAM->StackInfo.size()
-                                    )
-                                    {
-                                        newasm::terminate(newasm::exit_codes::seg_fault);
-                                        return 1;
-                                    }
-                                    auto& p = newasm::RAM->StackInfo.at(idx);
-                                    int type = p.stkType;
-                                    int argaddr = p.stkAddr;
-
-                                    if(type == newasm::datatypes::number)
-                                    {
-                                        operand = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(argaddr));
-                                    }
-                                    else if(type == newasm::datatypes::decimal)
-                                    {
-                                        operand = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(argaddr));
-                                    }
-                                    else if(type == newasm::datatypes::character)
-                                    {
-                                        std::string buf(1, newasm::hardware::randAccessMem.peek<char>(argaddr));
-                                        operand = "'";
-                                        operand += buf;
-                                        operand += "'";
-                                    }
-                                    else if(type == newasm::datatypes::text)
-                                    {
-                                        operand = "\"";
-                                        operand += newasm::hardware::randAccessMem.peek<std::string>(argaddr);
-                                        operand += "\"";
-                                    }
-                                }
-                                else
-                                {
-                                    auto& DedicatedStack = *newasm::DedicatedMemory;
-                                    int idx = DedicatedStack.StackInfo.size() - 2 - argid;
-                                    if(
-                                        idx < 0 or
-                                        idx >= DedicatedStack.StackInfo.size()
-                                    )
-                                    {
-                                        newasm::terminate(newasm::exit_codes::seg_fault);
-                                        return 1;
-                                    }
-                                    auto& p = DedicatedStack.StackInfo.at(idx);
-                                    int type = p.stkType;
-                                    int argaddr = p.stkAddr;
-
-                                    if(type == newasm::datatypes::number)
-                                    {
-                                        operand = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<int>(argaddr));
-                                    }
-                                    else if(type == newasm::datatypes::decimal)
-                                    {
-                                        operand = newasm::_std::to_string(newasm::hardware::randAccessMem.peek<float>(argaddr));
-                                    }
-                                    else if(type == newasm::datatypes::character)
-                                    {
-                                        std::string buf(1, newasm::hardware::randAccessMem.peek<char>(argaddr));
-                                        operand = "'";
-                                        operand += buf;
-                                        operand += "'";
-                                    }
-                                    else if(type == newasm::datatypes::text)
-                                    {
-                                        operand = "\"";
-                                        operand += newasm::hardware::randAccessMem.peek<std::string>(argaddr);
-                                        operand += "\"";
-                                    }
-                                }
-                                //std::cout << "operand is `" << operand << "`" << std::endl;
-                                //std::cout << "stk is " << newasm::mem::regs::stk.get_value() << std::endl;
-                            }
-                        }
-                        newasm::process_iso(line.raw, line.tokens.at(0), line.tokens.at(1), operand, line);
-                        return 1;
-                    }
-                    newasm::terminate(newasm::exit_codes::os_error);
+                    line.Runtime->Processor(line);
                     return 1;
                 }
                 newasm::terminate(newasm::exit_codes::os_error);
@@ -9360,6 +9230,23 @@ namespace newasm
         newasm::perf::heavyHostServices.clear();
         newasm::perf::StandardLibLoading.clear();
         newasm::perf::DynLibLoading.clear();
+        newasm::perf::Jitc.clear();
+        //some jit compilation
+        auto size = newasm::compiler::compiledCode.size();
+        newasm::perf::Jitc.start();
+        for(size_t i = 0; i < size; ++i)
+        {
+            auto& mmap = newasm::compiler::compiledCode.at(i);
+            if(
+                mmap.type == newasm::compiler::instruction and
+                mmap.Runtime == nullptr
+            )
+            {
+                mmap.Runtime = new NewASM::compiler::lineDataRT;
+                mmap.Runtime->Processor = NewASM::Const::InstructionClass::ClassProcessors[mmap.Class];
+            }
+        }
+        newasm::perf::Jitc.stop();
         //now we load the standard lib after loading the case jump table
         newasm::CYCLE_COUNT = 0, newasm::perf::start = std::chrono::steady_clock::now();
         newasm::perf::StandardLibLoading.start();
@@ -9381,8 +9268,6 @@ namespace newasm
             );
             return;
         }
-
-        auto size = newasm::compiler::compiledCode.size();
 
         while(true)
         {
@@ -9855,6 +9740,22 @@ namespace newasm
                 }
             }
 
+            for(size_t i = 0; i < newasm::compiler::compiledCode.size(); ++i)
+            {
+                auto& mmap = newasm::compiler::compiledCode.at(i);
+                mmap.SourceLocation = i;
+
+                mmap.Class = mmap.tokens.size();
+                if(mmap.type == newasm::compiler::instruction) if(
+                    mmap.Class < NewASM::Const::InstructionClass::Tiny or
+                    mmap.Class > NewASM::Const::InstructionClass::Large
+                )
+                {
+                    newasm::compiler::abort(newasm::compiler::fail::unmatched_syntax);
+                }
+                continue;
+            }
+
             __newasmDBG_COMPLEX({
                 std::cout << "2: LINE DATA SIZE -> " << newasm::forLinker::lineData.size() << std::endl;
                 std::cout << "2: COMPILED CODE SIZE -> " << newasm::compiler::compiledCode.size() << std::endl;
@@ -9883,13 +9784,6 @@ namespace newasm
             {
                 std::cout << std::endl;
                 return 1;
-            }
-
-            for(size_t i = 0; i < newasm::compiler::compiledCode.size(); ++i)
-            {
-                auto& mmap = newasm::compiler::compiledCode.at(i);
-                mmap.SourceLocation = i;
-                continue;
             }
 
             newasm::compiler::bin::ASSEMBLE( // create the binary format
