@@ -280,6 +280,8 @@ namespace newasm
             bool dataDecl = false;
         };
 
+        struct lineDataRT;
+
         struct lineData final
         {
             //some definitions, typedef where we can, using where we must!
@@ -334,6 +336,7 @@ namespace newasm
             //---------------------------------------------
             // compile-time info
             lineDataCT CompileTime;
+            lineDataRT* Runtime;
             //stuff not included in the binary:
             unsigned int resType = 0;
             int resInt = 0;
@@ -375,6 +378,11 @@ namespace newasm
                     this->AltStackArg == rhs.AltStackArg
                 );
             }
+        };
+
+        struct lineDataRT final
+        {
+            std::function<void(lineData&)> Processor = nullptr;
         };
 
         inline std::string parse_def(std::string suf);
