@@ -9008,7 +9008,7 @@ namespace newasm
                 }
                 case newasm::compiler::instruction:
                 {
-                    line.Runtime->Processor(line);
+                    line.Runtime.Process(line);
                     return 1;
                 }
                 newasm::terminate(newasm::exit_codes::os_error);
@@ -9234,18 +9234,23 @@ namespace newasm
         //some jit compilation
         auto size = newasm::compiler::compiledCode.size();
         newasm::perf::Jitc.start();
-        for(size_t i = 0; i < size; ++i)
-        {
-            auto& mmap = newasm::compiler::compiledCode.at(i);
-            if(
-                mmap.type == newasm::compiler::instruction and
-                mmap.Runtime == nullptr
-            )
+        auto InstructionClassJIT = <:&:>(auto& vec) -> void {
+            for(size_t i = 0; i < vec.size(); ++i)
             {
-                mmap.Runtime = new NewASM::compiler::lineDataRT;
-                mmap.Runtime->Processor = NewASM::Const::InstructionClass::ClassProcessors[mmap.Class];
+                auto& mmap = vec.at(i);
+                if(
+                    mmap.type == newasm::compiler::instruction
+                )
+                {
+                    //auto p = GetLineLocation(mmap.SourceLocation);
+                    //std::cout << "SECOND: yooo this happened right? -> " << mmap.Class - 1 << std::endl;
+                    //std::cout << "\t\t\t" << mmap.raw << " @ " << (p.first ? p.second : "null") << std::endl;
+                    mmap.Runtime.Processor = NewASM::Const::InstructionClass::ClassProcessors[mmap.Class - 1];
+                }
             }
-        }
+        };
+        InstructionClassJIT(newasm::compiler::compiledCode);
+        InstructionClassJIT(newasm::compiler::caseJumpTable);
         newasm::perf::Jitc.stop();
         //now we load the standard lib after loading the case jump table
         newasm::CYCLE_COUNT = 0, newasm::perf::start = std::chrono::steady_clock::now();
@@ -9740,21 +9745,20 @@ namespace newasm
                 }
             }
 
-            for(size_t i = 0; i < newasm::compiler::compiledCode.size(); ++i)
-            {
-                auto& mmap = newasm::compiler::compiledCode.at(i);
-                mmap.SourceLocation = i;
-
-                mmap.Class = mmap.tokens.size();
-                if(mmap.type == newasm::compiler::instruction) if(
-                    mmap.Class < NewASM::Const::InstructionClass::Tiny or
-                    mmap.Class > NewASM::Const::InstructionClass::Large
-                )
+            //5th pass
+            auto AOTInstructionClass = <:&:>(auto& vec, bool ModifySourceLocation) -> void {
+                for(size_t i = 0; i < vec.size(); ++i)
                 {
-                    newasm::compiler::abort(newasm::compiler::fail::unmatched_syntax);
+                    auto& mmap = vec.at(i);
+                    if(ModifySourceLocation) mmap.SourceLocation = i;
+
+                    //modify something if needed
+                    continue;
                 }
-                continue;
-            }
+            };
+
+            AOTInstructionClass(newasm::compiler::compiledCode, true);
+            AOTInstructionClass(newasm::compiler::caseJumpTable, false);
 
             __newasmDBG_COMPLEX({
                 std::cout << "2: LINE DATA SIZE -> " << newasm::forLinker::lineData.size() << std::endl;

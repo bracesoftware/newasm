@@ -308,7 +308,12 @@ namespace newasm
             bool dataDecl = false;
         };
 
-        struct lineDataRT;
+        struct lineDataRT final
+        {
+            Const::ClassProcessor Processor = nullptr;
+            
+            void Process(lineData& l);
+        };
 
         struct lineData final
         {
@@ -365,7 +370,7 @@ namespace newasm
             //---------------------------------------------
             // compile-time info
             lineDataCT CompileTime;
-            lineDataRT* Runtime = nullptr;
+            lineDataRT Runtime;
             //stuff not included in the binary:
             unsigned int resType = 0;
             int resInt = 0;
@@ -409,16 +414,22 @@ namespace newasm
             }
         };
 
-        struct lineDataRT final
-        {
-            Const::ClassProcessor Processor = nullptr;
-        };
-
         inline std::string parse_def(std::string suf);
         inline void process_compti(std::string ins);
         inline void process_comptis(std::string ins, std::string arg1);
         inline void process_comptiso(std::string ins, std::string arg1, std::string arg2);
         inline unsigned int iscomptins(std::string ins);
+
+        ATTR_HOT void lineDataRT::Process(lineData& l)
+        {
+            //std::cout << "FIRST->Yo bro this crashed did it ?? -> " << l.Class - 1 << std::endl;
+            if(this->Processor) this->Processor(l);
+            else
+            {
+                //std::cout << "Yo bro this crashed did it ?? -> " << l.Class - 1 << std::endl;
+                Const::InstructionClass::ClassProcessors[l.Class - 1](l);
+            }
+        }
     }
     namespace lambda
     {

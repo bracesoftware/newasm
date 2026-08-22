@@ -971,7 +971,7 @@ namespace newasm
                     }
                 }
             }
-            if(!linetokens.empty())
+            if(!linetokens.empty()) //ins
             {
                 lineCompiled.type = newasm::compiler::instruction;
                 lineCompiled.tokens = linetokens;
@@ -991,6 +991,15 @@ namespace newasm
 
                 lineCompiled.priArgType = newasm::datatypes::symbol_name;
                 lineCompiled.altArgType = newasm::datatypes::symbol_name;
+
+                lineCompiled.Class = lineCompiled.tokens.size();
+                if(
+                    lineCompiled.Class < NewASM::Const::InstructionClass::Tiny or
+                    lineCompiled.Class > NewASM::Const::InstructionClass::Large
+                )
+                {
+                    newasm::compiler::abort(newasm::compiler::fail::unmatched_syntax);
+                }
 
                 for(int i = 0; i < lineCompiled.tokens.size(); i++)
                 {
