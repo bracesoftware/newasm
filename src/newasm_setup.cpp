@@ -86,10 +86,12 @@ namespace newasm
         const int kernel_panic = 58;
         const int immovable_type = 59;
         const int user_error = 60;
+        const int unknown_inscp = 61;
 
         const std::unordered_map<int, std::string> identifier = {
             {noterm_point, "NoTerminationPoint"},
             {invalid_section, "InvalidSection"},
+            {unknown_inscp, "UnknownInsClassProcessor"},
             {invalid_proc, "InvalidProcedure"},
             {invalid_retn, "InvalidExitAttempt"},
             {sysreq_fail, "SystemRequirementsNotMet"},

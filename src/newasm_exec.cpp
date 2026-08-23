@@ -9009,33 +9009,8 @@ namespace newasm
                 if(NewASM::header::data::ActiveThreads != 0) newasm::handle_threads();
             }
             
-            switch(line.type)
-            {
-                case newasm::compiler::conditional:
-                {
-                    if(line.tokens.size() == 1)
-                    {
-                        newasm::header::data::case_line = line.other;
-                        newasm::process_i(line.raw, line.tokens.at(0), line);
-                        return 1;
-                    }
-                    if(line.tokens.size() == 2)
-                    {
-                        newasm::header::data::case_line = line.other;
-                        newasm::process_is(line.raw, line.tokens.at(0), line.tokens.at(1), line);
-                        return 1;
-                    }
-                    newasm::terminate(newasm::exit_codes::os_error);
-                    return 1;
-                }
-                case newasm::compiler::instruction:
-                {
-                    line.Runtime.Process(line);
-                    return 1;
-                }
-                newasm::terminate(newasm::exit_codes::os_error);
-                return 1;
-            }
+            line.Runtime.Process(line);
+            return 1;
         }
         
         newasm::terminate(newasm::exit_codes::invalid_syntax);
@@ -9261,13 +9236,14 @@ namespace newasm
             {
                 auto& mmap = vec.at(i);
                 if(
-                    mmap.type == newasm::compiler::instruction
+                    mmap.type == newasm::compiler::instruction or
+                    mmap.type == newasm::compiler::conditional
                 )
                 {
                     //auto p = GetLineLocation(mmap.SourceLocation);
                     //std::cout << "SECOND: yooo this happened right? -> " << mmap.Class - 1 << std::endl;
                     //std::cout << "\t\t\t" << mmap.raw << " @ " << (p.first ? p.second : "null") << std::endl;
-                    mmap.Runtime.Processor = NewASM::Const::InstructionClass::ClassProcessors[mmap.Class - 1];
+                    mmap.Runtime.Processor = NewASM::Const::InstructionClass::ClassProcessors[mmap.Class];
                 }
             }
         };

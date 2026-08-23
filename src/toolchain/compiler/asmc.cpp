@@ -301,6 +301,10 @@ namespace newasm
         @nodiscard
         inline newasm::compiler::lineData DO(std::string& line)
         {
+            newasm::perf::Jitc.start();
+            $defer
+                newasm::perf::Jitc.stop();
+            $
             newasm::compiler::data::line = line;
             newasm::compiler::lineData lineCompiled;
 
@@ -829,6 +833,7 @@ namespace newasm
                         std::vector<std::string> linetokens_inline = newasm::common::tokenize(line.substr(0, idx__));
                         if(linetokens_inline.size() == 2)
                         {
+                            lc.Class = NewASM::Const::InstructionClass::DedicatedClass::MediumConditional;
                             lineCompiled.type = newasm::compiler::conditional;
                             lineCompiled.other = newasm::header::functions::trim(line.substr(idx__ + 2));//part after ->
                             lineCompiled.tokens.push_back(linetokens_inline.at(0));
@@ -896,6 +901,7 @@ namespace newasm
                         }
                         if(linetokens_inline.size() == 1) // process_is(line, linetokens_inline.at(0), linetokens_inline.at(1))
                         {
+                            lc.Class = NewASM::Const::InstructionClass::DedicatedClass::TinyConditional;
                             lineCompiled.type = newasm::compiler::conditional;
                             lineCompiled.other = newasm::header::functions::trim(line.substr(idx__ + 2));
                             lineCompiled.tokens.push_back(linetokens_inline.at(0));
@@ -921,7 +927,7 @@ namespace newasm
                 }
             }
             //INSTRUCTION
-            std::string instruction;
+            static std::string instruction;
             linetokens.clear();
             linetokens = newasm::common::tokenize(line);
             if(!linetokens.empty())
@@ -992,7 +998,8 @@ namespace newasm
                 lineCompiled.priArgType = newasm::datatypes::symbol_name;
                 lineCompiled.altArgType = newasm::datatypes::symbol_name;
 
-                lineCompiled.Class = lineCompiled.tokens.size();
+                auto SIZEE = lineCompiled.tokens.size();
+                lineCompiled.Class = SIZEE;
                 if(
                     lineCompiled.Class < NewASM::Const::InstructionClass::Tiny or
                     lineCompiled.Class > NewASM::Const::InstructionClass::Large
@@ -1001,7 +1008,7 @@ namespace newasm
                     newasm::compiler::abort(newasm::compiler::fail::unmatched_syntax);
                 }
 
-                for(int i = 0; i < lineCompiled.tokens.size(); i++)
+                for(size_t i = 0; i < SIZEE; i++)
                 {
                     lineCompiled.tokens.at(i) = newasm::header::functions::trim(lineCompiled.tokens.at(i));
                     lineCompiled.tokens.at(i) = newasm::compiler::parse_def(lineCompiled.tokens.at(i));

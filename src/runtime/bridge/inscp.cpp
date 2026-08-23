@@ -7,6 +7,41 @@ module(ins_class_processor, {
 
 namespace newasm
 {
+    namespace compiler
+    {
+        ATTR_HOT void lineDataRT::Process(lineData& l)
+        {
+            //std::cout << "FIRST->Yo bro this crashed did it ?? -> " << l.Class - 1 << std::endl;
+            if(this->Processor)
+            {
+                this->Processor(l);
+                return;
+            }
+            if(Const::InstructionClass::ClassProcessors[l.Class])
+            {
+                Const::InstructionClass::ClassProcessors[l.Class](l);
+                return;
+            }
+            newasm::SetExceptionComment("critical issue with the instruction dispatch; instruction class -> " + newasm::_std::to_string(l.Class));
+            newasm::terminate(newasm::exit_codes::unknown_inscp);
+            return;
+        }
+    }
+
+    inline void TinyCondProc(compiler::lineData& line)
+    {
+        newasm::header::data::case_line = line.other;
+        newasm::process_i(line.raw, line.tokens.at(0), line);
+        return;
+    }
+    
+    inline void MediumCondProc(compiler::lineData& line)
+    {
+        newasm::header::data::case_line = line.other;
+        newasm::process_is(line.raw, line.tokens.at(0), line.tokens.at(1), line);
+        return;
+    }
+
     inline void LargeInsProc(compiler::lineData& line)
     {
         auto operand = line.tokens.at(2);

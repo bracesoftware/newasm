@@ -94,6 +94,10 @@ namespace newasm
     inline void LargeInsProc(NewASM::compiler::lineData& line);
     inline void MutexProc(NewASM::compiler::lineData& line);
 
+    inline void TinyCondProc(NewASM::compiler::lineData& line);
+    inline void MediumCondProc(NewASM::compiler::lineData& line);
+
+
     namespace Const
     {
         typedef std::function<void(NewASM::compiler::lineData&)> ClassProcessor;
@@ -107,16 +111,39 @@ namespace newasm
             namespace DedicatedClass
             {
                 constinit const int Mutex = 4;
+                constinit const int TinyConditional = 5;
+                constinit const int MediumConditional = 6;
             }
 
-            const std::array<ClassProcessor, 4> ClassProcessors = {
-                TinyInsProc,
-                MediumInsProc,
-                LargeInsProc,
-
-                //Dedicated instruction classes
-                MutexProc
+            const std::unordered_map<int, ClassProcessor> ClassTemplate = {
+                {Tiny, TinyInsProc},
+                {Medium, MediumInsProc},
+                {Large, LargeInsProc},
+                {DedicatedClass::Mutex, MutexProc},
+                {DedicatedClass::TinyConditional, TinyCondProc},
+                {DedicatedClass::MediumConditional, MediumCondProc}
             };
+
+            std::vector<ClassProcessor> ClassProcessors;
+
+            inline void SetupClasses()
+            {
+                int maxid = 0;
+                for(const auto& [id, processor] : ClassTemplate)
+                {
+                    if(id > maxid)
+                    {
+                        maxid = id;
+                    }
+                }
+
+                ClassProcessors.resize(maxid + 1);
+
+                for(const auto& [id, processor] : ClassTemplate)
+                {
+                    ClassProcessors[id] = processor;
+                }
+            }
         }
     }
 
@@ -423,17 +450,6 @@ namespace newasm
         inline void process_comptis(std::string ins, std::string arg1);
         inline void process_comptiso(std::string ins, std::string arg1, std::string arg2);
         inline unsigned int iscomptins(std::string ins);
-
-        ATTR_HOT void lineDataRT::Process(lineData& l)
-        {
-            //std::cout << "FIRST->Yo bro this crashed did it ?? -> " << l.Class - 1 << std::endl;
-            if(this->Processor) this->Processor(l);
-            else
-            {
-                //std::cout << "Yo bro this crashed did it ?? -> " << l.Class - 1 << std::endl;
-                Const::InstructionClass::ClassProcessors[l.Class - 1](l);
-            }
-        }
     }
     namespace lambda
     {
@@ -1571,6 +1587,7 @@ namespace newasm
 {
     inline signed int entry(signed int argc, char* argv[])
     {
+        NewASM::Const::InstructionClass::SetupClasses();
         #if NEWASM_IMM_LOGS == true
         newasm::mem::regs::imm.log_things(true);
         #endif
