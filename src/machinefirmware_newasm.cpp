@@ -96,7 +96,7 @@ namespace newasm
 
     inline void TinyCondProc(NewASM::compiler::lineData& line);
     inline void MediumCondProc(NewASM::compiler::lineData& line);
-
+    inline void MovRegProc(newasm::compiler::lineData& line);
 
     namespace Const
     {
@@ -113,6 +113,7 @@ namespace newasm
                 constinit const int Mutex = 4;
                 constinit const int TinyConditional = 5;
                 constinit const int MediumConditional = 6;
+                constinit const int MovReg = 7;
             }
 
             const std::unordered_map<int, ClassProcessor> ClassTemplate = {
@@ -121,7 +122,8 @@ namespace newasm
                 {Large, LargeInsProc},
                 {DedicatedClass::Mutex, MutexProc},
                 {DedicatedClass::TinyConditional, TinyCondProc},
-                {DedicatedClass::MediumConditional, MediumCondProc}
+                {DedicatedClass::MediumConditional, MediumCondProc},
+                {DedicatedClass::MovReg, MovRegProc}
             };
 
             std::vector<ClassProcessor> ClassProcessors;
@@ -348,7 +350,7 @@ namespace newasm
 
         struct lineData final
         {
-            //some definitions, typedef where we can, using where we must!
+            //some definitions, `typedef` where we can, `using` where we must!
             typedef std::string string;
             template<typename T>
             using vec = std::vector<T>;
@@ -548,6 +550,88 @@ link "sysext/csimple";
 #define __newasm_included "NEWASM"_str
 link "runtime/alpha";
 link "sys._platformSpecific";
+namespace newasm
+{
+    
+    namespace kernel
+    {
+        template<typename T>
+        class ValueTracker final
+        {
+            private T value;
+
+            inline void log(T v)
+            {
+                std::cout << NewASM::header::col::red;
+                std::cout << "\n=====================================================\n\n";
+                std::cout << "ValueTracker: " << v << '\n' << std::endl;
+                std::cout << "=====================================================\n";
+                std::cout << NewASM::header::col::reset;
+            }
+
+            inline T& get() { return value; }
+            inline const T& get() const { return value; }
+
+            public inline ValueTracker(T&& val) { this->value = std::move(val); }
+            public inline ValueTracker(const T& val) { this->value = val; }
+
+            inline ValueTracker<T>& operator=(const T& new_val)
+            {
+                get() = new_val;
+                this->log(new_val);
+                return *this;
+            }
+            inline ValueTracker<T>& operator=(T&& new_val)
+            {
+                get() = std::move(new_val);
+                this->log(new_val);
+                return *this;
+            }
+
+            inline operator T&()
+            {
+                return get();
+            }
+            inline operator const T&() const
+            {
+                return get();
+            }
+
+            inline T* operator->()
+            {
+                return &get();
+            }
+            inline const T* operator->() const
+            {
+                return &get();
+            }
+
+            inline T& operator*()
+            {
+                return get();
+            }
+            inline const T& operator*() const
+            {
+                return get();
+            }
+            inline ValueTracker<T>& operator++()
+            {
+                ++get();
+                this->log(get());
+                return *this;
+            }
+
+            inline T operator++(int)
+            {
+                T old = get();
+                ++get();
+                this->log(get());
+                return old;
+            }
+        };
+    }
+    bool thread_line = false;
+}
 link "newasm_dynlib";
 //<- UNDER THIS ALL MODULES CAN LOAD
 module(vm_impl, {
@@ -621,6 +705,7 @@ namespace newasm
         auto start = std::chrono::steady_clock::now();
         auto end = std::chrono::steady_clock::now();
 
+        newasm::timer MainRuntime;
         newasm::timer inputWasteTimer;
         newasm::timer heavyHostServices;
         newasm::timer StandardLibLoading;

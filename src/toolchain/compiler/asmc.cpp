@@ -1054,6 +1054,10 @@ namespace newasm
                         if(it_ != newasm::mem::regs::identifiers.end())
                         {
                             lineCompiled.whatAreRegistersLol = it_->second;
+                            if(lc.whatAmIDoing == newasm::core::lang_inf::mov)
+                            {
+                                lc.Class = NewASM::Const::InstructionClass::DedicatedClass::MovReg;
+                            }
                         }
                         if(lineCompiled.tokens.at(i).size() >= 3)
                         {

@@ -1629,10 +1629,12 @@ namespace newasm
                 default:
                 {
                     #if 0
+                    std::cout << "Thread id : " << newasm::CurrentThreadA->thrd->original_name << "|" << newasm::CurrentThreadB << std::endl;
                     std::cout << "FDX IS " << NewASM::mem::regs::fdx.get_value() << std::endl;
                     std::cout << "TLR IS " << NewASM::mem::regs::tlr.get_value() << std::endl;
                     std::cout << "STL IS " << NewASM::mem::regs::stl.get_value() << std::endl;
                     #endif
+
                     newasm::terminate(newasm::exit_codes::unknown_fdx);
                     return 1;
                 }

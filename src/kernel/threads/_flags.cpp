@@ -11,7 +11,6 @@ module(KRNL_____drivers, {
 
 namespace newasm
 {
-    bool thread_line = false;
     namespace threads
     {
         newasm::_std::vec<int> sys_module;
