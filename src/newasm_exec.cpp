@@ -8139,11 +8139,13 @@ namespace newasm
                 }
                 if(newasm::system::stop == 0)
                 {
+                    newasm::SetExceptionComment("probably no procedure was initiated");
                     newasm::terminate(newasm::exit_codes::unexpected_end);
                     return 1;
                 }
                 if(newasm::system::proclines == 0)
                 {
+                    newasm::SetExceptionComment("compiler was given `nil` data");
                     newasm::terminate(newasm::exit_codes::empty_proc);
                     return 1;
                 }
@@ -8199,7 +8201,7 @@ namespace newasm
                     }
                     p->TryBlock = true;
                     p->TryJump = lineInfo.jumpinTo;
-                    return 1;
+                    //return 1;
                 }
 
                 if(newasm::thread_line)
