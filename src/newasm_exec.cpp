@@ -12,6 +12,7 @@ module(virtual_cpu, {
 
 namespace newasm
 {
+    template<bool Await>
     FORCE_INLINE inline void HandleThread(VarPtr i)
     {
         static auto& mmap = i->thrd;
@@ -27,7 +28,7 @@ namespace newasm
             mmap->returned = true;
             return;
         }
-        ++NewASM::header::data::ActiveThreads;
+        if constexpr(!Await) ++NewASM::header::data::ActiveThreads;
         newasm::thread_line = true;
         newasm::CurrentThreadA = i;
         newasm::CurrentThreadB = mmap->id;
@@ -44,6 +45,7 @@ namespace newasm
         }
 
         newasm::thread_line = false;
+        //newasm::CurrentThreadA = nullptr;
         if(mmap->paused)
         {
             std::cout << newasm::header::col::red<<"-------- thrd : " << mmap->original_name << " paused" <<newasm::header::col::reset<< std::endl;
@@ -6579,7 +6581,7 @@ namespace newasm
 
                 while(!lmao)
                 {
-                    NewASM::HandleThread(ptr);
+                    NewASM::HandleThread<true>(ptr);
                 }
 
                 return 1;
@@ -8201,7 +8203,8 @@ namespace newasm
                     }
                     p->TryBlock = true;
                     p->TryJump = lineInfo.jumpinTo;
-                    //return 1;
+                    //std::cout << "proc data : " << p->original_name << std::endl;
+                    return 1;
                 }
 
                 if(newasm::thread_line)
@@ -9900,7 +9903,7 @@ namespace newasm
         for(size_t p = 0; p < newasm::CurrentThreads.size(); ++p)
         {
             auto& i = newasm::CurrentThreads.at(p);
-            NewASM::HandleThread(i);
+            NewASM::HandleThread<false>(i);
         }
         return;
     }

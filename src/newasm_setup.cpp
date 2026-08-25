@@ -518,8 +518,10 @@ namespace newasm
                     return;
                 }
 
-                //CallCStack.reserve(1000);
-
+                newasm::perf::Jitc.start();
+                $defer
+                    newasm::perf::Jitc.stop();
+                $
                 this->labels.max_load_factor(MAX_LOAD_FACTOR);
 
                 for(size_t i = 0; i < this->contents.size(); ++i)
@@ -703,6 +705,11 @@ namespace newasm
                 return;
             }
             this->labels.max_load_factor(MAX_LOAD_FACTOR);
+
+            newasm::perf::Jitc.start();
+            $defer
+                newasm::perf::Jitc.stop();
+            $
 
             bool FLAG1 = false;
 
