@@ -40,7 +40,7 @@ namespace newasm
         else
         {
             newasm::header::data::LastLine = &BYTECODE[IDX];
-            std::cout << newasm::header::col::cyan << "---Processing thread " << mmap->original_name << ":" << mmap->lcx << "|id:" << mmap->id<<"---"<<BYTECODE[IDX].raw << newasm::header::col::reset<<std::endl;
+            if constexpr(NEWASM_BUG_CRISIS) std::cout << newasm::header::col::cyan << "---Processing thread " << mmap->original_name << ":" << mmap->lcx << "|id:" << mmap->id<<"---"<<BYTECODE[IDX].raw << newasm::header::col::reset<<std::endl;
             newasm::procline(BYTECODE[IDX]);
         }
 
@@ -48,7 +48,7 @@ namespace newasm
         //newasm::CurrentThreadA = nullptr;
         if(mmap->paused)
         {
-            std::cout << newasm::header::col::red<<"-------- thrd : " << mmap->original_name << " paused" <<newasm::header::col::reset<< std::endl;
+            if constexpr(NEWASM_BUG_CRISIS) std::cout << newasm::header::col::red<<"-------- thrd : " << mmap->original_name << " paused" <<newasm::header::col::reset<< std::endl;
             mmap->paused = false;
             return;
         }
@@ -137,7 +137,7 @@ namespace newasm
         if(newasm::thread_line)
         {
             auto& mmap = newasm::CurrentThreadA->thrd;
-            std::cout << "terminate: " << mmap->original_name << "|" << mmap->id<<std::endl;
+            if constexpr(NEWASM_BUG_CRISIS) std::cout <<newasm::header::col::electric_purple<< "terminate: " << mmap->original_name << "|" << mmap->id<<std::endl;
             if(mmap->TryBlock)
             {
                 //std::cout << "Error catched in thread -> " << exit_code << std::endl;
@@ -1443,7 +1443,7 @@ namespace newasm
                 return 1;
             }
             struct_member_id->value = newasm::_std::to_string(intreg);
-            if(debugit) std::cout << struct_member_id->datatype << " " << struct_member_id->name << " " << struct_member_id->value << std::endl;
+            if constexpr(NEWASM_DATA_DECLARATION_DBG)  std::cout << struct_member_id->datatype << " " << struct_member_id->name << " " << struct_member_id->value << std::endl;
             return 1;
         }
         if(floatreg != newasm::header::constants::inv_freg_val)
@@ -1454,7 +1454,7 @@ namespace newasm
                 return 1;
             }
             struct_member_id->value = newasm::_std::to_string(floatreg);
-            if(debugit) std::cout << struct_member_id->datatype << " " << struct_member_id->name << " " << struct_member_id->value << std::endl;
+            if constexpr(NEWASM_DATA_DECLARATION_DBG)  std::cout << struct_member_id->datatype << " " << struct_member_id->name << " " << struct_member_id->value << std::endl;
             return 1;
         }
         if(strreg != newasm::header::constants::inv_reg_val)
@@ -1468,7 +1468,7 @@ namespace newasm
                 }
 
                 struct_member_id->value = strreg;
-                if(debugit) std::cout << struct_member_id->datatype << " " << struct_member_id->name << " " << struct_member_id->value << std::endl;
+                if constexpr(NEWASM_DATA_DECLARATION_DBG)  std::cout << struct_member_id->datatype << " " << struct_member_id->name << " " << struct_member_id->value << std::endl;
                 return 1;
             }
             if(newasm::header::functions::isfloat(strreg))
@@ -1480,7 +1480,7 @@ namespace newasm
                 }
 
                 struct_member_id->value = strreg;
-                if(debugit) std::cout << struct_member_id->datatype << " " << struct_member_id->name << " " << struct_member_id->value << std::endl;
+                if constexpr(NEWASM_DATA_DECLARATION_DBG)  std::cout << struct_member_id->datatype << " " << struct_member_id->name << " " << struct_member_id->value << std::endl;
                 return 1;
             }
             if(newasm::header::functions::istext(strreg))
@@ -1493,7 +1493,7 @@ namespace newasm
 
                 //strreg = newasm::header::functions::remq(strreg);
                 struct_member_id->value = strreg;
-                if(debugit) std::cout << struct_member_id->datatype << " " << struct_member_id->name << " " << struct_member_id->value << std::endl;
+                if constexpr(NEWASM_DATA_DECLARATION_DBG)  std::cout << struct_member_id->datatype << " " << struct_member_id->name << " " << struct_member_id->value << std::endl;
                 return 1;
             }
             if(newasm::header::functions::isref(strreg))
@@ -1506,7 +1506,7 @@ namespace newasm
 
                 //strreg = newasm::header::functions::remamp(strreg);
                 struct_member_id->value = strreg;
-                if(debugit) std::cout << struct_member_id->datatype << " " << struct_member_id->name << " " << struct_member_id->value << std::endl;
+                if constexpr(NEWASM_DATA_DECLARATION_DBG)  std::cout << struct_member_id->datatype << " " << struct_member_id->name << " " << struct_member_id->value << std::endl;
                 return 1;
             }
             newasm::terminate(newasm::exit_codes::invalid_syntax);
@@ -5248,7 +5248,7 @@ namespace newasm
                 if(newasm::thread_line)
                 {
                     auto& mmap = newasm::CurrentThreadA->thrd;
-                    std::cout << "catch: " << mmap->original_name << "|" << mmap->id<<std::endl;
+                    if constexpr(NEWASM_BUG_CRISIS) std::cout << "catch: " << mmap->original_name << "|" << mmap->id<<std::endl;
 
                     if(!mmap->TryCatched)
                     {
@@ -8210,7 +8210,7 @@ namespace newasm
                 if(newasm::thread_line)
                 {
                     auto& mmap = newasm::CurrentThreadA->thrd;
-                    std::cout << "try: " << mmap->original_name << "|" <<mmap->id << std::endl;
+                    if constexpr(NEWASM_BUG_CRISIS) std::cout << "try: " << mmap->original_name << "|" <<mmap->id << std::endl;
                     if(mmap->TryBlock)
                     {
                         mmap->TryBlock = false;
@@ -8764,6 +8764,7 @@ namespace newasm
             {
                 if(newasm::brace_stack__.empty())
                 {
+                    newasm::SetExceptionComment("object declaration stack is empty");
                     newasm::terminate(newasm::exit_codes::unexpected_cbrace);
                     return 1;
                 }
@@ -8941,6 +8942,12 @@ namespace newasm
 
         if(newasm::threads::thread_now)
         {
+            if constexpr(NEWASM_BUG_CRISIS)
+            {
+                auto& mmap = newasm::CurrentThread->thrd;
+                std::cout << newasm::header::col::yellow << "declaring thread : " << mmap->original_name<<"|"<<mmap->id<<"+++"<<line.raw<<std::endl;
+            }
+            
             newasm::CurrentThread->thrd->contents.push_back(line);
             return 1;
         }
@@ -9297,8 +9304,10 @@ namespace newasm
         newasm::perf::StandardLibLoading.clear();
         newasm::perf::DynLibLoading.clear();
         newasm::perf::Jitc.clear();
+        newasm::perf::MainRuntime.clear();
         //some jit compilation
-        newasm::perf::start = std::chrono::steady_clock::now();
+        //newasm::perf::start = std::chrono::steady_clock::now();
+        newasm::perf::MainRuntime.start();
         auto size = newasm::compiler::compiledCode.size();
         newasm::perf::Jitc.start();
         auto InstructionClassJIT = <:&:>(auto& vec) -> void {
@@ -9366,7 +9375,7 @@ namespace newasm
             
             if(newasm::code_stream::paused)
             {
-                std::cout << "-------- " << "MAIN THREAD" << " paused" << std::endl;
+                if constexpr(NEWASM_BUG_CRISIS) std::cout << "-------- " << "MAIN THREAD" << " paused" << std::endl;
                 newasm::code_stream::paused = false;
                 continue;
             }
@@ -9391,9 +9400,10 @@ namespace newasm
         {
             newasm::terminate(newasm::exit_codes::noterm_point); // You got to end your programs.
         }
-        newasm::perf::end = std::chrono::steady_clock::now();
+        //newasm::perf::end = std::chrono::steady_clock::now();
         newasm::compiler::data::JIT_mode = false;
         newasm::UnloadDynamicLibraries();
+        newasm::perf::MainRuntime.stop();
         return;
     }
     #if 0 //this ain't comin
