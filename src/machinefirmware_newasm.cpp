@@ -348,6 +348,11 @@ namespace newasm
             void Process(lineData& l);
         };
 
+        struct lineDescriptor final
+        {
+            int type = INVALID_INS;
+        };
+
         struct lineData final
         {
             //some definitions, `typedef` where we can, `using` where we must!
@@ -376,6 +381,7 @@ namespace newasm
             string altString = "";
 
             int caseLineArgType = 0;
+            lineDescriptor Descriptor;
 
             //newasm::compiler::argumentData suffixLiteral;
             //newasm::compiler::argumentData operandLiteral;
@@ -395,9 +401,9 @@ namespace newasm
             //for runtime analysis and better error messages
             bool MacroComponent = false;
             string SourceMacroName = "";
+
             bool AltArgLambda = false;
             bool AltStackArg = false;
-
             int SourceLocation = -1;
             int Class = 0;
             //---------------------------------------------

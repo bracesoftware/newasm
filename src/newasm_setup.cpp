@@ -104,6 +104,16 @@ namespace newasm
                 this->critical = c;
             }
 
+            public inline std::string getName() const
+            {
+                return this->name;
+            }
+
+            public inline bool isCritical() const
+            {
+                return this->critical;
+            }
+
             public inline std::string getName()
             {
                 return this->name;

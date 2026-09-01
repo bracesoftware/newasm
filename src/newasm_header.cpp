@@ -291,22 +291,22 @@ namespace newasm::header
             #endif
         }
 
-        inline void nullprint(std::string text) noexcept
+        inline void nullprint(const std::string& text) noexcept
         {
             std::cout << text << '\n';
         }
-        inline int nullprint_wnm(std::string text) noexcept
+        inline int nullprint_wnm(const std::string& text) noexcept
         {
             std::cout << newasm::header::system_info::name << " " << text << '\n';
             return 0;
         }
         inline void err(const std::string& text)
         {
-            std::cout << newasm::header::col::light_red << "*** "<<newasm::header::style::dim<<"Error:  " << newasm::header::col::gray << text <<newasm::header::col::reset<< '\n';
+            std::cout << newasm::header::col::light_red << " *** "<<newasm::header::style::dim<<"Error:  " << newasm::header::col::gray << text <<newasm::header::col::reset<< '\n';
         }
         inline void wrn(const std::string& text)
         {
-            std::cout << newasm::header::col::yellow << "! "<<newasm::header::style::dim<<"Warning:  " << newasm::header::col::gray << text<<newasm::header::col::reset << '\n';
+            std::cout << newasm::header::col::yellow << " ! "<<newasm::header::style::dim<<"Warning:  " << newasm::header::col::gray << text<<newasm::header::col::reset << '\n';
         }
         inline void info(const std::string& text)
         {
@@ -369,7 +369,7 @@ namespace newasm::header
 
         inline void caution(const std::string& text) noexcept
         {
-            std::cout << newasm::header::col::orange << "* "<<newasm::header::style::dim<<"Caution: " <<newasm::header::col::reset<< newasm::header::col::gray << text << newasm::header::col::reset<<std::endl;
+            std::cout << newasm::header::col::orange << " * "<<""<<"Caution: " <<newasm::header::col::reset<< newasm::header::col::gray << text << newasm::header::col::reset<<std::endl;
         }
         
         /*void init()
