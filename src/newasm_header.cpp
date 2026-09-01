@@ -302,15 +302,15 @@ namespace newasm::header
         }
         inline void err(const std::string& text)
         {
-            std::cout << newasm::header::col::light_red << "! error:  " << newasm::header::col::reset << text << '\n';
+            std::cout << newasm::header::col::light_red << "*** "<<newasm::header::style::dim<<"Error:  " << newasm::header::col::gray << text <<newasm::header::col::reset<< '\n';
         }
         inline void wrn(const std::string& text)
         {
-            std::cout << newasm::header::col::yellow << "! warning:  " << newasm::header::col::reset << text << '\n';
+            std::cout << newasm::header::col::yellow << "! "<<newasm::header::style::dim<<"Warning:  " << newasm::header::col::gray << text<<newasm::header::col::reset << '\n';
         }
         inline void info(const std::string& text)
         {
-            std::cout << newasm::header::col::light_blue << " info:  " << newasm::header::col::gray << text << newasm::header::col::reset << '\n';
+            std::cout << newasm::header::col::light_blue << " Info:  " << newasm::header::col::gray << text << newasm::header::col::reset << '\n';
         }
         //formatted info overloads
         inline void f__(const char* format)
@@ -346,7 +346,7 @@ namespace newasm::header
         template<typename... A>
         inline void finfo(A... a) noexcept //main func used
         {
-            std::cout << newasm::header::col::light_blue << " info:  " << newasm::header::col::gray;
+            std::cout << newasm::header::col::light_blue << " Info:  " << newasm::header::col::gray;
             //formatting:
             f__(a...);
             std::cout << newasm::header::col::reset << std::endl;
@@ -355,16 +355,21 @@ namespace newasm::header
         inline void dbg(const std::string& text) noexcept
         {
             if(newasm::header::settings::debug == 1)
-                std::cout << newasm::header::col::gray << " debug:  " << newasm::header::col::reset << text << std::endl;
+                std::cout << newasm::header::col::gray << " Debug:  " << newasm::header::col::reset << text << std::endl;
         }
         inline void linkinfo(const std::string& text) noexcept
         {
-            std::cout << newasm::header::col::aqua << " linker:  " << newasm::header::col::reset << text << std::endl;
+            std::cout << newasm::header::col::aqua << " Linker:  " << newasm::header::col::reset << text << std::endl;
         }
 
         inline void compilerinfo(const std::string& text) noexcept
         {
-            std::cout << newasm::header::col::aqua << " compiler:  " << newasm::header::col::reset << text << std::endl;
+            std::cout << newasm::header::col::aqua << " Compiler:  " << newasm::header::col::reset << text << std::endl;
+        }
+
+        inline void caution(const std::string& text) noexcept
+        {
+            std::cout << newasm::header::col::orange << "* "<<newasm::header::style::dim<<"Caution: " <<newasm::header::col::reset<< newasm::header::col::gray << text << newasm::header::col::reset<<std::endl;
         }
         
         /*void init()

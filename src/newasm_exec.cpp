@@ -244,7 +244,18 @@ namespace newasm
             }
         };
 
+        auto LogCritical = <::>(bool c) -> void {
+            if(c)
+            {
+                newasm::header::functions::caution("Program encountered a non-recoverable issue. Terminating execution...");
+                return;
+            }
+            newasm::header::functions::caution("This is a recoverable issue; the program will progress forward with execution. However, it is recommended not to ignore this!");
+            return;
+        };
+
         // ---- body ---- //
+        auto& Exc = newasm::exit_codes::identifier.at(exit_code);
         std::cout << std::endl;
         //std::cout << "TERMINATEEE" << std::endl;
         if(newasm::header::data::repl)
@@ -255,10 +266,10 @@ namespace newasm
                 std::cout <<
                 "\t" <<
                 newasm::header::col::red <<
-                "Exception \"" <<
+                "Exception \"" << (Exc.isCritical() ? "!" : "") <<
                 newasm::header::col::gray<<
                 newasm::header::style::underline<<
-                newasm::exit_codes::identifier.at(exit_code)<<
+                Exc.getName() <<
                 newasm::header::col::reset<<
                 newasm::header::col::red << "\" [";
                 std::cout << newasm::header::col::gray << exit_code << newasm::header::col::red << "] occured >> "<<
@@ -285,10 +296,10 @@ namespace newasm
             std::cout <<
             "\t" <<
             newasm::header::col::red <<
-            "Exception \"" <<
+            "Exception \"" << (Exc.isCritical() ? "!" : "") <<
             newasm::header::col::gray<<
             newasm::header::style::underline<<
-            newasm::exit_codes::identifier.at(exit_code)<<
+            Exc.getName() <<
             newasm::header::col::reset <<
             newasm::header::col::red <<
             "\" [";
@@ -411,6 +422,8 @@ namespace newasm
 
             LogExceptionSourceLoc();
             LogComment();
+            std::cout << std::endl;
+            LogCritical(Exc.isCritical());
         }
         return 1;
     }

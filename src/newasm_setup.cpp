@@ -88,69 +88,96 @@ namespace newasm
         const int user_error = 60;
         const int unknown_inscp = 61;
 
-        const std::unordered_map<int, std::string> identifier = {
-            {noterm_point, "NoTerminationPoint"},
-            {invalid_section, "InvalidSection"},
-            {unknown_inscp, "UnknownInsClassProcessor"},
-            {invalid_proc, "InvalidProcedure"},
-            {invalid_retn, "InvalidExitAttempt"},
-            {sysreq_fail, "SystemRequirementsNotMet"},
-            {stkhea_col, "StackHeapCollision"},
-            {data_overflow, "DataOverflow"},
-            {dtyp_mismatch, "DataTypeMismatch"},
-            {label_redef, "LabelRedefinition"},
-            {bus_err, "BusError"},
-            {invalid_ins, "InvalidASMInstruction"},
-            {mem_overflow, "ProgramMemoryOverflow"},
-            {mem_underflow, "ProgramMemoryUnderflow"},
-            {proc_redef, "ProcedureRedefinition"},
-            {invalid_memacc, "InvalidMemoryAccess"},
-            {invalid_syntax, "InvalidSyntax"},
-            {memory_leak, "HeapMemoryLeak"},
-            {invalid_config, "InvalidSysConfiguration"},
-            {inline_proc, "InlineProcedure"},
-            {unknown_fdx, "UnknownSystemCall"},
-            {unknown_directive, "UnknownParserDirective"},
-            {uninptr_usage, "UnassignedRefUsage"},
-            {var_redef, "VariableRedefinition"},
-            {object_redef, "ObjectRedefinition"},
-            {unexpected_cbrace, "UnexpectedClosingBrace"},
-            {undefined_object, "UndefinedObject"},
-            {undefined_objectmem, "UndefinedObjectMember"},
-            {nested_object, "NestedObject"},
-            {expected_cbrace, "ExpectedClosingBrace"},
-            {empty_proc, "EmptyProcedureBlock"},
-            {datastruct_redef, "DataStructureRedefinition"},
-            {unexpected_end, "UnexpectedProcedureEnd"},
-            {improper_dynlib, "ImproperDynLibraryImplementation"},
-            {unknown_event, "UnknownEventToHandle"},
-            {invalid_evhndlr, "InvalidEventHandler"},
-            {constant_modif, "ConstValModification"},
-            {os_error, "OSErr"},
-            {malloc_err, "MallocErr"},
-            {seg_fault, "SegmentationFaultOrAccessViolation"},
-            {invalid_call, "InvalidProcCall"},
-            {hndl_reassign, "HexReassignment"},
-            {sysenter_fail, "SysenterFail"},
-            {macro_redef, "MacroRedefinition"},
-            {unexpected_hash, "UnexpectedHash"},
-            {undefined_macro, "UndefinedMacro"},
-            {invalid_sysint, "InvalidSysInterrupt"},
-            {expected_await, "ExpectedAwait"},
-            {invalid_thread, "InvalidThread"},
-            {invalid_exp, "InvalidExpression"},
-            {vmem_overflow, "VirtualMemOverflow"},
-            {namespace_err, "NamespaceError"},
-            {tuple_redef, "TupleRedefinition"},
-            {invalid_tuple, "InvalidTuple"},
-            {channel_deadlock, "ThreadChannelDeadlock"},
-            {invalid_alloc, "InvalidAlloc"},
-            {invalid_init, "InvalidVarInitializer"},
-            {dangling_this, "DanglingThisPointer"},
-            {jit_fail, "JITCompilerFailure"},
-            {kernel_panic, "KernelPanicOrSysCrash"},
-            {immovable_type, "ImmovableType"},
-            {user_error, "UserError"}
+        class Exception final
+        {
+            private std::string name;
+            private bool critical = true;
+
+            public explicit inline Exception(std::string n)
+            {
+                this->name = n;
+            }
+
+            public explicit inline Exception(std::string n, bool c)
+            {
+                this->name = n;
+                this->critical = c;
+            }
+
+            public inline std::string getName()
+            {
+                return this->name;
+            }
+
+            public inline bool isCritical()
+            {
+                return this->critical;
+            }
+        };
+
+        const std::unordered_map<int, Exception> identifier = {
+            {noterm_point, Exception("NoTerminationPoint")},
+            {invalid_section, Exception("InvalidSection")},
+            {unknown_inscp, Exception("UnknownInsClassProcessor")},
+            {invalid_proc, Exception("InvalidProcedure")},
+            {invalid_retn, Exception("InvalidExitAttempt")},
+            {sysreq_fail, Exception("SystemRequirementsNotMet")},
+            {stkhea_col, Exception("StackHeapCollision")},
+            {data_overflow, Exception("DataOverflow")},
+            {dtyp_mismatch, Exception("DataTypeMismatch")},
+            {label_redef, Exception("LabelRedefinition")},
+            {bus_err, Exception("BusError")},
+            {invalid_ins, Exception("InvalidASMInstruction")},
+            {mem_overflow, Exception("ProgramMemoryOverflow")},
+            {mem_underflow, Exception("ProgramMemoryUnderflow")},
+            {proc_redef, Exception("ProcedureRedefinition")},
+            {invalid_memacc, Exception("InvalidMemoryAccess")},
+            {invalid_syntax, Exception("InvalidSyntax")},
+            {memory_leak, Exception("HeapMemoryLeak")},
+            {invalid_config, Exception("InvalidSysConfiguration")},
+            {inline_proc, Exception("InlineProcedure")},
+            {unknown_fdx, Exception("UnknownSystemCall")},
+            {unknown_directive, Exception("UnknownParserDirective")},
+            {uninptr_usage, Exception("UnassignedRefUsage")},
+            {var_redef, Exception("VariableRedefinition")},
+            {object_redef, Exception("ObjectRedefinition")},
+            {unexpected_cbrace, Exception("UnexpectedClosingBrace")},
+            {undefined_object, Exception("UndefinedObject")},
+            {undefined_objectmem, Exception("UndefinedObjectMember")},
+            {nested_object, Exception("NestedObject")},
+            {expected_cbrace, Exception("ExpectedClosingBrace")},
+            {empty_proc, Exception("EmptyProcedureBlock")},
+            {datastruct_redef, Exception("DataStructureRedefinition")},
+            {unexpected_end, Exception("UnexpectedProcedureEnd")},
+            {improper_dynlib, Exception("ImproperDynLibraryImplementation")},
+            {unknown_event, Exception("UnknownEventToHandle")},
+            {invalid_evhndlr, Exception("InvalidEventHandler")},
+            {constant_modif, Exception("ConstValModification")},
+            {os_error, Exception("OSErr")},
+            {malloc_err, Exception("MallocErr")},
+            {seg_fault, Exception("SegmentationFaultOrAccessViolation")},
+            {invalid_call, Exception("InvalidProcCall")},
+            {hndl_reassign, Exception("HexReassignment")},
+            {sysenter_fail, Exception("SysenterFail")},
+            {macro_redef, Exception("MacroRedefinition")},
+            {unexpected_hash, Exception("UnexpectedHash")},
+            {undefined_macro, Exception("UndefinedMacro")},
+            {invalid_sysint, Exception("InvalidSysInterrupt")},
+            {expected_await, Exception("ExpectedAwait")},
+            {invalid_thread, Exception("InvalidThread")},
+            {invalid_exp, Exception("InvalidExpression")},
+            {vmem_overflow, Exception("VirtualMemOverflow")},
+            {namespace_err, Exception("NamespaceError")},
+            {tuple_redef, Exception("TupleRedefinition")},
+            {invalid_tuple, Exception("InvalidTuple")},
+            {channel_deadlock, Exception("ThreadChannelDeadlock")},
+            {invalid_alloc, Exception("InvalidAlloc")},
+            {invalid_init, Exception("InvalidVarInitializer")},
+            {dangling_this, Exception("DanglingThisPointer")},
+            {jit_fail, Exception("JITCompilerFailure")},
+            {kernel_panic, Exception("KernelPanicOrSysCrash")},
+            {immovable_type, Exception("ImmovableType")},
+            {user_error, Exception("UserError")}
         };
     }
     namespace cmp_results
