@@ -1834,6 +1834,30 @@ namespace newasm::header
             return { true, { before, inside } };
         }
 
+        inline std::pair<bool, std::string> parseDescriptor(const std::string& s)
+        {
+            if(s.empty() || s.front() != '[') return {false, ""};
+
+            size_t e = s.find(']');
+            if(e != std::string::npos and s.back() != ']')
+            {
+                return {true, newasm::header::functions::trim(s.substr(1, e - 1))};
+            }
+
+            return {false, ""};
+        }
+
+        // Do NOT use without the parseDescriptor check 
+        inline void removeDescriptor(std::string& s) noexcept
+        {
+            size_t start = s.find('[');
+            size_t end = s.find(']');
+            
+            s.erase(start, end - start + 1);
+            s = newasm::header::functions::trim(s);
+            return;
+        }
+
         inline bool parseHandleModifier(const std::string& s)
         {
             size_t i = 0;

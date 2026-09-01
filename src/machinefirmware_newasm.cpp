@@ -100,6 +100,14 @@ namespace newasm
 
     namespace Const
     {
+        namespace InsDescriptor
+        {
+            namespace Types
+            {
+                constinit const int NIL = 1;
+                constinit const int DATA = 2;
+            }
+        }
         typedef std::function<void(NewASM::compiler::lineData&)> ClassProcessor;
         namespace InstructionClass
         {
@@ -350,7 +358,16 @@ namespace newasm
 
         struct lineDescriptor final
         {
+            typedef std::string string;
+
             int type = INVALID_INS;
+
+            //extra data
+            int descType = 0;
+            int descInt = 0;
+            float descFloat = 0;
+            char descChar = 0;
+            string descString = "";
         };
 
         struct lineData final
@@ -1940,6 +1957,12 @@ namespace newasm
             }
 
             std::cout << newasm::header::col::gray << "  Profiler info for: " << newasm::header::col::yellow << newasm::project_data::name << " " << newasm::project_data::version << std::endl;
+            if(newasm::compiler::data::aborted)
+            {
+                std::cout << "\t\t\t" << newasm::header::col::red << "No profiler data is available." << std::endl;
+                return;
+            }
+
             std::cout << newasm::header::col::gray << "\t\tTime elapsed: " << newasm::perf::MainRuntime.count() << " ms\n";//elapsed.count
             std::cout << newasm::header::col::gray << "\t\t\t" << newasm::perf::inputWasteTimer.count() << " ms wasted on user input\n";
             std::cout << newasm::header::col::gray << "\t\t\t" << newasm::perf::heavyHostServices.count() << " ms used on heavy host services\n";

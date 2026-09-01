@@ -128,6 +128,13 @@ namespace newasm
 
                 write_bin(out, ld.SourceLocation);
                 write_bin(out, ld.Class);
+
+                write_bin(out, ld.Descriptor.type);
+                write_bin(out, ld.Descriptor.descType);
+                write_bin(out, ld.Descriptor.descInt);
+                write_bin(out, ld.Descriptor.descFloat);
+                write_bin(out, ld.Descriptor.descChar);
+                write_string(out, ld.Descriptor.descString);
                 return;
             }
             void load_lineData(std::ifstream& in, newasm::compiler::lineData& ld)
@@ -213,6 +220,13 @@ namespace newasm
 
                 read_bin(in, ld.SourceLocation);
                 read_bin(in, ld.Class);
+
+                read_bin(in, ld.Descriptor.type);
+                read_bin(in, ld.Descriptor.descType);
+                read_bin(in, ld.Descriptor.descInt);
+                read_bin(in, ld.Descriptor.descFloat);
+                read_bin(in, ld.Descriptor.descChar);
+                read_string(in, ld.Descriptor.descString);
                 return;
             }
             //label addresses

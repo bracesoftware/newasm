@@ -357,6 +357,49 @@ namespace newasm
                     return lineCompiled;
                 }
             }
+
+            //desc
+            auto desc = newasm::header::functions::parseDescriptor(line);
+            if(desc.first)
+            {
+                NewASM::header::functions::removeDescriptor(line);
+                //nil desc
+                if(desc.second == NIL_STR or desc.second.empty())
+                {
+                    lc.Descriptor.type = NewASM::Const::InsDescriptor::Types::NIL;
+                }
+                else if(newasm::header::functions::isnumeric(desc.second))
+                {
+                    lc.Descriptor.type = NewASM::Const::InsDescriptor::Types::DATA;
+                    lc.Descriptor.descInt = std::stoi(desc.second);
+                    lc.Descriptor.descType = newasm::datatypes::number;
+                }
+                else if(newasm::header::functions::isfloat(desc.second))
+                {
+                    lc.Descriptor.type = NewASM::Const::InsDescriptor::Types::DATA;
+                    lc.Descriptor.descFloat = std::stof(desc.second);
+                    lc.Descriptor.descType = newasm::datatypes::decimal;
+                }
+                else if(newasm::header::functions::ischar(desc.second))
+                {
+                    lc.Descriptor.type = NewASM::Const::InsDescriptor::Types::DATA;
+                    lc.Descriptor.descChar = newasm::header::functions::remsq(desc.second)[0];
+                    lc.Descriptor.descType = newasm::datatypes::character;
+                }
+                else if(newasm::header::functions::istext(desc.second))
+                {
+                    lc.Descriptor.type = NewASM::Const::InsDescriptor::Types::DATA;
+                    lc.Descriptor.descString = newasm::header::functions::remq(desc.second);
+                    lc.Descriptor.descType = newasm::datatypes::text;
+                }
+                //invalid
+                else
+                {
+                    newasm::compiler::abort(newasm::compiler::fail::invalid_symbol);
+                    lc.type = newasm::compiler::empty;
+                    return lc;
+                }
+            }
             
             //macroterminator
             if(line == static_cast<std::string>("#"))

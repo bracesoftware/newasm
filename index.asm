@@ -26,9 +26,9 @@ using "tuple"
 using "http"
 using "math"
 .start
-    try
+   [] try
         lmao
-    catch nil
+    [   nil  ]catch nil
     try
         throw
     catch nil
@@ -82,7 +82,7 @@ using "math"
         __say 0,"thread debug 9"
         __say 0,"thread debug 10"
 
-        try
+        [nil] try
             jsdif
         catch nil
         
@@ -120,9 +120,9 @@ using "math"
         mov fdx, 1
         syscall
     }
-    thread  testthread2 -> {
+    [nil] thread  testthread2 -> {
         __say 0,"thread debug 2"
-        __say 0,"thread debug 4"
+        []__say 0,"thread debug 4"
 
         mov tlr, "hello from thread 2\n"
         mov bos, 5
