@@ -4507,7 +4507,7 @@ namespace newasm
             newasm::CurrentProc->proc->contents.push_back(lineInfo);
             return;
         }
-        
+
         static newasm::rawData priArg;
         static std::string suf;
         suf = lineInfo.tokens.at(1);
@@ -8072,6 +8072,28 @@ namespace newasm
         return 1;
     }
 
+    inline void ForkProc(newasm::compiler::lineData& lineInfo)
+    {
+        if(newasm::system::stop == 1)
+        {
+            newasm::system::proclines ++;
+            NewASM::CurrentProc->proc->contents.push_back(lineInfo);
+            return;
+        }
+        return;
+    }
+
+    inline void ArtifactProc(newasm::compiler::lineData& lineInfo)
+    {
+        if(newasm::system::stop == 1)
+        {
+            newasm::system::proclines ++;
+            NewASM::CurrentProc->proc->contents.push_back(lineInfo);
+            return;
+        }
+        return;
+    }
+
     inline void CatchProc(newasm::compiler::lineData& lineInfo)
     {
         if(newasm::system::stop == 1)
@@ -8145,7 +8167,7 @@ namespace newasm
 
         if(newasm::header::data::repl)
         {
-            newasm::unsins(ins);
+            newasm::unsins(lineInfo.raw);
             return;
         }
 
