@@ -508,6 +508,11 @@ namespace newasm
             short addr = 0;
         };
 
+        class artifactData final
+        {
+            public std::vector<VarPtr> data;
+        };
+
         class procedureData final
         {
             private bool prepared = false;

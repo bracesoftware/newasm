@@ -155,6 +155,9 @@ namespace newasm
 
             const int resize__ = 86;//
 
+            const int artifact__ = 87;//
+            const int fork__ = 88;//
+
             /// @brief //////
             const int Link___ = 99;
             const int __say = 100;
@@ -268,6 +271,8 @@ namespace newasm
                 {lock__, "lock"},
                 {unlock__, "unlock"},
                 {resize__, "resize"},
+                {artifact__, "artifact"},
+                {fork__, "fork"},
 
                 {__say, "__say"}
             };

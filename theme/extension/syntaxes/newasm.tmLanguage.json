@@ -26,7 +26,7 @@
     },
     {
       "name": "special.keyword.newasm",
-      "match": "\\b(throw|catch|try)\\b"
+      "match": "\\b(throw|catch|try|artifact|fork)\\b"
     },
     {
       "name": "comptins.newasm",

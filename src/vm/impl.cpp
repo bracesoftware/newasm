@@ -16,6 +16,14 @@
 #define NEWASM_BUG_CRISIS true
 #define NEWASM_DATA_DECLARATION_DBG false
 
+//compiler
+#define NEWASM_APP_SIGNATURE "__newasm_app"
+#define NEWASM_SIGNATURE_SIZE 12
+#define NEWASM_ARTIFACT_SIGNATURE "__newasm_artifact"
+#define NEWASM_ARTIFACT_SIGNATURE_SIZE 17
+
+#define NEWASM_ARTIFACT_FILE_EXT ".asmartifact"
+
 // funcs
 #define __newasm_B_TO_KB(val)   ((val) / 1024.0)
 #define __newasm_B_TO_MB(val)   ((val) / (1024.0 * 1024.0))

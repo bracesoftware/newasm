@@ -97,6 +97,10 @@ namespace newasm
     inline void TinyCondProc(NewASM::compiler::lineData& line);
     inline void MediumCondProc(NewASM::compiler::lineData& line);
     inline void MovRegProc(newasm::compiler::lineData& line);
+    inline void TryProc(newasm::compiler::lineData& line);
+    inline void CatchProc(newasm::compiler::lineData& line);
+    inline void ArtifactProc(newasm::compiler::lineData& line);
+    inline void ForkProc(newasm::compiler::lineData& line);
 
     namespace Const
     {
@@ -122,12 +126,20 @@ namespace newasm
                 constinit const int TinyConditional = 5;
                 constinit const int MediumConditional = 6;
                 constinit const int MovReg = 7;
+                constinit const int Try = 8;
+                constinit const int Catch = 9;
+                constinit const int Artifact = 10;
+                constinit const int Fork = 11;
             }
 
             const std::unordered_map<int, ClassProcessor> ClassTemplate = {
                 {Tiny, TinyInsProc},
                 {Medium, MediumInsProc},
+                {DedicatedClass::Try, TryProc},
+                {DedicatedClass::Artifact, ArtifactProc},
+                {DedicatedClass::Catch, CatchProc},
                 {Large, LargeInsProc},
+                {DedicatedClass::Fork, ForkProc},
                 {DedicatedClass::Mutex, MutexProc},
                 {DedicatedClass::TinyConditional, TinyCondProc},
                 {DedicatedClass::MediumConditional, MediumCondProc},
@@ -269,6 +281,7 @@ namespace newasm
         struct staticObjectData;
         class containerData;
         class listData;
+        class artifactData;
 
         struct varData final
         {
@@ -282,6 +295,7 @@ namespace newasm
             containerData* container = nullptr;//if container
             threadData* thrd = nullptr;//if thread
             listData* list = nullptr;//if list
+            artifactData* artifact = nullptr;//if art
 
             //just for checks
             eventData* event = nullptr;

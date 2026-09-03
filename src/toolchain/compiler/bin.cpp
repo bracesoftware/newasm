@@ -5,9 +5,6 @@ module(binary_gen, {
     //setup goes here
 });
 
-#define NEWASM_APP_SIGNATURE "__newasm_app"
-#define NEWASM_SIGNATURE_SIZE 12
-
 namespace newasm
 {
     namespace compiler
@@ -325,6 +322,37 @@ namespace newasm
                 }
                 return;
             }
+            inline bool AssembleArtifact(
+                const std::string& path,
+                const std::vector<newasm::compiler::lineData>& lines
+            ) noexcept {
+                std::ofstream out(path + NEWASM_ARTIFACT_FILE_EXT, std::ios::binary);
+                if(!out)
+                {
+                    return false;
+                }
+
+                // MAGIC
+                out.write(NEWASM_ARTIFACT_SIGNATURE, NEWASM_ARTIFACT_SIGNATURE_SIZE);
+
+                // VERSION
+                int buildnum = newasm::BUILD_NUMBER;
+                int runtimever = newasm::RUNTIME_VERSION;
+                int krnl = newasm::KERNEL_VERSION;
+
+                write_bin(out, buildnum);
+                write_bin(out, runtimever);
+                write_bin(out, krnl);
+
+                // lineData
+                uint32_t lineCount = lines.size();
+                write_bin(out, lineCount);
+                for(auto& l : lines)
+                {
+                    save_lineData(out, l);
+                }
+                return true;
+            }
             //finally
             inline bool ASSEMBLE(
                 const std::string& path,
@@ -423,7 +451,7 @@ namespace newasm
             {
                 static const std::unordered_map<int, std::string> loading_errors = {
                     {UNKNOWN_ERROR, "unknown error or no such file found"},
-                    {INVALID_APP, "not a valid NewASM application"},
+                    {INVALID_APP, "not a valid NewASM application or artifact"},
                     {INCOMPATIBLE_APP, "not a compatible NewASM binary format"}
                 };
 
@@ -436,6 +464,58 @@ namespace newasm
 
                 newasm::header::functions::nullprint(newasm::header::col::gray + "\t\t" + path + ": " + loading_errors.at(exit_code) + "\n\n");
                 return;
+            }
+
+            bool LoadArtifact(
+                const std::string& path,
+                std::vector<lineData>& lines
+            ) noexcept {
+                std::ifstream in(path + NEWASM_ARTIFACT_FILE_EXT, std::ios::binary);
+                if(!in)
+                {
+                    newasm::compiler::bin::exit_load(path + NEWASM_ARTIFACT_FILE_EXT, newasm::compiler::bin::UNKNOWN_ERROR);
+                    return false;
+                }
+
+                // MAGIC
+                char magic[NEWASM_ARTIFACT_SIGNATURE_SIZE];
+                in.read(magic, NEWASM_ARTIFACT_SIGNATURE_SIZE);
+                if(std::memcmp(magic, NEWASM_ARTIFACT_SIGNATURE, NEWASM_ARTIFACT_SIGNATURE_SIZE) != 0)
+                {
+                    newasm::compiler::bin::exit_load(path + NEWASM_ARTIFACT_FILE_EXT, newasm::compiler::bin::INVALID_APP);
+                    return false;
+                }
+
+                // VERSION
+                int buildnum, runtimever, krnl;
+                read_bin(in, buildnum);
+                read_bin(in, runtimever);
+                read_bin(in, krnl);
+
+                if(
+                    (buildnum != newasm::BUILD_NUMBER) or
+                    (runtimever != newasm::RUNTIME_VERSION) or
+                    (krnl != newasm::KERNEL_VERSION)
+                )
+                {
+                    __newasmDBG_COMPLEX({
+                        std::cout << "buildnum: " << buildnum << std::endl;
+                        std::cout << "runtimever: " << runtimever << std::endl;
+                        std::cout << "krnl: " << krnl << std::endl;
+                    });
+                    newasm::compiler::bin::exit_load(path + NEWASM_ARTIFACT_FILE_EXT, newasm::compiler::bin::INCOMPATIBLE_APP);
+                    return false;
+                }
+
+                // lineData
+                uint32_t lineCount;
+                read_bin(in, lineCount);
+                lines.resize(lineCount);
+                for(auto& l : lines)
+                {
+                    load_lineData(in, l);
+                }
+                return true;
             }
 
             bool load_app(

@@ -1049,6 +1049,39 @@ namespace newasm
                 )
                 {
                     newasm::compiler::abort(newasm::compiler::fail::unmatched_syntax);
+                    return lc;
+                }
+
+                if(
+                    lc.whatAmIDoing == NewASM::core::lang_inf::unlock__ or
+                    lc.whatAmIDoing == NewASM::core::lang_inf::lock__
+                )
+                {
+                    lc.Class = NewASM::Const::InstructionClass::DedicatedClass::Mutex;
+                }
+                else if(
+                    lc.whatAmIDoing == newasm::core::lang_inf::try__
+                )
+                {
+                    lc.Class = NewASM::Const::InstructionClass::DedicatedClass::Try;
+                }
+                else if(
+                    lc.whatAmIDoing == newasm::core::lang_inf::catch__
+                )
+                {
+                    lc.Class = NewASM::Const::InstructionClass::DedicatedClass::Catch;
+                }
+                else if(
+                    lc.whatAmIDoing == newasm::core::lang_inf::artifact__
+                )
+                {
+                    lc.Class = NewASM::Const::InstructionClass::DedicatedClass::Artifact;
+                }
+                else if(
+                    lc.whatAmIDoing == newasm::core::lang_inf::fork__
+                )
+                {
+                    lc.Class = NewASM::Const::InstructionClass::DedicatedClass::Fork;
                 }
 
                 for(size_t i = 0; i < SIZEE; i++)
@@ -1245,14 +1278,6 @@ namespace newasm
                             }
                         }
                     }
-                }
-
-                if(
-                    lc.whatAmIDoing == NewASM::core::lang_inf::unlock__ or
-                    lc.whatAmIDoing == NewASM::core::lang_inf::lock__
-                )
-                {
-                    lc.Class = NewASM::Const::InstructionClass::DedicatedClass::Mutex;
                 }
 
                 return lineCompiled;

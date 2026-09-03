@@ -4507,7 +4507,8 @@ namespace newasm
             newasm::CurrentProc->proc->contents.push_back(lineInfo);
             return;
         }
-        newasm::rawData priArg;
+        
+        static newasm::rawData priArg;
         static std::string suf;
         suf = lineInfo.tokens.at(1);
         switch(lineInfo.whatAmIDoing)
@@ -5238,58 +5239,7 @@ namespace newasm
                 return 1;
             }
             //catch
-            case newasm::core::lang_inf::catch__:
-            {
-                NewASM::variables::procedureData* p = nullptr;
-                if(newasm::header::data::proc_now) p = NewASM::CurrentProcA->proc;
-                else if(newasm::LambdaDispatch::LambdaLine) p = &(*newasm::LambdaDispatch::ThreadSafePtr);
-                if(p)
-                {
-                    if(!p->TryCatched)
-                    {
-                        p->TryBlock = false;
-                        return 1;
-                    }
-                    p->TryCatched = false;
-                    if(lineInfo.priArgType != newasm::datatypes::NIL)
-                    {
-                        p->idx = lineInfo.jumpinTo;
-                    }
-                    return 1;
-                }
-
-                if(newasm::thread_line)
-                {
-                    auto& mmap = newasm::CurrentThreadA->thrd;
-                    if constexpr(NEWASM_BUG_CRISIS) std::cout << "catch: " << mmap->original_name << "|" << mmap->id<<std::endl;
-
-                    if(!mmap->TryCatched)
-                    {
-                        mmap->TryBlock = false;
-                        return 1;
-                    }
-                    mmap->TryCatched = false;
-                    if(lineInfo.priArgType != newasm::datatypes::NIL)
-                    {
-                        mmap->lcx = lineInfo.jumpinTo;
-                    }
-                    return 1;
-                }
-
-                using namespace NewASM::header::data;
-                if(!TryCatched)
-                {
-                    TryBlock = false;
-                    return 1;
-                }
-
-                TryCatched = false;
-                if(lineInfo.priArgType != newasm::datatypes::NIL)
-                {
-                    NEWASM_JMP__(lineInfo.jumpinTo)
-                }
-                return 1;
-            }
+            //moved to its own
             //callc
             case newasm::core::lang_inf::callc:
             {
@@ -8121,6 +8071,133 @@ namespace newasm
         }
         return 1;
     }
+
+    inline void CatchProc(newasm::compiler::lineData& lineInfo)
+    {
+        if(newasm::system::stop == 1)
+        {
+            newasm::system::proclines ++;
+            NewASM::CurrentProc->proc->contents.push_back(lineInfo);
+            return;
+        }
+
+        static newasm::rawData priArg;
+
+        NewASM::variables::procedureData* p = nullptr;
+        if(newasm::header::data::proc_now) p = NewASM::CurrentProcA->proc;
+        else if(newasm::LambdaDispatch::LambdaLine) p = &(*newasm::LambdaDispatch::ThreadSafePtr);
+        if(p)
+        {
+            if(!p->TryCatched)
+            {
+                p->TryBlock = false;
+                return;
+            }
+            p->TryCatched = false;
+            if(lineInfo.priArgType != newasm::datatypes::NIL)
+            {
+                p->idx = lineInfo.jumpinTo;
+            }
+            return;
+        }
+
+        if(newasm::thread_line)
+        {
+            auto& mmap = newasm::CurrentThreadA->thrd;
+            if constexpr(NEWASM_BUG_CRISIS) std::cout << "catch: " << mmap->original_name << "|" << mmap->id<<std::endl;
+
+            if(!mmap->TryCatched)
+            {
+                mmap->TryBlock = false;
+                return;
+            }
+            mmap->TryCatched = false;
+            if(lineInfo.priArgType != newasm::datatypes::NIL)
+            {
+                mmap->lcx = lineInfo.jumpinTo;
+            }
+            return;
+        }
+
+        using namespace NewASM::header::data;
+        if(!TryCatched)
+        {
+            TryBlock = false;
+            return;
+        }
+
+        TryCatched = false;
+        if(lineInfo.priArgType != newasm::datatypes::NIL)
+        {
+            NEWASM_JMP__(lineInfo.jumpinTo)
+        }
+        return;
+    }
+
+    inline void TryProc(newasm::compiler::lineData& lineInfo)
+    {
+        if(newasm::system::stop == 1)
+        {
+            newasm::system::proclines ++;
+            NewASM::CurrentProc->proc->contents.push_back(lineInfo);
+            return;
+        }
+
+        if(newasm::header::data::repl)
+        {
+            newasm::unsins(ins);
+            return;
+        }
+
+        NewASM::variables::procedureData* p = nullptr;
+        if(newasm::header::data::proc_now) p = NewASM::CurrentProcA->proc;
+        else if(newasm::LambdaDispatch::LambdaLine) p = &(*newasm::LambdaDispatch::ThreadSafePtr);
+        
+        if(p)
+        {
+            if(p->TryBlock)
+            {
+                p->TryBlock = false;
+                newasm::SetExceptionComment("unusable try-catch block on same identation level");
+                newasm::terminate(newasm::exit_codes::jit_fail);
+                return;
+            }
+            p->TryBlock = true;
+            p->TryJump = lineInfo.jumpinTo;
+            //std::cout << "proc data : " << p->original_name << std::endl;
+            return;
+        }
+
+        if(newasm::thread_line)
+        {
+            auto& mmap = newasm::CurrentThreadA->thrd;
+            if constexpr(NEWASM_BUG_CRISIS) std::cout << "try: " << mmap->original_name << "|" <<mmap->id << std::endl;
+            if(mmap->TryBlock)
+            {
+                mmap->TryBlock = false;
+                newasm::SetExceptionComment("unusable try-catch block on same identation level");
+                newasm::terminate(newasm::exit_codes::jit_fail);
+                return;
+            }
+            mmap->TryBlock = true;
+            mmap->TryJump = lineInfo.jumpinTo;
+            return;
+        }
+
+        using namespace NewASM::header::data;
+        if(TryBlock)
+        {
+            TryBlock = false;
+            newasm::SetExceptionComment("unusable try-catch block on same identation level");
+            newasm::terminate(newasm::exit_codes::jit_fail);
+            return;
+        }
+        TryBlock = true;
+        TryJump = lineInfo.jumpinTo;
+ 
+        return;
+    }
+
     FORCE_INLINE inline int process_i(std::string& line, std::string& ins, newasm::compiler::lineData& lineInfo)
     {
         /*auto it = newasm::inverted_ins.find(ins);
@@ -8193,61 +8270,7 @@ namespace newasm
                 return 1;
             }
             //try
-            case newasm::core::lang_inf::try__:
-            {
-                if(newasm::header::data::repl)
-                {
-                    newasm::unsins(ins);
-                    return 1;
-                }
-
-                NewASM::variables::procedureData* p = nullptr;
-                if(newasm::header::data::proc_now) p = NewASM::CurrentProcA->proc;
-                else if(newasm::LambdaDispatch::LambdaLine) p = &(*newasm::LambdaDispatch::ThreadSafePtr);
-                
-                if(p)
-                {
-                    if(p->TryBlock)
-                    {
-                        p->TryBlock = false;
-                        newasm::SetExceptionComment("unusable try-catch block on same identation level");
-                        newasm::terminate(newasm::exit_codes::jit_fail);
-                        return 1;
-                    }
-                    p->TryBlock = true;
-                    p->TryJump = lineInfo.jumpinTo;
-                    //std::cout << "proc data : " << p->original_name << std::endl;
-                    return 1;
-                }
-
-                if(newasm::thread_line)
-                {
-                    auto& mmap = newasm::CurrentThreadA->thrd;
-                    if constexpr(NEWASM_BUG_CRISIS) std::cout << "try: " << mmap->original_name << "|" <<mmap->id << std::endl;
-                    if(mmap->TryBlock)
-                    {
-                        mmap->TryBlock = false;
-                        newasm::SetExceptionComment("unusable try-catch block on same identation level");
-                        newasm::terminate(newasm::exit_codes::jit_fail);
-                        return 1;
-                    }
-                    mmap->TryBlock = true;
-                    mmap->TryJump = lineInfo.jumpinTo;
-                    return 1;
-                }
-
-                using namespace NewASM::header::data;
-                if(TryBlock)
-                {
-                    TryBlock = false;
-                    newasm::SetExceptionComment("unusable try-catch block on same identation level");
-                    newasm::terminate(newasm::exit_codes::jit_fail);
-                    return 1;
-                }
-                TryBlock = true;
-                TryJump = lineInfo.jumpinTo;
-                return 1;
-            }
+            //moved to its own class proc
             //nop
             case newasm::core::lang_inf::nop:
             {
