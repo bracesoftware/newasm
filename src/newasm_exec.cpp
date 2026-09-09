@@ -8103,6 +8103,14 @@ namespace newasm
         {
             case NewASM::Const::SupportedNatives::PRINT:
             {
+                if constexpr(NEWASM_BUG_CRISIS)
+                {
+                    std::cout << newasm::header::col::red;
+                    std::cout << "PRINT called" << std::endl;
+                    std::cout << "newasm::thread_line -> " << newasm::thread_line << std::endl;
+                    std::cout << "newasm::CurrentThreadB -> " << newasm::CurrentThreadB << std::endl;
+                    std::cout << newasm::header::col::reset;
+                }
                 NewASM::Console::out(
                     newasm::header::functions::remsq(
                         newasm::header::functions::remq(

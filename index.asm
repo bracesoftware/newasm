@@ -126,7 +126,9 @@ using "math"
         syscall
         __say 0, "thread done"
         mov tlr, "this was returned"
-        mov &shit, *tlr
+        try
+            mov &shit, *tlr
+        catch nil
 
         retf shit
 
@@ -142,6 +144,7 @@ using "math"
         []__say 0,"thread debug 4"
 
         mov tlr, "hello from thread 2\n"
+        [native] call print
         mov bos, 5
         mov stl, 0c1
         mov fdx, 1
@@ -151,6 +154,7 @@ using "math"
     thread  testthread3 -> {
 
         mov tlr, "hello from thread 3\n"
+        [native ] call print
         mov bos, 5
         mov stl, 0c1
         mov fdx, 1

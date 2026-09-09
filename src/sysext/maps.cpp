@@ -61,6 +61,54 @@ namespace newasm
                 v.resize(100);
             }
 
+            private ATTR_FLAT inline void debug() const
+            {
+                for(size_t i = 0; i < this->v.size(); ++i)
+                {
+                    std::cout
+                        << "\033[38;2;191;0;255m"
+                        << "vec[" << i << "] : ";
+
+                    if constexpr(requires(std::ostream& os, const T& value)
+                    {
+                        os << value;
+                    })
+                    {
+                        std::cout << v[i];
+                    }
+                    else
+                    {
+                        std::cout << "<not streamable>";
+                    }
+
+                    std::cout << std::endl;
+                }
+            }
+
+            private ATTR_FLAT inline void debug()
+            {
+                for(size_t i = 0; i < this->v.size(); ++i)
+                {
+                    std::cout
+                        << "\033[38;2;191;0;255m"
+                        << "vec[" << i << "] : ";
+
+                    if constexpr(requires(std::ostream& os, const T& value)
+                    {
+                        os << value;
+                    })
+                    {
+                        std::cout << v[i];
+                    }
+                    else
+                    {
+                        std::cout << "<not streamable>";
+                    }
+
+                    std::cout << std::endl;
+                }
+            }
+
             private ATTR_FLAT inline void ensure_capacity(unsigned int index)
             {
                 if(index >= this->v.size())
@@ -84,24 +132,32 @@ namespace newasm
 
             public FORCE_INLINE inline T& operator[](unsigned int index)
             {
+                if constexpr(NEWASM_BUG_CRISIS) std::cout << "================= OPERATOR [] ===================" << std::endl;
+                if constexpr(NEWASM_BUG_CRISIS) std::cout << "\033[38;2;255;105;180m" << "index: "<< index << std::endl;
                 ensure_capacity(index);
                 return reinterpret_cast<T&>(v[index]);
             }
 
             FORCE_INLINE inline T& at(unsigned int index)
             {
+                if constexpr(NEWASM_BUG_CRISIS) std::cout << "================= AT ===================" << std::endl;
+                if constexpr(NEWASM_BUG_CRISIS) std::cout << "\033[38;2;255;105;180m" << "index: "<< index << std::endl;
                 ensure_capacity(index);
                 return reinterpret_cast<T&>(v.at(index));
             }
 
             FORCE_INLINE inline const T& operator[](unsigned int index) const
             {
+                if constexpr(NEWASM_BUG_CRISIS) std::cout << "================= OPERATOR [] CONST ===================" << std::endl;
+                if constexpr(NEWASM_BUG_CRISIS) std::cout << "\033[38;2;255;105;180m" << "index: "<< index << std::endl;
                 ensure_capacity(index);
                 return reinterpret_cast<const T&>(v[index]);
             }
 
             FORCE_INLINE inline const T& at(unsigned int index) const
             {
+                if constexpr(NEWASM_BUG_CRISIS) std::cout << "================= AT CONST ===================" << std::endl;
+                if constexpr(NEWASM_BUG_CRISIS) std::cout << "\033[38;2;255;105;180m" << "index: "<< index << std::endl;
                 ensure_capacity(index);
                 return reinterpret_cast<const T&>(v.at(index));
             }
