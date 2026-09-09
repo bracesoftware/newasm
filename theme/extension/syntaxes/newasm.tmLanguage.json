@@ -136,7 +136,7 @@
     },
     {
       "name": "constant.numeric.newasm",
-      "match": "\\b\\d+(?:\\.\\d+)?\\b|\\b(?:nil|true|false|this)\\b"
+      "match": "\\b\\d+(?:\\.\\d+)?\\b|\\b(?:nil|true|false|this|home|native)\\b"
     },
     {
       "name": "constant.hex.newasm",
