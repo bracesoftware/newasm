@@ -8111,6 +8111,7 @@ namespace newasm
                     std::cout << "newasm::CurrentThreadB -> " << newasm::CurrentThreadB << std::endl;
                     std::cout << newasm::header::col::reset;
                 }
+                newasm::mem::regs::tlr.debugThreadValues();
                 NewASM::Console::out(
                     newasm::header::functions::remsq(
                         newasm::header::functions::remq(

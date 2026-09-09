@@ -61,7 +61,7 @@ namespace newasm
                 v.resize(100);
             }
 
-            private ATTR_FLAT inline void debug() const
+            public ATTR_FLAT inline void debug() const
             {
                 for(size_t i = 0; i < this->v.size(); ++i)
                 {
@@ -85,7 +85,7 @@ namespace newasm
                 }
             }
 
-            private ATTR_FLAT inline void debug()
+            public ATTR_FLAT inline void debug()
             {
                 for(size_t i = 0; i < this->v.size(); ++i)
                 {

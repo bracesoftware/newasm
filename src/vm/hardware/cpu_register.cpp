@@ -510,6 +510,12 @@ namespace newasm
             }
             return;
         }
+
+        FORCE_INLINE inline void debugThreadValues()
+        {
+            std::cout << "main thread val: " << this->value << std::endl;
+            this->thread_values.debug();
+        }
     };
 
 /*
