@@ -65,6 +65,7 @@ namespace newasm
             constinit const int redundant_catch = 16;
             constinit const int unexpected_nmst = 17;
             constinit const int invalid_nilu = 18;
+            constinit const int unknown_native_func = 19;
 
             const std::unordered_map<int, std::string> id = {
                 {unmatched_syntax, "UnmatchedSyntax"},
@@ -84,7 +85,8 @@ namespace newasm
                 {redundant_try, "RedundantTry"},
                 {redundant_catch, "RedundantCatch"},
                 {unexpected_nmst, "UnexpectedNamespaceTerminator"},
-                {invalid_nilu, "InvalidNilUsage"}
+                {invalid_nilu, "InvalidNilUsage"},
+                {unknown_native_func, "UnknownNativeFunction"}
             };
         }
 
@@ -134,6 +136,63 @@ namespace newasm
 
         std::vector<newasm::compiler::lineData> compiledCode;
         std::vector<newasm::compiler::lineData> caseJumpTable;
+        
+        inline void DedicateClass(newasm::compiler::lineData& lc)
+        {
+            if(
+                lc.whatAmIDoing == NewASM::core::lang_inf::unlock__ or
+                lc.whatAmIDoing == NewASM::core::lang_inf::lock__
+            )
+            {
+                lc.Class = NewASM::Const::InstructionClass::DedicatedClass::Mutex;
+            }
+            // =========================== NATIVE CALL
+            else if(
+                lc.whatAmIDoing == NewASM::core::lang_inf::call and
+                lc.Descriptor.type == NewASM::Const::InsDescriptor::Types::NATIVE
+            )
+            {
+                lc.Class = NewASM::Const::InstructionClass::DedicatedClass::NativeCall;
+                auto it = newasm::Const::SupportedNatives::Identifiers.find(lc.tokens.at(1));
+                if(it == newasm::Const::SupportedNatives::Identifiers.end())
+                {
+                    newasm::compiler::abort(newasm::compiler::fail::unknown_native_func);
+                    return;
+                }
+                lc.priInt = it->second;
+            }
+            // =========================== try
+            else if(
+                lc.whatAmIDoing == newasm::core::lang_inf::try__
+            )
+            {
+                lc.Class = NewASM::Const::InstructionClass::DedicatedClass::Try;
+            }
+            // =========================== catch
+            else if(
+                lc.whatAmIDoing == newasm::core::lang_inf::catch__
+            )
+            {
+                lc.Class = NewASM::Const::InstructionClass::DedicatedClass::Catch;
+            }
+            // =========================== artifact assembly
+            else if(
+                lc.whatAmIDoing == newasm::core::lang_inf::artifact__
+            )
+            {
+                lc.Class = NewASM::Const::InstructionClass::DedicatedClass::Artifact;
+            }
+            // =========================== artifact load
+            else if(
+                lc.whatAmIDoing == newasm::core::lang_inf::fork__
+            )
+            {
+                lc.Class = NewASM::Const::InstructionClass::DedicatedClass::Fork;
+            }
+
+            return;
+        }
+
         namespace utils
         {
             inline std::string MangleName(const std::vector<std::string>& data, const std::string& final_str)
@@ -367,6 +426,14 @@ namespace newasm
                 if(desc.second == NIL_STR or desc.second.empty())
                 {
                     lc.Descriptor.type = NewASM::Const::InsDescriptor::Types::NIL;
+                }
+                else if(desc.second == NATIVE_STR)
+                {
+                    lc.Descriptor.type = NewASM::Const::InsDescriptor::Types::NATIVE;
+                }
+                else if(desc.second == HOME_STR)
+                {
+                    lc.Descriptor.type = NewASM::Const::InsDescriptor::Types::HOME;
                 }
                 else if(newasm::header::functions::isnumeric(desc.second))
                 {
@@ -940,6 +1007,7 @@ namespace newasm
                                 newasm::compiler::caseJumpTable.push_back(cc);
                                 lineCompiled.caseTableAddress = newasm::compiler::caseJumpTable.size() - 1;
                             }
+                            newasm::compiler::DedicateClass(lc);
                             return lineCompiled;
                         }
                         if(linetokens_inline.size() == 1) // process_is(line, linetokens_inline.at(0), linetokens_inline.at(1))
@@ -964,6 +1032,7 @@ namespace newasm
                             {
                                 lineCompiled.whatAmIDoing = INS_EXTERNAL;
                             }
+                            newasm::compiler::DedicateClass(lc);
                             return lineCompiled;
                         }
                     }
@@ -1052,37 +1121,7 @@ namespace newasm
                     return lc;
                 }
 
-                if(
-                    lc.whatAmIDoing == NewASM::core::lang_inf::unlock__ or
-                    lc.whatAmIDoing == NewASM::core::lang_inf::lock__
-                )
-                {
-                    lc.Class = NewASM::Const::InstructionClass::DedicatedClass::Mutex;
-                }
-                else if(
-                    lc.whatAmIDoing == newasm::core::lang_inf::try__
-                )
-                {
-                    lc.Class = NewASM::Const::InstructionClass::DedicatedClass::Try;
-                }
-                else if(
-                    lc.whatAmIDoing == newasm::core::lang_inf::catch__
-                )
-                {
-                    lc.Class = NewASM::Const::InstructionClass::DedicatedClass::Catch;
-                }
-                else if(
-                    lc.whatAmIDoing == newasm::core::lang_inf::artifact__
-                )
-                {
-                    lc.Class = NewASM::Const::InstructionClass::DedicatedClass::Artifact;
-                }
-                else if(
-                    lc.whatAmIDoing == newasm::core::lang_inf::fork__
-                )
-                {
-                    lc.Class = NewASM::Const::InstructionClass::DedicatedClass::Fork;
-                }
+                newasm::compiler::DedicateClass(lc);
 
                 for(size_t i = 0; i < SIZEE; i++)
                 {

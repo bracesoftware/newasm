@@ -181,6 +181,13 @@
       }
     },
     {
+      "scope": "native.func.newasm",
+      "settings": {
+        "foreground": "#1db4ad",
+        "fontStyle": "italic"
+      }
+    },
+    {
       "scope": "declaration.newasm",
       "settings": {
         "foreground": "#e5e0e9"

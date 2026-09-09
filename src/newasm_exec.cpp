@@ -6291,6 +6291,13 @@ namespace newasm
                     return 1;
                 }
 
+                if(newasm::thread_line)
+                {
+                    newasm::SetExceptionComment("cannot declare a thread within a thread");
+                    newasm::terminate(newasm::exit_codes::invalid_thread);
+                    return 1;
+                }
+
                 std::string original_name;
                 if(newasm::nms::count != 0)
                 {
@@ -8083,14 +8090,75 @@ namespace newasm
         return;
     }
 
+    inline void NativeProc(newasm::compiler::lineData& lineInfo)
+    {
+        if(newasm::system::stop == 1)
+        {
+            ++newasm::system::proclines;
+            NewASM::CurrentProc->proc->contents.push_back(lineInfo);
+            return;
+        }
+
+        switch(lineInfo.priInt)
+        {
+            case NewASM::Const::SupportedNatives::PRINT:
+            {
+                NewASM::Console::out(
+                    newasm::header::functions::remsq(
+                        newasm::header::functions::remq(
+                            newasm::mem::regs::tlr.get_value()
+                        )
+                    )
+                );
+                return;
+            }
+            default:
+            {
+                newasm::terminate(newasm::exit_codes::os_error);
+                return;
+            }
+        }
+        return;
+    }
+
     inline void ArtifactProc(newasm::compiler::lineData& lineInfo)
     {
         if(newasm::system::stop == 1)
         {
-            newasm::system::proclines ++;
-            NewASM::CurrentProc->proc->contents.push_back(lineInfo);
+            newasm::SetExceptionComment("cannot assemble an artifact inside a procedure");
+            newasm::terminate(newasm::exit_codes::jit_fail);
             return;
         }
+
+        if(newasm::thread_line)
+        {
+            newasm::SetExceptionComment("cannot assemble an artifact inside a thread");
+            newasm::terminate(newasm::exit_codes::jit_fail);
+            return;
+        }
+        if(lineInfo.caseLineArgType != NewASM::datatypes::tokenOpenBrace)//if(newasm::header::data::case_line != OPEN_BRACE_STR)
+        {
+            newasm::SetExceptionComment("must provide the `{` token to begin artifact assembly");
+            newasm::terminate(newasm::exit_codes::invalid_syntax);
+            return;
+        }
+        if(newasm::DeclaringArtifact)
+        {
+            newasm::SetExceptionComment("cannot create an artifact inside an artifact");
+            newasm::terminate(newasm::exit_codes::bus_err);
+            return;
+        }
+        if(lineInfo.tokens.size() != 2)
+        {
+            newasm::terminate(newasm::exit_codes::unknown_inscp);
+            return;
+        }
+
+        newasm::DeclaringArtifact = true;
+        newasm::DeclaringArtifactName = lineInfo.tokens.back();
+        newasm::DeclaringArtifactData.clear();
+
+        newasm::brace_stack__.push_back(newasm::brace_stack::artifact_block);
         return;
     }
 
@@ -8841,6 +8909,15 @@ namespace newasm
                     NewASM::CurrentThreads.push_back(newasm::CurrentThread);
                     return 1;
                 }
+                if(brace_purpose == newasm::brace_stack::artifact_block)
+                {
+                    newasm::DeclaringArtifact = false;
+                    newasm::compiler::bin::AssembleArtifact(
+                        newasm::DeclaringArtifactName,
+                        newasm::DeclaringArtifactData
+                    );
+                    return 1;
+                }
                 if(brace_purpose == newasm::brace_stack::object_block)
                 {
                     newasm::header::data::struct_now = false;
@@ -8995,6 +9072,12 @@ namespace newasm
         if(newasm::LambdaDispatch::LambdaNow)
         {
             newasm::LambdaDispatch::ThreadSafePtr->contents.push_back(line);
+            return 1;
+        }
+
+        if(newasm::DeclaringArtifact)
+        {
+            newasm::DeclaringArtifactData.push_back(line);
             return 1;
         }
 

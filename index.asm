@@ -7,6 +7,19 @@ fi
     string PrintThisLaterLol: "Test string"
     intg len2 : $ - PrintThisLaterLol
 .start
+    artifact testArt -> {
+        .start
+            mov tlr, "Hi"
+    }
+    
+    __say 0, "HELOOOOOOOOO"
+    mov tlr, "heloooooooooo Native print works!\n"
+    
+    sysenter "ios"
+    mov fdx, 1
+    syscall
+    
+    [native] call print
     align 4
     align 3
     int 0x4
@@ -82,6 +95,10 @@ using "math"
         __say 0,"thread debug 9"
         __say 0,"thread debug 10"
 
+        mov tlr, "hello boss"
+        [native] call print
+        mov tlr, 43743278
+        [native] call print
         [nil] try
             jsdif
         catch nil
@@ -2883,6 +2900,14 @@ mymacro : #
     mov this, "Test list works loool"
     mov tlr, *this
     call std::ios::writeln
+
+    artifact TestArtifact -> {
+        .start
+            proc TestArtifactMethod
+                [native] call print
+                halt 0
+            end
+    }
 
     zero rax
     mov rax, 223 ; exit code

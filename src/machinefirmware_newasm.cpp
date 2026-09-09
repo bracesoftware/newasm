@@ -102,6 +102,8 @@ namespace newasm
     inline void ArtifactProc(newasm::compiler::lineData& line);
     inline void ForkProc(newasm::compiler::lineData& line);
 
+    inline void NativeProc(newasm::compiler::lineData& line);
+
     namespace Const
     {
         namespace InsDescriptor
@@ -110,6 +112,8 @@ namespace newasm
             {
                 constinit const int NIL = 1;
                 constinit const int DATA = 2;
+                constinit const int NATIVE = 3;
+                constinit const int HOME = 4;
             }
         }
         typedef std::function<void(NewASM::compiler::lineData&)> ClassProcessor;
@@ -130,6 +134,7 @@ namespace newasm
                 constinit const int Catch = 9;
                 constinit const int Artifact = 10;
                 constinit const int Fork = 11;
+                constinit const int NativeCall = 12;
             }
 
             const std::unordered_map<int, ClassProcessor> ClassTemplate = {
@@ -143,7 +148,8 @@ namespace newasm
                 {DedicatedClass::Mutex, MutexProc},
                 {DedicatedClass::TinyConditional, TinyCondProc},
                 {DedicatedClass::MediumConditional, MediumCondProc},
-                {DedicatedClass::MovReg, MovRegProc}
+                {DedicatedClass::MovReg, MovRegProc},
+                {DedicatedClass::NativeCall, NativeProc}
             };
 
             std::vector<ClassProcessor> ClassProcessors;
@@ -322,6 +328,11 @@ namespace newasm
     VarPtr CurrentThreadA = nullptr;
     constinit int CurrentThreadB = 0;
     VarPtr CurrentThreadC = nullptr;
+
+    constinit bool DeclaringArtifact = false;
+    constinit std::string DeclaringArtifactName; 
+    constinit std::vector<newasm::compiler::lineData> DeclaringArtifactData;
+    VarPtr CurrentArtifact = nullptr;
 
     std::vector<VarPtr> CurrentThreads;
 
@@ -682,6 +693,7 @@ link "kernel/threads/_flags";
 link "vm/blueprint/class";
 // hardware changes
 link "vm/hardware/multiproc";
+link "newasm_native";
 extern "C"
 {
     void free_string(char* str);
@@ -1100,6 +1112,7 @@ namespace newasm
         constinit const int thread_block = 1;
         constinit const int class_block = 2;
         constinit const int event_block = 3;
+        constinit const int artifact_block = 4;
     }
     std::vector<int> brace_stack__;
     //------------------------------------------------------
@@ -1529,6 +1542,8 @@ namespace newasm
     {
         inline void cleanup()
         {
+            NewASM::DeclaringArtifact = false;
+            NewASM::DeclaringArtifactData.clear();
             NewASM::CurrentThreads.clear();
             NewASM::MutableConfig::DisplaySourceInformation = false;
             NewASM::kernel::ThreadCount = 0;
@@ -1543,6 +1558,7 @@ namespace newasm
             newasm::GLOBAL::showed_perf = false;
             newasm::header::data::exception = true;
             newasm::stack::events.clear();
+            newasm::thread_line = false;
 
             newasm::compiler::caseJumpTable.clear();
 

@@ -73,6 +73,10 @@
       "match": "\\b(mutex|final|static|mangle|safe)\\b"
     },
     {
+      "name": "native.func.newasm",
+      "match": "\\b(print)\\b"
+    },
+    {
       "name": "namespace.newasm",
       "match": "'(termination)'"
     },
