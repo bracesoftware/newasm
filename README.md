@@ -169,7 +169,7 @@ NewASM features many instructions, around 80 of them. Here is a list:
 ***
 #### Language concepts
 NewASM features different concepts such as decorators, namespaces, primitive classes and more advanced stuff.
-1. [Decorators](docs/concepts/deco.md)
+1. [Decorators and descriptors](docs/concepts/deco.md)
 2. [Namespaces](docs/concepts/namespaces.md)
 3. [Anonymous procedures](docs/concepts/lambda.md)
 4. [Environment variables](docs/concepts/env.md)
@@ -177,6 +177,7 @@ NewASM features different concepts such as decorators, namespaces, primitive cla
 6. [Attributes](docs/concepts/attrib.md)
 7. [Events](docs/concepts/events.md)
 8. [Macros](docs/concepts/macros.md)
+9. [Native function calls](docs/concepts/natives.md)
 
 ## Other resources
 This is a list of extra resources that might help.
