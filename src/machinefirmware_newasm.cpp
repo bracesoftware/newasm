@@ -89,6 +89,11 @@ namespace newasm
 
     namespace compiler { struct lineData; }
 
+    namespace ApiBridge
+    {
+        inline void procCallStackArgs(NewASM::compiler::lineData& line, std::string& operand);
+    }
+
     inline void TinyInsProc(NewASM::compiler::lineData& line);
     inline void MediumInsProc(NewASM::compiler::lineData& line);
     inline void LargeInsProc(NewASM::compiler::lineData& line);

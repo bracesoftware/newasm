@@ -2842,15 +2842,26 @@ mymacro : #
 
 
     thread AbsoluteShit -> {
-        __say 0, "hi 234234243x\n"
+        mov tlr, "hi 234234243x\n"
+        __say 0, "DBG 1"
+        [native] call print
+        __say 0, "DBG 2"
         fetch testinggg
-        lock this
+        __say 0, "DBG 3"
+        ;lock this
+        __say 0, "DBG 4"
         mov this,"xd\n"
+        __say 0, "DBG 5"
         mov tlr, *this
+        __say 0, "DBG 6"
         mov fdx, 1
+        __say 0, "DBG 7"
         sysenter "ios"
+        __say 0, "DBG 8"
         syscall
-        unlock this
+        __say 0, "DBG 9"
+        ;unlock this
+        __say 0, "DBG 10"
         retf 0
     }
 
@@ -2869,11 +2880,11 @@ mymacro : #
     ./!lmaoo
 
     fetch testinggg
-    lock this
+    ;lock this
     mov this, "Testing the funny string from main thread"
     mov tlr, *this
     call std::ios::writeln ; test
-    unlock this
+    ;unlock this
 
     async &TEST
     await &TEST

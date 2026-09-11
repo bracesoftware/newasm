@@ -41,7 +41,8 @@ namespace newasm
         else
         {
             newasm::header::data::LastLine = &BYTECODE[IDX];
-            if constexpr(NEWASM_BUG_CRISIS) std::cout << newasm::header::col::cyan << "---Processing thread " << mmap->original_name << ":" << mmap->lcx << "|id:" << mmap->id<<"---"<<BYTECODE[IDX].raw << newasm::header::col::reset<<std::endl;
+            if constexpr(NEWASM_BUG_CRISIS) return;
+            if(mmap->id > 10) std::cout << newasm::header::col::cyan << "---Processing thread " << mmap->original_name << ":" << mmap->lcx << "|id:" << mmap->id<<"---"<<BYTECODE[IDX].raw << newasm::header::col::reset<<std::endl;
             newasm::procline(BYTECODE[IDX]);
         }
 
@@ -49,7 +50,8 @@ namespace newasm
         //newasm::CurrentThreadA = nullptr;
         if(mmap->paused)
         {
-            if constexpr(NEWASM_BUG_CRISIS) std::cout << newasm::header::col::red<<"-------- thrd : " << mmap->original_name << " paused" <<newasm::header::col::reset<< std::endl;
+            if constexpr(NEWASM_BUG_CRISIS) return;
+            if(mmap->id > 10) std::cout << newasm::header::col::red<<"-------- thrd : " << mmap->original_name << " paused" <<newasm::header::col::reset<< std::endl;
             mmap->paused = false;
             return;
         }
@@ -80,22 +82,18 @@ namespace newasm
     int compile(const std::string& file);
     static inline int terminate_(int exit_code, const std::source_location& loc);
 
-    inline void unsins(std::string ins)
+    inline void unsins(const std::string& ins)
     {
         newasm::header::functions::wrn(
-            "Instruction `"_str +
-            newasm::header::style::underline +
-            ins + newasm::header::col::reset +
+            "Instruction `"_str + ins +
             "` is not supported in the REPL mode."_str
         );
         return;
     }
-    inline void unsins_repl(std::string ins)
+    inline void unsins_repl(const std::string& ins)
     {
         newasm::header::functions::wrn(
-            "Instruction `"_str +
-            newasm::header::style::underline +
-            ins + newasm::header::col::reset +
+            "Instruction `"_str + ins +
             "` is not supported outside the REPL mode."_str
         );
         return;
@@ -203,7 +201,7 @@ namespace newasm
             {
                 std::cout << Insomnia << newasm::header::col::reset << newasm::header::col::light_red;
                 std::cout << "^ exception source information -> " << newasm::header::col::gray << newasm::header::style::underline;
-                std::cout << loc.file_name() << ":" << loc.line() << ":" << loc.column() << newasm::header::col::reset << "\n\t" << Insomnia;
+                std::cout << "*/vmsrc_c++/" << loc.file_name() << ":" << loc.line() << ":" << loc.column() << newasm::header::col::reset << "\n\t" << Insomnia;
                 std::cout << newasm::header::col::light_red << '`' << newasm::header::col::gray;
                 std::cout << loc.function_name() << newasm::header::col::light_red << '`';
                 std::cout << newasm::header::col::reset << newasm::header::col::gray;
@@ -1581,6 +1579,16 @@ namespace newasm
             newasm::SetExceptionComment("unknown register");
             newasm::terminate(newasm::exit_codes::bus_err);
             return;
+        }
+
+        if(lineInfo.VirtualMemoryAccess)
+        {
+            //std::cout << "UAAAA\n";
+            auto p = newasm::header::functions::isvmemref(opr);
+            if(p.first)
+            {
+                opr = newasm::_virtual::readData(p.second);
+            }
         }
 
         switch(lineInfo.whatAreRegistersLol)
@@ -4107,6 +4115,8 @@ namespace newasm
                             return 1;
                         }
                     }
+                    newasm::SetExceptionComment("`mov` case fallthrough");
+                    newasm::terminate(newasm::exit_codes::os_error);
                     return 1;
                 }
                 newasm::terminate(newasm::exit_codes::os_error);
@@ -4727,22 +4737,6 @@ namespace newasm
                 {
                     newasm::SetExceptionComment("cannot fetch safe objects");
                     newasm::terminate(newasm::exit_codes::seg_fault);
-                    return 1;
-                }
-
-                if constexpr(false) if(ptr->type != newasm::datatypes::proc) if(ptr->fetched)
-                {
-                    if(newasm::header::data::proc_now)
-                    {
-                        newasm::CurrentProcA->proc->Halt = true;
-                    }
-
-                    if(newasm::thread_line)
-                    {
-                        newasm::CurrentThreadA->thrd->paused = true;
-                        return 1;
-                    }
-                    newasm::code_stream::paused = true;
                     return 1;
                 }
 
