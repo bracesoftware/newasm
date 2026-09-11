@@ -2840,6 +2840,27 @@ mymacro : #
         halt 0
     end
 
+    thread AbsoluteTest -> {
+        fetch testinggg
+        mov this, "hi from AbsoluteTest"
+        mov tlr, *this
+        [native] call print
+        [native] call print
+        [native] call print
+        [native] call print
+        [native] call print
+        [native] call print
+        [native] call print
+        [native] call print
+        [native] call print
+        [native] call print
+        [native] call print
+        [native] call print
+    }
+
+    await &AbsoluteTest
+    mov tlr, "AbsoluteTest finished"
+    [native] call print
 
     thread AbsoluteShit -> {
         mov tlr, "hi 234234243x\n"
@@ -2923,6 +2944,11 @@ mymacro : #
                 halt 0
             end
     }
+
+    fork TestArtifact
+    [home] call TestArtifactMethod
+    call TestArtifact.TestArtifactMethod
+
 
     zero rax
     mov rax, 223 ; exit code

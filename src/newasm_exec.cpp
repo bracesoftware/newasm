@@ -4697,6 +4697,7 @@ namespace newasm
             {
                 if(newasm::_this != nullptr)
                 {
+                    std::cout << newasm::header::col::lime_teal << "this ptr reset successfully" << std::endl;
                     (*newasm::_this)->fetched = false;
                 }
                 if(lineInfo.priArgType == NewASM::datatypes::NIL)
@@ -6968,12 +6969,9 @@ namespace newasm
                     return 1;
                 }
 
+                NewASM::perf::Wasted.start();
                 auto k = newasm::header::functions::wait(time);
-
-                if(k != -1)
-                {
-                    newasm::wasted_deduction.push_back(std::chrono::duration<double, std::milli>(time));
-                }
+                NewASM::perf::Wasted.stop();
 
                 if(k == -1)
                 {
@@ -8129,6 +8127,11 @@ namespace newasm
 
     inline void ArtifactProc(newasm::compiler::lineData& lineInfo)
     {
+        newasm::perf::ArtifactLoading.start();
+        $defer
+            newasm::perf::ArtifactLoading.stop();
+        $
+
         if(newasm::system::stop == 1)
         {
             newasm::SetExceptionComment("cannot assemble an artifact inside a procedure");
@@ -9444,14 +9447,7 @@ namespace newasm
             newasm::mem::regs::lcx.set_value(0);
         }
         //cleanup timers
-        newasm::wasted_deduction.clear();
-        newasm::network_deduction.clear();
-        newasm::perf::inputWasteTimer.clear();
-        newasm::perf::heavyHostServices.clear();
-        newasm::perf::StandardLibLoading.clear();
-        newasm::perf::DynLibLoading.clear();
-        newasm::perf::Jitc.clear();
-        newasm::perf::MainRuntime.clear();
+        newasm::perf::clearAll();
         //some jit compilation
         //newasm::perf::start = std::chrono::steady_clock::now();
         newasm::perf::MainRuntime.start();
@@ -9550,7 +9546,7 @@ namespace newasm
         //newasm::perf::end = std::chrono::steady_clock::now();
         newasm::compiler::data::JIT_mode = false;
         newasm::UnloadDynamicLibraries();
-        newasm::perf::MainRuntime.stop();
+        newasm::perf::stopAll();
         return;
     }
     #if 0 //this ain't comin

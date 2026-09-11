@@ -394,12 +394,11 @@ namespace newasm
                         return 1;
                     }
           
-                    newasm::start = std::chrono::steady_clock::now();
+                    NewASM::perf::NetworkLatency.start();
                     std::string result = newasm::syscalls::http::get(
                         newasm::header::functions::remq(newasm::mem::regs::tlr.get_value())
                     );
-                    newasm::end = std::chrono::steady_clock::now();
-                    newasm::network_deduction.push_back(newasm::end - newasm::start);
+                    NewASM::perf::NetworkLatency.stop();
                     
                     auto removeexc = [](std::string& input) -> std::string {
                             for(int i = 0; i < input.size(); ++i)
@@ -435,13 +434,12 @@ namespace newasm
                         return 1;
                     }
 
-                    newasm::start = std::chrono::steady_clock::now();
+                    NewASM::perf::NetworkLatency.start();
                     std::string result = newasm::syscalls::http::post(
                         newasm::header::functions::remq(newasm::mem::regs::tlr.get_value()),
                         newasm::header::functions::remq(newasm::mem::regs::stl.get_value())
                     );
-                    newasm::end = std::chrono::steady_clock::now();
-                    newasm::network_deduction.push_back(newasm::end - newasm::start);
+                    NewASM::perf::NetworkLatency.stop();
 
                     auto removeexc = [](std::string& input) -> std::string {
                             for(int i = 0; i < input.size(); ++i)
@@ -490,13 +488,12 @@ namespace newasm
                         return 1;
                     }
 
-                    newasm::start = std::chrono::steady_clock::now();
+                    NewASM::perf::NetworkLatency.start();
                     auto result = newasm::syscalls::tcp::send(
                         newasm::header::functions::remq(newasm::mem::regs::tlr.get_value()), 
                         newasm::header::functions::remq(newasm::mem::regs::stl.get_value())
                     );
-                    newasm::end = std::chrono::steady_clock::now();
-                    newasm::network_deduction.push_back(newasm::end - newasm::start);
+                    NewASM::perf::NetworkLatency.stop();
 
                     newasm::mem::regs::tlr.set_value(newasm::_std::to_string(result.first));
                     newasm::mem::regs::stl.set_value(result.second);
@@ -516,12 +513,11 @@ namespace newasm
                         return 1;
                     }
 
-                    newasm::start = std::chrono::steady_clock::now();
+                    NewASM::perf::NetworkLatency.start();
                     std::string result = newasm::syscalls::tcp::recv(
                         newasm::header::functions::remq(newasm::mem::regs::tlr.get_value())
                     );
-                    newasm::end = std::chrono::steady_clock::now();
-                    newasm::network_deduction.push_back(newasm::end - newasm::start);
+                    NewASM::perf::NetworkLatency.stop();
 
                     newasm::mem::regs::tlr.set_value("\"" + (result) + "\"");
                     return 1;
@@ -1628,13 +1624,10 @@ namespace newasm
                 }
                 default:
                 {
-                    #if 1
-                    std::cout << "Thread id : " << newasm::CurrentThreadA->thrd->original_name << "|" << newasm::CurrentThreadB << std::endl;
-                    std::cout << "FDX IS " << NewASM::mem::regs::fdx.get_value() << std::endl;
-                    std::cout << "TLR IS " << NewASM::mem::regs::tlr.get_value() << std::endl;
-                    std::cout << "STL IS " << NewASM::mem::regs::stl.get_value() << std::endl;
-                    #endif
-
+                    newasm::SetExceptionComment(
+                        "thread`" + newasm::_std::to_string(newasm::GetCurrentThread()) + "` tried to call invalid host service " +
+                        newasm::_std::to_string(newasm::mem::regs::fdx.get_value())
+                    );
                     newasm::terminate(newasm::exit_codes::unknown_fdx);
                     return 1;
                 }

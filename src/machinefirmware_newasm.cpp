@@ -73,6 +73,7 @@ fetch link "https://bracesoftware.github.io/web/newasm_server/bcxx_test";
 link "runtime/common/chars";
 namespace newasm
 {
+    signed int GetCurrentThread();
     using BasicFunction = std::function<void()>;
     namespace Modules
     {
@@ -760,11 +761,39 @@ namespace newasm
         auto end = std::chrono::steady_clock::now();
 
         newasm::timer MainRuntime;
+
+        newasm::timer Wasted;
+        newasm::timer NetworkLatency;
         newasm::timer inputWasteTimer;
         newasm::timer heavyHostServices;
         newasm::timer StandardLibLoading;
         newasm::timer DynLibLoading;
         newasm::timer Jitc;
+        newasm::timer ArtifactLoading;
+
+        const std::vector<newasm::timer*> ALL_TIMERS = {
+            &MainRuntime, &Wasted, &NetworkLatency,
+            &inputWasteTimer, &heavyHostServices, &StandardLibLoading,
+            &DynLibLoading, &Jitc, &ArtifactLoading
+        };
+
+        void clearAll()
+        {
+            for(size_t i = 0; i < ALL_TIMERS.size(); ++i)
+            {
+                auto& timer = ALL_TIMERS[i];
+                timer->clear();
+            }
+        }
+
+        void stopAll()
+        {
+            for(size_t i = 0; i < ALL_TIMERS.size(); ++i)
+            {
+                auto& timer = ALL_TIMERS[i];
+                timer->stop();
+            }
+        }
     }
     std::vector<std::string> DynLibNames;
     std::vector<newasm::DynamicLibrary> DynLibs;
@@ -1090,12 +1119,6 @@ namespace newasm
     const std::string tab = "\t\t\t";
     std::unordered_map<std::string,std::vector<std::string>>* dyn_ins_set;
     std::vector<std::pair<std::string,std::string>>* env_vars;
-
-    auto start = std::chrono::steady_clock::now();
-    auto end = std::chrono::steady_clock::now();
-    std::vector<std::chrono::duration<double, std::milli>> runtime_deduction;
-    std::vector<std::chrono::duration<double, std::milli>> wasted_deduction;
-    std::vector<std::chrono::duration<double, std::milli>> network_deduction;
 
     namespace global
     {
@@ -1971,25 +1994,6 @@ namespace newasm
                 return;
             }
             newasm::flags::perf_available = false;
-            std::chrono::duration<double, std::milli> elapsed = newasm::perf::end - newasm::perf::start;
-            //std::chrono::duration<double, std::milli> input_wasted = std::chrono::duration<double, std::milli>::zero();
-            std::chrono::duration<double, std::milli> wait_wasted = std::chrono::duration<double, std::milli>::zero();
-            std::chrono::duration<double, std::milli> network_wasted = std::chrono::duration<double, std::milli>::zero();
-
-            /*for(int i = 0; i < newasm::runtime_deduction.size(); ++i)
-            {
-                input_wasted = input_wasted + newasm::runtime_deduction.at(i);
-            }*/
-
-            for(int i = 0; i < newasm::wasted_deduction.size(); ++i)
-            {
-                wait_wasted = wait_wasted + newasm::wasted_deduction.at(i);
-            }
-
-            for(int i = 0; i < newasm::network_deduction.size(); ++i)
-            {
-                network_wasted = network_wasted + newasm::network_deduction.at(i);
-            }
 
             std::cout << newasm::header::col::gray << "  Profiler info for: " << newasm::header::col::yellow << newasm::project_data::name << " " << newasm::project_data::version << std::endl;
             if(newasm::compiler::data::aborted)
@@ -2001,24 +2005,26 @@ namespace newasm
             std::cout << newasm::header::col::gray << "\t\tTime elapsed: " << newasm::perf::MainRuntime.count() << " ms\n";//elapsed.count
             std::cout << newasm::header::col::gray << "\t\t\t" << newasm::perf::inputWasteTimer.count() << " ms wasted on user input\n";
             std::cout << newasm::header::col::gray << "\t\t\t" << newasm::perf::heavyHostServices.count() << " ms used on heavy host services\n";
-            std::cout << newasm::header::col::gray << "\t\t\t" << network_wasted.count() << " ms wasted on network latency\n";
+            std::cout << newasm::header::col::gray << "\t\t\t" << newasm::perf::NetworkLatency.count() << " ms wasted on network latency\n";
             std::cout << newasm::header::col::gray << "\t\t\t" << newasm::perf::DynLibLoading.count() << " ms used on DLL/SO maintenence\n";
             std::cout << newasm::header::col::gray << "\t\t\t" << newasm::perf::StandardLibLoading.count() << " ms used on standard library loading\n";
             std::cout << newasm::header::col::gray << "\t\t\t" << newasm::perf::Jitc.count() << " ms used by the JIT compiler\n";
+            std::cout << newasm::header::col::gray << "\t\t\t" << newasm::perf::ArtifactLoading.count() << " ms used by the artifact manager\n";
             //
             std::cout << newasm::header::style::underline;
-            std::cout << newasm::header::col::gray << "\t\t\t" << wait_wasted.count() << " ms wasted on `wait`\n";
+            std::cout << newasm::header::col::gray << "\t\t\t" << newasm::perf::Wasted.count() << " ms wasted on `wait`\n";
             std::cout << newasm::header::col::reset;
             std::cout << newasm::header::col::gray << "\t\t\tTotal: ";
             std::cout << (
                 newasm::perf::MainRuntime.count()
                 - newasm::perf::heavyHostServices.count()
                 - newasm::perf::inputWasteTimer.count()
-                - wait_wasted.count()
-                - network_wasted.count()
+                - newasm::perf::Wasted.count()
+                - newasm::perf::NetworkLatency.count()
                 - newasm::perf::StandardLibLoading.count()
                 - newasm::perf::DynLibLoading.count()
                 - newasm::perf::Jitc.count()
+                - newasm::perf::ArtifactLoading.count()
             ) << " ms\n";
             std::cout << newasm::header::col::gray << "\t\t\tCycle count: " << newasm::CYCLE_COUNT << '\n';
             std::cout << newasm::header::col::reset;
