@@ -42,12 +42,12 @@ namespace newasm
         return;
     }
 
-    inline void LargeInsProc(compiler::lineData& line)
+    namespace ApiBridge
     {
-        auto operand = line.tokens.at(2);
-        if(newasm::header::data::proc_now)
+        ATTR_HOT inline void procCallStackArgs(compiler::lineData& line, std::string& operand)
         {
-            if(line.AltStackArg)
+            if(!line.AltStackArg) return;
+            if(newasm::header::data::proc_now)
             {
                 newasm::header::data::argc ++;                                
                 // If the address of the func handler is i,
@@ -130,7 +130,14 @@ namespace newasm
                     }
                 }
             }
+            return;
         }
+    }
+
+    inline void LargeInsProc(compiler::lineData& line)
+    {
+        auto operand = line.tokens.at(2);
+        newasm::ApiBridge::procCallStackArgs(line, operand);
         newasm::process_iso(line.raw, line.tokens.at(0), line.tokens.at(1), operand, line);
         return;
     }

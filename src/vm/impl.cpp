@@ -13,8 +13,9 @@
 #define NEWASM_BYTECODE_RESERVE 1000
 #define NEWASM_INVALID_MUTEX_OWNER -1
 
-#define NEWASM_BUG_CRISIS true
+#define NEWASM_BUG_CRISIS false
 #define NEWASM_DATA_DECLARATION_DBG false
+#define NEWASM_DO_BUGS //static
 
 //compiler
 #define NEWASM_APP_SIGNATURE "__newasm_app"

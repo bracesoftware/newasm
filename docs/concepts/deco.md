@@ -20,11 +20,12 @@ When you put a decorator in front of an instruction, it becomes an instruction d
 
 | Descriptor | Info |
 | ---------------- | ----------- |
+| `[], [nil]` | Empty descriptor. Does absolutely nothing. |
 | `[native]` | When used in front of the `call` instruction, you can call native functions implemented by the VM. |
 
 Example:
 ```asm
 [native] call print ; prints anything, way faster than std::ios::writeln or a host service call
 ```
-
-If you put a certain descriptor in front of an unsupported instruction, it will not cause any issues and will be simple ignored by the virtual machine.
+> [!TIP]
+> If you put a certain descriptor in front of an unsupported instruction, it will not cause any issues and will be simple ignored by the virtual machine; which means, descriptors take no hits on the VM's performance.
