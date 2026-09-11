@@ -2900,6 +2900,8 @@ mymacro : #
         }
     ./!lmaoo
 
+    await &AbsoluteShit
+
     fetch testinggg
     ;lock this
     mov this, "Testing the funny string from main thread"

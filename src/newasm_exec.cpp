@@ -29,7 +29,10 @@ namespace newasm
             mmap->returned = true;
             return;
         }
-        if constexpr(!Await) ++NewASM::header::data::ActiveThreads;
+        if constexpr(!Await)
+        {
+            ++NewASM::header::data::ActiveThreads;
+        }
         newasm::thread_line = true;
         newasm::CurrentThreadA = i;
         newasm::CurrentThreadB = mmap->id;
@@ -47,7 +50,7 @@ namespace newasm
         }
 
         newasm::thread_line = false;
-        //newasm::CurrentThreadA = nullptr;
+        
         if(mmap->paused)
         {
             if constexpr(NEWASM_BUG_CRISIS) return;
@@ -56,6 +59,7 @@ namespace newasm
             return;
         }
         else ++IDX;
+        return;
     }
     auto GetLineLocation = <::>(int idx) -> std::pair<bool, std::string> {
         if(
@@ -165,10 +169,6 @@ namespace newasm
         }
 
         newasm::terminate_(exit_code, loc);
-        if constexpr(0) if(newasm::header::functions::trim(NewASM::ExceptionHandling::Line->raw) == std::string("syscall"))
-        {
-            newasm::header::functions::krnl("Kernel crashed.");
-        }
         return 1;
     }
     inline int terminate(const std::string& exit_code, const std::source_location loc = std::source_location::current())
@@ -4697,12 +4697,13 @@ namespace newasm
             {
                 if(newasm::_this != nullptr)
                 {
-                    std::cout << newasm::header::col::lime_teal << "this ptr reset successfully" << std::endl;
+                    //std::cout << newasm::header::col::lime_teal << "this ptr reset successfully" << std::endl;
                     (*newasm::_this)->fetched = false;
                 }
                 if(lineInfo.priArgType == NewASM::datatypes::NIL)
                 {
                     newasm::_this = nullptr;
+                    //std::cout << "FETCH IS NIL, SORRY!" << std::endl;
                     return 1;
                 }
                 /*
@@ -9516,16 +9517,17 @@ namespace newasm
             
             newasm::procline<true>(ll);
             
+            if(newasm::code_stream::jump)//
+            {
+                newasm::code_stream::jump = 0;
+                newasm::mem::regs::lcx.set_value(newasm::code_stream::jumpto);
+                continue;
+            }
+
             if(newasm::code_stream::paused)
             {
                 if constexpr(NEWASM_BUG_CRISIS) std::cout << "-------- " << "MAIN THREAD" << " paused" << std::endl;
                 newasm::code_stream::paused = false;
-                continue;
-            }
-            else if(newasm::code_stream::jump)//
-            {
-                newasm::code_stream::jump = 0;
-                newasm::mem::regs::lcx.set_value(newasm::code_stream::jumpto);
                 continue;
             }
             else newasm::mem::regs::lcx.set_value(newasm::mem::regs::lcx.get_value() + 1);//
