@@ -6,6 +6,8 @@
     #error [New-ASM] Cannot compile.
 #endif
 
+#define MAKE_BUGS //static
+
 module(virtual_cpu, {
     NewASM::Modules::PrintLine("Virtual CPU successfully plugged in...");
 });
@@ -15,9 +17,9 @@ namespace newasm
     template<bool Await>
     FORCE_INLINE inline void HandleThread(VarPtr i)
     {
-        static auto& mmap = i->thrd;
-        static auto& IDX = mmap->lcx;
-        static auto& BYTECODE = mmap->contents;
+        MAKE_BUGS auto& mmap = i->thrd;
+        MAKE_BUGS auto& IDX = mmap->lcx;
+        MAKE_BUGS auto& BYTECODE = mmap->contents;
         //if(0) newasm::threads::memory.at(*i)->prepare_sys();
         if(mmap->returned)
         {
@@ -196,7 +198,7 @@ namespace newasm
     static inline int terminate_(int exit_code, const std::source_location& loc)//, std::string line)
     {
         // ---- helper funcs ---- //
-        const std::string Insomnia = "\t\t  ";
+        static const std::string Insomnia = "\t\t  ";
         auto LogExceptionSourceLoc = <:loc, Insomnia:>() -> void {
             if(NewASM::MutableConfig::DisplaySourceInformation)
             {
@@ -1531,9 +1533,9 @@ namespace newasm
 
     inline void MovRegProc(NewASM::compiler::lineData& lineInfo)
     {
-        static std::string opr = lineInfo.tokens.at(2);
-        static std::string suf = lineInfo.tokens.at(1);
-        static std::string& ins = lineInfo.tokens.at(0);
+        MAKE_BUGS std::string opr = lineInfo.tokens.at(2);
+        MAKE_BUGS std::string suf = lineInfo.tokens.at(1);
+        MAKE_BUGS std::string& ins = lineInfo.tokens.at(0);
 
         if(lineInfo.AltArgLambda) [[unlikely]]
         {
@@ -4508,8 +4510,8 @@ namespace newasm
             return;
         }
 
-        static newasm::rawData priArg;
-        static std::string suf;
+        MAKE_BUGS newasm::rawData priArg;
+        MAKE_BUGS std::string suf;
         suf = lineInfo.tokens.at(1);
         switch(lineInfo.whatAmIDoing)
         {
@@ -8180,7 +8182,7 @@ namespace newasm
             return;
         }
 
-        static newasm::rawData priArg;
+        MAKE_BUGS newasm::rawData priArg;
 
         NewASM::variables::procedureData* p = nullptr;
         if(newasm::header::data::proc_now) p = NewASM::CurrentProcA->proc;
@@ -9797,7 +9799,7 @@ namespace newasm
             //newasm::compiler::data::lnidx = 1;
             //thing above us was for this down here
             auto AOTCompileBytecode = <:&:>(auto& vec) -> void {
-                static bool already_processed = false;
+                MAKE_BUGS bool already_processed = false;
                 for(size_t i = 0; i < vec.size(); ++i)
                 {
                     auto& bytecode = vec.at(i);
