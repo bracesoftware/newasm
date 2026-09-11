@@ -50,7 +50,7 @@ namespace newasm
         }
 
         newasm::thread_line = false;
-        
+
         if(mmap->paused)
         {
             if constexpr(NEWASM_BUG_CRISIS) return;
@@ -3486,7 +3486,8 @@ namespace newasm
                         newasm::terminate(newasm::exit_codes::constant_modif);
                         return 1;
                     }
-                    if constexpr(false) if(i.MutexLock) if(i.MutexOwner != newasm::GetCurrentThread()) [[unlikely]]
+                    
+                    if(i.MutexLock) if(i.MutexOwner != newasm::GetCurrentThread()) [[unlikely]]
                     {
                         if(newasm::header::data::proc_now)
                         {
@@ -4524,147 +4525,85 @@ namespace newasm
         NEWASM_DO_BUGS newasm::rawData priArg;
         NEWASM_DO_BUGS std::string suf;
         suf = lineInfo.tokens.at(1);
-        switch(lineInfo.whatAmIDoing)
+
+        VarPtr ptr = nullptr;
+        if(lineInfo.priArgType == newasm::datatypes::ThisPtr)
         {
-            case INVALID_INS:
+            if(newasm::_this == nullptr)
             {
-                newasm::terminate(newasm::exit_codes::invalid_ins);
+                newasm::SetExceptionComment("`this` is probably not initialized");
+                newasm::terminate(newasm::exit_codes::invalid_memacc);
                 return;
             }
-             //lock
-            case newasm::core::lang_inf::lock__:
-            {
-                VarPtr ptr = nullptr;
-                if(lineInfo.priArgType == newasm::datatypes::ThisPtr)
-                {
-                    if(newasm::_this == nullptr)
-                    {
-                        newasm::SetExceptionComment("`this` is probably not initialized");
-                        newasm::terminate(newasm::exit_codes::invalid_memacc);
-                        return;
-                    }
-                    ptr = newasm::_this;
-                }
-                else if(lineInfo.priArgType != newasm::datatypes::ThisPtr)
-                {
-                    newasm::runtime::functions::eval(suf, lineInfo.priEvalMode);
-                    if(!newasm::header::functions::isref(suf))
-                    {
-                        newasm::terminate(newasm::exit_codes::invalid_memacc);
-                        return;
-                    }
-
-                    suf = newasm::header::functions::remamp(suf);
-                    auto it = newasm::variables::ids.find(suf);
-                    if(it == newasm::variables::ids.end())
-                    {
-                        newasm::terminate(newasm::exit_codes::invalid_memacc);
-                        return;
-                    }
-                    ptr = &it->second;
-                }
-
-                if(!(ptr->attrib & newasm::core::lang_inf::attributes::MUTEX__))
-                {
-                    newasm::SetExceptionComment("object is not marked as mutual exclusive (mutex)");
-                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                    return;
-                }
-
-                if(ptr->MutexLock) if(ptr->MutexOwner != newasm::GetCurrentThread()) [[unlikely]]
-                {
-                    if(newasm::header::data::proc_now)
-                    {
-                        NewASM::CurrentProcA->proc->Halt = true;
-                    }
-
-                    if(newasm::thread_line)
-                    {
-                        newasm::CurrentThreadA->thrd->paused = true;
-                    }
-                    else
-                    {
-                        newasm::code_stream::paused = true;
-                    }
-                    return;
-                }
-
-                ptr->MutexLock = true;
-                ptr->MutexOwner = newasm::GetCurrentThread();
-                if(newasm::thread_line)
-                {
-                    newasm::CurrentThreadA->thrd->LockedObjects.push_back(ptr);
-                }
-                return;
-            }
-            //unlock
-            case newasm::core::lang_inf::unlock__:
-            {
-                VarPtr ptr = nullptr;
-                if(lineInfo.priArgType == newasm::datatypes::ThisPtr)
-                {
-                    if(newasm::_this == nullptr)
-                    {
-                        newasm::SetExceptionComment("`this` is probably not initialized");
-                        newasm::terminate(newasm::exit_codes::invalid_memacc);
-                        return;
-                    }
-                    ptr = newasm::_this;
-                }
-                else if(lineInfo.priArgType != newasm::datatypes::ThisPtr)
-                {
-                    newasm::runtime::functions::eval(suf, lineInfo.priEvalMode);
-                    if(!newasm::header::functions::isref(suf))
-                    {
-                        newasm::terminate(newasm::exit_codes::invalid_memacc);
-                        return;
-                    }
-
-                    suf = newasm::header::functions::remamp(suf);
-                    auto it = newasm::variables::ids.find(suf);
-                    if(it == newasm::variables::ids.end())
-                    {
-                        newasm::terminate(newasm::exit_codes::invalid_memacc);
-                        return;
-                    }
-                    ptr = &it->second;
-                }
-
-                if(!(ptr->attrib & newasm::core::lang_inf::attributes::MUTEX__))
-                {
-                    newasm::SetExceptionComment("object is not marked as mutual exclusive (mutex)");
-                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                    return;
-                }
-
-                if(ptr->MutexLock) if(ptr->MutexOwner != newasm::GetCurrentThread()) [[unlikely]]
-                {
-                    if(newasm::header::data::proc_now)
-                    {
-                        NewASM::CurrentProcA->proc->Halt = true;
-                    }
-
-                    if(newasm::thread_line)
-                    {
-                        newasm::CurrentThreadA->thrd->paused = true;
-                    }
-                    else
-                    {
-                        newasm::code_stream::paused = true;
-                    }
-                    return;
-                }
-
-                ptr->MutexLock = false;
-                ptr->MutexOwner = NEWASM_INVALID_MUTEX_OWNER;
-                return;
-            }
-            default:
-            {
-                newasm::terminate(newasm::exit_codes::os_error);
-                return;
-            }
+            ptr = newasm::_this;
         }
+        else if(lineInfo.priArgType != newasm::datatypes::ThisPtr)
+        {
+            newasm::runtime::functions::eval(suf, lineInfo.priEvalMode);
+            if(!newasm::header::functions::isref(suf))
+            {
+                newasm::terminate(newasm::exit_codes::invalid_memacc);
+                return;
+            }
+
+            suf = newasm::header::functions::remamp(suf);
+            auto it = newasm::variables::ids.find(suf);
+            if(it == newasm::variables::ids.end())
+            {
+                newasm::terminate(newasm::exit_codes::invalid_memacc);
+                return;
+            }
+            ptr = &it->second;
+        }
+
+        if(!(ptr->attrib & newasm::core::lang_inf::attributes::MUTEX__))
+        {
+            newasm::SetExceptionComment("object is not marked as mutual exclusive (mutex)");
+            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+            return;
+        }
+
+        if(ptr->MutexLock) if(ptr->MutexOwner != newasm::GetCurrentThread()) [[unlikely]]
+        {
+            std::cout << "THIS HAPPENED!" << std::endl;
+            if(newasm::header::data::proc_now)
+            {
+                NewASM::CurrentProcA->proc->Halt = true;
+            }
+
+            if(newasm::thread_line)
+            {
+                newasm::CurrentThreadA->thrd->paused = true;
+            }
+            else
+            {
+                newasm::code_stream::paused = true;
+            }
+            return;
+        }
+
+        //now we do whatever depending if it is loc or unlock
+        if(lineInfo.whatAmIDoing == newasm::core::lang_inf::lock__)
+        {
+            std::cout << "LOCK CALLED" << std::endl;
+            ptr->MutexLock = true;
+            ptr->MutexOwner = newasm::GetCurrentThread();
+            if(newasm::thread_line)
+            {
+                newasm::CurrentThreadA->thrd->LockedObjects.push_back(ptr);
+            }
+            return;
+        }
+        if(lineInfo.whatAmIDoing == newasm::core::lang_inf::unlock__)
+        {
+            std::cout << "UNLOCK CALLED" << std::endl;
+            ptr->MutexLock = false;
+            ptr->MutexOwner = NEWASM_INVALID_MUTEX_OWNER;
+            return;
+        }
+
+        newasm::SetExceptionComment("mutex instruction class processor fallthrough");
+        newasm::terminate(newasm::exit_codes::os_error);
         return;
     }
 
@@ -9463,9 +9402,11 @@ namespace newasm
                     mmap.type == newasm::compiler::conditional
                 )
                 {
-                    //auto p = GetLineLocation(mmap.SourceLocation);
-                    //std::cout << "SECOND: yooo this happened right? -> " << mmap.Class - 1 << std::endl;
-                    //std::cout << "\t\t\t" << mmap.raw << " @ " << (p.first ? p.second : "null") << std::endl;
+                    if constexpr(NEWASM_BUG_CRISIS)
+                    {
+                        auto p = GetLineLocation(mmap.SourceLocation);
+                        std::cout << "\t\t" << mmap.raw << " @ " << (p.first ? p.second : "null") << " -> " << mmap.Class << std::endl;
+                    }
                     mmap.Runtime.Processor = NewASM::Const::InstructionClass::ClassProcessors[mmap.Class];
                 }
             }

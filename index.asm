@@ -2869,7 +2869,7 @@ mymacro : #
         __say 0, "DBG 2"
         fetch testinggg
         __say 0, "DBG 3"
-        ;lock this
+        lock this
         __say 0, "DBG 4"
         mov this,"xd\n"
         __say 0, "DBG 5"
@@ -2881,7 +2881,7 @@ mymacro : #
         __say 0, "DBG 8"
         syscall
         __say 0, "DBG 9"
-        ;unlock this
+        unlock this
         __say 0, "DBG 10"
         retf 0
     }

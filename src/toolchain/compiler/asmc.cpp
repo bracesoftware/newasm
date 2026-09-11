@@ -153,6 +153,7 @@ namespace newasm
             )
             {
                 lc.Class = NewASM::Const::InstructionClass::DedicatedClass::NativeCall;
+                
                 auto it = newasm::Const::SupportedNatives::Identifiers.find(lc.tokens.at(1));
                 if(it == newasm::Const::SupportedNatives::Identifiers.end())
                 {
