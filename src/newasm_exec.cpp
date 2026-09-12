@@ -254,12 +254,13 @@ namespace newasm
         };
 
         // ---- body ---- //
-        newasm::exit_codes::Exception& Exc;
-        if(newasm::exit_codes::identifier.find(exit_code) == newasm::exit_codes::identifier.end())
+        auto* Exc = &newasm::exit_codes::identifier.at(newasm::exit_codes::unknown_error);
+        auto it = newasm::exit_codes::identifier.find(exit_code);
+        if(it != newasm::exit_codes::identifier.end())
         {
-            Exc = newasm::exit_codes::identifier.at(newasm::exit_codes::unknown_fdx);
+            Exc = &(it->second);
         }
-        else Exc = newasm::exit_codes::identifier.at(exit_code);
+
         std::cout << std::endl;
         //std::cout << "TERMINATEEE" << std::endl;
         if(newasm::header::data::repl)
@@ -270,10 +271,10 @@ namespace newasm
                 std::cout <<
                 "\t" <<
                 newasm::header::col::red <<
-                "Exception \"" << (Exc.isCritical() ? "!" : "") <<
+                "Exception \"" << (Exc->isCritical() ? "!" : "") <<
                 newasm::header::col::gray<<
                 newasm::header::style::underline<<
-                Exc.getName() <<
+                Exc->getName() <<
                 newasm::header::col::reset<<
                 newasm::header::col::red << "\" [";
                 std::cout << newasm::header::col::gray << exit_code << newasm::header::col::red << "] occured >> "<<
@@ -293,17 +294,17 @@ namespace newasm
             newasm::mem::regs::exc = exit_code;
         }
 
-        if(Exc.isCritical()) newasm::system::terminated = true;
+        if(Exc->isCritical()) newasm::system::terminated = true;
 
         if(newasm::header::data::exception)
         {
             std::cout <<
             "\t" <<
             newasm::header::col::red <<
-            "Exception \"" << (Exc.isCritical() ? "!" : "") <<
+            "Exception \"" << (Exc->isCritical() ? "!" : "") <<
             newasm::header::col::gray<<
             newasm::header::style::underline<<
-            Exc.getName() <<
+            Exc->getName() <<
             newasm::header::col::reset <<
             newasm::header::col::red <<
             "\" [";
@@ -427,7 +428,7 @@ namespace newasm
             LogExceptionSourceLoc();
             LogComment();
             std::cout << std::endl;
-            LogCritical(Exc.isCritical());
+            LogCritical(Exc->isCritical());
         }
         return 1;
     }

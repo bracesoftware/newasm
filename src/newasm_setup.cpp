@@ -87,6 +87,7 @@ namespace newasm
         const int immovable_type = 59;
         const int user_error = 60;
         const int unknown_inscp = 61;
+        const int unknown_error = 62;
 
         class Exception final
         {
@@ -187,7 +188,8 @@ namespace newasm
             {jit_fail, Exception("JITCompilerFailure")},
             {kernel_panic, Exception("KernelPanicOrSysCrash")},
             {immovable_type, Exception("ImmovableType")},
-            {user_error, Exception("UserError")}
+            {user_error, Exception("UserError")},
+            {unknown_error, Exception("UnknownError")}
         };
     }
     namespace cmp_results
