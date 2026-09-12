@@ -254,7 +254,12 @@ namespace newasm
         };
 
         // ---- body ---- //
-        auto& Exc = newasm::exit_codes::identifier.at(exit_code);
+        newasm::exit_codes::Exception& Exc;
+        if(newasm::exit_codes::identifier.find(exit_code) == newasm::exit_codes::identifier.end())
+        {
+            Exc = newasm::exit_codes::identifier.at(newasm::exit_codes::unknown_fdx);
+        }
+        else Exc = newasm::exit_codes::identifier.at(exit_code);
         std::cout << std::endl;
         //std::cout << "TERMINATEEE" << std::endl;
         if(newasm::header::data::repl)
@@ -288,7 +293,7 @@ namespace newasm
             newasm::mem::regs::exc = exit_code;
         }
 
-        newasm::system::terminated = true;
+        if(Exc.isCritical()) newasm::system::terminated = true;
 
         if(newasm::header::data::exception)
         {
