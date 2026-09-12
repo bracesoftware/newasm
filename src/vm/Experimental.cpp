@@ -9,7 +9,7 @@ module(experimental__TESTS, {
 
 namespace newasm
 {
-    class Experimental
+    class Experimental final
     {
         public inline static void entry()
         {
@@ -18,7 +18,7 @@ namespace newasm
         }
     };
     
-    class procline_insert
+    class procline_insert final
     {
         public:
         int processline(std::string &ln)
