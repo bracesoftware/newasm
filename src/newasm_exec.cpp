@@ -76,6 +76,26 @@ namespace newasm
                 newasm::forLinker::getLine(idx);
         return {true, ss.str()};
     };
+    auto InstructionClassJIT = <:&:>(auto& vec) -> void {
+        newasm::perf::Jitc.start();
+        for(size_t i = 0; i < vec.size(); ++i)
+        {
+            auto& mmap = vec.at(i);
+            if(
+                mmap.type == newasm::compiler::instruction or
+                mmap.type == newasm::compiler::conditional
+            )
+            {
+                if constexpr(NEWASM_BUG_CRISIS)
+                {
+                    auto p = GetLineLocation(mmap.SourceLocation);
+                    std::cout << "\t\t" << mmap.raw << " @ " << (p.first ? p.second : "null") << " -> " << mmap.Class << std::endl;
+                }
+                mmap.Runtime.Processor = NewASM::Const::InstructionClass::ClassProcessors[mmap.Class];
+            }
+        }
+        newasm::perf::Jitc.stop();
+    };
     inline signed int GetCurrentThread()
     {
         if(!newasm::thread_line) return 0;
@@ -7222,7 +7242,7 @@ namespace newasm
                 }
 
                 newasm::SetExceptionComment("procedure name is probably not alphanumeric");
-                newasm::terminate(newasm::exit_codes::os_error);
+                newasm::terminate(newasm::exit_codes::mem_overflow);
                 return 1;
             }
             //heap
@@ -8028,6 +8048,43 @@ namespace newasm
             NewASM::CurrentProc->proc->contents.push_back(lineInfo);
             return;
         }
+
+        if(lineInfo.tokens.size() != 2)
+        {
+            newasm::terminate(newasm::exit_codes::unknown_inscp);
+            return;
+        }
+
+        std::string& name = lineInfo.tokens.back();
+
+        auto it = newasm::variables::ids.find(name);
+        if(it == newasm::variables::ids.end())
+        {
+            newasm::variables::ids[name].artifact = new newasm::variables::artifactData;
+            auto& mmap = newasm::variables::ids.at(name);
+            mmap.type = newasm::datatypes::artifactz;
+            
+            NewASM::CurrentArtifact = &mmap;
+            std::vector<lineData> v;
+            bool h = NewASM::compiler::bin::LoadArtifact(name, v);
+            if(!h)
+            {
+                newasm::SetExceptionComment("artifact failed to load");
+                newasm::terminate(newasm::exit_codes::empty_proc);
+                return;
+            }
+
+            NewASM::RunningArtifact = true;
+            InstructionClassJIT(v);
+            for(size_t i = 0; i < v.size(); ++i)
+            {
+                newasm::procline(v.at(i));
+            }
+            NewASM::RunningArtifact = false;
+            return;
+        }
+        
+        newasm::CurrentArtifact = &it->second;
         return;
     }
 
@@ -8109,8 +8166,16 @@ namespace newasm
             return;
         }
 
+        std::string& name = lineInfo.tokens.back();
+        if(!NewASM::header::functions::isalphanum(name))
+        {
+            newasm::SetExceptionComment("name of the artifact has to be alphanumeric");
+            newasm::terminate(newasm::exit_codes::invalid_init);
+            return;
+        }
+
         newasm::DeclaringArtifact = true;
-        newasm::DeclaringArtifactName = lineInfo.tokens.back();
+        newasm::DeclaringArtifactName = name;
         newasm::DeclaringArtifactData.clear();
 
         newasm::brace_stack__.push_back(newasm::brace_stack::artifact_block);
@@ -9398,28 +9463,10 @@ namespace newasm
         //newasm::perf::start = std::chrono::steady_clock::now();
         newasm::perf::MainRuntime.start();
         auto size = newasm::compiler::compiledCode.size();
-        newasm::perf::Jitc.start();
-        auto InstructionClassJIT = <:&:>(auto& vec) -> void {
-            for(size_t i = 0; i < vec.size(); ++i)
-            {
-                auto& mmap = vec.at(i);
-                if(
-                    mmap.type == newasm::compiler::instruction or
-                    mmap.type == newasm::compiler::conditional
-                )
-                {
-                    if constexpr(NEWASM_BUG_CRISIS)
-                    {
-                        auto p = GetLineLocation(mmap.SourceLocation);
-                        std::cout << "\t\t" << mmap.raw << " @ " << (p.first ? p.second : "null") << " -> " << mmap.Class << std::endl;
-                    }
-                    mmap.Runtime.Processor = NewASM::Const::InstructionClass::ClassProcessors[mmap.Class];
-                }
-            }
-        };
+        
         InstructionClassJIT(newasm::compiler::compiledCode);
         InstructionClassJIT(newasm::compiler::caseJumpTable);
-        newasm::perf::Jitc.stop();
+
         //now we load the standard lib after loading the case jump table
         newasm::CYCLE_COUNT = 0;
         newasm::perf::StandardLibLoading.start();

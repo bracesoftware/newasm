@@ -339,6 +339,7 @@ namespace newasm
     constinit std::string DeclaringArtifactName; 
     constinit std::vector<newasm::compiler::lineData> DeclaringArtifactData;
     VarPtr CurrentArtifact = nullptr;
+    constinit bool RunningArtifact = false;
 
     std::vector<VarPtr> CurrentThreads;
 
@@ -547,6 +548,7 @@ namespace newasm
         constinit const int tokenOpenBrace = 103;
         constinit const int ThisPtr = 104;
         constinit const int listz = 105;
+        constinit const int artifactz = 106;
 
         namespace cont_types
         {
