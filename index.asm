@@ -2948,10 +2948,16 @@ mymacro : #
             end
     }
 
+    mov tlr, "echo hi from echo"
+    [native] call sys
+
     fork TestArtifact
     [home] call TestArtifactMethod
     call TestArtifact.TestArtifactMethod
 
+jmp e203423
+    ee
+:e203423
 
     zero rax
     mov rax, 223 ; exit code

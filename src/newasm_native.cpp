@@ -12,9 +12,11 @@ namespace newasm
         namespace SupportedNatives
         {
             constinit const int PRINT = 0;
+            constinit const int SYS = 1;
 
             const std::unordered_map<std::string, int> Identifiers = {
-                {"print", PRINT}
+                {"print", PRINT},
+                {"sys", SYS}
             };
         }
     }

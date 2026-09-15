@@ -210,7 +210,7 @@ namespace newasm
         int stop = 0;
         //int stoproc = 0;
         //std::string cproc;
-        int proclines = 0;
+        //int proclines = 0;
         //std::string original_proc;
         //bool mangled_proc;
         //std::string processing_proc;

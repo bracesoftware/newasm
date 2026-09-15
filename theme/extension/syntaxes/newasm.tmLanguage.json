@@ -74,7 +74,7 @@
     },
     {
       "name": "native.func.newasm",
-      "match": "\\b(print)\\b"
+      "match": "\\b(print|sys)\\b"
     },
     {
       "name": "native.func.newasm",

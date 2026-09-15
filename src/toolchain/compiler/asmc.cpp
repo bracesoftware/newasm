@@ -1255,7 +1255,8 @@ namespace newasm
                                 (lineCompiled.whatAmIDoing == NewASM::core::lang_inf::fetch__) or
                                 (lineCompiled.whatAmIDoing == NewASM::core::lang_inf::catch__) or
                                 (lineCompiled.whatAmIDoing == NewASM::core::lang_inf::pop) or
-                                (lineCompiled.whatAmIDoing == newasm::core::lang_inf::resb__)
+                                (lineCompiled.whatAmIDoing == newasm::core::lang_inf::resb__) or
+                                (lineCompiled.whatAmIDoing == newasm::core::lang_inf::fork__)
                             )
                             {
                                 lineCompiled.priArgType = NewASM::datatypes::NIL;

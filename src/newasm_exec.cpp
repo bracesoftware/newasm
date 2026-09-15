@@ -1584,7 +1584,7 @@ namespace newasm
         //so we can easily check what instructions are being added to a function,etc
         if(newasm::system::stop == 1)
         {
-            newasm::system::proclines ++;
+            //newasm::system::proclines ++;
             NewASM::CurrentProc->proc->contents.push_back(lineInfo);
             return;
         }
@@ -1953,7 +1953,7 @@ namespace newasm
         //so we can easily check what instructions are being added to a function,etc
         if(newasm::system::stop == 1)
         {
-            newasm::system::proclines ++;
+            //newasm::system::proclines ++;
             NewASM::CurrentProc->proc->contents.push_back(lineInfo);
             return 1;
         }
@@ -4543,7 +4543,7 @@ namespace newasm
     {
         if(newasm::system::stop == 1)
         {
-            newasm::system::proclines++;
+            //newasm::system::proclines++;
             newasm::CurrentProc->proc->contents.push_back(lineInfo);
             return;
         }
@@ -4637,7 +4637,7 @@ namespace newasm
     {
         if(newasm::system::stop == 1)
         {
-            newasm::system::proclines ++;
+            //newasm::system::proclines ++;
             NewASM::CurrentProc->proc->contents.push_back(lineInfo);
             return 1;
         }
@@ -7227,11 +7227,12 @@ namespace newasm
                 NewASM::VarTable& ref = newasm::variables::ids;
                 if(NewASM::RunningArtifact)
                 {
+                    std::cout << "Declaring an artifact procedure -> "<<suf << std::endl;
                     ref = (*NewASM::CurrentArtifact)->artifact->data;
                 }
 
                 newasm::system::stop = 1;
-                newasm::system::proclines = 0;
+                //newasm::system::proclines = 0;
                 ref[suf].proc = new newasm::variables::procedureData;
                 auto& mmap = ref.at(suf);
                 mmap.type = newasm::datatypes::proc;
@@ -8076,6 +8077,14 @@ namespace newasm
             auto it = ref.find(suf);
             if(it == ref.end())
             {
+                if constexpr(true)
+                {
+                    std::cout << "VarTable for artifact" << std::endl;
+                    for(const auto& [k, v] : ref)
+                    {
+                        std::cout <<"  * "<< k << std::endl;
+                    }
+                }
                 newasm::SetExceptionComment("object with such name does not exist within the artifact");
                 newasm::terminate(newasm::exit_codes::invalid_memacc);
                 return;
@@ -8098,8 +8107,14 @@ namespace newasm
     {
         if(newasm::system::stop == 1)
         {
-            newasm::system::proclines ++;
+            //newasm::system::proclines ++;
             NewASM::CurrentProc->proc->contents.push_back(lineInfo);
+            return;
+        }
+
+        if(lineInfo.priArgType == newasm::datatypes::NIL)
+        {
+            newasm::CurrentArtifact = nullptr;
             return;
         }
 
@@ -8161,13 +8176,26 @@ namespace newasm
     {
         if(newasm::system::stop == 1)
         {
-            ++newasm::system::proclines;
+            //++newasm::system::proclines;
             NewASM::CurrentProc->proc->contents.push_back(lineInfo);
             return;
         }
 
         switch(lineInfo.priInt)
         {
+            case NewASM::Const::SupportedNatives::SYS:
+            {
+                std::string cmd = newasm::mem::regs::tlr;
+                if(!newasm::header::functions::istext(cmd))
+                {
+                    newasm::SetExceptionComment("command has to be an instance of `string`");
+                    newasm::terminate(newasm::exit_codes::bus_err);
+                    return;
+                }
+                cmd = newasm::header::functions::remq(cmd);
+                std::system(cmd.data());
+                return;
+            }
             case NewASM::Const::SupportedNatives::PRINT:
             {
                 if constexpr(NEWASM_BUG_CRISIS)
@@ -8249,7 +8277,7 @@ namespace newasm
     {
         if(newasm::system::stop == 1)
         {
-            newasm::system::proclines ++;
+            //newasm::system::proclines ++;
             NewASM::CurrentProc->proc->contents.push_back(lineInfo);
             return;
         }
@@ -8311,7 +8339,7 @@ namespace newasm
     {
         if(newasm::system::stop == 1)
         {
-            newasm::system::proclines ++;
+            //newasm::system::proclines ++;
             NewASM::CurrentProc->proc->contents.push_back(lineInfo);
             return;
         }
@@ -8408,7 +8436,7 @@ namespace newasm
                     newasm::terminate(newasm::exit_codes::unexpected_end);
                     return 1;
                 }
-                if(newasm::system::proclines == 0)
+                if(NewASM::CurrentProc->proc->contents.empty())
                 {
                     newasm::SetExceptionComment("compiler was given `nil` data");
                     newasm::terminate(newasm::exit_codes::empty_proc);
@@ -8424,7 +8452,7 @@ namespace newasm
         }
         if(newasm::system::stop == 1)
         {
-            newasm::system::proclines ++;
+            //newasm::system::proclines ++;
             NewASM::CurrentProc->proc->contents.push_back(lineInfo);
             return 1;
         }
