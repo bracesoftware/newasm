@@ -76,7 +76,7 @@ namespace newasm
                 newasm::forLinker::getLine(idx);
         return {true, ss.str()};
     };
-    auto InstructionClassJIT = <:&:>(auto& vec) -> void {
+    auto InstructionClassJIT = <::>(auto& vec) -> void {
         newasm::perf::Jitc.start();
         for(size_t i = 0; i < vec.size(); ++i)
         {
@@ -824,7 +824,7 @@ namespace newasm
                 {
                     mmap.addr = newasm::hardware::randAccessMem.write<int>(std::stoi(value));
                 }
-                if(line.priArgType == newasm::datatypes::number)
+                else if(line.priArgType == newasm::datatypes::number)
                 {
                     mmap.addr = newasm::hardware::randAccessMem.write<int>(line.priInt);
                 }
@@ -876,7 +876,7 @@ namespace newasm
                 {
                     mmap.addr = newasm::hardware::randAccessMem.write<float>(std::stof(value));
                 }
-                if(line.priArgType == newasm::datatypes::decimal)
+                else if(line.priArgType == newasm::datatypes::decimal)
                 {
                     mmap.addr = newasm::hardware::randAccessMem.write<float>(line.priFloat);
                 }
@@ -926,7 +926,7 @@ namespace newasm
                 {
                     mmap.addr = newasm::hardware::randAccessMem.write<std::string>(newasm::header::functions::remq(value));
                 }
-                if(line.priArgType == newasm::datatypes::text)
+                else if(line.priArgType == newasm::datatypes::text)
                 {
                     mmap.addr = newasm::hardware::randAccessMem.write<std::string>(line.priString);
                 }
@@ -1014,7 +1014,7 @@ namespace newasm
                 {
                     mmap.addr = newasm::hardware::randAccessMem.write<char>(newasm::header::functions::remsq(value).at(0));
                 }
-                if(line.priArgType == newasm::datatypes::character)
+                else if(line.priArgType == newasm::datatypes::character)
                 {
                     mmap.addr = newasm::hardware::randAccessMem.write<char>(line.priChar);
                 }
@@ -6293,10 +6293,6 @@ namespace newasm
 
                 newasm::brace_stack__.push_back(newasm::brace_stack::thread_block);
                 mmap.thrd->original_name = original_name;
-                
-                
-                //newasm::threads::thread_count++;
-                //newasm::header::data::case_line.clear();
                 return 1;
             }
             case newasm::core::lang_inf::recv:
@@ -7228,21 +7224,21 @@ namespace newasm
                     original_name = suf;
                 }
 
-                if(newasm::header::functions::isalphanum(suf))
+                NewASM::VarTable& ref = newasm::variables::ids;
+                if(NewASM::RunningArtifact)
                 {
-                    newasm::system::stop = 1;
-                    newasm::system::proclines = 0;
-                    newasm::variables::ids[suf].proc = new newasm::variables::procedureData;
-                    auto& mmap = newasm::variables::ids.at(suf);
-                    mmap.type = newasm::datatypes::proc;
-                    mmap.proc->LCX = newasm::mem::regs::lcx.get_value();
-                    NewASM::CurrentProc = &mmap;
-                    mmap.proc->original_name = original_name;
-                    return 1;
+                    ref = (*NewASM::CurrentArtifact)->artifact->data;
                 }
 
-                newasm::SetExceptionComment("procedure name is probably not alphanumeric");
-                newasm::terminate(newasm::exit_codes::mem_overflow);
+                newasm::system::stop = 1;
+                newasm::system::proclines = 0;
+                ref[suf].proc = new newasm::variables::procedureData;
+                auto& mmap = ref.at(suf);
+                mmap.type = newasm::datatypes::proc;
+                mmap.proc->LCX = newasm::mem::regs::lcx.get_value();
+                NewASM::CurrentProc = &mmap;
+                mmap.proc->original_name = original_name;
+              
                 return 1;
             }
             //heap
@@ -8040,6 +8036,64 @@ namespace newasm
         return 1;
     }
 
+    inline void CallHomeProc(newasm::compiler::lineData& lc)
+    {
+        if(newasm::header::data::proc_now)
+        {
+            newasm::SetExceptionComment("cannot call a procedure within procedure, use `callc`; `" + NewASM::CurrentProcA->proc->original_name + "` is running already");
+            newasm::terminate(newasm::exit_codes::inline_proc);
+            return;
+        }
+
+        if(lc.tokens.size() != 2)
+        {
+            newasm::terminate(newasm::exit_codes::unknown_inscp);
+            return;
+        }
+
+        std::string suf = lc.tokens.back();
+
+        VarPtr art = newasm::CurrentArtifact;
+
+        if(art == nullptr)
+        {
+            newasm::SetExceptionComment("unknown home artifact");
+            newasm::terminate(newasm::exit_codes::dangling_this);
+            return;
+        }
+
+        VarTable& ref = art->artifact->data;
+        VarPtr ptr = nullptr;
+        if(lc.priArgType == newasm::datatypes::ThisPtr)
+        {
+            newasm::SetExceptionComment("cannot access `this` from within the artifact, use `[] call`");
+            newasm::terminate(newasm::exit_codes::dangling_this);
+            return;
+        }
+        else
+        {
+            newasm::runtime::functions::parse<true>(suf);
+            auto it = ref.find(suf);
+            if(it == ref.end())
+            {
+                newasm::SetExceptionComment("object with such name does not exist within the artifact");
+                newasm::terminate(newasm::exit_codes::invalid_memacc);
+                return;
+            }
+            ptr = &it->second;
+            if(ptr->type != newasm::datatypes::proc) [[unlikely]]
+            {
+                newasm::SetExceptionComment("object is not a procedure");
+                newasm::terminate(newasm::exit_codes::seg_fault);
+                return;
+            }
+        }
+
+        ptr->proc->calledBy = lc.SourceLocation;
+        newasm::callproc(ptr);
+        return;
+    }
+
     inline void ForkProc(newasm::compiler::lineData& lineInfo)
     {
         if(newasm::system::stop == 1)
@@ -8060,12 +8114,22 @@ namespace newasm
         auto it = newasm::variables::ids.find(name);
         if(it == newasm::variables::ids.end())
         {
+            if(newasm::thread_line)
+            {
+                newasm::terminate(newasm::exit_codes::jit_fail);
+                return;
+            }
+            if(newasm::header::data::proc_now)
+            {
+                newasm::terminate(newasm::exit_codes::jit_fail);
+                return;
+            }
             newasm::variables::ids[name].artifact = new newasm::variables::artifactData;
             auto& mmap = newasm::variables::ids.at(name);
             mmap.type = newasm::datatypes::artifactz;
             
             NewASM::CurrentArtifact = &mmap;
-            std::vector<lineData> v;
+            std::vector<newasm::compiler::lineData> v;
             bool h = NewASM::compiler::bin::LoadArtifact(name, v);
             if(!h)
             {
@@ -8083,7 +8147,12 @@ namespace newasm
             NewASM::RunningArtifact = false;
             return;
         }
-        
+        if(it->second.type != newasm::datatypes::artifactz)
+        {
+            newasm::SetExceptionComment("object is not an artifact");
+            newasm::terminate(newasm::exit_codes::dtyp_mismatch);
+            return;
+        }
         newasm::CurrentArtifact = &it->second;
         return;
     }
@@ -8167,12 +8236,6 @@ namespace newasm
         }
 
         std::string& name = lineInfo.tokens.back();
-        if(!NewASM::header::functions::isalphanum(name))
-        {
-            newasm::SetExceptionComment("name of the artifact has to be alphanumeric");
-            newasm::terminate(newasm::exit_codes::invalid_init);
-            return;
-        }
 
         newasm::DeclaringArtifact = true;
         newasm::DeclaringArtifactName = name;
@@ -8747,7 +8810,7 @@ namespace newasm
         newasm::stack::events[tohandle] = procedure;
         return;
     }
-    int process_text(std::string macroname, std::string symbol)
+    inline int process_text(std::string macroname, std::string symbol)
     {
         if(symbol != "#"_str)
         {

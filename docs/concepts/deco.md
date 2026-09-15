@@ -22,6 +22,7 @@ When you put a decorator in front of an instruction, it becomes an instruction d
 | ---------------- | ----------- |
 | `[], [nil]` | Empty descriptor. Does absolutely nothing. |
 | `[native]` | When used in front of the `call` instruction, you can call native functions implemented by the VM. |
+| `[force]` | Forces an instruction to be as is, so the compiler will ignore it during optimization. Useful when making artifacts! |
 
 Example:
 ```asm

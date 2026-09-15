@@ -70,11 +70,15 @@
     },
     {
       "name": "namespace.newasm",
-      "match": "\\b(mutex|final|static|mangle|safe)\\b"
+      "match": "\\b(mutex|final|static|mangle|safe|force)\\b"
     },
     {
       "name": "native.func.newasm",
       "match": "\\b(print)\\b"
+    },
+    {
+      "name": "native.func.newasm",
+      "match": "\\b(abstract|impl)\\b"
     },
     {
       "name": "namespace.newasm",

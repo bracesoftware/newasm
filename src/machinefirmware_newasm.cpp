@@ -109,6 +109,7 @@ namespace newasm
     inline void ForkProc(newasm::compiler::lineData& line);
 
     inline void NativeProc(newasm::compiler::lineData& line);
+    inline void CallHomeProc(newasm::compiler::lineData& line);
 
     namespace Const
     {
@@ -120,6 +121,9 @@ namespace newasm
                 constinit const int DATA = 2;
                 constinit const int NATIVE = 3;
                 constinit const int HOME = 4;
+                constinit const int FORCE = 5;
+                constinit const int ABSTRACT = 6;
+                constinit const int IMPL = 7;
             }
         }
         typedef std::function<void(NewASM::compiler::lineData&)> ClassProcessor;
@@ -141,6 +145,7 @@ namespace newasm
                 constinit const int Artifact = 10;
                 constinit const int Fork = 11;
                 constinit const int NativeCall = 12;
+                constinit const int HomeCall = 13;
             }
 
             const std::unordered_map<int, ClassProcessor> ClassTemplate = {
@@ -155,7 +160,8 @@ namespace newasm
                 {DedicatedClass::TinyConditional, TinyCondProc},
                 {DedicatedClass::MediumConditional, MediumCondProc},
                 {DedicatedClass::MovReg, MovRegProc},
-                {DedicatedClass::NativeCall, NativeProc}
+                {DedicatedClass::NativeCall, NativeProc},
+                {DedicatedClass::HomeCall, CallHomeProc}
             };
 
             std::vector<ClassProcessor> ClassProcessors;
@@ -338,7 +344,7 @@ namespace newasm
     constinit bool DeclaringArtifact = false;
     constinit std::string DeclaringArtifactName; 
     constinit std::vector<newasm::compiler::lineData> DeclaringArtifactData;
-    VarPtr CurrentArtifact = nullptr;
+    
     constinit bool RunningArtifact = false;
 
     std::vector<VarPtr> CurrentThreads;
@@ -1088,6 +1094,7 @@ namespace newasm
     using execBytecode = newasm::compiler::lineData;
     newasm::kernel::thread_safe<newasm::compiler::lineData*> PRC;
     newasm::kernel::thread_safe<VarPtr> _this = nullptr;
+    newasm::kernel::thread_safe<VarPtr> CurrentArtifact = nullptr;
     struct _m_StackInfo final
     {
         int stkType;
@@ -1696,6 +1703,13 @@ namespace newasm
                     if(i->second.thrd != nullptr)
                     {
                         delete i->second.thrd;
+                    }
+                }
+                if(i->second.type == newasm::datatypes::artifactz)
+                {
+                    if(i->second.artifact != nullptr)
+                    {
+                        delete i->second.artifact;
                     }
                 }
                 //list cleanup

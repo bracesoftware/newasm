@@ -512,7 +512,7 @@ namespace newasm
 
         class artifactData final
         {
-            public std::vector<VarPtr> data;
+            public VarTable data;
         };
 
         class procedureData final

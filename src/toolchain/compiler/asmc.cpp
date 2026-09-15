@@ -146,6 +146,14 @@ namespace newasm
             {
                 lc.Class = NewASM::Const::InstructionClass::DedicatedClass::Mutex;
             }
+            // =========================== HOME CALL
+            else if(
+                lc.whatAmIDoing == newasm::core::lang_inf::call and
+                lc.Descriptor.type == NewASM::Const::InsDescriptor::Types::HOME
+            )
+            {
+                lc.Class = NewASM::Const::InstructionClass::DedicatedClass::HomeCall;
+            }
             // =========================== NATIVE CALL
             else if(
                 lc.whatAmIDoing == NewASM::core::lang_inf::call and
@@ -435,6 +443,18 @@ namespace newasm
                 else if(desc.second == HOME_STR)
                 {
                     lc.Descriptor.type = NewASM::Const::InsDescriptor::Types::HOME;
+                }
+                else if(desc.second == ABSTRACT_STR)
+                {
+                    lc.Descriptor.type = NewASM::Const::InsDescriptor::Types::ABSTRACT;
+                }
+                else if(desc.second == IMPL_STR)
+                {
+                    lc.Descriptor.type = NewASM::Const::InsDescriptor::Types::IMPL;
+                }
+                else if(desc.second == FORCE_STR)
+                {
+                    lc.Descriptor.type = NewASM::Const::InsDescriptor::Types::FORCE;
                 }
                 else if(newasm::header::functions::isnumeric(desc.second))
                 {
@@ -768,10 +788,15 @@ namespace newasm
                     return;
                 }
                 std::string temp_name;
+                if(!newasm::header::functions::isalphanum(name))
+                {
+                    newasm::compiler::abort(newasm::compiler::fail::unmatched_syntax);
+                    return;
+                }
                 temp_name.append(name);
                 for(int i = 0; i < newasm::compiler::data::namespace_stack.size(); ++i)
                 {
-                    temp_name.append("--");
+                    temp_name.append(NEWASM_COZY_DELIMITER);
                     temp_name.append(newasm::compiler::data::namespace_stack[i]);
                 }
                 auto& vec = newasm::compiler::data::symbol_map;
@@ -998,6 +1023,10 @@ namespace newasm
                             }
                             //checking for thread names cuz SPEED
                             if(lineCompiled.whatAmIDoing == newasm::core::lang_inf::thread__)
+                            {
+                                checkCollisions(otherShit);
+                            }
+                            if(lineCompiled.whatAmIDoing == newasm::core::lang_inf::artifact__)
                             {
                                 checkCollisions(otherShit);
                             }
@@ -1333,6 +1362,28 @@ namespace newasm
         using DescFuncRange = std::function<void(const std::string&, int, int)>;
         using DescFuncLmao = std::function<void(const std::string&, const std::vector<int>&)>;
 
+        auto SKIPPING_FORCE__ = <::>(const std::string& text, newasm::compiler::lineData* L, int idx) -> void {
+            if(NewASM::header::data::LogCompilerOptimizations)
+            {
+                static const std::string Insomnia = "\t  "_str;
+                std::cout << Insomnia << newasm::header::col::magenta;
+                auto LINE_CODE__ = newasm::header::functions::trim(L->raw);
+                std::cout << LINE_CODE__ << "@";
+                try
+                {
+                    std::cout << newasm::forLinker::getFile(idx) << ":";
+                    std::cout << newasm::forLinker::getLine(idx);
+                }
+                catch(const std::exception& e)
+                {
+                    std::cout << "cached code";
+                }
+                std::cout << newasm::header::col::gray;
+                std::cout << ": " << text << newasm::header::col::reset << std::endl;
+            }
+            return;
+        };
+
         inline void OptimizeCodeA(
             DescFunc _OptDescription,
             newasm::compiler::lineData& line, int idx
@@ -1384,6 +1435,17 @@ namespace newasm
                 {
                     newasm::OptimizerData::JmpUsed = true;
                 }
+            }
+            //-----------------------ignore if force------------------------
+            if(line.Descriptor.type == NewASM::Const::InsDescriptor::Types::FORCE)
+            {
+                SKIPPING_FORCE__("instruction marked as [force]; skipping...", &line, idx);
+                return;
+            }
+            if(lastLine.Descriptor.type == NewASM::Const::InsDescriptor::Types::FORCE)
+            {
+                SKIPPING_FORCE__("instruction marked as [force]; skipping...", &lastLine, _idx);
+                return;
             }
             //actual optimizations
             //------------------------------------------- double instructions -------------------------------------------
@@ -1557,6 +1619,7 @@ namespace newasm
             for(int i = 0; i < k.size(); ++i)
             {
                 auto& line = k.at(i);
+                
                 //find section modifier and set the flag
                 if(CodesecFound == INVALID_LINE)
                 {
@@ -1590,6 +1653,11 @@ namespace newasm
                     }
                     else if(line.whatCodeSection == k.at(CodesecFound).whatCodeSection)
                     {
+                        if(line.Descriptor.type == NewASM::Const::InsDescriptor::Types::FORCE)
+                        {
+                            SKIPPING_FORCE__("instruction marked as [force]; skipping...", &line, i);
+                            continue;
+                        }
                         _OptDescription("dead code elimination, removed redundant code section reset", &line, i);
                         line.type = newasm::compiler::empty;
                         continue;

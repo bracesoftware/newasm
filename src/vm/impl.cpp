@@ -56,12 +56,16 @@ stock constexpr inline void _newasm_rem__24234() noexcept
 #define __newasm_rem(comment)   _newasm_rem__24234()
 
 // other bs
+#define NEWASM_COZY_DELIMITER "$$"_str
 #define STR(x) #x
 #define CONCAT(a, b) a##b
 #define NIL_STR "nil"_str
 #define THIS_STR "this"_str
 #define NATIVE_STR "native"_str
 #define HOME_STR "home"_str
+#define IMPL_STR "impl"_str
+#define FORCE_STR "force"_str
+#define ABSTRACT_STR "abstract"_str
 #define NULL_STR "0"_str
 #define OPEN_BRACE_STR "{"_str
 #define INVALID_INS (-1)

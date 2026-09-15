@@ -8,7 +8,7 @@ fi
     intg len2 : $ - PrintThisLaterLol
 .start
     artifact testArt -> {
-        .start
+        [force] .start
             mov tlr, "Hi"
     }
     
@@ -94,7 +94,7 @@ using "math"
         __say 0,"thread debug 8"
         __say 0,"thread debug 9"
         __say 0,"thread debug 10"
-
+        fetch std::ios::write
         mov tlr, "hello boss"
         [native] call print
         mov tlr, 43743278
@@ -2869,11 +2869,11 @@ mymacro : #
         __say 0, "DBG 2"
         fetch testinggg
         __say 0, "DBG 3"
-        lock this
+        ;lock this
         __say 0, "DBG 4"
-        mov this,"xd\n"
+        mov &testinggg,"xd\n"
         __say 0, "DBG 5"
-        mov tlr, *this
+        mov tlr, testinggg
         __say 0, "DBG 6"
         mov fdx, 1
         __say 0, "DBG 7"
@@ -2881,7 +2881,7 @@ mymacro : #
         __say 0, "DBG 8"
         syscall
         __say 0, "DBG 9"
-        unlock this
+        ;unlock this
         __say 0, "DBG 10"
         retf 0
     }
@@ -2940,8 +2940,9 @@ mymacro : #
     call std::ios::writeln
 
     artifact TestArtifact -> {
-        .start
+        [force] .start
             proc TestArtifactMethod
+                mov tlr, "ey"
                 [native] call print
                 halt 0
             end
