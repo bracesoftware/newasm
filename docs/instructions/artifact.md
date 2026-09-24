@@ -8,7 +8,7 @@ This article covers following topics:
 1. [`artifact` instruction](#artifact)
 2. [`fork` instruction](#forking-the-artifact)
 3. `home` pointer
-4. 
+4. [`mixin` instruction](#mixins)
 
 ### `artifact`
 Artifacts are loadable containers containing compiled code. To make it easier to understand, they behave like Java's class files.
