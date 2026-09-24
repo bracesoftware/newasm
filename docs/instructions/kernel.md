@@ -97,8 +97,10 @@ int 0x3 ; tells the system to manually calculate the `bos` size for output
 
 | System interrupt | Description |
 | ---------------- | ----------- |
+| `0x1` | Does nothing. Can be used as a test call instead of `nop`. |
 | `0x3` | Toggles the automatic `bos` calculation when printing text. |
 | `0x4` | Toggles the offline mode. When offline mode is on, host service calls that require internet connection are blocked. |
+| `0x5` | Toggles thread execution. |
 
 ## `sysreq`
 

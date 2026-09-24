@@ -6552,12 +6552,18 @@ namespace newasm
                 //crash
                 if(SystemInterrupt == -1)
                 {
+                    newasm::SetExceptionComment("could not resolve system interrupt");
                     newasm::terminate(newasm::exit_codes::invalid_sysint);
                     return 1;
                 }
 
                 switch(SystemInterrupt)
                 {
+                    //do nothin
+                    case 1:
+                    {
+                        return 1;
+                    }
                     case 3:
                     {
                         newasm::header::flags::autobos = !newasm::header::flags::autobos;
@@ -6580,21 +6586,6 @@ namespace newasm
             //sysenter
             case newasm::core::lang_inf::sysenter:
             {
-                #if 0
-                if(!newasm::header::functions::istext(suf))
-                {
-                    newasm::terminate(newasm::exit_codes::dtyp_mismatch);
-                    return 1;
-                }
-                suf = newasm::header::functions::remq(suf);
-
-                auto kernel_module = newasm::inverted_kernel.find(suf);
-                if(kernel_module == newasm::inverted_kernel.end())
-                {
-                    newasm::terminate(newasm::exit_codes::sysenter_fail);
-                    return 1;
-                }
-                #endif
                 if(lineInfo.krnlMod == INVALID_INS)
                 {
                     newasm::terminate(newasm::exit_codes::sysenter_fail);
@@ -7227,7 +7218,7 @@ namespace newasm
                 NewASM::VarTable& ref = newasm::variables::ids;
                 if(NewASM::RunningArtifact)
                 {
-                    std::cout << "Declaring an artifact procedure -> "<<suf << std::endl;
+                    std::cout << "Declaring an artifact procedure -> " << suf << std::endl;
                     ref = (*NewASM::CurrentArtifact)->artifact->data;
                 }
 

@@ -526,6 +526,7 @@ namespace newasm
 
             std::string original_name;
             bool Async = false;
+            bool Abstract = false;
             int calledBy = 0;
             bool Halt = false;
 
