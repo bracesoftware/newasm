@@ -2940,6 +2940,7 @@ mymacro : #
     call std::ios::writeln
 
     artifact TestArtifact -> {
+        lmao
         [force] .start
             proc TestArtifactMethod
                 mov tlr, "ey"

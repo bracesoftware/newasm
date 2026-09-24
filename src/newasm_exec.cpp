@@ -45,7 +45,7 @@ namespace newasm
         {
             newasm::header::data::LastLine = &BYTECODE[IDX];
             if constexpr(NEWASM_BUG_CRISIS) return;
-            if(mmap->id > 10) std::cout << newasm::header::col::cyan << "---Processing thread " << mmap->original_name << ":" << mmap->lcx << "|id:" << mmap->id<<"---"<<BYTECODE[IDX].raw << newasm::header::col::reset<<std::endl;
+            if(mmap->id > 11) std::cout << newasm::header::col::cyan << "---Processing thread " << mmap->original_name << ":" << mmap->lcx << "|id:" << mmap->id<<"---"<<BYTECODE[IDX].raw << newasm::header::col::reset<<std::endl;
             newasm::procline(BYTECODE[IDX]);
         }
 
@@ -54,7 +54,7 @@ namespace newasm
         if(mmap->paused)
         {
             if constexpr(NEWASM_BUG_CRISIS) return;
-            if(mmap->id > 10) std::cout << newasm::header::col::red<<"-------- thrd : " << mmap->original_name << " paused" <<newasm::header::col::reset<< std::endl;
+            if(mmap->id > 11) std::cout << newasm::header::col::red<<"-------- thrd : " << mmap->original_name << " paused" <<newasm::header::col::reset<< std::endl;
             mmap->paused = false;
             return;
         }
@@ -221,7 +221,7 @@ namespace newasm
             {
                 std::cout << Insomnia << newasm::header::col::reset << newasm::header::col::light_red;
                 std::cout << "^ exception source information -> " << newasm::header::col::gray << newasm::header::style::underline;
-                std::cout << "*/vmsrc_c++/" << loc.file_name() << ":" << loc.line() << ":" << loc.column() << newasm::header::col::reset << "\n\t" << Insomnia;
+                std::cout << "/c++base/" << loc.file_name() << ":" << loc.line() << ":" << loc.column() << newasm::header::col::reset << "\n\t" << Insomnia;
                 std::cout << newasm::header::col::light_red << '`' << newasm::header::col::gray;
                 std::cout << loc.function_name() << newasm::header::col::light_red << '`';
                 std::cout << newasm::header::col::reset << newasm::header::col::gray;
@@ -258,6 +258,19 @@ namespace newasm
             {
                 std::cout << Insomnia << newasm::header::col::reset << newasm::header::col::magenta;
                 std::cout << "^ in lambda/anonymous procedure";
+                std::cout << std::endl;
+                std::cout << newasm::header::col::reset;
+            }
+        };
+
+        auto LogArtifact = <:Insomnia:>() -> void {
+            if(newasm::RunningArtifact)
+            {
+                std::cout << Insomnia << newasm::header::col::reset << newasm::header::col::dark_aqua;
+                std::cout << "^ code in an artifact `";
+                std::cout << newasm::header::col::gray << newasm::RunningArtifactName;
+                std::cout << newasm::header::col::dark_aqua << "` on line ";
+                std::cout << newasm::header::col::gray << newasm::RunningArtifactLcx;
                 std::cout << std::endl;
                 std::cout << newasm::header::col::reset;
             }
@@ -417,6 +430,7 @@ namespace newasm
                     std::cout << std::endl;
                 }
             }
+
             LogLambda();
 
             if(NewASM::ExceptionHandling::Line->MacroComponent)
@@ -444,6 +458,7 @@ namespace newasm
             }
             std::cout << std::endl;
             std::cout << newasm::header::col::reset;
+            LogArtifact();
 
             LogExceptionSourceLoc();
             LogComment();
@@ -7086,56 +7101,6 @@ namespace newasm
 
                 return 1;
             }
-            //call
-            case newasm::core::lang_inf::call:
-            {
-                if(newasm::header::data::proc_now)
-                {
-                    newasm::SetExceptionComment("cannot call a procedure within procedure, use `callc`; `" + NewASM::CurrentProcA->proc->original_name + "` is running already");
-                    newasm::terminate(newasm::exit_codes::inline_proc);
-                    return 1;
-                }
-
-                VarPtr ptr = nullptr;
-                if(lineInfo.priArgType == newasm::datatypes::ThisPtr)
-                {
-                    if(newasm::_this == nullptr) [[unlikely]]
-                    {
-                        newasm::SetExceptionComment("`this` is probably not initialized");
-                        newasm::terminate(newasm::exit_codes::invalid_memacc);
-                        return 1;
-                    }
-                    if((*newasm::_this)->type != newasm::datatypes::proc) [[unlikely]]
-                    {
-                        newasm::SetExceptionComment("object is not a procedure");
-                        newasm::terminate(newasm::exit_codes::seg_fault);
-                        return 1;
-                    }
-                    ptr = newasm::_this;
-                }
-                else
-                {
-                    newasm::runtime::functions::parse<true>(suf);
-                    auto it = newasm::variables::ids.find(suf);
-                    if(it == newasm::variables::ids.end())
-                    {
-                        newasm::SetExceptionComment("object with such name does not exist");
-                        newasm::terminate(newasm::exit_codes::invalid_memacc);
-                        return 1;
-                    }
-                    ptr = &it->second;
-                    if(ptr->type != newasm::datatypes::proc) [[unlikely]]
-                    {
-                        newasm::SetExceptionComment("object is not a procedure");
-                        newasm::terminate(newasm::exit_codes::seg_fault);
-                        return 1;
-                    }
-                }
-
-                ptr->proc->calledBy = lineInfo.SourceLocation;
-                newasm::callproc(ptr);
-                return 1;
-            }
             //free
             case newasm::core::lang_inf::free__:
             {
@@ -7215,17 +7180,17 @@ namespace newasm
                     original_name = suf;
                 }
 
-                NewASM::VarTable& ref = newasm::variables::ids;
+                NewASM::VarTable* ref = &newasm::variables::ids;
                 if(NewASM::RunningArtifact)
                 {
-                    std::cout << "Declaring an artifact procedure -> " << suf << std::endl;
-                    ref = (*NewASM::CurrentArtifact)->artifact->data;
+                    //std::cout << "Declaring an artifact procedure -> " << suf << std::endl;
+                    ref = &(*NewASM::CurrentArtifact)->artifact->data;
                 }
 
                 newasm::system::stop = 1;
                 //newasm::system::proclines = 0;
-                ref[suf].proc = new newasm::variables::procedureData;
-                auto& mmap = ref.at(suf);
+                (*ref)[suf].proc = new newasm::variables::procedureData;
+                auto& mmap = ref->at(suf);
                 mmap.type = newasm::datatypes::proc;
                 mmap.proc->LCX = newasm::mem::regs::lcx.get_value();
                 NewASM::CurrentProc = &mmap;
@@ -8028,6 +7993,81 @@ namespace newasm
         return 1;
     }
 
+    inline void StandardCallProc(newasm::compiler::lineData& lc)
+    {
+        if(newasm::header::data::proc_now)
+        {
+            newasm::SetExceptionComment("cannot perform a standard call within a procedure, use `callc`; `" + NewASM::CurrentProcA->proc->original_name + "` is running already");
+            newasm::terminate(newasm::exit_codes::inline_proc);
+            return;
+        }
+
+        VarPtr ptr = nullptr;
+        if(lc.priArgType == newasm::datatypes::ThisPtr)
+        {
+            if(newasm::_this == nullptr) [[unlikely]]
+            {
+                newasm::SetExceptionComment("`this` is probably not initialized");
+                newasm::terminate(newasm::exit_codes::invalid_memacc);
+                return;
+            }
+            if((*newasm::_this)->type != newasm::datatypes::proc) [[unlikely]]
+            {
+                newasm::SetExceptionComment("object is not a procedure");
+                newasm::terminate(newasm::exit_codes::seg_fault);
+                return;
+            }
+            ptr = newasm::_this;
+        }
+        else if(lc.Runtime.cachedCall != nullptr)
+        {
+            //loop optimization
+            ptr = lc.Runtime.cachedCall;
+        }
+        else
+        {
+            std::string suf = lc.altString;
+            NewASM::VarTable* ref = &newasm::variables::ids;
+            if(lc.priArgType == newasm::datatypes::artifactz)
+            {
+                auto it = newasm::variables::ids.find(lc.priString);
+                if(it == newasm::variables::ids.end())
+                {
+                    newasm::SetExceptionComment("no object with type of artifact found with such name");
+                    newasm::terminate(newasm::exit_codes::invalid_alloc);
+                    return;
+                }
+
+                ref = &it->second.artifact->data;
+                if constexpr(NEWASM_BUG_CRISIS)
+                {
+                    std::cout << "Artifact name -> " << lc.priString << std::endl;
+                    std::cout << "Suf -> " << suf << std::endl;
+                }
+            }
+            newasm::runtime::functions::parse<true>(suf);
+            auto it = ref->find(suf);
+            if(it == ref->end())
+            {
+                newasm::SetExceptionComment("object with such name does not exist: `" + suf + "`");
+                newasm::terminate(newasm::exit_codes::invalid_memacc);
+                return;
+            }
+            ptr = &it->second;
+            if(ptr->type != newasm::datatypes::proc) [[unlikely]]
+            {
+                newasm::SetExceptionComment("object is not a procedure");
+                newasm::terminate(newasm::exit_codes::seg_fault);
+                return;
+            }
+        }
+
+        ptr->proc->calledBy = lc.SourceLocation;
+        newasm::callproc(ptr);
+        lc.Runtime.cachedCall = ptr;
+        return;
+    }
+
     inline void CallHomeProc(newasm::compiler::lineData& lc)
     {
         if(newasm::header::data::proc_now)
@@ -8062,13 +8102,18 @@ namespace newasm
             newasm::terminate(newasm::exit_codes::dangling_this);
             return;
         }
+        else if(lc.Runtime.cachedCall != nullptr)
+        {
+            //loop optimization
+            ptr = lc.Runtime.cachedCall;
+        }
         else
         {
             newasm::runtime::functions::parse<true>(suf);
             auto it = ref.find(suf);
             if(it == ref.end())
             {
-                if constexpr(true)
+                if constexpr(NEWASM_BUG_CRISIS)
                 {
                     std::cout << "VarTable for artifact" << std::endl;
                     for(const auto& [k, v] : ref)
@@ -8091,6 +8136,7 @@ namespace newasm
 
         ptr->proc->calledBy = lc.SourceLocation;
         newasm::callproc(ptr);
+        lc.Runtime.cachedCall = ptr;
         return;
     }
 
@@ -8145,9 +8191,11 @@ namespace newasm
             }
 
             NewASM::RunningArtifact = true;
+            NewASM::RunningArtifactName = name;
             InstructionClassJIT(v);
             for(size_t i = 0; i < v.size(); ++i)
             {
+                NewASM::RunningArtifactLcx = i + 1;
                 newasm::procline(v.at(i));
             }
             NewASM::RunningArtifact = false;
@@ -8911,7 +8959,8 @@ namespace newasm
             newasm::system::terminated and
             !newasm::events::exitNow
         ) return 1;
-        if constexpr(0)
+
+        if constexpr(NEWASM_BUG_CRISIS)
         {
             std::cout << std::endl;
             std::cout << "Current line: " << line.raw << std::endl;
@@ -9905,7 +9954,7 @@ namespace newasm
                         {
                             newasm::compiler::abort(newasm::compiler::fail::unknown_label);
                             //std::cout << "Tried compiling -> `" << bytecode.raw << "` " << (std::find(sl.begin(), sl.end(), label_name) != sl.end()) << "\n";
-                            if(0) for(size_t j = 0; j < sl.size(); ++j)
+                            if constexpr(NEWASM_BUG_CRISIS) for(size_t j = 0; j < sl.size(); ++j)
                             {
                                 std::cout << "sl[" << j << "] = `" << sl[j] << "`\n";
                             }
@@ -9917,7 +9966,7 @@ namespace newasm
                         }
                         catch(std::exception& e)
                         {
-                            if(0) for(auto p = newasm::mem::labels.begin(); p != newasm::mem::labels.end(); ++p)
+                            if constexpr(NEWASM_BUG_CRISIS) for(auto p = newasm::mem::labels.begin(); p != newasm::mem::labels.end(); ++p)
                             {
                                 std::cout << "labels[" << p->first << "] = `" << p->second << "`\n";
                             }
@@ -9968,7 +10017,7 @@ namespace newasm
                         {
                             newasm::compiler::abort(newasm::compiler::fail::unknown_label);
                             //std::cout << "Tried compiling -> `" << bytecode.raw << "` " << (std::find(sl.begin(), sl.end(), label_name) != sl.end()) << "\n";
-                            if(0) for(size_t j = 0; j < sl.size(); ++j)
+                            if constexpr(NEWASM_BUG_CRISIS) for(size_t j = 0; j < sl.size(); ++j)
                             {
                                 std::cout << "sl[" << j << "] = `" << sl[j] << "`\n";
                             }
@@ -9984,7 +10033,7 @@ namespace newasm
                         }
                         catch(std::exception& e)
                         {
-                            for(auto p = newasm::mem::labels.begin(); p != newasm::mem::labels.end(); ++p)
+                            if constexpr(NEWASM_BUG_CRISIS) for(auto p = newasm::mem::labels.begin(); p != newasm::mem::labels.end(); ++p)
                             {
                                 std::cout << "labels[" << p->first << "] = `" << p->second << "`\n";
                             }

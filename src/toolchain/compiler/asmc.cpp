@@ -139,6 +139,11 @@ namespace newasm
         
         inline void DedicateClass(newasm::compiler::lineData& lc)
         {
+            if(lc.whatAmIDoing == NewASM::core::lang_inf::call)
+            {
+                lc.Class = NewASM::Const::InstructionClass::DedicatedClass::StandardCall;
+            }
+
             if(
                 lc.whatAmIDoing == NewASM::core::lang_inf::unlock__ or
                 lc.whatAmIDoing == NewASM::core::lang_inf::lock__
@@ -1189,6 +1194,29 @@ namespace newasm
                                 return lineCompiled;
                             }
                             lineCompiled.krnlMod = kernel_module->second;
+                        }
+                        //artifact names
+                        if(lineCompiled.whatAmIDoing == newasm::core::lang_inf::call)
+                        {
+                            auto suf = lc.tokens.at(i);
+                            lc.altString = suf;
+                            if(suf.find('.') != std::string::npos)
+                            {
+                                if(lc.Descriptor.type == NewASM::Const::InsDescriptor::Types::HOME)
+                                {
+                                    newasm::compiler::abort(newasm::compiler::fail::unexpected_nmst);
+                                    return lc;
+                                }
+                                auto vec = newasm::header::functions::split(suf, '.');
+                                if(vec.size() != 2)
+                                {
+                                    newasm::compiler::abort(newasm::compiler::fail::unmatched_syntax);
+                                    return lc;
+                                }
+                                lc.altString = vec[1];
+                                lc.priArgType = newasm::datatypes::artifactz;//we're callinan artifact METHOD,not the artifact itself
+                                lc.priString = vec[0]; //my convention xD
+                            }
                         }
                         //compiling proc names CUZ SPEED
                         if(lineCompiled.whatAmIDoing == newasm::core::lang_inf::proc)

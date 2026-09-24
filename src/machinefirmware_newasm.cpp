@@ -110,6 +110,7 @@ namespace newasm
 
     inline void NativeProc(newasm::compiler::lineData& line);
     inline void CallHomeProc(newasm::compiler::lineData& line);
+    inline void StandardCallProc(newasm::compiler::lineData& line);
 
     namespace Const
     {
@@ -146,6 +147,7 @@ namespace newasm
                 constinit const int Fork = 11;
                 constinit const int NativeCall = 12;
                 constinit const int HomeCall = 13;
+                constinit const int StandardCall = 14;
             }
 
             const std::unordered_map<int, ClassProcessor> ClassTemplate = {
@@ -156,6 +158,7 @@ namespace newasm
                 {DedicatedClass::Catch, CatchProc},
                 {Large, LargeInsProc},
                 {DedicatedClass::Fork, ForkProc},
+                {DedicatedClass::StandardCall, StandardCallProc},
                 {DedicatedClass::Mutex, MutexProc},
                 {DedicatedClass::TinyConditional, TinyCondProc},
                 {DedicatedClass::MediumConditional, MediumCondProc},
@@ -346,6 +349,8 @@ namespace newasm
     constinit std::vector<newasm::compiler::lineData> DeclaringArtifactData;
     
     constinit bool RunningArtifact = false;
+    constinit std::string RunningArtifactName;
+    constinit int RunningArtifactLcx = 0;
 
     std::vector<VarPtr> CurrentThreads;
 
@@ -389,6 +394,7 @@ namespace newasm
 
         struct lineDataRT final
         {
+            VarPtr cachedCall = nullptr;
             Const::ClassProcessor Processor = nullptr;
             
             void Process(lineData& l);

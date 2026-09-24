@@ -215,6 +215,8 @@ namespace newasm
 
             const std::string reset = "";
             const std::string sky_blue = "";
+
+            const std::string dark_aqua = "";
         }
         namespace style
         {

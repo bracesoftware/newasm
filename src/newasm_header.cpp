@@ -614,14 +614,16 @@ namespace newasm::header
             while((end = str.find(delimiter, start)) != std::string::npos)
             {
                 std::string token = str.substr(start, end - start);
-                if(!newasm::header::functions::trim(token).empty()) 
+                auto p = newasm::header::functions::trim(token);
+                if(!p.empty())
                 {
-                    tokens.push_back(token);
+                    tokens.push_back(p);
                 }
                 start = end + 1;
             }
             std::string last = str.substr(start);
-            if(!newasm::header::functions::trim(last).empty()) tokens.push_back(last);
+            auto p = newasm::header::functions::trim(last);
+            if(!p.empty()) tokens.push_back(p);
             return tokens;
         }
 

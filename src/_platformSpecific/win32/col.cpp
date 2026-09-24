@@ -48,6 +48,7 @@ namespace newasm
             
             const std::string sky_blue = "\033[44m";
             const std::string black = "\033[30m";
+            const std::string dark_aqua = "\033[38;2;0;128;128m";
 
             const std::string reset = "\033[0m";
         }
