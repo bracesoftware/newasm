@@ -2955,6 +2955,16 @@ mymacro : #
     [home] call TestArtifactMethod
     call TestArtifact.TestArtifactMethod
 
+    [abstract] proc myabstractproctestLOL
+    call myabstractproctestLOL
+    [impl] proc myabstractproctestLOL
+        mov tlr, "hello guyz"
+        [native] call print
+        halt 0
+    end
+    call myabstractproctestLOL
+
+
 jmp e203423
     ee
 :e203423

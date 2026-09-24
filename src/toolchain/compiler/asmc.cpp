@@ -143,7 +143,7 @@ namespace newasm
             {
                 lc.Class = NewASM::Const::InstructionClass::DedicatedClass::StandardCall;
             }
-
+            // -------------------------------------
             if(
                 lc.whatAmIDoing == NewASM::core::lang_inf::unlock__ or
                 lc.whatAmIDoing == NewASM::core::lang_inf::lock__
@@ -203,7 +203,22 @@ namespace newasm
             {
                 lc.Class = NewASM::Const::InstructionClass::DedicatedClass::Fork;
             }
-
+            // =========================== abstract proc
+            else if(
+                lc.whatAmIDoing == newasm::core::lang_inf::proc and
+                lc.Descriptor.type == NewASM::Const::InsDescriptor::Types::ABSTRACT
+            )
+            {
+                lc.Class = NewASM::Const::InstructionClass::DedicatedClass::AbstractProcDecl;
+            }
+            // ----------------------------- abstract proc impl
+            else if(
+                lc.whatAmIDoing == newasm::core::lang_inf::proc and
+                lc.Descriptor.type == NewASM::Const::InsDescriptor::Types::IMPL
+            )
+            {
+                lc.Class = NewASM::Const::InstructionClass::DedicatedClass::AbstractProcImpl;
+            }
             return;
         }
 
@@ -1221,7 +1236,10 @@ namespace newasm
                         //compiling proc names CUZ SPEED
                         if(lineCompiled.whatAmIDoing == newasm::core::lang_inf::proc)
                         {
-                            checkCollisions(lineCompiled.tokens.at(i));
+                            if(lc.Descriptor.type != NewASM::Const::InsDescriptor::Types::IMPL)
+                            {
+                                checkCollisions(lineCompiled.tokens.at(i));
+                            }
                         }
                         auto it_ = newasm::mem::regs::identifiers.find(lineCompiled.tokens.at(i));
                         if(it_ != newasm::mem::regs::identifiers.end())

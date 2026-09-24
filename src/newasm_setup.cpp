@@ -88,6 +88,7 @@ namespace newasm
         const int user_error = 60;
         const int unknown_inscp = 61;
         const int unknown_error = 62;
+        const int abstract_proc_body = 63;
 
         class Exception final
         {
@@ -127,6 +128,7 @@ namespace newasm
         };
 
         const std::unordered_map<int, Exception> identifier = {
+            {abstract_proc_body, Exception("CalledAbstractProcWithNoImpl", false)},//not critical
             {noterm_point, Exception("NoTerminationPoint")},
             {invalid_section, Exception("InvalidSection")},
             {unknown_inscp, Exception("UnknownInsClassProcessor")},
@@ -522,6 +524,7 @@ namespace newasm
             std::unordered_map<std::string, int> labels;
             int idx;
             int LCX;
+            int IMPL_LCX;
             std::vector<int> CallCStack;
 
             std::string original_name;

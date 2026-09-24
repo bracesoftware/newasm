@@ -38,6 +38,58 @@ To resize or access a specific index of the list, you have to use `resize` and `
 
 After using `lea`, the list will return the value stored on index 3. Attempting to modify a list without using `lea` first will cause a crash. After each resize, the index will be also invalidated.
 
++ Added new abstract procedures! Abstract procedures are procedures with no declared body.
+
+```asm
+.start
+    [abstract] proc myabstractproctestLOL ; creates a proc object
+    
+    call myabstractproctestLOL  ; throws a recoverable exception, program continues
+    
+    [impl] proc myabstractproctestLOL ; we get the implementation
+        mov tlr, "hello guyz"
+        [native] call print
+        halt 0
+    end
+    
+    call myabstractproctestLOL ; now it does what it was implemented with
+```
+
++ Added new artifacts! Artifacts are loadable containers containing compiled code. To make it easier to understand, they behave like Java's class files.
+To create an artifact, use the artifact instruction:
+
+```asm
+.start
+    artifact MyArtifact -> { ;this creates a file MyArtifact.asmartifact
+        [force] .start ; tell the compiler optimizer to ignore the duplicate .start section
+        proc ArtifactProcedure ; now equivalent to java class methods
+            mov tlr, "Hello from the artifact"
+            [native] call print
+            halt 0
+        end
+    }
+```
+
+Now, to use an artifact, we have to load it into a program, as this thing above just creates an artifact binary next to your app binary; so to create this compiled artifact, you have to run your program.
+
+### Forking the artifact
+To load an artifact, use `fork`:
+
+```asm
+; completely different program
+.start
+    fork MyArtifact ; has to match the name MyArtifact.asmartifact
+
+```
+
+If the artifact loaded with no exceptions, we can simply call its procedures using the `home` pointer or by directly addressing the procedure with its home artifact:
+
+```asm
+    [home] call ArtifactProcedure ; home ptr must be set by fork instruction, fork is like fetch but for artifacts
+    ; or java-style
+    call MyArtifact.ArtifactProcedure
+```
+
 ## Fixed issues
 
 - No issues were reported.

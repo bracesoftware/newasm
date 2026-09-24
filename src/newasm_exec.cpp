@@ -252,6 +252,17 @@ namespace newasm
             std::cout << std::endl;
             std::cout << newasm::header::col::reset;
         };
+        auto LogImplementationSource = <:Insomnia:>(const std::string& name, int idx) -> void {
+            std::cout << Insomnia << newasm::header::col::reset << newasm::header::col::yellow;
+            std::cout << newasm::header::style::dim;
+            std::cout << "| `" << name << "` implemented in: " << newasm::header::style::underline;
+            std::cout << newasm::header::col::gray <<
+                    newasm::forLinker::getFile(idx) <<//(newasm::header::data::lastlndx) << //newasm::header::settings::script_file <<
+                    ":" <<
+                    newasm::forLinker::getLine(idx);
+            std::cout << std::endl;
+            std::cout << newasm::header::col::reset;
+        };
         
         auto LogLambda = <:Insomnia:>() -> void {
             if(newasm::LambdaDispatch::LambdaLine)
@@ -419,6 +430,7 @@ namespace newasm
             {
                 auto& k = NewASM::CurrentProcA->proc;
                 LogDeclarationSource(k->original_name, k->LCX);
+                LogImplementationSource(k->original_name, k->IMPL_LCX);
                 
                 auto z = GetLineLocation(k->calledBy);
                 if(z.first)
@@ -7193,9 +7205,9 @@ namespace newasm
                 auto& mmap = ref->at(suf);
                 mmap.type = newasm::datatypes::proc;
                 mmap.proc->LCX = newasm::mem::regs::lcx.get_value();
+                mmap.proc->IMPL_LCX = newasm::mem::regs::lcx.get_value();
                 NewASM::CurrentProc = &mmap;
                 mmap.proc->original_name = original_name;
-              
                 return 1;
             }
             //heap
@@ -8062,6 +8074,13 @@ namespace newasm
             }
         }
 
+        if(ptr->proc->Abstract)
+        {
+            newasm::SetExceptionComment("procedure lacks implementation");
+            newasm::terminate(newasm::exit_codes::abstract_proc_body);
+            return;
+        }
+
         ptr->proc->calledBy = lc.SourceLocation;
         newasm::callproc(ptr);
         lc.Runtime.cachedCall = ptr;
@@ -8435,6 +8454,90 @@ namespace newasm
         TryBlock = true;
         TryJump = lineInfo.jumpinTo;
  
+        return;
+    }
+
+    inline void AbstractProcDeclProc(newasm::compiler::lineData& lc)
+    {
+        if(newasm::system::stop == 1)
+        {
+            //newasm::system::proclines ++;
+            NewASM::CurrentProc->proc->contents.push_back(lc);
+            return;
+        }
+
+        std::string original_name;
+        std::string suf = lc.tokens.back();
+        if(newasm::nms::count != 0)
+        {
+            original_name = newasm::header::functions::demangleName(newasm::nms::stack, suf);
+            suf = newasm::header::functions::mangleName(newasm::nms::stack, suf);
+        }
+        else
+        {
+            original_name = suf;
+        }
+
+        NewASM::VarTable* ref = &newasm::variables::ids;
+        if(NewASM::RunningArtifact)
+        {
+            //std::cout << "Declaring an artifact procedure -> " << suf << std::endl;
+            ref = &(*NewASM::CurrentArtifact)->artifact->data;
+        }
+
+        //newasm::system::stop = 1;
+        //newasm::system::proclines = 0;
+        (*ref)[suf].proc = new newasm::variables::procedureData;
+        auto& mmap = ref->at(suf);
+        mmap.type = newasm::datatypes::proc;
+        mmap.proc->LCX = newasm::mem::regs::lcx.get_value();
+        mmap.proc->original_name = original_name;
+        mmap.proc->Abstract = true;
+        return;
+    }
+
+    inline void AbstractProcImplProc(newasm::compiler::lineData& lc)
+    {
+        if(newasm::system::stop == 1)
+        {
+            newasm::terminate(newasm::exit_codes::jit_fail);
+            //newasm::system::proclines ++;
+            NewASM::CurrentProc->proc->contents.push_back(lc);
+            return;
+        }
+
+        std::string suf = lc.tokens.back();
+
+        NewASM::VarTable* ref = &newasm::variables::ids;
+        if(NewASM::RunningArtifact)
+        {
+            //std::cout << "Declaring an artifact procedure -> " << suf << std::endl;
+            ref = &(*NewASM::CurrentArtifact)->artifact->data;
+        }
+        //newasm::system::proclines = 0;
+        //(*ref)[suf].proc = new newasm::variables::procedureData;
+        newasm::runtime::functions::parse<true>(suf);
+        auto it = ref->find(suf);
+        if(it == ref->end())
+        {
+            newasm::SetExceptionComment("object with type of procedure with such name doesn't exist");
+            newasm::terminate(newasm::exit_codes::invalid_memacc);
+            return;
+        }
+        
+        auto& mmap = ref->at(suf);
+
+        if(!mmap.proc->Abstract)
+        {
+            newasm::SetExceptionComment("specified procedure is not abstract");
+            newasm::terminate(newasm::exit_codes::proc_redef);
+            return;
+        }
+
+        mmap.proc->IMPL_LCX = newasm::mem::regs::lcx.get_value();
+        NewASM::CurrentProc = &mmap;
+        mmap.proc->Abstract = false;
+        newasm::system::stop = 1;
         return;
     }
 

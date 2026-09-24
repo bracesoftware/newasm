@@ -179,6 +179,7 @@ NewASM features different concepts such as decorators, namespaces, primitive cla
 7. [Events](docs/concepts/events.md)
 8. [Macros](docs/concepts/macros.md)
 9. [Native function calls](docs/concepts/natives.md)
+10. [Abstract procedures](docs/concepts/abstract.md)
 
 ## Other resources
 This is a list of extra resources that might help.

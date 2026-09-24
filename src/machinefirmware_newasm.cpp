@@ -111,6 +111,8 @@ namespace newasm
     inline void NativeProc(newasm::compiler::lineData& line);
     inline void CallHomeProc(newasm::compiler::lineData& line);
     inline void StandardCallProc(newasm::compiler::lineData& line);
+    inline void AbstractProcDeclProc(newasm::compiler::lineData& line);
+    inline void AbstractProcImplProc(newasm::compiler::lineData& line);
 
     namespace Const
     {
@@ -148,6 +150,8 @@ namespace newasm
                 constinit const int NativeCall = 12;
                 constinit const int HomeCall = 13;
                 constinit const int StandardCall = 14;
+                constinit const int AbstractProcDecl = 15;
+                constinit const int AbstractProcImpl = 16;
             }
 
             const std::unordered_map<int, ClassProcessor> ClassTemplate = {
@@ -164,6 +168,8 @@ namespace newasm
                 {DedicatedClass::MediumConditional, MediumCondProc},
                 {DedicatedClass::MovReg, MovRegProc},
                 {DedicatedClass::NativeCall, NativeProc},
+                {DedicatedClass::AbstractProcDecl, AbstractProcDeclProc},
+                {DedicatedClass::AbstractProcImpl, AbstractProcImplProc},
                 {DedicatedClass::HomeCall, CallHomeProc}
             };
 
