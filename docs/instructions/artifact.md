@@ -71,4 +71,10 @@ Let's say an artifact declares an abstract procedure, only way to modify it is t
             halt 0
         end
     }
+
+    ; we can append bytecode to the same mixin infinitely
+    mixin TestArtifact -> {
+        mov tlr, "TestArtifact mixin by dentist loaded"
+        [native] call print
+    }
 ```
