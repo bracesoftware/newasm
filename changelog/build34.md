@@ -90,6 +90,39 @@ If the artifact loaded with no exceptions, we can simply call its procedures usi
     call MyArtifact.ArtifactProcedure
 ```
 
+### Mixins
+To make your program append or rather inject more code into a specific artifact, you use the `mixin` instruction.
+
+Let's say an artifact declares an abstract procedure, only way to modify it is to access its object inside an artifact, so we use a mixin to implement it:
+
+```asm
+.start
+    artifact TestArtifact -> {
+        [force] .start
+            proc TestArtifactMethod
+                mov tlr, "ey"
+                [native] call print
+                halt 0
+            end
+
+            [abstract] proc GottaImplementThis
+    }
+
+    mixin TestArtifact -> {
+        [impl] proc GottaImplementThis
+            mov tlr, "oyy mixin impl works"
+            [native] call print
+            halt 0
+        end
+    }
+
+    ; we can append bytecode to the same mixin infinitely
+    mixin TestArtifact -> {
+        mov tlr, "TestArtifact mixin by dentist loaded"
+        [native] call print
+    }
+```
+
 ## Fixed issues
 
 - No issues were reported.

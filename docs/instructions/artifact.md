@@ -47,7 +47,7 @@ If the artifact loaded with no exceptions, we can simply call its procedures usi
 ```
 
 ### Mixins
-To make your program append more code into a specific artifact, you use the `mixin` instruction.
+To make your program append or rather inject more code into a specific artifact, you use the `mixin` instruction.
 
 Let's say an artifact declares an abstract procedure, only way to modify it is to access its object inside an artifact, so we use a mixin to implement it:
 
