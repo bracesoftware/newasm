@@ -2961,9 +2961,16 @@ mymacro : #
         end
     }
 
-    fork TestArtifact
+    ; we can append bytecode to the same mixin infinitely
+    mixin TestArtifact -> {
+        mov tlr, "TestArtifact mixin by dentist loaded"
+        [native] call print
+    }
+
+    fork TestArtifact ; automatically finds a mixin named TestArtifact and does the job
     [home] call TestArtifactMethod
     call TestArtifact.TestArtifactMethod
+    call TestArtifact.GottaImplementThis
 
     [abstract] proc myabstractproctestLOL
     call myabstractproctestLOL
