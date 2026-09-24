@@ -98,6 +98,7 @@ namespace newasm
             {86, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::resize__)},
             {87, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::artifact__)},
             {88, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::fork__)},
+            {89, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::mixin__)},
 
             {99, newasm::core::lang_inf::instruction_set.at(newasm::core::lang_inf::__say)}
         };

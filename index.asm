@@ -2946,10 +2946,20 @@ mymacro : #
                 [native] call print
                 halt 0
             end
+
+            [abstract] proc GottaImplementThis
     }
 
     mov tlr, "echo hi from echo"
     [native] call sys
+
+    mixin TestArtifact -> {
+        [impl] proc GottaImplementThis
+            mov tlr, "oyy mixin impl works"
+            [native] call print
+            halt 0
+        end
+    }
 
     fork TestArtifact
     [home] call TestArtifactMethod

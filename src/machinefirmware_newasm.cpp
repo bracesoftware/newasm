@@ -113,6 +113,7 @@ namespace newasm
     inline void StandardCallProc(newasm::compiler::lineData& line);
     inline void AbstractProcDeclProc(newasm::compiler::lineData& line);
     inline void AbstractProcImplProc(newasm::compiler::lineData& line);
+    inline void MixinProc(newasm::compiler::lineData& line);
 
     namespace Const
     {
@@ -152,6 +153,7 @@ namespace newasm
                 constinit const int StandardCall = 14;
                 constinit const int AbstractProcDecl = 15;
                 constinit const int AbstractProcImpl = 16;
+                constinit const int Mixin = 17;
             }
 
             const std::unordered_map<int, ClassProcessor> ClassTemplate = {
@@ -163,6 +165,7 @@ namespace newasm
                 {Large, LargeInsProc},
                 {DedicatedClass::Fork, ForkProc},
                 {DedicatedClass::StandardCall, StandardCallProc},
+                {DedicatedClass::Mixin, MixinProc},
                 {DedicatedClass::Mutex, MutexProc},
                 {DedicatedClass::TinyConditional, TinyCondProc},
                 {DedicatedClass::MediumConditional, MediumCondProc},
@@ -357,6 +360,11 @@ namespace newasm
     constinit bool RunningArtifact = false;
     constinit std::string RunningArtifactName;
     constinit int RunningArtifactLcx = 0;
+
+    typedef std::unordered_map<std::string, std::vector<newasm::compiler::lineData*>> MixinTable;
+    NewASM::MixinTable ARTIFACT_MIXIN_CONTENTS;
+    constinit bool MixinNow = false;
+    constinit std::string MixinName;
 
     std::vector<VarPtr> CurrentThreads;
 
@@ -1162,6 +1170,7 @@ namespace newasm
         constinit const int class_block = 2;
         constinit const int event_block = 3;
         constinit const int artifact_block = 4;
+        constinit const int mixin_block = 5;
     }
     std::vector<int> brace_stack__;
     //------------------------------------------------------

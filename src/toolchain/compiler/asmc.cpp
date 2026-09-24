@@ -203,6 +203,13 @@ namespace newasm
             {
                 lc.Class = NewASM::Const::InstructionClass::DedicatedClass::Fork;
             }
+            // =========================== artifact mixin
+            else if(
+                lc.whatAmIDoing == newasm::core::lang_inf::mixin__
+            )
+            {
+                lc.Class = NewASM::Const::InstructionClass::DedicatedClass::Mixin;
+            }
             // =========================== abstract proc
             else if(
                 lc.whatAmIDoing == newasm::core::lang_inf::proc and

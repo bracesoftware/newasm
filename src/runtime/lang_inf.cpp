@@ -157,6 +157,7 @@ namespace newasm
 
             const int artifact__ = 87;//
             const int fork__ = 88;//
+            const int mixin__ = 89;//
 
             /// @brief //////
             const int Link___ = 99;
@@ -273,6 +274,7 @@ namespace newasm
                 {resize__, "resize"},
                 {artifact__, "artifact"},
                 {fork__, "fork"},
+                {mixin__, "mixin"},
 
                 {__say, "__say"}
             };

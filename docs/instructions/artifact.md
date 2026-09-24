@@ -8,6 +8,7 @@ This article covers following topics:
 1. [`artifact` instruction](#artifact)
 2. [`fork` instruction](#forking-the-artifact)
 3. `home` pointer
+4. 
 
 ### `artifact`
 Artifacts are loadable containers containing compiled code. To make it easier to understand, they behave like Java's class files.
@@ -43,4 +44,31 @@ If the artifact loaded with no exceptions, we can simply call its procedures usi
     [home] call ArtifactProcedure ; home ptr must be set by fork instruction, fork is like fetch but for artifacts
     ; or java-style
     call MyArtifact.ArtifactProcedure
+```
+
+### Mixins
+To make your program append more code into a specific artifact, you use the `mixin` instruction.
+
+Let's say an artifact declares an abstract procedure, only way to modify it is to access its object inside an artifact, so we use a mixin to implement it:
+
+```asm
+.start
+    artifact TestArtifact -> {
+        [force] .start
+            proc TestArtifactMethod
+                mov tlr, "ey"
+                [native] call print
+                halt 0
+            end
+
+            [abstract] proc GottaImplementThis
+    }
+
+    mixin TestArtifact -> {
+        [impl] proc GottaImplementThis
+            mov tlr, "oyy mixin impl works"
+            [native] call print
+            halt 0
+        end
+    }
 ```

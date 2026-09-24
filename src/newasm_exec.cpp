@@ -44,8 +44,7 @@ namespace newasm
         else
         {
             newasm::header::data::LastLine = &BYTECODE[IDX];
-            if constexpr(NEWASM_BUG_CRISIS) return;
-            if(mmap->id > 11) std::cout << newasm::header::col::cyan << "---Processing thread " << mmap->original_name << ":" << mmap->lcx << "|id:" << mmap->id<<"---"<<BYTECODE[IDX].raw << newasm::header::col::reset<<std::endl;
+            if constexpr(NEWASM_BUG_CRISIS) std::cout << newasm::header::col::cyan << "---Processing thread " << mmap->original_name << ":" << mmap->lcx << "|id:" << mmap->id<<"---"<<BYTECODE[IDX].raw << newasm::header::col::reset<<std::endl;
             newasm::procline(BYTECODE[IDX]);
         }
 
@@ -53,8 +52,7 @@ namespace newasm
 
         if(mmap->paused)
         {
-            if constexpr(NEWASM_BUG_CRISIS) return;
-            if(mmap->id > 11) std::cout << newasm::header::col::red<<"-------- thrd : " << mmap->original_name << " paused" <<newasm::header::col::reset<< std::endl;
+            if constexpr(NEWASM_BUG_CRISIS) std::cout << newasm::header::col::red<<"-------- thrd : " << mmap->original_name << " paused" <<newasm::header::col::reset<< std::endl;
             mmap->paused = false;
             return;
         }
@@ -8217,6 +8215,17 @@ namespace newasm
                 NewASM::RunningArtifactLcx = i + 1;
                 newasm::procline(v.at(i));
             }
+            auto it = NewASM::ARTIFACT_MIXIN_CONTENTS.find(NewASM::RunningArtifactName);
+            if(it != NewASM::ARTIFACT_MIXIN_CONTENTS.end())
+            {
+                auto& vec = it->second;
+                for(int i = 0; i < vec.size(); ++i)
+                {
+                    auto* l = vec.at(i);
+                    NewASM::RunningArtifactLcx++;
+                    NewASM::procline(*l);
+                }
+            }
             NewASM::RunningArtifact = false;
             return;
         }
@@ -8227,6 +8236,48 @@ namespace newasm
             return;
         }
         newasm::CurrentArtifact = &it->second;
+        return;
+    }
+
+    inline void MixinProc(newasm::compiler::lineData& lineInfo)
+    {
+        if(newasm::system::stop == 1)
+        {
+            newasm::SetExceptionComment("cannot assemble a mixin block inside a procedure");
+            newasm::terminate(newasm::exit_codes::jit_fail);
+            return;
+        }
+
+        if(newasm::thread_line)
+        {
+            newasm::SetExceptionComment("cannot assemble a mixin block inside a thread");
+            newasm::terminate(newasm::exit_codes::jit_fail);
+            return;
+        }
+        if(lineInfo.caseLineArgType != NewASM::datatypes::tokenOpenBrace)//if(newasm::header::data::case_line != OPEN_BRACE_STR)
+        {
+            newasm::SetExceptionComment("must provide the `{` token to begin mixin block assembly");
+            newasm::terminate(newasm::exit_codes::invalid_syntax);
+            return;
+        }
+        if(newasm::DeclaringArtifact)
+        {
+            newasm::SetExceptionComment("cannot create an mixin block inside an artifact");
+            newasm::terminate(newasm::exit_codes::bus_err);
+            return;
+        }
+
+        if(lineInfo.tokens.size() != 2)
+        {
+            newasm::terminate(newasm::exit_codes::unknown_inscp);
+            return;
+        }
+
+        std::string& name = lineInfo.tokens.back();
+
+        NewASM::MixinNow = true;
+        NewASM::MixinName = name;
+        NewASM::brace_stack__.push_back(newasm::brace_stack::mixin_block);
         return;
     }
 
@@ -9172,6 +9223,11 @@ namespace newasm
                     );
                     return 1;
                 }
+                if(brace_purpose == newasm::brace_stack::mixin_block)
+                {
+                    newasm::MixinNow = false;
+                    return 1;
+                }
                 if(brace_purpose == newasm::brace_stack::object_block)
                 {
                     newasm::header::data::struct_now = false;
@@ -9344,6 +9400,13 @@ namespace newasm
             }
             
             newasm::CurrentThread->thrd->contents.push_back(line);
+            return 1;
+        }
+
+        if(newasm::MixinNow)
+        {
+            auto& v = NewASM::ARTIFACT_MIXIN_CONTENTS[NewASM::MixinName];
+            v.push_back(&line);
             return 1;
         }
 
